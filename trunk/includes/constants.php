@@ -100,6 +100,7 @@ define('PAGE_TRAINING',		-12);
 define('PAGE_CONTACT',		-13);
 define('PAGE_FORUM',		-14);
 define('PAGE_TEAMSPEAK',	-15);
+define('PAGE_CALENDAR',		-16);
 
 // URL PARAMETERS
 define('POST_TEAMS_URL',	't');

@@ -206,8 +206,8 @@
 		</tr>
 		<!-- BEGIN match_comments_guest -->
 		<tr>
-			<td class="row1_form" width="25%">Nickname: *</td>
-			<td class="row2" width="75%"><input class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
+			<td class="row1_form" width="30%">Nickname: *</td>
+			<td class="row2" width="70%"><input class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Mail: *</td>
@@ -219,7 +219,7 @@
 		</tr>
 		<tr>
 			<td class="row1_form" valign="top">Cpatcha:<br><span class="small">Reload des Captchas per Klick aufs Bild</span></td>
-			<td class="row2"><img style="padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
+			<td class="row2"><img style="background:#FFF;" style="padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Captcha-Code: *</td>
@@ -227,7 +227,7 @@
 		</tr>
 		<tr>
 			<td class="row1_form" width="25%" valign="top">Kommentar:</td>
-			<td class="row2" width="75%"><textarea class="textarea" name="comment" cols="40" rows="5">{COMMENT}</textarea></td>
+			<td class="row2" width="75%"><textarea class="textarea" name="comment" cols="30" rows="5">{COMMENT}</textarea></td>
 		</tr>
 		<tr>
 			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>
@@ -235,8 +235,8 @@
 		<!-- END match_comments_guest -->
 		<!-- BEGIN match_comments_member -->
 		<tr>
-			<td class="row1_form" width="25%" valign="top">Kommentar:</td>
-			<td class="row2" width="75%"><textarea class="textarea" name="comment" cols="40" rows="5">{COMMENT}</textarea></td>
+			<td class="row1_form" width="30%" valign="top">Kommentar:</td>
+			<td class="row2" width="70%"><textarea class="textarea" name="comment" cols="30" rows="5">{COMMENT}</textarea></td>
 		</tr>
 		<tr>
 			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>

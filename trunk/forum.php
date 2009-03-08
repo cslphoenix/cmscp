@@ -16,14 +16,14 @@ include($root_path . 'includes/page_header.php');
 $template->set_filenames(array('body' => 'forum_body.tpl'));	
 
 $sql = "SELECT cat_id, cat_title, cat_intern, cat_order FROM " . FORUM_CATEGORIE_TABLE . " WHERE cat_intern != 1 ORDER BY cat_order";
-if( !$q_categories = $db->sql_query($sql) )
+if (!$categories = $db->sql_query($sql))
 {
 	message_die(GENERAL_ERROR, "Could not query categories list", "", __LINE__, __FILE__, $sql);
 }
 
-if( $total_categories = $db->sql_numrows($q_categories) )
+if ($total_categories = $db->sql_numrows($categories))
 {
-	$category_rows = $db->sql_fetchrowset($q_categories);
+	$category_rows = $db->sql_fetchrowset($categories);
 
 	$sql = "SELECT * FROM " . FORUM_FORUMS_TABLE . " WHERE forum_intern != 1 ORDER BY cat_id, forum_order";
 	if(!$q_forums = $db->sql_query($sql))
@@ -33,7 +33,7 @@ if( $total_categories = $db->sql_numrows($q_categories) )
 
 	if( $total_forums = $db->sql_numrows($q_forums) )
 	{
-		$forum_rows = $db->sql_fetchrowset($q_forums);
+		$forum_data = $db->sql_fetchrowset($q_forums);
 	}
 
 	//
@@ -54,27 +54,44 @@ if( $total_categories = $db->sql_numrows($q_categories) )
 
 		for($j = 0; $j < $total_forums; $j++)
 		{
-			$forum_id = $forum_rows[$j]['forum_id'];
+			$forum_id = $forum_data[$j]['forum_id'];
 			
-			if ($forum_rows[$j]['cat_id'] == $cat_id && $forum_rows[$j]['forum_parent'] == 0)
+			if ($forum_data[$j]['cat_id'] == $cat_id && $forum_data[$j]['forum_parent'] == 0)
 			{
-				$template->assign_block_vars("catrow.forumrow",	array(
-					'FORUM_NAME' => $forum_rows[$j]['forum_name'],
-					'FORUM_DESC' => $forum_rows[$j]['forum_desc'],
+				if ( $forum_data[$j]['forum_last_post_id'] )
+				{
+					$last_post_time = create_date($board_config['default_dateformat'], $forum_data[$j]['post_time'], $board_config['board_timezone']);
+	
+					$last_post = $last_post_time . '<br />';
+	
+					$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
 					
-					'TOPICS' => $forum_rows[$j]['forum_topics'],
-					'POSTS' => $forum_rows[$j]['forum_posts'],
+					$last_post .= '<a href="' . append_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
+				}
+				else
+				{
+					$last_post = $lang['No_Posts'];
+				}
+				
+				$template->assign_block_vars("catrow.forumrow",	array(
+					'FORUM_NAME' => $forum_data[$j]['forum_name'],
+					'FORUM_DESC' => $forum_data[$j]['forum_desc'],
+					
+					'TOPICS' => $forum_data[$j]['forum_topics'],
+					'POSTS' => $forum_data[$j]['forum_posts'],
+					
+					'LAST_POST' => $last_post,
 
 					'U_VIEWFORUM' => append_sid($root_path."viewforum.php?" . POST_FORUM_URL . "=$forum_id"),
 				));
 				
 				for( $k = 0; $k < $total_forums; $k++ )
 				{
-					$forum_id2 = $forum_rows[$k]['forum_id'];
-					if ( $forum_rows[$k]['forum_parent'] == $forum_id )
+					$forum_id2 = $forum_data[$k]['forum_id'];
+					if ( $forum_data[$k]['forum_parent'] == $forum_id )
 					{
 						$template->assign_block_vars("catrow.forumrow.parent",	array(
-							'FORUM_NAME'	=> $forum_rows[$k]['forum_name'],
+							'FORUM_NAME'	=> $forum_data[$k]['forum_name'],
 							'U_VIEWFORUM'	=> append_sid($root_path."viewforum.php?" . POST_FORUM_URL . "=$forum_id2"),
 						));
 					}
@@ -107,7 +124,6 @@ $template->assign_vars(array(
 );
 
 $template->pparse("body");
-	
 	
 include($root_path . 'includes/page_tail.php');
 

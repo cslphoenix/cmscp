@@ -278,3 +278,8 @@ a:hover										{ color: #39F; text-decoration: underline; }
 
 a.copyright			{ color: #999; text-decoration: none;}
 a.copyright:hover	{ color: #fff; text-decoration: underline;}
+
+a.f_popup { text-decoration: none; color: #39F;}
+a.f_popup:hover { cursor: default; text-decoration: none; }
+a.f_popup span { text-align: left; visibility: hidden; position: absolute; z-index: 3;  display:block;  margin-top: 1em; padding: 1em; text-decoration: none; }
+a.f_popup:hover span { visibility: visible; border: 1px solid; background: #FFF; }

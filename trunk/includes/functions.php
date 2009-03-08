@@ -1,5 +1,12 @@
 <?php
 
+function _cache_clear()
+{
+	global $oCache;
+	
+	$oCache -> truncateCache();
+}
+
 function _cut($text)
 {
 	// Wörter mit mehr als 60 Zeichen werden ab dem 60. Zeichen um ein Leerzeichen ergänzt 
@@ -55,7 +62,7 @@ function _cut($text)
 	return $text;
 }
 
-function _cached($sql, $name, $row='0', $time='')
+function _cached($sql, $name, $row='', $time='')
 {
 	global $db, $oCache;
 	
@@ -66,7 +73,7 @@ function _cached($sql, $name, $row='0', $time='')
 		{
 			$result = $db->sql_query($sql);
 			$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-			$db->sql_freeresult($result);
+//			$db->sql_freeresult($result);
 			
 			$oCache -> writeCache($sCacheName, $fetch, $time);
 		}
@@ -75,7 +82,7 @@ function _cached($sql, $name, $row='0', $time='')
 	{
 		$result = $db->sql_query($sql);
 		$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
+//		$db->sql_freeresult($result);
 	}
 	
 	return $fetch;

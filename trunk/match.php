@@ -872,7 +872,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 }
 else
 {
-	redirect(append_sid('index.php', true));
+	redirect(append_sid('match.php', true));
 }
 
 $template->pparse('body');
