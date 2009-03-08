@@ -56,7 +56,7 @@
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
 			<td style="background-image:url(templates/subSilver/images/page/phx_02.png);" height="54" width="471" align="right">{SITENAME}<br />{SITE_DESCRIPTION}</td>
-			<td style="background-image:url(templates/subSilver/images/page/phx_03.png);" height="54" width="515" align="center"><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><br /><a href="match.php">Begegnungen</a></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_03.png);" height="54" width="515" align="center"><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><br /><a href="match.php">Begegnungen</a><br /><a href="index.php?mode=cache">Cache Leeren</a></td>
 		</tr>
 		</table>
 	</td>

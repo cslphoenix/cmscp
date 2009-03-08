@@ -13,7 +13,14 @@ init_userprefs($userdata);
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 $start = ($start < 0) ? 0 : $start;
 
-
+if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
+{
+	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
+}
+else
+{
+	$mode = '';
+}
 
 //
 //	Start output of page
@@ -32,6 +39,13 @@ $template->assign_vars(array(
 
 	'U_MARK_READ' => append_sid("index.php?mark=forums"))
 );
+
+if ( $mode == 'cache')
+{
+	_cache_clear();
+	
+	message_die(GENERAL_MESSAGE, 'Cache geleert!');
+}
 
 		
 	
@@ -77,10 +91,6 @@ $template->assign_vars(array(
 		));
 	}
 
-
-//
-//	Generate the page
-//
 $template->pparse('body');
 
 include($root_path . 'includes/page_tail.php');

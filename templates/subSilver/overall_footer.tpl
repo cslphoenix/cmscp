@@ -21,6 +21,42 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
+				<tr>
+					<td class="info_head"><span style="float:right">{MONTH}</span>Wars</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN match -->
+						<tr>
+							<td width="99%">{minical.match.NAME}</td>
+							<td width="1%" nowrap>{minical.match.DATE}</td>
+						</tr>
+						<!-- END match -->
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="info_head"><span style="float:right">{MONTH}</span>Trainings</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN training -->
+						<tr>
+							<td width="99%">{minical.training.NAME}</td>
+							<td width="1%" nowrap>{minical.training.DATE}</td>
+						</tr>
+						<!-- END training -->
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
 				<!-- END minical -->
 				<!-- BEGIN teams -->
 				<tr>
