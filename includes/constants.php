@@ -56,6 +56,27 @@ define('USER_ACTIVATION_NONE', 0);
 define('USER_ACTIVATION_SELF', 1);
 define('USER_ACTIVATION_ADMIN', 2);
 
+// Auth settings
+define('AUTH_LIST_ALL',		0);
+define('AUTH_ALL',			0);
+
+define('AUTH_REG',	1);
+define('AUTH_TRI',	2);
+define('AUTH_MEM',	3);
+define('AUTH_MOD',	4);
+define('AUTH_ADM',	5);
+
+define('AUTH_VIEW',			1);
+define('AUTH_READ',			2);
+define('AUTH_POST',			3);
+define('AUTH_REPLY',		4);
+define('AUTH_EDIT',			5);
+define('AUTH_DELETE',		6);
+define('AUTH_ANNOUNCE',		7);
+define('AUTH_STICKY',		8);
+define('AUTH_POLLCREATE',	9);
+define('AUTH_POLL',			10);
+
 
 define('LOGO_NONE', 0);
 define('LOGO_UPLOAD', 1);
@@ -67,10 +88,10 @@ define('END_TRANSACTION', 2);
 
 
 // Error codes
-define('GENERAL_MESSAGE', 200);
-define('GENERAL_ERROR', 202);
-define('CRITICAL_MESSAGE', 203);
-define('CRITICAL_ERROR', 204);
+define('GENERAL_MESSAGE',	200);
+define('GENERAL_ERROR',		202);
+define('CRITICAL_MESSAGE',	203);
+define('CRITICAL_ERROR',	204);
 
 
 // Private messaging
@@ -111,7 +132,9 @@ define('POST_GAMES_URL',	'g');
 define('POST_MATCH_URL',	'm');
 define('POST_TRAINING_URL',	'tr');
 define('POST_SERVER_URL',	's');
-
+define('POST_GROUPS_URL',	'g');
+define('POST_CONTACT_URL',	'c');
+define('POST_POST_URL',	'p');
 define('POST_TOPIC_URL', 't');
 define('POST_CAT_URL', 'c');
 define('POST_FORUM_URL', 'f');
@@ -134,6 +157,8 @@ define('SETTINGS_TABLE',		$db_prefix.'settings');
 define('BANLIST_TABLE',			$db_prefix.'banlist');
 define('DISALLOW_TABLE',		$db_prefix.'disallow');
 
+
+
 define('RANKS_TABLE',			$db_prefix.'ranks');
 define('GAMES_TABLE',			$db_prefix.'game');
 
@@ -145,7 +170,10 @@ define('THEMES_NAME_TABLE',		$db_prefix.'themes_name');
 
 define('USERS_TABLE',			$db_prefix.'users');
 define('USERS_AUTH_TABLE',		$db_prefix.'users_auth');
-define('USER_GROUP_TABLE',		$db_prefix.'user_group');
+
+define('GROUPS_TABLE',			$db_prefix.'groups');
+define('GROUPS_AUTH_TABLE',		$db_prefix.'groups_auth');
+define('GROUPS_USER_TABLE',		$db_prefix.'groups_user');
 
 define('NEWS_TABLE',			$db_prefix.'news');
 define('NEWS_CATEGORIE_TABLE',	$db_prefix.'news_categorie');
@@ -172,10 +200,14 @@ define('CONTACT_TABLE',			$db_prefix.'contact');
 define('LOG_TABLE',				$db_prefix.'log');
 define('ERROR_TABLE',			$db_prefix.'log_error');
 
-define('FORUM_CATEGORIE_TABLE',	$db_prefix.'forum_cat');
-define('FORUM_FORUMS_TABLE',	$db_prefix.'forum_forums');
+define('CATEGORIES_TABLE',		$db_prefix.'forum_cat');
+define('FORUMS_TABLE',			$db_prefix.'forum_forums');
+define('POSTS_TABLE',			$db_prefix.'forum_posts');
+define('TOPICS_TABLE',			$db_prefix.'forum_topics');
 
 define('COUNTER_COUNTER_TABLE',	$db_prefix.'counter_counter');
 define('COUNTER_ONLINE_TABLE',	$db_prefix.'counter_online');
+
+define('EVENTS_TABLE',			$db_prefix.'events');
 
 ?>

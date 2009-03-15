@@ -14,19 +14,25 @@ $admin_link =	(	$userdata['user_level'] == ADMIN ||
 					$userdata['auth_teams'] || 
 					$userdata['auth_match'] || 
 					$userdata['auth_ranks'] || 
-					$userdata['auth_games']
+					$userdata['auth_games'] ||
+					$userdata['auth_contact'] ||
+					$userdata['auth_joinus'] ||
+					$userdata['auth_fightus']
+					
 				) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br /><br />' : '';
 
-$template->set_filenames(array(
-	'overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl')
-);
+$template->set_filenames(array('overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl'));
+
+$debug = (defined('DEBUG')) ? '[ Debug: on ]' : '[ Debug: off ]';
+$cache = (defined('CACHE')) ? '[ Cache: on ]' : '[ Cache: off ]';
 
 $template->assign_vars(array(
-	'TRANSLATION_INFO' => (isset($lang['TRANSLATION_INFO'])) ? $lang['TRANSLATION_INFO'] : ((isset($lang['TRANSLATION'])) ? $lang['TRANSLATION'] : ''),
-	'ADMIN_LINK' => $admin_link)
-);
+	'ADMIN_LINK'	=> $admin_link,
+	'DEBUG'			=> $debug,
+	'CACHE'			=> $cache,
+));
 
-if ( empty($gen_simple_header) && defined('DEBUG') )
+if ( empty($gen_simple_header) && defined('DEBUG_SQL') )
 {
 	// send run stat (page generation, sql time, requests dump...)
 	$stat_run = new stat_run_class(microtime());
@@ -39,7 +45,6 @@ $template->pparse('overall_footer');
 // Close our DB connection.
 //
 $db->sql_close();
-
 
 //
 // Compress buffered output if required and send to browser
