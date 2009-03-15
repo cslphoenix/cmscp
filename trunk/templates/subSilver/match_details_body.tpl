@@ -143,18 +143,23 @@
 		<tr>
 			<td valign="top">
 				<form action="{S_TEAM_ACTION}" method="post" id="list" name="post">
-				<table class="out" cellspacing="0">
+				<table class="out" width="100%" cellspacing="0">
 				<tr>
 					<td class="rowHead" width="30%">{L_USERNAME}</td>
 					<td class="rowHead" width="70%" colspan="2">{L_STATUS}</td>
 				</tr>
 				<!-- BEGIN match_users_status -->
 				<tr>
-					<td class="row" width="30%" align="left" nowrap>{match_users.match_users_status.USERNAME}</td>
-					<td class="row" width="20%" align="left" nowrap><span class="{match_users.match_users_status.CLASS}">{match_users.match_users_status.STATUS}</span></td>
-					<td class="row" width="50%" align="left" nowrap>{match_users.match_users_status.DATE}</td>
+					<td width="30%" align="left" nowrap>{match_users.match_users_status.USERNAME}</td>
+					<td width="20%" align="left" nowrap><span class="{match_users.match_users_status.CLASS}">{match_users.match_users_status.STATUS}</span></td>
+					<td width="50%" align="left" nowrap>{match_users.match_users_status.DATE}</td>
 				</tr>
 				<!-- END match_users_status -->
+				<!-- BEGIN no_entry_status -->
+				<tr>
+ 					<td align="center" colspan="3">{NO_ENTRY}</td>
+				</tr>
+				<!-- END no_entry -->
 				</table>
 				</form>
 			</td>
@@ -193,10 +198,7 @@
 <!-- BEGIN match_comments -->
 <tr>
 	<td colspan="2" align="center">
-		<form action="{S_MATCH_ACTION}" method="post" name="post">
-
-		{ERROR_BOX}
-
+		<form action="{S_MATCH_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
 		<table class="info" width="55%" cellspacing="0">
 		<tr>
 			<td colspan="2">&nbsp;</td>
@@ -204,14 +206,19 @@
 		<tr>
 			<td class="info_head" colspan="2">Kommentar einfügen</td>
 		</tr>
+		</table>
+
+		{ERROR_BOX}<div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
+
+		<table class="info" width="55%" cellspacing="0">
 		<!-- BEGIN match_comments_guest -->
 		<tr>
 			<td class="row1_form" width="30%">Nickname: *</td>
-			<td class="row2" width="70%"><input class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
+			<td class="row2" width="70%"><input id="poster_nick" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Mail: *</td>
-			<td class="row2"><input class="post" type="text" value="{POSTER_MAIL}" name="poster_mail"></td>
+			<td class="row2"><input id="poster_mail" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{POSTER_MAIL}" name="poster_mail"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Homepage:</td>
@@ -219,11 +226,11 @@
 		</tr>
 		<tr>
 			<td class="row1_form" valign="top">Cpatcha:<br><span class="small">Reload des Captchas per Klick aufs Bild</span></td>
-			<td class="row2"><img style="background:#FFF;" style="padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
+			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Captcha-Code: *</td>
-			<td class="row2"><input class="post" type="text" name="captchaa" /></td>
+			<td class="row2"><input id="captcha" onBlur="javascript:checkEntry(this)" class="post" type="text" name="captcha" /></td>
 		</tr>
 		<tr>
 			<td class="row1_form" width="25%" valign="top">Kommentar:</td>

@@ -12,7 +12,7 @@
 <!-- END match_row_n -->
 <!-- BEGIN no_entry_n -->
 <tr>
-	<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_n -->
 </table>
@@ -33,7 +33,7 @@
 <!-- END match_row_o -->
 <!-- BEGIN no_entry_o -->
 <tr>
-	<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_o -->
 </table>
@@ -56,8 +56,8 @@
 	<tr>
 		<td class="{teams_row.CLASS}" align="center" width="1%">{teams_row.TEAM_GAME}</td>
 		<td class="{teams_row.CLASS}" align="left" style="vertical-align:middle">{teams_row.TEAM_NAME}</td>
+		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap>{teams_row.FIGHTUS}</td>
 		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.ALL_MATCHES}">{L_ALL_MATCHES}</a></td>
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.FIGHTUS}">{L_FIGHTUS}</a></td>
 		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
 	</tr>
 	<!-- END teams_row -->

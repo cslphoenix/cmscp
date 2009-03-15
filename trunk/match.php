@@ -46,7 +46,7 @@ if ($mode == '')
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
-					WHERE m.match_date < ' . time() . '
+					WHERE m.match_date > ' . time() . '
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'list_match_open_member');
 	}
@@ -57,7 +57,7 @@ if ($mode == '')
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
-					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
+					WHERE m.match_date > ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'list_match_open_guest');
 	}
@@ -93,7 +93,7 @@ if ($mode == '')
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
-					WHERE m.match_date > ' . time() . '
+					WHERE m.match_date < ' . time() . '
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'list_match_close_member');
 	}
@@ -104,7 +104,7 @@ if ($mode == '')
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
-					WHERE m.match_date > ' . time() . ' AND m.match_public = 1
+					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'list_match_close_guest');
 	}
@@ -141,7 +141,7 @@ if ($mode == '')
 				FROM ' . TEAMS_TABLE . ' t, ' . GAMES_TABLE . ' g
 				WHERE t.team_game = g.game_id
 			ORDER BY t.team_order';
-	$teams = _cached($sql, 'list_teams_info');
+	$teams = _cached($sql, 'list_teams_match_info');
 	
 	if (!$teams)
 	{
@@ -160,7 +160,7 @@ if ($mode == '')
 				'TEAM_NAME'		=> $teams[$i]['team_name'],
 				'ALL_MATCHES'	=> append_sid("match.php?mode=teammatches&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
 				'TO_TEAM'		=> append_sid("teams.php?mode=show&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
-				'FIGHTUS'		=> append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
+				'FIGHTUS'		=> ( $teams[$i]['team_fight'] ) ? '<a href="' . append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']) . '">' . $lang['match_fightus'] . '</>'  : '',
 			));
 		}		
 	}
@@ -168,12 +168,13 @@ if ($mode == '')
 	//	Teams
 	//
 	
+	
 	$template->assign_vars(array(
 		'L_DETAILS'		=> $lang['match_details'],
 		
 		'L_TEAMS'		=> $lang['teams'],
 		'L_ALL_MATCHES'	=> $lang['all_matches'],
-		'L_FIGHTUS'		=> $lang['match_fightus'],
+//		'L_FIGHTUS'		=> $lang['match_fightus'],
 		'L_TO_TEAM'		=> $lang['to_team'],
 		
 		'L_UPCOMING'	=> $lang['match_upcoming'],
@@ -400,7 +401,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		));
 	}
 	
-	if ($userdata['session_logged_in'] && $row_details['match_date'] > time() && ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN))
+	if ($userdata['session_logged_in'] && ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN))
 	{
 		$sql = 'SELECT mu.*, u.username
 					FROM ' . MATCH_USERS_TABLE . ' mu, ' . USERS_TABLE . ' u
@@ -434,6 +435,12 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				'DATE'			=> ($row['match_users_update']) ? $lang['change_on'] . create_date($userdata['user_dateformat'], $row['match_users_update'], $userdata['user_timezone']) : create_date($userdata['user_dateformat'], $row['match_users_create'], $userdata['user_timezone'])
 			));
 		}
+		
+		if (!$db->sql_numrows($result))
+		{
+			$template->assign_block_vars('match_users.no_entry_status', array());
+			$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+		}
 		$db->sql_freeresult($result);
 		
 		$template->assign_vars(array(
@@ -450,7 +457,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				WHERE user_id = ' . $userdata['user_id'] . ' AND team_id = ' . $row_details['team_id'];
 		$result = $db->sql_query($sql);
 		
-		if ($db->sql_numrows($result))
+		if ($db->sql_numrows($result) && $row_details['match_date'] > time())
 		{
 			$template->assign_block_vars('match_users.users_status', array());
 			
@@ -586,9 +593,9 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 			
 			if (!$userdata['session_logged_in'])
 			{
-				$captchaa = $HTTP_POST_VARS['captchaa'];
+				$captcha = $HTTP_POST_VARS['captcha'];
 				
-				if ($captchaa != $HTTP_SESSION_VARS['captcha'])
+				if ($captcha != $HTTP_SESSION_VARS['captcha'])
 				{
 					$error = true;
 					$error_msg = 'captcha';
@@ -753,9 +760,9 @@ else if ($mode == 'addcomment')
 	
 	if (!$userdata['session_logged_in'])
 	{
-		$captchaa = $HTTP_POST_VARS['captchaa'];
+		$captcha = $HTTP_POST_VARS['captcha'];
 		
-		if ($captchaa != $HTTP_SESSION_VARS['captcha'])
+		if ($captcha != $HTTP_SESSION_VARS['captcha'])
 		{
 			$error = true;
 			$error_msg = 'captcha';

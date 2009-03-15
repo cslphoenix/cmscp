@@ -1,6 +1,47 @@
 <?php
 
 //
+//
+//
+$lang['Public']			= 'Öffentlich';
+$lang['Private']		= 'Privat';
+$lang['Trial']			= 'Trial';
+$lang['Member']			= 'Member';
+$lang['Registered']		= 'Registriert';
+$lang['Administrators']	= 'Administratoren';
+$lang['Hidden']			= 'Versteckt';
+
+$lang['View'] = 'Ansicht';
+$lang['Read'] = 'Lesen';
+$lang['Post'] = 'Posten';
+$lang['Reply'] = 'Antworten';
+$lang['Edit'] = 'Editieren';
+$lang['Delete'] = 'Löschen';
+$lang['Sticky'] = 'Wichtig';
+$lang['Announce'] = 'Ankündigung';
+$lang['Poll'] = 'Umfrage';
+$lang['Pollcreate'] = 'Umfrage erstellen';
+
+$lang['Forum_ALL']		= 'Alle';
+$lang['Forum_REG']		= 'Reg';
+$lang['Forum_TRI']		= 'Trial';
+$lang['Forum_MEM']		= 'Member';
+$lang['Forum_MOD']		= 'Mods';
+$lang['Forum_ADM']		= 'Admin';
+
+
+//
+//
+//
+$lang['contact']					= 'Kontakt';
+$lang['contact_fightus']			= 'FightUs';
+$lang['contact_joinus']				= 'JoinUs';
+
+$lang['contact_type_open']			= 'Offen';
+$lang['contact_type_edit']			= 'Bearbeitung';
+$lang['contact_type_close']			= 'Geschlossen';
+
+//
 //	Ranks
 //
 $lang['training_head']			= 'Trainingadministration';
@@ -16,7 +57,7 @@ $lang['training_vs']			= 'Trainingsname';
 $lang['training_team']			= 'Team';
 $lang['training_match']			= 'War';
 $lang['training_date']			= 'Trainingstermin';
-$lang['training_duration']		= 'Trainingsdauer';
+$lang['training_duration']		= 'Trainingsdauer (min)';
 $lang['training_maps']			= 'Trainingsmaps';
 $lang['training_comment']		= 'Trainingskommentar';
 
@@ -46,6 +87,11 @@ $lang['match']			= 'Begegnungen';
 $lang['teams_over']		= 'Übersicht';
 $lang['ranks_over']		= 'Ränge';
 $lang['games_over']		= 'Spiele';
+$lang['contact']		= 'Kontakt';
+$lang['contact_over']	= 'Kontakt - Übersicht';
+$lang['joinus']			= 'JoinUs';
+$lang['fighus']			= 'FightUs';
+$lang['teams']			= 'Teams';
 $lang['set']			= 'Einstellungen';
 $lang['logs_over']		= 'Übersicht';
 $lang['logs_admin']		= 'Protokoll - Admin';
@@ -352,14 +398,13 @@ $lang['rank_not_exist']			= 'Der Rang ist nicht vorhanden!';
 
 $lang['game_not_exist']			= 'Das Spiel ist nicht vorhanden!';
 
-//	Match
-$lang['select_match_team']			= 'Bitte ein Team auswählen';
-$lang['select_match_type']			= 'Bitte ein Type auswählen';
-$lang['select_match_cate']			= 'Bitte eine Spielkategorie auswählen';
-$lang['select_match_league']		= 'Bitte eine Liga auswählen';
-
-//	Training
-$lang['select_duration']		= 'Zeitdauer wählen';
+$lang['select_fail_team']			= 'Bitte ein Team auswählen';
+$lang['select_fail_type']			= 'Bitte ein Type auswählen';
+$lang['select_fail_cate']			= 'Bitte eine Spielkategorie auswählen';
+$lang['select_fail_league']			= 'Bitte eine Liga auswählen';
+$lang['select_fail_duration']		= 'Bitte eine Zeitdauer wählen';
+$lang['select_fail_date']			= 'Bitte ein gültiges Datum wählen';
+$lang['select_fail_map']			= 'Bitte ein Map angeben';
 
 
 ?>

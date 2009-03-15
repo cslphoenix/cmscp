@@ -217,7 +217,10 @@ else
 				$userdata['auth_teams'] || 
 				$userdata['auth_match'] || 
 				$userdata['auth_ranks'] || 
-				$userdata['auth_games'])))
+				$userdata['auth_games'] ||
+					$userdata['auth_contact'] ||
+					$userdata['auth_joinus'] ||
+					$userdata['auth_fightus'])))
 	{
 		$page_title = $lang['Login'];
 		include($root_path . 'includes/page_header.php');

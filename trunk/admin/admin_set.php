@@ -64,7 +64,7 @@ else
 			$selected = ( $path == $default ) ? ' selected="selected"' : '';
 			$select_path .= '<option value="' . $path . '" ' . $selected . '>&raquo; ' . $status . $path . '&nbsp;</option>';
 		}
-		$select_path .= "</select>";
+		$select_path .= '</select>';
 		
 		return $select_path;	
 	}
@@ -86,7 +86,7 @@ else
 			$selected = ( $perm == $default ) ? ' selected="selected"' : '';
 			$select_perm .= '<option value="' . $perm . '" ' . $selected . '>&raquo; ' . $perm . '&nbsp;</option>';
 		}
-		$select_perm .= "</select>";
+		$select_perm .= '</select>';
 		
 		return $select_perm;	
 	}

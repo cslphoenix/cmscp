@@ -116,7 +116,7 @@ else
 			$selected = ( $valve == $default ) ? ' selected="selected"' : '';
 			$select_game .= '<option value="' . $valve . '" ' . $selected . '>&raquo; ' . $typ . '&nbsp;</option>';
 		}
-		$select_game .= "</select>";
+		$select_game .= '</select>';
 		
 		return $select_game;	
 	}

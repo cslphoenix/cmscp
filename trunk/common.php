@@ -174,6 +174,7 @@ if (!defined("CMS_INSTALLED"))
 include($root_path . 'includes/constants.php');
 include($root_path . 'includes/template.php');
 include($root_path . 'includes/sessions.php');
+include($root_path . 'includes/auth.php');
 include($root_path . 'includes/functions.php');
 include($root_path . 'includes/functions_display.php');
 include($root_path . 'includes/db.php');
@@ -251,16 +252,6 @@ else
 if (file_exists('install') || file_exists('contrib'))
 {
 	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
-}
-
-//
-// Show 'Board is disabled' message if needed.
-//
-if ( $config['page_disable'] && !defined("IN_ADMIN") && !defined("IN_LOGIN") )
-{
-	$message = ($config['disable_reason']) ? $config['disable_reason'] : 'Board_disable';
-	
-	message_die(GENERAL_MESSAGE, $message);
 }
 
 ?>
