@@ -24,7 +24,7 @@ function _select($default, $type)
 		$selected = ( $row['rank_order'] == $default ) ? ' selected="selected"' : '';
 		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
 	}
-	$func_select .= "</select>";
+	$func_select .= '</select>';
 
 	return $func_select;
 }
@@ -52,7 +52,7 @@ function _select_game($default)
 		$selected = ( $row['game_id'] == $default ) ? 'selected="selected"' : '';
 		$func_select .= '<option value="' . $row['game_image'] . '" ' . $selected . ' >&raquo; ' . $row['game_name'] . '&nbsp;</option>';
 	}
-	$func_select .= "</select>";
+	$func_select .= '</select>';
 
 	return $func_select;
 }
@@ -62,18 +62,21 @@ function _select_game($default)
 //
 //	default:	id
 //	class:		css class
+//	type:		alle/fight/join
 //
-function _select_team($default, $class)
+function _select_team($default, $type, $class)
 {
 	global $db, $lang;
 	
-	$sql = 'SELECT team_id, team_name FROM ' . TEAMS_TABLE . ' WHERE team_fight = 1 ORDER BY team_order';
+	$typ = ($type != '0') ? ($type == '2') ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
+
+	$sql = 'SELECT team_id, team_name FROM ' . TEAMS_TABLE . $typ . ' ORDER BY team_order';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
 	}
 	
-	$func_select = '<select class="' . $class . '" name="team_id">';
+	$func_select = '<select id="team_id" class="' . $class . '" name="team_id">';
 	$func_select .= '<option value="">&raquo; ' . $lang['select_team'] . '</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
@@ -81,7 +84,7 @@ function _select_team($default, $class)
 		$selected = ( $row['team_id'] == $default ) ? 'selected="selected"' : '';
 		$func_select .= '<option value="' . $row['team_id'] . '" ' . $selected . ' >&raquo; ' . $row['team_name'] . '&nbsp;</option>';
 	}
-	$func_select .= "</select>";
+	$func_select .= '</select>';
 
 	return $func_select;
 }
@@ -110,7 +113,7 @@ function _select_match($default, $class)
 		$selected = ( $row['match_id'] == $default ) ? 'selected="selected"' : '';
 		$func_select .= '<option value="' . $row['match_id'] . '" ' . $selected . ' >&raquo; ' . $row['match_rival'] . ' :: ' . $row['match_rival_tag'] . '&nbsp;</option>';
 	}
-	$func_select .= "</select>";
+	$func_select .= '</select>';
 
 	return $func_select;
 }
@@ -132,10 +135,14 @@ function _select_date($default, $var, $value)
 			$select = '<select class="post" name="' . $var . '">';
 			for ($i=1; $i < 32; $i++)
 			{
+				if ($i < 10)
+				{
+					$i = '0'.$i;
+				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
 				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
 			}
-			$select .= "</select>";
+			$select .= '</select>';
 			
 		break;
 		
@@ -144,22 +151,26 @@ function _select_date($default, $var, $value)
 			$select = '<select class="post" name="' . $var . '">';
 			for ($i=1; $i < 13; $i++)
 			{
+				if ($i < 10)
+				{
+					$i = '0'.$i;
+				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
 				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
 			}
-			$select .= "</select>";
+			$select .= '</select>';
 			
 		break;
 		
 		case 'year':
 		
 			$select = '<select class="post" name="' . $var . '">';
-			for ($i=$value-1; $i < $value+2; $i++)
+			for ($i=$value; $i < $value+2; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
 				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
 			}
-			$select .= "</select>";
+			$select .= '</select>';
 		
 		break;
 		
@@ -171,7 +182,7 @@ function _select_date($default, $var, $value)
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
 				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
 			}
-			$select .= "</select>";
+			$select .= '</select>';
 			
 		break;
 		
@@ -183,7 +194,7 @@ function _select_date($default, $var, $value)
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
 				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
 			}
-			$select .= "</select>";
+			$select .= '</select>';
 			
 		break;
 		
@@ -195,7 +206,7 @@ function _select_date($default, $var, $value)
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
 				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
 			}
-			$select .= "</select>";
+			$select .= '</select>';
 			
 		break;
 			

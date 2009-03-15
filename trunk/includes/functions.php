@@ -73,7 +73,7 @@ function _cached($sql, $name, $row='', $time='')
 		{
 			$result = $db->sql_query($sql);
 			$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-//			$db->sql_freeresult($result);
+			$db->sql_freeresult($result);
 			
 			$oCache -> writeCache($sCacheName, $fetch, $time);
 		}
@@ -82,7 +82,7 @@ function _cached($sql, $name, $row='', $time='')
 	{
 		$result = $db->sql_query($sql);
 		$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-//		$db->sql_freeresult($result);
+		$db->sql_freeresult($result);
 	}
 	
 	return $fetch;
@@ -266,19 +266,21 @@ $old_error_handler = set_error_handler("myErrorHandler");
 
 function _debug_poste($data)
 {
-	print '<br>';
+	print '<br />';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
+	print '<br />';
 	exit;
 }
 
 function _debug_post($data)
 {
-	print '<br>';
+	print '<br />';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
+	print '<br />';
 }
 
 function check_image_type(&$type)
@@ -925,7 +927,9 @@ function init_userprefs($userdata)
 	$config['default_lang'] = $default_lang;
 
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_main.php');
-
+	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
+	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
+	
 	if ( defined('IN_ADMIN') )
 	{
 		if( !file_exists(@phpbb_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php')) )

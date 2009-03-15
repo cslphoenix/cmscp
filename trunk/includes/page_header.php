@@ -94,84 +94,104 @@ if ($settings['counter'] == '1')
 	// Prüfen, ob bereits ein Counter für den  
     // heutigen Tag erstellt wurde 
     $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = CURDATE()'; 
-	if( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-	}
+	$result = $db->sql_query($sql);
+	
     // ist der Tag nocht nicht vorhanden,  
     // wird ein neuer Tagescounter erstellt 
     if (!$db->sql_numrows($result))
 	{
 		$sql = 'INSERT INTO ' . COUNTER_COUNTER_TABLE . ' SET counter_date = CURDATE()'; 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-		}
+		$result = $db->sql_query($sql);
     }
 	
 	// Alte (mehr als 1 Tag) IPs in 'Online' löschen 
 	// damit die Datenbank nicht überfüllt wird
 	$sql = 'DELETE FROM ' . COUNTER_ONLINE_TABLE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_date'; 
-	if( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-	}
+	$result = $db->sql_query($sql);
 	
 	// Überprüfe, ob die IP bereits gespeichert ist
 	$sql = 'SELECT online_ip FROM ' . COUNTER_ONLINE_TABLE . ' WHERE online_ip = "' . $userdata['session_ip'] . '"';
-	if( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-	}
+	$result = $db->sql_query($sql);
 		
 	// Falls nicht, wird sie gespeichert 
     if (!$db->sql_numrows($result))
 	{
 		$sql = 'INSERT INTO ' . COUNTER_ONLINE_TABLE . ' (online_ip, online_date) VALUES ("' . $userdata['session_ip'] . '", NOW())'; 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-		}
+		$result = $db->sql_query($sql);
 		
 		// ... und die Anzahl wird um 1 erhöht 
-        $sql = 'UPDATE ' . COUNTER_COUNTER_TABLE . ' SET counter_entry = counter_entry+1 WHERE counter_date = CURDATE()'; 
-        if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = 'UPDATE ' . COUNTER_COUNTER_TABLE . ' SET counter_entry = counter_entry+1 WHERE counter_date = CURDATE()'; 
+		$result = $db->sql_query($sql);
     } 
     // Falls ja, wird ihr Datum aktualisiert 
     else
 	{
 		$sql = 'UPDATE ' . COUNTER_ONLINE_TABLE . ' SET online_date = NOW() WHERE online_ip = "' . $userdata['session_ip'] . '"';
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
-		}
+		$result = $db->sql_query($sql);
 	}
 	
 	// User die 'heute' auf der Seite waren 
     $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = CURDATE()'; 
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
-	print 'heute: '. $row['counter_entry'] .'<br />';
+	$stats_day = (int) $row['counter_entry'];
 	$db->sql_freeresult($result);
 	
 	// User die 'gestern' auf der Seite waren 
-	$sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
-    $result = $db->sql_query($sql); 
-    $row = $db->sql_fetchrow($result); 
-    echo 'gestern: '. $row['counter_entry'] .'<br />';
-	$db->sql_freeresult($result);
+	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
+	$row = _cached($sql, 'counter_stats_yesterday', 1, 3600);
+	$stats_yesterday = (int) $row['sum'];
+	
+	// user-monat: 
+	$sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER_TABLE . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')"; 
+	$row = _cached($sql, 'counter_stats_month', 1, 3600);
+	$stats_month = (int) $row['sum'];
 	
 	// User die insgesamt die Seite besucht haben. 
     // Dazu wird die Gruppenfunktion SUM() 
     // verwendet, die alle Werte der Spalte 'Anzahl' summiert 
-    $sql = 'SELECT SUM(counter_entry) FROM ' . COUNTER_COUNTER_TABLE;
-	$result = $db->sql_query($sql);
-	echo 'insgesamt: '. mysql_result($result, 0);
-	$db->sql_freeresult($result);
+    $sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER_TABLE;
+	$row = _cached($sql, 'counter_stats_total', 1, 3600);
+	$stats_year = (int) $row['sum'];
+	
+	$l_counter_head = sprintf($lang['counter_today'], $stats_day);
+	$l_counter_head .= sprintf($lang['counter_yesterday'], $stats_yesterday);
+	$l_counter_head .= sprintf($lang['counter_month'], $stats_month);
+	$l_counter_head .= sprintf($lang['counter_year'], $stats_year);
+	$l_counter_head .= sprintf($lang['counter_total'], $stats_year+$config['counter_start']);
+	
+	if ( $settings['subnavi_statscounter'] )
+	{
+		$template->assign_block_vars('statscounter', array());
+	
+		$template->assign_vars(array(
+			'STATS_COUNTER_TODAY' 		=> sprintf($lang['counter_today'], $stats_day),
+			'STATS_COUNTER_YESTERDAY' 	=> sprintf($lang['counter_yesterday'], $stats_yesterday),
+			'STATS_COUNTER_MONTH' 		=> sprintf($lang['counter_month'], $stats_month),
+			'STATS_COUNTER_YEAR' 		=> sprintf($lang['counter_year'], $stats_year),
+			'STATS_COUNTER_TOTAL' 		=> sprintf($lang['counter_total'], $stats_year+$config['counter_start']),
+			'STATS_COUNTER_CACHE'		=> (defined('CACHE')) ? display_cache('counter_stats_total', 1) : '',
+		));
+	}
 }
+
+$sql = 'SELECT group_id, group_name, group_color, group_order FROM ' . GROUPS_TABLE . ' WHERE group_legend = 1 ORDER BY group_order';
+$group_data = _cached($sql, 'list_overall_group');
+
+
+$group_list = array();
+for ( $i=0; $i < count($group_data); $i++ )
+{
+	$group_id		= $group_data[$i]['group_id'];
+	$group_name		= $group_data[$i]['group_name'];
+	$group_style	= $group_data[$i]['group_color'];
+	
+	$group_list[] = '<a href="' . append_sid("groups.php?mode=view&amp;" . POST_GROUPS_URL . "=" . $group_id) . '" style="color:#' . $group_style . '"><b>' . $group_name . '</b></a>';
+
+}
+
+$group_list = implode(', ', $group_list);
+			
 //
 // Get basic (usernames + totals) online
 // situation
@@ -183,125 +203,108 @@ $online_userlist = '';
 $l_online_users = '';
 $l_online_users_head = '';
 
-	$user_forum_sql = ( !empty($forum_id) ) ? "AND s.session_page = " . intval($forum_id) : '';
-	$sql = "SELECT u.username, u.user_id, u.user_allow_viewonline, u.user_level, s.session_logged_in, s.session_ip
-		FROM ".USERS_TABLE." u, ".SESSIONS_TABLE." s
-		WHERE u.user_id = s.session_user_id
-			AND s.session_time >= ".( time() - 300 ) . "
-			$user_forum_sql
-		ORDER BY u.username ASC, s.session_ip ASC";
-	if( !($result = $db->sql_query($sql)) )
+$user_forum_sql = ( !empty($forum_id) ) ? "AND s.session_page = " . intval($forum_id) : '';
+$sql = "SELECT u.username, u.user_id, u.user_allow_viewonline, u.user_level, u.user_color, s.session_logged_in, s.session_ip
+	FROM ".USERS_TABLE." u, ".SESSIONS_TABLE." s
+	WHERE u.user_id = s.session_user_id
+		AND s.session_time >= ".( time() - 300 ) . "
+		$user_forum_sql
+	ORDER BY u.username ASC, s.session_ip ASC";
+if( !($result = $db->sql_query($sql)) )
+{
+	message_die(GENERAL_ERROR, 'Could not obtain user/online information', '', __LINE__, __FILE__, $sql);
+}
+
+$userlist_ary = array();
+$userlist_visible = array();
+
+$prev_user_id = 0;
+$prev_user_ip = $prev_session_ip = '';
+
+while( $row = $db->sql_fetchrow($result) )
+{
+	// User is logged in and therefor not a guest
+	if ( $row['session_logged_in'] )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain user/online information', '', __LINE__, __FILE__, $sql);
-	}
-
-	$userlist_ary = array();
-	$userlist_visible = array();
-
-	$prev_user_id = 0;
-	$prev_user_ip = $prev_session_ip = '';
-
-	while( $row = $db->sql_fetchrow($result) )
-	{
-		// User is logged in and therefor not a guest
-		if ( $row['session_logged_in'] )
+		// Skip multiple sessions for one user
+		if ( $row['user_id'] != $prev_user_id )
 		{
-			// Skip multiple sessions for one user
-			if ( $row['user_id'] != $prev_user_id )
+			$style_color = '';
+			
+			$row['username'] = '<b>' . $row['username'] . '</b>';
+			$style_color = 'style="color:#' . $row['user_color'] . '"';
+
+			if ( $row['user_allow_viewonline'] )
 			{
-				$style_color = '';
-				if ( $row['user_level'] == ADMIN )
-				{
-					$row['username'] = '<b>' . $row['username'] . '</b>';
-					$style_color = 'style="color:#' . $theme['fontcolor3'] . '"';
-				}
-				else if ( $row['user_level'] == MOD )
-				{
-					$row['username'] = '<b>' . $row['username'] . '</b>';
-					$style_color = 'style="color:#' . $theme['fontcolor2'] . '"';
-				}
-
-				if ( $row['user_allow_viewonline'] )
-				{
-					$user_online_link = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
-					$logged_visible_online++;
-				}
-				else
-				{
-					$user_online_link = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
-					$logged_hidden_online++;
-				}
-
-				if ( $row['user_allow_viewonline'] || $userdata['user_level'] == ADMIN )
-				{
-					$online_userlist .= ( $online_userlist != '' ) ? ', ' . $user_online_link : $user_online_link;
-				}
+				$user_online_link = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
+				$logged_visible_online++;
+			}
+			else
+			{
+				$user_online_link = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
+				$logged_hidden_online++;
 			}
 
-			$prev_user_id = $row['user_id'];
-		}
-		else
-		{
-			// Skip multiple sessions for one user
-			if ( $row['session_ip'] != $prev_session_ip )
+			if ( $row['user_allow_viewonline'] || $userdata['user_level'] == ADMIN )
 			{
-				$guests_online++;
+				$online_userlist .= ( $online_userlist != '' ) ? ', ' . $user_online_link : $user_online_link;
 			}
 		}
 
-		$prev_session_ip = $row['session_ip'];
+		$prev_user_id = $row['user_id'];
 	}
-	$db->sql_freeresult($result);
-
-	if ( empty($online_userlist) )
+	else
 	{
-		$online_userlist = $lang['None'];
-	}
-	$online_userlist = ( ( isset($forum_id) ) ? $lang['Browsing_forum'] : $lang['Registered_users'] ) . ' ' . $online_userlist;
-
-	$total_online_users = $logged_visible_online + $logged_hidden_online + $guests_online;
-
-	if ( $total_online_users > $config['record_online_users'])
-	{
-		$config['record_online_users'] = $total_online_users;
-		$config['record_online_date'] = time();
-
-		$sql = "UPDATE " . CONFIG_TABLE . "
-			SET config_value = '$total_online_users'
-			WHERE config_name = 'record_online_users'";
-		if ( !$db->sql_query($sql) )
+		// Skip multiple sessions for one user
+		if ( $row['session_ip'] != $prev_session_ip )
 		{
-			message_die(GENERAL_ERROR, 'Could not update online user record (nr of users)', '', __LINE__, __FILE__, $sql);
-		}
-
-		$sql = "UPDATE " . CONFIG_TABLE . "
-			SET config_value = '" . $config['record_online_date'] . "'
-			WHERE config_name = 'record_online_date'";
-		if ( !$db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, 'Could not update online user record (date)', '', __LINE__, __FILE__, $sql);
+			$guests_online++;
 		}
 	}
-	
-	$l_t_user_s = ( $total_online_users != 0 )		? ( $total_online_users == 1 )		? $l_t_user_s = $lang['online_user_total'] : $l_t_user_s = $lang['online_users_total'] : $lang['online_users_zero_total'];
-	$l_r_user_s = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['reg_user_total'] : $l_r_user_s = $lang['reg_users_total'] : $l_r_user_s = $lang['reg_users_zero_total'];
-	$l_h_user_s = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['hidden_user_total'] : $l_h_user_s = $lang['hidden_users_total'] : $l_h_user_s = $lang['hidden_users_zero_total'];	
-	$l_g_user_s = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['guest_user_total'] : $l_g_user_s = $lang['guest_users_total'] : $l_g_user_s = $lang['guest_users_zero_total'];
-	
-	$l_t_user_s_h = ( $total_online_users != 0 )	? ( $total_online_users == 1 )		? $l_t_user_s = $lang['online_user_total_h'] : $l_t_user_s = $lang['online_users_total_h'] : $lang['online_users_zero_total_h'];
-	$l_r_user_s_h = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['reg_user_total_h'] : $l_r_user_s = $lang['reg_users_total_h'] : $l_r_user_s = $lang['reg_users_zero_total_h'];
-	$l_h_user_s_h = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['hidden_user_total_h'] : $l_h_user_s = $lang['hidden_users_total_h'] : $l_h_user_s = $lang['hidden_users_zero_total_h'];	
-	$l_g_user_s_h = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['guest_user_total_h'] : $l_g_user_s = $lang['guest_users_total_h'] : $l_g_user_s = $lang['guest_users_zero_total_h'];
-	
-	$l_online_users = sprintf($l_t_user_s, $total_online_users);
-	$l_online_users .= sprintf($l_r_user_s, $logged_visible_online);
-	$l_online_users .= sprintf($l_h_user_s, $logged_hidden_online);
-	$l_online_users .= sprintf($l_g_user_s, $guests_online);
-	
-	$l_online_users_head = sprintf($l_t_user_s_h, $total_online_users);
-	$l_online_users_head .= sprintf($l_r_user_s_h, $logged_visible_online);
-	$l_online_users_head .= sprintf($l_h_user_s_h, $logged_hidden_online);
-	$l_online_users_head .= sprintf($l_g_user_s_h, $guests_online);
+
+	$prev_session_ip = $row['session_ip'];
+}
+$db->sql_freeresult($result);
+
+if ( empty($online_userlist) )
+{
+	$online_userlist = $lang['None'];
+}
+$online_userlist = ( ( isset($forum_id) ) ? $lang['Browsing_forum'] : $lang['Registered_users'] ) . ' ' . $online_userlist;
+
+$total_online_users = $logged_visible_online + $logged_hidden_online + $guests_online;
+
+if ( $total_online_users > $config['record_online_users'])
+{
+	$config['record_online_users'] = $total_online_users;
+	$config['record_online_date'] = time();
+
+	$sql = "UPDATE " . CONFIG_TABLE . " SET config_value = '$total_online_users' WHERE config_name = 'record_online_users'";
+	$db->sql_query($sql);
+
+	$sql = "UPDATE " . CONFIG_TABLE . " SET config_value = '" . $config['record_online_date'] . "' WHERE config_name = 'record_online_date'";
+	$db->sql_query($sql);
+}
+
+$l_t_user_s = ( $total_online_users != 0 )		? ( $total_online_users == 1 )		? $l_t_user_s = $lang['online_user_total'] : $l_t_user_s = $lang['online_users_total'] : $lang['online_users_zero_total'];
+$l_r_user_s = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['reg_user_total'] : $l_r_user_s = $lang['reg_users_total'] : $l_r_user_s = $lang['reg_users_zero_total'];
+$l_h_user_s = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['hidden_user_total'] : $l_h_user_s = $lang['hidden_users_total'] : $l_h_user_s = $lang['hidden_users_zero_total'];	
+$l_g_user_s = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['guest_user_total'] : $l_g_user_s = $lang['guest_users_total'] : $l_g_user_s = $lang['guest_users_zero_total'];
+
+$l_t_user_s_h = ( $total_online_users != 0 )	? ( $total_online_users == 1 )		? $l_t_user_s = $lang['online_user_total_h'] : $l_t_user_s = $lang['online_users_total_h'] : $lang['online_users_zero_total_h'];
+$l_r_user_s_h = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['reg_user_total_h'] : $l_r_user_s = $lang['reg_users_total_h'] : $l_r_user_s = $lang['reg_users_zero_total_h'];
+$l_h_user_s_h = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['hidden_user_total_h'] : $l_h_user_s = $lang['hidden_users_total_h'] : $l_h_user_s = $lang['hidden_users_zero_total_h'];	
+$l_g_user_s_h = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['guest_user_total_h'] : $l_g_user_s = $lang['guest_users_total_h'] : $l_g_user_s = $lang['guest_users_zero_total_h'];
+
+$l_online_users = sprintf($l_t_user_s, $total_online_users);
+$l_online_users .= sprintf($l_r_user_s, $logged_visible_online);
+$l_online_users .= sprintf($l_h_user_s, $logged_hidden_online);
+$l_online_users .= sprintf($l_g_user_s, $guests_online);
+
+$l_online_users_head = sprintf($l_t_user_s_h, $total_online_users);
+$l_online_users_head .= sprintf($l_r_user_s_h, $logged_visible_online);
+$l_online_users_head .= sprintf($l_h_user_s_h, $logged_hidden_online);
+$l_online_users_head .= sprintf($l_g_user_s_h, $guests_online);
 
 /*
 //
@@ -390,9 +393,37 @@ while( list($nav_item, $nav_array) = @each($nav_links) )
 display_last_matches();
 display_navi();
 
+if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+{
+	if ( $settings['subnavi_training'] )	{ display_navitrain(); }
+}
+
 if ( $settings['subnavi_minical'] )		{ display_minical(); }
 if ( $settings['subnavi_newusers'] )	{ display_newusers(); }
 if ( $settings['subnavi_teams'] )		{ display_teams(); }
+if ( $settings['subnavi_matches'] )		{ display_navimatch(); }
+
+if ( $settings['subnavi_statsonline'] )
+{
+	$template->assign_block_vars('statsonline', array());
+	
+	$l_t_user_s_n = ( $total_online_users != 0 )	? ( $total_online_users == 1 )		? $l_t_user_s = $lang['n_online_user_total'] : $l_t_user_s = $lang['n_online_users_total'] : $lang['n_online_users_zero_total'];
+	$l_r_user_s_n = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['n_reg_user_total'] : $l_r_user_s = $lang['n_reg_users_total'] : $l_r_user_s = $lang['n_reg_users_zero_total'];
+	$l_h_user_s_n = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['n_hidden_user_total'] : $l_h_user_s = $lang['n_hidden_users_total'] : $l_h_user_s = $lang['n_hidden_users_zero_total'];	
+	$l_g_user_s_n = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['n_guest_user_total'] : $l_g_user_s = $lang['n_guest_users_total'] : $l_g_user_s = $lang['n_guest_users_zero_total'];
+	
+	$l_online_users_total	= sprintf($l_t_user_s_n, $total_online_users);
+	$l_online_users_visible	= sprintf($l_r_user_s_n, $logged_visible_online);
+	$l_online_users_hidden	= sprintf($l_h_user_s_n, $logged_hidden_online);
+	$l_online_users_guests	= sprintf($l_g_user_s_n, $guests_online);
+	
+	$template->assign_vars(array(
+		'STATS_ONLINE_TOTAL' 	=> $l_online_users_total,
+		'STATS_ONLINE_VISIBLE' 	=> $l_online_users_visible,
+		'STATS_ONLINE_HIDDEN' 	=> $l_online_users_hidden,
+		'STATS_ONLINE_GUESTS' 	=> $l_online_users_guests,
+	));
+}
 
 //
 // Standardseitentitel
@@ -421,7 +452,10 @@ $template->assign_vars(array(
 	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['board_timezone'])),
 	'TOTAL_USERS_ONLINE' => $l_online_users,
 	
-	'TOTAL_USERS_ONLINE_HEAD' => $l_online_users_head,
+	'TOTAL_COUNTER_HEAD'		=> $l_counter_head,
+	'TOTAL_USERS_ONLINE_HEAD'	=> $l_online_users_head,
+	
+	'GROUPS_LEGENED'	=> 'Gruppen: ' . $group_list,
 	
 	'LOGGED_IN_USER_LIST' => $online_userlist,
 	'RECORD_USERS' => sprintf($lang['Record_online_users'], $config['record_online_users'], create_date($config['default_dateformat'], $config['record_online_date'], $config['board_timezone'])),
@@ -450,7 +484,7 @@ $template->assign_vars(array(
 	'U_SEARCH_UNANSWERED' => append_sid('search.php?search_id=unanswered'),
 	'U_SEARCH_SELF' => append_sid('search.php?search_id=egosearch'),
 	'U_SEARCH_NEW' => append_sid('search.php?search_id=newposts'),
-	'U_INDEX' => append_sid('index.php'),
+	'U_INDEX' => append_sid('forum.php'),
 	'U_REGISTER' => append_sid('profile.php?mode=register'),
 	'U_PROFILE' => append_sid('profile.php?mode=editprofile'),
 	'U_PRIVATEMSGS' => append_sid('privmsg.php?folder=inbox'),
@@ -473,42 +507,6 @@ $template->assign_vars(array(
 	'T_HEAD_STYLESHEET' => $theme['head_stylesheet'],
 	'T_BODY_BACKGROUND' => $theme['body_background'],
 	'T_BODY_BGCOLOR' => '#'.$theme['body_bgcolor'],
-	'T_BODY_TEXT' => '#'.$theme['body_text'],
-	'T_BODY_LINK' => '#'.$theme['body_link'],
-	'T_BODY_VLINK' => '#'.$theme['body_vlink'],
-	'T_BODY_ALINK' => '#'.$theme['body_alink'],
-	'T_BODY_HLINK' => '#'.$theme['body_hlink'],
-	'T_TR_COLOR1' => '#'.$theme['tr_color1'],
-	'T_TR_COLOR2' => '#'.$theme['tr_color2'],
-	'T_TR_COLOR3' => '#'.$theme['tr_color3'],
-	'T_TR_CLASS1' => $theme['tr_class1'],
-	'T_TR_CLASS2' => $theme['tr_class2'],
-	'T_TR_CLASS3' => $theme['tr_class3'],
-	'T_TH_COLOR1' => '#'.$theme['th_color1'],
-	'T_TH_COLOR2' => '#'.$theme['th_color2'],
-	'T_TH_COLOR3' => '#'.$theme['th_color3'],
-	'T_TH_CLASS1' => $theme['th_class1'],
-	'T_TH_CLASS2' => $theme['th_class2'],
-	'T_TH_CLASS3' => $theme['th_class3'],
-	'T_TD_COLOR1' => '#'.$theme['td_color1'],
-	'T_TD_COLOR2' => '#'.$theme['td_color2'],
-	'T_TD_COLOR3' => '#'.$theme['td_color3'],
-	'T_TD_CLASS1' => $theme['td_class1'],
-	'T_TD_CLASS2' => $theme['td_class2'],
-	'T_TD_CLASS3' => $theme['td_class3'],
-	'T_FONTFACE1' => $theme['fontface1'],
-	'T_FONTFACE2' => $theme['fontface2'],
-	'T_FONTFACE3' => $theme['fontface3'],
-	'T_FONTSIZE1' => $theme['fontsize1'],
-	'T_FONTSIZE2' => $theme['fontsize2'],
-	'T_FONTSIZE3' => $theme['fontsize3'],
-	'T_FONTCOLOR1' => '#'.$theme['fontcolor1'],
-	'T_FONTCOLOR2' => '#'.$theme['fontcolor2'],
-	'T_FONTCOLOR3' => '#'.$theme['fontcolor3'],
-	'T_SPAN_CLASS1' => $theme['span_class1'],
-	'T_SPAN_CLASS2' => $theme['span_class2'],
-	'T_SPAN_CLASS3' => $theme['span_class3'],
-
 	'NAV_LINKS' => $nav_links_html)
 );
 
@@ -554,5 +552,15 @@ header('Expires:0');
 header('Pragma:no-cache');
 
 $template->pparse('overall_header');
+
+//
+// Show 'Page is disabled' message if needed.
+//
+if ( $config['page_disable'] && !defined("IN_ADMIN") && !defined("IN_LOGIN") )
+{
+	$message = ($config['disable_reason']) ? $config['disable_reason'] : 'Board_disable';
+	
+	message_die(GENERAL_MESSAGE, $message);
+}
 
 ?>

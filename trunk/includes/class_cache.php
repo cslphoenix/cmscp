@@ -115,6 +115,71 @@ class Cache
 		return $mData[1];
 	}
 	
+	function readCacheTime($sCacheName)
+	{
+		// Leere Cache-Eintrag-Namen sind nicht erlaubt :-)
+		if(trim($sCacheName) == '')
+		{
+			return false;
+		}
+		
+		// Der Cache-Name ist also nicht leer, nun wird
+		// der Dateiname inklusive Pfad generiert
+		$sFileName = $this -> getFileName($sCacheName);
+		
+		// Nun müssen wir prüfen, ob die Datei überhaupt
+		// existiert.. Wenn nicht, wird die Funktion abgebrochen
+		// und false zurückgegeben.
+		if(file_exists($sFileName) === false)
+		{
+			return false;
+		}
+		
+		// Hier müssen wir prüfen, ob die Datei lesbar ist.
+		// Wenn nicht, wird die Funktion ebenfalls abgebrochen
+		// und false zurückgegeben.
+		if(is_readable($sFileName) === false)
+		{
+			return false;
+		}
+		
+		$rHandle = @fopen($sFileName, 'r');
+		if (is_resource($rHandle) === false)
+		{
+			// Falls troztdem etwas schiefgegangen ist,
+			// gib wieder false zurück
+			return false;
+		}
+		
+		// Jetzt haben wir die Datei geöffnet, nun sperren wir sie
+		flock($rHandle, LOCK_SH);
+		
+		// Nun lesen wir die Daten aus ..
+		$sData = '';
+		while(!feof($rHandle))
+		{
+			$sData .= fread($rHandle, 4096);
+		}
+		
+		// und schließen diese Datei wieder (wichtig!).
+		fclose($rHandle);
+		
+		// Nun ent-serialisieren wir die gegebenen Daten
+		$mData = @unserialize($sData);
+		
+		// Falls beim ent-serialisieren etwas schiefgelaufen ist,
+		// oder der aktuelle Zeitstempel bereits größer als der
+		// im Cache ist (d.h. der Cache ist verfallen) wird
+		// die Datei gelöscht, und es wird false zurückgegeben.
+		if (!$mData or time() > $mData[0])
+		{
+			// Delete that file and return false
+			$this -> deleteCache($sCacheName);
+			return false;
+		}
+		return $mData[0];
+	}
+	
 	/**
 	* Schreibt die übergebenen Daten in den Cache
 	*

@@ -128,9 +128,9 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 		$sessiondata['userid'] = $user_id = ANONYMOUS;
 		$enable_autologin = $login = 0;
 
-		$sql = 'SELECT u.*, ua.*
-			FROM ' . USERS_TABLE . ' u, ' . USERS_AUTH_TABLE . ' ua
-			WHERE u.user_id = ua.user_id AND u.user_id = ' . (int) $user_id;
+		$sql = 'SELECT *
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . (int) $user_id;
 		if (!($result = $db->sql_query($sql)))
 		{
 			message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
@@ -306,11 +306,10 @@ function session_pagestart($user_ip, $thispage_id)
 		// session_id exists so go ahead and attempt to grab all
 		// data in preparation
 		//
-		$sql = "SELECT u.*, s.*, ua.*
-			FROM " . SESSIONS_TABLE . " s, " . USERS_TABLE . " u, " . USERS_AUTH_TABLE . " ua
+		$sql = "SELECT u.*, s.*
+			FROM " . SESSIONS_TABLE . " s, " . USERS_TABLE . " u
 			WHERE s.session_id = '$session_id'
-				AND u.user_id = s.session_user_id
-				AND u.user_id = ua.user_id";
+				AND u.user_id = s.session_user_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
@@ -338,7 +337,7 @@ function session_pagestart($user_ip, $thispage_id)
 				//
 				// Only update session DB a minute or so after last update
 				//
-				if ( $current_time - $userdata['session_time'] > 60 )
+				if ( $current_time - $userdata['session_time'] > 10 )
 				{
 					// A little trick to reset session_admin on session re-usage
 					$update_admin = (!defined('IN_ADMIN') && $current_time - $userdata['session_time'] > ($config['session_length']+60)) ? ', session_admin = 0' : '';
