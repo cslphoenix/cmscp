@@ -75,67 +75,78 @@ _debug_post($day_rows_t);
 
 */
 $tag			= date("j", time());
-$monat	= date("m", time());
-$jahr		= date("Y", time());
+$monat			= date("m", time());
+$jahr			= date("Y", time());
+$tage_im_monat	= date("t");
 
-$day_rows = array();
-for ( $i=1; $i<31; $i++ )
+$oCache = new Cache;
+$sCacheName = 'kalender_' . $monat;
+
+if (($monat_data = $oCache -> readCache($sCacheName)) === false)
+{
+	for ( $i=1; $i<$tage_im_monat+1; $i++ )
+	{
+		if ($i < 10)
+		{
+			$i = '0'.$i;
+		}
+		
+		$sql = 'SELECT * FROM ' . MATCH_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
+		}
+		$day_rows_w = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+		
+		$sql = 'SELECT * FROM ' . TRAINING_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
+		}
+		$day_rows_t = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+		
+		$monat_data_w[$i] = $day_rows_w;
+		$monat_data_t[$i] = $day_rows_t;
+		
+	}
+	
+	if ( $i == $tage_im_monat+1 )
+	{
+		$monat_data = array_merge(array($monat_data_w), array($monat_data_t));
+		$oCache -> writeCache($sCacheName, $monat_data);	
+	}
+}
+	
+$monat_data_w = array_slice($monat_data, 0, 1);
+$monat_data_t = array_slice($monat_data, 1, 2);
+
+foreach($monat_data_w as $monat_data_w_w)
+foreach($monat_data_t as $monat_data_t_t)
+
+for ( $i=1; $i<$tage_im_monat+1; $i++ )
 {
 	if ($i < 10)
 	{
 		$i = '0'.$i;
 	}
 	
-	$sql = 'SELECT * FROM ' . MATCH_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
-	$day_rows_w[$i] = _cached($sql, $monat.'-'. $i . '_w_kalender');
-	
-	$sql = 'SELECT * FROM ' . TRAINING_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
-	$day_rows_t[$i] = _cached($sql, $monat.'-'. $i . '_t_kalender');
-	
-	
 	if ($i == $tag )
 	{
 		echo '<br /><b>' . $i . '</b>';
 	}
-	else if ( is_array($day_rows_w[$i]) )
+
+	else if ( is_array($monat_data_w_w[$i]) )
 	{
-		echo '<br />' . $i . ' <a class="f_popup" href="#">Match<span>test infos '.count($day_rows_w[$i]).' </span></a>';
+		echo '<br />' . $i . ' <a class="f_popup" href="#">Match<span>match infos '.count($monat_data_w_w[$i]).' </span></a>';
 	}
-	else if ( is_array($day_rows_t[$i]) )
+	
+	else if ( is_array($monat_data_t_t[$i]) )
 	{
-//		_debug_post($day_rows_t[$i]);
-		
-		
-		for ( $k=0; $k< count($day_rows_t[$i]); $k++ )
-		{
-			$test[] = $day_rows_t[$i][$k]['training_vs'];
-//			_debug_post($day_rows[$i][$k]);
-		}
-		
-		$test = implode('<br />', $test);
-		
-		echo '<br />' . $i . ' <a class="f_popup" href="#">Train<span>test infos <br />'.$test.' </span></a>';
+		echo '<br />' . $i . ' <a class="f_popup" href="#">Train<span>train infos '.count($monat_data_t_t[$i]).' </span></a>';
 	}
 
-/*	
-	if ($i == $tag || is_array($day_rows_w[$i]))
-	{
-		if ($i == $tag && is_array($day_rows_w[$i]) )
-		{
-			echo '<br /><b>' . $i . ' Match </b>';
-		}
-		else if ($i == $tag )
-		{
-			echo '<br /><b>' . $i . '</b>';
-		}
-		else if ( is_array($day_rows_w[$i]) )
-		{
-			
-			echo '<br />' . $i . ' <a class="f_popup" href="#">Match<span>test infos '.count($day_rows_w[$i]).' </span></a>';
-//			_debug_post($day_rows[$i]);
-		}
-	}
-*/	
 	else
 	{
 		echo '<br />' . $i . '';
@@ -143,7 +154,6 @@ for ( $i=1; $i<31; $i++ )
 }
 
 echo '<br />';
-
 
 //$template->pparse('body');
 

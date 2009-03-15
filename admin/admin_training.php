@@ -100,7 +100,7 @@ else
 				else if ( $mode == 'add' )
 				{
 					$training_vs	= (isset($HTTP_POST_VARS['training_vs'])) ? trim($HTTP_POST_VARS['training_vs']) : trim($HTTP_GET_VARS['vs']);
-					$team_id		= (isset($HTTP_POST_VARS[POST_TEAMS_URL])) ? intval($HTTP_POST_VARS[POST_TEAMS_URL]) : '';
+					$team_id		= (isset($HTTP_POST_VARS['team_id'])) ? intval($HTTP_POST_VARS['team_id']) : '';
 					$match_id		= (isset($HTTP_POST_VARS[POST_MATCH_URL])) ? intval($HTTP_POST_VARS[POST_MATCH_URL]) : '';
 					//	Start Werte setzen
 					$training = array (
@@ -145,15 +145,15 @@ else
 					'TRAINING_MAPS'			=> $training['training_maps'],
 					'TRAINING_COMMENT'		=> $training['training_comment'],
 					
-					'S_DAY'					=> _select_date('day', 'day',		date('d', $training['training_start'])),
-					'S_MONTH'				=> _select_date('month', 'month',	date('m', $training['training_start'])),
-					'S_YEAR'				=> _select_date('year', 'year',		date('Y', $training['training_start'])),
-					'S_HOUR'				=> _select_date('hour', 'hour',		date('H', $training['training_start'])),
-					'S_MIN'					=> _select_date('min', 'min',		date('i', $training['training_start'])),
+					'S_DAY'					=> _select_date('day',		'day',		date('d', $training['training_start'])),
+					'S_MONTH'				=> _select_date('month',	'month',	date('m', $training['training_start'])),
+					'S_YEAR'				=> _select_date('year',		'year',		date('Y', $training['training_start'])),
+					'S_HOUR'				=> _select_date('hour',		'hour',		date('H', $training['training_start'])),
+					'S_MIN'					=> _select_date('min',		'min',		date('i', $training['training_start'])),
 					
 					'S_DURATION'			=> _select_date('duration', 'dmin',	($training['training_duration'] - $training['training_start']) / 60),
 					
-					'S_TEAMS'				=> _select_team($training['team_id'], 'post'),
+					'S_TEAMS'				=> _select_team($training['team_id'], 0, 'post'),
 					'S_MATCH'				=> _select_match($training['match_id'], 'post'),
 				
 					
@@ -168,22 +168,35 @@ else
 			
 			case 'addtraining':
 			
-				_debug_post($_POST);
-			
 				$error = ''; 
 				$error_msg = '';
 			
 				if ( intval($HTTP_POST_VARS['team_id']) == '0' )
 				{
 					$error = true;
-					$error_msg = $lang['select_match_team'];
+					$error_msg = $lang['select_fail_team'];
 				}
 				
 				if ( intval($HTTP_POST_VARS['dmin']) == '00' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_duration'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_duration'];
 				}
+				
+//				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) || time() > mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
+				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
+				{
+					$error = true;
+					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_date'];
+				}
+				
+				if ( $HTTP_POST_VARS['training_maps'] == '' )
+				{
+					$error = true;
+					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_map'];
+				}
+				
+				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['wrong_back'];
 				
 				if ($error)
 				{
@@ -218,6 +231,41 @@ else
 				break;
 			
 			case 'edittraining':
+			
+				$error = ''; 
+				$error_msg = '';
+			
+				if ( intval($HTTP_POST_VARS['team_id']) == '0' )
+				{
+					$error = true;
+					$error_msg = $lang['select_fail_team'];
+				}
+				
+				if ( intval($HTTP_POST_VARS['dmin']) == '00' )
+				{
+					$error = true;
+					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_duration'];
+				}
+				
+//				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) || time() > mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
+				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
+				{
+					$error = true;
+					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_date'];
+				}
+				
+				if ( $HTTP_POST_VARS['training_maps'] == '' )
+				{
+					$error = true;
+					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_map'];
+				}
+				
+				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['wrong_back'];
+				
+				if ($error)
+				{
+					message_die(GENERAL_ERROR, $error_msg, '');
+				}
 			
 				$training_start		= mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
 				$training_duration	= mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'] + $HTTP_POST_VARS['dmin'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
@@ -321,7 +369,7 @@ else
 		'L_SETTING'				=> $lang['setting'],
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
-		'S_TEAMS'				=> _select_team('', 'postselect'),
+		'S_TEAMS'				=> _select_team('', 0, 'postselect'),
 		'S_TEAM_ACTION'			=> append_sid("admin_training.php")
 	));
 	
@@ -331,24 +379,30 @@ else
 			ORDER BY training_start';
 	$result = $db->sql_query($sql);
 	
-	$training_entry_n = $db->sql_fetchrowset($result); 
-	$training_count_n = count($training_entry_n);
-	$db->sql_freeresult($result);
+	$training_entry_n = $db->sql_fetchrowset($result);
 	
-	for($i = $start; $i < min($settings['entry_per_page'] + $start, $training_count_n); $i++)
+	if (!$training_entry_n)
 	{
-		$class = ($i % 2) ? 'row_class1' : 'row_class2';
-		
-		$template->assign_block_vars('training_row_n', array(
-			'CLASS'		=> $class,
-			'NAME'		=> $training_entry_n[$i]['training_vs'],
+		$template->assign_block_vars('no_entry_new', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	else
+	{
+		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($training_entry_n)); $i++)
+		{
+			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 			
-			'I_IMAGE'		=> display_gameicon($training_entry_n[$i]['game_size'], $training_entry_n[$i]['game_image']),
-			'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry_n[$i]['training_start'], $userdata['user_timezone']),
-			
-			'U_EDIT'		=> append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$training_entry_n[$i]['training_id']),
-			'U_DELETE'		=> append_sid("admin_training.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$training_entry_n[$i]['training_id'])
-		));
+			$template->assign_block_vars('training_row_n', array(
+				'CLASS'		=> $class,
+				'NAME'		=> $training_entry_n[$i]['training_vs'],
+				
+				'I_IMAGE'		=> display_gameicon($training_entry_n[$i]['game_size'], $training_entry_n[$i]['game_image']),
+				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry_n[$i]['training_start'], $userdata['user_timezone']),
+				
+				'U_EDIT'		=> append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$training_entry_n[$i]['training_id']),
+				'U_DELETE'		=> append_sid("admin_training.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$training_entry_n[$i]['training_id'])
+			));
+		}
 	}
 	
 	$sql = 'SELECT tr.*, g.game_image, g.game_size
@@ -357,36 +411,38 @@ else
 			ORDER BY training_start';
 	$result = $db->sql_query($sql);
 	
-	$training_entry_o = $db->sql_fetchrowset($result); 
-	$training_count_o = count($training_entry_o);
-	$db->sql_freeresult($result);
+	$training_entry_o = $db->sql_fetchrowset($result);
 	
-	for($i = $start; $i < min($settings['entry_per_page'] + $start, $training_count_o); $i++)
+	if ( !$training_entry_o )
 	{
-		$class = ($i % 2) ? 'row_class1' : 'row_class2';
-		
-		$template->assign_block_vars('training_row_o', array(
-			'CLASS'		=> $class,
-			'NAME'		=> $training_entry_o[$i]['training_vs'],
-			
-			'I_IMAGE'		=> display_gameicon($training_entry_o[$i]['game_size'], $training_entry_o[$i]['game_image']),
-			'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry_o[$i]['training_start'], $userdata['user_timezone']),
-			
-			'U_EDIT'		=> append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$training_entry_o[$i]['training_id']),
-			'U_DELETE'		=> append_sid("admin_training.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$training_entry_o[$i]['training_id'])
-		));
-	}
-	
-	if ( !$training_count_o )
-	{
-		$template->assign_block_vars('no_entry', array());
+		$template->assign_block_vars('no_entry_old', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
+	else
+	{
+		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($training_entry_o)); $i++)
+		{
+			$class = ($i % 2) ? 'row_class1' : 'row_class2';
+			
+			$template->assign_block_vars('training_row_o', array(
+				'CLASS'		=> $class,
+				'NAME'		=> $training_entry_o[$i]['training_vs'],
+				
+				'I_IMAGE'		=> display_gameicon($training_entry_o[$i]['game_size'], $training_entry_o[$i]['game_image']),
+				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry_o[$i]['training_start'], $userdata['user_timezone']),
+				
+				'U_EDIT'		=> append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$training_entry_o[$i]['training_id']),
+				'U_DELETE'		=> append_sid("admin_training.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$training_entry_o[$i]['training_id'])
+				
+			));
+		}
+	}
 	
-	$current_page = ( !$training_count_o ) ? 1 : ceil( $training_count_o / $settings['entry_per_page'] );
+	
+	$current_page = ( !count($training_entry_o) ) ? 1 : ceil( count($training_entry_o) / $settings['entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => ( $training_count_o ) ? generate_pagination("admin_training.php?", $training_count_o, $settings['entry_per_page'], $start) : '',
+		'PAGINATION' => generate_pagination("admin_training.php?", count($training_entry_o), $settings['entry_per_page'], $start),
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])

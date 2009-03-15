@@ -21,9 +21,9 @@
 	// <![CDATA[
 				
 	/***
-	*	Check Entry/Forum
-	*
-	*	name = name ;)
+	*	
+	*	....
+	*	
 	***/
 	
 	function checkEntry(element)

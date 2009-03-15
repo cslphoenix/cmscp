@@ -1,0 +1,76 @@
+
+.button, .button:link, .button:visited, .button:active,
+.button2, .button2:link, .button2:visited, .button2:active{
+	font-family: Verdana, Geneva, sans-serif;
+	padding: 0px 5px;
+	color:	#000;
+	height: 15px;
+	background:	#F0EFEF;
+	border:	#000 1px solid;
+	font-size:10px;
+	vertical-align:middle;
+}
+
+.button:hover,
+.button2:hover{
+	color: #F00;
+	border: #F00 1px solid;
+	background:	#FAFAFA;
+	
+}
+
+.button2, .button2:link, .button2:visited, .button2:active {
+	font-weight:bold;
+}
+
+.button2:hover {
+	font-weight:bold;
+}
+
+.post, .post:link, .post:visited, .post:active {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #000;
+	background:	#F0EFEF;
+	border:	#666 1px solid;
+	padding: 1px;
+	font-size:12px;
+}
+
+.postselect, .postselect:link, .postselect:visited, .postselect:active {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #000;
+	background:	#F0EFEF;
+	border:	#666 1px solid;
+	padding: 1px;
+	font-size:10px;
+}
+
+.post:hover,
+.postselect:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #B22222;
+	background:	#FAFAFA;
+	border: #B22222 1px solid;
+	padding: 1px;
+}
+
+.textarea,
+.textarea:link,
+.textarea:visited,
+.textarea:active {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #000;
+	background:	#F0EFEF;
+	border:	#666 1px solid;
+	padding: 1px;
+	font-size:12px;
+}
+
+.textarea:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #B22222;
+	background:	#FAFAFA;
+	border: #B22222 1px solid;
+	padding: 1px;
+	font-size:12px;
+}

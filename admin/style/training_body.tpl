@@ -28,11 +28,11 @@
 	</tr>
 	<!-- END training_row_n -->
 	
-	<!-- BEGIN no_entry -->
+	<!-- BEGIN no_entry_new -->
 	<tr>
 		<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
 	</tr>
-	<!-- END no_entry -->
+	<!-- END no_entry_new -->
 	
 	<tr>
 		<td class="rowHead" colspan="5">{L_EXPIRED}</td>
@@ -46,11 +46,11 @@
 		<td class="{training_row_o.CLASS}" align="center" width="1%"><a href="{training_row_o.U_DELETE}">{L_DELETE}</a></td>
 	</tr>
 	<!-- END training_row_o -->
-	<!-- BEGIN no_entry -->
+	<!-- BEGIN no_entry_old -->
 	<tr>
 		<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
 	</tr>
-	<!-- END no_entry -->
+	<!-- END no_entry_old -->
 	</table>
 	
 	<table class="foot" cellspacing="4">

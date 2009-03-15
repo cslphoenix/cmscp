@@ -14,7 +14,7 @@
 
 <table class="edit" cellspacing="1">
 <tr>
-	<td class="row1" width="160">{TRAINING_VS}: *</td>
+	<td class="row1" width="160">{L_TRAINING_VS}: *</td>
 	<td class="row2"><input id="training_vs" onBlur="javascript:checkEntry(this)" class="post" type="text" name="training_vs" value="{TRAINING_VS}" ></td>
 </tr>
 <tr>
@@ -27,15 +27,16 @@
 </tr>
 
 <tr>
-	<td class="row1">
-		{L_TRAINING_DATE}:<br>
-		{L_TRAINING_DURATION}
-	</td>
-	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN} - {S_DURATION}</td>
+	<td class="row1">{L_TRAINING_DATE}:</td>
+	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TRAINING_MAPS}:</td>
-	<td class="row3"><input class="post" type="text" name="training_maps" value="{TRAINING_MAPS}" ></td>
+	<td class="row1">{L_TRAINING_DURATION}:</td>
+	<td class="row3">{S_DURATION}</td>
+</tr>
+<tr>
+	<td class="row1">{L_TRAINING_MAPS}: *</td>
+	<td class="row3"><input id="training_maps" onBlur="javascript:checkEntry(this)" class="post" type="text" name="training_maps" value="{TRAINING_MAPS}" ></td>
 </tr>
 <tr>
 	<td class="row1">{L_TRAINING_COMMENT}:</td>

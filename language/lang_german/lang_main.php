@@ -1,5 +1,31 @@
 <?php
 
+$lang['cal_birthday']		= 'Geburtstag';
+$lang['cal_birthdays']		= 'Geburtstage';
+$lang['cal_event']			= 'Ereignis';
+$lang['cal_events']			= 'Ereignisse';
+$lang['cal_match']			= 'War';
+$lang['cal_matchs']			= 'Wars';
+$lang['cal_training']		= 'Training';
+$lang['cal_trainings']		= 'Trainings';
+
+$lang['cal_birth']		= '%s wird %s Jahre alt';
+$lang['cal_today']		= 'Heute';
+
+$lang['cache_duration']			= 'Cache-Datei verfällt am: %s';
+$lang['cache_valid']			= 'Gültig bis: %s';
+
+//
+//	Counter
+//
+$lang['counter_stats_from']		= 'Besucherstatistik vom %s.%s.%s';
+$lang['counter_today']			= 'Heute: %s';
+$lang['counter_yesterday']		= ' Gestern: %s';
+$lang['counter_month']			= ' Monat: %s';
+$lang['counter_year']			= ' Jahr: %s';
+$lang['counter_total']			= ' Gesamt: %s';
+$lang['select_team']			= 'Team auswählen';
+
 //
 //	Header
 //
@@ -17,21 +43,13 @@ $lang['teamspeak']			= 'Teamspeak';
 $lang['forum']				= 'Forum';
 $lang['subforums']			= 'Subforen';
 
-
-//
-//	Kontakt
-//
-$lang['contact']			= 'Kontakt';
-$lang['contact_fightus']	= 'FightUs';
-$lang['contact_joinus']		= 'JoinUs';
-
 //
 //	Matches
 //
 //	Teams
 
-$lang['replace']		= ' Ersatz: ';
-$lang['player']			= 'Spieler: ';
+$lang['replace']			= ' Ersatz: ';
+$lang['player']				= 'Spieler: ';
 
 $lang['last_matches']		= 'Last Wars';
 $lang['teams']				= 'Teams';
@@ -51,6 +69,7 @@ $lang['training_denied']	= 'Keine Berechtigung für diese Seite.';
 
 $lang['edit_match']			= 'War bearbeiten';
 $lang['edit_match_details']	= 'Wardetails bearbeiten';
+$lang['edit_training']			= 'Training bearbeiten';
 
 $lang['set_status']			= 'Status ändern';
 $lang['status_none']		= 'Unbekannt';
@@ -98,9 +117,15 @@ $lang['no_entry']			= 'keine Einträge vorhanden';
 $lang['username']			= 'Benutzername';
 $lang['status']				= 'Status';
 
+$lang['items_required']			= 'Mit * markierte Felder sind erforderlich';
+
 $lang['update_match_status_add']	= 'Status hinzugefügt';
 $lang['update_match_status_edit']	= 'Status geändert';
 $lang['update_match_status_none']	= 'Status nicht verändert';
+
+$lang['day']				= 'Tag';
+$lang['month']				= 'Monat';
+$lang['year']				= 'Jahr';
 
 //
 //	Meldungen
@@ -263,9 +288,22 @@ $lang['reg_user_total_h'] = '1 registrierter, ';
 $lang['hidden_users_zero_total_h'] = '0 versteckte und ';
 $lang['hidden_users_total_h'] = '%d versteckte und ';
 $lang['hidden_user_total_h'] = '1 versteckter und ';
-$lang['guest_users_zero_total_h'] = '0 Gäste.';
-$lang['guest_users_total_h'] = '%d Gäste.';
-$lang['guest_user_total_h'] = '1 Gast.';
+$lang['guest_users_zero_total_h'] = '0 Gäste';
+$lang['guest_users_total_h'] = '%d Gäste';
+$lang['guest_user_total_h'] = '1 Gast';
+
+$lang['n_online_users_zero_total'] = '<b>0</b> Benutzer';
+$lang['n_online_users_total'] = '<b>%d</b> Benutzer';
+$lang['n_online_user_total'] = '<b>1</b> Benutzer';
+$lang['n_reg_users_zero_total'] = '0 registrierter';
+$lang['n_reg_users_total'] = '%d registrierte';
+$lang['n_reg_user_total'] = '1 registrierter';
+$lang['n_hidden_users_zero_total'] = '0 versteckte';
+$lang['n_hidden_users_total'] = '%d versteckte';
+$lang['n_hidden_user_total'] = '1 versteckter';
+$lang['n_guest_users_zero_total'] = '0 Gäste';
+$lang['n_guest_users_total'] = '%d Gäste';
+$lang['n_guest_user_total'] = '1 Gast';
 
 $lang['Admin_online_color'] = '%sAdministrator%s';
 $lang['Mod_online_color'] = '%sModerator%s';

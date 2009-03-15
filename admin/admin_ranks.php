@@ -123,7 +123,7 @@ else
 						$filename_list .= '<option value="' . $file . '" ' . $selected . '>' . $file . '&nbsp;</option>';
 					}
 				}
-				$filename_list .= "</select>";
+				$filename_list .= '</select>';
 				
 				//	Unsichtbare Felder für andere Infos
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';

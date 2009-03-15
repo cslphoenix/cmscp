@@ -47,50 +47,6 @@ if ( $mode == 'cache')
 	message_die(GENERAL_MESSAGE, 'Cache geleert!');
 }
 
-		
-	
-	
-	$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . '';
-	$users = _cached($sql, 'user_lists');
-	
-//	_debug_post(_cached($sql, 'users', 'user_list'));
-//	_debug_post($users);
-
-/*
-	if (defined('CACHE'))
-	{
-		$oCache = new Cache;
-		
-		$sCacheName = 'user_list';
-		if (($users = $oCache -> readCache($sCacheName)) === false)
-		{
-			$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . '';
-			$result = $db->sql_query($sql);
-			$users = $db->sql_fetchrowset($result);
-			$db->sql_freeresult($result);
-			
-			$oCache -> writeCache($sCacheName, $users);
-		}
-	}
-	else
-	{
-		$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . '';
-		$result = $db->sql_query($sql);
-		$users = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
-	}
-*/	
-	for ($i = $start; $i < count($users) + $start; $i++)
-	{
-		$class = ($i % 2) ? 'row1r' : 'row2r';
-		
-		$template->assign_block_vars('users', array(
-			'CLASS' => $class,
-			'ID'	=> $users[$i]['user_id'],
-			'USER'	=> $users[$i]['username'],
-		));
-	}
-
 $template->pparse('body');
 
 include($root_path . 'includes/page_tail.php');
