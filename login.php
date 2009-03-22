@@ -46,7 +46,9 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 
 		if( $row = $db->sql_fetchrow($result) )
 		{
-			if( $row['user_level'] != ADMIN && $config['page_disable'] )
+//			if( $row['user_level'] != ADMIN && $config['page_disable'] )
+			$disable_mode = explode(',', $config['page_disable_mode']);
+			if ($config['page_disable'] && $row['user_level'] != ADMIN && in_array($row['user_level'], $disable_mode))
 			{
 				redirect(append_sid("index.php", true));
 			}

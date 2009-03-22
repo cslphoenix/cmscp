@@ -2,7 +2,7 @@
 
 define('IN_CMS', true); 
 
-$root_path = './'; // <-- 
+$root_path = './';
 include($root_path . 'common.php'); 
 
 $userdata = session_pagestart($user_ip, PAGE_TEAMSPEAK); 
@@ -13,31 +13,85 @@ include($root_path . 'includes/page_header.php');
 
 $template->set_filenames(array('body' => 'teamspeak_body.tpl'));
 
-$sql = 'SELECT * FROM ' . SERVER_TABLE . ' WHERE server_id = 4';
-if (!$result = $db->sql_query($sql))
-				{
-					message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
-				}
-				if (!($server = $db->sql_fetchrow($result)))
-					{
-						message_die(GENERAL_MESSAGE, $lang['match_not_exist']);
-					}
-					
-$serverAddress = $server['server_ip'];
+$sql = 'SELECT * FROM ' . TEAMSPEAK_TABLE . ' WHERE server_show = 1 LIMIT 0,1';
+$server = _cached($sql, 'teamspeak_data', 1);
+
+//$server['server_ip'] = "67.159.5.151";
+//$server['server_port'] = "8767";
+//$server['server_qport'] = "51234";
 
 include($root_path . 'includes/teamspeak/ts_config.php');
 include($root_path . 'includes/teamspeak/ts_functions.php');
+
 $tss2info->serverAddress=$server['server_ip'];
 $tss2info->serverUDPPort=$server['server_port'];
 $tss2info->serverQueryPort=$server['server_qport'];
+
+
 $tss2info->getInfo();
 
+	//
+	//	Userliste 
+	//
+	
+	$template->assign_block_vars('show_userist', array());
+	
+	//	löschen der Variablen
+	unset($s1); unset($s2); unset($v);
+	
+	//	Arrays erstellen
+	$s1 = array();
+	$s2 = array();
+	
+	foreach ( $tss2info->playerList as $v ) { $s1[] = $v['channelid']; }
+	foreach ( $tss2info->playerList as $v ) { $s2[] = $v['userstatus']; }
 
+	array_multisort($s1, SORT_ASC, $s2, SORT_DESC, $tss2info->playerList);
+	
+	$channels = $tss2info->channelList;
+	
+	
+	
+	function _getname($id)
+	{
+		global $channels;
+		
+		$channelname = '';
+		
+		foreach ( $channels as $channel )
+		{
+			if ( $id == $channel['channelid'] )
+			{
+				$channelname = $channel['channelname'];
+			}
+		}
+		
+		return $channelname;
+	}
+	
+	$tss2info_playerlist = $tss2info->playerList;
+	
+	unset($tss2info_playerlist['p_id']);
+	
+	$color = '';
+	foreach ( $tss2info_playerlist as $player )
+	{
+		$class = ($color % 2) ? 'row1r' : 'row2r';
+		$color++;
+		
+		$template->assign_block_vars('show_userist.userlist', array(
+			'CLASS' 	=> $class,
+			'USERNAME'	=> $player['playername'],
+			'CHANNEL'	=> _getname($player['channelid']),
+		));
+		
+	}
+	
+//	Arrays zum Suchen und Ersetzen von Sonderzeichen
+$tsv_array_1 = array(" ","-","(",")","[","]","{","}","&");
+$tsv_array_2 = array("_","_","","","","","","","");
 
-$tsv_array_1 = array(" ","-","(",")","[","]","{","}","&"); // Das wird gesucht..
-$tsv_array_2 = array("_","_","","","","","","",""); // ..und ersetzt mit diesem
-
-$tsv_username = ( $userdata['user_id'] == '-1' ) ? $tss2info->alternativer_nick : $userdata['username'];
+$tsv_username = ( $userdata['user_id'] == ANONYMOUS ) ? $server['server_join_name'] : $userdata['username'];
 
 for ( $x=0; $x < count($tsv_array_1); $x++ )
 {
@@ -51,11 +105,11 @@ $channelcounter = count($tss2info->channelList) - 1;
 //
 //	Channel Sortierung
 //
-unset($s1);
-unset($s2);
-unset($v);
+unset($s1); unset($s2); unset($v);
+
 $s1 = array();
 $s2 = array();
+
 foreach ($tss2info->channelList as $v) { $s1[] = $v['channelorder']; }	// Sortierung nach Order 
 foreach ($tss2info->channelList as $v) { $s2[] = $v['channelname']; }	// Wenn Order gleich Sortierung nach Name
 array_multisort($s1, SORT_ASC, $s2, SORT_ASC, $tss2info->channelList);	// ASC = auf-, DESC = absteigend
@@ -64,10 +118,6 @@ array_multisort($s1, SORT_ASC, $s2, SORT_ASC, $tss2info->channelList);	// ASC = 
 //	Subchannel nach Player durchsuchen
 //
 $tss2info_channellist = $tss2info->channelList;
-
-//$tss2info_serverinfo = $tss2info->playerList;
-
-//_debug_post($tss2info_serverinfo);
 
 //
 //	Fehlerunterdrückung
@@ -89,14 +139,14 @@ for ( $i=0; $i < count($tss2info_channellist); $i++ )
 //
 foreach ($tss2info->channelList as $channelInfo)
 {
-	if ( $channelInfo['channelid'] != "id" && !in_array($channelInfo['channelid'], $tss2info->TS_hide_channels) )
+	if ( $channelInfo['channelid'] != 'id' )
 	{
 		if ( $channelInfo['channelparent'] < 0 )
 		{
 			//
 			//	Channelanzeigen
 			//
-			if ( $tss2info->TS_channel_anzeigen == 1 && ( $tss2info->TS_leerchannel_anzeigen == 1 || ( $tss2info->TS_leerchannel_anzeigen == 0 && ( trim($channelInfo['channelcurrentplayers']) > 0 || ( intval($subchannels[$channelInfo['channelid']]) == 1) ))))
+			if ( ( $tss2info->TS_leerchannel_anzeigen == 1 || ( $tss2info->TS_leerchannel_anzeigen == 0 && ( trim($channelInfo['channelcurrentplayers']) > 0 || ( intval($subchannels[$channelInfo['channelid']]) == 1) ))))
 			{
 				//
 				//	Mouseover
@@ -120,7 +170,8 @@ foreach ($tss2info->channelList as $channelInfo)
 						$channel_mouseover3 = 'title="' . $channel_mouseover1 . '"';
 					}
 					
-					$channellink = '<a class="channellink" href="teamspeak://' . $serverAddress . ':' . $tss2info->serverUDPPort . '/?channel=' . rawurlencode($channelInfo['channelname']) . '?password=' . $tss2info->serverPasswort . '?nickname=' . rawurlencode($tsv_username)."\" ".$channel_mouseover3.">".$channelInfo['channelname']."</a>";
+					$channelicon = 'channel.gif';
+					$channellink = '<a class="channellink" href="teamspeak://' . $tss2info->serverAddress . ':' . $tss2info->serverUDPPort . '/?channel=' . rawurlencode($channelInfo['channelname']) . '?password=' . $tss2info->serverPasswort . '?nickname=' . rawurlencode($tsv_username)."\" ".$channel_mouseover3.">".$channelInfo['channelname']."</a>";
 				}
 				else
 				{
@@ -132,6 +183,8 @@ foreach ($tss2info->channelList as $channelInfo)
 					{
 						$channel_mouseover4 = "title=\"".$channel_mouseover2."\"";
 					}
+					
+					$channelicon = 'channel_close.gif';
 					$channellink = "<span ".$channel_mouseover4.">".$channelInfo['channelname']."</span>";
 				}
 				
@@ -147,7 +200,8 @@ foreach ($tss2info->channelList as $channelInfo)
 				//	Channel
 				//
 				$template->assign_block_vars('channel', array(
-					'channel' => $channellink,
+					'CHANNEL'		=> $channellink,
+					'CHANNEL_ICON'	=> $channelicon,
 				));
 				
 			}
@@ -222,10 +276,9 @@ foreach ($tss2info->channelList as $channelInfo)
 			//
 			foreach ( $tss2info->channelList as $subchannelInfo )
 			{
-				if ($subchannelInfo['channelparent'] == $channelInfo['channelid'] && !in_array($subchannelInfo['channelid'],$tss2info->TS_hide_channels) AND ($tss2info->TS_leerchannel_anzeigen == 1 OR ($tss2info->TS_leerchannel_anzeigen == 0 AND trim($subchannelInfo['channelcurrentplayers']) > 0)))
+				if ( $subchannelInfo['channelparent'] == $channelInfo['channelid'] )
 				{
-					if ($tss2info->TS_channel_anzeigen == 1)
-					{
+					
 						$subchannel_mouseover1 = "Join als: ".$tsv_username." | Channelname: ".$subchannelInfo['channelname']." | Subchannel von: ".$channelInfo['channelname']." | Topic: ".$subchannelInfo['channeltopic']." | Maximale User: ".$subchannelInfo['channelmaxplayers']." | Derzeitige User: ".$subchannelInfo['channelcurrentplayers']." | Codec: ".$subchannelInfo['channelcodec']."";
 						$subchannel_mouseover2 = "Kein Joinen möglich | Channelname: ".$subchannelInfo['channelname']." | Subchannel von: ".$channelInfo['channelname']." | Topic: ".$subchannelInfo['channeltopic']." | Maximale User: ".$subchannelInfo['channelmaxplayers']." | Derzeitige User: ".$subchannelInfo['channelcurrentplayers']." | Codec: ".$subchannelInfo['channelcodec']."";
 						$subchannel_mouseover3 = "<b>Join als:</b> ".$tsv_username."<br><br><b>Channelname:</b><br>".$subchannelInfo['channelname']."<br><b>Subchannel von:</b><br>".$channelInfo['channelname']."<br><br><b>Topic:</b><br>".$subchannelInfo['channeltopic']."<br><br><b>Maximale User:</b> ".$subchannelInfo['channelmaxplayers']."<br><b>Derzeitige User:</b> ".$subchannelInfo['channelcurrentplayers']."<br><br><b>Codec:</b><br>".$subchannelInfo['channelcodec']."";
@@ -236,19 +289,22 @@ foreach ($tss2info->channelList as $channelInfo)
 							if($tss2info->TS_overlib_mouseover == 1) $subchannel_mouseover3 = "onmouseover=\"return overlib('".str_replace("'","\'",$subchannel_mouseover3)."', WIDTH, 200);\"  onmouseout=\"return nd();\"";
 							else $subchannel_mouseover3 = "title=\"".$channel_mouseover1."\"";
 							
-							$subchannellink = "<a class=\"channellink\" href=\"teamspeak://".$serverAddress.":".$tss2info->serverUDPPort."/?channel=".rawurlencode($subchannelInfo['channelname'])."?password=".$tss2info->serverPasswort."?nickname=".rawurlencode($tsv_username)."\" ".$subchannel_mouseover3.">".$subchannelInfo['channelname']."</a>";
+							$subchannelicon = 'channel.gif';
+							$subchannellink = "<a class=\"channellink\" href=\"teamspeak://".$tss2info->serverAddress.":".$tss2info->serverUDPPort."/?channel=".rawurlencode($subchannelInfo['channelname'])."?password=".$tss2info->serverPasswort."?nickname=".rawurlencode($tsv_username)."\" ".$subchannel_mouseover3.">".$subchannelInfo['channelname']."</a>";
 						}
 						else
 						{
 							if($tss2info->TS_overlib_mouseover == 1) $subchannel_mouseover4 = "style=\"cursor: help;\" onmouseover=\"return overlib('".str_replace("'","\'",$subchannel_mouseover4)."', WIDTH, 200);\"  onmouseout=\"return nd();\"";
 							else $subchannel_mouseover4 = "title=\"".$channel_mouseover2."\"";
+							$subchannelicon = 'channel_close.gif';
 							$subchannellink = "<span ".$subchannel_mouseover4.">".$subchannelInfo['channelname']."</span>";
 						}
 
 						$template->assign_block_vars('channel.subchannel', array(
-							"subchannel" => $subchannellink,
+							'SUBCHANNEL'		=> $subchannellink,
+							'SUBCHANNEL_ICON'	=> $subchannelicon,
 						));
-					}
+						
 					$counter_player = 0;
 					
 					//---> Sortierung <---\\ Anfang

@@ -31,7 +31,7 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN match_row -->
 						<tr>
-							<td width="99%">{match.match_row.NAME}</td>
+							<td width="99%"><a href="{match.match_row.U_NAME}">{match.match_row.L_NAME}</a></td>
 							<td width="1%" nowrap>{match.match_row.DATE}</td>
 						</tr>
 						<!-- END match_row -->
@@ -51,7 +51,7 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN training_row -->
 						<tr>
-							<td width="99%">{training.training_row.NAME}</td>
+							<td width="99%"><a href="{training.training_row.U_NAME}">{training.training_row.L_NAME}</a></td>
 							<td width="1%" nowrap>{training.training_row.DATE}</td>
 						</tr>
 						<!-- END training_row -->

@@ -32,9 +32,10 @@ if( ( $total_categories = count($category_rows) ) )
 	//
 	// Define appropriate SQL
 	//
-	$sql = "SELECT f.*
-				FROM  " . FORUMS_TABLE . " f
-				
+	$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id
+				FROM (( " . FORUMS_TABLE . " f
+				LEFT JOIN " . POSTS_TABLE . " p ON p.post_id = f.forum_last_post_id )
+				LEFT JOIN " . USERS_TABLE . " u ON u.user_id = p.poster_id )
 				ORDER BY f.cat_id, f.forum_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -61,10 +62,10 @@ if( ( $total_categories = count($category_rows) ) )
 	{
 		
 
-		$sql = "SELECT p.*, pr.*
-			FROM cms_forum_posts p, cms_forum_post_read pr
-			WHERE p.post_id = pr.post_id AND p.post_time > " . $userdata['user_lastvisit'] . " 
-				"; 
+		$sql = "SELECT p . * , pr .read_time, pr.user_id
+FROM cms_forum_posts p
+LEFT JOIN cms_forum_post_read pr ON p.post_id = pr.post_id
+where p.post_time > " . $userdata['user_lastvisit'];
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
@@ -75,6 +76,7 @@ if( ( $total_categories = count($category_rows) ) )
 		{
 			
 			$new_topic_data[$topic_data['forum_id']][$topic_data['topic_id']] = $topic_data['post_time'];
+			_debug_post($new_topic_data);
 		}
 		$db->sql_freeresult($result);
 		
@@ -203,15 +205,6 @@ if( ( $total_categories = count($category_rows) ) )
 												$unread_topics = false;
 											}
 										}
-
-										if ( isset($HTTP_COOKIE_VARS[$board_config['cookie_name'] . '_f_all']) )
-										{
-											if ( $HTTP_COOKIE_VARS[$board_config['cookie_name'] . '_f_all'] > $forum_last_post_time )
-											{
-												$unread_topics = false;
-											}
-										}
-
 									}
 								}
 
@@ -224,13 +217,13 @@ if( ( $total_categories = count($category_rows) ) )
 
 							if ( $forum_data[$j]['forum_last_post_id'] )
 							{
-								$last_post_time = create_date($config['default_dateformat'], $forum_data[$j]['forum_last_post_time'], $config['board_timezone']);
+								$last_post_time = create_date($config['default_dateformat'], $forum_data[$j]['post_time'], $config['board_timezone']);
 
 								$last_post = $last_post_time . '<br />';
 
-								$last_post .= ( $forum_data[$j]['forum_last_poster_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['forum_last_poster_name'] != '' ) ? $forum_data[$j]['forum_last_poster_name'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['forum_last_poster_id']) . '">' . $forum_data[$j]['forum_last_poster_name'] . '</a> ';
+								$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
 								
-								$last_post .= '<a href="' . append_sid("viewtopic.php?"  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
+								$last_post .= '<a href="' . append_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
 							}
 							else
 							{

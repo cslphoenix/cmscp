@@ -22,6 +22,8 @@ else
 	$mode = '';
 }
 
+
+
 //
 //	Start output of page
 //

@@ -3,15 +3,35 @@
 	<td class="info_head">{L_TEAMSPEAK}Teamspeak</td>
 </tr>
 <tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
 	<td>
-		<table class="out" width="100%" cellspacing="0" border="0">
+		<!-- BEGIN show_userist -->
+		<table class="out" width="100%" cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<td class="info_head" colspan="2">Teamspeak User im Überblick</td>
+		</tr>
+		<!-- BEGIN userlist -->
+		<tr>
+			<td class="{show_userist.userlist.CLASS}">{show_userist.userlist.USERNAME}</td>
+			<td class="{show_userist.userlist.CLASS}">{show_userist.userlist.CHANNEL}</td>
+		</tr>
+		<!-- END userlist -->
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		</table>
+		<!-- END show_userist -->
+		
+		<table class="out" width="100%" cellspacing="2">
 		<!-- BEGIN channel -->
 		<tr>
 			<td valign="top">
 				<table border="0" width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="channel" width="25" valign="top" nowrap><img width="5" height="13" src="images/teamspeak/blank.gif" border="0" alt=""><img src="images/teamspeak/channel.gif" width="20" height="13" border="0" alt=""></td>
-					<td class="channel" width="100%" valign="top" nowrap>{channel.channel}</td>
+					<td class="channel" width="25" valign="top" nowrap><img width="5" height="13" src="images/teamspeak/blank.gif" border="0" alt=""><img src="images/teamspeak/{channel.CHANNEL_ICON}" width="20" height="13" border="0" alt=""></td>
+					<td class="channel" width="100%" valign="top" nowrap>{channel.CHANNEL}</td>
 				</tr>
 				</table>
 			</td>
@@ -33,8 +53,8 @@
 			<td valign="top">
 				<table border="0" width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="channel" width="40" valign="top" nowrap><img width="5" height="13" src="images/teamspeak/blank.gif" border="0" alt=""><img width="15" height="13" src="images/teamspeak/blank.gif" border="0" alt=""><img src="images/teamspeak/channel.gif" width="20" height="13" border="0" alt=""></td>
-					<td class="channel" width="100%" valign="top" nowrap>{channel.subchannel.subchannel}</td>
+					<td class="channel" width="40" valign="top" nowrap><img width="5" height="13" src="images/teamspeak/blank.gif" border="0" alt=""><img width="15" height="13" src="images/teamspeak/blank.gif" border="0" alt=""><img src="images/teamspeak/{channel.subchannel.SUBCHANNEL_ICON}" width="20" height="13" border="0" alt=""></td>
+					<td class="channel" width="100%" valign="top" nowrap>{channel.subchannel.SUBCHANNEL}</td>
 				</tr>
 				</table>
 			</td>

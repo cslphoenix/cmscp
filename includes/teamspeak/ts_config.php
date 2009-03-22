@@ -1,19 +1,14 @@
 <?php
 /***
 *
-*
-*
 *	© by Dooki: dooki@php-gfx.net
 *
-*	edit by Phoenix
-*
+*	change by Phoenix
 *
 ***/
 
 class tss2info
 {
-	
-	//////////////////////////////////////////////////////////
 	////// TeamSpeak Einstellungen ///////////////////////////
 	var $sitetitle       = "TS"; // SeitenTitle und Scriptversion
 //	var $serverAddress   = '88.198.52.237'; // Hier die TeamSpeak IP Adresse eintragen !!wichtig!! (Beispiel: 192.168.7.1)
@@ -35,7 +30,7 @@ class tss2info
 	
 	var $TS_userstatus_ausgabe     = 1;   // Soll der Status des Players angezeigt werden? (U,R,SA etc.)
 	var $TS_leerchannel_anzeigen   = 1;   // Sollen die leeren Channel angezeigt werden?
-	var $TS_title_anzeigen         = 1;   // Soll der Title über den Channels sichtbar sein?
+//	var $TS_title_anzeigen         = 0;   // Soll der Title über den Channels sichtbar sein?
 	var $TS_channelflags_ausgabe   = 1;   // Sollen die Channelrechte angezeigt werden? (R,M,S,P etc.)
 	
 	var $TS_refresh                = 1;   // Refreshen generell erlauben (inkl. Refreshlink)
@@ -43,18 +38,9 @@ class tss2info
 	var $TS_autorefresh_zeit       = 10;  // Zeit in Sekunden angeben (Funktioniert nur, wenn autorefresh aktiviert wurde)
 	
 	var $TS_overlib_mouseover      = 0;   // Soll der Mouseover Effekt vorhanden sein?
-	//
-	//
-	////// Aktivieren & Deaktivieren /////////////////////////
-	//
-	// 1 = aktiviert
-	// 0 = deaktiviert
-	//
-	//var $TS_subchannel_ausgabe     = 0;   // Sollen die Subchannels angezeigt werden? FUNKTION NOCH NICHT INTEGRIERT!!!
 	
-	
-	var $TS_channel_anzeigen       = 1;   // Sollen die Channel angezeigt werden? (0 = nur Playerausgabe)
-	var $TS_debug_modus            = 0;   // Debugmodus zur Fehlersuche an oder aus? (es werden sämtliche Variablen ausgegeben)
+//	var $TS_channel_anzeigen       = 1;   // Sollen die Channel angezeigt werden? (0 = nur Playerausgabe)
+
 	var $TS_hide_channels          = array(); // Welche Channels sollen versteckt werden?
 	//
 	// Beispiel: array(CHANNELID,CHANNELID,CHANNELID,CHANNELID)

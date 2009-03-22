@@ -36,7 +36,7 @@ function display_teams()
 					FROM ' . TEAMS_TABLE . ' t, ' . GAMES_TABLE . ' g
 					WHERE t.team_game = g.game_id AND team_navi = 1
 				ORDER BY t.team_order';
-		$teams = _cached($sql, 'subnavi_teams');
+		$teams = _cached($sql, 'display_subnavi_teams');
 		
 		if ($teams)
 		{
@@ -45,7 +45,7 @@ function display_teams()
 				$template->assign_block_vars('teams.teams_row', array(
 					'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 					'TEAM_NAME'		=> $teams[$i]['team_name'],
-					'TO_TEAM'		=> append_sid("teams.php?mode=show&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
+					'TO_TEAM'		=> append_sid("teams.php?mode=view&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
 				));
 			}
 		}
@@ -72,17 +72,17 @@ function display_newusers()
 	}
 	
 	$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
-	$users = _cached($sql, 'new_users', 0, 1800);
+	$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
 	
 	for ($i = 0; $i < count($users); $i++)
 	{
 		$template->assign_block_vars('new_users.user_row', array(
 			'USERNAME'		=> $users[$i]['username'],
-			'U_USERNAME'	=> append_sid("profile.php?mode=views&amp;" . POST_USERS_URL . "=".$users[$i]['user_id']),
+			'U_USERNAME'	=> append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=".$users[$i]['user_id']),
 		));
 	}
 	
-	$template->assign_vars(array('NEW_USERS_CACHE' => (defined('CACHE')) ? display_cache('new_users', 1) : ''));
+	$template->assign_vars(array('NEW_USERS_CACHE' => (defined('CACHE')) ? display_cache('display_subnavi_newusers', 1) : ''));
 	
 	return;
 }
@@ -140,7 +140,7 @@ function display_minical()
 	{
 		if (defined('CACHE'))
 		{
-			$sCacheName = 'kalender_' . $monat . '_member';
+			$sCacheName = 'calendar_' . $monat . '_member';
 	
 			if (($monat_data = $oCache -> readCache($sCacheName)) === false)
 			{
@@ -239,7 +239,7 @@ function display_minical()
 	{
 		if (defined('CACHE'))
 		{
-			$sCacheName = 'kalender_' . $monat . '_guest';
+			$sCacheName = 'calendar_' . $monat . '_guest';
 	
 			if (($monat_data = $oCache -> readCache($sCacheName)) === false)
 			{
@@ -574,13 +574,13 @@ function display_navimatch()
 	
 	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
-		$cache = 'list_kalender_' . $monat . '_match_member';
+		$cache = 'calendar_' . $monat . '_match_member';
 		$sql = 'SELECT * FROM ' . MATCH_TABLE . ' WHERE match_date > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '".$monat."' ORDER BY match_date";
 		$month_rows_w = _cached($sql, $cache);
 	}
 	else
 	{
-		$cache = 'list_kalender_' . $monat . '_match_guest';
+		$cache = 'calendar_' . $monat . '_match_guest';
 		$sql = 'SELECT * FROM ' . MATCH_TABLE . ' WHERE match_date > ' . $time . " AND match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '".$monat."' ORDER BY match_date";
 		$month_rows_w = _cached($sql, $cache);
 	}
@@ -593,7 +593,8 @@ function display_navimatch()
 			$date = create_date('d H:i', $month_rows_w[$k]['match_date'], $userdata['user_timezone']);
 			
 			$template->assign_block_vars('match.match_row', array(
-				'NAME'	=> $details,
+				'L_NAME'	=> $details,
+				'U_NAME'	=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$month_rows_w[$k]['match_id']),
 				'DATE'	=> $date,
 			));
 		}
@@ -615,7 +616,7 @@ function display_navitrain()
 	$time = time() - 86400;
 	$monat = date("m", time());	//	Heutiger Monat
 	
-	$cache = 'list_kalender_' . $monat . '_training';
+	$cache = 'calendar_' . $monat . '_training';
 	$sql = 'SELECT * FROM ' . TRAINING_TABLE . ' WHERE training_start > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(training_start), '%m') = '".$monat."' ORDER BY training_start";
 	$month_rows_t = _cached($sql, $cache);
 	
@@ -628,8 +629,9 @@ function display_navitrain()
 			$date = create_date('d H:i', $month_rows_t[$k]['training_start'], $userdata['user_timezone']);
 			
 			$template->assign_block_vars('training.training_row', array(
-				'NAME'	=> $details,
-				'DATE'	=> $date,
+				'L_NAME'	=> $details,
+				'U_NAME'	=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=".$month_rows_t[$k]['training_id']),
+				'DATE'		=> $date,
 				
 			));
 		}
@@ -647,13 +649,13 @@ function display_navi()
 	{
 		$template->assign_block_vars('navi_user', array());
 		
-		$sql = 'SELECT * FROM ' . NAVI_TABLE . ' WHERE navi_show = 1';
+		$sql = 'SELECT * FROM ' . NAVIGATION_TABLE . ' WHERE navi_show = 1';
 		
 		$width = 476;
 	}
 	else
 	{
-		$sql = 'SELECT * FROM ' . NAVI_TABLE . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
+		$sql = 'SELECT * FROM ' . NAVIGATION_TABLE . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
 		
 		$width = 578;
 	}
@@ -727,7 +729,7 @@ function display_last_matches()
 						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date < ' . time() . '
 				ORDER BY m.match_date ASC LIMIT 0,' . $settings['last_matches'];
-		$match_last = _cached($sql, 'head_match_member');
+		$match_last = _cached($sql, 'display_subnavi_matchs_member');
 	}
 	else
 	{
@@ -739,7 +741,7 @@ function display_last_matches()
 						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date ASC LIMIT 0,' . $settings['last_matches'];
-		$match_last = _cached($sql, 'head_match_guest');
+		$match_last = _cached($sql, 'display_subnavi_matchs_guest');
 	}
 	
 	if (!$match_last)
@@ -761,7 +763,7 @@ function display_last_matches()
 			else if	($clan = $rival) $class_result = 'draw';
 			else	$class_result = '';
 			
-			$match_rival = substr($match_last[$i]['match_rival'], 0, 15) . ' ...';
+			$match_rival = (strlen($match_last[$i]['match_rival']) < 15) ? $match_last[$i]['match_rival'] : substr($match_last[$i]['match_rival'], 0, 12) . ' ...';
 			
 			$game_size	= $match_last[$i]['game_size'];
 			$game_image	= '<img src="' . $root_path . $settings['game_path'] . '/' . $match_last[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';

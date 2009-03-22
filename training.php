@@ -40,10 +40,10 @@ if ($mode == '')
 				FROM ' . TRAINING_TABLE . ' tr
 					LEFT JOIN ' . TEAMS_TABLE . ' t ON tr.team_id = t.team_id
 					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					LEFT JOIN ' . MATCH_TABLE . ' m ON m.team_id = tr.team_id
-				WHERE training_start > ' . time() . '
+					LEFT JOIN ' . MATCH_TABLE . ' m ON m.match_id = tr.match_id
+				WHERE tr.training_start > ' . time() . '
 			ORDER BY tr.training_start DESC';
-	$training_entry = _cached($sql, 'list_training_open');
+	$training_entry = _cached($sql, 'training_list_open');
 	
 	if (!$training_entry)
 	{
@@ -63,7 +63,7 @@ if ($mode == '')
 				'TRAINING_GAME'	=> display_gameicon($training_entry[$i]['game_size'], $training_entry[$i]['game_image']),
 				'TRAINING_NAME'	=> $training_name,
 				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_start'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=".$training_entry[$i]['training_id'])
+				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_entry[$i]['training_id'])
 			));
 		}
 	}
@@ -72,10 +72,10 @@ if ($mode == '')
 				FROM ' . TRAINING_TABLE . ' tr
 					LEFT JOIN ' . TEAMS_TABLE . ' t ON tr.team_id = t.team_id
 					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					LEFT JOIN ' . MATCH_TABLE . ' m ON m.team_id = tr.team_id
-				WHERE training_start < ' . time() . '
+					LEFT JOIN ' . MATCH_TABLE . ' m ON m.match_id = tr.match_id
+				WHERE tr.training_start < ' . time() . '
 			ORDER BY tr.training_start DESC';
-	$training_entry = _cached($sql, 'list_training_close');
+	$training_entry = _cached($sql, 'training_list_close');
 	
 	if (!$training_entry)
 	{
@@ -95,7 +95,7 @@ if ($mode == '')
 				'TRAINING_GAME'	=> display_gameicon($training_entry[$i]['game_size'], $training_entry[$i]['game_image']),
 				'TRAINING_NAME'	=> $training_name,
 				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_start'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=".$training_entry[$i]['training_id'])
+				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_entry[$i]['training_id'])
 			));
 		}
 	}
@@ -103,7 +103,7 @@ if ($mode == '')
 	$current_page = ( !count($training_entry) ) ? 1 : ceil( count($training_entry) / $settings['entry_per_page'] );
 	
 	$template->assign_vars(array(
-		'PAGINATION'	=> generate_pagination("admin_match.php?", count($training_entry), $settings['entry_per_page'], $start),
+		'PAGINATION'	=> generate_pagination("match.php?", count($training_entry), $settings['entry_per_page'], $start),
 		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE'	=> $lang['Goto_page']
 	));
@@ -115,7 +115,7 @@ if ($mode == '')
 				FROM ' . TEAMS_TABLE . ' t, ' . GAMES_TABLE . ' g
 				WHERE t.team_game = g.game_id
 			ORDER BY t.team_order';
-	$teams = _cached($sql, 'list_teams_training_info');
+	$teams = _cached($sql, 'training_list_teaminfos');
 	
 	if (!$teams)
 	{
@@ -138,9 +138,6 @@ if ($mode == '')
 			));
 		}		
 	}
-	//
-	//	Teams
-	//
 		
 	$template->assign_vars(array(
 		'L_LAST_MATCH'	=> $lang['last_matches'],
@@ -157,7 +154,7 @@ if ($mode == '')
 }
 else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL]))
 {	
-	$page_title = $lang['training_details'];
+//	$page_title = $lang['training_details'];
 	include($root_path . 'includes/page_header.php');
 	
 	$template->set_filenames(array('body' => 'training_details_body.tpl'));
@@ -170,11 +167,10 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			WHERE tr.training_id = ' . $training_id;
 	$row_details = _cached($sql, 'training_details_' . $training_id, 1);
 	
-	
 	if ($userdata['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
 		$template->assign_block_vars('training_edit', array(
-			'EDIT_TRAINING' => '<a href="./admin/admin_match.php?mode=edit&' . POST_TRAINING_URL . '=' . $training_id . '&sid=' . $userdata['session_id'] . '" >&raquo; ' . $lang['edit_training'] . '</a>',
+			'EDIT_TRAINING' => '<a href="' . append_sid("admin/admin_training.php?mode=edit&" . POST_TRAINING_URL . "=" . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',
 		));
 	}
 
@@ -248,9 +244,9 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		break;
 	}*/
 	
-	$sql = 'SELECT mu.*, u.username
-				FROM ' . TRAINING_USERS_TABLE . ' mu, ' . USERS_TABLE . ' u
-			WHERE mu.user_id = u.user_id AND training_id = ' . $training_id;
+	$sql = 'SELECT tru.*, u.username
+				FROM ' . TRAINING_USERS_TABLE . ' tru, ' . USERS_TABLE . ' u
+			WHERE tru.user_id = u.user_id AND tru.training_id = ' . $training_id;
 	$result = $db->sql_query($sql);
 
 	$template->assign_block_vars('training_users', array());
@@ -273,7 +269,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			break;
 		}
 		
-		$template->assign_block_vars('training_users.match_users_status', array(
+		$template->assign_block_vars('training_users.training_users_status', array(
 			'CLASS' 		=> $class,
 			'USERNAME'		=> $row['username'],
 			'STATUS'		=> $status,
@@ -302,21 +298,21 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			WHERE user_id = ' . $userdata['user_id'] . ' AND team_id = ' . $row_details['team_id'];
 	$result = $db->sql_query($sql);
 	
-	if ($db->sql_numrows($result) && $row_details['training_date'] > time())
+	if ($db->sql_numrows($result) && $row_details['training_start'] > time())
 	{
 		$template->assign_block_vars('training_users.users_status', array());
 		
-		$sql = 'SELECT match_users_status
+		$sql = 'SELECT training_users_status
 					FROM ' . TRAINING_USERS_TABLE . '
 				WHERE user_id = ' . $userdata['user_id'] . ' AND training_id = ' . $training_id;
 		$result = $db->sql_query($sql);
 		
 		$row = $db->sql_fetchrow($result);
 		
-		$match_users_status = ($row['training_users_status'] == 0) ? '0' : $row['training_users_status'];
+		$training_users_status = ($row['training_users_status'] == 0) ? '0' : $row['training_users_status'];
 		
 		$s_hidden_fielda = '<input type="hidden" name="mode" value="change" />';
-		$s_hidden_fielda .= '<input type="hidden" name="users_status" value="' . $match_users_status . '" />';
+		$s_hidden_fielda .= '<input type="hidden" name="users_status" value="' . $training_users_status . '" />';
 		$s_hidden_fielda .= '<input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $training_id . '" />';
 		
 		$template->assign_vars(array(
@@ -328,7 +324,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		));
 	}
 	
-	$s_hidden_fieldb = '<input type="hidden" name="mode" value="matchdetails" />';
+	$s_hidden_fieldb = '<input type="hidden" name="mode" value="trainingdetails" />';
 	$s_hidden_fieldb .= '<input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $training_id . '" />';
 	
 	
@@ -337,108 +333,115 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	{
 		$template->assign_block_vars('training_comments', array());
 		
-		$sql = 'SELECT mc.*, u.username, u.user_email
-					FROM ' . MATCH_COMMENTS_TABLE . ' mc
-						LEFT JOIN ' . USERS_TABLE . ' u ON mc.poster_id = u.user_id
-					WHERE training_id = ' . $training_id . ' ORDER BY time_create DESC';
-		$comment_entry = _cached($sql, 'training_' . $training_id . '_comments');
+		$sql = 'SELECT trc.*, u.username, u.user_email
+					FROM ' . TRAINING_COMMENTS_TABLE . ' trc
+						LEFT JOIN ' . USERS_TABLE . ' u ON trc.poster_id = u.user_id
+					WHERE trc.training_id = ' . $training_id . ' ORDER BY trc.time_create DESC';
+		$comment_entry = _cached($sql, 'training_details_' . $training_id . '_comments');
 	
 		if (!$comment_entry)
 		{
 			$template->assign_block_vars('training_comments.no_entry', array());
 			$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+			$last_entry = '';
 		}
 		else
 		{
+			$sql = 'SELECT trcr.read_time
+						FROM ' . TRAINING_COMMENTS_TABLE . ' trc
+							LEFT JOIN ' . TRAINING_COMMENTS_READ_TABLE . ' trcr ON trc.training_id = trcr.training_id
+						WHERE user_id = ' . $userdata['user_id'] . ' AND trcr.training_id = ' . $training_id;
+			$result = $db->sql_query($sql);
+			$unread = $db->sql_fetchrowset($result);
+			
+			if ( $db->sql_numrows($result) )
+			{
+				$unreads = false;
+				
+				$sql = 'UPDATE ' . TRAINING_COMMENTS_READ_TABLE . '
+							SET read_time = ' . time() . '
+						WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];
+				$result = $db->sql_query($sql);
+			}
+			else
+			{
+				$unreads = true;
+				
+				$sql = 'INSERT INTO ' . TRAINING_COMMENTS_READ_TABLE . ' (training_id, user_id, read_time)
+					VALUES (' . $training_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
+				$result = $db->sql_query($sql);
+			}
+			
 			for($i = $start; $i < min($settings['comment_per_page'] + $start, count($comment_entry)); $i++)
 			{
 				$class = ($i % 2) ? 'row1' : 'row2';
+				
+				if ( $userdata['session_logged_in'] )
+				{
+					if ( $unreads || $unread[$i]['read_time'] < $comment_entry[$i]['time_create'])
+					{
+						$icon = 'images/forum/icon_minipost_new.gif';
+					}
+					else
+					{
+						$icon = 'images/forum/icon_minipost.gif';
+					}
+				}
+				else
+				{
+					$icon = 'images/forum/icon_minipost.gif';
+				}
 				
 				$comment = html_entity_decode($comment_entry[$i]['text'], ENT_QUOTES);
 	
 				$template->assign_block_vars('training_comments.comments', array(
 					'CLASS' 		=> $class,
 					'ID' 			=> $comment_entry[$i]['training_comments_id'],
-					'L_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_nick'] : $comment_entry[$i]['username'],
+					'L_USERNAME'	=> $comment_entry[$i]['username'],
 	//				'U_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_email'] : $comment_entry[$i]['user_email'],	Profil-Link und Mail schreiben an Gast
 					'MESSAGE'		=> $comment,
 					'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
+					
+					'ICON'			=> $icon,
 	
-					'U_EDIT'		=> append_sid("admin_match.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$comment_entry[$i]['training_id']),
-					'U_DELETE'		=> append_sid("admin_match.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$comment_entry[$i]['training_id'])
+					'U_EDIT'		=> append_sid("training.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$comment_entry[$i]['training_id']),
+					'U_DELETE'		=> append_sid("training.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$comment_entry[$i]['training_id'])
 				));
 			}
 		
 			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['comment_per_page'] );
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("match.php?mode=matchdetails&amp;" . POST_TRAINING_URL . "=" . $training_id, count($comment_entry), $settings['comment_per_page'], $start),
+				'PAGINATION' => generate_pagination("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id, count($comment_entry), $settings['comment_per_page'], $start),
 				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['comment_per_page'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'])
 			);
 		
-		
-		
-		sort($comment_entry);
-		$last_entry = array_pop($comment_entry);
-		
+			sort($comment_entry);
+			$last_entry = array_pop($comment_entry);
 		}
-//		if ($settings['comments_matches_guest'] && !$userdata['session_logged_in'] && $last_entry['poster_ip'] != $userdata['session_ip'])
-		if ($settings['comments_matches_guest'] && !$userdata['session_logged_in'])
-		{
-			$template->assign_block_vars('training_comments.match_comments_guest', array());
-		}
-		
+
 		if ($userdata['session_logged_in'])
 		{
-			$template->assign_block_vars('training_comments.match_comments_member', array());
+			$template->assign_block_vars('training_comments.training_comments_member', array());
 		}
 		
-		$error = FALSE;
+		$error = '';
 		$error_msg = '';
 		
-		if ( isset($HTTP_POST_VARS['submit']) )
+		//	Erlaubt nach Absenden kein Doppelbeitrag erst nach 20 Sekunden
+		if ( isset($HTTP_POST_VARS['submit']) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || $last_entry['time_create']+20 < time() ) )
 		{
+			//	Laden der Funktion zum eintragen von Kommentaren
 			include($root_path . 'includes/functions_post.php');
 			
-			$poster_nick	= (!$userdata['session_logged_in']) ? trim(stripslashes($HTTP_POST_VARS['poster_nick'])) : '';
-			$poster_mail	= (!$userdata['session_logged_in']) ? trim(stripslashes($HTTP_POST_VARS['poster_mail'])) : '';
-			$poster_hp		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['poster_hp']) : '';
 			$comment		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['comment']) : '';
 			
 			$template->assign_vars(array(
-				'POSTER_NICK'	=> $poster_nick,
-				'POSTER_MAIL'	=> $poster_mail,
-				'POSTER_HP'		=> $poster_hp,
 				'COMMENT'		=> $comment,
 			));
 			
-			if (!$userdata['session_logged_in'])
-			{
-				$captcha = $HTTP_POST_VARS['captcha'];
-				
-				if ($captcha != $HTTP_SESSION_VARS['captcha'])
-				{
-					$error = true;
-					$error_msg = 'captcha';
-				}
-					
-				if ( empty($HTTP_POST_VARS['poster_nick']) )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'user_nick';
-				}
-				
-				if ( empty($HTTP_POST_VARS['poster_mail']) )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'poster_mail';
-				}
-				
-				unset($_SESSION['captcha']);
-			}
-				
 			if ( empty($HTTP_POST_VARS['comment']) )
 			{
 				$error = true;
@@ -454,11 +457,41 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	
 			if ( !$error )
 			{
-				$oCache -> deleteCache('training_' . $training_id . '_comments');
+				//	Test: hier werden/sollen Kommentare als gelesen markiert werden
+				$sql = 'SELECT * FROM ' . TRAINING_COMMENTS_READ_TABLE . ' WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				
-				_comment_message('add', 'match', $training_id, $userdata['user_id'], $poster_nick, $poster_mail, '', $user_ip, $HTTP_POST_VARS['comment']);
+				if ( $db->sql_numrows($result) )
+				{
+					$sql = 'UPDATE ' . TRAINING_COMMENTS_READ_TABLE . '
+								SET read_time = ' . time() . '
+							WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];					
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				}
+				else
+				{				
+					$sql = 'INSERT INTO ' . TRAINING_COMMENTS_READ_TABLE . ' (training_id, user_id, read_time)
+						VALUES (' . $training_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				}
+				
+				//	Keine Fehler?
+				//	Cache löschung und eintragung des Kommentars
+				$oCache = new Cache;
+				$oCache -> deleteCache('training_details_' . $training_id . '_comments');
+				
+				_comment_message('add', 'training', $training_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
-				$message = $lang['add_comment'] . '<br /><br />' . sprintf($lang['click_return_match'],  '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_TRAINING_URL . "=" . $training_id) . '">', '</a>');
+				$message = $lang['add_comment'] . '<br /><br />' . sprintf($lang['click_return_training'],  '<a href="' . append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}
@@ -468,15 +501,15 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	/*	
 		'L_SUBMIT'				=> $lang['Submit'],
 		
-		'TRAINING_RIVAL'			=> $row_details['training_rival'],
+		'TRAINING_RIVAL'		=> $row_details['training_rival'],
 		'U_MATCH_RIVAL_URL'		=> $row_details['training_rival_url'],
-		'TRAINING_RIVAL_URL'		=> $row_details['training_rival_url'],
-		'TRAINING_RIVAL_TAG'		=> $row_details['training_rival_tag'],
+		'TRAINING_RIVAL_URL'	=> $row_details['training_rival_url'],
+		'TRAINING_RIVAL_TAG'	=> $row_details['training_rival_tag'],
 		
 	
-		'TRAINING_CATEGORIE'		=> $match_categorie,
+		'TRAINING_CATEGORIE'	=> $match_categorie,
 		'TRAINING_TYPE'			=> $match_type,
-		'TRAINING_LEAGUE_INFO'		=> $match_league,
+		'TRAINING_LEAGUE_INFO'	=> $match_league,
 		'SERVER'				=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
 		'SERVER_PW'				=> ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_pw'] : '',
 		'HLTV'					=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
@@ -490,81 +523,113 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		'DETAILS_MAPC'			=> $row_details['details_mapc'],
 		'DETAILS_MAPD'			=> $row_details['details_mapd'],
 		
-		'CLASSA'		=> $classa,
-		'CLASSB'		=> $classb,
-		'CLASSC'		=> $classc,
-		'CLASSD'		=> $classd,
-		
-		
-		'DETAILS_SOCRE_A'		=> $row_details['details_mapa_clan'],
-		'DETAILS_SOCRE_C'		=> $row_details['details_mapb_clan'],
-		'DETAILS_SOCRE_E'		=> $row_details['details_mapc_clan'],
-		'DETAILS_SOCRE_G'		=> $row_details['details_mapd_clan'],
-		
-		'DETAILS_SOCRE_B'		=> $row_details['details_mapa_rival'],
-		'DETAILS_SOCRE_D'		=> $row_details['details_mapb_rival'],
-		'DETAILS_SOCRE_F'		=> $row_details['details_mapc_rival'],
-		'DETAILS_SOCRE_H'		=> $row_details['details_mapd_rival'],
-
-		'DETAILS_PIC_A'			=> $pic_a,
-		'DETAILS_PIC_B'			=> $pic_b,
-		'DETAILS_PIC_C'			=> $pic_c,
-		'DETAILS_PIC_D'			=> $pic_d,
-		'DETAILS_PIC_E'			=> $pic_e,
-		'DETAILS_PIC_F'			=> $pic_f,
-		'DETAILS_PIC_G'			=> $pic_g,
-		'DETAILS_PIC_H'			=> $pic_h,
-		
 		'DETAILS_COMMENT'		=> $row_details['details_comment'],
 	*/
 		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-		'S_MATCH_ACTION'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_TRAINING_URL . "=" . $training_id))
+		'S_MATCH_ACTION'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id))
 	);
 }
 else if ($mode == 'change')
 {
-	//
-	//	Status für das Match ändern
-	//
+	//	Status für das Training ändern
 	//	wenn noch kein Eintrag wird insert ausgeführt
 	//	ansonsten der update befehl
 	//	sollte status gleich der in der db sein und der auswahl, wird nichts gespeichert
-	//
-	//	01.03.2009 Phoenix
-	//
 	if ($HTTP_POST_VARS['users_status'] == '0' || $HTTP_POST_VARS['users_status'] == '')
 	{
-		$sql = 'INSERT INTO ' . TRAINING_USERS_TABLE . " (training_id, user_id, match_users_status, match_users_create, match_users_update)
+		$sql = 'INSERT INTO ' . TRAINING_USERS_TABLE . " (training_id, user_id, training_users_status, training_users_create, training_users_update)
 			VALUES ($training_id, " . $userdata['user_id'] . ", '" . intval($HTTP_POST_VARS['training_users_status']) . "', '" . time() . "', 0)";
 		$result = $db->sql_query($sql);
 		
-		$message = $lang['update_match_status_add'];
+		$message = $lang['update_training_status_add'];
 
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'UCP_STATUS_ADD');
+		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'UCP_STATUS_ADD');
 	}
 	else if ($HTTP_POST_VARS['training_users_status'] != $HTTP_POST_VARS['users_status'])
 	{
 		$sql = "UPDATE " . TRAINING_USERS_TABLE . " SET
-					match_users_status		= '" . intval($HTTP_POST_VARS['training_users_status']) . "',
-					match_users_update		= '" . time() . "'
-				WHERE training_id = $training_id AND user_id = " . $userdata['user_id'];
+					training_users_status	= '" . intval($HTTP_POST_VARS['training_users_status']) . "',
+					training_users_update	= '" . time() . "'
+				WHERE training_id			= $training_id AND user_id = " . $userdata['user_id'];
 		$result = $db->sql_query($sql);
 		
-		$message = $lang['update_match_status_edit'];
+		$message = $lang['update_training_status_edit'];
 		
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'UCP_STATUS_EDIT');
+		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'UCP_STATUS_EDIT');
 	}
 	else
 	{
-		$message = $lang['update_match_status_none'];
+		$message = $lang['update_training_status_none'];
 	}
 
-	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid("match.php?mode=matchdetails&amp;" . POST_TRAINING_URL . "=" . $training_id) . '">'));
+	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id) . '">'));
 	message_die(GENERAL_MESSAGE, $message);
+}
+else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
+{
+	$page_title = $lang['training'];
+	include($root_path . 'includes/page_header.php');
+	
+	$template->set_filenames(array('body' => 'training_teams_body.tpl'));
+	
+	$team_id = $HTTP_GET_VARS[POST_TEAMS_URL];
+	
+	//
+	//	Team Details
+	//
+	$sql = 'SELECT * FROM ' . TEAMS_TABLE . ' WHERE team_id = ' . $team_id;
+	if (!($result_team = $db->sql_query($sql)))
+	{
+		message_die(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
+	}
+	$teams = $db->sql_fetchrow($result_team);
+	$db->sql_freeresult($result_team);
+
+	//
+	//	List Matches von Team
+	//
+	$sql = 'SELECT m.training_id, m.training_date, m.training_public, m.training_rival, t.team_name, g.game_image, g.game_size
+				FROM ' . MATCH_TABLE . ' m
+					LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
+					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+				WHERE m.team_id = ' . $team_id . '
+			ORDER BY m.training_date DESC';
+	$trainings_entry = _cached($sql, 'training_list_team_' . $team_id);
+	
+	if (!$matchs_entry)
+	{
+		$template->assign_block_vars('no_entry', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	else
+	{
+		for($i = $start; $i < min($settings['entry_per_page'] + $start, count($trainings_entry)); $i++)
+		{
+			$class = ($i % 2) ? 'row1r' : 'row2r';
+			
+			$template->assign_block_vars('training_teams', array(
+				'CLASS' 		=> $class,
+				'MATCH_GAME'	=> display_gameicon($trainings_entry[$i]['game_size'], $trainings_entry[$i]['game_image']),
+				'MATCH_NAME'	=> ($trainings_entry[$i]['training_public']) ? 'vs. ' . $trainings_entry[$i]['training_rival'] : 'vs. <span style="font-style:italic;">' . $trainings_entry[$i]['training_rival'] . '</span>',
+				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $trainings_entry[$i]['training_date'], $userdata['user_timezone']),
+				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_MATCH_URL . "=".$trainings_entry[$i]['training_id'])
+			));
+		}
+	}
+	
+	$current_page = ( !count($trainings_entry) ) ? 1 : ceil( count($trainings_entry) / $settings['entry_per_page'] );
+
+	$template->assign_vars(array(
+		'TEAM_NAME'		=> $teams['team_name'],
+		'PAGINATION'	=> generate_pagination("training.php?", count($trainings_entry), $settings['entry_per_page'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'L_GOTO_PAGE'	=> $lang['Goto_page'],
+	));
 }
 else
 {
 	redirect(append_sid('training.php', true));
+	
 }
 
 if (!$userdata['user_level'] == TRAIL || !$userdata['user_level'] == MEMBER || !$userdata['user_level'] == ADMIN)

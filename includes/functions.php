@@ -1,5 +1,43 @@
 <?php
 
+//
+// Get Userdata, $user can be username or user_id. If force_str is true, the username will be forced.
+//
+function get_userdata($user, $force_str = false)
+{
+	global $db;
+
+	if (!is_numeric($user) || $force_str)
+	{
+		$user = phpbb_clean_username($user);
+	}
+	else
+	{
+		$user = intval($user);
+	}
+
+	$sql = 'SELECT *
+				FROM ' . USERS_TABLE . ' 
+					WHERE ';
+	$sql .= ( ( is_integer($user) ) ? 'user_id = ' . $user : 'username = ' .  str_replace("\'", "''", $user) . "'" ) . ' AND user_id <> ' . ANONYMOUS;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Tried obtaining data for a non-existent user', '', __LINE__, __FILE__, $sql);
+	}
+
+	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
+}
+
+function _flood_control($data)
+{
+	global $userdata;
+	
+	if ( $data != $userdata['session_ip'] )
+	{
+		return true;
+	}
+}
+
 function _cache_clear()
 {
 	global $oCache;
@@ -71,7 +109,10 @@ function _cached($sql, $name, $row='', $time='')
 		$sCacheName = $name;
 		if (($fetch = $oCache -> readCache($sCacheName)) === false)
 		{
-			$result = $db->sql_query($sql);
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
 			$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 			
@@ -277,9 +318,14 @@ function _debug_poste($data)
 function _debug_post($data)
 {
 	print '<br />';
+	print '<-- start -->';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
+	print '<br />';
+	var_dump($data);
+	print '<br />';
+	print '<-- end -->';
 	print '<br />';
 }
 
@@ -853,7 +899,7 @@ function init_userprefs($userdata)
 	global $config, $theme, $images;
 	global $template, $lang, $phpEx, $root_path, $db;
 	global $nav_links;
-
+	
 	if ( $userdata['user_id'] != ANONYMOUS )
 	{
 		if ( !empty($userdata['user_lang']))
@@ -940,6 +986,8 @@ function init_userprefs($userdata)
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_adm.php');
 	}
+	
+	board_disable();
 
 	//
 	// Set up style
@@ -979,6 +1027,8 @@ function init_userprefs($userdata)
 		'url' => append_sid($root_path . 'memberlist.php'),
 		'title' => $lang['Memberlist']
 	);
+	
+	
 
 	return;
 }
@@ -1562,10 +1612,39 @@ function redirect($url)
 		echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><meta http-equiv="refresh" content="0; url=' . $server_protocol . $server_name . $server_port . $script_name . $url . '"><title>Redirect</title></head><body><div align="center">If your browser does not support meta redirection please click <a href="' . $server_protocol . $server_name . $server_port . $script_name . $url . '">HERE</a> to be redirected</div></body></html>';
 		exit;
 	}
-
+	
 	// Behave as per HTTP/1.1 spec for others
-	header('Location: ' . $server_protocol . $server_name . $server_port . $script_name . $url);
+	header('Location:' . $server_protocol . $server_name . $server_port . $script_name . $url);
 	exit;
+}
+
+function board_disable()
+{
+	global $config, $lang, $userdata;
+
+	// avoid multiple function calls
+	static $called = false;
+	if ($called == true)
+	{
+		return;
+	}
+	$called = true;
+
+	if ($config['page_disable'] && !defined('IN_ADMIN') && !defined('IN_LOGIN'))
+	{
+		$disable_mode = explode(',', $config['page_disable_mode']);
+		$user_level = ($userdata['user_id'] == ANONYMOUS) ? ANONYMOUS : $userdata['user_level'];
+
+		if (in_array($user_level, $disable_mode))
+		{
+			$disable_message = (!empty($config['page_disable_msg'])) ? htmlspecialchars($config['page_disable_msg']) : $lang['Board_disable'];
+			message_die(GENERAL_MESSAGE, str_replace("\n", '<br />', $disable_message));
+		}
+		else
+		{
+			define('PAGE_DISABLE', true);
+		}
+	}
 }
 
 ?>
