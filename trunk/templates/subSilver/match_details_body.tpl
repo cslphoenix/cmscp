@@ -3,8 +3,9 @@
 <tr>
 	<td class="info_head" colspan="2">
 		<!-- BEGIN match_edit -->
-		<span style="float:right;">{match_edit.EDIT_MATCH} {match_edit.EDIT_MATCH_DETAILS}</span>
+		<span class="small" style="float:right;">{match_edit.EDIT_MATCH} {match_edit.EDIT_MATCH_DETAILS}</span>
 		<!-- END match_edit -->
+		<span class="small" style="float:right;">{MATCH_MAIN}</span>
 		{L_MATCH_INFO}Matchinfos
 	</td>
 </tr>
@@ -271,7 +272,7 @@
 				
 				<tr>
 					<td>{match_comments.comments.DATE}</td>
-					<td align="right">{match_comments.comments.IP}{match_comments.comments.EDIT}{match_comments.comments.DELETE}{match_comments.comments.ID}</td>
+					<td align="right">{match_comments.comments.IP}{match_comments.comments.EDIT}{match_comments.comments.DELETE}{match_comments.comments.ID} <img src="{match_comments.comments.ICON}" alt=""></td>
 				</tr>
 				<tr>
 					<td valign="top" width="25%" nowrap><a href="{match_comments.comments.U_USERNAME}">{match_comments.comments.L_USERNAME}</a></td>

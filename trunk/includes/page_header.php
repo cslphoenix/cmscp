@@ -535,6 +535,15 @@ else
 	}
 }
 
+//
+// Show board disabled note
+//
+if (defined('PAGE_DISABLE'))
+{
+	$disable_message = (!empty($config['page_disable_msg'])) ? htmlspecialchars($config['page_disable_msg']) : $lang['Board_disable'];
+	$template->assign_block_vars('page_disable', array('MSG' => str_replace("\n", '<br />', $disable_message)));
+}
+
 // Add no-cache control for cookies if they are set
 //$c_no_cache = (isset($HTTP_COOKIE_VARS[$config['cookie_name'] . '_sid']) || isset($HTTP_COOKIE_VARS[$config['cookie_name'] . '_data'])) ? 'no-cache="set-cookie", ' : '';
 
@@ -552,15 +561,5 @@ header('Expires:0');
 header('Pragma:no-cache');
 
 $template->pparse('overall_header');
-
-//
-// Show 'Page is disabled' message if needed.
-//
-if ( $config['page_disable'] && !defined("IN_ADMIN") && !defined("IN_LOGIN") )
-{
-	$message = ($config['disable_reason']) ? $config['disable_reason'] : 'Board_disable';
-	
-	message_die(GENERAL_MESSAGE, $message);
-}
 
 ?>

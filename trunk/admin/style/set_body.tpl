@@ -45,7 +45,11 @@
 	</tr>
 	<tr>
 		<td class="row1"><b>{L_DISABLE_PAGE_REASON}:</b></td>
-		<td class="row3"><textarea class="post" cols="35" rows="4" maxlength="255" name="disable_reason">{DISABLE_REASON}</textarea></td>
+		<td class="row3"><textarea class="post" cols="35" rows="4" maxlength="255" name="page_disable_msg">{DISABLE_REASON}</textarea></td>
+	</tr>
+	<tr>
+		<td class="row1"><b>{L_DISABLE_PAGE_MODE}:</b></td>
+		<td class="row3">{BOARD_DISABLE_MODE}</td>
 	</tr>
 	<tr>
 		<td colspan="2">&nbsp;</td>

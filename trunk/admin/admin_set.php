@@ -27,7 +27,7 @@ else
 
 	$root_path = './../';
 	require('./pagestart.php');
-//	include($root_path . 'includes/functions_selects.php');
+	include($root_path . 'includes/functions_selects.php');
 
 	if ($userdata['user_level'] != ADMIN)
 	{
@@ -187,11 +187,17 @@ else
 	
 			if( isset($HTTP_POST_VARS['submit']) )
 			{
+				if ($config_name == 'page_disable_mode' && is_array($new_config['page_disable_mode']))
+				{
+					$new_config[$config_name] = implode(',', $new_config[$config_name]);
+				}
+				
 				$sql = 'UPDATE ' . CONFIG_TABLE . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
 				if (!$db->sql_query($sql))
 				{
 					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
 				}
+				$oCache -> deleteCache('config');
 			}
 		}
 	}
@@ -222,6 +228,7 @@ else
 				{
 					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
 				}
+				$oCache -> deleteCache('settings');
 			}
 		}
 	}
@@ -336,6 +343,7 @@ else
 		
 		'S_DISABLE_PAGE_YES'	=> ( $new_config['page_disable'] ) ? 'checked="checked"' : '',
 		'S_DISABLE_PAGE_NO'		=> (!$new_config['page_disable'] ) ? 'checked="checked"' : '',
+		'BOARD_DISABLE_MODE'	=> page_mode_select($new_config['page_disable_mode']),
 		
 		'L_GAMES_STORAGE_PATH'				=> $lang['games_storage'],
 		'L_GAMES_STORAGE_PATH_EXPLAIN'		=> $lang['games_storage_explain'],
@@ -347,13 +355,13 @@ else
 		'L_TEAM_LOGOS_STORAGE_PATH_EXPLAIN'	=> $lang['team_logos_storage_explain'],
 		
 		'GAMES_PATH'				=> $new_settings['game_path'],
-		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['game_path']) ? '<img src="' . $images['icon_granted'] . '" width="16">' : '<img src="' . $images['icon_denied'] . '" width="16">',	
+		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['game_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
 		'RANKS_PATH'				=> $new_settings['ranks_path'],
-		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['ranks_path']) ? '<img src="' . $images['icon_granted'] . '" width="16">' : '<img src="' . $images['icon_denied'] . '" width="16">',	
+		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['ranks_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
 		'TEAM_LOGO_PATH'			=> $new_settings['team_logo_path'],
-		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logo_path']) ? '<img src="' . $images['icon_granted'] . '" width="16">' : '<img src="' . $images['icon_denied'] . '" width="16">',	
+		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logo_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
 		'TEAM_LOGOS_PATH'			=> $new_settings['team_logos_path'],
-		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logos_path']) ? '<img src="' . $images['icon_granted'] . '" width="16">' : '<img src="' . $images['icon_denied'] . '" width="16">',	
+		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logos_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
 
 		'L_TEAM_LOGO_UPLOAD'				=> $lang['team_logo_upload'],
 		'L_TEAM_LOGO_UPLOAD_EXPLAIN'		=> $lang['team_logo_upload_explain'],

@@ -57,7 +57,7 @@
 		<td class="{teams_row.CLASS}" align="center" width="1%">{teams_row.TEAM_GAME}</td>
 		<td class="{teams_row.CLASS}" align="left" style="vertical-align:middle">{teams_row.TEAM_NAME}</td>
 		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap>{teams_row.FIGHTUS}</td>
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.ALL_MATCHES}">{L_ALL_MATCHES}</a></td>
+		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap>{teams_row.ALL_MATCHES}</td>
 		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
 	</tr>
 	<!-- END teams_row -->

@@ -1,4 +1,4 @@
-<table class="out" cellspacing="0">
+<table class="out" width="100%" cellspacing="0">
 <tr>
 	<td class="info_head" colspan="4">Wars von {TEAM_NAME}</td>
 </tr>
@@ -12,9 +12,12 @@
 <!-- END match_teams -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
+<tr>
+	<td align="left" colspan="4"><span style="float:right;">{PAGE_NUMBER}</span>{PAGINATION}</td>
+</tr>
 </table>
 
 

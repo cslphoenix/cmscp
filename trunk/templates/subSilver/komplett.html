@@ -3,7 +3,7 @@
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
 	<title>{SITENAME} :: {PAGE_TITLE}</title>
-<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
+	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
 	
 <!--<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>-->
 <!--<link rel="stylesheet" type="text/css" href="includes/teamspeak/stylesheet.css">-->
@@ -89,10 +89,9 @@
 	***/ 
 	-->
 	<script type="text/javascript" src="templates/subSilver/lightbox.js"></script>
-
-	
 </head>
-<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
+<body bgcolor="#000000" text="#FFFFFF" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
+
 <a name="top"></a>
 <!--
 <table width="100%" cellspacing="0" cellpadding="1" border="0" align="center"> 
@@ -141,11 +140,7 @@
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br />{SITE_DESCRIPTION}</td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center"><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><br /><a href="contact.php">contact</a> <a href="contact.php?mode=fightus">fightus</a> <a href="contact.php?mode=joinus">joinus</a> <a href="userlobby.php">lobby</a>
-			<!-- BEGIN switch_user_logged_in -->
-			<br /><a href="index.php?mode=cache">Cache Leeren</a>
-			<!-- END switch_user_logged_in -->
-			</td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center"><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><br /><a href="contact.php">contact</a> <a href="contact.php?mode=fightus">fightus</a> <a href="contact.php?mode=joinus">joinus</a><br /><a href="index.php?mode=cache">Cache Leeren</a></td>
 		</tr>
 		</table>
 	</td>
@@ -272,6 +267,17 @@
 					<!-- END navi_misc -->
 				</ul>
 			</div>
+			<!--
+			<td style="background-image:url(templates/subSilver/images/page/phx_08.png); height:50px; width:5px;" height="50" width="5"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_09.png); height:50px; width:120px;" height="50" width="120" align="center">main</td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_10.png); height:50px; width:1px;" height="50" width="2"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_09.png); height:50px; width:120px;" height="50" width="120" align="center">clan</td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_10.png); height:50px; width:1px;" height="50" width="2"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_09.png); height:50px; width:120px;" height="50" width="120" align="center">server</td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_10.png); height:50px; width:1px;" height="50" width="2"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_12.png); height:50px;" height="50" width="611"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_15.png); height:50px; width:5px;" height="50" width="4"></td>
+			-->
 		</tr>
 		</table>
 	</td>
@@ -280,10 +286,12 @@
 	<td>
 		<table width="986" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); padding:15px 3px 3px; width:244px;" valign="top">
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:244px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_20.png); height:146px; width:4px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; padding:10px 3px 3px;" valign="top">
 				<table class="out" width="100%" cellspacing="0">
 				<tr>
-					<td class="info_head" colspan="4">Last News</td>
+					<td class="info_head" colspan="4">{L_LAST_MATCH}</td>
 				</tr>
 				<!-- BEGIN match_row -->
 				<tr>
@@ -295,92 +303,28 @@
 				<!-- END match_row -->
 				<!-- BEGIN no_entry_last -->
 				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
+					<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
 				</tr>
 				<!-- END no_entry_last -->
 				</table>
 			</td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); padding:15px 3px 3px; width:243px;" valign="top">
-				<table class="out" width="100%" cellspacing="0">
-				<tr>
-					<td class="info_head" colspan="4" style="text-align:center;">{L_LAST_MATCH}</td>
-				</tr>
-				<!-- BEGIN match_row -->
-				<tr>
-					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
-					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
-					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
-				</tr>
-				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
-				</table>
-			</td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); padding:15px 3px 3px; width:243px;" valign="top">
-				<table class="out" width="100%" cellspacing="0">
-				<tr>
-					<td class="info_head" colspan="4" style="text-align:center;">Last Topics</td>
-				</tr>
-				<!-- BEGIN match_row -->
-				<tr>
-					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
-					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
-					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
-				</tr>
-				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
-				</table>
-			</td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); padding:15px 3px 3px; width:244px;" valign="top">
-				<table class="out" width="100%" cellspacing="0">
-				<tr>
-					<td class="info_head" colspan="4" style="text-align:right;">Top Downloads</td>
-				</tr>
-				<!-- BEGIN match_row -->
-				<tr>
-					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
-					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
-					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
-				</tr>
-				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
-				</table>
-			</td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_20.png); height:146px; width:4px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:243px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page/phx_20.png); height:146px; width:4px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:244px;"></td>
 		</tr>
 		</table>
 	</td>
 </tr>
 <tr>
-	<td style="background-image:url(templates/subSilver/images/page_/democms1.2_26.png); width:986px;">
+	<td style="background-image:url(templates/subSilver/images/page_/democms1.2_26.png); width:986px; background-repeat:repeat-y;">
 		<table width="100%" border="0" cellspacing="10" cellpadding="0">
-		<!-- BEGIN page_disable -->
-		<tr>
-			<td colspan="3" align="center"><div align="center">{page_disable.MSG}</div></td>
-		</tr>
-		<!-- END page_disable -->
 		<tr>
 			<td width="15%" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<!-- BEGIN new_users -->
 				<tr>
-					<td class="info_head"><span style="float: right;">{NEW_USERS_CACHE}</span>{NEW_USERS}</td>
+					<td class="info_head">{NEW_USERS}</td>
 				</tr>
 				<!-- BEGIN user_row -->
 				<tr>
@@ -396,19 +340,15 @@
 					<td class="info_head">{L_TEAMS}</td>
 				</tr>
 				<tr>
-					<td>
+					<td class="row4">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN teams_row -->
 						<tr>
+							
 							<td width="90%" align="left" style="vertical-align:top;"><a href="{teams.teams_row.TO_TEAM}">&raquo; {teams.teams_row.TEAM_NAME}</a></td>
 							<td width="10%">{teams.teams_row.TEAM_GAME}</td>
 						</tr>
 						<!-- END teams_row -->
-						<!-- BEGIN no_entry_head_teams -->
-						<tr>
-							<td width="10%">{NO_ENTRY}</td>
-						</tr>
-						<!-- END no_entry_head_teams -->
 						</table>
 					</td>
 				</tr>
@@ -416,51 +356,150 @@
 					<td>&nbsp;</td>
 				</tr>
 				<!-- END teams -->
-				<!-- BEGIN statsonline -->
 				<tr>
-					<td class="info_head">Stats Online</td>
-				</tr>
-				<tr>
-					<td>{STATS_ONLINE_TOTAL}</td>
-				</tr>
-				<tr>
-					<td>{STATS_ONLINE_VISIBLE}</td>
-				</tr>
-				<tr>
-					<td>{STATS_ONLINE_HIDDEN}</td>
-				</tr>
-				<tr>
-					<td>{STATS_ONLINE_GUESTS}</td>
+					<td class="info_head"></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END statsonline -->
-				
-				<!-- BEGIN statscounter -->
-				<tr>
-					<td class="info_head"><span style="float: right;">{STATS_COUNTER_CACHE}</span>Stats Counter</td>
-				</tr>
-				<tr>
-					<td>{STATS_COUNTER_TODAY}</td>
-				</tr>
-				<tr>
-					<td>{STATS_COUNTER_YESTERDAY}</td>
-				</tr>
-				<tr>
-					<td>{STATS_COUNTER_MONTH}</td>
-				</tr>
-				<tr>
-					<td>{STATS_COUNTER_YEAR}</td>
-				</tr>
-				<tr>
-					<td>{STATS_COUNTER_TOTAL}</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-				</tr>
-				<!-- END statscounter -->
-				
 				</table>
 			</td>
-			<td width="70%" valign="top">
+			<td width="70%" valign="top">infos blabla
+
+		
+		</td>
+			<td width="15%" valign="top">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<!-- BEGIN minical -->
+				<tr>
+					<td class="info_head"><span style="float:right">{MONTH}</span>Kalender</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							{DAYS}
+						</tr>
+						<tr>
+							{DAY}
+						</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END minical -->
+				<!-- BEGIN match -->
+				<tr>
+					<td class="info_head"><span style="float:right">{MONTH}</span>Wars</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN match_row -->
+						<tr>
+							<td width="99%">{match.match_row.NAME}</td>
+							<td width="1%" nowrap>{match.match_row.DATE}</td>
+						</tr>
+						<!-- END match_row -->
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+				<!-- END match -->
+				<!-- BEGIN training -->
+				<tr>
+					<td class="info_head"><span style="float:right">{MONTH}</span>Trainings</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN training_row -->
+						<tr>
+							<td width="99%">{training.training_row.NAME}</td>
+							<td width="1%" nowrap>{training.training_row.DATE}</td>
+						</tr>
+						<!-- END training_row -->
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END training -->
+				
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td style="background-image:url(templates/subSilver/images/page_/democms1.2_28.png); height:4px;"></td>
+</tr>
+<tr>
+	<td>
+		<table width="986" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_28-14.png); height:125px; width:267px;" valign="top"><span class="small">{LOGGED_IN_USER_LIST}</span></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_29.png); height:125px; width:233px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_32.png); height:125px; width:486px;"></td>
+		</tr>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td style="background-image:url(templates/subSilver/images/page_/democms1.2_34.png); height:11px; background-repeat:repeat-x;"></td>
+</tr>
+<tr>
+	<td>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_36.png); height:100px; width:27px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_37.png); height:100px; background-repeat:repeat-x;">
+				<table width="100%" height="100" border="0" cellspacing="0" cellpadding="0">
+				<tr style="height:46px;">
+					<td width="100%">&copy; by CMS-CP.de</td>
+					<td style="padding:0px 10px;" nowrap>Impressum</td>
+					<td style="background-image:url(templates/subSilver/images/page_/democms1.2_39.png); height:46px; width:4px;"></td>
+					<td style="padding:0px 10px;" nowrap>Kontatkt</td>
+					<td style="background-image:url(templates/subSilver/images/page_/democms1.2_39.png); height:46px; width:4px;"></td>
+					<td style="padding:0px 10px;" nowrap>FAQ</td>
+					<td style="background-image:url(templates/subSilver/images/page_/democms1.2_39.png); height:46px; width:4px;"></td>
+					<td style="padding:0px 10px;" nowrap>RSS-Feed</td>
+				</tr>
+				<tr>
+					<td colspan="7">
+					
+						<div class="copyright" align="center">
+							<br />
+							{ADMIN_LINK}
+							<br />
+							powered by<a class="copyright" href="http://www.coding.phoenix-area51.de/" target="_blank">CMSCP</a>&copy; 2009 CMSCP Team
+							<br />
+							{DEBUG} {CACHE}
+						</div>
+						
+					
+					</td>
+					<td valign="top" align="center">Nach Oben <img src="templates/subSilver/images/page_/democms1.3-schnitt_44.png" alt=""></td>
+				</tr>
+				</table>
+			</td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_41.png); height:100px; width:27px;"></td>
+		</tr>
+		</table>
+	</td>
+</tr>
+</table>
+</div>
+
+<div align="center">{RUN_STATS_BOX}</div>
+</body>
+</html>

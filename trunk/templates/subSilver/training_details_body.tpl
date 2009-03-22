@@ -271,7 +271,7 @@
 				
 				<tr>
 					<td>{training_comments.comments.DATE}</td>
-					<td align="right">{training_comments.comments.IP}{training_comments.comments.EDIT}{training_comments.comments.DELETE}{training_comments.comments.ID}</td>
+					<td align="right">{training_comments.comments.IP}{training_comments.comments.EDIT}{training_comments.comments.DELETE}{training_comments.comments.ID} <img src="{training_comments.comments.ICON}" alt=""></td>
 				</tr>
 				<tr>
 					<td valign="top" width="25%" nowrap><a href="{training_comments.comments.U_USERNAME}">{training_comments.comments.L_USERNAME}</a></td>

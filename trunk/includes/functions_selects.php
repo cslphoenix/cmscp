@@ -215,4 +215,28 @@ function _select_date($default, $var, $value)
 	return $select;
 }
 
+//
+// Disable modes
+//
+function page_mode_select($default, $select_name = 'page_disable_mode')
+{
+	global $lang;
+
+	if (!is_array($default))
+	{
+		$default = explode(',', $default);
+	}
+
+	$disable_select = '<select name="' . $select_name . '[]" multiple="multiple">';
+	foreach ($lang['page_disable_mode_opt'] as $const => $name)
+	{
+		$selected = (in_array($const, $default)) ? ' selected="selected"' : '';
+		$disable_select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
+	}
+	$disable_select .= '</select>';
+
+	return $disable_select;
+}
+
+
 ?>

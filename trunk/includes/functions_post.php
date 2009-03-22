@@ -37,16 +37,19 @@ $text = preg_replace_callback('#(( |^)(((ftp|http|https|)://)|www.)\S+)#mi', 'li
         return $ergebnis; 
     }
 
-function _comment_message($mode, $table, $id, $posterid, $posternick, $postermail, $posterhp, $posterip, $message)
+//
+//	Funktion zum Eintragen von Kommentaren
+//	17.03.2009 Anpassung an Trainingskommentare
+//	Änderung zu Gastkommentaren und Benutzerkommentaren
+//
+function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $posternick='', $postermail='', $posterhp='')
 {
-	global $config, $settings, $lang, $db, $root_path;
+	global $config, $settings, $lang, $db;
 	global $userdata, $user_ip;
 	
-	//	Flood kotrolle
-	
-	//	Ende
-	
 	//	Kommentar HTML Tags umwandeln
+	//	htmlentities - (Wandelt alle geeigneten Zeichen in entsprechende HTML-Codes um)
+	//	ENT_QUOTES - (Konvertiert sowohl doppelte als auch einfache Anführungszeichen.)
 	$message = htmlentities($message, ENT_QUOTES);
 		
 	//	Benutzer festlegen ob Gäste oder registerter Benutzer
@@ -57,16 +60,26 @@ function _comment_message($mode, $table, $id, $posterid, $posternick, $postermai
 		$poster_email	= $postermail;
 		$poster_hp		= $posterhp;
 		$poster_ip		= $user_ip;
+		$sql_fields		= 'poster_nick, poster_email, poster_hp, ';
+		$sql_data		= "'" . str_replace("\'", "''", $poster_nick) . "', '" . str_replace("\'", "''", $poster_email) . "', '" . str_replace("\'", "''", $poster_hp) . "', ";
 	}
 	else
 	{
+		//	Benutzername sowie Benutzermail und Homepage
+		//	werden nicht eingetragen, Zwecks dynamischer
+		//	Erhaltung der Daten, kurz, falls ein Benutzer
+		//	Daten verändert, werden diese beim Auslesen der
+		//	Kommentare auch immer richtig und Akuell sein!
 		$poster_id		= $userdata['user_id'];
 		$poster_nick	= '';
 		$poster_email	= '';
 		$poster_hp		= '';
 		$poster_ip		= $userdata['session_ip'];
+		$sql_fields		= '';
+		$sql_data		= '';
 	}
 	
+	//	Tabellen auswahl mit entsprechender ID
 	switch ($table)
 	{
 		case 'news':
@@ -77,6 +90,10 @@ function _comment_message($mode, $table, $id, $posterid, $posternick, $postermai
 			$table_name = MATCH_COMMENTS_TABLE;
 			$id_name	= 'match_id';
 		break;
+		case 'training':
+			$table_name = TRAINING_COMMENTS_TABLE;
+			$id_name	= 'training_id';
+		break;
 		default:
 			message_die(GENERAL_ERROR, 'No Table given', '', __LINE__, __FILE__);
 		break;
@@ -85,13 +102,60 @@ function _comment_message($mode, $table, $id, $posterid, $posternick, $postermai
 	//	Einfügen
 	if ($mode == 'add')
 	{
-		$sql = 'INSERT INTO ' . $table_name . " ($id_name, poster_id, poster_nick, poster_email, poster_hp, poster_ip, text, time_create, time_update)
-			VALUES ('" . intval($id) . "', '" . intval($poster_id) . "', '" . str_replace("\'", "''", $poster_nick) . "', '" . str_replace("\'", "''", $poster_email) . "', '" . str_replace("\'", "''", $poster_hp) . "', '" . $poster_ip . "', '" . str_replace("\'", "''", $message) . "', '" . time() . "', 0)";
-		$result = $db->sql_query($sql);
+		$sql = 'INSERT INTO ' . $table_name . " ($id_name, poster_id, $sql_fields poster_ip, text, time_create, time_update)
+			VALUES ('" . intval($id) . "', '" . intval($poster_id) . "', $sql_data '" . $poster_ip . "', '" . str_replace("\'", "''", $message) . "', '" . time() . "', 0)";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 		
-		_log(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_COMMENT, 'UCP_MATCH_COMMENT');
+		//	geändert von UCP_MATCH_COMMENT auf Allgemeine Message der Logfunktion
+		_log(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_COMMENT, 'comment_' . $table);
 	}
+	
+	return;
+}
+/*
+function _comment_read($mode, $table_type, $type_id, $user_id)
+{
+	global $config, $settings, $lang, $db;
+	global $userdata, $user_ip;
+	
+	//	Tabellen auswahl mit entsprechender ID
+	switch ($table_type)
+	{
+		case 'news':
+			$table_name = NEWS_COMMENTS_TABLE;
+			$id_name	= 'news_id';
+		break;
+		case 'match':
+			$table_name = MATCH_COMMENTS_READ_TABLE;
+			$id_name	= 'match_id';
+		break;
+		case 'training':
+			$table_name = TRAINING_COMMENTS_TABLE;
+			$id_name	= 'training_id';
+		break;
+		default:
+			message_die(GENERAL_ERROR, 'No Table given', '', __LINE__, __FILE__);
+		break;
+	}
+	
+	//	Einfügen
+	if ($mode == 'add')
+	{
+		$sql = 'INSERT INTO ' . $table_name . " ($id_name, comment_match_id, user_id, read_time)
+			VALUES ('" . intval($id) . "', '" . intval($poster_id) . "', $sql_data '" . $poster_ip . "', '" . time() . "')";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		//	geändert von UCP_MATCH_COMMENT auf Allgemeine Message der Logfunktion
+		_log(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_COMMENT, 'comment_' . $table);
+	}
+	
 	return;
 }
 
-?>
+*/?>

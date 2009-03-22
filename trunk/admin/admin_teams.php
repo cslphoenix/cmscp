@@ -822,46 +822,38 @@ else
 	if ($db->sql_numrows($result))
 	{
 		$type = '';
-		$lookup = $group_data = array();
+		$group_data = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
-			// used to determine what type a group is
-			$lookup[$row['team_id']] = $type;
-	
-			// used for easy access to the data within a group
-			$group_data[$type][$row['team_id']] = $row;
-			$group_data[$type][$row['team_id']]['total_members'] = 0;
+			$group_data[$row['team_id']] = $row;
+			$group_data[$row['team_id']]['total_members'] = 0;
 		}
 		$db->sql_freeresult($result);
 		
-		$sql = 'SELECT COUNT(tu.user_id) AS total_members, tu.team_id FROM ' . TEAMS_USERS_TABLE . ' tu WHERE tu.team_id IN (' . implode(', ', array_keys($lookup)) . ') GROUP BY tu.team_id';
+		$sql = 'SELECT COUNT(tu.user_id) AS total_members, tu.team_id FROM ' . TEAMS_USERS_TABLE . ' tu WHERE tu.team_id IN (' . implode(', ', array_keys($group_data)) . ') GROUP BY tu.team_id';
 		$result = $db->sql_query($sql);
 		
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$type = $lookup[$row['team_id']];
-			$group_data[$type][$row['team_id']]['total_members'] = $row['total_members'];
+			$group_data[$row['team_id']]['total_members'] = $row['total_members'];
 		}
 		$db->sql_freeresult($result);
 		
-		foreach ($group_data as $type => $row_ary)
+		foreach ($group_data as $team_id => $row)
 		{
-			foreach ($row_ary as $team_id => $row)
-			{
-				$game_size = (!$row['game_size']) ? '16' : $row['game_size'];
+			$game_size = (!$row['game_size']) ? '16' : $row['game_size'];
+			
+			$template->assign_block_vars('teams_row', array(
+				'TEAM_NAME'			=> $row['team_name'],
+				'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['game_path'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
+				'TEAM_MEMBER_COUNT'	=> $row['total_members'],
 				
-				$template->assign_block_vars('teams_row', array(
-					'TEAM_NAME'			=> $row['team_name'],
-					'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['game_path'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
-					'TEAM_MEMBER_COUNT'	=> $row['total_members'],
-					
-					'U_MEMBER'			=> append_sid("admin_teams.php?mode=member&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
-					'U_EDIT'			=> append_sid("admin_teams.php?mode=edit&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
-					'U_MOVE_UP'			=> append_sid("admin_teams.php?mode=order&amp;move=-15&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
-					'U_MOVE_DOWN'		=> append_sid("admin_teams.php?mode=order&amp;move=15&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
-					'U_DELETE'			=> append_sid("admin_teams.php?mode=delete&amp;" . POST_TEAMS_URL . "=".$row['team_id'])
-				));
-			}
+				'U_MEMBER'			=> append_sid("admin_teams.php?mode=member&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
+				'U_EDIT'			=> append_sid("admin_teams.php?mode=edit&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
+				'U_MOVE_UP'			=> append_sid("admin_teams.php?mode=order&amp;move=-15&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
+				'U_MOVE_DOWN'		=> append_sid("admin_teams.php?mode=order&amp;move=15&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
+				'U_DELETE'			=> append_sid("admin_teams.php?mode=delete&amp;" . POST_TEAMS_URL . "=".$row['team_id'])
+			));
 		}
 	}
 	else
