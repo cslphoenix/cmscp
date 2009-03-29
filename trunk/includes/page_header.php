@@ -41,6 +41,24 @@ if ( $config['gzip_compress'] )
 }
 
 //
+// MOD - TODAY AT - BEGIN
+// PARSE DATEFORMAT TO GET TIME FORMAT 
+//
+$time_reg = '([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)';
+eregi($time_reg, $config['default_dateformat'], $regs);
+$config['default_timeformat'] = $regs[1];
+unset($time_reg);
+unset($regs);
+
+//
+// GET THE TIME TODAY AND YESTERDAY
+//
+$today_ary = explode('|', create_date('m|d|Y', time(), $config['board_timezone']));
+$config['time_today'] = gmmktime(0 - $config['board_timezone'] - $config['board_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+$config['time_yesterday'] = $config['time_today'] - 86400;
+unset($today_ary);
+
+//
 // Parse and show the overall header.
 //
 $template->set_filenames(array(
@@ -236,12 +254,12 @@ while( $row = $db->sql_fetchrow($result) )
 
 			if ( $row['user_allow_viewonline'] )
 			{
-				$user_online_link = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
+				$user_online_link = '<a href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
 				$logged_visible_online++;
 			}
 			else
 			{
-				$user_online_link = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
+				$user_online_link = '<a href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
 				$logged_hidden_online++;
 			}
 
@@ -390,7 +408,8 @@ while( list($nav_item, $nav_array) = @each($nav_links) )
 	}
 }
 
-display_last_matches();
+display_subnavi_match();
+display_subnavi_news();
 display_navi();
 
 if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
@@ -448,6 +467,9 @@ $template->assign_vars(array(
 	
 	'PAGE_TITLE' => $page_title,
 	
+	'L_FORUM'	=> $lang['forum_index'],
+	'U_FORUM'	=> append_sid('forum.php'),
+	
 	'LAST_VISIT_DATE' => sprintf($lang['You_last_visit'], $s_last_visit),
 	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['board_timezone'])),
 	'TOTAL_USERS_ONLINE' => $l_online_users,
@@ -466,7 +488,7 @@ $template->assign_vars(array(
 	'L_LOGIN' => $lang['Login'],
 	'L_LOG_ME_IN' => $lang['Log_me_in'],
 	'L_AUTO_LOGIN' => $lang['Log_me_in'],
-	'L_INDEX' => sprintf($lang['Forum_Index'], $config['sitename']),
+	
 	'L_REGISTER' => $lang['Register'],
 	'L_PROFILE' => $lang['Profile'],
 	'L_SEARCH' => $lang['Search'],
@@ -484,7 +506,7 @@ $template->assign_vars(array(
 	'U_SEARCH_UNANSWERED' => append_sid('search.php?search_id=unanswered'),
 	'U_SEARCH_SELF' => append_sid('search.php?search_id=egosearch'),
 	'U_SEARCH_NEW' => append_sid('search.php?search_id=newposts'),
-	'U_INDEX' => append_sid('forum.php'),
+	
 	'U_REGISTER' => append_sid('profile.php?mode=register'),
 	'U_PROFILE' => append_sid('profile.php?mode=editprofile'),
 	'U_PRIVATEMSGS' => append_sid('privmsg.php?folder=inbox'),

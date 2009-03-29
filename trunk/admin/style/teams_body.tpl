@@ -23,7 +23,7 @@
 	<td class="row_class1" align="center" width="1%">{teams_row.TEAM_MEMBER_COUNT}</td>
 	<td class="row_class2" align="center" width="1%"><a href="{teams_row.U_MEMBER}">{L_TEAM_MEMBER}</a></td>
 	<td class="row_class2" align="center" width="1%"><a href="{teams_row.U_EDIT}">{L_TEAM_SETTING}</a></td>
-	<td class="row_class2" align="center" nowrap="nowrap"><a href="{teams_row.U_MOVE_UP}">{ICON_MOVE_UP}</a> <a href="{teams_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a></td>
+	<td class="row_class2" align="center" nowrap="nowrap"><a href="{teams_row.U_MOVE_UP}">{teams_row.ICON_UP}</a> <a href="{teams_row.U_MOVE_DOWN}">{teams_row.ICON_DOWN}</a></td>
 	<td class="row_class2" align="center" width="1%"><a href="{teams_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END teams_row -->

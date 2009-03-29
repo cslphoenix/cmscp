@@ -232,7 +232,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	if (!$row_details)
 	{
 		message_die(GENERAL_ERROR, 'Falsche ID ?');
-	}		
+	}
 	
 	if ($userdata['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
@@ -551,18 +551,18 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		{
 			$template->assign_block_vars('match_comments.no_entry', array());
 			$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
-			$last_entry = '';
+			$last_entry = array('poster_ip' => '', 'time_create' => '');
 		}
 		else
 		{
 			if ( $userdata['session_logged_in'] )
 			{
-				$sql = 'SELECT mcr.read_time
-							FROM ' . MATCH_COMMENTS_TABLE . ' mc
-								LEFT JOIN ' . MATCH_COMMENTS_READ_TABLE . ' mcr ON mc.match_id = mcr.match_id
-							WHERE user_id = ' . $userdata['user_id'] . ' AND mcr.match_id = ' . $match_id;
+				//	SQL Abfrage verkleinert, voher für jeden Beitrag eine Zeit, die aber immer gleich war
+				$sql = 'SELECT read_time
+							FROM ' . MATCH_COMMENTS_READ_TABLE . '
+							WHERE user_id = ' . $userdata['user_id'] . ' AND match_id = ' . $match_id;
 				$result = $db->sql_query($sql);
-				$unread = $db->sql_fetchrowset($result);
+				$unread = $db->sql_fetchrow($result);
 				
 				if ( $db->sql_numrows($result) )
 				{
@@ -589,7 +589,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				
 				if ( $userdata['session_logged_in'] )
 				{
-					if ( $unreads || $unread[$i]['read_time'] < $comment_entry[$i]['time_create'])
+					if ( $unreads || $unread['read_time'] < $comment_entry[$i]['time_create'])
 					{
 						$icon = 'images/forum/icon_minipost_new.gif';
 					}
@@ -603,7 +603,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 					$icon = 'images/forum/icon_minipost.gif';
 				}
 				
-				$comment = html_entity_decode($comment_entry[$i]['text'], ENT_QUOTES);
+				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
 	
 				$template->assign_block_vars('match_comments.comments', array(
 					'CLASS' 		=> $class,

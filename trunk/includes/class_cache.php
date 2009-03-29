@@ -14,8 +14,6 @@ class Cache
 	// Die Dateierweiterung für die Cache-Dateien (z.B. ".cache")
 	var $sFileExtension = '.cache';
 	
-	static $db;
-	
 	/**
 	* Konstruktor der Klasse	
 	*
@@ -37,10 +35,7 @@ class Cache
 	{
 		$sFileIdentifier = ($this -> bHashFilenamesSHA1 === true) ? sha1($sCacheName) : $sCacheName;
 		
-		
 		return $this -> sCachePath . DIRECTORY_SEPARATOR . $sFileIdentifier . $this -> sFileExtension;
-		
-		
 	} 
 	
 	/** 

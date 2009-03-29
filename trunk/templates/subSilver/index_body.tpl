@@ -1,6 +1,6 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="info_head">News-Übersicht</td>
+	<td class="info_head">Index</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>

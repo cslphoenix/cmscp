@@ -15,3 +15,23 @@
 	</table>
 </td>
 <td valign="top">
+
+<!-- ************* /-->
+<style>
+div.info_box {
+	position: absolute;
+	right: 253px;
+	background-color: red;
+	width: 200px;
+	height: 50px;
+
+}
+</style>
+
+
+<div class="info_box">
+xxy
+</div>
+
+
+<!-- ************* /-->

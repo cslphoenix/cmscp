@@ -2,30 +2,6 @@
 
 /***
 
-CREATE TABLE IF NOT EXISTS `cms_contact` (
-  `contact_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `contact_from` varchar(50) COLLATE utf8_bin NOT NULL,
-  `contact_type` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `contact_mail` varchar(100) COLLATE utf8_bin NOT NULL,
-  `contact_homepage` varchar(200) COLLATE utf8_bin NOT NULL,
-  `contact_rival_name` varchar(100) COLLATE utf8_bin NOT NULL,
-  `contact_rival_tag` varchar(50) COLLATE utf8_bin NOT NULL,
-  `contact_maps` varchar(50) COLLATE utf8_bin NOT NULL,
-  `contact_message` text COLLATE utf8_bin NOT NULL,
-  `contact_team` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `contact_age` mediumint(2) unsigned NOT NULL DEFAULT '0',
-  `contact_date` int(11) unsigned NOT NULL DEFAULT '0',
-  `contact_wartype` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `contact_categorie` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `contact_status` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `contact_time` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`contact_id`)
-);
-
-
-
-
-
 	
 	admin_contact.php
 	

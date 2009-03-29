@@ -197,7 +197,6 @@ else
 				{
 					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
 				}
-				$oCache -> deleteCache('config');
 			}
 		}
 	}
@@ -228,7 +227,6 @@ else
 				{
 					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
 				}
-				$oCache -> deleteCache('settings');
 			}
 		}
 	}
@@ -239,7 +237,6 @@ else
 			. '<br /><br />' . sprintf($lang['click_return_set'], "<a href=\"" . append_sid("admin_set.php") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
-	
 	
 	$template->set_filenames(array('body' => './../admin/style/set_body.tpl'));
 	
@@ -355,13 +352,13 @@ else
 		'L_TEAM_LOGOS_STORAGE_PATH_EXPLAIN'	=> $lang['team_logos_storage_explain'],
 		
 		'GAMES_PATH'				=> $new_settings['game_path'],
-		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['game_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
+		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['game_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
 		'RANKS_PATH'				=> $new_settings['ranks_path'],
-		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['ranks_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
+		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['ranks_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
 		'TEAM_LOGO_PATH'			=> $new_settings['team_logo_path'],
-		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logo_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
+		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logo_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
 		'TEAM_LOGOS_PATH'			=> $new_settings['team_logos_path'],
-		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logos_path']) ? '<img src="' . $images['icon_acp_yes'] . '">' : '<img src="' . $images['icon_acp_no'] . '">',	
+		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logos_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
 
 		'L_TEAM_LOGO_UPLOAD'				=> $lang['team_logo_upload'],
 		'L_TEAM_LOGO_UPLOAD_EXPLAIN'		=> $lang['team_logo_upload_explain'],

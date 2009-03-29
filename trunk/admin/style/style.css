@@ -45,7 +45,7 @@ table.foot {
 table.normal {
 	width:100%;
 	border:none;
-	padding:4;
+	padding:4px;
 }
 
 th {
@@ -60,14 +60,14 @@ th {
 table.agree {
 	width:100%;
 	border:none;
-	padding:4;
+	padding:4px;
 	background-color:#98FB98;
 }
 
 table.disagree {
 	width:100%;
 	border:none;
-	padding:4;
+	padding:4px;
 	background-color: #B22222;
 	color:#FFF;
 }
@@ -116,6 +116,7 @@ td.row_class3 {
 td.row1, td.row2, td.row3 {
 	padding: 5px 5px;
 	vertical-align: top;
+	border-right:1px #FFF solid;
 }
 
 td.row1:hover {
@@ -128,56 +129,32 @@ td.row3:hover {
 	color:#000;
 }
 
-.button,
-.button:link,
-.button:visited,
-.button:active {
+.button, .button:link, .button:visited, .button:active,
+.button2, .button2:link, .button2:visited, .button2:active{
 	font-family: Verdana, Geneva, sans-serif;
-	width:auto !important;
-	padding: 0px 5px;
+	padding: 1px 5px 5px 5px;
 	color:	#000;
-	height: 15px;
+	height: 17px;
 	background:	#F0EFEF;
 	border:	#000 1px solid;
 	font-size:10px;
 }
 
-.button:hover {
-	font-family: Verdana, Geneva, sans-serif;
-	width:auto !important;
-	padding: 0px 5px;
+.button:hover,
+.button2:hover{
 	color: #39F;
-	height: 15px;
-	background:	#FAFAFA;
+	padding: 0px 5px;
 	border: #39F 1px solid;
-	font-size:10px;
+	background:	#FAFAFA;
+	
 }
 
-.button2,
-.button2:link,
-.button2:visited,
-.button2:active {
+.button2, .button2:link, .button2:visited, .button2:active {
 	font-weight:bold;
-	font-family: Verdana, Geneva, sans-serif;
-	width:auto !important;
-	padding: 0px 5px;
-	color:	#000;
-	height: 15px;
-	background:	#F0EFEF;
-	border:	#000 1px solid;
-	font-size:10px;
 }
 
 .button2:hover {
 	font-weight:bold;
-	font-family: Verdana, Geneva, sans-serif;
-	width:auto !important;
-	padding: 0px 5px;
-	color: #39F;
-	height: 15px;
-	background:	#FAFAFA;
-	border: #39F 1px solid;
-	font-size:10px;
 }
 
 .post,

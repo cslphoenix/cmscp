@@ -34,9 +34,9 @@
 <tr>
 	<td class="row1">{L_RANK_TYPE}:</td>
 	<td class="row2">
-		<input type="radio" name="rank_type" value="0" {CHECKED_TYPE_PAGE} /> {L_TYPE_PAGE}
-		<input type="radio" name="rank_type" value="1" {CHECKED_TYPE_FORUM} /> {L_TYPE_FORUM}
-		<input type="radio" name="rank_type" value="2" {CHECKED_TYPE_TEAM} /> {L_TYPE_TEAM}
+		<input type="radio" name="rank_type" value="1" {CHECKED_TYPE_PAGE} /> {L_TYPE_PAGE}
+		<input type="radio" name="rank_type" value="2" {CHECKED_TYPE_FORUM} /> {L_TYPE_FORUM}
+		<input type="radio" name="rank_type" value="3" {CHECKED_TYPE_TEAM} /> {L_TYPE_TEAM}
 	</td> 
 </tr>
 <tr>

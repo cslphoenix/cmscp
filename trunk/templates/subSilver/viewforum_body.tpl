@@ -2,19 +2,22 @@
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" colspan="5"><span class="right">{PAGINATION}</span>Forum: <a href="{U_VIEW_FORUM}">{FORUM_NAME}</a></td>
+	<td class="info_head" colspan="5"><span class="right">{PAGINATION}</span>
+		<a href="{U_FORUM}">{L_FORUM}</a>
+		<!-- BEGIN sub -->
+		 <a href="{sub.U_VIEW_FORUM}">{sub.FORUM_NAME}</a> ::
+		<!-- END sub -->
+		 <a href="{U_VIEW_FORUM}">{FORUM_NAME}</a>
+	</td>
 </tr>
 </table>
 
 	<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 	<tr>
-		<td align="left" valign="bottom" colspan="2"><a class="maintitle" href="{U_VIEW_FORUM}">{FORUM_NAME}</a><br><span class="gensmall"><b>{L_MODERATOR}: {MODERATORS}<br><br>{LOGGED_IN_USER_LIST}</b></span></td>
-		<td align="right" valign="bottom" nowrap="nowrap"><span class="gensmall"><b>{PAGINATION}</b></span></td>
-	</tr>
+		<td align="left" colspan="3"><span class="small"><b>{L_MODERATOR}: {MODERATORS}</b></span><span class="gensmall"><b>{PAGINATION}</b></span></td>
+		</tr>
 	<tr>
-		<td align="left" valign="middle" width="50"><a href="{U_POST_NEW_TOPIC}"><img src="{POST_IMG}" border="0" alt="{L_POST_NEW_TOPIC}" /></a></td>
-		<td align="left" valign="middle" class="nav" width="100%"><span class="nav">&nbsp;&nbsp;&nbsp;<a href="{U_INDEX}" class="nav">{L_INDEX}</a> -> <a class="nav" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></span></td>
-		<td align="right" valign="bottom" class="nav" nowrap="nowrap"><span class="gensmall"><a href="{U_MARK_READ}">{L_MARK_TOPICS_READ}</a></span></td>
+		<td align="left" colspan="3"><a href="{U_POST_NEW_TOPIC}">Neues Thema</a></td>
 	</tr>
 	</table>
 	
@@ -48,24 +51,14 @@
 	
 	<table width="100%" cellspacing="2" border="0" align="center" cellpadding="2">
 	<tr>
-		<td align="left" valign="middle" width="50"><a href="{U_POST_NEW_TOPIC}"><img src="{POST_IMG}" border="0" alt="{L_POST_NEW_TOPIC}" /></a></td>
-		<td align="left" valign="middle" width="100%"><span class="nav">&nbsp;&nbsp;&nbsp;<a href="{U_INDEX}" class="nav">{L_INDEX}</a> -> <a class="nav" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></span></td>
-		<td align="right" valign="middle" nowrap="nowrap"><span class="gensmall">{S_TIMEZONE}</span><br><span class="nav">{PAGINATION}</span></td>
-	</tr>
-	<tr>
 		<td align="left" colspan="3"><span class="nav">{PAGE_NUMBER}</span></td>
 	</tr>
 	</table>
 	</form>
 	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td align="right">{JUMPBOX}</td>
-	</tr>
-	</table>
-	
 	<table width="100%" cellspacing="0" border="0" align="center" cellpadding="0">
 	<tr>
+		<!--
 		<td align="left" valign="top">
 			<table cellspacing="3" cellpadding="0" border="0">
 			<tr>
@@ -98,7 +91,8 @@
 			</tr>
 			</table>
 		</td>
-		<td align="right"><span class="gensmall">{S_AUTH_LIST}</span></td>
+		-->
+		<td align="left"><span class="small">{S_AUTH_LIST}</span></td>
 	</tr>
 	</table>
 

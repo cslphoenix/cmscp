@@ -343,16 +343,15 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		{
 			$template->assign_block_vars('training_comments.no_entry', array());
 			$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
-			$last_entry = '';
+			$last_entry = array('poster_ip' => '', 'time_create' => '');
 		}
 		else
 		{
-			$sql = 'SELECT trcr.read_time
-						FROM ' . TRAINING_COMMENTS_TABLE . ' trc
-							LEFT JOIN ' . TRAINING_COMMENTS_READ_TABLE . ' trcr ON trc.training_id = trcr.training_id
-						WHERE user_id = ' . $userdata['user_id'] . ' AND trcr.training_id = ' . $training_id;
+			$sql = 'SELECT read_time
+						FROM ' . TRAINING_COMMENTS_READ_TABLE . '
+						WHERE user_id = ' . $userdata['user_id'] . ' AND training_id = ' . $training_id;
 			$result = $db->sql_query($sql);
-			$unread = $db->sql_fetchrowset($result);
+			$unread = $db->sql_fetchrow($result);
 			
 			if ( $db->sql_numrows($result) )
 			{
@@ -378,7 +377,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				
 				if ( $userdata['session_logged_in'] )
 				{
-					if ( $unreads || $unread[$i]['read_time'] < $comment_entry[$i]['time_create'])
+					if ( $unreads || $unread['read_time'] < $comment_entry[$i]['time_create'])
 					{
 						$icon = 'images/forum/icon_minipost_new.gif';
 					}
@@ -392,7 +391,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 					$icon = 'images/forum/icon_minipost.gif';
 				}
 				
-				$comment = html_entity_decode($comment_entry[$i]['text'], ENT_QUOTES);
+				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
 	
 				$template->assign_block_vars('training_comments.comments', array(
 					'CLASS' 		=> $class,

@@ -32,6 +32,7 @@ define('LOG_SEK_GAME',		4);
 define('LOG_SEK_MATCH',		5);
 define('LOG_SEK_TRAINING',	6);
 define('LOG_SEK_LOGIN',		7);
+define('LOG_SEK_NAVI',		8);
 define('LOG_SEK_COMMENT',	21);
 
 //	Navi types
@@ -55,14 +56,23 @@ define('USER_ACTIVATION_NONE',	0);
 define('USER_ACTIVATION_SELF',	1);
 define('USER_ACTIVATION_ADMIN',	2);
 
+//	Gruppeneinstellungen
+define('GROUP_OPEN',	0);
+define('GROUP_CLOSED',	1);
+define('GROUP_HIDDEN',	2);
+
+// Forum state
+define('FORUM_UNLOCKED', 0);
+define('FORUM_LOCKED', 1);
+
 //	Auth settings
 define('AUTH_LIST_ALL',	0);
 define('AUTH_ALL',		0);
 define('AUTH_REG',		1);		//	Benutzer
 define('AUTH_TRI',		2);		//	Trial
 define('AUTH_MEM',		3);		//	Member
-define('AUTH_ACL',		4);		//	Privat
-define('AUTH_MOD',		5);		//	Moderatoren
+define('AUTH_MOD',		4);		//	Moderatoren
+define('AUTH_ACL',		5);		//	Privat
 define('AUTH_ADM',		6);		//	Administratoren
 
 define('AUTH_VIEW',			1);		//	sehen
@@ -125,12 +135,15 @@ define('POST_RANKS_URL',		'r');
 define('POST_USERS_URL',		'u');
 define('POST_LOG_URL',			'l');
 define('POST_GAMES_URL',		'g');
+define('POST_GROUPS_URL',		'g');
 define('POST_MATCH_URL',		'm');
 define('POST_TRAINING_URL',		'tr');
 define('POST_SERVER_URL',		's');
 define('POST_GROUPS_URL',		'g');
 define('POST_CONTACT_URL',		'c');
 define('POST_NAVIGATION_URL',	'n');
+define('POST_NEWS_URL',			'n');
+define('POST_NEWSCAT_URL',		'nc');
 //	fürs Forum
 define('POST_POST_URL',			'p');
 define('POST_TOPIC_URL',		't');
@@ -180,9 +193,10 @@ define('GROUPS_AUTH_TABLE',		$db_prefix.'groups_auth');
 define('GROUPS_USER_TABLE',		$db_prefix.'groups_user');
 
 //	News
-define('NEWS_TABLE',			$db_prefix.'news');
-define('NEWS_CATEGORIE_TABLE',	$db_prefix.'news_categorie');
-define('NEWS_COMMENTS_TABLE',	$db_prefix.'news_comments');
+define('NEWS_TABLE',				$db_prefix.'news');
+define('NEWS_CATEGORIE_TABLE',		$db_prefix.'news_categorie');
+define('NEWS_COMMENTS_TABLE',		$db_prefix.'news_comments');
+define('NEWS_COMMENTS_READ_TABLE',	$db_prefix.'news_comments_read');
 
 //	Team + Games(Spiele)
 define('GAMES_TABLE',			$db_prefix.'game');
@@ -198,6 +212,7 @@ define('CATEGORIES_TABLE',		$db_prefix.'forum_cat');
 define('FORUMS_TABLE',			$db_prefix.'forum_forums');
 define('POSTS_TABLE',			$db_prefix.'forum_posts');
 define('TOPICS_TABLE',			$db_prefix.'forum_topics');
+define('TOPICS_READ_TABLE',		$db_prefix.'forum_topics_read');
 
 //	Counter
 define('COUNTER_COUNTER_TABLE',	$db_prefix.'counter_counter');

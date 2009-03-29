@@ -285,19 +285,13 @@
 				<tr>
 					<td class="info_head" colspan="4">Last News</td>
 				</tr>
-				<!-- BEGIN match_row -->
+				<!-- BEGIN news_subnavi_row -->
 				<tr>
-					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
-					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
-					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
+					<td class="{news_subnavi_row.CLASS}" align="left" width="1%">{news_subnavi_row.NEWS_GAME}</td>
+					<td class="{news_subnavi_row.CLASS}" align="left" width="99%">{news_subnavi_row.NEWS_TITLE}</td>
+					<td class="{news_subnavi_row.CLASS}" align="center" width="1%"><a href="{news_subnavi_row.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
-				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
+				<!-- END news_subnavi_row -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -306,19 +300,14 @@
 				<tr>
 					<td class="info_head" colspan="4" style="text-align:center;">{L_LAST_MATCH}</td>
 				</tr>
-				<!-- BEGIN match_row -->
+				<!-- BEGIN display_subnavi_match -->
 				<tr>
-					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
-					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
-					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
+					<td class="{display_subnavi_match.CLASS}" align="center" width="1%">{display_subnavi_match.MATCH_GAME}</td>
+					<td class="{display_subnavi_match.CLASS}" align="left" width="100%">{display_subnavi_match.MATCH_NAME}</td>
+					<td class="{display_subnavi_match.CLASS}" align="center" nowrap><span class="{display_subnavi_match.CLASS_RESULT}">{display_subnavi_match.MATCH_RESULT}</span></td>
+					<td class="{display_subnavi_match.CLASS}" align="center" width="1%"><a href="{display_subnavi_match.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
-				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
+				<!-- END display_subnavi_match -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -335,11 +324,6 @@
 					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
 				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -356,11 +340,6 @@
 					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
 				<!-- END match_row -->
-				<!-- BEGIN no_entry_last -->
-				<tr>
-					<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
-				</tr>
-				<!-- END no_entry_last -->
 				</table>
 			</td>
 		</tr>

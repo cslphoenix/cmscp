@@ -183,20 +183,53 @@ include($root_path . 'includes/class_cache.php');
 error_reporting((defined('DEBUG')) ? E_ALL : E_ALL ^ E_NOTICE);
 defined('DEBUG') ? set_error_handler('error_handler') : '';
 
-unset($dbpasswd);
+unset($db_pwd);
 
 $client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
 $user_ip = encode_ip($client_ip);
 
-if (defined('CACHE'))
+if ( !defined('IN_ADMIN') )
 {
-	$oCache = new Cache;
-	
-	$sCacheNamea = 'config';
-	if ( ($config = $oCache -> readCache($sCacheNamea)) === false)
+	if ( defined('CACHE') )
+	{
+		$oCache = new Cache;
+		
+		$sCacheNamea = 'config';
+		if ( ($config = $oCache -> readCache($sCacheNamea)) === false)
+		{
+			$sql = 'SELECT * FROM ' . CONFIG_TABLE;
+			if (!($result = $db->sql_query($sql)))
+			{
+				message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$config[$row['config_name']] = $row['config_value'];
+			}
+			$oCache -> writeCache($sCacheNamea, $config);
+		}
+		
+		$sCacheNameb = 'settings';
+		if ( ($settings = $oCache -> readCache($sCacheNameb)) === false)
+		{
+			$sql = 'SELECT * FROM ' . SETTINGS_TABLE;
+			if (!($result = $db->sql_query($sql)))
+			{
+				message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$settings[$row['settings_name']] = $row['settings_value'];
+			}
+			$oCache -> writeCache($sCacheNameb, $settings);
+		}
+	}
+	else
 	{
 		$sql = 'SELECT * FROM ' . CONFIG_TABLE;
-		if (!($result = $db->sql_query($sql)))
+		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 		}
@@ -205,14 +238,9 @@ if (defined('CACHE'))
 		{
 			$config[$row['config_name']] = $row['config_value'];
 		}
-		$oCache -> writeCache($sCacheNamea, $config);
-	}
-	
-	$sCacheNameb = 'settings';
-	if ( ($settings = $oCache -> readCache($sCacheNameb)) === false)
-	{
+		
 		$sql = 'SELECT * FROM ' . SETTINGS_TABLE;
-		if (!($result = $db->sql_query($sql)))
+		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
 		}
@@ -221,7 +249,6 @@ if (defined('CACHE'))
 		{
 			$settings[$row['settings_name']] = $row['settings_value'];
 		}
-		$oCache -> writeCache($sCacheNameb, $settings);
 	}
 }
 else

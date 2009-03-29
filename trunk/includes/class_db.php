@@ -19,6 +19,10 @@
  *
  ***************************************************************************/
 
+define('DEBUG_RUN_STATS', true);
+define('DEBUG_SQL', true);
+define('DEBUG_SQL_ADMIN', true);
+
 // var_dump() reviewed for output
 function _dump($message, $line='', $file='')
 {
@@ -105,12 +109,12 @@ class db_class extends sql_db
 		{
 			$break_on_error = false;
 		}
-		if ( defined('DEBUG_SQL') )
+		if ( defined('DEBUG_RUN_STATS') )
 		{
 			$query_start = microtime();
 		}
 		$query_res = parent::sql_query($query, $transaction);
-		if ( defined('DEBUG_SQL') )
+		if ( defined('DEBUG_RUN_STATS') )
 		{
 			$query_end = microtime();
 			if ( defined('DEBUG_SQL') )
@@ -152,7 +156,7 @@ class stat_run_class
 		global $db, $template, $lang, $userdata, $board_config;
 		global $starttime, $trc_loc_start, $trc_loc_end;
 
-		if ( !defined('DEBUG_SQL') )
+		if ( !defined('DEBUG_RUN_STATS') )
 		{
 			return;
 		}
@@ -204,7 +208,8 @@ class stat_run_class
 			$sql_duration += $sql_dur;
 
 			// dump informations
-			if ( defined('DEBUG_SQL') && ($userdata['user_level'] == ADMIN) )
+//			if ( defined('DEBUG_SQL') && ($userdata['user_level'] == ADMIN) )
+			if ( defined('DEBUG_SQL') )
 			{
 				$sql_real_dur = 0;
 

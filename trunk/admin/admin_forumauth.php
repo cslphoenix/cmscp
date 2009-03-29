@@ -23,7 +23,7 @@
 if( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	$module['Forums']['Permissions']   = $filename;
+	$module['permissions']['forums']   = $filename;
 
 	return;
 }
@@ -48,41 +48,38 @@ else
 		3  => array(AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail versteckt
 		
 		4  => array(AUTH_REG, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member
-		5  => array(AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member versteckt
+		5  => array(AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member versteckt		
 		
 		6  => array(AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren
 		7  => array(AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren versteckt
+		
+		8  => array(AUTH_REG, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat
+		9  => array(AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat versteckt
 	);
 	
 	$simple_auth_types = array(
-		$lang['Registered'],
-		$lang['Registered'] . ' [' . $lang['Hidden'] . ']',
-		
-		$lang['Trial'],
-		$lang['Trial'] . ' [' . $lang['Hidden'] . ']',
-		
-		$lang['Member'],
-		$lang['Member'] . ' [' . $lang['Hidden'] . ']',
-		
-		$lang['Moderators'],
-		$lang['Moderators'] . ' [' . $lang['Hidden'] . ']');
+		$lang['Registered'],	$lang['Registered'] . ' [' . $lang['Hidden'] . ']',
+		$lang['Trial'],			$lang['Trial'] . ' [' . $lang['Hidden'] . ']',
+		$lang['Member'],		$lang['Member'] . ' [' . $lang['Hidden'] . ']',
+		$lang['Moderators'],	$lang['Moderators'] . ' [' . $lang['Hidden'] . ']',
+		$lang['Private'],		$lang['Private'] . ' [' . $lang['Hidden'] . ']');
 	
 	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_poll', 'auth_pollcreate');
 	
 	$field_names = array(
-		'auth_view' => $lang['View'],
-		'auth_read' => $lang['Read'],
-		'auth_post' => $lang['Post'],
-		'auth_reply' => $lang['Reply'],
-		'auth_edit' => $lang['Edit'],
-		'auth_delete' => $lang['Delete'],
-		'auth_sticky' => $lang['Sticky'],
-		'auth_announce' => $lang['Announce'], 
-		'auth_poll' => $lang['Poll'], 
-		'auth_pollcreate' => $lang['Pollcreate']);
+		'auth_view'			=> $lang['View'],
+		'auth_read'			=> $lang['Read'],
+		'auth_post'			=> $lang['Post'],
+		'auth_reply'		=> $lang['Reply'],
+		'auth_edit'			=> $lang['Edit'],
+		'auth_delete'		=> $lang['Delete'],
+		'auth_sticky'		=> $lang['Sticky'],
+		'auth_announce'		=> $lang['Announce'], 
+		'auth_poll'			=> $lang['Poll'], 
+		'auth_pollcreate'	=> $lang['Pollcreate']);
 	
-	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ADM');
-	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ADM);
+	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ACL', 'ADM');
+	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
 	
 	if(isset($HTTP_GET_VARS[POST_FORUM_URL]) || isset($HTTP_POST_VARS[POST_FORUM_URL]))
 	{
@@ -133,9 +130,9 @@ else
 				{
 					$value = intval($HTTP_POST_VARS[$forum_auth_fields[$i]]);
 	
-					if ( $forum_auth_fields[$i] == 'auth_vote' )
+					if ( $forum_auth_fields[$i] == 'auth_poll' )
 					{
-						if ( $HTTP_POST_VARS['auth_vote'] == AUTH_ALL )
+						if ( $HTTP_POST_VARS['auth_poll'] == AUTH_ALL )
 						{
 							$value = AUTH_REG;
 						}

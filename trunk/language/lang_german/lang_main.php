@@ -1,5 +1,34 @@
 <?php
 
+$lang['news_head_info']	= 'News: %s';
+$lang['forum_index'] = 'Forum:';
+
+$lang['today_at'] = "Heute um %s"; // %s is the time
+$lang['yesterday_at'] = "Gestern um %s"; // %s is the time
+
+$lang['news']		= 'News';
+
+$lang['comment']	= '%s neuer Kommentar';
+$lang['comments']	= '%s neue Kommentare';
+$lang['']	= '';
+$lang['']	= '';
+$lang['']	= '';
+$lang['']	= '';
+$lang['']	= '';
+$lang['']	= '';
+$lang['']	= '';
+$lang['']	= '';
+
+
+$lang['page_disable'] = 'Seite deaktiviert.';
+$lang['Board_disable_explain'] = 'This will deny access to the board for several user groups you can define below.';
+$lang['Board_disable_mode'] = 'Disable board for...';
+$lang['Board_disable_mode_explain'] = 'Here you can choose who isn\'t allowed to access the board when it\'s disabled. With Ctrl key pressed you can select more than one user group.';
+$lang['page_disable_mode_opt'] = array(ANONYMOUS => 'Gäste', USER => 'Registierte Benutzer', TRAIL => 'Trial Member', MEMBER => 'Member');
+$lang['Board_disable_msg'] = 'Board disabled message';
+$lang['Board_disable_msg_explain'] = 'This message will be shown when the board is disabled (empty message = phpBB default message).';
+
+
 $lang['cal_birthday']		= 'Geburtstag';
 $lang['cal_birthdays']		= 'Geburtstage';
 $lang['cal_event']			= 'Ereignis';
@@ -55,6 +84,7 @@ $lang['last_matches']		= 'Last Wars';
 $lang['teams']				= 'Teams';
 $lang['all_matches']		= 'alle Wars';
 $lang['match_fightus']		= 'FightUs?';
+$lang['match_joinus']		= 'JoinUs?';
 $lang['to_team']			= 'zum Team';
 $lang['match_details']		= 'Details';
 $lang['match']				= 'Begegnungen';
@@ -156,8 +186,10 @@ $lang['navi_match']			= 'Wars';
 $lang['navi_index']			= 'Startseite';
 
 
-$lang['add_comment']		= 'Kommentar hinzugefügt.';
-$lang['click_return_match']	= '%sHier klicken%s, um zum Match zurückzukehren.';
+$lang['add_comment']			= 'Kommentar hinzugefügt.';
+$lang['click_return_match']		= '%sHier klicken%s, um zum Match zurückzukehren.';
+$lang['click_return_training']	= '%sHier klicken%s, um zum Training zurückzukehren.';
+$lang['click_return_news']		= '%sHier klicken%s, um zu den News zurückzukehren.';
 
 $lang['hlsw']		= 'HLSW';
 $lang['connect']	= 'spielen';

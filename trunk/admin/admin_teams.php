@@ -815,6 +815,11 @@ else
 		'S_TEAM_ACTION'		=> append_sid("admin_teams.php")
 	));
 	
+	$sql = 'SELECT MAX(team_order) AS max FROM ' . TEAMS_TABLE;
+	$result = $db->sql_query($sql);
+	$max_order = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	
 	//	Daten aus DB
 	$sql = 'SELECT t.*, g.* FROM ' . TEAMS_TABLE . ' t, ' . GAMES_TABLE . ' g WHERE t.team_game = g.game_id ORDER BY t.team_order';
 	$result = $db->sql_query($sql);
@@ -843,10 +848,16 @@ else
 		{
 			$game_size = (!$row['game_size']) ? '16' : $row['game_size'];
 			
+			$icon_up	= ( $row['team_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
+			$icon_down	= ( $row['team_order'] != $max_order['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
+			
 			$template->assign_block_vars('teams_row', array(
 				'TEAM_NAME'			=> $row['team_name'],
 				'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['game_path'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
 				'TEAM_MEMBER_COUNT'	=> $row['total_members'],
+				
+				'ICON_UP'			=> $icon_up,
+				'ICON_DOWN'			=> $icon_down,
 				
 				'U_MEMBER'			=> append_sid("admin_teams.php?mode=member&amp;" . POST_TEAMS_URL . "=".$row['team_id']),
 				'U_EDIT'			=> append_sid("admin_teams.php?mode=edit&amp;" . POST_TEAMS_URL . "=".$row['team_id']),

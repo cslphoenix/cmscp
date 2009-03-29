@@ -24,6 +24,12 @@ function renumber_order($mode, $type = '')
 			$orderfield	= 'game_order';
 		break;
 		
+		case 'newscat':
+			$table		= NEWS_CATEGORIE_TABLE;
+			$idfield	= 'news_categorie_id';
+			$orderfield	= 'news_categorie_order';
+		break;
+		
 		case 'server':
 			$table		= SERVER_TABLE;
 			$idfield	= 'server_id';
@@ -36,6 +42,13 @@ function renumber_order($mode, $type = '')
 			$idfield	= 'rank_id';
 			$orderfield = 'rank_order';
 			$typefield	= 'rank_type';
+			break;
+		
+		case 'navi':
+			$table		= NAVIGATION_TABLE;
+			$idfield	= 'navi_id';
+			$orderfield = 'navi_order';
+			$typefield	= 'navi_type';
 			break;
 	}
 

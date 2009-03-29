@@ -12,9 +12,11 @@ init_userprefs($userdata);
 
 $viewcat = ( !empty($HTTP_GET_VARS[POST_CAT_URL]) ) ? $HTTP_GET_VARS[POST_CAT_URL] : -1;
 
-$sql = "SELECT c.cat_id, c.cat_title, c.cat_order
-	FROM " . CATEGORIES_TABLE . " c 
-	ORDER BY c.cat_order";
+$sql = 'SELECT c.cat_id, c.cat_title, c.cat_order
+			FROM ' . CATEGORIES_TABLE . ' c 
+			ORDER BY c.cat_order';
+//$category_rows = _cached($sql, 'forum_cat');
+
 if( !($result = $db->sql_query($sql)) )
 {
 	message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
@@ -27,6 +29,14 @@ while ($row = $db->sql_fetchrow($result))
 }
 $db->sql_freeresult($result);
 
+$template->set_filenames(array('body' => 'forum_body.tpl'));	
+
+//
+	// Start output of page
+	//
+	$page_title = $lang['forum'];
+	include($root_path . 'includes/page_header.php');
+
 if( ( $total_categories = count($category_rows) ) )
 {
 	//
@@ -37,6 +47,8 @@ if( ( $total_categories = count($category_rows) ) )
 				LEFT JOIN " . POSTS_TABLE . " p ON p.post_id = f.forum_last_post_id )
 				LEFT JOIN " . USERS_TABLE . " u ON u.user_id = p.poster_id )
 				ORDER BY f.cat_id, f.forum_order";
+//	$forum_data = _cached($sql, 'forum_forms');
+	
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not query forums information', '', __LINE__, __FILE__, $sql);
@@ -48,40 +60,13 @@ if( ( $total_categories = count($category_rows) ) )
 		$forum_data[] = $row;
 	}
 	$db->sql_freeresult($result);
-
+	
 	if ( !($total_forums = count($forum_data)) )
 	{
-		message_die(GENERAL_MESSAGE, $lang['No_forums']);
-	}
-	
-	//
-	// Obtain a list of topic ids which contain
-	// posts made since user last visited
-	//
-	if ($userdata['session_logged_in'])
-	{
+	//	message_die(GENERAL_MESSAGE, $lang['No_forums']);
 		
-
-		$sql = "SELECT p . * , pr .read_time, pr.user_id
-FROM cms_forum_posts p
-LEFT JOIN cms_forum_post_read pr ON p.post_id = pr.post_id
-where p.post_time > " . $userdata['user_lastvisit'];
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
-		}
-
-		$new_topic_data = array();
-		while( $topic_data = $db->sql_fetchrow($result) )
-		{
-			
-			$new_topic_data[$topic_data['forum_id']][$topic_data['topic_id']] = $topic_data['post_time'];
-			_debug_post($new_topic_data);
-		}
-		$db->sql_freeresult($result);
-		
-		
-		
+		$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
+		$template->assign_block_vars('switch_no_forums', array() );
 	}
 	
 	//
@@ -90,13 +75,9 @@ where p.post_time > " . $userdata['user_lastvisit'];
 	$is_auth_ary = array();
 	$is_auth_ary = auth(AUTH_VIEW, AUTH_LIST_ALL, $userdata, $forum_data);
 
-	//
-	// Start output of page
-	//
-	$page_title = $lang['forum'];
-	include($root_path . 'includes/page_header.php');
 	
-	$template->set_filenames(array('body' => 'forum_body.tpl'));	
+	
+	
 
 
 	$template->assign_vars(array(
@@ -174,37 +155,39 @@ where p.post_time > " . $userdata['user_lastvisit'];
 							else
 							{
 								$unread_topics = false;
-								if ( $userdata['session_logged_in'] )
+								if ( $userdata['session_logged_in'] && $forum_data[$j]['forum_topics'] )
 								{
-									if ( !empty($new_topic_data[$forum_id]) )
+									$sql = 'SELECT topic_id FROM ' . TOPICS_TABLE . ' WHERE forum_id = ' . $forum_id;
+									$forum_topics = _cached($sql, 'forum_' . $forum_id . '_topics');
+								/*
+									if ( !($result = $db->sql_query($sql)) )
 									{
-										$forum_last_post_time = 0;
-
-										while( list($check_topic_id, $check_post_time) = @each($new_topic_data[$forum_id]) )
-										{
-											if ( empty($tracking_topics[$check_topic_id]) )
-											{
-												$unread_topics = true;
-												$forum_last_post_time = max($check_post_time, $forum_last_post_time);
-
-											}
-											else
-											{
-												if ( $tracking_topics[$check_topic_id] < $check_post_time )
-												{
-													$unread_topics = true;
-													$forum_last_post_time = max($check_post_time, $forum_last_post_time);
-												}
-											}
-										}
-
-										if ( !empty($tracking_forums[$forum_id]) )
-										{
-											if ( $tracking_forums[$forum_id] > $forum_last_post_time )
-											{
-												$unread_topics = false;
-											}
-										}
+										message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
+									}
+									$forum_topics = $db->sql_fetchrowset($result);
+								*/
+									//_debug_post($forum_topics);
+									
+									$sql = 'SELECT tr.topic_id
+												FROM ' . TOPICS_READ_TABLE . ' tr
+													LEFT JOIN ' . TOPICS_TABLE . ' t ON t.topic_id = tr.topic_id
+												WHERE tr.user_id = ' . $userdata['user_id'] . ' AND tr.forum_id = ' . $forum_id . ' AND tr.read_time < t.topic_time';
+									if ( !($result = $db->sql_query($sql)) )
+									{
+										message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
+									}
+									$forum_topics_unread = $db->sql_fetchrowset($result);
+									//_debug_post($forum_topics_unread);
+									
+									if ( is_array($forum_topics_unread) )
+									{
+										$forum_topics_diff = array_diff_assoc($forum_topics, $forum_topics_unread);
+									//	_debug_post($forum_topics_diff);
+										$unread_topics = ( !$forum_topics_diff ) ? false : true;
+									}
+									else
+									{
+										$unread_topics = true;
 									}
 								}
 
@@ -256,8 +239,10 @@ where p.post_time > " . $userdata['user_lastvisit'];
 }// if ... total_categories
 else
 {
-	message_die(GENERAL_MESSAGE, $lang['No_forums']);
+	$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
+	$template->assign_block_vars('switch_no_forums', array() );
 }
+
 
 $template->pparse("body");
 	
