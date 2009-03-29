@@ -1,7 +1,65 @@
 <?php
 
 //
+//	News
 //
+$lang['news_head']			= 'Newsadministration';
+$lang['news_explain']		= 'Hier kannst du die News Verwalten';
+
+$lang['news_add']			= 'Neue News erstellen';
+$lang['news_new_add']		= 'News hinzufügen';
+$lang['news_edit']			= 'News bearbeiten';
+
+$lang['news_title']			= 'Newstitel';
+$lang['news_categorie']		= 'Newskategorie';
+$lang['news_text']			= 'Newstext';
+$lang['news_link']			= 'Link URL / Name';
+$lang['news_link_explain']	= 'Link beschreibung';
+$lang['news_public']		= 'Öffentlich';
+$lang['news_public_time']	= 'Zeit & Datum zum veröffentlichen';
+$lang['news_intern']		= 'Internnews';
+$lang['news_comments']		= 'Kommentare erlauben';
+
+$lang['news_main']		= 'Main Navi';
+$lang['news_clan']		= 'Clan Navi';
+$lang['news_com']		= 'Community Navi';
+$lang['news_misc']		= 'Misc Navi';
+$lang['news_user']		= 'Benutzer Navi';
+
+$lang['news_new']		= 'Neue Seite';
+$lang['news_self']		= 'Selbe Seite';
+
+$lang['news_update']		= 'News geändert.';
+
+//
+//	Navigation
+//
+$lang['navi_head']		= 'Navigationadministration';
+$lang['navi_explain']	= 'Hier kannst du die Navigation Verwalten';
+
+$lang['navi_add']		= 'Neuen Link erstellen';
+$lang['navi_new_add']	= 'Link hinzufügen';
+$lang['navi_edit']		= 'Link bearbeiten';
+
+$lang['navi_name']		= 'Navi Name';
+$lang['navi_url']		= 'Navi Url';
+$lang['navi_type']		= 'Navi Typ';
+$lang['navi_language']	= 'Sprachdatei';
+$lang['navi_show']		= 'Sichtbar';
+$lang['navi_intern']	= 'Intern';
+$lang['navi_target']	= 'Ziel';
+
+$lang['navi_main']		= 'Main Navi';
+$lang['navi_clan']		= 'Clan Navi';
+$lang['navi_com']		= 'Community Navi';
+$lang['navi_misc']		= 'Misc Navi';
+$lang['navi_user']		= 'Benutzer Navi';
+
+$lang['navi_new']		= 'Neue Seite';
+$lang['navi_self']		= 'Selbe Seite';
+
+//
+//	Befugnisse
 //
 $lang['Public']			= 'Öffentlich';
 $lang['Private']		= 'Privat';
@@ -59,7 +117,7 @@ $lang['training_match']			= 'War';
 $lang['training_date']			= 'Trainingstermin';
 $lang['training_duration']		= 'Trainingsdauer (min)';
 $lang['training_maps']			= 'Trainingsmaps';
-$lang['training_comment']		= 'Trainingskommentar';
+$lang['training_text']			= 'Trainingsbericht';
 
 $lang['training_create']		= 'Neues Training hinzuggefügt.';
 $lang['training_update']		= 'Training geändert.';
@@ -93,6 +151,7 @@ $lang['joinus']			= 'JoinUs';
 $lang['fighus']			= 'FightUs';
 $lang['teams']			= 'Teams';
 $lang['set']			= 'Einstellungen';
+$lang['set_ftp']		= 'FTP-Rechte';
 $lang['logs_over']		= 'Übersicht';
 $lang['logs_admin']		= 'Protokoll - Admin';
 $lang['logs_member']	= 'Protokoll - Member';
@@ -100,9 +159,16 @@ $lang['logs_user']		= 'Protokoll - User';
 $lang['logs_db']		= 'Protokoll - DB-Fehler';
 $lang['match_over']		= 'Übersicht';
 $lang['training']		= 'Training';
-$lang['server']			= 'Server - Übersicht';
+$lang['server']			= 'Server';
+$lang['navi']			= 'Navigation';
+$lang['permissions']	= 'Befugnisse';
+$lang['forums']			= 'Forum';
+$lang['users']			= 'Benutzer';
+$lang['groups']			= 'Gruppen';
+$lang['news']			= 'News';
+$lang['newscat']		= 'Newskategorie';
 
-$lang['match_add']		= 'Match hinzufügen';
+
 
 
 
@@ -135,6 +201,9 @@ $lang['confirm_delete_team']	= 'Bist du sicher, dass dieses Team gelöscht werden
 $lang['confirm_delete_rank']	= 'Bist du sicher, dass dieser Rang gelöscht werden soll?';
 $lang['confirm_delete_game']	= 'Bist du sicher, dass dieses Spiel gelöscht werden soll?';
 
+$lang['confirm_delete_news']	= 'Bist du sicher, dass die Spiel gelöscht werden soll?';
+
+
 
 //
 //	Clicks
@@ -145,9 +214,12 @@ $lang['click_return_team_member']	= 'Klicke %shier%s, um zur Teammemberadministr
 $lang['click_return_rank']			= 'Klicke %shier%s, um zur Rangadministration zurückzukehren';
 $lang['click_return_set']			= 'Klicke %shier%s, um zur Einstellunsadministration zurückzukehren';
 $lang['click_return_game']			= 'Klicke %shier%s, um zur Spieladministration zurückzukehren';
-$lang['click_return_match']			= 'Klicke %shier%s, um zur Begegnungsadministration zurückzukehren';
+$lang['click_return_match']			= 'Klicke %shier%s, um zur Matchadministration zurückzukehren';
+$lang['click_return_match_details']	= 'Klicke %shier%s, um zur Matchdeatilsadministration zurückzukehren';
 $lang['click_return_details']		= 'Klicke %shier%s, um zur Detailadministration zurückzukehren';
 $lang['click_return_training']		= 'Klicke %shier%s, um zur Trainingsadministration zurückzukehren';
+$lang['click_return_news']			= 'Klicke %shier%s, um zur Newsadministration zurückzukehren';
+
 //
 //	Errors
 //
@@ -257,11 +329,57 @@ $lang['game_empty'] = 'Es sind keine Spiele vorhanden.';
 //
 //	Match
 //
-$lang['training']			= 'Training ';
+$lang['match_head']				= 'Matchadministration';
+$lang['match_explain']			= 'Hier können Wars verwaltet werden.';
+$lang['match_details_explain']	= 'Hier können die Details für den War eingetragen und verändert werden.';
+
+$lang['match_add']			= 'Neues Match erstellen';
+$lang['match_new_add']		= 'Match hinzufügen';
+$lang['match_edit']			= 'Match bearbeiten';
+$lang['match_update']		= 'Match geändert.';
+$lang['match_upcoming']		= 'Anstehende Match';
+$lang['match_expired']		= 'Abgelaufen Match';
+
+$lang['match_team']			= 'Wechles Team';
+$lang['match_type']			= 'XonX';
+$lang['match_categorie']	= 'Match Art';
+$lang['match_league']		= 'Liga';
+$lang['match_league_url']	= 'Liga Link';
+$lang['league_match']		= 'Ligamatchlink';
+$lang['match_date']			= 'Match Datum';
+$lang['match_public']		= 'Match Öffentlich?';
+$lang['match_comments']		= 'Kommentare erlauben?';
+$lang['match_rival']		= 'Gegner Name';
+$lang['match_rival_tag']	= 'Gegner Clantag';
+$lang['match_rival_url']	= 'Gegner Homepage';
+$lang['match_server']		= 'Server';
+$lang['match_serverpw']		= 'Server PW';
+$lang['match_hltv']			= 'HLTV-Server';
+$lang['match_hltvpw']		= 'HLTV-Server PW';
+$lang['match_text']			= 'Match Bericht';
+
+$lang['match_map_more']			= 'weitere Map';
+$lang['match_map_close']		= 'schließen';
+
+$lang['match_rival_lineup']		= 'Gegner Lineup';
+$lang['match_details_map']		= 'Map';
+$lang['match_details_mappic']	= 'Mapbild hochladen';
+$lang['match_details_points']	= 'Punkte';
+$lang['match_details_info']		= 'Wardetails in der Übersicht';
+$lang['match_details_comment']	= 'Match Kommentar';
+$lang['match_lineup']			= 'Clan Lineup';
+$lang['match_lineup_add_yes']	= 'Spieler hinzugefügt';
+$lang['match_lineup_del_yes']	= 'Spieler gelöscht';
+$lang['match_lineup_add']		= 'Spieler hinzufügen';
+$lang['match_lineup_explain']	= 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.';
+$lang['match_lineup_status']	= 'Spielerstatus';
+$lang['match_lineup_add']		= 'Spieler hinzugefügt';
+$lang['match_lineup_del']		= 'Spieler gelöscht';
+$lang['match_lineup_no_users']	= 'Bitte Spieler auswählen die noch nicht eingetragen sind.';
+$lang['match_lineup_change']	= 'Spielerliste verändert';
+
+
 $lang['select_team']		= 'Team auswählen';
-
-
-$lang['match_details']		= 'Details';
 
 $lang['add_train']			= 'hinzufügen';
 $lang['edit_train']			= 'ändern';
@@ -299,6 +417,9 @@ $lang['select_league4i']	= 'http://www.lgz.de/';
 $lang['select_league5i']	= 'http://www.tactical-esports.de/';
 $lang['select_league6i']	= 'http://www.xgc-online.de/';
 $lang['select_league7i']	= 'http://www.ncsl.de/';
+
+$lang['match_details']		= 'Details';
+
 
 //
 //	Settings
@@ -374,7 +495,7 @@ $lang['select_match']	= 'Match auswählen';
 //
 $lang['auth_fail']			= 'Keine Berechtiung für dieses Modul';
 $lang['wrong_filetype']		= 'Falscher Dateityp!';
-$lang['wrong_back']			= '<br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(1)">&laquo; Zur&uuml;ck</a>';
+$lang['wrong_back']			= '<br /><br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(1)">&laquo; Zur&uuml;ck</a>';
 $lang['no_entry']			= 'Keine Daten Vorhanden';
 
 //	Teams

@@ -23,8 +23,8 @@
 if( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	$module['Users']['Permissions'] = $filename . "?mode=user";
-	$module['Groups']['Permissions'] = $filename . "?mode=group";
+	$module['permissions']['users'] = $filename . "?mode=user";
+	$module['permissions']['groups'] = $filename . "?mode=group";
 
 	return;
 }
@@ -52,10 +52,10 @@ else
 		}
 	}
 	
-	$user_id = intval($user_id);
-	$group_id = intval($group_id);
-	$adv = intval($adv);
-	$mode = htmlspecialchars($mode);
+	$user_id	= intval($user_id);
+	$group_id	= intval($group_id);
+	$adv		= intval($adv);
+	$mode		= htmlspecialchars($mode);
 	
 	//
 	// Start program - define vars
@@ -63,28 +63,28 @@ else
 	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_poll', 'auth_pollcreate');
 	
 	$auth_field_match = array(
-		'auth_view' => AUTH_VIEW,
-		'auth_read' => AUTH_READ,
-		'auth_post' => AUTH_POST,
-		'auth_reply' => AUTH_REPLY,
-		'auth_edit' => AUTH_EDIT,
-		'auth_delete' => AUTH_DELETE,
-		'auth_sticky' => AUTH_STICKY,
-		'auth_announce' => AUTH_ANNOUNCE, 
-		'auth_poll' => AUTH_POLL, 
-		'auth_pollcreate' => AUTH_POLLCREATE);
+		'auth_view'			=> AUTH_VIEW,
+		'auth_read'			=> AUTH_READ,
+		'auth_post'			=> AUTH_POST,
+		'auth_reply'		=> AUTH_REPLY,
+		'auth_edit'			=> AUTH_EDIT,
+		'auth_delete'		=> AUTH_DELETE,
+		'auth_sticky'		=> AUTH_STICKY,
+		'auth_announce'		=> AUTH_ANNOUNCE, 
+		'auth_poll'			=> AUTH_POLL, 
+		'auth_pollcreate'	=> AUTH_POLLCREATE);
 	
 	$field_names = array(
-		'auth_view' => $lang['View'],
-		'auth_read' => $lang['Read'],
-		'auth_post' => $lang['Post'],
-		'auth_reply' => $lang['Reply'],
-		'auth_edit' => $lang['Edit'],
-		'auth_delete' => $lang['Delete'],
-		'auth_sticky' => $lang['Sticky'],
-		'auth_announce' => $lang['Announce'], 
-		'auth_poll' => $lang['Poll'], 
-		'auth_pollcreate' => $lang['Pollcreate']);
+		'auth_view'			=> $lang['View'],
+		'auth_read'			=> $lang['Read'],
+		'auth_post'			=> $lang['Post'],
+		'auth_reply'		=> $lang['Reply'],
+		'auth_edit'			=> $lang['Edit'],
+		'auth_delete'		=> $lang['Delete'],
+		'auth_sticky'		=> $lang['Sticky'],
+		'auth_announce'		=> $lang['Announce'], 
+		'auth_poll'			=> $lang['Poll'], 
+		'auth_pollcreate'	=> $lang['Pollcreate']);
 	
 	// ---------------
 	// Start Functions
@@ -100,7 +100,7 @@ else
 				$result = 0;
 				switch($type)
 				{
-					case AUTH_MEM:
+					case AUTH_ACL:
 						$result = $u_access[$j][$key];
 	
 					case AUTH_MOD:
@@ -255,7 +255,7 @@ else
 	
 						for($j = 0; $j < count($forum_auth_fields); $j++)
 						{
-							$forum_auth_level_fields[$forum_id][$forum_auth_fields[$j]] = $forum_access[$i][$forum_auth_fields[$j]] == AUTH_MEM;
+							$forum_auth_level_fields[$forum_id][$forum_auth_fields[$j]] = $forum_access[$i][$forum_auth_fields[$j]] == AUTH_ACL;
 						}
 					}
 	
@@ -346,7 +346,7 @@ else
 					{
 						$auth_field = $forum_auth_fields[$j];
 	
-						if( $forum_access[$i][$auth_field] == AUTH_MEM && isset($change_acl_list[$forum_id][$auth_field]) )
+						if( $forum_access[$i][$auth_field] == AUTH_ACL && isset($change_acl_list[$forum_id][$auth_field]) )
 						{
 							if ( ( empty($auth_access[$forum_id]['auth_mod']) && 
 								( isset($auth_access[$forum_id][$auth_field]) && $change_acl_list[$forum_id][$auth_field] != $auth_access[$forum_id][$auth_field] ) || 
@@ -630,9 +630,9 @@ else
 				for($j = 0; $j < count($forum_auth_fields); $j++)
 				{
 					$forum_access[$i][$forum_auth_fields[$j]] . ' :: ';
-					if ( $forum_access[$i][$forum_auth_fields[$j]] == AUTH_MEM )
+					if ( $forum_access[$i][$forum_auth_fields[$j]] == AUTH_ACL )
 					{
-						$forum_auth_level[$forum_id] = AUTH_MEM;
+						$forum_auth_level[$forum_id] = AUTH_ACL;
 						$forum_auth_level_fields[$forum_id][] = $forum_auth_fields[$j];
 					}
 				}
@@ -686,8 +686,8 @@ else
 						$auth_ug[$forum_id][$key] = 1;
 						break;
 	
-					case AUTH_MEM:
-						$auth_ug[$forum_id][$key] = ( !empty($auth_access_count[$forum_id]) ) ? check_auth(AUTH_MEM, $key, $auth_access[$forum_id], $is_admin) : 0;
+					case AUTH_ACL:
+						$auth_ug[$forum_id][$key] = ( !empty($auth_access_count[$forum_id]) ) ? check_auth(AUTH_ACL, $key, $auth_access[$forum_id], $is_admin) : 0;
 						$auth_field_acl[$forum_id][$key] = $auth_ug[$forum_id][$key];
 	
 						if ( isset($prev_acl_setting) )
@@ -728,7 +728,7 @@ else
 		{
 			if ( empty($adv) )
 			{
-				if ( $forum_auth_level[$forum_id] == AUTH_MEM )
+				if ( $forum_auth_level[$forum_id] == AUTH_ACL )
 				{
 					$allowed = 1;
 	
@@ -772,7 +772,7 @@ else
 						{
 							$field_name = $forum_auth_fields[$k];
 	
-							if( $forum_access[$j][$field_name] == AUTH_MEM )
+							if( $forum_access[$j][$field_name] == AUTH_ACL )
 							{
 								$optionlist_acl_adv[$forum_id][$k] = '<select name="private_' . $field_name . '[' . $forum_id . ']">';
 	

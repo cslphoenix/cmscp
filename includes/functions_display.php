@@ -69,22 +69,21 @@ function display_newusers()
 	if ( $settings['subnavi_newusers'] )
 	{
 		$template->assign_block_vars('new_users', array());
+		
+		$sql = 'SELECT user_id, username, user_color FROM ' . USERS_TABLE . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
+		$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
+		
+		for ($i = 0; $i < count($users); $i++)
+		{
+			$template->assign_block_vars('new_users.user_row', array(
+				'USERNAME'		=> '<a class="small" href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $users[$i]['user_id']) . '" style="color:#' . $users[$i]['user_color'] . '"><b>' . $users[$i]['username'] . '</b></a>',
+			));
+		}
+		
+		$template->assign_vars(array('NEW_USERS_CACHE' => (defined('CACHE')) ? display_cache('display_subnavi_newusers', 1) : ''));
+		
+		return;
 	}
-	
-	$sql = 'SELECT user_id, username FROM ' . USERS_TABLE . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
-	$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
-	
-	for ($i = 0; $i < count($users); $i++)
-	{
-		$template->assign_block_vars('new_users.user_row', array(
-			'USERNAME'		=> $users[$i]['username'],
-			'U_USERNAME'	=> append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=".$users[$i]['user_id']),
-		));
-	}
-	
-	$template->assign_vars(array('NEW_USERS_CACHE' => (defined('CACHE')) ? display_cache('display_subnavi_newusers', 1) : ''));
-	
-	return;
 }
 
 //
@@ -713,32 +712,30 @@ function display_navi()
 }
 
 //
-//	Last Matches
+//	Letzten Wars anzeigen
 //
-function display_last_matches()
+function display_subnavi_match()
 {
 	global $db, $root_path, $oCache, $settings, $template, $userdata, $lang;
 	
 	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
-		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size, tr.training_id
+		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH_TABLE . ' m
 						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date < ' . time() . '
 				ORDER BY m.match_date ASC LIMIT 0,' . $settings['last_matches'];
 		$match_last = _cached($sql, 'display_subnavi_matchs_member');
 	}
 	else
 	{
-		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size, tr.training_id
+		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH_TABLE . ' m
 						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date ASC LIMIT 0,' . $settings['last_matches'];
 		$match_last = _cached($sql, 'display_subnavi_matchs_guest');
@@ -765,18 +762,89 @@ function display_last_matches()
 			
 			$match_rival = (strlen($match_last[$i]['match_rival']) < 15) ? $match_last[$i]['match_rival'] : substr($match_last[$i]['match_rival'], 0, 12) . ' ...';
 			
-			$game_size	= $match_last[$i]['game_size'];
-			$game_image	= '<img src="' . $root_path . $settings['game_path'] . '/' . $match_last[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
-			
 			$match_name	= ($match_last[$i]['match_public']) ? 'vs. ' . $match_rival : 'vs. <span style="font-style:italic;">' . $match_rival . '</span>';
 			
-			$template->assign_block_vars('match_row', array(
+			$template->assign_block_vars('display_subnavi_match', array(
 				'CLASS' 		=> $class,
 				'CLASS_RESULT'	=> $class_result,
-				'MATCH_GAME'	=> $game_image,
+				'MATCH_GAME'	=> display_gameicon($match_last[$i]['game_size'], $match_last[$i]['game_image']),
 				'MATCH_NAME'	=> $match_name,
 				'MATCH_RESULT'	=> $clan . ':' . $rival,
 				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$match_last[$i]['match_id']),
+			));
+		}
+	}
+	
+	$template->assign_vars(array(
+		'L_DETAILS'		=> $lang['match_details'],
+		'L_LAST_MATCH'	=> $lang['last_matches'],
+	));
+	
+	return;
+}
+
+//
+//	Letzte News anzeigen
+//
+function display_subnavi_news()
+{
+	global $db, $config, $root_path, $oCache, $settings, $template, $userdata, $lang;
+	
+	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	{
+		$sql = 'SELECT n.*, t.team_name, g.game_image, g.game_size
+					FROM ' . NEWS_TABLE . ' n
+						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+					WHERE n.news_time_public < ' . time() . '
+				ORDER BY n.news_time_public DESC';
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+		}
+		$news_last = $db->sql_fetchrowset($result);
+//		$news_last = _cached($sql, 'display_subnavi_news_member');
+	}
+	else
+	{
+		$sql = 'SELECT n.*, t.team_name, g.game_image, g.game_size
+					FROM ' . NEWS_TABLE . ' n
+						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0
+				ORDER BY n.news_time_public DESC';
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+		}
+		$news_last = $db->sql_fetchrowset($result);
+//		$news_last = _cached($sql, 'display_subnavi_news_guest');
+	}
+	
+	if ( $news_last )
+	{
+		for ($i = 0; $i < count($news_last); $i++)
+		{
+			$class = ($i % 2) ? 'row1r' : 'row2r';
+						
+			$news_title = (strlen($news_last[$i]['news_title']) < 15) ? $news_last[$i]['news_title'] : substr($news_last[$i]['news_title'], 0, 12) . ' ...';
+			
+			if ( $config['time_today'] < $news_last[$i]['news_time_public'])
+			{ 
+				$news_date = sprintf($lang['today_at'], create_date($config['default_timeformat'], $news_last[$i]['news_time_public'], $userdata['user_timezone'])); 
+			}
+			else if ( $config['time_yesterday'] < $news_last[$i]['news_time_public'])
+			{ 
+				$news_date = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $news_last[$i]['news_time_public'], $userdata['user_timezone'])); 
+			}
+			
+			$template->assign_block_vars('news_subnavi_row', array(
+				'CLASS' 		=> $class,
+				'NEWS_TITLE'	=> $news_title,
+				'NEWS_GAME'		=> ( $news_last[$i]['match_id'] ) ? display_gameicon($news_last[$i]['game_size'], $news_last[$i]['game_image']) : '',
+				'U_DETAILS'		=> append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_last[$i]['news_id']),
 			));
 		}
 	}

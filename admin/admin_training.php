@@ -117,7 +117,8 @@ else
 				}
 				
 				//	Template definieren
-				$template->set_filenames(array('body' => './../admin/style/training_edit_body.tpl'));
+				$template->set_filenames(array('body' => './../admin/style/acp_training.tpl'));
+				$template->assign_block_vars('training_edit', array());
 				
 				//	Unsichtbare Felder für andere Infos
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
@@ -138,12 +139,12 @@ else
 					'L_TRAINING_DATE'		=> $lang['training_date'],
 					'L_TRAINING_DURATION'	=> $lang['training_duration'],
 					'L_TRAINING_MAPS'		=> $lang['training_maps'],
-					'L_TRAINING_COMMENT'	=> $lang['training_comment'],
+					'L_TRAINING_TEXT'		=> $lang['training_text'],
 	
 					
 					'TRAINING_VS'			=> $training['training_vs'],
 					'TRAINING_MAPS'			=> $training['training_maps'],
-					'TRAINING_COMMENT'		=> $training['training_comment'],
+					'TRAINING_TEXT'			=> $training['training_text'],
 					
 					'S_DAY'					=> _select_date('day',		'day',		date('d', $training['training_start'])),
 					'S_MONTH'				=> _select_date('month',	'month',	date('m', $training['training_start'])),
@@ -154,7 +155,7 @@ else
 					'S_DURATION'			=> _select_date('duration', 'dmin',	($training['training_duration'] - $training['training_start']) / 60),
 					
 					'S_TEAMS'				=> _select_team($training['team_id'], 0, 'post'),
-					'S_MATCH'				=> _select_match($training['match_id'], 'post'),
+					'S_MATCH'				=> _select_match($training['match_id'], '', 'post'),
 				
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
@@ -206,7 +207,7 @@ else
 				$training_start		= mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
 				$training_duration	= mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'] + $HTTP_POST_VARS['dmin'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
 				
-				$sql = "INSERT INTO " . TRAINING_TABLE . " (training_vs, team_id, match_id, training_start, training_duration, training_create, training_maps, training_comment)
+				$sql = "INSERT INTO " . TRAINING_TABLE . " (training_vs, team_id, match_id, training_start, training_duration, training_create, training_maps, training_text)
 					VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['training_vs']) . "',
 							'" . intval($HTTP_POST_VARS['team_id']) . "',
 							'" . intval($HTTP_POST_VARS['match_id']) . "',
@@ -214,7 +215,7 @@ else
 							$training_duration,
 							" . time() . ",
 							'" . str_replace("\'", "''", $HTTP_POST_VARS['training_maps']) . "',
-							'" . str_replace("\'", "''", $HTTP_POST_VARS['training_comment']) . "')";
+							'" . str_replace("\'", "''", $HTTP_POST_VARS['training_text']) . "')";
 				if (!$result = $db->sql_query($sql))
 				{
 					message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
@@ -278,7 +279,7 @@ else
 							training_duration	= $training_duration,
 							training_update		= " . time() . ",
 							training_maps		= '" . str_replace("\'", "''", $HTTP_POST_VARS['training_maps']) . "',
-							training_comment	= '" . str_replace("\'", "''", $HTTP_POST_VARS['training_comment']) . "'
+							training_text		= '" . str_replace("\'", "''", $HTTP_POST_VARS['training_text']) . "'
 						WHERE training_id = " . intval($HTTP_POST_VARS[POST_TRAINING_URL]);
 				$result = $db->sql_query($sql);
 				
@@ -357,7 +358,8 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/training_body.tpl'));
+	$template->set_filenames(array('body' => './../admin/style/acp_training.tpl'));
+	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
 		'L_TRAINING_TITLE'		=> $lang['training_head'],
@@ -383,7 +385,7 @@ else
 	
 	if (!$training_entry_n)
 	{
-		$template->assign_block_vars('no_entry_new', array());
+		$template->assign_block_vars('display.no_entry_new', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
@@ -392,7 +394,7 @@ else
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 			
-			$template->assign_block_vars('training_row_n', array(
+			$template->assign_block_vars('display.training_row_n', array(
 				'CLASS'		=> $class,
 				'NAME'		=> $training_entry_n[$i]['training_vs'],
 				
@@ -415,7 +417,7 @@ else
 	
 	if ( !$training_entry_o )
 	{
-		$template->assign_block_vars('no_entry_old', array());
+		$template->assign_block_vars('display.no_entry_old', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
@@ -424,7 +426,7 @@ else
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 			
-			$template->assign_block_vars('training_row_o', array(
+			$template->assign_block_vars('display.training_row_o', array(
 				'CLASS'		=> $class,
 				'NAME'		=> $training_entry_o[$i]['training_vs'],
 				

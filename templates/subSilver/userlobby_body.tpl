@@ -4,9 +4,21 @@
 </tr>
 <tr>
 	<td>
-
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		
+		<tr>
+			<td width="20%" valign="top" nowrap>News:</td>
+			<td width="80%" align="left">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<!-- BEGIN lobby_news_new_row -->
+				<tr>
+					<td width="20 %" nowrap>{lobby_news_new_row.NEWS_NAME}</td>
+					<td align="left">{lobby_news_new_row.NEWS_COMMENTS}</td>
+					
+				</tr>
+				<!-- END lobby_news_new_row -->
+				</table>			
+			</td>
+		</tr>
 		<tr>
 			<td width="20%" valign="top" nowrap>Aktuelle Clanwars:</td>
 			<td width="80%" align="left">
@@ -37,12 +49,9 @@
 			</td>
 		</tr>
 		<!-- END lobby_match_old -->
-		
 		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<td colspan="2">&nbsp;</td>
 		</tr>
-		
 		<!-- BEGIN lobby_training -->
 		<tr>
 			<td width="20%" valign="top" nowrap>Aktuelle Trainings:</td>
@@ -52,7 +61,6 @@
 				<tr>
 					<td width="20%" nowrap>{lobby_training.lobby_training_new_row.TRAINING_NAME}</td>
 					<td align="left">{lobby_training.lobby_training_new_row.TRAINING_COMMENTS}</td>
-					
 				</tr>
 				<!-- END lobby_training_new_row -->
 				</table>			

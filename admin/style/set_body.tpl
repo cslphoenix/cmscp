@@ -8,8 +8,6 @@
 </tr>
 </table>
 
-<br />
-
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
 <table class="edit" cellspacing="1">

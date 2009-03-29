@@ -17,7 +17,7 @@
 	<td class="rowHead" colspan="3">{L_MATCH_SETTINGS}</td>
 </tr>
 <tr>
-		<td class="rowHead" colspan="7"> aktuelle </td>
+		<td class="rowHead" colspan="7">{L_UPCOMING}</td>
 	</tr>
 <!-- BEGIN match_row_n -->
 <tr>
@@ -37,7 +37,7 @@
 	</tr>
 	<!-- END no_entry -->
 	<tr>
-		<td class="rowHead" colspan="7"> abgelaufen </td>
+		<td class="rowHead" colspan="7">{L_EXPIRED}</td>
 	</tr>
 <!-- BEGIN match_row_o -->
 <tr>

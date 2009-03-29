@@ -1,7 +1,7 @@
 <form action="{S_MATCH_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_TEAM_TITLE} - {L_TEAM_NEW_EDIT}</th>
+	<th>{L_MATCH_TITLE} - {L_MATCH_NEW_EDIT}</th>
 </tr>
 <tr>
 	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
@@ -13,92 +13,94 @@
 
 <table class="edit" cellspacing="1">
 <tr>
-	<th colspan="2">{L_TEAM_INFOS}</th>
+	<th colspan="2">{L_MATCH_INFOS}</th>
 </tr>
 <tr>
-	<td class="row1" width="160">{L_TEAM_NAME}: *</td>
+	<td class="row1" width="160">{L_MATCH_TEAM}: *</td>
 	<td class="row3">{S_TEAMS}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}: *</td>
+	<td class="row1">{L_MATCH_TYPE}: *</td>
 	<td class="row3">{S_TYPE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}: *</td>
+	<td class="row1">{L_MATCH_CATEGORIE}: *</td>
 	<td class="row3">{S_CATEGORIE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}: *</td>
+	<td class="row1">{L_MATCH_LEAGUE}: *</td>
 	<td class="row3">{S_LEAGUE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_LEAGUE_URL}:</td>
 	<td class="row3"><input class="post" type="text" name="match_league_url" value="{LEAGUE_URL}" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_LEAGUE_MATCH}:</td>
 	<td class="row3"><input class="post" type="text" name="match_league_match" value="{LEAGUE_MATCH}" ></td>
 </tr>
-
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_DATE}:</td>
 	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}  </td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_PUBLIC}:</td>
 	<td class="row3"><input type="radio" name="match_public" value="1" {S_CHECKED_PUB_YES} /> {L_YES} <input type="radio" name="match_public" value="0" {S_CHECKED_PUB_NO} /> {L_NO} </td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_COMMENTS}:</td>
 	<td class="row3"><input type="radio" name="match_comments" value="1" {S_CHECKED_COM_YES} /> {L_YES} <input type="radio" name="match_comments" value="0" {S_CHECKED_COM_NO} /> {L_NO} </td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}: *</td>
+	<td class="row1">{L_MATCH_RIVAL}: *</td>
 	<td class="row3"><input id="match_rival" onBlur="javascript:checkEntry(this)" class="post" type="text" name="match_rival" value="{MATCH_RIVAL}" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}: *</td>
+	<td class="row1">{L_MATCH_RIVALTAG}: *</td>
 	<td class="row3"><input id="match_rival_tag" onBlur="javascript:checkEntry(this)" class="post" type="text" name="match_rival_tag" value="{MATCH_RIVAL_TAG}" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_RIVALURL}:</td>
 	<td class="row3"><input class="post" type="text" name="match_rival_url" value="{MATCH_RIVAL_URL}" ></td>
 </tr>
 
-
 <tr>
-	<td class="row1">{L_TEAM_GAME}: *</td>
+	<td class="row1">{L_MATCH_SERVER}: *</td>
 	<td class="row3"><input id="server" onBlur="javascript:checkEntry(this)" class="post" type="text" name="server" value="{SERVER}" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_SERVERPW}:</td>
 	<td class="row3"><input class="post" type="text" name="server_pw" value="{SERVER_PW}" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_HLTV}:</td>
 	<td class="row3"><input class="post" type="text" name="server_hltv" value="{SERVER_HLTV}" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_MATCH_HLTVPW}:</td>
 	<td class="row3"><input class="post" type="text" name="server_hltv_pw" value="{SERVER_HLTV_PW}" ></td>
+</tr>
+<tr>
+	<td class="row1">{L_MATCH_TEXT}:</td>
+	<td class="row3"><textarea class="post" rows="5" cols="50" name="match_text"></textarea></td>
 </tr>
 <!-- BEGIN new_match -->
 <tr>
-	<td class="row1">{L_TRAIN}:</td>
+	<td class="row1">{L_TRAINING}:</td>
 	<td class="row3"><input type="radio" name="train" value="1" onChange="document.getElementById('trainbox').style.display = '';" /> {L_YES} <input type="radio" name="train" value="0" onChange="document.getElementById('trainbox').style.display = 'none';" checked="checked" /> {L_NO} </td>
 </tr>
 <tbody id="trainbox" style="display: none;">
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_TRAINING_DATE}:</td>
 	<td class="row3">{S_TDAY} . {S_TMONTH} . {S_TYEAR} - {S_THOUR} : {S_TMIN} - {S_TDURATION}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
+	<td class="row1">{L_TRAINING_MAPS}:</td>
 	<td class="row3"><input class="post" type="text" name="training_maps" value="" ></td>
 </tr>
 <tr>
-	<td class="row1">{L_TEAM_GAME}:</td>
-	<td class="row3"><textarea class="post" rows="5" cols="50" name="training_comment"></textarea></td>
+	<td class="row1">{L_TRAINING_TEXT}:</td>
+	<td class="row3"><textarea class="post" rows="5" cols="50" name="training_text"></textarea></td>
 </tr>
 </tbody>
 <!-- END new_match -->

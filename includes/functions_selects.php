@@ -1,5 +1,43 @@
 <?php
 
+function _select_box($default, $type)
+{
+	global $db, $lang;
+	
+	$func_select = '<select class="post" name="rank_id">';
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$selected = ( $row['rank_order'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
+	}
+	$func_select .= '</select>';
+
+	return $func_select;
+}
+
+function _select_newscat($default)
+{
+	global $db;
+		
+	$sql = 'SELECT * FROM ' . NEWS_CATEGORIE_TABLE . " ORDER BY news_categorie_order";
+	if (!($result = $db->sql_query($sql)))
+	{
+		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+	}
+
+	$func_select = '<select name="news_categorie_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select .= '<option value="0">----------</option>';
+	
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$selected = ( $row['news_categorie_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['news_categorie_image'] . '"' . $selected . '>' . $row['news_categorie_title'] . '&nbsp;</option>';
+	}
+	$func_select .= '</select>';
+
+	return $func_select;
+}
+
 //
 //	Rang (Page/Forum/Team) Select
 //
@@ -95,11 +133,13 @@ function _select_team($default, $type, $class)
 //	default:	id
 //	class:		css class
 //
-function _select_match($default, $class)
+function _select_match($default, $type, $class)
 {
 	global $db, $lang;
 	
-	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH_TABLE . ' WHERE match_date > ' . time() . ' ORDER BY match_date';
+	$where = ($type == '') ? ' WHERE match_date > ' . time() : '';
+	
+	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH_TABLE . $where . ' ORDER BY match_date';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);

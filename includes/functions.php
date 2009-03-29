@@ -319,12 +319,14 @@ function _debug_post($data)
 {
 	print '<br />';
 	print '<-- start -->';
+	print '<br />';
+	print '<br />';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
 	print '<br />';
-	var_dump($data);
-	print '<br />';
+//	var_dump($data);
+//	print '<br />';
 	print '<-- end -->';
 	print '<br />';
 }
@@ -632,7 +634,7 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 	
 	if ( $current_logo != '' )
 	{
-		picture_delete($format, $current_logo, $current_logo_preview);
+		picture_delete($num, $current_logo, $current_logo_preview);
 	}
 
 	if ( @$ini_val('open_basedir') != '' )
@@ -657,8 +659,6 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 	$move_file($logo_filename, './../' . $settings['match_picture_path'] . "/$new_filename");
 
 	@chmod('./../' . $settings['match_picture_path'] . "/$new_filename", 0777);
-	
-	$pic = $picture . $num . '_sql';
 	
 	$pic = "details_map_pic_" . $num . " = '$new_filename', pic_" . $num . "_preview = '$new_filename_preview',";
 	

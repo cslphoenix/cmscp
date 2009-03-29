@@ -25,6 +25,11 @@
 		</tr>
 		<!-- END forumrow -->
 		<!-- END catrow -->
+		<!-- BEGIN switch_no_forums -->
+		<tr>
+			<td>{NO_FORUMS}</td>
+		</tr>
+		<!-- END switch_no_forums -->
 		</table>
 	</td>
 </tr>

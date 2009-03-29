@@ -373,6 +373,21 @@ else
 		'S_TEAM_ACTION'		=> append_sid("admin_ranks.php")
 	));
 	
+	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_PAGE;
+	$result = $db->sql_query($sql);
+	$max_page = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	
+	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_FORUM;
+	$result = $db->sql_query($sql);
+	$max_forum = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	
+	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_TEAM;
+	$result = $db->sql_query($sql);
+	$max_team = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	
 	$sql = 'SELECT * FROM ' . RANKS_TABLE . ' ORDER BY rank_type ASC, rank_special DESC, rank_order ASC';
 	$result = $db->sql_query($sql);
 	
@@ -385,9 +400,15 @@ else
 		
 		if ($row['rank_type'] == RANK_PAGE)
 		{
+			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
+			$icon_down	= ( $row['rank_order'] != $max_page['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
+			
 			$template->assign_block_vars('page_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
+				
+				'ICON_UP'		=> $icon_up,
+				'ICON_DOWN'		=> $icon_down,
 
 				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
 				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
@@ -398,11 +419,18 @@ else
 		}
 		else if ($row['rank_type'] == RANK_FORUM)
 		{
+			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
+			$icon_down	= ( $row['rank_order'] != $max_forum['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
+			
 			$template->assign_block_vars('forum_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
 				'RANK_MIN'		=> ($row['rank_special'] == '0') ? $row['rank_min'] : ' - ',
 				'RANK_SPECIAL'	=> ($row['rank_special'] == '1') ? $lang['Yes'] : $lang['No'],
+				
+				'ICON_UP'		=> $icon_up,
+				'ICON_DOWN'		=> $icon_down,
+				
 				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
 				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
 				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
@@ -412,9 +440,15 @@ else
 		}
 		else if ($row['rank_type'] == RANK_TEAM)
 		{
+			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
+			$icon_down	= ( $row['rank_order'] != $max_team['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
+			
 			$template->assign_block_vars('team_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
+				
+				'ICON_UP'		=> $icon_up,
+				'ICON_DOWN'		=> $icon_down,
 
 				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
 				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=".$row['rank_id']),

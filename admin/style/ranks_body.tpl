@@ -22,7 +22,7 @@
 			<tr>
 				<td class="{page_row.CLASS}" align="left">{page_row.RANK_TITLE}</td>
 				<td class="{page_row.CLASS}" align="center" width="1%"><a href="{page_row.U_EDIT}">{L_SETTING}</a></td>
-				<td class="{page_row.CLASS}" align="center" width="5%"><a href="{page_row.U_MOVE_UP}">{ICON_MOVE_UP}</a> <a href="{page_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a></td>
+				<td class="{page_row.CLASS}" align="center" width="6%"><a href="{page_row.U_MOVE_UP}">{page_row.ICON_UP}</a> <a href="{page_row.U_MOVE_DOWN}">{page_row.ICON_DOWN}</a></td>
 				<td class="{page_row.CLASS}" align="center" width="1%"><a href="{page_row.U_DELETE}">{L_DELETE}</a></td>
 			</tr>
 			<!-- END page_row -->
@@ -52,7 +52,7 @@
 				<td class="{forum_row.CLASS}" align="left">{forum_row.RANK_SPECIAL}</td>
 				<td class="{forum_row.CLASS}" align="left">{forum_row.RANK_MIN}</td>
 				<td class="{forum_row.CLASS}" align="center" width="1%"><a href="{forum_row.U_EDIT}">{L_SETTING}</a></td>
-				<td class="{forum_row.CLASS}" align="center" width="5%"><a href="{forum_row.U_MOVE_UP}">{ICON_MOVE_UP}</a> <a href="{forum_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a></td>
+				<td class="{forum_row.CLASS}" align="center" width="6%"><a href="{forum_row.U_MOVE_UP}">{forum_row.ICON_UP}</a> <a href="{forum_row.U_MOVE_DOWN}">{forum_row.ICON_DOWN}</a></td>
 				<td class="{forum_row.CLASS}" align="center" width="1%"><a href="{forum_row.U_DELETE}">{L_DELETE}</a></td>
 			</tr>
 			<!-- END forum_row -->
@@ -78,7 +78,7 @@
 			<tr>
 				<td class="{team_row.CLASS}" align="left">{team_row.RANK_TITLE}</td>
 				<td class="{team_row.CLASS}" align="center" width="1%"><a href="{team_row.U_EDIT}">{L_SETTING}</a></td>
-				<td class="{team_row.CLASS}" align="center" width="5%"><a href="{team_row.U_MOVE_UP}">{ICON_MOVE_UP}</a> <a href="{team_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a></td>
+				<td class="{team_row.CLASS}" align="center" width="6%"><a href="{team_row.U_MOVE_UP}">{team_row.ICON_UP}</a> <a href="{team_row.U_MOVE_DOWN}">{team_row.ICON_DOWN}</a></td>
 				<td class="{team_row.CLASS}" align="center" width="1%"><a href="{team_row.U_DELETE}">{L_DELETE}</a></td>
 			</tr>
 			<!-- END team_row -->
