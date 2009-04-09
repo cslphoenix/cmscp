@@ -13,7 +13,7 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userdata['auth_training'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_training'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['teams']['training'] = $filename;
 	}
@@ -31,7 +31,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userdata['auth_training'] && $userdata['user_level'] != ADMIN)
+	if (!$auth['auth_training'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -109,7 +109,7 @@ else
 						'match_id'			=> $match_id,
 						'training_start'	=> time(),
 						'training_maps'		=> '',
-						'training_comment'	=> '',
+						'training_text'		=> '',
 						'training_duration'	=> '',
 					);
 
@@ -223,7 +223,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'acp_training_add');
 				
-				$oCache = new Cache;				
+				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 	
 				$message = $lang['training_create'] . '<br /><br />' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
@@ -285,7 +285,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'acp_team_edit');
 				
-				$oCache = new Cache;				
+				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 				
 				$message = $lang['training_update'] . '<br /><br />' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
@@ -318,6 +318,9 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, ACP_TRAINING_DELETE, $team_info['training_title']);
 					
+					$oCache -> sCachePath = './../cache/';
+					$oCache -> deleteCache('subnavi_trains');
+					
 					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
@@ -347,7 +350,7 @@ else
 				break;
 							
 			default:
-				message_die(GENERAL_ERROR, 'kein modul');
+				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
 				break;
 		}
 	
@@ -390,7 +393,7 @@ else
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($training_entry_n)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_entry_n)); $i++)
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 			
@@ -422,7 +425,7 @@ else
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($training_entry_o)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_entry_o)); $i++)
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 			
@@ -441,11 +444,11 @@ else
 	}
 	
 	
-	$current_page = ( !count($training_entry_o) ) ? 1 : ceil( count($training_entry_o) / $settings['entry_per_page'] );
+	$current_page = ( !count($training_entry_o) ) ? 1 : ceil( count($training_entry_o) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination("admin_training.php?", count($training_entry_o), $settings['entry_per_page'], $start),
-		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION' => generate_pagination("admin_training.php?", count($training_entry_o), $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])
 	);

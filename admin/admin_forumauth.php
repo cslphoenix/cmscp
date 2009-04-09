@@ -36,6 +36,7 @@ else
 	//
 	$root_path = './../';
 	require('./pagestart.php');
+	
 	//
 	// Start program - define vars
 	//
@@ -43,16 +44,12 @@ else
 	$simple_auth_ary = array(
 		0  => array(AUTH_ALL, AUTH_ALL, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_MOD),	//	Benutzer
 		1  => array(AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_MOD),	//	Benutzer versteckt
-		
 		2  => array(AUTH_REG, AUTH_REG, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail
 		3  => array(AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail versteckt
-		
 		4  => array(AUTH_REG, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member
 		5  => array(AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member versteckt		
-		
 		6  => array(AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren
 		7  => array(AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren versteckt
-		
 		8  => array(AUTH_REG, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat
 		9  => array(AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat versteckt
 	);
@@ -76,7 +73,8 @@ else
 		'auth_sticky'		=> $lang['Sticky'],
 		'auth_announce'		=> $lang['Announce'], 
 		'auth_poll'			=> $lang['Poll'], 
-		'auth_pollcreate'	=> $lang['Pollcreate']);
+		'auth_pollcreate'	=> $lang['Pollcreate']
+	);
 	
 	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ACL', 'ADM');
 	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
@@ -188,11 +186,13 @@ else
 		// Output the selection table if no forum id was
 		// specified
 		//
-		$template->set_filenames(array(
-			'body' => './../admin/style/auth_select_body.tpl')
-		);
+		$template->set_filenames(array('body' => './../admin/style/acp_auth.tpl'));
+		$template->assign_block_vars('display', array());
+//		$template->set_filenames(array(
+//			'body' => './../admin/style/auth_select_body.tpl')
+//		);
 	
-		$select_list = '<select name="' . POST_FORUM_URL . '">';
+		$select_list = '<select name="' . POST_FORUM_URL . '" class="post">';
 		for($i = 0; $i < count($forum_rows); $i++)
 		{
 			$select_list .= '<option value="' . $forum_rows[$i]['forum_id'] . '">' . $forum_rows[$i]['forum_name'] . '</option>';
@@ -216,9 +216,11 @@ else
 		// Output the authorisation details if an id was
 		// specified
 		//
-		$template->set_filenames(array(
-			'body' => './../admin/style/auth_forum_body.tpl')
-		);
+		$template->set_filenames(array('body' => './../admin/style/acp_auth.tpl'));
+		$template->assign_block_vars('auth_forum', array());
+//		$template->set_filenames(array(
+//			'body' => './../admin/style/auth_forum_body.tpl')
+//		);
 	
 		$forum_name = $forum_rows[0]['forum_name'];
 	
@@ -265,12 +267,8 @@ else
 	
 			$simple_auth .= '</select>';
 	
-			$template->assign_block_vars('forum_auth_titles', array(
-				'CELL_TITLE' => $lang['Simple_mode'])
-			);
-			$template->assign_block_vars('forum_auth_data', array(
-				'S_AUTH_LEVELS_SELECT' => $simple_auth)
-			);
+			$template->assign_block_vars('auth_forum.forum_auth_titles', array('CELL_TITLE' => $lang['Simple_mode']));
+			$template->assign_block_vars('auth_forum.forum_auth_data', array('S_AUTH_LEVELS_SELECT' => $simple_auth));
 	
 			$s_column_span++;
 		}
@@ -293,12 +291,11 @@ else
 	
 				$cell_title = $field_names[$forum_auth_fields[$j]];
 	
-				$template->assign_block_vars('forum_auth_titles', array(
-					'CELL_TITLE' => $cell_title)
-				);
-				$template->assign_block_vars('forum_auth_data', array(
-					'S_AUTH_LEVELS_SELECT' => $custom_auth[$j])
-				);
+				
+				$template->assign_block_vars('auth_forum.forum_auth_data', array(
+					'CELL_TITLE' => $cell_title,
+					'S_AUTH_LEVELS_SELECT' => $custom_auth[$j],
+				));
 	
 				$s_column_span++;
 			}

@@ -23,11 +23,13 @@
 	
 	<table border="0" cellpadding="4" cellspacing="1" width="100%">
 	<tr>
-		<th colspan="2" align="center" class="thCornerL" nowrap="nowrap">&nbsp;{L_TOPICS}&nbsp;</th>
-		<th width="50" align="center" class="thTop" nowrap="nowrap">&nbsp;{L_REPLIES}&nbsp;</th>
-		<th width="100" align="center" class="thTop" nowrap="nowrap">&nbsp;{L_AUTHOR}&nbsp;</th>
-		<th width="50" align="center" class="thTop" nowrap="nowrap">&nbsp;{L_VIEWS}&nbsp;</th>
-		<th align="center" class="thCornerR" nowrap="nowrap">&nbsp;{L_LASTPOST}&nbsp;</th>
+		<td class="info_head" colspan="2" align="left">{L_TOPICS}</td>
+		<!--
+		<td class="info_head" width="50" align="center" nowrap="nowrap">&nbsp;{L_REPLIES}&nbsp;</td>
+		<td class="info_head" width="100" align="center" nowrap="nowrap">&nbsp;{L_AUTHOR}&nbsp;</td>
+		<td class="info_head" width="50" align="center" nowrap="nowrap">&nbsp;{L_VIEWS}&nbsp;</td>
+		-->
+		<td class="info_head" style="text-align:right;">{L_LASTPOST}</td>
 	</tr>
 	<!-- BEGIN topicrow -->
 	<tr>
@@ -41,12 +43,9 @@
 	<!-- END topicrow -->
 	<!-- BEGIN switch_no_topics -->
 	<tr>
-		<td class="row1" colspan="6" height="30" align="center" valign="middle"><span class="gen">{L_NO_TOPICS}</span></td>
+		<td class="row1" colspan="6" align="center"><span class="small">{L_NO_TOPICS}</span></td>
 	</tr>
 	<!-- END switch_no_topics -->
-	<tr> 
-		<td class="catBottom" align="center" valign="middle" colspan="6"><span class="genmed">{L_DISPLAY_TOPICS}:&nbsp;{S_SELECT_TOPIC_DAYS}&nbsp;<input type="submit" class="liteoption" value="{L_GO}" name="submit" /></span></td>
-	</tr>
 	</table>
 	
 	<table width="100%" cellspacing="2" border="0" align="center" cellpadding="2">
@@ -56,9 +55,11 @@
 	</table>
 	</form>
 	
+	<br/>
+	<!--
 	<table width="100%" cellspacing="0" border="0" align="center" cellpadding="0">
 	<tr>
-		<!--
+		<td align="left" nowrap><span class="small">{S_AUTH_LIST}</span></td>
 		<td align="left" valign="top">
 			<table cellspacing="3" cellpadding="0" border="0">
 			<tr>
@@ -91,11 +92,10 @@
 			</tr>
 			</table>
 		</td>
-		-->
-		<td align="left"><span class="small">{S_AUTH_LIST}</span></td>
+		
 	</tr>
 	</table>
-
+	-->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
 	<td class="info_foot" colspan="5">{LOGGED_IN_USER_LIST}</td>

@@ -13,7 +13,7 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userdata['auth_server'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_server'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['main']['server'] = $filename;
 	}
@@ -31,7 +31,7 @@ else
 	include($root_path . 'includes/teamspeak_query.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userdata['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$auth['auth_games'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -259,7 +259,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
 	
-				$message = $lang['team_create'] . '<br /><br />' . sprintf($lang['click_return_team'], "<a href=\"" . append_sid("admin_server.php") . '">', '</a>') . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>');
+				$message = $lang['team_create'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_server.php") . '">', '</a>') . '<br /><br />' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -290,8 +290,8 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
 				
-				$message = $lang['team_update'] . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_server'], "<a href=\"" . append_sid("admin_server.php") . '">', '</a>');
+				$message = $lang['team_update'] . '<br /><br />' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
+					. '<br /><br />' . sprintf($lang['click_return_server'], '<a href="' . append_sid("admin_server.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -321,8 +321,8 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
 					
-					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['click_return_server'], "<a href=\"" . append_sid("admin_server.php") . '">', '</a>');
+					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
+						. '<br /><br />' . sprintf($lang['click_return_server'], '<a href="' . append_sid("admin_server.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -368,7 +368,7 @@ else
 				break;
 				
 			default:
-				message_die(GENERAL_ERROR, 'kein modul');
+				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
 				break;
 		}
 	

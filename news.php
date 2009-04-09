@@ -52,16 +52,16 @@ if ($mode == '')
 	//
 	//	List News
 	//
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
-		$sql = 'SELECT n.*, nc.news_categorie_title, nc.news_categorie_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS_TABLE . ' n
 						LEFT JOIN ' . USERS_TABLE . ' u ON n.user_id = u.user_id
 						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWS_CATEGORIE_TABLE . ' nc ON n.news_categorie = nc.news_categorie_id
+						LEFT JOIN ' . NEWS_CATEGORY_TABLE . ' nc ON n.news_category = nc.news_category_id
 					WHERE n.news_time_public < ' . time() . '
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
@@ -73,14 +73,14 @@ if ($mode == '')
 	}
 	else
 	{
-		$sql = 'SELECT n.*, nc.news_categorie_title, nc.news_categorie_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS_TABLE . ' n
 						LEFT JOIN ' . USERS_TABLE . ' u ON n.user_id = u.user_id
 						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWS_CATEGORIE_TABLE . ' nc ON n.news_categorie = nc.news_categorie_id
+						LEFT JOIN ' . NEWS_CATEGORY_TABLE . ' nc ON n.news_category = nc.news_category_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
@@ -98,7 +98,7 @@ if ($mode == '')
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($news_data)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($news_data)); $i++)
 		{
 			$class = ($i % 2) ? 'row1' : 'row2';
 			
@@ -124,8 +124,8 @@ if ($mode == '')
 				'NEWS_URL2'			=> $news_data[$i]['news_url2'],
 				'NEWS_LINK2'		=> $news_data[$i]['news_link2'],
 				
-				'NEWSCAT_TITLE'		=> ( $news_data[$i]['news_categorie_title'] ) ? $news_data[$i]['news_categorie_title'] : '',
-				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['news_categorie_image'] ) ? $root_path . $settings['news_categorie_path'] . '/' . $news_data[$i]['news_categorie_image'] : '',
+				'NEWSCAT_TITLE'		=> ( $news_data[$i]['news_category_title'] ) ? $news_data[$i]['news_category_title'] : '',
+				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news_data[$i]['news_category_image'] : '',
 				
 				'U_NEWS'			=> append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']),
 				
@@ -149,11 +149,11 @@ if ($mode == '')
 			}
 		}
 		
-		$current_page = ( !count($news_data) ) ? 1 : ceil( count($news_data) / $settings['comment_per_page'] );
+		$current_page = ( !count($news_data) ) ? 1 : ceil( count($news_data) / $settings['site_comment_per_page'] );
 			
 		$template->assign_vars(array(
-			'PAGINATION' => generate_pagination("news.php?" . POST_NEWS_URL . "=" . $news_data, count($news_data), $settings['comment_per_page'], $start),
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['comment_per_page'] ) + 1 ), $current_page ), 
+			'PAGINATION' => generate_pagination("news.php?" . POST_NEWS_URL . "=" . $news_data, count($news_data), $settings['site_comment_per_page'], $start),
+			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
 		
 			'L_GOTO_PAGE' => $lang['Goto_page'])
 		);
@@ -164,7 +164,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 {
 	session_start();
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT n.*, u.username, u.user_color
 					FROM ' . NEWS_TABLE . ' n
@@ -263,7 +263,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 		}
 		else
 		{
-			for($i = $start; $i < min($settings['comment_per_page'] + $start, count($comment_entry)); $i++)
+			for($i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++)
 			{
 				$class = ($i % 2) ? 'row1' : 'row2';
 				
@@ -300,11 +300,11 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				));
 			}
 		
-			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['comment_per_page'] );
+			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_id, count($comment_entry), $settings['comment_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['comment_per_page'] ) + 1 ), $current_page ), 
+				'PAGINATION' => generate_pagination("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_id, count($comment_entry), $settings['site_comment_per_page'], $start),
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'])
 			);
@@ -421,7 +421,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				//	Keine Fehler?
 				//	Cache löschung und eintragung des Kommentars
-				$oCache = new Cache;
+				
 				$oCache -> deleteCache('news_details_' . $news_id . '_comments');
 				
 				_comment_message('add', 'news', $news_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');

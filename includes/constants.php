@@ -12,9 +12,10 @@ define('ANONYMOUS',	-1);
 //	Userlevel
 define('GUEST',		0);
 define('USER',		1);
-define('TRAIL',		2);
+define('TRIAL',		2);
 define('MEMBER',	3);
-define('ADMIN',		4);
+define('MOD',		4);
+define('ADMIN',		5);
 
 //	Log types
 //	- wo gespeichert wird, Admin, Moderation oder Benutzerbereich
@@ -33,6 +34,7 @@ define('LOG_SEK_MATCH',		5);
 define('LOG_SEK_TRAINING',	6);
 define('LOG_SEK_LOGIN',		7);
 define('LOG_SEK_NAVI',		8);
+define('LOG_SEK_FORUM',		9);
 define('LOG_SEK_COMMENT',	21);
 
 //	Navi types
@@ -47,6 +49,11 @@ define('RANK_PAGE',		1);
 define('RANK_FORUM',	2);
 define('RANK_TEAM',		3);
 
+//	Rank types
+define('CONTACT_NORMAL',	0);
+define('CONTACT_FIGHTUS',	1);
+define('CONTACT_JOINUS',	2);
+
 //	Server types
 define('SERVER_GAME',	1);
 define('SERVER_VOICE',	2);
@@ -58,8 +65,10 @@ define('USER_ACTIVATION_ADMIN',	2);
 
 //	Gruppeneinstellungen
 define('GROUP_OPEN',	0);
-define('GROUP_CLOSED',	1);
-define('GROUP_HIDDEN',	2);
+define('GROUP_REQUEST',	1);
+define('GROUP_CLOSED',	2);
+define('GROUP_HIDDEN',	3);
+define('GROUP_SYSTEM',	4);
 
 // Forum state
 define('FORUM_UNLOCKED', 0);
@@ -86,10 +95,20 @@ define('AUTH_STICKY',		8);		//	Wichtig
 define('AUTH_POLLCREATE',	9);		//	Umfrage erstellen
 define('AUTH_POLL',			10);	//	an Umfrage teilnehmen
 
+define('AUTH_DISALLOWED',	0);		//	nicht erlaubt
+define('AUTH_ALLOWED',		1);		//	erlaubt
+define('AUTH_SPECIAL',		2);		//	Special für Benutzer
+define('AUTH_DEFAULT',		3);		//	Vorgabe Einstellung
+
 //	Logo Upload
 define('LOGO_NONE',		0);
 define('LOGO_UPLOAD',	1);
 define('LOGO_REMOTE',	2);
+
+// Topic types
+define('POST_NORMAL', 0);
+define('POST_STICKY', 1);
+define('POST_ANNOUNCE', 2);
 
 //	SQL codes
 define('BEGIN_TRANSACTION',	1);
@@ -120,6 +139,8 @@ define('PAGE_ADMIN',		-1);
 define('PAGE_LOGIN',		-2);
 define('PAGE_REGISTER',		-3);
 define('PAGE_PROFILE',		-4);
+define('PAGE_POSTING',		-5);
+define('PAGE_GROUPS',		-6);
 //define('PAGE_TOPIC_OFFSET',	5000);
 define('PAGE_MATCH',		-11);
 define('PAGE_TRAINING',		-12);
@@ -144,6 +165,7 @@ define('POST_CONTACT_URL',		'c');
 define('POST_NAVIGATION_URL',	'n');
 define('POST_NEWS_URL',			'n');
 define('POST_NEWSCAT_URL',		'nc');
+
 //	fürs Forum
 define('POST_POST_URL',			'p');
 define('POST_TOPIC_URL',		't');
@@ -168,6 +190,7 @@ define('CONFIG_TABLE',			$db_prefix.'config');
 define('SETTINGS_TABLE',		$db_prefix.'settings');
 
 //	sonstiges ;)
+
 define('BANLIST_TABLE',			$db_prefix.'banlist');
 define('CONTACT_TABLE',			$db_prefix.'contact');
 define('DISALLOW_TABLE',		$db_prefix.'disallow');
@@ -189,12 +212,13 @@ define('USERS_AUTH_TABLE',		$db_prefix.'users_auth');
 
 //	Gruppen
 define('GROUPS_TABLE',			$db_prefix.'groups');
+define('GROUPS_TEST_TABLE',		$db_prefix.'groups_test');
 define('GROUPS_AUTH_TABLE',		$db_prefix.'groups_auth');
 define('GROUPS_USER_TABLE',		$db_prefix.'groups_user');
 
 //	News
 define('NEWS_TABLE',				$db_prefix.'news');
-define('NEWS_CATEGORIE_TABLE',		$db_prefix.'news_categorie');
+define('NEWS_CATEGORY_TABLE',		$db_prefix.'news_category');
 define('NEWS_COMMENTS_TABLE',		$db_prefix.'news_comments');
 define('NEWS_COMMENTS_READ_TABLE',	$db_prefix.'news_comments_read');
 
@@ -208,6 +232,7 @@ define('LOG_TABLE',				$db_prefix.'log');
 define('ERROR_TABLE',			$db_prefix.'log_error');
 
 //	Forum
+define('AUTH_ACCESS_TABLE',		$db_prefix.'forum_auth_access');
 define('CATEGORIES_TABLE',		$db_prefix.'forum_cat');
 define('FORUMS_TABLE',			$db_prefix.'forum_forums');
 define('POSTS_TABLE',			$db_prefix.'forum_posts');

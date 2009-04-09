@@ -52,7 +52,7 @@ if ($mode == '')
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($training_entry)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
@@ -84,7 +84,7 @@ if ($mode == '')
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($training_entry)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
@@ -100,11 +100,11 @@ if ($mode == '')
 		}
 	}
 
-	$current_page = ( !count($training_entry) ) ? 1 : ceil( count($training_entry) / $settings['entry_per_page'] );
+	$current_page = ( !count($training_entry) ) ? 1 : ceil( count($training_entry) / $settings['site_entry_per_page'] );
 	
 	$template->assign_vars(array(
-		'PAGINATION'	=> generate_pagination("match.php?", count($training_entry), $settings['entry_per_page'], $start),
-		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION'	=> generate_pagination("match.php?", count($training_entry), $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE'	=> $lang['Goto_page']
 	));
 	
@@ -140,7 +140,7 @@ if ($mode == '')
 	}
 		
 	$template->assign_vars(array(
-		'L_LAST_MATCH'	=> $lang['last_matches'],
+		'L_LAST_MATCH'	=> $lang['subnavi_last_matches'],
 		'L_DETAILS'		=> $lang['match_details'],
 		
 		'L_TEAMS'		=> $lang['teams'],
@@ -167,7 +167,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			WHERE tr.training_id = ' . $training_id;
 	$row_details = _cached($sql, 'training_details_' . $training_id, 1);
 	
-	if ($userdata['auth_match'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
 		$template->assign_block_vars('training_edit', array(
 			'EDIT_TRAINING' => '<a href="' . append_sid("admin/admin_training.php?mode=edit&" . POST_TRAINING_URL . "=" . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',
@@ -371,7 +371,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				$result = $db->sql_query($sql);
 			}
 			
-			for($i = $start; $i < min($settings['comment_per_page'] + $start, count($comment_entry)); $i++)
+			for($i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++)
 			{
 				$class = ($i % 2) ? 'row1' : 'row2';
 				
@@ -408,11 +408,11 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				));
 			}
 		
-			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['comment_per_page'] );
+			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id, count($comment_entry), $settings['comment_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['comment_per_page'] ) + 1 ), $current_page ), 
+				'PAGINATION' => generate_pagination("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id, count($comment_entry), $settings['site_comment_per_page'], $start),
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'])
 			);
@@ -485,7 +485,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				
 				//	Keine Fehler?
 				//	Cache löschung und eintragung des Kommentars
-				$oCache = new Cache;
+				
 				$oCache -> deleteCache('training_details_' . $training_id . '_comments');
 				
 				_comment_message('add', 'training', $training_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
@@ -510,9 +510,9 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		'TRAINING_TYPE'			=> $match_type,
 		'TRAINING_LEAGUE_INFO'	=> $match_league,
 		'SERVER'				=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'SERVER_PW'				=> ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_pw'] : '',
+		'SERVER_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_pw'] : '',
 		'HLTV'					=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'HLTV_PW'				=> ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_hltv_pw'] : '',
+		'HLTV_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_hltv_pw'] : '',
 		
 		'MAPC'					=> ($row_details['details_mapc']) ? '' : 'none',
 		'MAPD'					=> ($row_details['details_mapd']) ? '' : 'none',
@@ -602,7 +602,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	}
 	else
 	{
-		for($i = $start; $i < min($settings['entry_per_page'] + $start, count($trainings_entry)); $i++)
+		for($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($trainings_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
@@ -616,12 +616,12 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 		}
 	}
 	
-	$current_page = ( !count($trainings_entry) ) ? 1 : ceil( count($trainings_entry) / $settings['entry_per_page'] );
+	$current_page = ( !count($trainings_entry) ) ? 1 : ceil( count($trainings_entry) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
 		'TEAM_NAME'		=> $teams['team_name'],
-		'PAGINATION'	=> generate_pagination("training.php?", count($trainings_entry), $settings['entry_per_page'], $start),
-		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION'	=> generate_pagination("training.php?", count($trainings_entry), $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE'	=> $lang['Goto_page'],
 	));
 }
@@ -631,7 +631,7 @@ else
 	
 }
 
-if (!$userdata['user_level'] == TRAIL || !$userdata['user_level'] == MEMBER || !$userdata['user_level'] == ADMIN)
+if (!$userdata['user_level'] == TRIAL || !$userdata['user_level'] == MEMBER || !$userdata['user_level'] == ADMIN)
 {
 	message_die(GENERAL_ERROR, $lang['training_denied']);
 }

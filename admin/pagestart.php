@@ -14,6 +14,7 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_ADMIN);
 init_userprefs($userdata);
 
+$auth = auth_acp_check($userdata['user_id']);
 
 if (!$userdata['session_logged_in'])
 {

@@ -100,7 +100,7 @@
 					<td style="padding:15px 10px 5px 10px;" width="100%">&copy; by CMS-CP.de</td>
 					<td style="padding:15px 10px 5px 10px;" nowrap>Impressum</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap>Kontatkt</td>
+					<td style="padding:15px 10px 5px 10px;" nowrap><a href="contact.php">Kontatkt</a></td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
 					<td style="padding:15px 10px 5px 10px;" nowrap>FAQ</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>

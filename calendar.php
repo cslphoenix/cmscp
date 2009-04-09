@@ -23,7 +23,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 	$erster			= date("w", mktime(0, 0, 0, $monat, 1, $jahr)); // Der erste Tag im Monat: z. B. "5 / Freitag"
 	$arr_woche_kurz	= array('So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa');
 	
-	$oCache = new Cache;
+	
 	
 	$monate = array(
 		'01'	=> 'Januar',
@@ -42,7 +42,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 	
 	$month = $monate[$monat];
 
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		if (defined('CACHE'))
 		{
@@ -236,7 +236,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 			$i = '0'.$i;
 		}
 		
-		if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+		if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 		{
 			if ($i == $tag || is_array($monat_birthday[$i]) || is_array($monat_events[$i]) || is_array($monat_matchs[$i]) || is_array($monat_trainings[$i]))
 			{

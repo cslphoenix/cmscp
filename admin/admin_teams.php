@@ -13,7 +13,7 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userdata['auth_teams'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_teams'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['teams']['teams_over'] = $filename;
 	}
@@ -30,7 +30,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userdata['auth_teams'] && $userdata['user_level'] != ADMIN)
+	if (!$auth['auth_teams'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -75,7 +75,8 @@ else
 			case 'add':
 			case 'edit':
 			
-				$template->set_filenames(array('body' => './../admin/style/teams_edit_body.tpl'));
+				$template->set_filenames(array('body' => './../admin/style/acp_teams.tpl'));
+				$template->assign_block_vars('teams_edit', array());
 				
 				if ( $mode == 'edit' )
 				{
@@ -107,9 +108,9 @@ else
 					$new_mode = 'addteam';
 				}
 				
-				$team_logo_path		= $root_path . $settings['team_logo_path'];
-				$team_logos_path	= $root_path . $settings['team_logos_path'];
-				$game_path			= $root_path . $settings['game_path'] . '/';
+				$path_team_logo		= $root_path . $settings['path_team_logo'];
+				$path_team_logos	= $root_path . $settings['path_team_logos'];
+				$game_path			= $root_path . $settings['path_game'] . '/';
 				
 				$team_logo			= ( $mode == 'add' ) ? '' : $team['team_logo'];
 				$team_logo_type		= ( $mode == 'add' ) ? '' : $team['team_logo_type'];
@@ -117,7 +118,7 @@ else
 				$team_logos_type	= ( $mode == 'add' ) ? '' : $team['team_logos_type'];
 				
 				$logo_img	= '';
-				$logo_img	= ( $settings['team_logo_upload'] && $team_logo ) ? '<img src="' . $team_logo_path . '/' . $team_logo . '" alt="" />' : '';
+				$logo_img	= ( $settings['team_logo_upload'] && $team_logo ) ? '<img src="' . $path_team_logo . '/' . $team_logo . '" alt="" />' : '';
 				$logos_img	= '';
 				$logos_img	= ( $settings['team_logos_upload'] && $team_logos ) ? '<img src="' . $team_logos_path . '/' . $team_logos . '" alt="" />' : '';
 				
@@ -133,17 +134,17 @@ else
 				
 				if ( $settings['team_logo_upload'] && $settings['team_logos_upload'] )
 				{
-					$template->assign_block_vars('logo_upload', array() );
+					$template->assign_block_vars('teams_edit.logo_upload', array() );
 				}
 				
-				if ( $settings['team_logo_upload'] && file_exists(@phpbb_realpath($team_logo_path)) )
+				if ( $settings['team_logo_upload'] && file_exists(@phpbb_realpath($path_team_logo)) )
 				{
-					$template->assign_block_vars('logo_upload.team_logo_upload', array() );
+					$template->assign_block_vars('teams_edit.logo_upload.team_logo_upload', array() );
 				}
 				
 				if ( $settings['team_logos_upload'] && file_exists(@phpbb_realpath($team_logos_path)) )
 				{
-					$template->assign_block_vars('logo_upload.team_logos_upload', array() );
+					$template->assign_block_vars('teams_edit.logo_upload.team_logos_upload', array() );
 				}
 				
 				
@@ -151,6 +152,7 @@ else
 				$template->assign_vars(array(
 					'L_TEAM_TITLE'			=> $lang['team_head'],
 					'L_TEAM_NEW_EDIT'		=> ($mode == 'add') ? $lang['team_new_add'] : $lang['team_edit'],
+					'L_TEAM_MEMBER'			=> $lang['team_view_member'],
 					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_TEAM_NAME'			=> $lang['team_name'],
@@ -199,7 +201,7 @@ else
 					'CHECKED_SHOW_NO'		=> (!$team['team_show']) ? ' checked="checked"' : '',
 					'CHECKED_SHOW_YES'		=> ( $team['team_show']) ? ' checked="checked"' : '',
 					
-					'GAME_PATH'				=> $root_path . $settings['game_path'],
+					'GAME_PATH'				=> $root_path . $settings['path_game'],
 					'GAME_IMAGE'			=> $game_image,
 					'GAME_SIZE'				=> $game_size,
 					
@@ -211,6 +213,7 @@ else
 					
 					'S_TEAM_GAME'			=> _select_game($team['team_game']),
 					
+					'S_TEAM_MEMBER'			=> append_sid("admin_teams.php?mode=member&amp;" . POST_TEAMS_URL . "=" . $team_id),
 					'S_TEAM_ACTION'			=> append_sid("admin_teams.php"),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
@@ -292,8 +295,8 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_add');
 				
-				$oCache = new Cache;				
-				$oCache -> deleteCache('list_teams_info');
+				$oCache -> sCachePath = './../cache/';
+				$oCache -> deleteCache('display_subnavi_teams');
 	
 				$message = $lang['team_create'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
@@ -404,8 +407,8 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_edit');
 				
-				$oCache = new Cache;				
-				$oCache -> deleteCache('list_teams_info');
+				$oCache -> sCachePath = './../cache/';
+				$oCache -> deleteCache('display_subnavi_teams');
 				
 				$message = $lang['team_update'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
@@ -439,17 +442,17 @@ else
 					
 					if ( $logo_type == LOGO_UPLOAD && $logo_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['team_logo_path'] . '/' . $logo_file)) )
+						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logo'] . '/' . $logo_file)) )
 						{
-							@unlink($root_path . $settings['team_logo_path'] . '/' . $logo_file);
+							@unlink($root_path . $settings['path_team_logo'] . '/' . $logo_file);
 						}
 					}
 					
 					if ( $logos_type == LOGO_UPLOAD && $logos_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['team_logos_path'] . '/' . $logos_file)) )
+						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logos'] . '/' . $logos_file)) )
 						{
-							@unlink($root_path . $settings['team_logos_path'] . '/' . $logos_file);
+							@unlink($root_path . $settings['path_team_logos'] . '/' . $logos_file);
 						}
 					}
 				
@@ -460,6 +463,9 @@ else
 					$result = $db->sql_query($sql, END_TRANSACTION);
 
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_DELETE', $team_info['team_name']);
+					
+					$oCache -> sCachePath = './../cache/';
+					$oCache -> deleteCache('display_subnavi_teams');
 					
 					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
@@ -503,10 +509,10 @@ else
 				
 				renumber_order('teams');
 				
-				$oCache = new Cache;				
-				$oCache -> deleteCache('list_teams_info');
-				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_ORDER');
+				
+				$oCache -> sCachePath = './../cache/';
+				$oCache -> deleteCache('display_subnavi_teams');
 				
 				$show_index = TRUE;
 	
@@ -514,7 +520,8 @@ else
 	
 			case 'member':
 			
-				$template->set_filenames(array('body' => './../admin/style/teams_member_body.tpl'));
+				$template->set_filenames(array('body' => './../admin/style/acp_teams.tpl'));
+				$template->assign_block_vars('teams_member', array());
 				
 				$sql = 'SELECT tu.rank_id, tu.team_join, u.user_id, u.username, u.user_regdate, r.rank_title
 						FROM ' . USERS_TABLE . ' u, ' . TEAMS_USERS_TABLE . ' tu, ' . RANKS_TABLE . " r
@@ -531,7 +538,7 @@ else
 					$date_register	= create_date('d.m.Y', $row['user_regdate'], $userdata['user_timezone']);
 					$date_joined	= create_date($userdata['user_dateformat'], $row['team_join'], $userdata['user_timezone']);
 					
-					$template->assign_block_vars('members_row', array(
+					$template->assign_block_vars('teams_member.members_row', array(
 						'CLASS' 		=> $class,
 						'USER_ID'		=> $row['user_id'],
 						'USERNAME'		=> $row['username'],
@@ -543,7 +550,7 @@ else
 				
 				if (!$db->sql_numrows($result))
 				{
-					$template->assign_block_vars('no_members_row', array());
+					$template->assign_block_vars('teams_member.no_members_row', array());
 					$template->assign_vars(array('NO_TEAMS' => $lang['member_empty']));
 				}
 				
@@ -572,6 +579,7 @@ else
 
 				$template->assign_vars(array(
 					'L_TEAM_TITLE'			=> $lang['team_head'],
+					'L_TEAM_NEW_EDIT'		=> $lang['team_edit'],
 					'L_TEAM_MEMBER'			=> $lang['team_view_member'],
 					'L_TEAM_ADD_MEMBER'		=> $lang['team_add_member'],
 					
@@ -590,10 +598,11 @@ else
 					'L_MARK_ALL'			=> $lang['mark_all'],
 					'L_MARK_DEALL'			=> $lang['mark_deall'],
 					
-					'S_RANK_SELECT'			=> _select($settings['default_team_rank'], RANK_TEAM),
+					'S_RANK_SELECT'			=> _select_rank(RANK_TEAM),
 
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
+					'S_TEAM_EDIT'			=> append_sid("admin_teams.php?mode=edit&amp;" . POST_TEAMS_URL . "=" . $team_id),
 					'S_TEAM_ACTION'			=> append_sid("admin_teams.php"),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2)
@@ -604,6 +613,8 @@ else
 			break;
 			
 			case 'change':
+			
+				
 			
 				$member = $_POST['members'];
 				$rank_id = $_POST['rank_id'];
@@ -616,6 +627,13 @@ else
 				
 				$members = $member;
 				
+				foreach ($members as $user_id)
+				{
+					$sql = "UPDATE " . TEAMS_USERS_TABLE . " SET rank_id = $rank_id WHERE team_id = $team_id AND user_id = $user_id";
+					$result = $db->sql_query($sql);
+				}
+				
+				/*
 				$i	= 0;
 				$g	= 0;
 				$e	= 1;
@@ -630,6 +648,7 @@ else
 					
 					$i++; $g--;
 				}
+				*/
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_ORDER', $members);
 				
@@ -653,7 +672,7 @@ else
 				$member = trim($member, ", ");
 				$member = trim($member, ",");
 				
-				$username_ary = array_unique(explode(", ", $member));
+				$username_ary = array_unique(explode(', ', $member));
 				
 				$which_ary = 'username_ary';
 			
@@ -790,7 +809,8 @@ else
 	}
 	
 	//	Template
-	$template->set_filenames(array('body' => './../admin/style/teams_body.tpl'));
+	$template->set_filenames(array('body' => './../admin/style/acp_teams.tpl'));
+	$template->assign_block_vars('display', array());
 
 	$template->assign_vars(array(
 		'L_TEAM_TITLE'			=> $lang['team_head'],
@@ -851,9 +871,9 @@ else
 			$icon_up	= ( $row['team_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
 			$icon_down	= ( $row['team_order'] != $max_order['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
 			
-			$template->assign_block_vars('teams_row', array(
+			$template->assign_block_vars('display.teams_row', array(
 				'TEAM_NAME'			=> $row['team_name'],
-				'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['game_path'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
+				'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['path_game'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
 				'TEAM_MEMBER_COUNT'	=> $row['total_members'],
 				
 				'ICON_UP'			=> $icon_up,
@@ -869,7 +889,7 @@ else
 	}
 	else
 	{
-		$template->assign_block_vars('no_teams', array());
+		$template->assign_block_vars('display.no_teams', array());
 		$template->assign_vars(array('NO_TEAMS' => $lang['team_empty']));
 	}
 
@@ -877,4 +897,5 @@ else
 			
 	include('./page_footer_admin.php');
 }
+
 ?>

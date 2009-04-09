@@ -49,11 +49,11 @@ else
 		global $root_path, $settings;
 		
 		$paths = array (
-			$settings['game_path'],
-			$settings['ranks_path'],
-			$settings['team_logo_path'],
-			$settings['team_logos_path'],
-			$settings['match_picture_path'],
+			$settings['path_game'],
+			$settings['path_ranks'],
+			$settings['path_team_logo'],
+			$settings['path_team_logos'],
+			$settings['path_match_picture'],
 		);
 		
 		$select_path = '';
@@ -100,8 +100,6 @@ else
 			case 'ftp':
 				
 				$template->set_filenames(array('body' => './../admin/style/set_ftp_body.tpl'));
-				
-//				_debug_post($_SERVER);
 				
 				$server = $_SERVER['HTTP_HOST'];
 				
@@ -233,10 +231,17 @@ else
 	
 	if (isset($HTTP_POST_VARS['submit']))
 	{
-		$message = $lang['Config_updated'] . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>')
-			. '<br /><br />' . sprintf($lang['click_return_set'], "<a href=\"" . append_sid("admin_set.php") . '">', '</a>');
+		$oCache -> sCachePath = './../cache/';
+		$oCache -> deleteCache('config');
+		$oCache -> deleteCache('settings');
+	
+		$message = $lang['Config_updated'] . '<br /><br />' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
+			. '<br /><br />' . sprintf($lang['click_return_set'], '<a href="' . append_sid("admin_set.php") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
+	
+	
+	
 	
 	$template->set_filenames(array('body' => './../admin/style/set_body.tpl'));
 	
@@ -302,7 +307,7 @@ else
 	// Escape any quotes in the site description for proper display in the text
 	// box on the admin page 
 	//
-	$new_config['site_desc'] = str_replace('"', '&quot;', $new_config['site_desc']);
+	$new_config['site_description'] = str_replace('"', '&quot;', $new_config['site_description']);
 	$new_config['sitename'] = str_replace('"', '&quot;', strip_tags($new_config['sitename']));
 	
 	
@@ -330,13 +335,21 @@ else
 		'L_DISABLE_PAGE'			=> $lang['disable_page'],
 		'L_DISABLE_PAGE_EXPLAIN'	=> $lang['disable_page_explain'],
 		'L_DISABLE_PAGE_REASON'		=> $lang['disable_page_reason'],
+		'L_DISABLE_PAGE_MODE'		=> $lang['disable_page_mode'],
 		
 		'SERVER_NAME'			=> $new_config['server_name'], 
 		'SERVER_PORT'			=> $new_config['server_port'], 
 		'SCRIPT_PATH'			=> $new_config['script_path'], 
 		'SITENAME'				=> $new_config['sitename'],
 		'SITE_DESCRIPTION'		=> $new_config['site_description'], 
-		'DISABLE_REASON'		=> $new_config['disable_reason'], 
+		'DISABLE_REASON'		=> $new_config['page_disable_msg'], 
+		
+		"L_EMAIL_ON-OFF" => $lang['email_enabled'],
+		"L_EMAIL_ON-OFF_EXPLAIN" => $lang['email_enabled_explain'],
+	
+		"EMAIL_ON" => ( $new_config['email_enabled'] ) ? 'checked="checked"' : '',
+		"EMAIL_OFF" =>  ( !$new_config['email_enabled'] ) ? 'checked="checked"' : '',
+		
 		
 		'S_DISABLE_PAGE_YES'	=> ( $new_config['page_disable'] ) ? 'checked="checked"' : '',
 		'S_DISABLE_PAGE_NO'		=> (!$new_config['page_disable'] ) ? 'checked="checked"' : '',
@@ -351,14 +364,14 @@ else
 		'L_TEAM_LOGOS_STORAGE_PATH'			=> $lang['team_logos_storage'],
 		'L_TEAM_LOGOS_STORAGE_PATH_EXPLAIN'	=> $lang['team_logos_storage_explain'],
 		
-		'GAMES_PATH'				=> $new_settings['game_path'],
-		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['game_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-		'RANKS_PATH'				=> $new_settings['ranks_path'],
-		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['ranks_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-		'TEAM_LOGO_PATH'			=> $new_settings['team_logo_path'],
-		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logo_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-		'TEAM_LOGOS_PATH'			=> $new_settings['team_logos_path'],
-		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['team_logos_path']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
+		'GAMES_PATH'				=> $new_settings['path_game'],
+		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['path_game']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
+		'RANKS_PATH'				=> $new_settings['path_ranks'],
+		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['path_ranks']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
+		'TEAM_LOGO_PATH'			=> $new_settings['path_team_logo'],
+		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['path_team_logo']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
+		'TEAM_LOGOS_PATH'			=> $new_settings['path_team_logos'],
+		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['path_team_logos']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
 
 		'L_TEAM_LOGO_UPLOAD'				=> $lang['team_logo_upload'],
 		'L_TEAM_LOGO_UPLOAD_EXPLAIN'		=> $lang['team_logo_upload_explain'],
@@ -366,8 +379,13 @@ else
 		'L_TEAM_LOGO_MAX_FILESIZE_EXPLAIN'	=> $lang['team_logo_file_explain'],
 		'L_TEAM_LOGO_MAX_SIZE'				=> $lang['team_logo_size'],
 		'L_TEAM_LOGO_MAX_SIZE_EXPLAIN'		=> $lang['team_logo_size_explain'],
-		'L_TEAM_LOGO_STORAGE_PATH'			=> $lang['team_logo_storage'],
-		'L_TEAM_LOGO_STORAGE_PATH_EXPLAIN'	=> $lang['team_logo_storage_explain'],
+		'L_TEAM_LOGOS_UPLOAD'				=> $lang['team_logos_upload'],
+		'L_TEAM_LOGOS_UPLOAD_EXPLAIN'		=> $lang['team_logos_upload_explain'],
+		'L_TEAM_LOGOS_MAX_FILESIZE'			=> $lang['team_logos_file'],
+		'L_TEAM_LOGOS_MAX_FILESIZE_EXPLAIN'	=> $lang['team_logos_file_explain'],
+		'L_TEAM_LOGOS_MAX_SIZE'				=> $lang['team_logos_size'],
+		'L_TEAM_LOGOS_MAX_SIZE_EXPLAIN'		=> $lang['team_logos_size_explain'],
+		
 		
 		"TEAM_LOGO_FILESIZE"		=> $new_settings['team_logo_filesize'],
 		"TEAM_LOGO_MAX_HEIGHT"		=> $new_settings['team_logo_max_height'],

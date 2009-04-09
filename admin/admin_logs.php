@@ -99,8 +99,8 @@ else
 					
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, ACP_TEAM_DELETE, $team_info['team_name']);
 					
-					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>')
-						. "<br /><br />" . sprintf($lang['click_return_team'], "<a href=\"" . append_sid("admin_teams.php") . '">', '</a>');
+					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
+						. "<br /><br />" . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -144,7 +144,7 @@ else
 				$log_count = count($log_entry);
 				$db->sql_freeresult($result);
 				
-				for ($i = $start; $i < min($settings['entry_per_page'] + $start, $log_count); $i++)
+				for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, $log_count); $i++)
 				{
 					$class = ($i % 2) ? 'row_class1' : 'row_class2';
 					
@@ -182,11 +182,11 @@ else
 					$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 				}
 				
-				$current_page = ( !$log_count ) ? 1 : ceil( $log_count / $settings['entry_per_page'] );
+				$current_page = ( !$log_count ) ? 1 : ceil( $log_count / $settings['site_entry_per_page'] );
 			
 				$template->assign_vars(array(
-					'PAGINATION' => generate_pagination("admin_logs.php?", $log_count, $settings['entry_per_page'], $start),
-					'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+					'PAGINATION' => generate_pagination("admin_logs.php?", $log_count, $settings['site_entry_per_page'], $start),
+					'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 			
 					'L_GOTO_PAGE' => $lang['Goto_page'])
 				);
@@ -243,7 +243,7 @@ else
 	$log_count = count($log_entry);
 	$db->sql_freeresult($result);
 	
-	for($i = $start; $i < min($settings['entry_per_page'] + $start, $log_count); $i++)
+	for($i = $start; $i < min($settings['site_entry_per_page'] + $start, $log_count); $i++)
 	{
 		$class = ($i % 2) ? 'row_class1' : 'row_class2';
 		
@@ -288,11 +288,11 @@ else
 		$template->assign_vars(array('NO_TEAMS' => $lang['team_empty']));
 	}
 	
-	$current_page = ( !$log_count ) ? 1 : ceil( $log_count / $settings['entry_per_page'] );
+	$current_page = ( !$log_count ) ? 1 : ceil( $log_count / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination("admin_logs.php?", $log_count, $settings['entry_per_page'], $start),
-		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION' => generate_pagination("admin_logs.php?", $log_count, $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])
 	);
