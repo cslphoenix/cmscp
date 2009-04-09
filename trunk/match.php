@@ -52,7 +52,7 @@ if ($mode == '')
 	//
 	//	List Matches New
 	//
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
 					FROM ' . MATCH_TABLE . ' m
@@ -82,7 +82,7 @@ if ($mode == '')
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($match_entry)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
@@ -99,7 +99,7 @@ if ($mode == '')
 	//
 	//	List Matches Old
 	//
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
 					FROM ' . MATCH_TABLE . ' m
@@ -129,7 +129,7 @@ if ($mode == '')
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['entry_per_page'] + $start, count($match_entry)); $i++)
+		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 
@@ -142,7 +142,7 @@ if ($mode == '')
 			));
 		}
 	}
-	$current_page = ( !count($match_entry) ) ? 1 : ceil( count($match_entry) / $settings['entry_per_page'] );
+	$current_page = ( !count($match_entry) ) ? 1 : ceil( count($match_entry) / $settings['site_entry_per_page'] );
 	
 	//
 	//	Teams
@@ -190,8 +190,8 @@ if ($mode == '')
 		
 		'L_UPCOMING'	=> $lang['match_upcoming'],
 		'L_EXPIRED'		=> $lang['match_expired'],
-		'PAGINATION'	=> generate_pagination("match.php?", count($match_entry), $settings['entry_per_page'], $start),
-		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION'	=> generate_pagination("match.php?", count($match_entry), $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE'	=> $lang['Goto_page']
 	));
 }
@@ -204,7 +204,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	
 	$template->set_filenames(array('body' => 'match_details_body.tpl'));
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT	m.*, md.*, t.team_id, t.team_name, g.game_image, ml.match_id AS lineup_match_id, tr.training_vs, tr.training_start
 				FROM ' . MATCH_TABLE . ' m
@@ -234,7 +234,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		message_die(GENERAL_ERROR, 'Falsche ID ?');
 	}
 	
-	if ($userdata['auth_match'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
 		$template->assign_block_vars('match_edit', array(
 			'EDIT_MATCH' => '<a href="' . append_sid("admin/admin_match.php?mode=edit&" . POST_MATCH_URL . "=" . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match'] . '</a>',
@@ -242,7 +242,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		));
 	}
 
-	$picture_path = $root_path . $settings['match_picture_path'];
+	$picture_path = $root_path . $settings['path_match_picture'];
 	
 	if ($row_details['details_mapa'] && $row_details['details_mapa_clan'] && $row_details['details_mapa_clan'])
 	{
@@ -419,7 +419,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	//	Teilnahme
 	//	- nur sichtbar für eingeloggte und mit dem Status Trail, Member oder Admin sichtbar
 	//
-	if ($userdata['session_logged_in'] && ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN))
+	if ($userdata['session_logged_in'] && ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN))
 	{
 		$template->assign_block_vars('match_users', array());
 		
@@ -583,7 +583,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				}
 			}
 			
-			for($i = $start; $i < min($settings['comment_per_page'] + $start, count($comment_entry)); $i++)
+			for($i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++)
 			{
 				$class = ($i % 2) ? 'row1' : 'row2';
 				
@@ -620,11 +620,11 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				));
 			}
 		
-			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['comment_per_page'] );
+			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id, count($comment_entry), $settings['comment_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['comment_per_page'] ) + 1 ), $current_page ), 
+				'PAGINATION' => generate_pagination("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id, count($comment_entry), $settings['site_comment_per_page'], $start),
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'])
 			);
@@ -741,7 +741,6 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				
 				//	Keine Fehler?
 				//	Cache löschung und eintragung des Kommentars
-				$oCache = new Cache;
 				$oCache -> deleteCache('match_details_' . $match_id . '_comments');
 				
 				_comment_message('add', 'match', $match_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
@@ -766,9 +765,9 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		'MATCH_TYPE'			=> $match_type,
 		'MATCH_LEAGUE_INFO'		=> $match_league,
 		'SERVER'				=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'SERVER_PW'				=> ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_pw'] : '',
+		'SERVER_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_pw'] : '',
 		'HLTV'					=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'HLTV_PW'				=> ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_hltv_pw'] : '',
+		'HLTV_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $row_details['server_hltv_pw'] : '',
 		
 		'MAPC'					=> ($row_details['details_mapc']) ? '' : 'none',
 		'MAPD'					=> ($row_details['details_mapd']) ? '' : 'none',
@@ -870,7 +869,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	//
 	//	List Matches von Team
 	//
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH_TABLE . ' m
@@ -898,7 +897,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	}
 	else
 	{
-		for($i = $start; $i < min($settings['entry_per_page'] + $start, count($matchs_entry)); $i++)
+		for($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($matchs_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
@@ -912,12 +911,12 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 		}
 	}
 	
-	$current_page = ( !count($matchs_entry) ) ? 1 : ceil( count($matchs_entry) / $settings['entry_per_page'] );
+	$current_page = ( !count($matchs_entry) ) ? 1 : ceil( count($matchs_entry) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
 		'TEAM_NAME'		=> $teams['team_name'],
-		'PAGINATION'	=> generate_pagination("match.php?", count($matchs_entry), $settings['entry_per_page'], $start),
-		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION'	=> generate_pagination("match.php?", count($matchs_entry), $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE'	=> $lang['Goto_page'],
 	));
 }

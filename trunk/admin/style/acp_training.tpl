@@ -1,73 +1,79 @@
 <!-- BEGIN display -->
-<form method="post" action="{S_TRAINING_ACTION}">
-	<table class="head" cellspacing="0">
-	<tr>
-		<th>{L_TRAINING_TITLE}</th>
-	</tr>
-	<tr>
-		<td class="row2">{L_TRAINING_EXPLAIN}</td>
-	</tr>
-	</table>
-	
-	<br />
-	
-	<table class="row" cellspacing="1">
-	<tr>
-		<td class="rowHead" colspan="3">{L_TRAINING}</td>
-		<td class="rowHead" colspan="2">{L_SETTINGS}</td>
-	</tr>
-	<tr>
-		<td class="rowHead" colspan="5">{L_UPCOMING}</td>
-	</tr>
-	<!-- BEGIN training_row_n -->
-	<tr>
-		<td class="{display.training_row_n.CLASS}" align="center" width="1%">{display.training_row_n.I_IMAGE}</td>
-		<td class="{display.training_row_n.CLASS}" align="left" width="100%">{display.training_row_n.NAME}</td>
-		<td class="{display.training_row_n.CLASS}" align="center" nowrap>{display.training_row_n.TRAINING_DATE}</td>
-		<td class="{display.training_row_n.CLASS}" align="center" width="1%"><a href="{display.training_row_n.U_EDIT}">{L_SETTING}</a></td>		
-		<td class="{display.training_row_n.CLASS}" align="center" width="1%"><a href="{display.training_row_n.U_DELETE}">{L_DELETE}</a></td>
-	</tr>
-	<!-- END training_row_n -->
-	
-	<!-- BEGIN no_entry_new -->
-	<tr>
-		<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
-	</tr>
-	<!-- END no_entry_new -->
-	
-	<tr>
-		<td class="rowHead" colspan="5">{L_EXPIRED}</td>
-	</tr>
-	<!-- BEGIN training_row_o -->
-	<tr>
-		<td class="{display.training_row_o.CLASS}" align="center" width="1%">{display.training_row_o.I_IMAGE}</td>
-		<td class="{display.training_row_o.CLASS}" align="left" width="100%">{display.training_row_o.NAME}</td>
-		<td class="{display.training_row_o.CLASS}" align="center" nowrap>{display.training_row_o.TRAINING_DATE}</td>
-		<td class="{display.training_row_o.CLASS}" align="center" width="1%"><a href="{display.training_row_o.U_EDIT}">{L_SETTING}</a></td>		
-		<td class="{display.training_row_o.CLASS}" align="center" width="1%"><a href="{display.training_row_o.U_DELETE}">{L_DELETE}</a></td>
-	</tr>
-	<!-- END training_row_o -->
-	<!-- BEGIN no_entry_old -->
-	<tr>
-		<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
-	</tr>
-	<!-- END no_entry_old -->
-	</table>
-	
-	<table class="foot" cellspacing="4">
-	<tr>
-		<td width="50%" align="left">{PAGE_NUMBER}</td>
-		<td width="50%" align="right">{PAGINATION}</td>
-	</tr>
-	</table>
-	
-	<table class="foot" cellspacing="2">
-	<tr>
-		<td width="99%" align="right"><input class="post" name="training_vs" type="text" value="" /></td>
-		<td width="1%" align="right">{S_TEAMS}</td>
-		<td><input class="button" type="submit" name="add" value="{L_TRAINING_ADD}" /></td>
-	</tr>
-	</table>
+<form action="{S_TRAINING_ACTION}" method="post">
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+	<div id="navcontainer">
+		<ul id="navlist">
+			<li id="active"><a href="#" id="current">{L_TRAINING_TITLE}</a></li>
+		</ul>
+	</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2">{L_TRAINING_EXPLAIN}</td>
+</tr>
+</table>
+
+<br />
+
+<table class="row" cellspacing="1">
+<tr>
+	<td class="rowHead" colspan="3">{L_TRAINING}</td>
+	<td class="rowHead" colspan="2">{L_SETTINGS}</td>
+</tr>
+<tr>
+	<td class="rowHead" colspan="5">{L_UPCOMING}</td>
+</tr>
+<!-- BEGIN training_row_n -->
+<tr>
+	<td class="{display.training_row_n.CLASS}" align="center" width="1%">{display.training_row_n.I_IMAGE}</td>
+	<td class="{display.training_row_n.CLASS}" align="left" width="100%">{display.training_row_n.NAME}</td>
+	<td class="{display.training_row_n.CLASS}" align="center" nowrap>{display.training_row_n.TRAINING_DATE}</td>
+	<td class="{display.training_row_n.CLASS}" align="center" width="1%"><a href="{display.training_row_n.U_EDIT}">{L_SETTING}</a></td>		
+	<td class="{display.training_row_n.CLASS}" align="center" width="1%"><a href="{display.training_row_n.U_DELETE}">{L_DELETE}</a></td>
+</tr>
+<!-- END training_row_n -->
+
+<!-- BEGIN no_entry_new -->
+<tr>
+	<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+</tr>
+<!-- END no_entry_new -->
+
+<tr>
+	<td class="rowHead" colspan="5">{L_EXPIRED}</td>
+</tr>
+<!-- BEGIN training_row_o -->
+<tr>
+	<td class="{display.training_row_o.CLASS}" align="center" width="1%">{display.training_row_o.I_IMAGE}</td>
+	<td class="{display.training_row_o.CLASS}" align="left" width="100%">{display.training_row_o.NAME}</td>
+	<td class="{display.training_row_o.CLASS}" align="center" nowrap>{display.training_row_o.TRAINING_DATE}</td>
+	<td class="{display.training_row_o.CLASS}" align="center" width="1%"><a href="{display.training_row_o.U_EDIT}">{L_SETTING}</a></td>		
+	<td class="{display.training_row_o.CLASS}" align="center" width="1%"><a href="{display.training_row_o.U_DELETE}">{L_DELETE}</a></td>
+</tr>
+<!-- END training_row_o -->
+<!-- BEGIN no_entry_old -->
+<tr>
+	<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+</tr>
+<!-- END no_entry_old -->
+</table>
+
+<table class="foot" cellspacing="4">
+<tr>
+	<td width="50%" align="left">{PAGE_NUMBER}</td>
+	<td width="50%" align="right">{PAGINATION}</td>
+</tr>
+</table>
+
+<table class="foot" cellspacing="2">
+<tr>
+	<td width="99%" align="right"><input class="post" name="training_vs" type="text" value="" /></td>
+	<td width="1%" align="right">{S_TEAMS}</td>
+	<td><input class="button" type="submit" name="add" value="{L_TRAINING_ADD}" /></td>
+</tr>
+</table>
 </form>
 <!-- END display -->
 
@@ -76,7 +82,14 @@
 	
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_TRAINING_HEAD} - {L_TRAINING_NEW_EDIT}</th>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li><a href="{S_TRAINING_ACTION}">{L_TRAINING_HEAD}</a></li>
+				<li id="active"><a href="#" id="current">{L_TRAINING_NEW_EDIT}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
 	<td class="row2"><span class="small">{L_REQUIRED}</span></td>

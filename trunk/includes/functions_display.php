@@ -71,12 +71,14 @@ function display_newusers()
 		$template->assign_block_vars('new_users', array());
 		
 		$sql = 'SELECT user_id, username, user_color FROM ' . USERS_TABLE . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
-		$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
+//		$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
+		$result = $db->sql_query($sql);
+		$users = $db->sql_fetchrowset($result);
 		
 		for ($i = 0; $i < count($users); $i++)
 		{
 			$template->assign_block_vars('new_users.user_row', array(
-				'USERNAME'		=> '<a class="small" href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $users[$i]['user_id']) . '" style="color:#' . $users[$i]['user_color'] . '"><b>' . $users[$i]['username'] . '</b></a>',
+				'USERNAME'		=> '<a class="small" href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $users[$i]['user_id']) . '" style="color:' . $users[$i]['user_color'] . '"><b>' . $users[$i]['username'] . '</b></a>',
 			));
 		}
 		
@@ -93,7 +95,7 @@ function display_gameicon($game_size, $game_image)
 {
 	global $root_path, $settings;
 	
-	$image	= '<img src="' . $root_path . $settings['game_path'] . '/' . $game_image . '" alt="' . $game_image . '" title="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" >';
+	$image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $game_image . '" alt="' . $game_image . '" title="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" >';
 
 	return $image;
 }
@@ -135,7 +137,7 @@ function display_minical()
 	
 	$month = $monate[$monat];
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		if (defined('CACHE'))
 		{
@@ -355,7 +357,7 @@ function display_minical()
 			$i = '0'.$i;
 		}
 		
-		if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+		if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 		{
 			if ($i == $tag || is_array($monat_birthday[$i]) || is_array($monat_events[$i]) || is_array($monat_matchs[$i]) || is_array($monat_trainings[$i]))
 			{
@@ -571,7 +573,7 @@ function display_navimatch()
 	$time = time() - 86400;
 	$monat = date("m", time());	//	Heutiger Monat
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$cache = 'calendar_' . $monat . '_match_member';
 		$sql = 'SELECT * FROM ' . MATCH_TABLE . ' WHERE match_date > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '".$monat."' ORDER BY match_date";
@@ -607,7 +609,7 @@ function display_navitrain()
 {
 	global $db, $oCache, $root_path, $settings, $template, $userdata, $lang;
 	
-	if ( $settings['subnavi_training'] && ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) )
+	if ( $settings['subnavi_training'] && ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) )
 	{
 		$template->assign_block_vars('training', array());
 	}
@@ -718,7 +720,7 @@ function display_subnavi_match()
 {
 	global $db, $root_path, $oCache, $settings, $template, $userdata, $lang;
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH_TABLE . ' m
@@ -726,7 +728,7 @@ function display_subnavi_match()
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 					WHERE m.match_date < ' . time() . '
-				ORDER BY m.match_date ASC LIMIT 0,' . $settings['last_matches'];
+				ORDER BY m.match_date ASC LIMIT 0,' . $settings['subnavi_last_matches'];
 		$match_last = _cached($sql, 'display_subnavi_matchs_member');
 	}
 	else
@@ -737,7 +739,7 @@ function display_subnavi_match()
 						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
 					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
-				ORDER BY m.match_date ASC LIMIT 0,' . $settings['last_matches'];
+				ORDER BY m.match_date ASC LIMIT 0,' . $settings['subnavi_last_matches'];
 		$match_last = _cached($sql, 'display_subnavi_matchs_guest');
 	}
 	
@@ -777,7 +779,7 @@ function display_subnavi_match()
 	
 	$template->assign_vars(array(
 		'L_DETAILS'		=> $lang['match_details'],
-		'L_LAST_MATCH'	=> $lang['last_matches'],
+		'L_LAST_MATCH'	=> $lang['subnavi_last_matches'],
 	));
 	
 	return;
@@ -790,7 +792,7 @@ function display_subnavi_news()
 {
 	global $db, $config, $root_path, $oCache, $settings, $template, $userdata, $lang;
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT n.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS_TABLE . ' n
@@ -804,6 +806,7 @@ function display_subnavi_news()
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
 		$news_last = $db->sql_fetchrowset($result);
+		
 //		$news_last = _cached($sql, 'display_subnavi_news_member');
 	}
 	else
@@ -851,7 +854,7 @@ function display_subnavi_news()
 	
 	$template->assign_vars(array(
 		'L_DETAILS'		=> $lang['match_details'],
-		'L_LAST_MATCH'	=> $lang['last_matches'],
+		'L_LAST_MATCH'	=> $lang['subnavi_last_matches'],
 	));
 	
 	return;

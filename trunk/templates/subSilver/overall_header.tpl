@@ -141,7 +141,19 @@
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br />{SITE_DESCRIPTION}</td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center"><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><br /><a href="contact.php">contact</a> <a href="contact.php?mode=fightus">fightus</a> <a href="contact.php?mode=joinus">joinus</a> <a href="userlobby.php">lobby</a>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
+				<!-- BEGIN switch_user_logged_out -->
+				<form method="post" action="{S_LOGIN_ACTION}">
+					<input class="post" type="text" name="username" size="10" />
+					<input class="post" type="password" name="password" size="10" maxlength="32" />
+					<!--
+					<- BEGIN switch_allow_autologin ->
+					<input class="text" type="checkbox" name="autologin" />
+					<- END switch_allow_autologin ->
+					-->
+					<input type="submit" class="button2" name="login" value="{L_LOGIN}" />
+				</form>
+				<!-- END switch_user_logged_out -->	
 			<!-- BEGIN switch_user_logged_in -->
 			<br /><a href="index.php?mode=cache">Cache Leeren</a>
 			<!-- END switch_user_logged_in -->

@@ -100,7 +100,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 			$auth_fields = array('auth_pollcreate');
 			break;
 		case AUTH_POLL:
-			$a_sql = 'a.auth_vote';
+			$a_sql = 'a.auth_poll';
 			$auth_fields = array('auth_poll');
 			break;
 
@@ -145,8 +145,11 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 		$forum_match_sql = ( $forum_id != AUTH_LIST_ALL ) ? "AND a.forum_id = $forum_id" : '';
 
 		$sql = "SELECT a.forum_id, $a_sql, a.auth_mod 
-			FROM " . USERS_AUTH_TABLE . " a 
-			WHERE a.user_id = ".$userdata['user_id']. " $forum_match_sql";
+			FROM " . AUTH_ACCESS_TABLE . " a, " . GROUPS_USER_TABLE . " gu 
+			WHERE gu.user_id = " . $userdata['user_id'] . " 
+				AND gu.user_pending = 0 
+				AND a.group_id = gu.group_id
+				$forum_match_sql";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'Failed obtaining forum access control lists', '', __LINE__, __FILE__, $sql);
@@ -196,27 +199,37 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 			{
 				case AUTH_ALL:
 					$auth_user[$key] = TRUE;
-					$auth_user[$key . '_type'] = $lang['Auth_Anonymous_Users'];
+					$auth_user[$key . '_type'] = $lang['auth_anonymous_users'];
 					break;
 
 				case AUTH_REG:
 					$auth_user[$key] = ( $userdata['session_logged_in'] ) ? TRUE : 0;
-					$auth_user[$key . '_type'] = $lang['Auth_Registered_Users'];
+					$auth_user[$key . '_type'] = $lang['auth_registered_users'];
 					break;
-
-				case AUTH_ACL:
-					$auth_user[$key] = ( $userdata['session_logged_in'] ) ? auth_check_user(AUTH_ACL, $key, $u_access, $is_admin) : 0;
-					$auth_user[$key . '_type'] = $lang['Auth_Users_granted_access'];
+					
+				case AUTH_TRI:
+					$auth_user[$key] = ( $userdata['session_logged_in'] ) ? TRUE : 0;
+					$auth_user[$key . '_type'] = $lang['auth_trial_users'];
+					break;
+					
+				case AUTH_MEM:
+					$auth_user[$key] = ( $userdata['session_logged_in'] ) ? TRUE : 0;
+					$auth_user[$key . '_type'] = $lang['auth_member_users'];
 					break;
 
 				case AUTH_MOD:
 					$auth_user[$key] = ( $userdata['session_logged_in'] ) ? auth_check_user(AUTH_MOD, 'auth_mod', $u_access, $is_admin) : 0;
-					$auth_user[$key . '_type'] = $lang['Auth_Moderators'];
+					$auth_user[$key . '_type'] = $lang['auth_moderators'];
+					break;
+					
+				case AUTH_ACL:
+					$auth_user[$key] = ( $userdata['session_logged_in'] ) ? auth_check_user(AUTH_ACL, $key, $u_access, $is_admin) : 0;
+					$auth_user[$key . '_type'] = $lang['auth_users_granted_access'];
 					break;
 
-				case AUTH_ADMIN:
+				case AUTH_ADM:
 					$auth_user[$key] = $is_admin;
-					$auth_user[$key . '_type'] = $lang['Auth_Administrators'];
+					$auth_user[$key . '_type'] = $lang['auth_administrators'];
 					break;
 
 				default:
@@ -236,25 +249,35 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 				{
 					case AUTH_ALL:
 						$auth_user[$f_forum_id][$key] = TRUE;
-						$auth_user[$f_forum_id][$key . '_type'] = $lang['Auth_Anonymous_Users'];
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_anonymous_users'];
 						break;
 
 					case AUTH_REG:
 						$auth_user[$f_forum_id][$key] = ( $userdata['session_logged_in'] ) ? TRUE : 0;
-						$auth_user[$f_forum_id][$key . '_type'] = $lang['Auth_Registered_Users'];
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_registered_users'];
 						break;
-
-					case AUTH_ACL:
-						$auth_user[$f_forum_id][$key] = ( $userdata['session_logged_in'] ) ? auth_check_user(AUTH_ACL, $key, $u_access[$f_forum_id], $is_admin) : 0;
-						$auth_user[$f_forum_id][$key . '_type'] = $lang['Auth_Users_granted_access'];
+						
+					case AUTH_TRI:
+						$auth_user[$f_forum_id][$key] = ( $userdata['session_logged_in'] ) ? TRUE : 0;
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_trial_users'];
+						break;
+						
+					case AUTH_MEM:
+						$auth_user[$f_forum_id][$key] = ( $userdata['session_logged_in'] ) ? TRUE : 0;
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_member_users'];
 						break;
 
 					case AUTH_MOD:
 						$auth_user[$f_forum_id][$key] = ( $userdata['session_logged_in'] ) ? auth_check_user(AUTH_MOD, 'auth_mod', $u_access[$f_forum_id], $is_admin) : 0;
-						$auth_user[$f_forum_id][$key . '_type'] = $lang['Auth_Moderators'];
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_moderators'];
+						break;
+						
+					case AUTH_ACL:
+						$auth_user[$f_forum_id][$key] = ( $userdata['session_logged_in'] ) ? auth_check_user(AUTH_ACL, $key, $u_access[$f_forum_id], $is_admin) : 0;
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_administrators'];
 						break;
 
-					case AUTH_ADMIN:
+					case AUTH_ADM:
 						$auth_user[$f_forum_id][$key] = $is_admin;
 						$auth_user[$f_forum_id][$key . '_type'] = $lang['Auth_Administrators'];
 						break;
@@ -305,7 +328,7 @@ function auth_check_user($type, $key, $u_access, $is_admin)
 				case AUTH_MOD:
 					$result = $result || $u_access[$j]['auth_mod'];
 
-				case AUTH_ADMIN:
+				case AUTH_ADM:
 					$result = $result || $is_admin;
 					break;
 			}
@@ -319,6 +342,99 @@ function auth_check_user($type, $key, $u_access, $is_admin)
 	}
 
 	return $auth_user;
+}
+
+function auth_acp_check($user_id)
+{
+	global $db;
+	
+	$group_auth_fields = array(
+		'auth_contact',
+		'auth_fightus',
+		'auth_forum',
+		'auth_forum_auth',
+		'auth_games',
+		'auth_groups',
+		'auth_joinus',
+		'auth_match',
+		'auth_navi',
+		'auth_news',
+		'auth_news_public',
+		'auth_newscat',
+		'auth_ranks',
+		'auth_server',
+		'auth_teams',
+		'auth_teamspeak',
+		'auth_training',
+		'auth_user',
+	);
+	
+	$sql = 'SELECT g.group_id, ' . implode(', ', $group_auth_fields) . '
+				FROM ' . GROUPS_TEST_TABLE . ' g, ' . GROUPS_USER_TABLE . ' gu
+				WHERE g.group_id = gu.group_id
+					AND gu.user_pending = 0
+					AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$auth_data = array();
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$auth_data[$row['group_id']] = $row;
+		
+		unset($auth_data[$row['group_id']]['group_id']);
+	}
+	$db->sql_freeresult($result);
+	
+	$sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . ' FROM ' . GROUPS_TEST_TABLE . ' WHERE group_single_user = 0 ORDER BY group_id';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
+	}
+	
+	$auth_group = array();
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$auth_group[$row['group_id']] = $row;
+		
+		unset($auth_group[$row['group_id']]['group_id']);
+	}
+	$db->sql_freeresult($result);
+	
+	$auth		= array();
+	$group_ids	= array_keys($auth_group);
+	foreach ( $auth_data as $key => $value )
+	{
+		foreach ($group_ids as $group_key => $group_id)
+		{
+			foreach( $value as $v_key => $v_value )
+			{
+				if ( $v_value == '0' )
+				{
+					if ( !array_key_exists($v_key, $auth) )
+					{
+						$auth[$v_key] = $auth_group[$group_id][$v_key];
+					}
+					else if ( !$auth[$v_key] )
+					{
+						$auth[$v_key] = $auth_group[$group_id][$v_key];
+					}
+				}
+				else if ( $v_value == '2' )
+				{
+					$auth[$v_key] = $v_value;
+				}
+				else
+				{
+					$auth[$v_key] = $v_value;
+				}
+			}
+		}
+	}
+	
+	return $auth;
 }
 
 ?>

@@ -17,7 +17,7 @@ $template->set_filenames(array('body' => 'userlobby_body.tpl'));
 if ( $userdata['session_logged_in'] )
 {
 	//	News / Newskommentare
-	if ( $userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT n.* FROM ' . NEWS_TABLE . " n ORDER BY n.news_time_public";
 		if( !($result = $db->sql_query($sql)) )
@@ -103,7 +103,7 @@ if ( $userdata['session_logged_in'] )
 	
 	//	Fehler enthalten bei den Abfragen, bei News sind diese nicht mehr vorhanden!
 	//	Clanwars/Clanwarskommentare
-	if ( $userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT m.* FROM ' . MATCH_TABLE . " m ORDER BY m.match_date";
 		$match_data = _cached($sql, 'lobby_match_details_member');
@@ -235,7 +235,7 @@ if ( $userdata['session_logged_in'] )
 	}	//	Abfrage ob Daten vorhanden sind
 	
 	//	Training/Trainingskommentare
-	if ( $userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$template->assign_block_vars('lobby_training', array());
 		

@@ -13,7 +13,7 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userdata['auth_match'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['match']['match_over'] = $filename;
 	}
@@ -31,7 +31,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userdata['auth_match'] && $userdata['user_level'] != ADMIN)
+	if (!$auth['auth_match'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -178,6 +178,8 @@ else
 					{
 						message_die(GENERAL_MESSAGE, $lang['match_not_exist']);
 					}
+					
+					$template->assign_block_vars('match_edit.edit_match', array());
 			
 					$new_mode = 'editmatch';
 				}
@@ -215,6 +217,7 @@ else
 				$template->assign_vars(array(
 					'L_MATCH_TITLE'			=> $lang['match_head'],
 					'L_MATCH_NEW_EDIT'		=> ($mode == 'add') ? $lang['match_new_add'] : $lang['match_edit'],
+					'L_MATCH_DETAILS'		=> $lang['match_details'],
 					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_MATCH_TEAM'			=> $lang['match_team'],
@@ -241,6 +244,8 @@ else
 					'L_TRAINING_DATE'		=> $lang['training_date'],
 					'L_TRAINING_MAPS'		=> $lang['training_maps'],
 					'L_TRAINING_TEXT'		=> $lang['training_text'],
+					
+					'L_RESET_LIST'			=> $lang['match_interest_reset'],
 					
 					'L_SUBMIT'				=> $lang['Submit'],
 					'L_RESET'				=> $lang['Reset'],
@@ -280,7 +285,8 @@ else
 					'S_TMIN'				=> _select_date('min', 'tmin',		date('i', time())),
 					
 					'S_TDURATION'			=> _select_date('duration', 'dmin',	date('i', time())),
-
+					
+					'S_MATCH_DETAILS'		=> append_sid("admin_match.php?mode=details&amp;" . POST_MATCH_URL . "=".$match_id),
 					'S_MATCH_ACTION'		=> append_sid("admin_match.php"),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
@@ -382,9 +388,22 @@ else
 					}
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_add', str_replace("\'", "''", $HTTP_POST_VARS['match_name']));
+				$monat = date('m', time());
+				$oCache -> sCachePath = './../cache/';
+				$oCache -> deleteCache('match_list_open_member');
+				$oCache -> deleteCache('match_list_open_guest');
+				$oCache -> deleteCache('match_list_close_member');
+				$oCache -> deleteCache('match_list_close_guest');
+				$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
+				$oCache -> deleteCache('calendar_' . $monat . '_match_member');
+				$oCache -> deleteCache('calendar_' . $monat . '_guest');
+				$oCache -> deleteCache('calendar_' . $monat . '_member');
+				$oCache -> deleteCache('display_subnavi_matchs_guest');
+				$oCache -> deleteCache('display_subnavi_matchs_member');
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_add');
 	
-				$message = $lang['match_create'] . '<br /><br />' . sprintf($lang['click_return_match'], "<a href=\"" . append_sid("admin_match.php") . '">', '</a>');
+				$message = $lang['create_match'] . '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 			break;
@@ -424,9 +443,18 @@ else
 					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'date';
 				}
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg, '');
+				}
+				
+				if ( $HTTP_POST_VARS['listdel'] )
+				{
+					$sql = 'DELETE FROM ' . MATCH_USERS_TABLE . ' WHERE match_id = ' . $match_id;
+					if (!$db->sql_query($sql))
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 				}
 				
 				$match_date = mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
@@ -457,7 +485,20 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_edit');
 				
-				$message = $lang['match_update'] . '<br /><br />' . sprintf($lang['click_return_match'], "<a href=\"" . append_sid("admin_match.php") . '">', '</a>');
+				$monat = date('m', time());
+				$oCache -> sCachePath = './../cache/';
+				$oCache -> deleteCache('match_list_open_member');
+				$oCache -> deleteCache('match_list_open_guest');
+				$oCache -> deleteCache('match_list_close_member');
+				$oCache -> deleteCache('match_list_close_guest');
+				$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
+				$oCache -> deleteCache('calendar_' . $monat . '_match_member');
+				$oCache -> deleteCache('calendar_' . $monat . '_guest');
+				$oCache -> deleteCache('calendar_' . $monat . '_member');
+				$oCache -> deleteCache('display_subnavi_matchs_guest');
+				$oCache -> deleteCache('display_subnavi_matchs_member');
+				
+				$message = $lang['match_update'] . '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
@@ -489,9 +530,9 @@ else
 					
 					if ( $picture_type == LOGO_UPLOAD && $picture_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['match_picture_path'] . '/' . $picture_file)) )
+						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_match_picture'] . '/' . $picture_file)) )
 						{
-							@unlink($root_path . $settings['match_picture_path'] . '/' . $picture_file);
+							@unlink($root_path . $settings['path_match_picture'] . '/' . $picture_file);
 						}
 					}
 					
@@ -535,7 +576,15 @@ else
 
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, ACP_MATCH_DELETE, $match_info['match_name']);
 					
-					$message = $lang['match_delete'] . '<br /><br />' . sprintf($lang['click_return_match'], "<a href=\"" . append_sid("admin_match.php") . '">', '</a>');
+					$monat = date("m", time());
+					$oCache -> sCachePath = './../cache/';
+					$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
+					$oCache -> deleteCache('calendar_' . $monat . '_match_member');
+					$oCache -> deleteCache('calendar_' . $monat . '_member');
+					$oCache -> deleteCache('display_subnavi_matchs_guest');
+					$oCache -> deleteCache('display_subnavi_matchs_member');
+					
+					$message = $lang['match_delete'] . '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -600,7 +649,7 @@ else
 					message_die(GENERAL_MESSAGE, '', '', __LINE__, __FILE__);
 				}
 				
-				$picture_path = $root_path . $settings['match_picture_path'];
+				$picture_path = $root_path . $settings['path_match_picture'];
 				
 				$map_pic_a	= $row['details_map_pic_a'];
 				$map_pic_b	= $row['details_map_pic_b'];
@@ -778,6 +827,7 @@ else
 				$template->assign_vars(array(
 					'L_MATCH_TITLE'			=> $lang['match_head'],
 					'L_MATCH_DETAILS'		=> $lang['match_details'],
+					'L_MATCH_NEW_EDIT'		=> $lang['match_edit'],
 					'L_MATCH_EXPLAIN'		=> $lang['match_details_explain'],
 					'L_MATCH_INFO'			=> $lang['match_details_info'],
 					'L_RIVAL'				=> $lang['match_rival'],
@@ -859,6 +909,7 @@ else
 					'S_HIDDEN_FIELDC'		=> $s_hidden_fieldc,
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_MATCH_EDIT'			=> append_sid("admin_match.php?mode=edit&amp;" . POST_MATCH_URL . "=".$match_id),
 					'S_MATCH_ACTION'		=> append_sid("admin_match.php"))
 				);
 			
@@ -1232,12 +1283,12 @@ else
 	}
 	else
 	{
-		for($i = $start; $i < min($settings['entry_per_page'] + $start, count($match_entry)); $i++)
+		for($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 				
 			$game_size	= $match_entry[$i]['game_size'];
-			$game_image	= '<img src="' . $root_path . $settings['game_path'] . '/' . $match_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
+			$game_image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $match_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
 			
 			$match_name	= ($match_entry[$i]['match_public']) ? 'vs. ' . $match_entry[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $match_entry[$i]['match_rival'] . '</span>';
 			
@@ -1272,11 +1323,11 @@ else
 		}
 	}
 	
-	$current_page = ( !count($match_entry) ) ? 1 : ceil( count($match_entry) / $settings['entry_per_page'] );
+	$current_page = ( !count($match_entry) ) ? 1 : ceil( count($match_entry) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => ( count($match_entry) ) ? generate_pagination("admin_match.php?", count($match_entry), $settings['entry_per_page'], $start) : '',
-		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION' => ( count($match_entry) ) ? generate_pagination("admin_match.php?", count($match_entry), $settings['site_entry_per_page'], $start) : '',
+		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])
 	);

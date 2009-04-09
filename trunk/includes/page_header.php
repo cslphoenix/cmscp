@@ -7,6 +7,8 @@ if ( !defined('IN_CMS') )
 
 define('HEADER_INC', TRUE);
 
+$auth = auth_acp_check($userdata['user_id']);
+
 //
 // gzip_compression
 //
@@ -107,7 +109,7 @@ $s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($config['defaul
 //	Counter
 //	von http://www.mywebsolution.de/
 //
-if ($settings['counter'] == '1')
+if ($settings['site_counter'] == '1')
 {
 	// Prüfen, ob bereits ein Counter für den  
     // heutigen Tag erstellt wurde 
@@ -178,6 +180,10 @@ if ($settings['counter'] == '1')
 	$l_counter_head .= sprintf($lang['counter_year'], $stats_year);
 	$l_counter_head .= sprintf($lang['counter_total'], $stats_year+$config['counter_start']);
 	
+	$template->assign_vars(array(
+		'TOTAL_COUNTER_HEAD'		=> $l_counter_head,
+	));
+	
 	if ( $settings['subnavi_statscounter'] )
 	{
 		$template->assign_block_vars('statscounter', array());
@@ -194,21 +200,26 @@ if ($settings['counter'] == '1')
 }
 
 $sql = 'SELECT group_id, group_name, group_color, group_order FROM ' . GROUPS_TABLE . ' WHERE group_legend = 1 ORDER BY group_order';
-$group_data = _cached($sql, 'list_overall_group');
-
-
-$group_list = array();
-for ( $i=0; $i < count($group_data); $i++ )
+//$group_data = _cached($sql, 'list_overall_group');
+if( !($result = $db->sql_query($sql)) )
 {
-	$group_id		= $group_data[$i]['group_id'];
-	$group_name		= $group_data[$i]['group_name'];
-	$group_style	= $group_data[$i]['group_color'];
+	message_die(GENERAL_ERROR, 'Could not obtain user/online information', '', __LINE__, __FILE__, $sql);
+}
+$groups_data = $db->sql_fetchrowset($result);
+
+
+$groups_list = array();
+for ( $i=0; $i < count($groups_data); $i++ )
+{
+	$groups_id		= $groups_data[$i]['group_id'];
+	$groups_name	= $groups_data[$i]['group_name'];
+	$groups_style	= $groups_data[$i]['group_color'];
 	
-	$group_list[] = '<a href="' . append_sid("groups.php?mode=view&amp;" . POST_GROUPS_URL . "=" . $group_id) . '" style="color:#' . $group_style . '"><b>' . $group_name . '</b></a>';
+	$groups_list[] = '<a href="' . append_sid("groups.php?mode=view&amp;" . POST_GROUPS_URL . "=" . $groups_id) . '" style="color:' . $groups_style . '"><b>' . $groups_name . '</b></a>';
 
 }
 
-$group_list = implode(', ', $group_list);
+$groups_list = implode(', ', $groups_list);
 			
 //
 // Get basic (usernames + totals) online
@@ -250,7 +261,7 @@ while( $row = $db->sql_fetchrow($result) )
 			$style_color = '';
 			
 			$row['username'] = '<b>' . $row['username'] . '</b>';
-			$style_color = 'style="color:#' . $row['user_color'] . '"';
+			$style_color = 'style="color:' . $row['user_color'] . '"';
 
 			if ( $row['user_allow_viewonline'] )
 			{
@@ -412,7 +423,7 @@ display_subnavi_match();
 display_subnavi_news();
 display_navi();
 
-if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 {
 	if ( $settings['subnavi_training'] )	{ display_navitrain(); }
 }
@@ -474,10 +485,10 @@ $template->assign_vars(array(
 	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['board_timezone'])),
 	'TOTAL_USERS_ONLINE' => $l_online_users,
 	
-	'TOTAL_COUNTER_HEAD'		=> $l_counter_head,
+	
 	'TOTAL_USERS_ONLINE_HEAD'	=> $l_online_users_head,
 	
-	'GROUPS_LEGENED'	=> 'Gruppen: ' . $group_list,
+	'GROUPS_LEGENED'	=> 'Gruppen: ' . $groups_list,
 	
 	'LOGGED_IN_USER_LIST' => $online_userlist,
 	'RECORD_USERS' => sprintf($lang['Record_online_users'], $config['record_online_users'], create_date($config['default_dateformat'], $config['record_online_date'], $config['board_timezone'])),

@@ -192,7 +192,7 @@ if ( !defined('IN_ADMIN') )
 {
 	if ( defined('CACHE') )
 	{
-		$oCache = new Cache;
+		
 		
 		$sCacheNamea = 'config';
 		if ( ($config = $oCache -> readCache($sCacheNamea)) === false)

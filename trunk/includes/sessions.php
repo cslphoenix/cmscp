@@ -306,10 +306,25 @@ function session_pagestart($user_ip, $thispage_id)
 		// session_id exists so go ahead and attempt to grab all
 		// data in preparation
 		//
-		$sql = "SELECT u.*, s.*
-			FROM " . SESSIONS_TABLE . " s, " . USERS_TABLE . " u
+//		$sql = 'SELECT u.*, s.*, ua.*
+//					FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . ' s, ' . USERS_AUTH_TABLE . ' ua
+//					WHERE s.session_id = "' . $session_id . '"
+//						AND u.user_id = s.session_user_id
+//						AND u.user_id = ua.user_id';
+						
+		$sql = 'SELECT u.*, s.*
+					FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . ' s
+					WHERE s.session_id = "' . $session_id . '"
+						AND u.user_id = s.session_user_id';
+		/*
+		$sql = "SELECT u.*, s.*, gu.group_id
+			FROM " . SESSIONS_TABLE . " s, " . USERS_TABLE . " u, " . GROUPS_TABLE . " g, " . GROUPS_USER_TABLE . " gu
 			WHERE s.session_id = '$session_id'
-				AND u.user_id = s.session_user_id";
+				AND u.user_id = s.session_user_id
+				AND gu.user_id = s.session_user_id
+				AND g.group_single_user = " . TRUE . "
+				AND g.group_id = gu.group_id";
+		*/
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);

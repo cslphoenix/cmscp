@@ -19,7 +19,7 @@ $template->assign_vars(array(
 	'TRANSLATION_INFO' => (isset($lang['TRANSLATION_INFO'])) ? $lang['TRANSLATION_INFO'] : ((isset($lang['TRANSLATION'])) ? $lang['TRANSLATION'] : ''))
 );
 
-if ( defined('DEBUG') && defined('DEBUG_SQL_ADMIN') )
+if ( defined('DEBUG_SQL_ADMIN') )
 {
 	// send run stat (page generation, sql time, requests dump...)
 	$stat_run = new stat_run_class(microtime());

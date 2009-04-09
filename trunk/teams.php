@@ -30,7 +30,18 @@ if ( !$mode )
 {
 	$page_title = $lang['teams'];
 	$template->set_filenames(array('body' => 'teams_body.tpl'));
-
+	
+/*	
+	Filtert gleich die richtigen Spiele raus!
+	
+    $sql = "SELECT DISTINCT g.game_name, g.game_id FROM cms_game g, cms_teams t WHERE g.game_id = t.team_game ORDER BY game_order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$game = $db->sql_fetchrowset($result);
+*/
+	
 	$sql = "SELECT g.* FROM cms_game g, cms_teams t WHERE g.game_id = t.team_game ORDER BY game_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -46,8 +57,6 @@ if ( !$mode )
 		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$teams = $db->sql_fetchrowset($result);
-	
-	_debug_post(array_keys($games));
 	
 	//	Multi-Array in einfaches Array
 	foreach ($games as $game)
@@ -94,7 +103,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 //	$page_title = $lang['team'];
 	$template->set_filenames(array('body' => 'team_body.tpl'));
 	
-	if ($userdata['user_level'] == TRAIL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT t.*, g.game_size, g.game_image, m.match_id
 					FROM ' . TEAMS_TABLE . ' t

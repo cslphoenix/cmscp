@@ -2,7 +2,13 @@
 <form method="post" action="{S_MATCH_ACTION}">
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_MATCH_TITLE}</th>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_MATCH_TITLE}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
 	<td class="row2">{L_MATCH_EXPLAIN}</td>
@@ -28,13 +34,12 @@
 	<td class="{display.match_row_n.CLASS}" align="center"><a href="{display.match_row_n.U_TRAINING}">{display.match_row_n.TRAINING}</a></td>
 	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_EDIT}">{L_MATCH_SETTING}</a></td>
 	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
-	
 	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END match_row_n -->
 <!-- BEGIN no_entry -->
 	<tr>
-		<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+		<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
 	</tr>
 	<!-- END no_entry -->
 	<tr>
@@ -48,13 +53,12 @@
 	<td class="{display.match_row_o.CLASS}" align="center"> - </td>
 	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_EDIT}">{L_MATCH_SETTING}</a></td>
 	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
-	
 	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END match_row_o -->
 <!-- BEGIN no_entry -->
 	<tr>
-		<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+		<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
 	</tr>
 	<!-- END no_entry -->
 	</table>
@@ -79,7 +83,17 @@
 <form action="{S_MATCH_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_MATCH_TITLE} - {L_MATCH_NEW_EDIT}</th>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li><a href="{S_MATCH_ACTION}">{L_MATCH_TITLE}</a></li>
+				<li id="active"><a href="#" id="current">{L_MATCH_NEW_EDIT}</a></li>
+				<!-- BEGIN edit_match -->
+				<li><a href="{S_MATCH_DETAILS}">{L_MATCH_DETAILS}</a></li>
+				<!-- END edit_match -->
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
 	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
@@ -119,7 +133,11 @@
 </tr>
 <tr>
 	<td class="row1">{L_MATCH_DATE}:</td>
-	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}  </td>
+	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}
+		<!-- BEGIN edit_match -->
+		<input type="checkbox" name="listdel" /> {L_RESET_LIST}
+		<!-- END edit_match -->
+	</td>
 </tr>
 <tr>
 	<td class="row1">{L_MATCH_PUBLIC}:</td>
@@ -200,11 +218,18 @@
 <form action="{S_TEAM_ACTION}" method="post" id="list" name="post">
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_MATCH_TITLE} - {L_MATCH_DETAILS}</th>
-	<th style=" text-align:right;">{L_MATCH_TITLE} - {L_MATCH_DETAILS}</th>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li><a href="{S_MATCH_ACTION}">{L_MATCH_TITLE}</a></li>
+				<li><a href="{S_MATCH_EDIT}">{L_MATCH_NEW_EDIT}</a></li>
+				<li id="active"><a href="#" id="current">{L_MATCH_DETAILS}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
-	<td class="row2" colspan="2">{L_MATCH_EXPLAIN}</td>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
 </tr>
 </table>
 

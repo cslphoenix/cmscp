@@ -38,3 +38,13 @@
 	<td colspan="3" align="center">Diese Seite ist eine Demo Seite und noch keine Offizielle Alpha oder Beta Seite!!!<br> Missbrauch oder mutwilliges Vollspammen wird bestraft!</td>
 </tr>
 </table>
+
+<table>
+
+<!-- BEGIN group_auth_data -->
+<tr>
+	<td>{group_auth_data.CELL_TITLE}</td>
+	<td>{group_auth_data.S_AUTH_LEVELS_SELECT}</td>
+</tr>
+<!-- END group_auth_data -->
+</table>

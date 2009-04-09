@@ -366,4 +366,6 @@ class Cache
 		return @unlink($sFileName);
 	} 
 }
+
+$oCache = new Cache;
 ?>

@@ -26,7 +26,7 @@ define('IN_CMS', 1);
 // Load default header
 //
 
-$root_path = "./../";
+$root_path = './../';
 require('./pagestart.php');
 
 // ---------------

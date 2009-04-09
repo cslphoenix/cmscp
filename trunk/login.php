@@ -44,7 +44,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			message_die(GENERAL_ERROR, 'Error in obtaining userdata', '', __LINE__, __FILE__, $sql);
 		}
 
-		if( $row = $db->sql_fetchrow($result) )
+		if ( $row = $db->sql_fetchrow($result) )
 		{
 //			if( $row['user_level'] != ADMIN && $config['page_disable'] )
 			$disable_mode = explode(',', $config['page_disable_mode']);
@@ -67,9 +67,14 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				{
 					message_die(GENERAL_MESSAGE, sprintf($lang['Login_attempts_exceeded'], $config['max_login_attempts'], $config['login_reset_time']));
 				}
-
-				if( md5($password) == $row['user_password'] && $row['user_active'] )
+				
+				if ( md5($password) == $row['user_password'] && $row['user_active'] )
 				{
+					if ( isset($HTTP_POST_VARS['admin']) && $userdata['username'] != $username )
+					{
+						$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+						message_die(GENERAL_MESSAGE, $message);
+					}
 					$autologin = ( isset($HTTP_POST_VARS['autologin']) ) ? TRUE : 0;
 
 					$admin = (isset($HTTP_POST_VARS['admin'])) ? 1 : 0;
@@ -123,9 +128,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					message_die(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
 				}
 				
-				$template->assign_vars(array(
-					'META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">")
-				);
+				$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
 				$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
 
@@ -146,7 +149,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			{
 //				$login = ($userdata['user_level'] == ADMIN) ? ACP_LOGIN : MCP_LOGIN;
 //				add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_False'], '');
-				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, UCP_LOGIN_FALSE, '');
+				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_login_false');
 			}
 
 			$template->assign_vars(array(
@@ -174,7 +177,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			message_die(CRITICAL_ERROR, 'Couldn\'t update Sessions Table', '', __LINE__, __FILE__, $sql);
 		}
 		
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, UCP_ACP_LOGOUT, '');
+		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_acp_logout');
 		
 		redirect(append_sid("index.php", true));
 	}
@@ -214,15 +217,38 @@ else
 	// Do a full login page dohickey if
 	// user not already logged in
 	//
-	if( !$userdata['session_logged_in'] || 
-		(isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && ($userdata['user_level'] == ADMIN || 
-				$userdata['auth_teams'] || 
-				$userdata['auth_match'] || 
-				$userdata['auth_ranks'] || 
-				$userdata['auth_games'] ||
-					$userdata['auth_contact'] ||
-					$userdata['auth_joinus'] ||
-					$userdata['auth_fightus'])))
+	
+	$group_auth_fields = array(
+		'auth_contact',
+		'auth_fightus',
+		'auth_forum',
+		'auth_forum_auth',
+		'auth_games',
+		'auth_groups',
+		'auth_joinus',
+		'auth_match',
+		'auth_navi',
+		'auth_news',
+		'auth_news_public',
+		'auth_newscat',
+		'auth_ranks',
+		'auth_server',
+		'auth_teams',
+		'auth_teamspeak',
+		'auth_training',
+		'auth_user',
+	);
+	
+	for ( $i = 0; $i < count($group_auth_fields); $i++ )
+	{
+		$split .= ' || $auth[\'' . $group_auth_fields[$i] . '\']';
+	}
+
+	if ( !$userdata['session_logged_in'] || (
+			isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && (
+				$userdata['user_level'] == ADMIN || $split )
+			)
+		)
 	{
 		$page_title = $lang['Login'];
 		include($root_path . 'includes/page_header.php');

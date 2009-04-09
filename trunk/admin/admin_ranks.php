@@ -13,7 +13,7 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userdata['auth_ranks'] || $userdata['user_level'] == ADMIN)
+	if ($auth['auth_ranks'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['main']['ranks_over'] = $filename;
 	}
@@ -29,7 +29,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userdata['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$auth['auth_games'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -39,7 +39,6 @@ else
 		redirect('admin/' . append_sid("admin_match.php", true));
 	}
 	
-	//	ID Abfrage
 	if ( isset($HTTP_POST_VARS[POST_RANKS_URL]) || isset($HTTP_GET_VARS[POST_RANKS_URL]) )
 	{
 		$rank_id = ( isset($HTTP_POST_VARS[POST_RANKS_URL]) ) ? intval($HTTP_POST_VARS[POST_RANKS_URL]) : intval($HTTP_GET_VARS[POST_RANKS_URL]);
@@ -49,7 +48,6 @@ else
 		$rank_id = 0;
 	}
 	
-	//	mode Abfrage
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
 		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
@@ -78,16 +76,8 @@ else
 				
 				if ( $mode == 'edit' )
 				{
-					//	Infos der Spiele
-					$sql = 'SELECT * FROM ' . RANKS_TABLE . ' WHERE rank_id = ' . $rank_id;
-					$result = $db->sql_query($sql);
-			
-					if ( !($rank = $db->sql_fetchrow($result)) )
-					{
-						message_die(GENERAL_MESSAGE, $lang['rank_not_exist']);
-					}
-			
-					$new_mode = 'editrank';
+					$rank		= get_data('ranks', $rank_id, 0);
+					$new_mode	= 'editrank';
 				}
 				else if ( $mode == 'add' )
 				{
@@ -104,11 +94,10 @@ else
 					$new_mode = 'addrank';
 				}
 				
-				//	Template definieren
-				$template->set_filenames(array('body' => './../admin/style/ranks_edit_body.tpl'));
+				$template->set_filenames(array('body' => './../admin/style/acp_ranks.tpl'));
+				$template->assign_block_vars('ranks_edit', array());
 				
-				//	Rangbilder auslesen, ganz einfach, mit Dropdown erstelluung
-				$folder = $root_path . $settings['ranks_path'];
+				$folder = $root_path . $settings['path_ranks'];
 				$files = scandir($folder);
 				
 				$filename_list = '';
@@ -125,11 +114,9 @@ else
 				}
 				$filename_list .= '</select>';
 				
-				//	Unsichtbare Felder für andere Infos
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
 				$s_hidden_fields .= '<input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
 
-				//	Variablen zur Ausgabe
 				$template->assign_vars(array(
 					'L_RANK_HEAD'			=> $lang['rank_head'],
 					'L_RANK_NEW_EDIT'		=> ($mode == 'add') ? $lang['rank_add'] : $lang['rank_edit'],
@@ -140,41 +127,30 @@ else
 					'L_RANK_TYPE'			=> $lang['rank_type'],
 					'L_RANK_SPECIAL'		=> $lang['rank_special'],
 					'L_RANK_MIN'			=> $lang['rank_min'],
-					
 					'L_TYPE_PAGE'			=> $lang['rank_page'],
 					'L_TYPE_FORUM'			=> $lang['rank_forum'],
 					'L_TYPE_TEAM'			=> $lang['rank_team'],
 					
-					
 					'L_SUBMIT'				=> $lang['Submit'],
 					'L_RESET'				=> $lang['Reset'],
-					
-					
 					'L_YES'					=> $lang['Yes'],
 					'L_NO'					=> $lang['No'],
 					
 					'RANK_TITLE'			=> $rank['rank_title'],
-					'RANK_IMAGE'			=> ($mode == 'add') ? $root_path . 'images/spacer.gif' : $root_path . $settings['ranks_path'] . '/' . $rank['rank_image'],
+					'RANK_IMAGE'			=> ($mode == 'add') ? $root_path . 'images/spacer.gif' : $root_path . $settings['path_ranks'] . '/' . $rank['rank_image'],
 					'RANK_MIN'				=> $rank['rank_min'],
-					
-					'RANKS_PATH'			=> $root_path . $settings['ranks_path'],
-					
+					'RANKS_PATH'			=> $root_path . $settings['path_ranks'],
 					'CHECKED_TYPE_PAGE'		=> ($rank['rank_type'] == '1') ? ' checked="checked"' : '',
 					'CHECKED_TYPE_FORUM'	=> ($rank['rank_type'] == '2') ? ' checked="checked"' : '',
 					'CHECKED_TYPE_TEAM'		=> ($rank['rank_type'] == '3') ? ' checked="checked"' : '',
-					
 					'CHECKED_SPECIAL_YES'	=> ( $rank['rank_special']) ? ' checked="checked"' : '',
 					'CHECKED_SPECIAL_NO'	=> (!$rank['rank_special']) ? ' checked="checked"' : '',
 					
-					
-				
 					'S_FILENAME_LIST'		=> $filename_list,
-					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_TEAM_ACTION'			=> append_sid("admin_ranks.php")
+					'S_RANKS_ACTION'		=> append_sid("admin_ranks.php")
 				));
 			
-				// Template ausgabe
 				$template->pparse('body');
 				
 			break;
@@ -186,26 +162,27 @@ else
 				$rank_min		= (isset($HTTP_POST_VARS['rank_min']))		? intval($HTTP_POST_VARS['rank_min']) : -1;
 				$rank_special	= ($HTTP_POST_VARS['rank_special'] == 1)	? 1 : 0;
 				
-				if( $rank_title == '' )
+				if ( $rank_title == '' )
 				{
-					message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
+					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['wrong_back'], '');
 				}
 	
-				$sql = 'SELECT MAX(rank_order) AS max_order FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . intval($HTTP_POST_VARS['rank_type']);
+				$sql = 'SELECT MAX(rank_order) AS max_order
+							FROM ' . RANKS_TABLE . '
+							WHERE rank_type = ' . intval($HTTP_POST_VARS['rank_type']);
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 	
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 				
-				// There is no problem having duplicate forum names so we won't check for it.
 				$sql = 'INSERT INTO ' . RANKS_TABLE . " (rank_title, rank_type, rank_min, rank_special, rank_image, rank_order)
 					VALUES ('" . str_replace("\'", "''", $rank_title) . "', '" . intval($HTTP_POST_VARS['rank_type']) . "', $rank_min, $rank_special, '" . str_replace("\'", "''", $rank_image) . "', $next_order)";
 				$result = $db->sql_query($sql);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_RANK_ADD', $rank_title);
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_add', $rank_title);
 	
-				$message = $lang['team_create'] . '<br /><br />' . sprintf($lang['click_return_team'], "<a href=\"" . append_sid("admin_ranks.php") . '">', '</a>') . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>');
+				$message = $lang['create_rank'] . '<br /><br />' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -217,11 +194,11 @@ else
 				$rank_min		= (isset($HTTP_POST_VARS['rank_min']))		? intval($HTTP_POST_VARS['rank_min']) : -1;
 				$rank_special	= ($HTTP_POST_VARS['rank_special'] == 1)	? 1 : 0;
 				
-				if( $rank_title == '' )
+				if ( $rank_title == '' )
 				{
-					message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
+					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['wrong_back'], '');
 				}
-
+					
 				$sql = "UPDATE " . RANKS_TABLE . " SET
 							rank_title		= '" . str_replace("\'", "''", $rank_title) . "',
 							rank_type		= '" . intval($HTTP_POST_VARS['rank_type']) . "',
@@ -231,10 +208,9 @@ else
 						WHERE rank_id = " . intval($HTTP_POST_VARS[POST_RANKS_URL]);
 				$result = $db->sql_query($sql);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_TEAM_EDIT', $log_data);
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_edit');
 				
-				$message = $lang['team_update'] . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_rank'], "<a href=\"" . append_sid("admin_ranks.php") . '">', '</a>');
+				$message = $lang['update_rank'] . '<br /><br />' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -245,21 +221,14 @@ else
 				
 				if ( $rank_id && $confirm )
 				{	
-					$sql = 'SELECT * FROM ' . RANKS_TABLE . " WHERE rank_id = $rank_id";
-					$result = $db->sql_query($sql);
-			
-					if ( !($team_info = $db->sql_fetchrow($result)) )
-					{
-						message_die(GENERAL_MESSAGE, $lang['rank_not_exist']);
-					}
+					$rank = get_data('rank', $rank_id, 0);
 				
 					$sql = 'DELETE FROM ' . RANKS_TABLE . " WHERE rank_id = $rank_id";
 					$result = $db->sql_query($sql);
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_RANK_DELETE', $team_info['rank_title']);
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_delete', $rank['rank_title']);
 					
-					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['click_return_rank'], "<a href=\"" . append_sid("admin_ranks.php") . '">', '</a>');
+					$message = $lang['delete_rank'] . '<br /><br />' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -267,7 +236,8 @@ else
 				{
 					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
+					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
+					$hidden_fields .= '<input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['confirm'],
@@ -298,7 +268,7 @@ else
 		
 				renumber_order('ranks', RANK_PAGE);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_RANK_ORDER', 'page');
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_order', RANK_PAGE);
 				
 				$show_index = TRUE;
 	
@@ -313,7 +283,7 @@ else
 		
 				renumber_order('ranks', RANK_FORUM);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_RANK_ORDER', 'forum');
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_order', RANK_FORUM);
 				
 				$show_index = TRUE;
 	
@@ -328,14 +298,14 @@ else
 		
 				renumber_order('ranks', RANK_TEAM);
 					
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_RANK_ORDER', 'team');
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_order', RANK_TEAM);
 				
 				$show_index = TRUE;
 	
 				break;
 	
 			default:
-				message_die(GENERAL_ERROR, 'kein modul');
+				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
 				break;
 		}
 	
@@ -346,7 +316,8 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/ranks_body.tpl'));
+	$template->set_filenames(array('body' => './../admin/style/acp_ranks.tpl'));
+	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
 		'L_RANK_TITLE'			=> $lang['rank_head'],
@@ -357,20 +328,16 @@ else
 		'L_RANK_TEAM'			=> $lang['rank_team'],
 		'L_RANK_SPECIAL'		=> $lang['rank_special'],
 		'L_RANK_MIN'			=> $lang['rank_min'],
-		
 		'L_RANK_ADD'			=> $lang['rank_add'],
 		
-		'L_SETTING'				=> $lang['setting'],
+		'L_EDIT'				=> $lang['edit'],
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
 		
 		'L_MOVE_UP'				=> $lang['Move_up'], 
 		'L_MOVE_DOWN'			=> $lang['Move_down'], 
 		
-		'ICON_MOVE_UP'			=> '<img src="./../admin/style/images/icon_arrow_up.png" alt="Up" title="" width="12" height="12" />',
-		'ICON_MOVE_DOWN'		=> '<img src="./../admin/style/images/icon_arrow_down.png" alt="Down" title="" width="12" height="12" />',
-		
-		'S_TEAM_ACTION'		=> append_sid("admin_ranks.php")
+		'S_RANKS_ACTION'		=> append_sid("admin_ranks.php")
 	));
 	
 	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_PAGE;
@@ -398,23 +365,25 @@ else
 		$class = ($color % 2) ? 'row_class1' : 'row_class2';
 		$color++;
 		
+		$rank_id = $row['rank_id'];
+		
 		if ($row['rank_type'] == RANK_PAGE)
 		{
 			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
 			$icon_down	= ( $row['rank_order'] != $max_page['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
 			
-			$template->assign_block_vars('page_row', array(
+			$template->assign_block_vars('display.page_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
 				
 				'ICON_UP'		=> $icon_up,
 				'ICON_DOWN'		=> $icon_down,
 
-				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_page&amp;move=-15&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_page&amp;move=15&amp;" . POST_RANKS_URL . "=".$row['rank_id'])
+				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_page&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_page&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id),
 			));
 		}
 		else if ($row['rank_type'] == RANK_FORUM)
@@ -422,7 +391,7 @@ else
 			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
 			$icon_down	= ( $row['rank_order'] != $max_forum['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
 			
-			$template->assign_block_vars('forum_row', array(
+			$template->assign_block_vars('display.forum_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
 				'RANK_MIN'		=> ($row['rank_special'] == '0') ? $row['rank_min'] : ' - ',
@@ -431,11 +400,11 @@ else
 				'ICON_UP'		=> $icon_up,
 				'ICON_DOWN'		=> $icon_down,
 				
-				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_forum&amp;move=-15&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_forum&amp;move=15&amp;" . POST_RANKS_URL . "=".$row['rank_id'])
+				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_forum&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_forum&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id),
 			));
 		}
 		else if ($row['rank_type'] == RANK_TEAM)
@@ -443,18 +412,18 @@ else
 			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
 			$icon_down	= ( $row['rank_order'] != $max_team['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
 			
-			$template->assign_block_vars('team_row', array(
+			$template->assign_block_vars('display.team_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
 				
 				'ICON_UP'		=> $icon_up,
 				'ICON_DOWN'		=> $icon_down,
 
-				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_team&amp;move=-15&amp;" . POST_RANKS_URL . "=".$row['rank_id']),
-				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_team&amp;move=15&amp;" . POST_RANKS_URL . "=".$row['rank_id'])
+				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_team&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_team&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id),
 			));
 		}
 		

@@ -61,12 +61,16 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 	message_die(GENERAL_MESSAGE, $message);
 }
 
-$sql = 'SELECT u.user_id, u.username, u.user_color
-			FROM ' . USERS_AUTH_TABLE . ' ua, ' . USERS_TABLE . ' u
-			WHERE ua.forum_id = ' . $forum_id . '
-				AND ua.auth_mod = ' . TRUE . '
-			GROUP BY u.user_id, u.username
-			ORDER BY u.user_id';
+$sql = "SELECT u.user_id, u.username, u.user_color 
+	FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " gu, " . GROUPS_TABLE . " g, " . USERS_TABLE . " u
+	WHERE aa.forum_id = $forum_id 
+		AND aa.auth_mod = " . TRUE . " 
+		AND g.group_single_user = 1
+		AND gu.group_id = aa.group_id 
+		AND g.group_id = aa.group_id 
+		AND u.user_id = gu.user_id 
+	GROUP BY u.user_id, u.username  
+	ORDER BY u.user_id";
 if ( !($result = $db->sql_query($sql)) )
 {
 	message_die(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
@@ -75,16 +79,19 @@ if ( !($result = $db->sql_query($sql)) )
 $moderators = array();
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '">' . $row['username'] . '</a>';
+	$moderators[] = '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['username'] . '</a>';
 }
-
-$sql = 'SELECT g.group_id, g.group_name, g.group_color, g.group_order
-			FROM ' . GROUPS_AUTH_TABLE . ' ga, ' . GROUPS_TABLE . ' g
-			WHERE ga.forum_id = ' . $forum_id . '
-				AND ga.auth_mod = ' . TRUE . '
-				AND g.group_type <> ' . GROUP_HIDDEN . '
-					GROUP BY g.group_order
-					ORDER BY g.group_order';
+//	AND g.group_type <> ". GROUP_HIDDEN ."
+$sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
+	FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " gu, " . GROUPS_TABLE . " g 
+	WHERE aa.forum_id = $forum_id
+		AND aa.auth_mod = " . TRUE . " 
+		AND g.group_single_user = 0
+		
+		AND gu.group_id = aa.group_id 
+		AND g.group_id = aa.group_id 
+	GROUP BY g.group_id, g.group_name  
+	ORDER BY g.group_order";
 if ( !($result = $db->sql_query($sql)) )
 {
 	message_die(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
@@ -92,7 +99,7 @@ if ( !($result = $db->sql_query($sql)) )
 
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . append_sid("groupcp.$phpEx?" . POST_GROUPS_URL . "=" . $row['group_id']) . '">' . $row['group_name'] . '</a>';
+	$moderators[] = '<a href="' . append_sid("groupcp.$phpEx?" . POST_GROUPS_URL . "=" . $row['group_id']) . '" style="color:#' . $row['group_color'] . '">' . $row['group_name'] . '</a>';
 }
 
 $l_moderators = ( count($moderators) == 1 ) ? $lang['Moderator'] : $lang['Moderators'];
@@ -105,7 +112,6 @@ include($root_path . 'includes/page_header.php');
 $template->set_filenames(array('body' => 'viewforum_body.tpl'));
 
 
-/*
 //
 // User authorisation levels output
 //
@@ -119,7 +125,72 @@ if ( $is_auth['auth_mod'] )
 {
 	$s_auth_can .= sprintf($lang['Rules_moderate'], "<a href=\"modcp.$phpEx?" . POST_FORUM_URL . "=$forum_id&amp;start=" . $start . "&amp;sid=" . $userdata['session_id'] . '">', '</a>');
 }
-*/
+
+//
+// All announcement data, this keeps announcements
+// on each viewforum page ...
+//
+$sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as id2, p.post_time, p.post_username
+	FROM " . TOPICS_TABLE . " t, " . USERS_TABLE . " u, " . POSTS_TABLE . " p, " . USERS_TABLE . " u2
+	WHERE t.forum_id = $forum_id 
+		AND t.topic_poster = u.user_id
+		AND p.post_id = t.topic_last_post_id
+		AND p.poster_id = u2.user_id
+		AND t.topic_type = " . POST_ANNOUNCE . " 
+	ORDER BY t.topic_last_post_id DESC ";
+if ( !($result = $db->sql_query($sql)) )
+{
+   message_die(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
+}
+
+$topic_rowset = array();
+$total_announcements = 0;
+while( $row = $db->sql_fetchrow($result) )
+{
+	$topic_rowset[] = $row;
+	$total_announcements++;
+}
+
+$db->sql_freeresult($result);
+
+//
+// Grab all the basic data (all topics except announcements)
+// for this forum
+//
+$sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as id2, p.post_username, p2.post_username AS post_username2, p2.post_time 
+	FROM " . TOPICS_TABLE . " t, " . USERS_TABLE . " u, " . POSTS_TABLE . " p, " . POSTS_TABLE . " p2, " . USERS_TABLE . " u2
+	WHERE t.forum_id = $forum_id
+		AND t.topic_poster = u.user_id
+		AND p.post_id = t.topic_first_post_id
+		AND p2.post_id = t.topic_last_post_id
+		AND u2.user_id = p2.poster_id 
+		AND t.topic_type <> " . POST_ANNOUNCE . " 
+	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC 
+	LIMIT $start, " . $settings['site_entry_per_page'];
+if ( !($result = $db->sql_query($sql)) )
+{
+   message_die(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
+}
+
+$total_topics = 0;
+while( $row = $db->sql_fetchrow($result) )
+{
+	$topic_rowset[] = $row;
+	$total_topics++;
+}
+
+$db->sql_freeresult($result);
+
+$template->assign_vars(array(
+	'L_DISPLAY_TOPICS' => $lang['Display_topics'],
+
+	'U_POST_NEW_TOPIC' => append_sid("posting.php?mode=newtopic&amp;" . POST_FORUM_URL . "=$forum_id"),
+));
+
+//
+// Total topics ...
+//
+$total_topics += $total_announcements;
 
 $template->assign_vars(array(
 	'FORUM_ID' => $forum_id,
@@ -156,7 +227,7 @@ $template->assign_vars(array(
 	'L_JOINED' => $lang['Joined'],
 	'L_AUTHOR' => $lang['Author'],
 
-//	'S_AUTH_LIST' => $s_auth_can,
+	'S_AUTH_LIST' => $s_auth_can,
 	'L_MODERATOR'	=> $l_moderators,
 	'MODERATORS'	=> $forum_moderators,
 

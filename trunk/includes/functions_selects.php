@@ -19,19 +19,19 @@ function _select_newscat($default)
 {
 	global $db;
 		
-	$sql = 'SELECT * FROM ' . NEWS_CATEGORIE_TABLE . " ORDER BY news_categorie_order";
+	$sql = 'SELECT * FROM ' . NEWS_CATEGORY_TABLE . " ORDER BY news_category_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select name="news_categorie_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select = '<select name="news_category_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
 	$func_select .= '<option value="0">----------</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['news_categorie_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['news_categorie_image'] . '"' . $selected . '>' . $row['news_categorie_title'] . '&nbsp;</option>';
+		$selected = ( $row['news_category_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['news_category_image'] . '"' . $selected . '>' . $row['news_category_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -41,10 +41,9 @@ function _select_newscat($default)
 //
 //	Rang (Page/Forum/Team) Select
 //
-//	default:		Auswahl Rang
 //	type:			1 = Page / 2 = Forum / 3 = Team
 //
-function _select($default, $type)
+function _select_rank($type)
 {
 	global $db;
 	
@@ -59,8 +58,7 @@ function _select($default, $type)
 	$func_select = '<select class="post" name="rank_id">';
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['rank_order'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
+		$func_select .= '<option value="' . $row['rank_id'] . '">' . $row['rank_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -267,7 +265,7 @@ function page_mode_select($default, $select_name = 'page_disable_mode')
 		$default = explode(',', $default);
 	}
 
-	$disable_select = '<select name="' . $select_name . '[]" multiple="multiple">';
+	$disable_select = '<select class="post" name="' . $select_name . '[]" multiple="multiple">';
 	foreach ($lang['page_disable_mode_opt'] as $const => $name)
 	{
 		$selected = (in_array($const, $default)) ? ' selected="selected"' : '';

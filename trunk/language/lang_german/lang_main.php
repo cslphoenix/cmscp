@@ -1,5 +1,32 @@
 <?php
 
+$lang['group_set_mod']		= 'Gruppenrechte geändert.';
+$lang['group_is_moderator'] = 'Du bist der Moderator dieser Gruppe.';
+
+
+
+$lang['Forum_DISALLOWED']	= 'Nein';
+$lang['Forum_ALLOWED']		= 'Ja';
+
+$lang['auth_contact']		= 'Kontakt';
+$lang['auth_fightus']		= 'Fightus';
+$lang['auth_forum']			= 'Forum';
+$lang['auth_forum_auth']	= 'Forumberechtigung';
+$lang['auth_games']			= 'Spiele';
+$lang['auth_groups']		= 'Gruppen';
+$lang['auth_joinus']		= 'Joinus';
+$lang['auth_match']			= 'Match/Wars';
+$lang['auth_navi']			= 'Navigation';
+$lang['auth_news']			= 'News';
+$lang['auth_news_public']	= 'News veröffentlichen';
+$lang['auth_newscat']		= 'News Kategorien';
+$lang['auth_ranks']			= 'Ränge';
+$lang['auth_server']		= 'Server';
+$lang['auth_teams']			= 'Teams';
+$lang['auth_teamspeak']		= 'Teamspeak';
+$lang['auth_training']		= 'Training';
+$lang['auth_user']			= 'Benutzer';
+
 $lang['news_head_info']	= 'News: %s';
 $lang['forum_index'] = 'Forum:';
 
@@ -24,7 +51,7 @@ $lang['page_disable'] = 'Seite deaktiviert.';
 $lang['Board_disable_explain'] = 'This will deny access to the board for several user groups you can define below.';
 $lang['Board_disable_mode'] = 'Disable board for...';
 $lang['Board_disable_mode_explain'] = 'Here you can choose who isn\'t allowed to access the board when it\'s disabled. With Ctrl key pressed you can select more than one user group.';
-$lang['page_disable_mode_opt'] = array(ANONYMOUS => 'Gäste', USER => 'Registierte Benutzer', TRAIL => 'Trial Member', MEMBER => 'Member');
+$lang['page_disable_mode_opt'] = array(ANONYMOUS => 'Gäste', USER => 'Registierte Benutzer', TRIAL => 'Trial Member', MEMBER => 'Member');
 $lang['Board_disable_msg'] = 'Board disabled message';
 $lang['Board_disable_msg_explain'] = 'This message will be shown when the board is disabled (empty message = phpBB default message).';
 
@@ -80,7 +107,7 @@ $lang['subforums']			= 'Subforen';
 $lang['replace']			= ' Ersatz: ';
 $lang['player']				= 'Spieler: ';
 
-$lang['last_matches']		= 'Last Wars';
+$lang['subnavi_last_matches']		= 'Last Wars';
 $lang['teams']				= 'Teams';
 $lang['all_matches']		= 'alle Wars';
 $lang['match_fightus']		= 'FightUs?';
@@ -440,6 +467,18 @@ $lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum lös
 $lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum <b>nicht</b> löschen.';
 $lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen in diesem Forum teilnehmen.';
 $lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen in diesem Forum <b>nicht</b> teilnehmen.';
+$lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.'; // %s replaced by a href links, do not remove!
+
+$lang['Rules_post_can'] = 'Du <b>kannst</b> Beiträge schreiben.';
+$lang['Rules_post_cannot'] = 'Du <b>kannst keine</b> Beiträge schreiben.';
+$lang['Rules_reply_can'] = 'Du <b>kannst</b> auf Beiträge antworten.';
+$lang['Rules_reply_cannot'] = 'Du <b>kannst</b> auf Beiträge <b>nicht</b> antworten.';
+$lang['Rules_edit_can'] = 'Du <b>kannst</b> deine Beiträge bearbeiten.';
+$lang['Rules_edit_cannot'] = 'Du <b>kannst</b> deine Beiträge <b>nicht</b> bearbeiten.';
+$lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beiträge löschen.';
+$lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beiträge <b>nicht</b> löschen.';
+$lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen teilnehmen.';
+$lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen <b>nicht</b> teilnehmen.';
 $lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.'; // %s replaced by a href links, do not remove!
 
 $lang['No_topics_post_one'] = 'In diesem Forum sind keine Beiträge vorhanden.<br />Klicke auf <b>Neues Thema</b>, um den ersten Beitrag zu erstellen.';
@@ -894,6 +933,7 @@ $lang['Pending_members'] = 'Wartende Mitglieder';
 
 $lang['Group_type'] = 'Gruppentyp';
 $lang['Group_open'] = 'Offene Gruppe';
+$lang['Group_quest'] = 'Anfrage Gruppe';
 $lang['Group_closed'] = 'Geschlossene Gruppe';
 $lang['Group_hidden'] = 'Versteckte Gruppe';
 
@@ -903,6 +943,12 @@ $lang['Memberships_pending'] = 'Warten auf Mitgliedschaft';
 
 $lang['No_groups_exist'] = 'Es existieren keine Gruppen';
 $lang['Group_not_exist'] = 'Diese Gruppe existiert nicht';
+
+$lang['group_no_members'] = 'Diese Gruppe hat keine Mitglieder.';
+$lang['group_no_moderators'] = 'Diese Gruppe hat keine Moderatoren.';
+
+$lang['group_msg_open'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.';
+$lang['group_msg_request'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.<br />Du wirst benachrichtigt, wenn der Gruppenmoderator deine Mitgliedschaft akzeptiert hat.';
 
 $lang['Join_group'] = 'Gruppe beitreten';
 $lang['No_group_members'] = 'Diese Gruppe hat keine Mitglieder.';
@@ -932,9 +978,11 @@ $lang['Add_member'] = 'Mitglied hinzufügen';
 $lang['Not_group_moderator'] = 'Du bist nicht der Moderator dieser Gruppe. Daher kannst du diese Aktion nicht durchführen.';
 
 $lang['Login_to_join'] = 'Einloggen, um Gruppe zu verwalten';
-$lang['This_open_group'] = 'Dies ist eine offene Gruppe. Du kannst eine Mitgliedschaft beantragen.';
+$lang['This_open_group'] = 'Dies ist eine offene Gruppe. Du wirst automatisch eingetragen.';
+$lang['This_request_group'] = 'Dies ist eine Anfrage Gruppe. Du kannst eine Mitgliedschaft beantragen.';
 $lang['This_closed_group'] = 'Dies ist eine geschlossene Gruppe, keine weiteren Mitglieder werden akzeptiert.';
 $lang['This_hidden_group'] = 'Dies ist eine versteckte Gruppe, automatische Anmeldungen werden nicht akzeptiert.';
+$lang['This_system_group'] = 'Dies ist eine System Gruppe, automatische An/Abmeldungen werden nicht akzeptiert.';
 $lang['Member_this_group'] = 'Du bist ein Mitglied dieser Gruppe.';
 $lang['Pending_this_group'] = 'Du wartest auf eine Mitgliedschaft in dieser Gruppe.';
 $lang['Are_group_moderator'] = 'Du bist der Moderator dieser Gruppe.';
@@ -999,11 +1047,13 @@ $lang['Sorry_auth_delete'] = 'Nur %s haben die Berechtigung, in diesem Forum Bei
 $lang['Sorry_auth_vote'] = 'In diesem Forum können sich nur %s an Abstimmungen beteiligen.';
 
 // These replace the %s in the above strings
-$lang['Auth_Anonymous_Users'] = '<b>anonyme Benutzer</b>';
-$lang['Auth_Registered_Users'] = '<b>registrierte Benutzer</b>';
-$lang['Auth_Users_granted_access'] = '<b>Benutzer mit speziellen Rechten</b>';
-$lang['Auth_Moderators'] = '<b>Moderatoren</b>';
-$lang['Auth_Administrators'] = '<b>Administratoren</b>';
+$lang['auth_anonymous_users']		= '<b>anonyme Benutzer</b>';
+$lang['auth_registered_users']		= '<b>registrierte Benutzer</b>';
+$lang['auth_trial_users']			= '<b>Trail Member</b>';
+$lang['auth_member_users']			= '<b>Member</b>';
+$lang['auth_users_granted_access']	= '<b>Benutzer mit speziellen Rechten</b>';
+$lang['auth_moderators']			= '<b>Moderatoren</b>';
+$lang['auth_administrators']		= '<b>Administratoren</b>';
 
 $lang['Not_Moderator'] = 'Du bist nicht Moderator dieses Forums.';
 $lang['Not_Authorised'] = 'Nicht berechtigt';

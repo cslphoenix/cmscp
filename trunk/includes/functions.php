@@ -1,5 +1,135 @@
 <?php
 
+function group_set_auth($user_id, $group_id)
+{
+	global $db;
+	
+	$sql = 'SELECT group_access, group_color
+				FROM ' . GROUPS_TABLE . '
+				WHERE group_id = ' . $group_id . '
+					AND group_type <> ' . GROUP_HIDDEN;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+	}
+	$group = $db->sql_fetchrow($result);
+	
+	$sql = 'SELECT user_level
+				FROM ' . USERS_TABLE . '
+				WHERE user_id = ' . $user_id;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+	}
+	$user = $db->sql_fetchrow($result);
+	
+	$group_access	= $group['group_access'];
+	$group_color	= $group['group_color'];
+	
+	$user_level		= $user['user_level'];
+	
+	if ( $group_access == ADMIN && ( $user_level < ADMIN || $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
+	{
+		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . ADMIN . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if (!$db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+	}
+	else if ( $group_access == MOD && ( $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
+	{
+		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . MOD . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if (!$db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+	}
+	else if ( $group_access == MEMBER && ( $user_level < MEMBER || $user_level < TRIAL ) )
+	{
+		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . MEMBER . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if (!$db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+	}
+	else if ( $group_access == TRIAL && $user_level <= TRIAL )
+	{
+		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . TRIAL . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if (!$db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+	}
+}
+
+function group_reset_auth($user_id, $group_id)
+{
+	global $db;
+	
+	$sql = 'SELECT g.group_access, g.group_color
+				FROM ' . GROUPS_TABLE . ' g, ' . GROUPS_USER_TABLE . ' gu
+				WHERE gu.user_id <> ' . ANONYMOUS . '
+					AND g.group_id = gu.group_id
+					AND gu.user_id = ' . $user_id . '
+					AND g.group_single_user = 0
+					AND NOT g.group_id = ' . $group_id . '
+				GROUP BY g.group_id ASC';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$group = $db->sql_fetchrow($result);
+	
+	$sql = 'SELECT user_founder FROM ' . USERS_TABLE . ' WHERE user_id = ' . $user_id;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+	}
+	$user = $db->sql_fetchrow($result);
+	
+	if ( $user['user_founder'] == '0' )
+	{
+		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . $group['group_access'] . ', user_color = "' . $group['group_color'] . '" WHERE user_id = ' . $user_id;
+		if (!$db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+	}
+}
+
+function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$joined, &$poster_avatar, &$profile_img, &$profile, &$search_img, &$search, &$pm_img, &$pm, &$email_img, &$email, &$www_img, &$www, &$icq_status_img, &$icq_img, &$icq, &$aim_img, &$aim, &$msn_img, &$msn, &$yim_img, &$yim)
+{
+	global $lang, $images, $config, $phpEx;
+
+	$from = ( !empty($row['user_from']) ) ? $row['user_from'] : '&nbsp;';
+	$joined = create_date($date_format, $row['user_regdate'], $config['board_timezone']);
+
+	$posts = ( $row['user_posts'] ) ? $row['user_posts'] : 0;
+
+	if ( !empty($row['user_viewemail']) || $group_mod )
+	{
+		$email_uri = ( $config['page_email_form'] ) ? append_sid("profile.php?mode=email&amp;" . POST_USERS_URL .'=' . $row['user_id']) : 'mailto:' . $row['user_email'];
+
+		$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
+		$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
+	}
+	else
+	{
+		$email_img = '&nbsp;';
+		$email = '&nbsp;';
+	}
+
+	$temp_url = append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']);
+	$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
+	$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
+
+	$temp_url = append_sid("privmsg.php?mode=post&amp;" . POST_USERS_URL . "=" . $row['user_id']);
+	$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
+	$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
+
+	return;
+}
+
 //
 // Get Userdata, $user can be username or user_id. If force_str is true, the username will be forced.
 //
@@ -16,10 +146,10 @@ function get_userdata($user, $force_str = false)
 		$user = intval($user);
 	}
 
-	$sql = 'SELECT *
-				FROM ' . USERS_TABLE . ' 
-					WHERE ';
-	$sql .= ( ( is_integer($user) ) ? 'user_id = ' . $user : 'username = ' .  str_replace("\'", "''", $user) . "'" ) . ' AND user_id <> ' . ANONYMOUS;
+	$sql = "SELECT *
+				FROM " . USERS_TABLE . " 
+				WHERE ";
+	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "username = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Tried obtaining data for a non-existent user', '', __LINE__, __FILE__, $sql);
@@ -175,55 +305,55 @@ function error_handler($errno, $errstr, $errfile, $errline)
 		define('E_RECOVERABLE_ERROR', 4096);
 	}
 	
-	echo '<b>';
+	$msg = '<b>';
 	
 	switch ($errno)
 	{
 		case E_ERROR:
-			echo 'Error';
+			$msg .= 'Error';
 		break;
 		case E_WARNING:
-			echo 'Warning';
+			$msg .= 'Warning';
 		break;
 		case E_PARSE:
-			echo 'Parse Error';
+			$msg .= 'Parse Error';
 		break;
 		case E_NOTICE:
-			echo 'Notice';
+			$msg .= 'Notice';
 		break;
 		case E_CORE_ERROR:
-			echo 'Core Error';
+			$msg .= 'Core Error';
 		break;
 		case E_CORE_WARNING:
-			echo 'Core Warning';
+			$msg .= 'Core Warning';
 		break;
 		case E_COMPILE_ERROR:
-			echo 'Compile Error';
+			$msg .= 'Compile Error';
 		break;
 		case E_COMPILE_WARNING:
-			echo 'Compile Warning';
+			$msg .= 'Compile Warning';
 		break;
 		case E_USER_ERROR:
-			echo 'User Error';
+			$msg .= 'User Error';
 		break;
 		case E_USER_WARNING:
-			echo 'User Warning';
+			$msg .= 'User Warning';
 		break;
 		case E_USER_NOTICE:
-			echo 'User Notice';
+			$msg .= 'User Notice';
 		break;
 		case E_STRICT:
-			echo 'Strict Notice';
+			$msg .= 'Strict Notice';
 		break;
 		case E_RECOVERABLE_ERROR:
-			echo 'Recoverable Error';
+			$msg .= 'Recoverable Error';
 		break;
 		default:
-			echo 'Unknown error ($errno)';
+			$msg .= 'Unknown error ($errno)';
 		break;
 	}
 	
-	echo ":</b> $errstr in <b>$errfile</b> on line <b>$errline</b>";
+	$msg .= ":</b> $errstr in <b>$errfile</b> on line <b>$errline</b>";
 /*	
 	if (function_exists('debug_backtrace'))
 	{
@@ -247,7 +377,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
         }
     }
 */
-    echo "<br>";
+    $msg .= "<br>";
 	
 	if (isset($GLOBALS['error_fatal']))
 	{
@@ -256,6 +386,8 @@ function error_handler($errno, $errstr, $errfile, $errline)
 			die('fatal');
 		}
 	}
+	
+	echo $msg;
 }
 
 /*
@@ -622,13 +754,13 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 		case '.jpeg':
 		case '.pjpeg':
 		case '.jpg':
-			imagejpeg($image_p, './../' . $settings['match_picture_path'] . "/$new_filename_preview", 100);
+			imagejpeg($image_p, './../' . $settings['path_match_picture'] . "/$new_filename_preview", 100);
 		break;
 		case '.gif':
-			imagegif($image_p, './../' . $settings['match_picture_path'] . "/$new_filename_preview");
+			imagegif($image_p, './../' . $settings['path_match_picture'] . "/$new_filename_preview");
 		break;
 		case '.png':
-			imagepng($image_p, './../' . $settings['match_picture_path'] . "/$new_filename_preview");
+			imagepng($image_p, './../' . $settings['path_match_picture'] . "/$new_filename_preview");
 		break;
 	}
 	
@@ -656,9 +788,9 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 		message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
 
-	$move_file($logo_filename, './../' . $settings['match_picture_path'] . "/$new_filename");
+	$move_file($logo_filename, './../' . $settings['path_match_picture'] . "/$new_filename");
 
-	@chmod('./../' . $settings['match_picture_path'] . "/$new_filename", 0777);
+	@chmod('./../' . $settings['path_match_picture'] . "/$new_filename", 0777);
 	
 	$pic = "details_map_pic_" . $num . " = '$new_filename', pic_" . $num . "_preview = '$new_filename_preview',";
 	
@@ -673,14 +805,14 @@ function picture_delete($num, $logo_file, $logo_preview_file)
 	$logo_preview_file = basename($logo_preview_file);
 	if ($logo_file != '' )
 	{
-		if ( @file_exists(@phpbb_realpath('./../' . $settings['match_picture_path'] . '/' . $logo_file)) )
+		if ( @file_exists(@phpbb_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_file)) )
 		{
-			@unlink('./../' . $settings['match_picture_path'] . '/' . $logo_file);
+			@unlink('./../' . $settings['path_match_picture'] . '/' . $logo_file);
 		}
 		
-		if ( @file_exists(@phpbb_realpath('./../' . $settings['match_picture_path'] . '/' . $logo_preview_file)) )
+		if ( @file_exists(@phpbb_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file)) )
 		{
-			@unlink('./../' . $settings['match_picture_path'] . '/' . $logo_preview_file);
+			@unlink('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file);
 		}
 	}
 	
@@ -1304,7 +1436,7 @@ function obtain_word_list(&$orig_word, &$replacement_word)
 //
 function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $err_file = '', $sql = '')
 {
-	global $db, $template, $config, $theme, $lang, $root_path, $nav_links, $gen_simple_header, $images;
+	global $db, $template, $config, $settings, $theme, $lang, $root_path, $nav_links, $gen_simple_header, $images;
 	global $userdata, $user_ip, $session_length;
 	global $starttime;
 	
