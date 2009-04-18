@@ -117,7 +117,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 		$forum_match_sql = ( $forum_id != AUTH_LIST_ALL ) ? "WHERE a.forum_id = $forum_id" : '';
 
 		$sql = "SELECT a.forum_id, $a_sql
-			FROM " . FORUMS_TABLE . " a
+			FROM " . FORUMS . " a
 			$forum_match_sql";
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -145,7 +145,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 		$forum_match_sql = ( $forum_id != AUTH_LIST_ALL ) ? "AND a.forum_id = $forum_id" : '';
 
 		$sql = "SELECT a.forum_id, $a_sql, a.auth_mod 
-			FROM " . AUTH_ACCESS_TABLE . " a, " . GROUPS_USER_TABLE . " gu 
+			FROM " . AUTH_ACCESS . " a, " . GROUPS_USERS . " gu 
 			WHERE gu.user_id = " . $userdata['user_id'] . " 
 				AND gu.user_pending = 0 
 				AND a.group_id = gu.group_id
@@ -348,29 +348,10 @@ function auth_acp_check($user_id)
 {
 	global $db;
 	
-	$group_auth_fields = array(
-		'auth_contact',
-		'auth_fightus',
-		'auth_forum',
-		'auth_forum_auth',
-		'auth_games',
-		'auth_groups',
-		'auth_joinus',
-		'auth_match',
-		'auth_navi',
-		'auth_news',
-		'auth_news_public',
-		'auth_newscat',
-		'auth_ranks',
-		'auth_server',
-		'auth_teams',
-		'auth_teamspeak',
-		'auth_training',
-		'auth_user',
-	);
+	$group_auth_fields = get_authlist();
 	
 	$sql = 'SELECT g.group_id, ' . implode(', ', $group_auth_fields) . '
-				FROM ' . GROUPS_TEST_TABLE . ' g, ' . GROUPS_USER_TABLE . ' gu
+				FROM ' . GROUPS . ' g, ' . GROUPS_USERS . ' gu
 				WHERE g.group_id = gu.group_id
 					AND gu.user_pending = 0
 					AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
@@ -379,33 +360,38 @@ function auth_acp_check($user_id)
 		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
 	}
 	
-	$auth_data = array();
+	$usergroups_data = array();
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$auth_data[$row['group_id']] = $row;
+		$group_in[] = $row['group_id'];
+		$usergroups_data[$row['group_id']] = $row;
 		
-		unset($auth_data[$row['group_id']]['group_id']);
+		unset($usergroups_data[$row['group_id']]['group_id']);
 	}
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . ' FROM ' . GROUPS_TEST_TABLE . ' WHERE group_single_user = 0 ORDER BY group_id';
+	$sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . '
+				FROM ' . GROUPS . '
+				WHERE group_single_user = 0
+					AND group_id IN (' . implode(', ', $group_in) . ')
+			ORDER BY group_id';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
 	}
 	
-	$auth_group = array();
+	$group_data = array();
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$auth_group[$row['group_id']] = $row;
+		$group_data[$row['group_id']] = $row;
 		
-		unset($auth_group[$row['group_id']]['group_id']);
+		unset($group_data[$row['group_id']]['group_id']);
 	}
 	$db->sql_freeresult($result);
 	
-	$auth		= array();
-	$group_ids	= array_keys($auth_group);
-	foreach ( $auth_data as $key => $value )
+	$userauth	= array();
+	$group_ids	= array_keys($group_data);
+	foreach ( $usergroups_data as $key => $value )
 	{
 		foreach ($group_ids as $group_key => $group_id)
 		{
@@ -413,28 +399,28 @@ function auth_acp_check($user_id)
 			{
 				if ( $v_value == '0' )
 				{
-					if ( !array_key_exists($v_key, $auth) )
+					if ( !array_key_exists($v_key, $userauth) )
 					{
-						$auth[$v_key] = $auth_group[$group_id][$v_key];
+						$userauth[$v_key] = $group_data[$group_id][$v_key];
 					}
-					else if ( !$auth[$v_key] )
+					else if ( !$userauth[$v_key] )
 					{
-						$auth[$v_key] = $auth_group[$group_id][$v_key];
+						$userauth[$v_key] = $group_data[$group_id][$v_key];
 					}
 				}
 				else if ( $v_value == '2' )
 				{
-					$auth[$v_key] = $v_value;
+					$userauth[$v_key] = $v_value;
 				}
 				else
 				{
-					$auth[$v_key] = $v_value;
+					$userauth[$v_key] = $v_value;
 				}
 			}
 		}
 	}
 	
-	return $auth;
+	return $userauth;
 }
 
 ?>

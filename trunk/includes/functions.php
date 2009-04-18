@@ -1,11 +1,69 @@
 <?php
 
+function get_authlist()
+{
+	global $db;
+	
+	$sql = 'SELECT auth_name FROM ' . AUTHLIST . ' ORDER BY auth_name';
+//	if( !($result = $db->sql_query($sql)) )
+//	{
+//		message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+//	}
+//	$authlist_data = $db->sql_fetchrowset($result);
+	$authlist_data = _cached($sql, 'authlist', 0);
+
+	for ( $i = 0; $i < count($authlist_data); $i++ )
+	{
+		$authlist[] = $authlist_data[$i]['auth_name'];
+	}
+	
+	return $authlist;
+}
+
+function random_password($minlength = 7, $maxlength = 14, $uselower = true, $useupper = false, $usenumbers = true, $usespecial = false)
+{
+	$charset = '';
+	
+	if ($useupper)
+	{
+		$charset .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	}
+    
+	if ($usenumbers)
+	{
+		$charset .= '1234567890';
+	}
+	
+	if ($usespecial)
+	{
+		$charset .= '~@#$%^*()_+-={}|][';
+	}
+	
+	if (empty($charset) || $uselower)
+	{
+		$charset .= 'abcdefghijklmnopqrstuvwxyz';
+	}
+	
+	$length = ($minlength > $maxlength) ? mt_rand($maxlength, $minlength) : mt_rand($minlength, $maxlength);
+	
+	$charsetlength = strlen($charset) - 1;
+	
+	$str = '';
+	
+	for ( $i=0; $i < $length; $i++ )
+	{
+		$str .= $charset[mt_rand(0, $charsetlength)];
+	}
+	
+	return $str; 
+} 
+
 function group_set_auth($user_id, $group_id)
 {
 	global $db;
 	
 	$sql = 'SELECT group_access, group_color
-				FROM ' . GROUPS_TABLE . '
+				FROM ' . GROUPS . '
 				WHERE group_id = ' . $group_id . '
 					AND group_type <> ' . GROUP_HIDDEN;
 	if ( !($result = $db->sql_query($sql)) )
@@ -15,7 +73,7 @@ function group_set_auth($user_id, $group_id)
 	$group = $db->sql_fetchrow($result);
 	
 	$sql = 'SELECT user_level
-				FROM ' . USERS_TABLE . '
+				FROM ' . USERS . '
 				WHERE user_id = ' . $user_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -30,35 +88,25 @@ function group_set_auth($user_id, $group_id)
 	
 	if ( $group_access == ADMIN && ( $user_level < ADMIN || $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . ADMIN . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
-		if (!$db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . ADMIN . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
 	}
 	else if ( $group_access == MOD && ( $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . MOD . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
-		if (!$db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
 	}
 	else if ( $group_access == MEMBER && ( $user_level < MEMBER || $user_level < TRIAL ) )
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . MEMBER . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
-		if (!$db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
 	}
 	else if ( $group_access == TRIAL && $user_level <= TRIAL )
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . TRIAL . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
-		if (!$db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		
+	}
+	
+	if (!$db->sql_query($sql))
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 }
 
@@ -67,7 +115,7 @@ function group_reset_auth($user_id, $group_id)
 	global $db;
 	
 	$sql = 'SELECT g.group_access, g.group_color
-				FROM ' . GROUPS_TABLE . ' g, ' . GROUPS_USER_TABLE . ' gu
+				FROM ' . GROUPS . ' g, ' . GROUPS_USERS . ' gu
 				WHERE gu.user_id <> ' . ANONYMOUS . '
 					AND g.group_id = gu.group_id
 					AND gu.user_id = ' . $user_id . '
@@ -80,7 +128,7 @@ function group_reset_auth($user_id, $group_id)
 	}
 	$group = $db->sql_fetchrow($result);
 	
-	$sql = 'SELECT user_founder FROM ' . USERS_TABLE . ' WHERE user_id = ' . $user_id;
+	$sql = 'SELECT user_founder FROM ' . USERS . ' WHERE user_id = ' . $user_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
@@ -89,7 +137,7 @@ function group_reset_auth($user_id, $group_id)
 	
 	if ( $user['user_founder'] == '0' )
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . $group['group_access'] . ', user_color = "' . $group['group_color'] . '" WHERE user_id = ' . $user_id;
+		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . $group['group_access'] . ', user_color = "' . $group['group_color'] . '" WHERE user_id = ' . $user_id;
 		if (!$db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -147,7 +195,7 @@ function get_userdata($user, $force_str = false)
 	}
 
 	$sql = "SELECT *
-				FROM " . USERS_TABLE . " 
+				FROM " . USERS . " 
 				WHERE ";
 	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "username = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
@@ -825,7 +873,7 @@ function _log($type, $user_id, $user_ip, $sektion, $message, $data='')
 	
 	$message = strtolower($message);
 	
-	$sql = "INSERT INTO " . LOG_TABLE . " SET log_type = '$type', log_time = " . time() . ", user_id = '$user_id', user_ip = '$user_ip', log_sektion = '$sektion', log_message = '$message', log_data = '$data'";
+	$sql = "INSERT INTO " . LOGS . " SET log_type = '$type', log_time = " . time() . ", user_id = '$user_id', user_ip = '$user_ip', log_sektion = '$sektion', log_message = '$message', log_data = '$data'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'log fail', '', __LINE__, __FILE__, $sql);
@@ -851,13 +899,13 @@ function get_db_stat($mode)
 	{
 		case 'usercount':
 			$sql = "SELECT COUNT(user_id) AS total
-				FROM " . USERS_TABLE . "
+				FROM " . USERS . "
 				WHERE user_id <> " . ANONYMOUS;
 			break;
 
 		case 'newestuser':
 			$sql = "SELECT user_id, username
-				FROM " . USERS_TABLE . "
+				FROM " . USERS . "
 				WHERE user_id <> " . ANONYMOUS . "
 				ORDER BY user_id DESC
 				LIMIT 1";
@@ -866,7 +914,7 @@ function get_db_stat($mode)
 		case 'postcount':
 		case 'topiccount':
 			$sql = "SELECT SUM(forum_topics) AS topic_total, SUM(forum_posts) AS post_total
-				FROM " . FORUMS_TABLE;
+				FROM " . FORUMS;
 			break;
 	}
 
@@ -979,7 +1027,7 @@ function dss_rand()
    
 	if($dss_seeded !== true)
 	{
-		$sql = "UPDATE " . CONFIG_TABLE . " SET
+		$sql = "UPDATE " . CONFIG . " SET
 			config_value = '" . $config['rand_seed'] . "'
 			WHERE config_name = 'rand_seed'";
 		
@@ -1012,7 +1060,7 @@ function get_userdata($user, $force_str = false)
 	}
 
 	$sql = "SELECT *
-		FROM " . USERS_TABLE . " 
+		FROM " . USERS . " 
 		WHERE ";
 	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "username = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
@@ -1079,7 +1127,7 @@ function init_userprefs($userdata)
 	// before we go any further since it means there is something wrong with it
 	if ( $userdata['user_id'] != ANONYMOUS && $userdata['user_lang'] !== $default_lang )
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . "
+		$sql = 'UPDATE ' . USERS . "
 			SET user_lang = '" . $default_lang . "'
 			WHERE user_lang = '" . $userdata['user_lang'] . "'";
 
@@ -1092,7 +1140,7 @@ function init_userprefs($userdata)
 	}
 	elseif ( $userdata['user_id'] == ANONYMOUS && $config['default_lang'] !== $default_lang )
 	{
-		$sql = 'UPDATE ' . CONFIG_TABLE . "
+		$sql = 'UPDATE ' . CONFIG . "
 			SET config_value = '" . $default_lang . "'
 			WHERE config_name = 'default_lang'";
 
@@ -1107,12 +1155,23 @@ function init_userprefs($userdata)
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_main.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
+	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_ucp.php');
+	
+	if ( file_exists($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php') )
+	{
+		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php');
+	}
 	
 	if ( defined('IN_ADMIN') )
 	{
-		if( !file_exists(@phpbb_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php')) )
+		if ( !file_exists(@phpbb_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php')) )
 		{
 			$config['default_lang'] = 'english';
+		}
+		
+		if ( file_exists($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php') )
+		{
+			include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php');
 		}
 
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
@@ -1160,8 +1219,6 @@ function init_userprefs($userdata)
 		'title' => $lang['Memberlist']
 	);
 	
-	
-
 	return;
 }
 
@@ -1169,7 +1226,7 @@ function setup_style($style)
 {
 	global $db, $config, $template, $images, $root_path;
 
-	$sql = 'SELECT * FROM ' . THEMES_TABLE . ' WHERE themes_id = ' . (int) $style;
+	$sql = 'SELECT * FROM ' . THEMES . ' WHERE themes_id = ' . (int) $style;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(CRITICAL_ERROR, 'Could not query database for theme info');
@@ -1183,7 +1240,7 @@ function setup_style($style)
 		if ( $style != $config['default_style'])
 		{
 			$sql = 'SELECT *
-				FROM ' . THEMES_TABLE . '
+				FROM ' . THEMES . '
 				WHERE themes_id = ' . (int) $config['default_style'];
 			if ( !($result = $db->sql_query($sql)) )
 			{
@@ -1194,7 +1251,7 @@ function setup_style($style)
 			{
 				$db->sql_freeresult($result);
 
-				$sql = 'UPDATE ' . USERS_TABLE . '
+				$sql = 'UPDATE ' . USERS . '
 					SET user_style = ' . (int) $config['default_style'] . "
 					WHERE user_style = $style";
 				if ( !($result = $db->sql_query($sql)) )
@@ -1396,7 +1453,7 @@ function obtain_word_list(&$orig_word, &$replacement_word)
 	// Define censored word matches
 	//
 	$sql = "SELECT word, replacement
-		FROM  " . WORDS_TABLE;
+		FROM  " . WORDS;
 	if( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not get censored words from database', '', __LINE__, __FILE__, $sql);
@@ -1633,7 +1690,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		$error_file  = str_replace('\\', '\\\\', $error_file);
 		$error_file  = str_replace('\'', '\\\'', $error_file);
 		
-		$sql = "INSERT INTO  " . ERROR_TABLE . " (error_sql_code, error_userid, error_file_line, error_time, error_sql_text, error_file, error_sql_store, error_msg_title, error_msg_text) VALUES ('$error_sql_code', '$error_userid', '$err_line', '$error_time', '$error_sql_text', '$error_file', '$error_sql_store', '$msg_title', '$msg_text')";
+		$sql = "INSERT INTO  " . ERROR . " (error_sql_code, error_userid, error_file_line, error_time, error_sql_text, error_file, error_sql_store, error_msg_title, error_msg_text) VALUES ('$error_sql_code', '$error_userid', '$err_line', '$error_time', '$error_sql_text', '$error_file', '$error_sql_store', '$msg_title', '$msg_text')";
 		
 		if (!($result = $db->sql_query($sql)))
 		{
@@ -1681,7 +1738,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 			'MESSAGE_TITLE' => $msg_title,
 			'MESSAGE_TEXT' => $msg_text,
 			'CLASS' => (!empty($class)) ? $class : 'normal',
-			'BACK' => (!empty($back)) ? $lang['wrong_back'] : ''
+			'BACK' => (!empty($back)) ? $lang['back'] : ''
 		));
 		$template->pparse('message_body');
 

@@ -1,10 +1,32 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
 function _select_box($default, $type)
 {
 	global $db, $lang;
 	
-	$func_select = '<select class="post" name="rank_id">';
+	$func_select = '<select class="select" name="rank_id">';
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$selected = ( $row['rank_order'] == $default ) ? ' selected="selected"' : '';
@@ -19,7 +41,7 @@ function _select_newscat($default)
 {
 	global $db;
 		
-	$sql = 'SELECT * FROM ' . NEWS_CATEGORY_TABLE . " ORDER BY news_category_order";
+	$sql = 'SELECT * FROM ' . NEWS_CATEGORY . " ORDER BY news_category_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
@@ -43,22 +65,24 @@ function _select_newscat($default)
 //
 //	type:			1 = Page / 2 = Forum / 3 = Team
 //
-function _select_rank($type)
+function _select_rank($default, $type)
 {
 	global $db;
 	
 	$order = ($type == '2') ? 'rank_order' : 'rank_id';
 	
-	$sql = 'SELECT rank_id, rank_title, rank_order FROM ' . RANKS_TABLE . " WHERE rank_type = $type ORDER BY $order";
+	$sql = 'SELECT rank_id, rank_title, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select class="post" name="rank_id">';
+	$func_select = '<select class="select" name="rank_id">';
+	$func_select .= '<option value="0">----------</option>';
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$func_select .= '<option value="' . $row['rank_id'] . '">' . $row['rank_title'] . '&nbsp;</option>';
+		$selected = ( $row['rank_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -74,13 +98,13 @@ function _select_game($default)
 {
 	global $db, $lang;
 	
-	$sql = 'SELECT * FROM ' . GAMES_TABLE . ' WHERE game_id != -1 ORDER BY game_order';
+	$sql = 'SELECT * FROM ' . GAMES . ' WHERE game_id != -1 ORDER BY game_order';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
 	}
 	
-	$func_select = '<select class="post" name="game_image" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select = '<select class="select" name="game_image" onchange="update_image(this.options[selectedIndex].value);">';
 	$func_select .= '<option value="">&raquo; ' . $lang['game_select'] . '</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
@@ -106,7 +130,7 @@ function _select_team($default, $type, $class)
 	
 	$typ = ($type != '0') ? ($type == '2') ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
 
-	$sql = 'SELECT team_id, team_name FROM ' . TEAMS_TABLE . $typ . ' ORDER BY team_order';
+	$sql = 'SELECT team_id, team_name FROM ' . TEAMS . $typ . ' ORDER BY team_order';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
@@ -137,7 +161,7 @@ function _select_match($default, $type, $class)
 	
 	$where = ($type == '') ? ' WHERE match_date > ' . time() : '';
 	
-	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH_TABLE . $where . ' ORDER BY match_date';
+	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
@@ -170,7 +194,7 @@ function _select_date($default, $var, $value)
 	{
 		case 'day':
 		
-			$select = '<select class="post" name="' . $var . '">';
+			$select = '<select class="select" name="' . $var . '">';
 			for ($i=1; $i < 32; $i++)
 			{
 				if ($i < 10)
@@ -186,7 +210,7 @@ function _select_date($default, $var, $value)
 		
 		case 'month':
 		
-			$select = '<select class="post" name="' . $var . '">';
+			$select = '<select class="select" name="' . $var . '">';
 			for ($i=1; $i < 13; $i++)
 			{
 				if ($i < 10)
@@ -202,7 +226,7 @@ function _select_date($default, $var, $value)
 		
 		case 'year':
 		
-			$select = '<select class="post" name="' . $var . '">';
+			$select = '<select class="select" name="' . $var . '">';
 			for ($i=$value; $i < $value+2; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -214,7 +238,7 @@ function _select_date($default, $var, $value)
 		
 		case 'hour':
 		
-			$select = '<select class="post" name="' . $var . '">';
+			$select = '<select class="select" name="' . $var . '">';
 			for ($i=0; $i < 24; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -226,7 +250,7 @@ function _select_date($default, $var, $value)
 		
 		case 'min':
 		
-			$select = '<select class="post" name="' . $var . '">';
+			$select = '<select class="select" name="' . $var . '">';
 			for ($i="00"; $i < 60; $i = $i + 15)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -238,7 +262,7 @@ function _select_date($default, $var, $value)
 		
 		case 'duration':
 		
-			$select = '<select class="post" name="' . $var . '">';
+			$select = '<select class="select" name="' . $var . '">';
 			for ($i="00"; $i < 260; $i = $i + 30)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -265,7 +289,7 @@ function page_mode_select($default, $select_name = 'page_disable_mode')
 		$default = explode(',', $default);
 	}
 
-	$disable_select = '<select class="post" name="' . $select_name . '[]" multiple="multiple">';
+	$disable_select = '<select class="select" name="' . $select_name . '[]" multiple="multiple">';
 	foreach ($lang['page_disable_mode_opt'] as $const => $name)
 	{
 		$selected = (in_array($const, $default)) ? ' selected="selected"' : '';

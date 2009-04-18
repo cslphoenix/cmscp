@@ -23,7 +23,7 @@ function _bbcode($text)
         // $treffer[1] ist die URL 
         $url = trim($treffer[1]); 
         if(substr($url,0,7)!= 'http://') 
-                $url = "http://".$url; 
+                $url = "http://" . $url; 
         // $treffer[2] ist der Ausgabename 
         // wurde kein Name angegeben, wird die URL als Name gewählt 
         if(strlen(trim($treffer[2]))!=0) 
@@ -35,7 +35,7 @@ function _bbcode($text)
         if(strlen($linkname)>40 AND !substr_count(strtolower($linkname), '[img]') AND !substr_count(strtolower($linkname), '[/img]')) 
             $linkname = substr($linkname, 0, 32)."...".substr($linkname, -5); 
         // Rückgabelink 
-        $ergebnis = "<a href=\"".$url."\" target=\"_blank\">".$linkname."</a>"; 
+        $ergebnis = "<a href=\"" . $url."\" target=\"_blank\">" . $linkname."</a>"; 
         return $ergebnis; 
     }
 
@@ -95,18 +95,18 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 	switch ($table)
 	{
 		case 'news':
-			$table_name = NEWS_TABLE;
-			$table_com	= NEWS_COMMENTS_TABLE;
+			$table_name = NEWS;
+			$table_com	= NEWS_COMMENTS;
 			$id_name	= 'news_id';
 		break;
 		case 'match':
-			$table_name = MATCH_TABLE;
-			$table_com	= MATCH_COMMENTS_TABLE;
+			$table_name = MATCH;
+			$table_com	= MATCH_COMMENTS;
 			$id_name	= 'match_id';
 		break;
 		case 'training':
-			$table_name = TRAINING_TABLE;
-			$table_com	= TRAINING_COMMENTS_TABLE;
+			$table_name = TRAINING;
+			$table_com	= TRAINING_COMMENTS;
 			$id_name	= 'training_id';
 		break;
 		default:

@@ -86,7 +86,7 @@ function get($request, $ip, $port, $game)
 				$port = '23000';
 			}
 			
-			$launch = "hlsw://".$ip.":".$port;
+			$launch = "hlsw://" . $ip.":" . $port;
 		}
 		return $launch;
 	}
@@ -338,7 +338,7 @@ function query_one($ip, $port, $game, $request)
 	}
 	
 	if ($request == "info")     { $challenge = "\xFF\xFF\xFF\xFFTSource Engine Query\x00"; }
-	if ($request == "players")  { $challenge = "\xFF\xFF\xFF\xFF\x55".$challengenumber;       }
+	if ($request == "players")  { $challenge = "\xFF\xFF\xFF\xFF\x55" . $challengenumber;       }
 	
     fwrite($fp, $challenge);
 
@@ -734,7 +734,7 @@ function query_one($ip, $port, $game, $request)
     }
 
     if ($request == "info")     { $challenge = "\xFF\xFF\xFF\xFFTSource Engine Query\x00"; }
-    if ($request == "players")  { $challenge = "\xFF\xFF\xFF\xFF\x55".$challengenumber;       }
+    if ($request == "players")  { $challenge = "\xFF\xFF\xFF\xFF\x55" . $challengenumber;       }
 
     fwrite($fp, $challenge);
 
@@ -849,7 +849,7 @@ function query_one($ip, $port, $game, $request)
 		}
 		
 		$challenge = '';
-		$challenge  = "\xFE\xFD\x00\x21\x21\x21\x21".$challenge_code."\xFF\xFF\xFF\x01";
+		$challenge  = "\xFE\xFD\x00\x21\x21\x21\x21" . $challenge_code."\xFF\xFF\xFF\x01";
 		
 		fwrite($fp, $challenge);
 		
@@ -974,24 +974,24 @@ function query_one($ip, $port, $game, $request)
       $buffer = $buffer[1];
 
       $name     = preg_match_all("/player_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $name     = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $name     = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
 
       if (!$name[0]) { return FALSE; }
 
       $score    = preg_match_all(" /score_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $score    = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $score    = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
       $ping     = preg_match_all("  /ping_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $ping     = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $ping     = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
       $deaths   = preg_match_all("/deaths_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $deaths   = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $deaths   = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
       $pid      = preg_match_all("   /pid_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $pid      = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $pid      = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
       $skill    = preg_match_all(" /skill_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $skill    = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $skill    = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
       $team     = preg_match_all("  /team_\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $team     = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $team     = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
       $teamname = preg_match_all(" /team_t\\x00.(.*)\\x00\\x00/U", $buffer, $match);
-      $teamname = explode("\x00", $match[1][0]."\x00".$match[1][1]);
+      $teamname = explode("\x00", $match[1][0]."\x00" . $match[1][1]);
 
       for($i=0; $i<count($name); $i++)
       {
@@ -1307,7 +1307,7 @@ function query_one($ip, $port, $game, $request)
       $player[$i+1]['name']        = preg_replace("/\^./", "", $matches[5][$i]);
       $player[$i+1]['tag']         = preg_replace("/\^./", "", $matches[6][$i]); // QUAKE4
 
-      if ($player[$i+1]['tag']) { $player[$i+1]['name'] = $player[$i+1]['tag']." ".$player[$i+1]['name']; }
+      if ($player[$i+1]['tag']) { $player[$i+1]['name'] = $player[$i+1]['tag']." " . $player[$i+1]['name']; }
     }
 
     if($request == "players") { return $player;  }
@@ -1326,7 +1326,7 @@ function query_one($ip, $port, $game, $request)
   {
     $i = 0;
     $list = array();
-    $connect = fsockopen("udp://".$ip, $queryport, $errno, $errstr, 30);
+    $connect = fsockopen("udp://" . $ip, $queryport, $errno, $errstr, 30);
     if($connect)
     {
       socket_set_timeout ($connect, 1, 000000);

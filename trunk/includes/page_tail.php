@@ -7,39 +7,6 @@ if ( !defined('IN_CMS') )
 
 global $do_gzip_compress, $userdata;
 
-	$group_auth_fields = array(
-		'auth_contact',
-		'auth_fightus',
-		'auth_forum',
-		'auth_forum_auth',
-		'auth_games',
-		'auth_groups',
-		'auth_joinus',
-		'auth_match',
-		'auth_navi',
-		'auth_news',
-		'auth_news_public',
-		'auth_newscat',
-		'auth_ranks',
-		'auth_server',
-		'auth_teams',
-		'auth_teamspeak',
-		'auth_training',
-		'auth_user',
-	);
-	
-	$split = '';
-	for ( $i = 0; $i < count($group_auth_fields); $i++ )
-	{
-		$split .= ' || $auth[\'' . $group_auth_fields[$i] . '\']';
-	}
-
-//_debug_post($auth);
-
-//
-// Show the overall footer.
-//
-$admin_link =	(	$userdata['user_level'] == ADMIN || $split ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br /><br />' : '';
 
 $template->set_filenames(array('overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl'));
 
@@ -47,7 +14,7 @@ $debug = (defined('DEBUG')) ? '[ Debug: on ]' : '[ Debug: off ]';
 $cache = (defined('CACHE')) ? '[ Cache: on ]' : '[ Cache: off ]';
 
 $template->assign_vars(array(
-	'ADMIN_LINK'	=> $admin_link,
+	
 	'DEBUG'			=> $debug,
 	'CACHE'			=> $cache,
 ));

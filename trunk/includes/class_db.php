@@ -20,7 +20,6 @@
  ***************************************************************************/
 
 define('DEBUG_RUN_STATS', true);
-define('DEBUG_SQL', true);
 define('DEBUG_SQL_ADMIN', true);
 
 // var_dump() reviewed for output
@@ -208,8 +207,8 @@ class stat_run_class
 			$sql_duration += $sql_dur;
 
 			// dump informations
-//			if ( defined('DEBUG_SQL') && ($userdata['user_level'] == ADMIN) )
-			if ( defined('DEBUG_SQL') )
+			if ( defined('DEBUG_SQL') && ($userdata['user_level'] == ADMIN) )
+//			if ( defined('DEBUG_SQL') )
 			{
 				$sql_real_dur = 0;
 
@@ -225,7 +224,7 @@ class stat_run_class
 
 				// for mysql & postgresql, explain request
 				$request_explain = '';
-				if ( in_array(SQL_LAYER, array('mysql', 'mysql4', 'postgresql')) && !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE)/i', $trc_sql[$i]['sql']) )
+				if ( !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER)/i', $trc_sql[$i]['sql']) )
 				{
 					// get explainations
 					$sql = 'EXPLAIN ' . $trc_sql[$i]['sql'];

@@ -79,7 +79,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 		if (isset($sessiondata['autologinid']) && (string) $sessiondata['autologinid'] != '' && $user_id)
 		{
 			$sql = 'SELECT u.* 
-				FROM ' . USERS_TABLE . ' u, ' . SESSIONS_KEYS_TABLE . ' k
+				FROM ' . USERS . ' u, ' . SESSIONS_KEYS . ' k
 				WHERE u.user_id = ' . (int) $user_id . "
 					AND u.user_active = 1
 					AND k.user_id = u.user_id
@@ -100,7 +100,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 			$sessiondata['userid'] = $user_id;
 
 			$sql = 'SELECT *
-				FROM ' . USERS_TABLE . '
+				FROM ' . USERS . '
 				WHERE user_id = ' . (int) $user_id . '
 					AND user_active = 1';
 			if (!($result = $db->sql_query($sql)))
@@ -129,7 +129,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 		$enable_autologin = $login = 0;
 
 		$sql = 'SELECT *
-			FROM ' . USERS_TABLE . '
+			FROM ' . USERS . '
 			WHERE user_id = ' . (int) $user_id;
 		if (!($result = $db->sql_query($sql)))
 		{
@@ -147,7 +147,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 	preg_match('/(..)(..)(..)(..)/', $user_ip, $user_ip_parts);
 
 	$sql = "SELECT ban_ip, ban_userid, ban_email 
-		FROM " . BANLIST_TABLE . " 
+		FROM " . BANLIST . " 
 		WHERE ban_ip IN ('" . $user_ip_parts[1] . $user_ip_parts[2] . $user_ip_parts[3] . $user_ip_parts[4] . "', '" . $user_ip_parts[1] . $user_ip_parts[2] . $user_ip_parts[3] . "ff', '" . $user_ip_parts[1] . $user_ip_parts[2] . "ffff', '" . $user_ip_parts[1] . "ffffff')
 			OR ban_userid = $user_id";
 	if ( $user_id != ANONYMOUS )
@@ -171,7 +171,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 	//
 	// Create or update the session
 	//
-	$sql = "UPDATE " . SESSIONS_TABLE . "
+	$sql = "UPDATE " . SESSIONS . "
 		SET session_user_id = $user_id, session_start = $current_time, session_time = $current_time, session_page = $page_id, session_logged_in = $login, session_admin = $admin
 		WHERE session_id = '" . $session_id . "' 
 			AND session_ip = '$user_ip'";
@@ -179,7 +179,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 	{
 		$session_id = md5(dss_rand());
 
-		$sql = "INSERT INTO " . SESSIONS_TABLE . "
+		$sql = "INSERT INTO " . SESSIONS . "
 			(session_id, session_user_id, session_start, session_time, session_ip, session_page, session_logged_in, session_admin)
 			VALUES ('$session_id', $user_id, $current_time, $current_time, '$user_ip', $page_id, $login, $admin)";
 		if ( !$db->sql_query($sql) )
@@ -194,7 +194,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 
 		if (!$admin)
 		{
-			$sql = "UPDATE " . USERS_TABLE . " 
+			$sql = "UPDATE " . USERS . " 
 				SET user_session_time = $current_time, user_session_page = $page_id, user_lastvisit = $last_visit
 				WHERE user_id = $user_id";
 			if ( !$db->sql_query($sql) )
@@ -214,13 +214,13 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 			
 			if (isset($sessiondata['autologinid']) && (string) $sessiondata['autologinid'] != '')
 			{
-				$sql = 'UPDATE ' . SESSIONS_KEYS_TABLE . "
+				$sql = 'UPDATE ' . SESSIONS_KEYS . "
 					SET last_ip = '$user_ip', key_id = '" . md5($auto_login_key) . "', last_login = $current_time
 					WHERE key_id = '" . md5($sessiondata['autologinid']) . "'";
 			}
 			else
 			{
-				$sql = 'INSERT INTO ' . SESSIONS_KEYS_TABLE . "(key_id, user_id, last_ip, last_login)
+				$sql = 'INSERT INTO ' . SESSIONS_KEYS . "(key_id, user_id, last_ip, last_login)
 					VALUES ('" . md5($auto_login_key) . "', $user_id, '$user_ip', $current_time)";
 			}
 
@@ -307,18 +307,18 @@ function session_pagestart($user_ip, $thispage_id)
 		// data in preparation
 		//
 //		$sql = 'SELECT u.*, s.*, ua.*
-//					FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . ' s, ' . USERS_AUTH_TABLE . ' ua
+//					FROM ' . USERS . ' u, ' . SESSIONS . ' s, ' . USERS_AUTH . ' ua
 //					WHERE s.session_id = "' . $session_id . '"
 //						AND u.user_id = s.session_user_id
 //						AND u.user_id = ua.user_id';
 						
 		$sql = 'SELECT u.*, s.*
-					FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . ' s
+					FROM ' . USERS . ' u, ' . SESSIONS . ' s
 					WHERE s.session_id = "' . $session_id . '"
 						AND u.user_id = s.session_user_id';
 		/*
 		$sql = "SELECT u.*, s.*, gu.group_id
-			FROM " . SESSIONS_TABLE . " s, " . USERS_TABLE . " u, " . GROUPS_TABLE . " g, " . GROUPS_USER_TABLE . " gu
+			FROM " . SESSIONS . " s, " . USERS . " u, " . GROUPS . " g, " . GROUPS_USERS . " gu
 			WHERE s.session_id = '$session_id'
 				AND u.user_id = s.session_user_id
 				AND gu.user_id = s.session_user_id
@@ -357,7 +357,7 @@ function session_pagestart($user_ip, $thispage_id)
 					// A little trick to reset session_admin on session re-usage
 					$update_admin = (!defined('IN_ADMIN') && $current_time - $userdata['session_time'] > ($config['session_length']+60)) ? ', session_admin = 0' : '';
 
-					$sql = "UPDATE " . SESSIONS_TABLE . " 
+					$sql = "UPDATE " . SESSIONS . " 
 						SET session_time = $current_time, session_page = $thispage_id$update_admin
 						WHERE session_id = '" . $userdata['session_id'] . "'";
 					if ( !$db->sql_query($sql) )
@@ -367,7 +367,7 @@ function session_pagestart($user_ip, $thispage_id)
 
 					if ( $userdata['user_id'] != ANONYMOUS )
 					{
-						$sql = "UPDATE " . USERS_TABLE . " 
+						$sql = "UPDATE " . USERS . " 
 							SET user_session_time = $current_time, user_session_page = $thispage_id
 							WHERE user_id = " . $userdata['user_id'];
 						if ( !$db->sql_query($sql) )
@@ -433,7 +433,7 @@ function session_end($session_id, $user_id)
 	//
 	// Delete existing session
 	//
-	$sql = 'DELETE FROM ' . SESSIONS_TABLE . " 
+	$sql = 'DELETE FROM ' . SESSIONS . " 
 		WHERE session_id = '$session_id' 
 			AND session_user_id = $user_id";
 	if ( !$db->sql_query($sql) )
@@ -447,7 +447,7 @@ function session_end($session_id, $user_id)
 	if ( isset($userdata['session_key']) && $userdata['session_key'] != '' )
 	{
 		$autologin_key = md5($userdata['session_key']);
-		$sql = 'DELETE FROM ' . SESSIONS_KEYS_TABLE . '
+		$sql = 'DELETE FROM ' . SESSIONS_KEYS . '
 			WHERE user_id = ' . (int) $user_id . "
 				AND key_id = '$autologin_key'";
 		if ( !$db->sql_query($sql) )
@@ -461,7 +461,7 @@ function session_end($session_id, $user_id)
 	// but just in case it isn't, reset $userdata to the details for a guest
 	//
 	$sql = 'SELECT *
-		FROM ' . USERS_TABLE . '
+		FROM ' . USERS . '
 		WHERE user_id = ' . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -490,7 +490,7 @@ function session_clean($session_id)
 	//
 	// Delete expired sessions
 	//
-	$sql = 'DELETE FROM ' . SESSIONS_TABLE . ' 
+	$sql = 'DELETE FROM ' . SESSIONS . ' 
 		WHERE session_time < ' . (time() - (int) $config['session_length']) . " 
 			AND session_id <> '$session_id'";
 	if ( !$db->sql_query($sql) )
@@ -505,7 +505,7 @@ function session_clean($session_id)
 	//
 	if (!empty($config['max_autologin_time']) && $config['max_autologin_time'] > 0)
 	{
-		$sql = 'DELETE FROM ' . SESSIONS_KEYS_TABLE . '
+		$sql = 'DELETE FROM ' . SESSIONS_KEYS . '
 			WHERE last_login < ' . (time() - (86400 * (int) $config['max_autologin_time']));
 		$db->sql_query($sql);
 	}
@@ -523,7 +523,7 @@ function session_reset_keys($user_id, $user_ip)
 
 	$key_sql = ($user_id == $userdata['user_id'] && !empty($userdata['session_key'])) ? "AND key_id != '" . md5($userdata['session_key']) . "'" : '';
 
-	$sql = 'DELETE FROM ' . SESSIONS_KEYS_TABLE . '
+	$sql = 'DELETE FROM ' . SESSIONS_KEYS . '
 		WHERE user_id = ' . (int) $user_id . "
 			$key_sql";
 
@@ -534,7 +534,7 @@ function session_reset_keys($user_id, $user_ip)
 
 	$where_sql = 'session_user_id = ' . (int) $user_id;
 	$where_sql .= ($user_id == $userdata['user_id']) ? " AND session_id <> '" . $userdata['session_id'] . "'" : '';
-	$sql = 'DELETE FROM ' . SESSIONS_TABLE . "
+	$sql = 'DELETE FROM ' . SESSIONS . "
 		WHERE $where_sql";
 	if ( !$db->sql_query($sql) )
 	{
@@ -547,7 +547,7 @@ function session_reset_keys($user_id, $user_ip)
 
 		$current_time = time();
 		
-		$sql = 'UPDATE ' . SESSIONS_KEYS_TABLE . "
+		$sql = 'UPDATE ' . SESSIONS_KEYS . "
 			SET last_ip = '$user_ip', key_id = '" . md5($auto_login_key) . "', last_login = $current_time
 			WHERE key_id = '" . md5($userdata['session_key']) . "'";
 		
