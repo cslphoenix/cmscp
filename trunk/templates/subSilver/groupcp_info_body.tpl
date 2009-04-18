@@ -66,7 +66,7 @@
 <!-- END mod_row -->
 <!-- BEGIN switch_no_moderators -->
 <tr>
-	<td colspan="6" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
+	<td class="row3" colspan="6" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
 </tr>
 <!-- END switch_no_moderators -->
 <tr>
@@ -91,7 +91,7 @@
 <!-- END member_row -->
 <!-- BEGIN switch_no_members -->
 <tr>
-	<td colspan="6" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
+	<td class="row3" colspan="6" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
 </tr>
 <!-- END switch_no_members -->
 <!-- BEGIN switch_hidden_group -->
@@ -118,4 +118,5 @@
 
 {PENDING_USER_BOX}
 
-{S_HIDDEN_FIELDS}</form>
+{S_HIDDEN_FIELDS}
+</form>

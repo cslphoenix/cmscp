@@ -151,9 +151,9 @@
 				</tr>
 				<!-- BEGIN match_users_status -->
 				<tr>
-					<td width="30%" align="left" nowrap>{match_users.match_users_status.USERNAME}</td>
-					<td width="20%" align="left" nowrap><span class="{match_users.match_users_status.CLASS}">{match_users.match_users_status.STATUS}</span></td>
-					<td width="50%" align="left" nowrap>{match_users.match_users_status.DATE}</td>
+					<td width="30%" align="left" nowrap="nowrap">{match_users.match_users_status.USERNAME}</td>
+					<td width="20%" align="left" nowrap="nowrap"><span class="{match_users.match_users_status.CLASS}">{match_users.match_users_status.STATUS}</span></td>
+					<td width="50%" align="left" nowrap="nowrap">{match_users.match_users_status.DATE}</td>
 				</tr>
 				<!-- END match_users_status -->
 				<!-- BEGIN no_entry_status -->
@@ -174,9 +174,9 @@
 					<td colspan="3">&nbsp;</td>
 				</tr>
 				<tr align="center">
-					<td width="33%" nowrap><input type="radio" value="1" name="match_users_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
-					<td width="34%" nowrap><input type="radio" value="2" name="match_users_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
-					<td width="33%" nowrap><input type="radio" value="3" name="match_users_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
+					<td width="33%" nowrap="nowrap"><input type="radio" value="1" name="match_users_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
+					<td width="34%" nowrap="nowrap"><input type="radio" value="2" name="match_users_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
+					<td width="33%" nowrap="nowrap"><input type="radio" value="3" name="match_users_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
 				</tr>
 				<tr>
 					<td class="row4" colspan="3" align="center"><input class="button" type="submit" value="{L_SET_STATUS}"></td>
@@ -275,7 +275,7 @@
 					<td align="right">{match_comments.comments.IP}{match_comments.comments.EDIT}{match_comments.comments.DELETE}{match_comments.comments.ID} <img src="{match_comments.comments.ICON}" alt=""></td>
 				</tr>
 				<tr>
-					<td valign="top" width="25%" nowrap><a href="{match_comments.comments.U_USERNAME}">{match_comments.comments.L_USERNAME}</a></td>
+					<td valign="top" width="25%" nowrap="nowrap"><a href="{match_comments.comments.U_USERNAME}">{match_comments.comments.L_USERNAME}</a></td>
 					<td width="75%">{match_comments.comments.MESSAGE}</td>
 				</tr>
 				

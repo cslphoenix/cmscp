@@ -32,7 +32,7 @@
 						<!-- BEGIN match_row -->
 						<tr>
 							<td width="99%"><a href="{match.match_row.U_NAME}">{match.match_row.L_NAME}</a></td>
-							<td width="1%" nowrap>{match.match_row.DATE}</td>
+							<td width="1%" nowrap="nowrap">{match.match_row.DATE}</td>
 						</tr>
 						<!-- END match_row -->
 						<tr>
@@ -52,7 +52,7 @@
 						<!-- BEGIN training_row -->
 						<tr>
 							<td width="99%"><a href="{training.training_row.U_NAME}">{training.training_row.L_NAME}</a></td>
-							<td width="1%" nowrap>{training.training_row.DATE}</td>
+							<td width="1%" nowrap="nowrap">{training.training_row.DATE}</td>
 						</tr>
 						<!-- END training_row -->
 						</table>
@@ -80,7 +80,27 @@
 		<table width="986" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_28-14.png); height:125px; width:267px;" valign="top"></td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_29.png); height:125px; width:233px;"></td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_29.png); height:125px; width:233px;">
+				<form action="{S_NEWSLETTER_ACTION}" method="post">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Newsletter</th>
+				</tr>
+				<tr>
+					<td><input type="text" class="post" name="user_name" maxlength="25" value="{USER}" /> <input type="submit" name="submit" class="button2" value="GO" /></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="post" name="user_mail"  maxlength="100" size="25" value="email@adresse" onblur="this.className='post'; if(this.value=='')this.value='email@adresse'" onfocus="this.className='post';if(this.value=='email@adresse') this.value='';" /></td>
+				</tr>
+				<tr>
+					<td> <input type="checkbox" name="unsubscribe" /> Austragen</td>
+				</tr>
+				<tr>
+					<td>text newsletter eintragen austragen bla bla blubb</td>
+				</tr>
+				</table>
+				</form>
+			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_32.png); height:125px; width:486px;"></td>
 		</tr>
 		</table>
@@ -98,19 +118,19 @@
 				<table width="100%" height="100" border="0" cellspacing="0" cellpadding="0">
 				<tr style="height:46px;">
 					<td style="padding:15px 10px 5px 10px;" width="100%">&copy; by CMS-CP.de</td>
-					<td style="padding:15px 10px 5px 10px;" nowrap>Impressum</td>
+					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">Impressum</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap><a href="contact.php">Kontatkt</a></td>
+					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="contact.php">Kontatkt</a></td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap>FAQ</td>
+					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">FAQ</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap>RSS-Feed</td>
+					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">RSS-Feed</td>
 				</tr>
 				<tr>
 					<td colspan="8">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap>&nbsp;</td>
+							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap="nowrap">&nbsp;</td>
 							<td colspan="6" width="80%" align="center">
 							
 								<div class="copyright">
@@ -124,7 +144,7 @@
 								
 							
 							</td>
-							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap>Nach Oben <img src="templates/subSilver/images/page_/democms1.3-schnitt_44.png" alt=""></td>
+							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap="nowrap">Nach Oben <img src="templates/subSilver/images/page_/democms1.3-schnitt_44.png" alt=""></td>
 						</tr>
 						</table>
 					</td>

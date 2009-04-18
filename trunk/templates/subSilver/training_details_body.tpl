@@ -150,9 +150,9 @@
 				</tr>
 				<!-- BEGIN training_users_status -->
 				<tr>
-					<td width="30%" align="left" nowrap>{training_users.training_users_status.USERNAME}</td>
-					<td width="20%" align="left" nowrap><span class="{training_users.training_users_status.CLASS}">{training_users.training_users_status.STATUS}</span></td>
-					<td width="50%" align="left" nowrap>{training_users.training_users_status.DATE}</td>
+					<td width="30%" align="left" nowrap="nowrap">{training_users.training_users_status.USERNAME}</td>
+					<td width="20%" align="left" nowrap="nowrap"><span class="{training_users.training_users_status.CLASS}">{training_users.training_users_status.STATUS}</span></td>
+					<td width="50%" align="left" nowrap="nowrap">{training_users.training_users_status.DATE}</td>
 				</tr>
 				<!-- END training_users_status -->
 				<!-- BEGIN no_entry_status -->
@@ -173,9 +173,9 @@
 					<td colspan="3">&nbsp;</td>
 				</tr>
 				<tr align="center">
-					<td width="33%" nowrap><input type="radio" value="1" name="training_users_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
-					<td width="34%" nowrap><input type="radio" value="2" name="training_users_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
-					<td width="33%" nowrap><input type="radio" value="3" name="training_users_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
+					<td width="33%" nowrap="nowrap"><input type="radio" value="1" name="training_users_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
+					<td width="34%" nowrap="nowrap"><input type="radio" value="2" name="training_users_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
+					<td width="33%" nowrap="nowrap"><input type="radio" value="3" name="training_users_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
 				</tr>
 				<tr>
 					<td class="row4" colspan="3" align="center"><input class="button" type="submit" value="{L_SET_STATUS}"></td>
@@ -274,7 +274,7 @@
 					<td align="right">{training_comments.comments.IP}{training_comments.comments.EDIT}{training_comments.comments.DELETE}{training_comments.comments.ID} <img src="{training_comments.comments.ICON}" alt=""></td>
 				</tr>
 				<tr>
-					<td valign="top" width="25%" nowrap><a href="{training_comments.comments.U_USERNAME}">{training_comments.comments.L_USERNAME}</a></td>
+					<td valign="top" width="25%" nowrap="nowrap"><a href="{training_comments.comments.U_USERNAME}">{training_comments.comments.L_USERNAME}</a></td>
 					<td width="75%">{training_comments.comments.MESSAGE}</td>
 				</tr>
 				

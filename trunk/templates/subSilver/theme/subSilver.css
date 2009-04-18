@@ -163,7 +163,7 @@ td.row {
 
 td.row1	{ background-color: #444; padding:2px;}
 td.row2	{ background-color: #666; padding:2px;}
-td.row3	{ background-color: #000; padding:2px;}
+td.row3	{ padding:2px;}
 
 td.row4	{ padding:4px;}
 td.noentry	{ padding: 2px; }
@@ -180,7 +180,7 @@ td.row4r	{ padding:2px 2px; }
 
 td.row1_form {
 	padding: 3px;
-	font-size:10px;
+	font-size:11px;
 	background-color: #444;
 }
 

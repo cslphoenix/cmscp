@@ -59,7 +59,7 @@
 	<!--
 	<table width="100%" cellspacing="0" border="0" align="center" cellpadding="0">
 	<tr>
-		<td align="left" nowrap><span class="small">{S_AUTH_LIST}</span></td>
+		<td align="left" nowrap="nowrap"><span class="small">{S_AUTH_LIST}</span></td>
 		<td align="left" valign="top">
 			<table cellspacing="3" cellpadding="0" border="0">
 			<tr>

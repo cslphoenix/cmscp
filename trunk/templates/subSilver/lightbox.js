@@ -310,7 +310,7 @@ function initLightbox()
 	//		</div>
 	// </div>
 	
-	var objBody = document.getElementsByTagName("body").item(0);
+	var objBody = document.getElementsByTagName('body').item(0);
 	
 	// create overlay div and hardcode some functional styles (aesthetic styles are in CSS file)
 	var objOverlay = document.createElement("div");

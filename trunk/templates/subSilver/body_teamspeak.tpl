@@ -1,6 +1,6 @@
 <table class="out" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head">{L_TEAMSPEAK}Teamspeak</td>
+	<td class="info_head">{L_TS_VIEWER}</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -10,7 +10,7 @@
 		<!-- BEGIN show_userist -->
 		<table class="out" width="100%" cellspacing="0" cellpadding="0" border="0">
 		<tr>
-			<td class="info_head" colspan="2">Teamspeak User im Überblick</td>
+			<td class="info_head" colspan="2">{L_TS_PLIST}</td>
 		</tr>
 		<!-- BEGIN userlist -->
 		<tr>
