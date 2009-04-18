@@ -185,6 +185,7 @@ defined('DEBUG') ? set_error_handler('error_handler') : '';
 
 unset($db_pwd);
 
+
 $client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
 $user_ip = encode_ip($client_ip);
 
@@ -197,7 +198,7 @@ if ( !defined('IN_ADMIN') )
 		$sCacheNamea = 'config';
 		if ( ($config = $oCache -> readCache($sCacheNamea)) === false)
 		{
-			$sql = 'SELECT * FROM ' . CONFIG_TABLE;
+			$sql = 'SELECT * FROM ' . CONFIG;
 			if (!($result = $db->sql_query($sql)))
 			{
 				message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
@@ -213,7 +214,7 @@ if ( !defined('IN_ADMIN') )
 		$sCacheNameb = 'settings';
 		if ( ($settings = $oCache -> readCache($sCacheNameb)) === false)
 		{
-			$sql = 'SELECT * FROM ' . SETTINGS_TABLE;
+			$sql = 'SELECT * FROM ' . SETTINGS;
 			if (!($result = $db->sql_query($sql)))
 			{
 				message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
@@ -228,7 +229,7 @@ if ( !defined('IN_ADMIN') )
 	}
 	else
 	{
-		$sql = 'SELECT * FROM ' . CONFIG_TABLE;
+		$sql = 'SELECT * FROM ' . CONFIG;
 		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
@@ -239,7 +240,7 @@ if ( !defined('IN_ADMIN') )
 			$config[$row['config_name']] = $row['config_value'];
 		}
 		
-		$sql = 'SELECT * FROM ' . SETTINGS_TABLE;
+		$sql = 'SELECT * FROM ' . SETTINGS;
 		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
@@ -253,7 +254,7 @@ if ( !defined('IN_ADMIN') )
 }
 else
 {
-	$sql = 'SELECT * FROM ' . CONFIG_TABLE;
+	$sql = 'SELECT * FROM ' . CONFIG;
 	if( !($result = $db->sql_query($sql)) )
 	{
 		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
@@ -264,7 +265,7 @@ else
 		$config[$row['config_name']] = $row['config_value'];
 	}
 	
-	$sql = 'SELECT * FROM ' . SETTINGS_TABLE;
+	$sql = 'SELECT * FROM ' . SETTINGS;
 	if( !($result = $db->sql_query($sql)) )
 	{
 		message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);

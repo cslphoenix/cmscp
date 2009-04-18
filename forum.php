@@ -13,7 +13,7 @@ init_userprefs($userdata);
 $viewcat = ( !empty($HTTP_GET_VARS[POST_CAT_URL]) ) ? $HTTP_GET_VARS[POST_CAT_URL] : -1;
 
 $sql = 'SELECT c.cat_id, c.cat_title, c.cat_order
-			FROM ' . CATEGORIES_TABLE . ' c 
+			FROM ' . CATEGORIES . ' c 
 			ORDER BY c.cat_order';
 //$category_rows = _cached($sql, 'forum_cat');
 
@@ -43,9 +43,9 @@ if( ( $total_categories = count($category_rows) ) )
 	// Define appropriate SQL
 	//
 	$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id
-				FROM (( " . FORUMS_TABLE . " f
-				LEFT JOIN " . POSTS_TABLE . " p ON p.post_id = f.forum_last_post_id )
-				LEFT JOIN " . USERS_TABLE . " u ON u.user_id = p.poster_id )
+				FROM (( " . FORUMS . " f
+				LEFT JOIN " . POSTS . " p ON p.post_id = f.forum_last_post_id )
+				LEFT JOIN " . USERS . " u ON u.user_id = p.poster_id )
 				ORDER BY f.cat_id, f.forum_order";
 //	$forum_data = _cached($sql, 'forum_forms');
 	
@@ -157,7 +157,7 @@ if( ( $total_categories = count($category_rows) ) )
 								$unread_topics = false;
 								if ( $userdata['session_logged_in'] && $forum_data[$j]['forum_topics'] )
 								{
-									$sql = 'SELECT topic_id FROM ' . TOPICS_TABLE . ' WHERE forum_id = ' . $forum_id;
+									$sql = 'SELECT topic_id FROM ' . TOPICS . ' WHERE forum_id = ' . $forum_id;
 									$forum_topics = _cached($sql, 'forum_' . $forum_id . '_topics');
 								/*
 									if ( !($result = $db->sql_query($sql)) )
@@ -169,8 +169,8 @@ if( ( $total_categories = count($category_rows) ) )
 									//_debug_post($forum_topics);
 									
 									$sql = 'SELECT tr.topic_id
-												FROM ' . TOPICS_READ_TABLE . ' tr
-													LEFT JOIN ' . TOPICS_TABLE . ' t ON t.topic_id = tr.topic_id
+												FROM ' . TOPICS_READ . ' tr
+													LEFT JOIN ' . TOPICS . ' t ON t.topic_id = tr.topic_id
 												WHERE tr.user_id = ' . $userdata['user_id'] . ' AND tr.forum_id = ' . $forum_id . ' AND tr.read_time < t.topic_time';
 									if ( !($result = $db->sql_query($sql)) )
 									{
@@ -244,7 +244,7 @@ else
 }
 
 
-$template->pparse("body");
+$template->pparse('body');
 	
 include($root_path . 'includes/page_tail.php');
 

@@ -12,30 +12,30 @@ init_userprefs($userdata);
 
 $page_title = $lang['Index'];
 include($root_path . 'includes/page_header.php');
-$template->set_filenames(array('body' => 'userlobby_body.tpl'));
+$template->set_filenames(array('body' => 'body_ucp.tpl'));
 
 if ( $userdata['session_logged_in'] )
 {
 	//	News / Newskommentare
 	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
-		$sql = 'SELECT n.* FROM ' . NEWS_TABLE . " n ORDER BY n.news_time_public";
+		$sql = 'SELECT n.* FROM ' . NEWS . " n ORDER BY n.news_time_public";
 		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
 		$news_data = $db->sql_fetchrowset($result);
-	//	$news_data = _cached($sql, 'lobby_news_member');
+	//	$news_data = _cached($sql, 'news_lobby_member');
 	}
 	else
 	{
-		$sql = 'SELECT n.* FROM ' . NEWS_TABLE . ' n WHERE n.news_intern = 0 ORDER BY n.news_time_public';
+		$sql = 'SELECT n.* FROM ' . NEWS . ' n WHERE n.news_intern = 0 ORDER BY n.news_time_public';
 		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
 		$news_data = $db->sql_fetchrowset($result);
-	//	$match_data = _cached($sql, 'lobby_news_guest');
+	//	$match_data = _cached($sql, 'news_lobby_guest');
 	}
 	
 	if ( $news_data )
@@ -46,7 +46,7 @@ if ( $userdata['session_logged_in'] )
 		{
 			//	Überprüfung ob der Benutzer die News gesehen hat
 			$sql = 'SELECT read_time
-						FROM ' . NEWS_COMMENTS_READ_TABLE . '
+						FROM ' . NEWS_COMMENTS_READ . '
 						WHERE user_id = ' . $userdata['user_id'] . ' AND news_id = ' . $news_data[$i]['news_id'];
 			if ( !($result = $db->sql_query($sql)) )
 			{
@@ -58,8 +58,8 @@ if ( $userdata['session_logged_in'] )
 				//	Wenn ja, dann Zählt er alle Neuen Beiträge auf
 				//	die seit dem letzten mal Lesen geschrieben wurden
 				$sql = 'SELECT COUNT(nc.news_comments_id) AS total_comments
-							FROM ' . NEWS_COMMENTS_TABLE . ' nc
-								LEFT JOIN ' . NEWS_COMMENTS_READ_TABLE . ' ncr ON nc.news_id = ncr.news_id
+							FROM ' . NEWS_COMMENTS . ' nc
+								LEFT JOIN ' . NEWS_COMMENTS_READ . ' ncr ON nc.news_id = ncr.news_id
 							WHERE nc.news_id = ' . $news_data[$i]['news_id'] . ' AND ncr.user_id = ' . $userdata['user_id'] . ' AND ncr.read_time < nc.time_create';
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -74,7 +74,7 @@ if ( $userdata['session_logged_in'] )
 				//	Zählt er alle Beiträge die in diesem
 				//	Thema geschrieben wurden
 				$sql = 'SELECT COUNT(nc.news_comments_id) AS total_comments
-							FROM ' . NEWS_COMMENTS_TABLE . ' nc
+							FROM ' . NEWS_COMMENTS . ' nc
 							WHERE nc.news_id = ' . $news_data[$i]['news_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -95,7 +95,7 @@ if ( $userdata['session_logged_in'] )
 								
 				$template->assign_block_vars('lobby_news_new_row', array(
 						'NEWS_NAME'		=> $news_data[$i]['news_title'],
-						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">' .  sprintf($language, $count) . '</a>' : 'Ungelesen',
+						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">' .  sprintf($language, $count) . '</a>' : '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">Ungelesen</a>',
 				));
 			}
 		}
@@ -105,12 +105,12 @@ if ( $userdata['session_logged_in'] )
 	//	Clanwars/Clanwarskommentare
 	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
-		$sql = 'SELECT m.* FROM ' . MATCH_TABLE . " m ORDER BY m.match_date";
+		$sql = 'SELECT m.* FROM ' . MATCH . " m ORDER BY m.match_date";
 		$match_data = _cached($sql, 'lobby_match_details_member');
 	}
 	else
 	{
-		$sql = 'SELECT m.* FROM ' . MATCH_TABLE . ' m  WHERE match_public = 1 ORDER BY m.match_date';
+		$sql = 'SELECT m.* FROM ' . MATCH . ' m  WHERE match_public = 1 ORDER BY m.match_date';
 		$match_data = _cached($sql, 'lobby_match_details_guest');
 	}
 	
@@ -126,7 +126,7 @@ if ( $userdata['session_logged_in'] )
 			{
 				//	Überprüfung ob der Benutzer die Kommentare gesehen hat
 				$sql = 'SELECT read_time
-							FROM ' . MATCH_COMMENTS_READ_TABLE . '
+							FROM ' . MATCH_COMMENTS_READ . '
 							WHERE user_id = ' . $userdata['user_id'] . ' AND match_id = ' . $match_data[$i]['match_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -138,8 +138,8 @@ if ( $userdata['session_logged_in'] )
 					//	Wenn ja, dann Zählt er alle Neuen Beiträge auf
 					//	die seit dem letzten mal Lesen geschrieben wurden
 					$sql = 'SELECT COUNT(mc.match_comments_id) AS total_comments
-								FROM ' . MATCH_COMMENTS_TABLE . ' mc
-									LEFT JOIN ' . MATCH_COMMENTS_READ_TABLE . ' mcr ON mc.match_id = mcr.match_id
+								FROM ' . MATCH_COMMENTS . ' mc
+									LEFT JOIN ' . MATCH_COMMENTS_READ . ' mcr ON mc.match_id = mcr.match_id
 								WHERE mc.match_id = ' . $match_data[$i]['match_id'] . ' AND mcr.user_id = ' . $userdata['user_id'] . ' AND mcr.read_time < mc.time_create';
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -152,7 +152,7 @@ if ( $userdata['session_logged_in'] )
 					//	Zählt er alle Beiträge die in diesem
 					//	Thema geschrieben wurden
 					$sql = 'SELECT COUNT(mc.match_comments_id) AS total_comments
-								FROM ' . MATCH_COMMENTS_TABLE . ' mc
+								FROM ' . MATCH_COMMENTS . ' mc
 								WHERE mc.match_id = ' . $match_data[$i]['match_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -182,7 +182,7 @@ if ( $userdata['session_logged_in'] )
 				//	Wars abgelaufen sind und nur aufgelistet
 				//	werden, wenn Kommentare dazu geschrieben werden
 				$sql = 'SELECT read_time
-							FROM ' . MATCH_COMMENTS_READ_TABLE . '
+							FROM ' . MATCH_COMMENTS_READ . '
 							WHERE user_id = ' . $userdata['user_id'] . ' AND match_id = ' . $match_data[$i]['match_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -192,8 +192,8 @@ if ( $userdata['session_logged_in'] )
 				if ($db->sql_numrows($result))
 				{		
 					$sql = 'SELECT COUNT(mc.match_comments_id) AS total_comments
-								FROM ' . MATCH_COMMENTS_TABLE . ' mc
-									LEFT JOIN ' . MATCH_COMMENTS_READ_TABLE . ' mcr ON mc.match_id = mcr.match_id
+								FROM ' . MATCH_COMMENTS . ' mc
+									LEFT JOIN ' . MATCH_COMMENTS_READ . ' mcr ON mc.match_id = mcr.match_id
 								WHERE mc.match_id = ' . $match_data[$i]['match_id'] . ' AND mcr.user_id = ' . $userdata['user_id'] . ' AND mcr.read_time < mc.time_create';
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -203,7 +203,7 @@ if ( $userdata['session_logged_in'] )
 				else
 				{
 					$sql = 'SELECT COUNT(mc.match_comments_id) AS total_comments
-								FROM ' . MATCH_COMMENTS_TABLE . ' mc
+								FROM ' . MATCH_COMMENTS . ' mc
 								WHERE mc.match_id = ' . $match_data[$i]['match_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -239,7 +239,7 @@ if ( $userdata['session_logged_in'] )
 	{
 		$template->assign_block_vars('lobby_training', array());
 		
-		$sql = 'SELECT m.* FROM ' . TRAINING_TABLE . " m ORDER BY m.training_start";
+		$sql = 'SELECT m.* FROM ' . TRAINING . " m ORDER BY m.training_start";
 		$training_data = _cached($sql, 'lobby_training_details');
 	
 		if ( $training_data )
@@ -254,7 +254,7 @@ if ( $userdata['session_logged_in'] )
 				{
 					//	Überprüfung ob der Benutzer die Kommentare gesehen hat
 					$sql = 'SELECT read_time
-								FROM ' . TRAINING_COMMENTS_READ_TABLE . '
+								FROM ' . TRAINING_COMMENTS_READ . '
 								WHERE user_id = ' . $userdata['user_id'] . ' AND training_id = ' . $training_data[$i]['training_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -266,8 +266,8 @@ if ( $userdata['session_logged_in'] )
 						//	Wenn ja, dann Zählt er alle Neuen Beiträge auf
 						//	die seit dem letzten mal Lesen geschrieben wurden
 						$sql = 'SELECT COUNT(mc.training_comments_id) AS total_comments
-									FROM ' . TRAINING_COMMENTS_TABLE . ' mc
-										LEFT JOIN ' . TRAINING_COMMENTS_READ_TABLE . ' mcr ON mc.training_id = mcr.training_id
+									FROM ' . TRAINING_COMMENTS . ' mc
+										LEFT JOIN ' . TRAINING_COMMENTS_READ . ' mcr ON mc.training_id = mcr.training_id
 									WHERE mc.training_id = ' . $training_data[$i]['training_id'] . ' AND mcr.user_id = ' . $userdata['user_id'] . ' AND mcr.read_time < mc.time_create';
 						if ( !($result = $db->sql_query($sql)) )
 						{
@@ -280,7 +280,7 @@ if ( $userdata['session_logged_in'] )
 						//	Zählt er alle Beiträge die in diesem
 						//	Thema geschrieben wurden
 						$sql = 'SELECT COUNT(mc.training_comments_id) AS total_comments
-									FROM ' . TRAINING_COMMENTS_TABLE . ' mc
+									FROM ' . TRAINING_COMMENTS . ' mc
 									WHERE mc.training_id = ' . $training_data[$i]['training_id'];
 						if ( !($result = $db->sql_query($sql)) )
 						{
@@ -310,7 +310,7 @@ if ( $userdata['session_logged_in'] )
 					//	Wars abgelaufen sind und nur aufgelistet
 					//	werden, wenn Kommentare dazu geschrieben werden
 					$sql = 'SELECT read_time
-								FROM ' . TRAINING_COMMENTS_READ_TABLE . '
+								FROM ' . TRAINING_COMMENTS_READ . '
 								WHERE user_id = ' . $userdata['user_id'] . ' AND training_id = ' . $training_data[$i]['training_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -320,8 +320,8 @@ if ( $userdata['session_logged_in'] )
 					if ($db->sql_numrows($result))
 					{		
 						$sql = 'SELECT COUNT(mc.training_comments_id) AS total_comments
-									FROM ' . TRAINING_COMMENTS_TABLE . ' mc
-										LEFT JOIN ' . TRAINING_COMMENTS_READ_TABLE . ' mcr ON mc.training_id = mcr.training_id
+									FROM ' . TRAINING_COMMENTS . ' mc
+										LEFT JOIN ' . TRAINING_COMMENTS_READ . ' mcr ON mc.training_id = mcr.training_id
 									WHERE mc.training_id = ' . $training_data[$i]['training_id'] . ' AND mcr.user_id = ' . $userdata['user_id'] . ' AND mcr.read_time < mc.time_create';
 						if ( !($result = $db->sql_query($sql)) )
 						{
@@ -331,7 +331,7 @@ if ( $userdata['session_logged_in'] )
 					else
 					{
 						$sql = 'SELECT COUNT(mc.training_comments_id) AS total_comments
-									FROM ' . TRAINING_COMMENTS_TABLE . ' mc
+									FROM ' . TRAINING_COMMENTS . ' mc
 									WHERE mc.training_id = ' . $training_data[$i]['training_id'];
 						if ( !($result = $db->sql_query($sql)) )
 						{
@@ -356,6 +356,15 @@ if ( $userdata['session_logged_in'] )
 			}	//	Schleife
 		}	//	Abfrage ob Daten vorhanden sind
 	}
+	
+	$template->assign_vars(array(
+		'L_UCP'				=> $lang['ucp_main'],
+		'L_STATUS'			=> $lang['status'],
+		'L_STATUS_YES'		=> $lang['status_yes'],
+		'L_STATUS_NO'		=> $lang['status_no'],
+		'L_STATUS_REPLACE'	=> $lang['status_replace'],
+		'L_SET_STATUS'		=> $lang['set_status']
+	));
 }
 else
 {

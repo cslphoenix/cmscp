@@ -15,7 +15,7 @@ include($root_path . 'includes/teamspeak_query.php');
 $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 
 	/*
-	$qry = db("SELECT ts_port,ts_sport,ts_ip FROM ".$db['settings']."");
+	$qry = db("SELECT ts_port,ts_sport,ts_ip FROM " . $db['settings']."");
 	$s = _fetch($qry);
 	*/
 	$uip 	= "88.198.52.237";
@@ -39,7 +39,7 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 		
 		if( $fp )
 		{
-			fputs($fp, "sel ".$port."\n");
+			fputs($fp, "sel " . $port."\n");
 			fputs($fp, "si\n");
 			fputs($fp, "quit\n");
 
@@ -77,7 +77,7 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 
 		if($fp)
 		{
-			fputs($fp, "pl ".$port."\n");
+			fputs($fp, "pl " . $port."\n");
 			fputs($fp, "quit\n");
 			
 			while(!feof($fp))
@@ -191,7 +191,7 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 				}
 			}
 			
-			$channels = "<img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" />&nbsp;<a style=\"font-weight:bold\" href=\"teamspeak.php?cID=".trim($innerArr[0])."&amp;type=1\">".removeChar($innerArr[1])."&nbsp;</a><br /> ".$users."";
+			$channels = "<img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" />&nbsp;<a style=\"font-weight:bold\" href=\"teamspeak.php?cID=".trim($innerArr[0])."&amp;type=1\">".removeChar($innerArr[1])."&nbsp;</a><br /> " . $users."";
 			
 //			$chan .= show($dir."/channel", array(
 			$template->assign_block_vars('channel', array(
@@ -215,7 +215,7 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 							}
 						}
 					}
-					$subchannels = "<img src=\"images/teamspeak/trenner.gif\" alt=\"\"  /><img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" /><a style=\"font-weight:normal\" href=\"teamspeak.php?cID=".$innerCCArray[0]."&amp;type=1\">&nbsp;".removeChar($innerCCArray[1])."&nbsp;</a><br /> ".$subusers."";
+					$subchannels = "<img src=\"images/teamspeak/trenner.gif\" alt=\"\"  /><img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" /><a style=\"font-weight:normal\" href=\"teamspeak.php?cID=" . $innerCCArray[0]."&amp;type=1\">&nbsp;".removeChar($innerCCArray[1])."&nbsp;</a><br /> " . $subusers."";
 					
 //					$subchan .= show($dir."/", array(
 					$template->assign_block_vars('channel.subchannel', array(

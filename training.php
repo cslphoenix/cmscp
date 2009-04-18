@@ -37,10 +37,10 @@ if ($mode == '')
 	$template->set_filenames(array('body' => 'training_body.tpl'));
 	
 	$sql = 'SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival
-				FROM ' . TRAINING_TABLE . ' tr
-					LEFT JOIN ' . TEAMS_TABLE . ' t ON tr.team_id = t.team_id
-					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					LEFT JOIN ' . MATCH_TABLE . ' m ON m.match_id = tr.match_id
+				FROM ' . TRAINING . ' tr
+					LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					LEFT JOIN ' . MATCH . ' m ON m.match_id = tr.match_id
 				WHERE tr.training_start > ' . time() . '
 			ORDER BY tr.training_start DESC';
 	$training_entry = _cached($sql, 'training_list_open');
@@ -69,10 +69,10 @@ if ($mode == '')
 	}
 	
 	$sql = 'SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival
-				FROM ' . TRAINING_TABLE . ' tr
-					LEFT JOIN ' . TEAMS_TABLE . ' t ON tr.team_id = t.team_id
-					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					LEFT JOIN ' . MATCH_TABLE . ' m ON m.match_id = tr.match_id
+				FROM ' . TRAINING . ' tr
+					LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					LEFT JOIN ' . MATCH . ' m ON m.match_id = tr.match_id
 				WHERE tr.training_start < ' . time() . '
 			ORDER BY tr.training_start DESC';
 	$training_entry = _cached($sql, 'training_list_close');
@@ -112,7 +112,7 @@ if ($mode == '')
 	//	Teams
 	//
 	$sql = 'SELECT t.team_id, t.team_name, t.team_fight, g.game_size, g.game_image
-				FROM ' . TEAMS_TABLE . ' t, ' . GAMES_TABLE . ' g
+				FROM ' . TEAMS . ' t, ' . GAMES . ' g
 				WHERE t.team_game = g.game_id
 			ORDER BY t.team_order';
 	$teams = _cached($sql, 'training_list_teaminfos');
@@ -132,9 +132,9 @@ if ($mode == '')
 				'CLASS' 		=> $class,
 				'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 				'TEAM_NAME'		=> $teams[$i]['team_name'],
-				'ALL_MATCHES'	=> append_sid("match.php?mode=teammatches&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
-				'TO_TEAM'		=> append_sid("teams.php?mode=show&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
-				'FIGHTUS'		=> append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
+				'ALL_MATCHES'	=> append_sid("match.php?mode=teammatches&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
+				'TO_TEAM'		=> append_sid("teams.php?mode=show&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
+				'FIGHTUS'		=> append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
 			));
 		}		
 	}
@@ -160,14 +160,14 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	$template->set_filenames(array('body' => 'training_details_body.tpl'));
 	
 	$sql = 'SELECT	tr.*, m.*, t.*, g.*
-			FROM ' . TRAINING_TABLE . ' tr
-				LEFT JOIN ' . MATCH_TABLE . ' m ON m.match_id = tr.match_id
-				LEFT JOIN ' . TEAMS_TABLE . ' t ON tr.team_id = t.team_id
-				LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+			FROM ' . TRAINING . ' tr
+				LEFT JOIN ' . MATCH . ' m ON m.match_id = tr.match_id
+				LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
+				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 			WHERE tr.training_id = ' . $training_id;
 	$row_details = _cached($sql, 'training_details_' . $training_id, 1);
 	
-	if ($auth['auth_match'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
 		$template->assign_block_vars('training_edit', array(
 			'EDIT_TRAINING' => '<a href="' . append_sid("admin/admin_training.php?mode=edit&" . POST_TRAINING_URL . "=" . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',
@@ -245,7 +245,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	}*/
 	
 	$sql = 'SELECT tru.*, u.username
-				FROM ' . TRAINING_USERS_TABLE . ' tru, ' . USERS_TABLE . ' u
+				FROM ' . TRAINING_USERS . ' tru, ' . USERS . ' u
 			WHERE tru.user_id = u.user_id AND tru.training_id = ' . $training_id;
 	$result = $db->sql_query($sql);
 
@@ -294,7 +294,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	));
 		
 	$sql = 'SELECT *
-				FROM ' . TEAMS_USERS_TABLE . '
+				FROM ' . TEAMS_USERS . '
 			WHERE user_id = ' . $userdata['user_id'] . ' AND team_id = ' . $row_details['team_id'];
 	$result = $db->sql_query($sql);
 	
@@ -303,7 +303,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		$template->assign_block_vars('training_users.users_status', array());
 		
 		$sql = 'SELECT training_users_status
-					FROM ' . TRAINING_USERS_TABLE . '
+					FROM ' . TRAINING_USERS . '
 				WHERE user_id = ' . $userdata['user_id'] . ' AND training_id = ' . $training_id;
 		$result = $db->sql_query($sql);
 		
@@ -334,8 +334,8 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		$template->assign_block_vars('training_comments', array());
 		
 		$sql = 'SELECT trc.*, u.username, u.user_email
-					FROM ' . TRAINING_COMMENTS_TABLE . ' trc
-						LEFT JOIN ' . USERS_TABLE . ' u ON trc.poster_id = u.user_id
+					FROM ' . TRAINING_COMMENTS . ' trc
+						LEFT JOIN ' . USERS . ' u ON trc.poster_id = u.user_id
 					WHERE trc.training_id = ' . $training_id . ' ORDER BY trc.time_create DESC';
 		$comment_entry = _cached($sql, 'training_details_' . $training_id . '_comments');
 	
@@ -348,7 +348,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		else
 		{
 			$sql = 'SELECT read_time
-						FROM ' . TRAINING_COMMENTS_READ_TABLE . '
+						FROM ' . TRAINING_COMMENTS_READ . '
 						WHERE user_id = ' . $userdata['user_id'] . ' AND training_id = ' . $training_id;
 			$result = $db->sql_query($sql);
 			$unread = $db->sql_fetchrow($result);
@@ -357,7 +357,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			{
 				$unreads = false;
 				
-				$sql = 'UPDATE ' . TRAINING_COMMENTS_READ_TABLE . '
+				$sql = 'UPDATE ' . TRAINING_COMMENTS_READ . '
 							SET read_time = ' . time() . '
 						WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];
 				$result = $db->sql_query($sql);
@@ -366,7 +366,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			{
 				$unreads = true;
 				
-				$sql = 'INSERT INTO ' . TRAINING_COMMENTS_READ_TABLE . ' (training_id, user_id, read_time)
+				$sql = 'INSERT INTO ' . TRAINING_COMMENTS_READ . ' (training_id, user_id, read_time)
 					VALUES (' . $training_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 				$result = $db->sql_query($sql);
 			}
@@ -403,8 +403,8 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 					
 					'ICON'			=> $icon,
 	
-					'U_EDIT'		=> append_sid("training.php?mode=edit&amp;" . POST_TRAINING_URL . "=".$comment_entry[$i]['training_id']),
-					'U_DELETE'		=> append_sid("training.php?mode=delete&amp;" . POST_TRAINING_URL . "=".$comment_entry[$i]['training_id'])
+					'U_EDIT'		=> append_sid("training.php?mode=edit&amp;" . POST_TRAINING_URL . "=" . $comment_entry[$i]['training_id']),
+					'U_DELETE'		=> append_sid("training.php?mode=delete&amp;" . POST_TRAINING_URL . "=" . $comment_entry[$i]['training_id'])
 				));
 			}
 		
@@ -457,7 +457,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			if ( !$error )
 			{
 				//	Test: hier werden/sollen Kommentare als gelesen markiert werden
-				$sql = 'SELECT * FROM ' . TRAINING_COMMENTS_READ_TABLE . ' WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];
+				$sql = 'SELECT * FROM ' . TRAINING_COMMENTS_READ . ' WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -465,7 +465,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				
 				if ( $db->sql_numrows($result) )
 				{
-					$sql = 'UPDATE ' . TRAINING_COMMENTS_READ_TABLE . '
+					$sql = 'UPDATE ' . TRAINING_COMMENTS_READ . '
 								SET read_time = ' . time() . '
 							WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];					
 					if ( !($result = $db->sql_query($sql)) )
@@ -475,7 +475,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				}
 				else
 				{				
-					$sql = 'INSERT INTO ' . TRAINING_COMMENTS_READ_TABLE . ' (training_id, user_id, read_time)
+					$sql = 'INSERT INTO ' . TRAINING_COMMENTS_READ . ' (training_id, user_id, read_time)
 						VALUES (' . $training_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -536,7 +536,7 @@ else if ($mode == 'change')
 	//	sollte status gleich der in der db sein und der auswahl, wird nichts gespeichert
 	if ($HTTP_POST_VARS['users_status'] == '0' || $HTTP_POST_VARS['users_status'] == '')
 	{
-		$sql = 'INSERT INTO ' . TRAINING_USERS_TABLE . " (training_id, user_id, training_users_status, training_users_create, training_users_update)
+		$sql = 'INSERT INTO ' . TRAINING_USERS . " (training_id, user_id, training_users_status, training_users_create, training_users_update)
 			VALUES ($training_id, " . $userdata['user_id'] . ", '" . intval($HTTP_POST_VARS['training_users_status']) . "', '" . time() . "', 0)";
 		$result = $db->sql_query($sql);
 		
@@ -546,7 +546,7 @@ else if ($mode == 'change')
 	}
 	else if ($HTTP_POST_VARS['training_users_status'] != $HTTP_POST_VARS['users_status'])
 	{
-		$sql = "UPDATE " . TRAINING_USERS_TABLE . " SET
+		$sql = "UPDATE " . TRAINING_USERS . " SET
 					training_users_status	= '" . intval($HTTP_POST_VARS['training_users_status']) . "',
 					training_users_update	= '" . time() . "'
 				WHERE training_id			= $training_id AND user_id = " . $userdata['user_id'];
@@ -576,7 +576,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	//
 	//	Team Details
 	//
-	$sql = 'SELECT * FROM ' . TEAMS_TABLE . ' WHERE team_id = ' . $team_id;
+	$sql = 'SELECT * FROM ' . TEAMS . ' WHERE team_id = ' . $team_id;
 	if (!($result_team = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
@@ -588,9 +588,9 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	//	List Matches von Team
 	//
 	$sql = 'SELECT m.training_id, m.training_date, m.training_public, m.training_rival, t.team_name, g.game_image, g.game_size
-				FROM ' . MATCH_TABLE . ' m
-					LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+				FROM ' . MATCH . ' m
+					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 				WHERE m.team_id = ' . $team_id . '
 			ORDER BY m.training_date DESC';
 	$trainings_entry = _cached($sql, 'training_list_team_' . $team_id);
@@ -611,7 +611,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 				'MATCH_GAME'	=> display_gameicon($trainings_entry[$i]['game_size'], $trainings_entry[$i]['game_image']),
 				'MATCH_NAME'	=> ($trainings_entry[$i]['training_public']) ? 'vs. ' . $trainings_entry[$i]['training_rival'] : 'vs. <span style="font-style:italic;">' . $trainings_entry[$i]['training_rival'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $trainings_entry[$i]['training_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_MATCH_URL . "=".$trainings_entry[$i]['training_id'])
+				'U_DETAILS'		=> append_sid("training.php?mode=trainingdetails&amp;" . POST_MATCH_URL . "=" . $trainings_entry[$i]['training_id'])
 			));
 		}
 	}

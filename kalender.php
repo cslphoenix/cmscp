@@ -42,7 +42,7 @@ $wbmk_wechsel = array_flip($wbmk);
 ?> 
 <table border="0" cellspacing="1" width="150" height="150">
 <tr>
-<?php for($i=0;$i<7;$i++){echo "<td>".$wbmk[$i]."</td>";} ?>
+<?php for($i=0;$i<7;$i++){echo "<td>" . $wbmk[$i]."</td>";} ?>
 </tr>
 <tr> 
 <?php
@@ -57,7 +57,7 @@ for ($i=1;$i<$tage_im_monat+1;$i++)
 {
 if ($i == $today) { echo "<td style=\"color:#F00\"><b>$i</b></td>";}
 else
-echo "<td>".$i."</td>";	
+echo "<td>" . $i."</td>";	
 if ($wcs < 7){	$wcs++;}
 if ($wcs == 7){echo "</tr><tr>";$wcs = 0;}
 

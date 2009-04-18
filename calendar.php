@@ -57,22 +57,22 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 						$i = '0'.$i;
 					}
 					
-					$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 					$result = $db->sql_query($sql);
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT match_rival, match_date FROM ' . MATCH_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_w = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT training_vs, training_start FROM ' . TRAINING_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_t = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
@@ -99,22 +99,22 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					$i = '0'.$i;
 				}
 				
-				$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				$result = $db->sql_query($sql);
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT match_rival, match_date FROM ' . MATCH_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT training_vs, training_start FROM ' . TRAINING_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_t = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -156,17 +156,17 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 						$i = '0'.$i;
 					}
 					
-					$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 					$result = $db->sql_query($sql);
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT * FROM ' . MATCH_TABLE . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_w = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
@@ -192,17 +192,17 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					$i = '0'.$i;
 				}
 				
-				$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				$result = $db->sql_query($sql);
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT * FROM ' . MATCH_TABLE . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);

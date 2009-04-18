@@ -55,10 +55,10 @@ if ($mode == '')
 	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date > ' . time() . '
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'match_list_open_member');
@@ -66,10 +66,10 @@ if ($mode == '')
 	else
 	{
 		$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date > ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'match_list_open_guest');
@@ -91,7 +91,7 @@ if ($mode == '')
 				'MATCH_GAME'	=> display_gameicon($match_entry[$i]['game_size'], $match_entry[$i]['game_image']),
 				'MATCH_NAME'	=> ($match_entry[$i]['match_public']) ? 'vs. ' . $match_entry[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $match_entry[$i]['match_rival'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_entry[$i]['match_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$match_entry[$i]['match_id'])
+				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id'])
 			));
 		}
 	}
@@ -102,10 +102,10 @@ if ($mode == '')
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date < ' . time() . '
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'match_list_close_member');
@@ -113,10 +113,10 @@ if ($mode == '')
 	else
 	{
 		$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . TRAINING_TABLE . ' tr ON m.match_id = tr.match_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
 					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date DESC';
 		$match_entry = _cached($sql, 'match_list_close_guest');
@@ -138,7 +138,7 @@ if ($mode == '')
 				'MATCH_GAME'	=> display_gameicon($match_entry[$i]['game_size'], $match_entry[$i]['game_image']),
 				'MATCH_NAME'	=> ($match_entry[$i]['match_public']) ? 'vs. ' . $match_entry[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $match_entry[$i]['match_rival'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_entry[$i]['match_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$match_entry[$i]['match_id'])
+				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id'])
 			));
 		}
 	}
@@ -148,8 +148,8 @@ if ($mode == '')
 	//	Teams
 	//
 	$sql = 'SELECT t.team_id, t.team_name, t.team_fight, g.game_size, g.game_image
-				FROM ' . TEAMS_TABLE . ' t
-					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+				FROM ' . TEAMS . ' t
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 			ORDER BY t.team_order';
 	$teams = _cached($sql, 'match_list_teaminfos');
 	if ( !($result = $db->sql_query($sql)) )
@@ -173,9 +173,9 @@ if ($mode == '')
 				'CLASS' 		=> $class,
 				'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 				'TEAM_NAME'		=> $teams[$i]['team_name'],
-				'ALL_MATCHES'	=> '<a href="' . append_sid("match.php?mode=teammatches&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']) . '">' . $lang['all_matches'] . '</a>',
-				'TO_TEAM'		=> append_sid("teams.php?mode=show&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
-				'FIGHTUS'		=> ( $teams[$i]['team_fight'] ) ? '<a href="' . append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']) . '">' . $lang['match_fightus'] . '</a>'  : '',
+				'ALL_MATCHES'	=> '<a href="' . append_sid("match.php?mode=teammatches&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']) . '">' . $lang['all_matches'] . '</a>',
+				'TO_TEAM'		=> append_sid("teams.php?mode=show&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
+				'FIGHTUS'		=> ( $teams[$i]['team_fight'] ) ? '<a href="' . append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']) . '">' . $lang['match_fightus'] . '</a>'  : '',
 			));
 		}		
 	}
@@ -207,24 +207,24 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT	m.*, md.*, t.team_id, t.team_name, g.game_image, ml.match_id AS lineup_match_id, tr.training_vs, tr.training_start
-				FROM ' . MATCH_TABLE . ' m
-					LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-					LEFT JOIN ' . MATCH_LINEUP_TABLE . ' ml ON m.match_id = ml.match_id
-					LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					LEFT JOIN ' . TRAINING_TABLE . ' tr ON tr.match_id = m.match_id
+				FROM ' . MATCH . ' m
+					LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+					LEFT JOIN ' . MATCH_LINEUP . ' ml ON m.match_id = ml.match_id
+					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					LEFT JOIN ' . TRAINING . ' tr ON tr.match_id = m.match_id
 				WHERE m.match_id = ' . $match_id;
 		$row_details = _cached($sql, 'match_details_' . $match_id . '_member', 1);
 	}
 	else
 	{
 		$sql = 'SELECT	m.*, md.*, t.team_id, t.team_name, g.game_image, ml.match_id AS lineup_match_id, tr.training_vs, tr.training_start
-				FROM ' . MATCH_TABLE . ' m
-					LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-					LEFT JOIN ' . MATCH_LINEUP_TABLE . ' ml ON m.match_id = ml.match_id
-					LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-					LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					LEFT JOIN ' . TRAINING_TABLE . ' tr ON tr.match_id = m.match_id
+				FROM ' . MATCH . ' m
+					LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+					LEFT JOIN ' . MATCH_LINEUP . ' ml ON m.match_id = ml.match_id
+					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					LEFT JOIN ' . TRAINING . ' tr ON tr.match_id = m.match_id
 				WHERE m.match_id = ' . $match_id . ' AND m.match_public = 1';
 		$row_details = _cached($sql, 'match_details_' . $match_id . '_guest', 1);
 	}
@@ -234,7 +234,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		message_die(GENERAL_ERROR, 'Falsche ID ?');
 	}
 	
-	if ($auth['auth_match'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_match'] || $userdata['user_level'] == ADMIN)
 	{
 		$template->assign_block_vars('match_edit', array(
 			'EDIT_MATCH' => '<a href="' . append_sid("admin/admin_match.php?mode=edit&" . POST_MATCH_URL . "=" . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match'] . '</a>',
@@ -244,19 +244,19 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 
 	$picture_path = $root_path . $settings['path_match_picture'];
 	
-	if ($row_details['details_mapa'] && $row_details['details_mapa_clan'] && $row_details['details_mapa_clan'])
+	if ($row_details['details_mapa'] && $row_details['details_mapa_clan'])
 	{
 		$template->assign_block_vars('map_details_a', array());
 	}
-	if ($row_details['details_mapb'] && $row_details['details_mapb_clan'] && $row_details['details_mapb_clan'])
+	if ($row_details['details_mapb'] && $row_details['details_mapb_clan'])
 	{
 		$template->assign_block_vars('map_details_b', array());
 	}
-	if ($row_details['details_mapc'] && $row_details['details_mapc_clan'] && $row_details['details_mapc_clan'])
+	if ($row_details['details_mapc'] && $row_details['details_mapc_clan'])
 	{
 		$template->assign_block_vars('map_details_c', array());
 	}
-	if ($row_details['details_mapd'] && $row_details['details_mapd_clan'] && $row_details['details_mapd_clan'])
+	if ($row_details['details_mapd'] && $row_details['details_mapd_clan'])
 	{
 		$template->assign_block_vars('map_details_d', array());
 	}
@@ -365,7 +365,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		$template->assign_block_vars('clan', array());
 		
 		$sql = 'SELECT ml.user_id, ml.status, u.username
-					FROM ' . MATCH_LINEUP_TABLE . ' ml, ' . USERS_TABLE . ' u
+					FROM ' . MATCH_LINEUP . ' ml, ' . USERS . ' u
 					WHERE match_id = ' . $match_id . ' AND u.user_id = ml.user_id
 				ORDER BY ml.status';
 		$result = $db->sql_query($sql);
@@ -426,7 +426,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		//	Teilnahme von mitgliedern zu diesem Match
 		//	Auch nur durch Clanmitglieder mit Status sichtbar
 		$sql = 'SELECT mu.*, u.username
-					FROM ' . MATCH_USERS_TABLE . ' mu, ' . USERS_TABLE . ' u
+					FROM ' . MATCH_USERS . ' mu, ' . USERS . ' u
 				WHERE mu.user_id = u.user_id AND mu.match_id = ' . $match_id;
 		$result = $db->sql_query($sql);
 
@@ -476,7 +476,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		//	falls match abgelaufen wird das erst gar nicht mehr abgefragt
 		if ( $row_details['match_date'] > time() )
 		{
-			$sql = 'SELECT * FROM ' . TEAMS_USERS_TABLE . ' WHERE user_id = ' . $userdata['user_id'] . ' AND team_id = ' . $row_details['team_id'];
+			$sql = 'SELECT * FROM ' . TEAMS_USERS . ' WHERE user_id = ' . $userdata['user_id'] . ' AND team_id = ' . $row_details['team_id'];
 			$result = $db->sql_query($sql);
 			
 			//	Wird ein Eintrag gefunden kann der Benutzer nun wählen
@@ -487,7 +487,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				
 				//	Abfrage des Status, falls er schon gesetzt wurde
 				$sql = 'SELECT match_users_status
-							FROM ' . MATCH_USERS_TABLE . '
+							FROM ' . MATCH_USERS . '
 						WHERE user_id = ' . $userdata['user_id'] . ' AND match_id = ' . $match_id;
 				$result = $db->sql_query($sql);
 				
@@ -542,8 +542,8 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		$template->assign_block_vars('match_comments', array());
 		
 		$sql = 'SELECT mc.*, u.username, u.user_email
-					FROM ' . MATCH_COMMENTS_TABLE . ' mc
-						LEFT JOIN ' . USERS_TABLE . ' u ON mc.poster_id = u.user_id
+					FROM ' . MATCH_COMMENTS . ' mc
+						LEFT JOIN ' . USERS . ' u ON mc.poster_id = u.user_id
 					WHERE match_id = ' . $match_id . ' ORDER BY time_create DESC';
 		$comment_entry = _cached($sql, 'match_details_' . $match_id . '_comments');
 		
@@ -559,7 +559,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 			{
 				//	SQL Abfrage verkleinert, voher für jeden Beitrag eine Zeit, die aber immer gleich war
 				$sql = 'SELECT read_time
-							FROM ' . MATCH_COMMENTS_READ_TABLE . '
+							FROM ' . MATCH_COMMENTS_READ . '
 							WHERE user_id = ' . $userdata['user_id'] . ' AND match_id = ' . $match_id;
 				$result = $db->sql_query($sql);
 				$unread = $db->sql_fetchrow($result);
@@ -568,7 +568,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				{
 					$unreads = false;
 					
-					$sql = 'UPDATE ' . MATCH_COMMENTS_READ_TABLE . '
+					$sql = 'UPDATE ' . MATCH_COMMENTS_READ . '
 								SET read_time = ' . time() . '
 							WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];
 					$result = $db->sql_query($sql);
@@ -577,7 +577,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				{
 					$unreads = true;
 					
-					$sql = 'INSERT INTO ' . MATCH_COMMENTS_READ_TABLE . ' (match_id, user_id, read_time)
+					$sql = 'INSERT INTO ' . MATCH_COMMENTS_READ . ' (match_id, user_id, read_time)
 						VALUES (' . $match_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 					$result = $db->sql_query($sql);
 				}
@@ -615,8 +615,8 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 					
 					'ICON'			=> $icon,
 	
-					'U_EDIT'		=> append_sid("match.php?mode=edit&amp;" . POST_MATCH_URL . "=".$comment_entry[$i]['match_id']),
-					'U_DELETE'		=> append_sid("match.php?mode=delete&amp;" . POST_MATCH_URL . "=".$comment_entry[$i]['match_id'])
+					'U_EDIT'		=> append_sid("match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $comment_entry[$i]['match_id']),
+					'U_DELETE'		=> append_sid("match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $comment_entry[$i]['match_id'])
 				));
 			}
 		
@@ -713,7 +713,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 			if ( !$error )
 			{
 				//	Test: hier werden/sollen Kommentare als gelesen markiert werden
-				$sql = 'SELECT * FROM ' . MATCH_COMMENTS_READ_TABLE . ' WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];
+				$sql = 'SELECT * FROM ' . MATCH_COMMENTS_READ . ' WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -721,7 +721,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				
 				if ( $db->sql_numrows($result) )
 				{
-					$sql = 'UPDATE ' . MATCH_COMMENTS_READ_TABLE . '
+					$sql = 'UPDATE ' . MATCH_COMMENTS_READ . '
 								SET read_time = ' . time() . '
 							WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];					
 					if ( !($result = $db->sql_query($sql)) )
@@ -731,7 +731,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				}
 				else
 				{				
-					$sql = 'INSERT INTO ' . MATCH_COMMENTS_READ_TABLE . ' (match_id, user_id, read_time)
+					$sql = 'INSERT INTO ' . MATCH_COMMENTS_READ . ' (match_id, user_id, read_time)
 						VALUES (' . $match_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -818,7 +818,7 @@ else if ($mode == 'change')
 	//	sollte status gleich der in der db sein und der auswahl, wird nichts gespeichert
 	if ($HTTP_POST_VARS['users_status'] == '0' || $HTTP_POST_VARS['users_status'] == '')
 	{
-		$sql = 'INSERT INTO ' . MATCH_USERS_TABLE . " (match_id, user_id, match_users_status, match_users_create, match_users_update)
+		$sql = 'INSERT INTO ' . MATCH_USERS . " (match_id, user_id, match_users_status, match_users_create, match_users_update)
 			VALUES ($match_id, " . $userdata['user_id'] . ", '" . intval($HTTP_POST_VARS['match_users_status']) . "', '" . time() . "', 0)";
 		$result = $db->sql_query($sql);
 		
@@ -828,7 +828,7 @@ else if ($mode == 'change')
 	}
 	else if ($HTTP_POST_VARS['match_users_status'] != $HTTP_POST_VARS['users_status'])
 	{
-		$sql = "UPDATE " . MATCH_USERS_TABLE . " SET
+		$sql = "UPDATE " . MATCH_USERS . " SET
 					match_users_status		= '" . intval($HTTP_POST_VARS['match_users_status']) . "',
 					match_users_update		= '" . time() . "'
 				WHERE match_id = $match_id AND user_id = " . $userdata['user_id'];
@@ -858,7 +858,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	//
 	//	Team Details
 	//
-	$sql = 'SELECT * FROM ' . TEAMS_TABLE . ' WHERE team_id = ' . $team_id;
+	$sql = 'SELECT * FROM ' . TEAMS . ' WHERE team_id = ' . $team_id;
 	if (!($result_team = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
@@ -872,9 +872,9 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival, t.team_name, g.game_image, g.game_size
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					WHERE m.team_id = ' . $team_id . '
 				ORDER BY m.match_date DESC';
 		$matchs_entry = _cached($sql, 'match_list_teammatches_' . $team_id . '_member');
@@ -882,9 +882,9 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	else
 	{
 		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival, t.team_name, g.game_image, g.game_size
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					WHERE m.team_id = ' . $team_id . ' AND m.match_public = 1
 				ORDER BY m.match_date DESC';
 		$matchs_entry = _cached($sql, 'match_list_teammatches_' . $team_id . '_guest');
@@ -906,7 +906,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 				'MATCH_GAME'	=> display_gameicon($matchs_entry[$i]['game_size'], $matchs_entry[$i]['game_image']),
 				'MATCH_NAME'	=> ($matchs_entry[$i]['match_public']) ? 'vs. ' . $matchs_entry[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $matchs_entry[$i]['match_rival'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $matchs_entry[$i]['match_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$matchs_entry[$i]['match_id'])
+				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $matchs_entry[$i]['match_id'])
 			));
 		}
 	}
