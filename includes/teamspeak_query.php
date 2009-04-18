@@ -516,7 +516,7 @@ function getChannels($ip,$port,$tPort)
 	$k			= 0;
 	$fp = fsockopen($ip, $tPort, $errno, $errstr, 30);
 	if($fp) {
-		fputs($fp, "cl ".$port."\n");		
+		fputs($fp, "cl " . $port."\n");		
 		fputs($fp, "quit\n");
 		while(!feof($fp)) {
 			$out .= fgets($fp, 1024);
@@ -554,7 +554,7 @@ function getTSChannelUsers($ip,$port,$tPort)
 	
 	$fp = fsockopen($ip, $tPort, $errno, $errstr, 30);
 	if($fp) {
-		fputs($fp, "pl ".$port."\n");		
+		fputs($fp, "pl " . $port."\n");		
 		fputs($fp, "quit\n");
 		while(!feof($fp)) {
 			$out .= fgets($fp, 1024);
@@ -599,7 +599,7 @@ function defaultInfo($ip,$tPort,$port)
 	
 	$fp = fsockopen($ip, $tPort, $errno, $errstr, 30);
 	if($fp) {
-		fputs($fp, "sel ".$port."\n");
+		fputs($fp, "sel " . $port."\n");
 		fputs($fp, "si\n");
 		fputs($fp, "quit\n");
 		while(!feof($fp)) {
@@ -627,15 +627,15 @@ function defaultInfo($ip,$tPort,$port)
 		else $tsTypeText = "Freeware Public Server";		
 
 		$html = "<tr><td id=\"contentMainFirst\"><span class=\"fontBold\">Server:</span></td></tr>\n";
-		$html .= "<tr><td id=\"contentMainFirst\">".$name."<br><br></td></tr>\n";
+		$html .= "<tr><td id=\"contentMainFirst\">" . $name."<br><br></td></tr>\n";
 		$html .= "<tr><td id=\"contentMainFirst\"><span class=\"fontBold\">Server IP:</span></td></tr>\n";
-		$html .= "<tr><td id=\"contentMainFirst\">".$ip.":".$port."<br><br></td></tr>\n";
+		$html .= "<tr><td id=\"contentMainFirst\">" . $ip.":" . $port."<br><br></td></tr>\n";
 		$html .= "<tr><td id=\"contentMainFirst\"><span class=\"fontBold\">Version:</span></td></tr>\n";
 		$html .= "<tr><td id=\"contentMainFirst\">".getTSVersion($ip,$tPort,$port)."<br><br></td></tr>\n";
 		$html .= "<tr><td id=\"contentMainFirst\"><span class=\"fontBold\">Type:</span></td></tr>\n";
-		$html .= "<tr><td id=\"contentMainFirst\">".$tsTypeText."<br><br></td></tr>\n";
+		$html .= "<tr><td id=\"contentMainFirst\">" . $tsTypeText."<br><br></td></tr>\n";
 		$html .= "<tr><td id=\"contentMainFirst\"><span class=\"fontBold\">Welcome Message:</span></td></tr>\n";
-		$html .= "<tr><td id=\"contentMainFirst\">".$welcomeMsg."<br><br></td></tr>";
+		$html .= "<tr><td id=\"contentMainFirst\">" . $welcomeMsg."<br><br></td></tr>";
 		
 		fclose($fp);
 	}
@@ -675,7 +675,7 @@ function channelInfo($ip,$tPort,$port,$cID)
 		$html .= "<tr><td><span class=\"fontBold\">Topic:</span></td></tr>\n";
 		$html .= "<tr><td>".removeChar($topic)."<br><br></td></tr>\n";
 		$html .= "<tr><td><span class=\"fontBold\">User in channel:</span></td></tr>\n";
-		$html .= "<tr><td>".$cUser."/".removeChar($max)."<br><br></td></tr>\n";
+		$html .= "<tr><td>" . $cUser."/".removeChar($max)."<br><br></td></tr>\n";
 		$html .= "<tr><td><span class=\"fontBold\">Codec:</span></td></tr>\n";
 		$html .= "<tr><td>".getCodec($codec)."<br><br></td></tr>\n";
 		$name = str_replace("'","¶",$name);
@@ -692,7 +692,7 @@ function getTSVersion($ip,$tPort,$port)
 	$out = "";
 	$fp = fsockopen($ip, $tPort, $errno, $errstr, 30);
 	if($fp) {
-		fputs($fp, "sel ".$port."\n");
+		fputs($fp, "sel " . $port."\n");
 		fputs($fp, "ver\n");
 		fputs($fp, "quit\n");
 		while(!feof($fp)) {

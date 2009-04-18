@@ -7,8 +7,6 @@ if ( !defined('IN_CMS') )
 
 define('HEADER_INC', TRUE);
 
-$auth = auth_acp_check($userdata['user_id']);
-
 //
 // gzip_compression
 //
@@ -73,19 +71,20 @@ $template->set_filenames(array(
 if ( $userdata['session_logged_in'] )
 {
 	$u_login_logout = 'login.php?logout=true&amp;sid=' . $userdata['session_id'];
-	$l_login_logout = $lang['Logout'] . ' [ ' . $userdata['username'] . ' ]';
+//	$l_login_logout = $lang['Logout'] . ' [ ' . $userdata['username'] . ' ]';
+	$l_login_logout = $lang['Logout'];
 }
 else
 {
 	$smart_redirect = strrchr($_SERVER['PHP_SELF'], '/');
 	$smart_redirect = substr($smart_redirect, 1, strlen($smart_redirect));
 
-	if( ($smart_redirect == ('profile.php')) or ($smart_redirect == ('login.php')) )
+	if ( ($smart_redirect == ('profile.php')) || ($smart_redirect == ('login.php')) || ($smart_redirect == ('index.php')) )
 	{
 		$smart_redirect = '';
 	}
 
-	if( isset($HTTP_GET_VARS) and !empty($smart_redirect) )
+	if ( isset($HTTP_GET_VARS) && !empty($smart_redirect) )
 	{		
 		$smart_get_keys = array_keys($HTTP_GET_VARS);
 
@@ -97,6 +96,8 @@ else
 			}
 		}
 	}
+	
+	
 
 	$u_login_logout = 'login.php';
 	$u_login_logout .= (!empty($smart_redirect)) ? '?redirect=' . $smart_redirect : '';
@@ -113,64 +114,64 @@ if ($settings['site_counter'] == '1')
 {
 	// Prüfen, ob bereits ein Counter für den  
     // heutigen Tag erstellt wurde 
-    $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = CURDATE()'; 
+    $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()'; 
 	$result = $db->sql_query($sql);
 	
     // ist der Tag nocht nicht vorhanden,  
     // wird ein neuer Tagescounter erstellt 
     if (!$db->sql_numrows($result))
 	{
-		$sql = 'INSERT INTO ' . COUNTER_COUNTER_TABLE . ' SET counter_date = CURDATE()'; 
+		$sql = 'INSERT INTO ' . COUNTER_COUNTER . ' SET counter_date = CURDATE()'; 
 		$result = $db->sql_query($sql);
     }
 	
 	// Alte (mehr als 1 Tag) IPs in 'Online' löschen 
 	// damit die Datenbank nicht überfüllt wird
-	$sql = 'DELETE FROM ' . COUNTER_ONLINE_TABLE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_date'; 
+	$sql = 'DELETE FROM ' . COUNTER_ONLINE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_date'; 
 	$result = $db->sql_query($sql);
 	
 	// Überprüfe, ob die IP bereits gespeichert ist
-	$sql = 'SELECT online_ip FROM ' . COUNTER_ONLINE_TABLE . ' WHERE online_ip = "' . $userdata['session_ip'] . '"';
+	$sql = 'SELECT online_ip FROM ' . COUNTER_ONLINE . ' WHERE online_ip = "' . $userdata['session_ip'] . '"';
 	$result = $db->sql_query($sql);
 		
 	// Falls nicht, wird sie gespeichert 
     if (!$db->sql_numrows($result))
 	{
-		$sql = 'INSERT INTO ' . COUNTER_ONLINE_TABLE . ' (online_ip, online_date) VALUES ("' . $userdata['session_ip'] . '", NOW())'; 
+		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date) VALUES ("' . $userdata['session_ip'] . '", NOW())'; 
 		$result = $db->sql_query($sql);
 		
 		// ... und die Anzahl wird um 1 erhöht 
-		$sql = 'UPDATE ' . COUNTER_COUNTER_TABLE . ' SET counter_entry = counter_entry+1 WHERE counter_date = CURDATE()'; 
+		$sql = 'UPDATE ' . COUNTER_COUNTER . ' SET counter_entry = counter_entry+1 WHERE counter_date = CURDATE()'; 
 		$result = $db->sql_query($sql);
     } 
     // Falls ja, wird ihr Datum aktualisiert 
     else
 	{
-		$sql = 'UPDATE ' . COUNTER_ONLINE_TABLE . ' SET online_date = NOW() WHERE online_ip = "' . $userdata['session_ip'] . '"';
+		$sql = 'UPDATE ' . COUNTER_ONLINE . ' SET online_date = NOW() WHERE online_ip = "' . $userdata['session_ip'] . '"';
 		$result = $db->sql_query($sql);
 	}
 	
 	// User die 'heute' auf der Seite waren 
-    $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = CURDATE()'; 
+    $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()'; 
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$stats_day = (int) $row['counter_entry'];
 	$db->sql_freeresult($result);
 	
 	// User die 'gestern' auf der Seite waren 
-	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER_TABLE . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
+	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
 	$row = _cached($sql, 'counter_stats_yesterday', 1, 3600);
 	$stats_yesterday = (int) $row['sum'];
 	
 	// user-monat: 
-	$sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER_TABLE . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')"; 
+	$sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')"; 
 	$row = _cached($sql, 'counter_stats_month', 1, 3600);
 	$stats_month = (int) $row['sum'];
 	
 	// User die insgesamt die Seite besucht haben. 
     // Dazu wird die Gruppenfunktion SUM() 
     // verwendet, die alle Werte der Spalte 'Anzahl' summiert 
-    $sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER_TABLE;
+    $sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER;
 	$row = _cached($sql, 'counter_stats_total', 1, 3600);
 	$stats_year = (int) $row['sum'];
 	
@@ -199,7 +200,7 @@ if ($settings['site_counter'] == '1')
 	}
 }
 
-$sql = 'SELECT group_id, group_name, group_color, group_order FROM ' . GROUPS_TABLE . ' WHERE group_legend = 1 ORDER BY group_order';
+$sql = 'SELECT group_id, group_name, group_color, group_order FROM ' . GROUPS . ' WHERE group_legend = 1 ORDER BY group_order';
 //$group_data = _cached($sql, 'list_overall_group');
 if( !($result = $db->sql_query($sql)) )
 {
@@ -234,7 +235,7 @@ $l_online_users_head = '';
 
 $user_forum_sql = ( !empty($forum_id) ) ? "AND s.session_page = " . intval($forum_id) : '';
 $sql = "SELECT u.username, u.user_id, u.user_allow_viewonline, u.user_level, u.user_color, s.session_logged_in, s.session_ip
-	FROM ".USERS_TABLE." u, ".SESSIONS_TABLE." s
+	FROM ".USERS." u, ".SESSIONS." s
 	WHERE u.user_id = s.session_user_id
 		AND s.session_time >= ".( time() - 300 ) . "
 		$user_forum_sql
@@ -308,10 +309,10 @@ if ( $total_online_users > $config['record_online_users'])
 	$config['record_online_users'] = $total_online_users;
 	$config['record_online_date'] = time();
 
-	$sql = "UPDATE " . CONFIG_TABLE . " SET config_value = '$total_online_users' WHERE config_name = 'record_online_users'";
+	$sql = "UPDATE " . CONFIG . " SET config_value = '$total_online_users' WHERE config_name = 'record_online_users'";
 	$db->sql_query($sql);
 
-	$sql = "UPDATE " . CONFIG_TABLE . " SET config_value = '" . $config['record_online_date'] . "' WHERE config_name = 'record_online_date'";
+	$sql = "UPDATE " . CONFIG . " SET config_value = '" . $config['record_online_date'] . "' WHERE config_name = 'record_online_date'";
 	$db->sql_query($sql);
 }
 
@@ -349,7 +350,7 @@ if ( ($userdata['session_logged_in']) && (empty($gen_simple_header)) )
 
 		if ( $userdata['user_last_privmsg'] > $userdata['user_lastvisit'] )
 		{
-			$sql = "UPDATE " . USERS_TABLE . "
+			$sql = "UPDATE " . USERS . "
 				SET user_last_privmsg = " . $userdata['user_lastvisit'] . "
 				WHERE user_id = " . $userdata['user_id'];
 			if ( !$db->sql_query($sql) )
@@ -455,6 +456,30 @@ if ( $settings['subnavi_statsonline'] )
 	));
 }
 
+$userauth = auth_acp_check($userdata['user_id']);
+
+$auth = array();
+foreach ($userauth as $key => $value)
+{
+	if ($value != '0')
+	{
+		$auth[$key] = $value;
+	}
+}
+
+//
+// Show the overall footer.
+//
+$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br /><br />' : '';
+
+$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
+if( !($result = $db->sql_query($sql)) )
+{
+	message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+}
+
+$changelog = $db->sql_fetchrow($result);
+
 //
 // Standardseitentitel
 //
@@ -473,8 +498,12 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 //
 $template->assign_vars(array(
 							 
+	'CMS_VERSION'		=> $changelog['changelog_number'],
+							 
 	'NEW_USERS'		=> sprintf($lang['newest_users'], $settings['subnavi_newusers_limit']),
 	'SITENAME' => $config['sitename'],
+	
+	'ADMIN_LINK'	=> $admin_link,
 	
 	'PAGE_TITLE' => $page_title,
 	
@@ -536,12 +565,19 @@ $template->assign_vars(array(
 	'S_CONTENT_DIR_RIGHT' => $lang['RIGHT'],
 	'S_TIMEZONE' => sprintf($lang['All_times'], $l_timezone),
 	'S_LOGIN_ACTION' => append_sid('login.php'),
+	
+	'redirect' => ( !$userdata['session_logged_in'] ) ? $smart_redirect : '',
 
 	'T_HEAD_STYLESHEET' => $theme['head_stylesheet'],
 	'T_BODY_BACKGROUND' => $theme['body_background'],
 	'T_BODY_BGCOLOR' => '#'.$theme['body_bgcolor'],
+	
+	'S_NEWSLETTER_ACTION'	=> append_sid('newsletter.php'),
+	
 	'NAV_LINKS' => $nav_links_html)
 );
+
+
 
 //
 // Login box?

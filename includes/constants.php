@@ -36,6 +36,13 @@ define('LOG_SEK_LOGIN',		7);
 define('LOG_SEK_NAVI',		8);
 define('LOG_SEK_FORUM',		9);
 define('LOG_SEK_COMMENT',	21);
+define('LOG_SEK_AUTHLIST',	22);
+define('LOG_SEK_TEAMSPEAK', 10);
+define('LOG_SEK_GROUPS',	11);
+define('LOG_SEK_LOG',		13);
+
+define('LOG_SEK_CHANGELOG',	98);
+define('LOG_SEK_BUGTRACKER',99);
 
 //	Navi types
 define('NAVI_MAIN',		1);
@@ -149,6 +156,10 @@ define('PAGE_FORUM',		-14);
 define('PAGE_TEAMSPEAK',	-15);
 define('PAGE_CALENDAR',		-16);
 define('PAGE_TEAM',			-17);
+define('PAGE_NEWSLETTER',	-18);
+
+define('PAGE_CHANGELOG',	-98);
+define('PAGE_BUGTRACKER',	-99);
 
 //	URL PARAMETERS
 define('POST_TEAMS_URL',		't');
@@ -164,7 +175,10 @@ define('POST_GROUPS_URL',		'g');
 define('POST_CONTACT_URL',		'c');
 define('POST_NAVIGATION_URL',	'n');
 define('POST_NEWS_URL',			'n');
+define('POST_TEAMSPEAK_URL',	't');
 define('POST_NEWSCAT_URL',		'nc');
+define('POST_AUTHLIST_URL',		'al');
+define('POST_BUGTRACKER_URL',	'bt');
 
 //	fürs Forum
 define('POST_POST_URL',			'p');
@@ -186,79 +200,82 @@ define('STATUS_REPLACE',	3);
 //	Table names
 //
 //	Config und Einstellungen
-define('CONFIG_TABLE',			$db_prefix.'config');
-define('SETTINGS_TABLE',		$db_prefix.'settings');
+define('CONFIG',					$db_prefix . 'config');
+define('SETTINGS',					$db_prefix . 'settings');
 
 //	sonstiges ;)
 
-define('BANLIST_TABLE',			$db_prefix.'banlist');
-define('CONTACT_TABLE',			$db_prefix.'contact');
-define('DISALLOW_TABLE',		$db_prefix.'disallow');
-define('EVENTS_TABLE',			$db_prefix.'events');
-define('NAVIGATION_TABLE',		$db_prefix.'navigation');
-define('RANKS_TABLE',			$db_prefix.'ranks');
+define('AUTHLIST',					$db_prefix . 'authlist');
+
+define('BANLIST',					$db_prefix . 'banlist');
+define('CONTACT',					$db_prefix . 'contact');
+define('DISALLOW',					$db_prefix . 'disallow');
+define('EVENTS',					$db_prefix . 'events');
+define('NAVIGATION',				$db_prefix . 'navigation');
+define('RANKS',						$db_prefix . 'ranks');
 
 //	Session
-define('SESSIONS_TABLE',		$db_prefix.'sessions');
-define('SESSIONS_KEYS_TABLE',	$db_prefix.'sessions_keys');
+define('SESSIONS',					$db_prefix . 'sessions');
+define('SESSIONS_KEYS',				$db_prefix . 'sessions_keys');
 
 //	Template
-define('THEMES_TABLE',			$db_prefix.'themes');
-define('THEMES_NAME_TABLE',		$db_prefix.'themes_name');
+define('THEMES',					$db_prefix . 'themes');
+define('THEMES_NAME',				$db_prefix . 'themes_name');
 
 //	Benutzer
-define('USERS_TABLE',			$db_prefix.'users');
-define('USERS_AUTH_TABLE',		$db_prefix.'users_auth');
+define('USERS',						$db_prefix . 'users');
 
 //	Gruppen
-define('GROUPS_TABLE',			$db_prefix.'groups');
-define('GROUPS_TEST_TABLE',		$db_prefix.'groups_test');
-define('GROUPS_AUTH_TABLE',		$db_prefix.'groups_auth');
-define('GROUPS_USER_TABLE',		$db_prefix.'groups_user');
+define('GROUPS',					$db_prefix . 'groups');
+define('GROUPS_USERS',				$db_prefix . 'groups_users');
 
 //	News
-define('NEWS_TABLE',				$db_prefix.'news');
-define('NEWS_CATEGORY_TABLE',		$db_prefix.'news_category');
-define('NEWS_COMMENTS_TABLE',		$db_prefix.'news_comments');
-define('NEWS_COMMENTS_READ_TABLE',	$db_prefix.'news_comments_read');
+define('NEWS',						$db_prefix . 'news');
+define('NEWS_CATEGORY',				$db_prefix . 'news_category');
+define('NEWS_COMMENTS',				$db_prefix . 'news_comments');
+define('NEWS_COMMENTS_READ',		$db_prefix . 'news_comments_read');
 
 //	Team + Games(Spiele)
-define('GAMES_TABLE',			$db_prefix.'game');
-define('TEAMS_TABLE',			$db_prefix.'teams');
-define('TEAMS_USERS_TABLE',		$db_prefix.'teams_users');
+define('GAMES',						$db_prefix . 'game');
+define('TEAMS',						$db_prefix . 'teams');
+define('TEAMS_USERS',				$db_prefix . 'teams_users');
 
 //	Logs
-define('LOG_TABLE',				$db_prefix.'log');
-define('ERROR_TABLE',			$db_prefix.'log_error');
+define('LOGS',						$db_prefix . 'log');
+define('ERROR',						$db_prefix . 'log_error');
 
 //	Forum
-define('AUTH_ACCESS_TABLE',		$db_prefix.'forum_auth_access');
-define('CATEGORIES_TABLE',		$db_prefix.'forum_cat');
-define('FORUMS_TABLE',			$db_prefix.'forum_forums');
-define('POSTS_TABLE',			$db_prefix.'forum_posts');
-define('TOPICS_TABLE',			$db_prefix.'forum_topics');
-define('TOPICS_READ_TABLE',		$db_prefix.'forum_topics_read');
+define('AUTH_ACCESS',				$db_prefix . 'forum_auth_access');
+define('CATEGORIES',				$db_prefix . 'forum_cat');
+define('FORUMS',					$db_prefix . 'forum_forums');
+define('POSTS',						$db_prefix . 'forum_posts');
+define('TOPICS',					$db_prefix . 'forum_topics');
+define('TOPICS_READ',				$db_prefix . 'forum_topics_read');
 
 //	Counter
-define('COUNTER_COUNTER_TABLE',	$db_prefix.'counter_counter');
-define('COUNTER_ONLINE_TABLE',	$db_prefix.'counter_online');
+define('COUNTER_COUNTER',			$db_prefix . 'counter_counter');
+define('COUNTER_ONLINE',			$db_prefix . 'counter_online');
 
 //	Server
-define('SERVER_TABLE',			$db_prefix.'server');
-define('TEAMSPEAK_TABLE',		$db_prefix.'teamspeak');
+define('SERVER',					$db_prefix . 'server');
+define('TEAMSPEAK',					$db_prefix . 'teamspeak');
+define('NEWSLETTER',				$db_prefix . 'newsletter');
+define('BUGTRACKER',				$db_prefix . 'bugtracker');
+define('CHANGELOG',					$db_prefix . 'changelog');
+
 
 //	Wars/Match
-define('MATCH_TABLE',					$db_prefix.'match');
-define('MATCH_COMMENTS_TABLE',			$db_prefix.'match_comments');
-define('MATCH_COMMENTS_READ_TABLE',		$db_prefix.'match_comments_read');
-define('MATCH_DETAILS_TABLE',			$db_prefix.'match_details');
-define('MATCH_LINEUP_TABLE',			$db_prefix.'match_lineup');
-define('MATCH_USERS_TABLE',				$db_prefix.'match_users');
+define('MATCH',						$db_prefix . 'match');
+define('MATCH_COMMENTS',			$db_prefix . 'match_comments');
+define('MATCH_COMMENTS_READ',		$db_prefix . 'match_comments_read');
+define('MATCH_DETAILS',				$db_prefix . 'match_details');
+define('MATCH_LINEUP',				$db_prefix . 'match_lineup');
+define('MATCH_USERS',				$db_prefix . 'match_users');
 
 //	Training
-define('TRAINING_TABLE',				$db_prefix.'training');
-define('TRAINING_COMMENTS_TABLE',		$db_prefix.'training_comments');
-define('TRAINING_COMMENTS_READ_TABLE',	$db_prefix.'training_comments_read');
-define('TRAINING_USERS_TABLE',			$db_prefix.'training_users');
+define('TRAINING',					$db_prefix . 'training');
+define('TRAINING_COMMENTS',			$db_prefix . 'training_comments');
+define('TRAINING_COMMENTS_READ',	$db_prefix . 'training_comments_read');
+define('TRAINING_USERS',			$db_prefix . 'training_users');
 
 ?>

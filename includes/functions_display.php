@@ -33,7 +33,7 @@ function display_teams()
 		$template->assign_block_vars('teams', array());
 	
 		$sql = 'SELECT t.team_id, t.team_name, t.team_fight, g.game_size, g.game_image
-					FROM ' . TEAMS_TABLE . ' t, ' . GAMES_TABLE . ' g
+					FROM ' . TEAMS . ' t, ' . GAMES . ' g
 					WHERE t.team_game = g.game_id AND team_navi = 1
 				ORDER BY t.team_order';
 		$teams = _cached($sql, 'display_subnavi_teams');
@@ -45,7 +45,7 @@ function display_teams()
 				$template->assign_block_vars('teams.teams_row', array(
 					'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 					'TEAM_NAME'		=> $teams[$i]['team_name'],
-					'TO_TEAM'		=> append_sid("teams.php?mode=view&amp;" . POST_TEAMS_URL . "=".$teams[$i]['team_id']),
+					'TO_TEAM'		=> append_sid("teams.php?mode=view&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
 				));
 			}
 		}
@@ -70,7 +70,7 @@ function display_newusers()
 	{
 		$template->assign_block_vars('new_users', array());
 		
-		$sql = 'SELECT user_id, username, user_color FROM ' . USERS_TABLE . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
+		$sql = 'SELECT user_id, username, user_color FROM ' . USERS . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
 //		$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
 		$result = $db->sql_query($sql);
 		$users = $db->sql_fetchrowset($result);
@@ -152,22 +152,22 @@ function display_minical()
 						$i = '0'.$i;
 					}
 					
-					$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 					$result = $db->sql_query($sql);
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT match_rival, match_date FROM ' . MATCH_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_w = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT training_vs, training_start FROM ' . TRAINING_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_t = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
@@ -194,22 +194,22 @@ function display_minical()
 					$i = '0'.$i;
 				}
 				
-				$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				$result = $db->sql_query($sql);
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT match_rival, match_date FROM ' . MATCH_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT training_vs, training_start FROM ' . TRAINING_TABLE . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_t = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -251,17 +251,17 @@ function display_minical()
 						$i = '0'.$i;
 					}
 					
-					$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 					$result = $db->sql_query($sql);
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT * FROM ' . MATCH_TABLE . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+					$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_w = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
@@ -287,17 +287,17 @@ function display_minical()
 					$i = '0'.$i;
 				}
 				
-				$sql = 'SELECT username, user_birthday FROM ' . USERS_TABLE . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				$result = $db->sql_query($sql);
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS_TABLE . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT * FROM ' . MATCH_TABLE . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'";
+				$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -576,13 +576,13 @@ function display_navimatch()
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$cache = 'calendar_' . $monat . '_match_member';
-		$sql = 'SELECT * FROM ' . MATCH_TABLE . ' WHERE match_date > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '".$monat."' ORDER BY match_date";
+		$sql = 'SELECT * FROM ' . MATCH . ' WHERE match_date > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '" . $monat."' ORDER BY match_date";
 		$month_rows_w = _cached($sql, $cache);
 	}
 	else
 	{
 		$cache = 'calendar_' . $monat . '_match_guest';
-		$sql = 'SELECT * FROM ' . MATCH_TABLE . ' WHERE match_date > ' . $time . " AND match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '".$monat."' ORDER BY match_date";
+		$sql = 'SELECT * FROM ' . MATCH . ' WHERE match_date > ' . $time . " AND match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '" . $monat."' ORDER BY match_date";
 		$month_rows_w = _cached($sql, $cache);
 	}
 	
@@ -595,7 +595,7 @@ function display_navimatch()
 			
 			$template->assign_block_vars('match.match_row', array(
 				'L_NAME'	=> $details,
-				'U_NAME'	=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$month_rows_w[$k]['match_id']),
+				'U_NAME'	=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $month_rows_w[$k]['match_id']),
 				'DATE'	=> $date,
 			));
 		}
@@ -618,7 +618,7 @@ function display_navitrain()
 	$monat = date("m", time());	//	Heutiger Monat
 	
 	$cache = 'calendar_' . $monat . '_training';
-	$sql = 'SELECT * FROM ' . TRAINING_TABLE . ' WHERE training_start > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(training_start), '%m') = '".$monat."' ORDER BY training_start";
+	$sql = 'SELECT * FROM ' . TRAINING . ' WHERE training_start > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(training_start), '%m') = '" . $monat."' ORDER BY training_start";
 	$month_rows_t = _cached($sql, $cache);
 	
 	if ($month_rows_t)
@@ -631,7 +631,7 @@ function display_navitrain()
 			
 			$template->assign_block_vars('training.training_row', array(
 				'L_NAME'	=> $details,
-				'U_NAME'	=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=".$month_rows_t[$k]['training_id']),
+				'U_NAME'	=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $month_rows_t[$k]['training_id']),
 				'DATE'		=> $date,
 				
 			));
@@ -648,17 +648,11 @@ function display_navi()
 	
 	if ( $userdata['session_logged_in'] )
 	{
-		$template->assign_block_vars('navi_user', array());
-		
-		$sql = 'SELECT * FROM ' . NAVIGATION_TABLE . ' WHERE navi_show = 1';
-		
-		$width = 476;
+		$sql = 'SELECT * FROM ' . NAVIGATION . ' WHERE navi_show = 1';
 	}
 	else
 	{
-		$sql = 'SELECT * FROM ' . NAVIGATION_TABLE . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
-		
-		$width = 578;
+		$sql = 'SELECT * FROM ' . NAVIGATION . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
 	}
 	$result = $db->sql_query($sql);
 	
@@ -666,6 +660,7 @@ function display_navi()
 	$template->assign_block_vars('navi_clan', array());
 	$template->assign_block_vars('navi_community', array());
 	$template->assign_block_vars('navi_misc', array());
+	$template->assign_block_vars('navi_user', array());
 	
 	while ( $navi = $db->sql_fetchrow($result) )
 	{
@@ -706,11 +701,6 @@ function display_navi()
 			'NAVI_TARGET'	=> $navi_target,
 		));
 	}
-
-	$template->assign_vars(array(
-		'WIDTH'		=> $width,
-	));
-	
 }
 
 //
@@ -723,10 +713,10 @@ function display_subnavi_match()
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					WHERE m.match_date < ' . time() . '
 				ORDER BY m.match_date ASC LIMIT 0,' . $settings['subnavi_last_matches'];
 		$match_last = _cached($sql, 'display_subnavi_matchs_member');
@@ -734,10 +724,10 @@ function display_subnavi_match()
 	else
 	{
 		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size
-					FROM ' . MATCH_TABLE . ' m
-						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+					FROM ' . MATCH . ' m
+						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					WHERE m.match_date < ' . time() . ' AND m.match_public = 1
 				ORDER BY m.match_date ASC LIMIT 0,' . $settings['subnavi_last_matches'];
 		$match_last = _cached($sql, 'display_subnavi_matchs_guest');
@@ -772,7 +762,7 @@ function display_subnavi_match()
 				'MATCH_GAME'	=> display_gameicon($match_last[$i]['game_size'], $match_last[$i]['game_image']),
 				'MATCH_NAME'	=> $match_name,
 				'MATCH_RESULT'	=> $clan . ':' . $rival,
-				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=".$match_last[$i]['match_id']),
+				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_last[$i]['match_id']),
 			));
 		}
 	}
@@ -795,11 +785,11 @@ function display_subnavi_news()
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT n.*, t.team_name, g.game_image, g.game_size
-					FROM ' . NEWS_TABLE . ' n
-						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					WHERE n.news_time_public < ' . time() . '
+					FROM ' . NEWS . ' n
+						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					WHERE n.news_time_public < ' . time() . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -812,11 +802,11 @@ function display_subnavi_news()
 	else
 	{
 		$sql = 'SELECT n.*, t.team_name, g.game_image, g.game_size
-					FROM ' . NEWS_TABLE . ' n
-						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0
+					FROM ' . NEWS . ' n
+						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{

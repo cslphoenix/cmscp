@@ -217,7 +217,7 @@ class emailer
 				{
 					$to = ' ';
 	
-					$sql = "UPDATE " . CONFIG_TABLE . " 
+					$sql = "UPDATE " . CONFIG . " 
 						SET config_value = '1'
 						WHERE config_name = 'sendmail_fix'";
 					if (!$db->sql_query($sql))
@@ -295,11 +295,11 @@ class emailer
 
 		if ( $mimetype == "message/rfc822" )
 		{
-			$this->mimeOut .= "From: ".$szFromAddress."\n";
-			$this->mimeOut .= "To: ".$this->emailAddress."\n";
+			$this->mimeOut .= "From: " . $szFromAddress."\n";
+			$this->mimeOut .= "To: " . $this->emailAddress."\n";
 			$this->mimeOut .= "Date: ".date("D, d M Y H:i:s") . " UT\n";
-			$this->mimeOut .= "Reply-To:".$szFromAddress."\n";
-			$this->mimeOut .= "Subject: ".$this->mailSubject."\n";
+			$this->mimeOut .= "Reply-To:" . $szFromAddress."\n";
+			$this->mimeOut .= "Subject: " . $this->mailSubject."\n";
 			$this->mimeOut .= "X-Mailer: PHP/".phpversion()."\n";
 			$this->mimeOut .= "MIME-Version: 1.0\n";
 		}

@@ -211,7 +211,7 @@ class tss2info
 		}
 		else
 		{
-			$codec = "unknown (".$codec.")";
+			$codec = "unknown (" . $codec.")";
 		}// end if
 		
 		return $codec;
@@ -228,35 +228,20 @@ class tss2info
 		
 		if ($this->socket == false)
 		{
-			if ($this->TS_debug_modus == 1)
-			{
-				echo "Es wird kein Server gefunden.<br><b>Scriptabbruch:</b> Der folgende Query Port ist falsch oder gesperrt: ".$this->serverQueryPort.""; // No Server
-				die;
-			}
-			else
-			{
-				return;
-			}
+			return;
+		
 		}
 		else
 		{
 			$this->serverStatus = "online";
 			
 			// select the one and only running server on port 8767
-			$this->sendQuery($this->socket, "sel ".$this->serverUDPPort);
+			$this->sendQuery($this->socket, "sel " . $this->serverUDPPort);
 			
 			// retrieve answer "OK"
 			if (!$this->getOK($this->socket))
 			{
-				if($this->TS_debug_modus == 1)
-				{
-					echo "Der Server antwortete nach der letzten Anfrage nicht mit OK.<br><b>Scriptabbruch:</b> Der folgende UPD Port ist falsch oder gesperrt: ".$this->serverUDPPort.""; // Server didn't answer \"OK\" after last command. Aborting.
-					die;
-				}
-				else
-				{
-					return;
-				}
+				return;
 			}// end if
 
 			// retrieve player list
