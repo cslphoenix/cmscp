@@ -1,12 +1,21 @@
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_WELCOME}</th>
+	<th>
+	<div id="navcontainer">
+		<ul id="navlist">
+			<li id="active"><a href="#" id="current">{L_WELCOME}</a></li>
+		</ul>
+	</div>
+	</th>
 </tr>
 <tr>
-	<td>{L_ADMIN_INTRO}</td>
+	<td class="row2">{L_ADMIN_INTRO}</td>
 </tr>
 </table>
 
+<br />
+
+<!--
 <table class="head" cellspacing="0">
 <tr>
 	<th>{L_VERSION_INFORMATION}</th>
@@ -24,6 +33,7 @@
 	<td></td>
 </tr>
 </table>
+-->
 <!--
 <table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
   <tr> 
@@ -63,7 +73,7 @@
 	<td class="row2"><b>{GZIP_COMPRESSION}</b></td>
   </tr>
 </table>
--->
+
 
 <br />
 
@@ -108,5 +118,5 @@
 		<td>&nbsp;</td>
 	</tr>
 </table>
-
+-->
 <br />

@@ -19,15 +19,16 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="2">{L_NEWS_TEAM}</td>
+	<td class="rowHead" colspan="2">{L_NEWS_NAME}</td>
 	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN news_row -->
 <tr>
-	<td class="{display.news_row.CLASS}" align="center">{display.news_row.I_IMAGE}</td>
+	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.I_IMAGE}{display.news_row.STATUS}</td>
 	<td class="{display.news_row.CLASS}" align="left">{display.news_row.NAME}</td>
-	<td class="{display.news_row.CLASS}" align="center" width="1%"><a href="{display.news_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.news_row.CLASS}" align="center" width="1%"><a href="{display.news_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.PUBLIC}</td>
+	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.EDIT}</td>		
+	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.DELETE}</td>
 </tr>
 <!-- END news_row -->
 <!-- BEGIN no_entry -->
@@ -85,6 +86,31 @@
 // ]]>
 </script>
 
+<script type="text/javascript" src="./../includes/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+tinyMCE.init({
+	language : "de",
+	theme : "advanced",
+	mode : "textareas",
+	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager",
+	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,removeformat,cleanup,code,preview",
+	theme_advanced_buttons2 : "",
+	theme_advanced_buttons3 : "",
+	plugin_preview_width : "500",
+	plugin_preview_height : "600",
+	theme_advanced_toolbar_location : "top",
+	theme_advanced_toolbar_align : "left",
+	theme_advanced_statusbar_location : "bottom",
+theme_advanced_resizing : true,
+	entity_encoding : "raw",
+	add_unload_trigger : false,
+	remove_linebreaks : false,
+	inline_styles : false,
+	convert_fonts_to_spans : false,
+	
+});
+</script>
+
 <form action="{S_NEWS_ACTION}" method="post" name="form">
 <table class="head" cellspacing="0">
 <tr>
@@ -119,7 +145,7 @@
 </tr>
 <tr>
 	<td class="row1">{L_NEWS_TEXT}:</td>
-	<td class="row2"><textarea class="textarea" name="news_text" rows="10" cols="80">{NEWS_TEXT}</textarea></td>
+	<td class="row2"><textarea class="textarea" name="news_text" rows="20" style="width:100%">{NEWS_TEXT}</textarea></td>
 </tr>
 
 <tr>
@@ -128,7 +154,7 @@
 		<table cellspacing="0">
 		<!-- BEGIN link_row -->
 		<tr>
-			<td class=""><input class="post" type="text" name="news_url[]" value="{link_row.NEWS_URL}">	<input class="post" type="text" name="news_name[]" value="{link_row.NEWS_NAME}"> <input  class="button2" type="button" value="eigentlich löschen ;)" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
+			<td class=""><input class="post" type="text" name="news_url[]" value="{news_edit.link_row.NEWS_URL}">	<input class="post" type="text" name="news_name[]" value="{news_edit.link_row.NEWS_NAME}"> <input  class="button2" type="button" value="eigentlich löschen ;)" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
 		</tr>
 		<!-- END link_row -->
 		</table>
@@ -145,10 +171,12 @@
 	<td class="row1">{L_NEWS_PUBLIC_TIME}:</td>
 	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}  </td>
 </tr>
+<!-- BEGIN public -->
 <tr>
 	<td class="row1">{L_NEWS_PUBLIC}:</td>
 	<td class="row3"><input type="radio" name="news_public" value="1" {S_CHECKED_PUBLIC_YES} /> {L_YES} <input type="radio" name="news_public" value="0" {S_CHECKED_PUBLIC_NO} /> {L_NO} </td>
 </tr>
+<!-- END public -->
 <tr>
 	<td class="row1">{L_NEWS_COMMENTS}:</td>
 	<td class="row3"><input type="radio" name="news_comments" value="1" {S_CHECKED_COMMENTS_YES} /> {L_YES} <input type="radio" name="news_comments" value="0" {S_CHECKED_COMMENTS_NO} /> {L_NO} </td>

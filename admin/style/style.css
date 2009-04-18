@@ -133,9 +133,9 @@ td.row3:hover {
 .button, .button:link, .button:visited, .button:active,
 .button2, .button2:link, .button2:visited, .button2:active{
 	font-family: Verdana, Geneva, sans-serif;
-	padding: 0px 5px;
+	padding: 1px 4px 1px;
 	color:	#000;
-	height: 17px;
+	height: auto;
 	background:	#F0EFEF;
 	border:	#000 1px solid;
 	font-size:10px;
@@ -144,7 +144,6 @@ td.row3:hover {
 .button:hover,
 .button2:hover{
 	color: #39F;
-	padding: 0px 5px;
 	border: #39F 1px solid;
 	background:	#FAFAFA;
 	
@@ -161,7 +160,8 @@ td.row3:hover {
 .post,
 .post:link,
 .post:visited,
-.post:active {
+.post:active,
+.select {
 	font-family: Verdana, Geneva, sans-serif;
 	color:	#000;
 	background:	#F0EFEF;
@@ -169,7 +169,8 @@ td.row3:hover {
 	padding: 1px;
 }
 
-.post:hover {
+.post:hover,
+.select:hover{
 	font-family: Verdana, Geneva, sans-serif;
 	color: #39F;
 	background:	#FAFAFA;

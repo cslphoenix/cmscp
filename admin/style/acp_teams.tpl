@@ -28,10 +28,10 @@
 	<td class="row_class1" align="center">{display.teams_row.TEAM_GAME}</td>
 	<td class="row_class1" align="left" width="100%">{display.teams_row.TEAM_NAME}</td>
 	<td class="row_class1" align="center" width="1%">{display.teams_row.TEAM_MEMBER_COUNT}</td>
-	<td class="row_class2" align="center" width="1%"><a href="{display.teams_row.U_MEMBER}">{L_TEAM_MEMBER}</a></td>
-	<td class="row_class2" align="center" width="1%"><a href="{display.teams_row.U_EDIT}">{L_TEAM_SETTING}</a></td>
-	<td class="row_class2" align="center" nowrap="nowrap"><a href="{display.teams_row.U_MOVE_UP}">{display.teams_row.ICON_UP}</a> <a href="{display.teams_row.U_MOVE_DOWN}">{display.teams_row.ICON_DOWN}</a></td>
-	<td class="row_class2" align="center" width="1%"><a href="{display.teams_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class2" align="center" nowrap="nowrap"><a href="{display.teams_row.U_MEMBER}">{L_MEMBER}</a></td>
+	<td class="row_class2" align="center" nowrap="nowrap"><a href="{display.teams_row.U_EDIT}">{L_TEAM_SETTING}</a></td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.teams_row.MOVE_UP} {display.teams_row.MOVE_DOWN}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><a href="{display.teams_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END teams_row -->
 <!-- BEGIN no_teams -->
@@ -50,7 +50,7 @@
 </form>
 <!-- END display -->
 
-<!-- BEGIN teams_edit -->
+<!-- BEGIN team_edit -->
 
 <script type="text/javascript">
 // <![CDATA[
@@ -69,7 +69,9 @@
 			<ul id="navlist">
 				<li><a href="{S_TEAM_ACTION}">{L_TEAM_TITLE}</a></li>
 				<li id="active"><a href="#" id="current">{L_TEAM_NEW_EDIT}</a></li>
+				<!-- BEGIN member -->
 				<li><a href="{S_TEAM_MEMBER}">{L_TEAM_MEMBER}</a></li>
+				<!-- END member -->
 			</ul>
 		</div>
 	</th>
@@ -83,7 +85,13 @@
 
 <table class="edit" cellspacing="1">
 <tr>
-	<th colspan="2">{L_TEAM_INFOS}</th>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_TEAM_INFOS}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
 	<td class="row1" width="160">{L_TEAM_NAME}: *</td>
@@ -107,7 +115,13 @@
 			<td valign="top">
 				<table class="edit" cellspacing="1">
 				<tr>
-					<th colspan="2">{L_MENU_SETTINGS}</th>
+					<th colspan="2">
+						<div id="navcontainer">
+							<ul id="navlist">
+								<li id="active"><a href="#" id="current">{L_MENU_SETTINGS}</a></li>
+							</ul>
+						</div>
+					</th>
 				</tr>
 				<tr>
 					<td class="row1" width="160">{L_TEAM_NAVI}:</td>
@@ -143,7 +157,13 @@
 				<!-- BEGIN logo_upload -->
 				<table class="edit" cellspacing="1" style="vertical-align:top;">
 				<tr>
-					<th colspan="2">{L_LOGO_SETTINGS}</th>
+					<th colspan="2">
+						<div id="navcontainer">
+							<ul id="navlist">
+								<li id="active"><a href="#" id="current">{L_LOGO_SETTINGS}</a></li>
+							</ul>
+						</div>
+					</th>
 				</tr>
 				<!-- BEGIN team_logo_upload -->
 				<tr>
@@ -182,9 +202,9 @@
 </table>
 {S_HIDDEN_FIELDS}
 </form>
-<!-- END teams_edit -->
+<!-- END team_edit -->
 
-<!-- BEGIN teams_member -->
+<!-- BEGIN team_member -->
 <form action="{S_TEAM_ACTION}" method="post" id="list" name="post">
 <table class="head" cellspacing="0">
 <tr>
@@ -214,15 +234,42 @@
 	<td class="rowHead" align="center">{L_RANK}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
-<!-- BEGIN members_row -->
 <tr>
-	<td class="{teams_member.members_row.CLASS}" align="left">{teams_member.members_row.USERNAME}</td>
-	<td class="{teams_member.members_row.CLASS}" align="center">{teams_member.members_row.REGISTER}</td>
-	<td class="{teams_member.members_row.CLASS}" align="center">{teams_member.members_row.JOINED}</td>
-	<td class="{teams_member.members_row.CLASS}" align="left">{teams_member.members_row.RANK}</td>
-	<td class="{teams_member.members_row.CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{teams_member.members_row.USER_ID}" /></td>
+	<td class="rowHead" colspan="7">{L_MODERATOR}</td>
 </tr>
-<!-- END members_row -->
+<!-- BEGIN mods_row -->
+<tr>
+	<td class="{team_member.mods_row.CLASS}" align="left">{team_member.mods_row.USERNAME}</td>
+	<td class="{team_member.mods_row.CLASS}" align="center">{team_member.mods_row.REGISTER}</td>
+	<td class="{team_member.mods_row.CLASS}" align="center">{team_member.mods_row.JOINED}</td>
+	<td class="{team_member.mods_row.CLASS}" align="left">{team_member.mods_row.RANK}</td>
+	<td class="{team_member.mods_row.CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{team_member.mods_row.USER_ID}" /></td>
+</tr>
+<!-- END mods_row -->
+<!-- BEGIN switch_no_moderators -->
+<tr>
+	<td colspan="7" class="row_class1" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
+</tr>
+<!-- END switch_no_moderators -->
+
+<tr>
+	<td class="rowHead" colspan="7">{L_MEMBER}</td>
+</tr>
+<!-- BEGIN nomods_row -->
+<tr>
+	<td class="{team_member.nomods_row.CLASS}" align="left">{team_member.nomods_row.USERNAME}</td>
+	<td class="{team_member.nomods_row.CLASS}" align="center">{team_member.nomods_row.REGISTER}</td>
+	<td class="{team_member.nomods_row.CLASS}" align="center">{team_member.nomods_row.JOINED}</td>
+	<td class="{team_member.nomods_row.CLASS}" align="left">{team_member.nomods_row.RANK}</td>
+	<td class="{team_member.nomods_row.CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{team_member.nomods_row.USER_ID}" /></td>
+</tr>
+<!-- END nomods_row -->
+<!-- BEGIN switch_no_members -->
+<tr>
+	<td colspan="7" class="row_class1" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
+</tr>
+<!-- END switch_no_members -->
+
 <!-- BEGIN no_members_row -->
 <tr>
 	<td class="row_class1" align="center" colspan="7">{NO_TEAMS}</td>
@@ -247,7 +294,13 @@
 <form action="{S_TEAM_ACTION}" method="post" name="post" id="list">
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_TEAM_TITLE} - {L_TEAM_ADD_MEMBER}</th>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_TEAM_ADD_MEMBER}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -255,21 +308,26 @@
 </table>
 
 <table class="edit" cellspacing="1">
-	<tr>
-		<td class="row1" width="40%"><b>{L_RANK}:</b></td>
-		<td class="row3" width="60%">{S_RANK_SELECT}</td>
-	</tr>
-	<tr>
-		<td class="row1" valign="top"><b>{L_TEAM_ADD}:</b><br /><span class="small">{L_TEAM_ADD_MEMBER_EX}</span></td>
-		<td class="row3"><textarea class="textarea" name="members" cols="80" rows="5"></textarea></td>
-	</tr>
-</table>
-
-<table class="foot" cellspacing="2">
 <tr>
-	<td align="right"><input type="submit" name="send" value="{L_SUBMIT}" class="button" /></td>
+	<td class="row1" width="25%"><b>{L_RANK}:</b></td>
+	<td class="row3" width="75%">{S_RANK_SELECT}</td>
 </tr>
+<tr>
+	<td class="row1" valign="top"><b>{L_TEAM_ADD}:</b><br /><span class="small">{L_TEAM_ADD_MEMBER_EX}</span></td>
+	<td class="row3">
+		<textarea class="textarea" name="members" cols="40" rows="5"></textarea>
+		<br /><br />
+		{S_ACTION_ADDUSERS}
+		<br /><br />
+		<input type="checkbox" name="mod" /> Moderatorstatus
+	</td>
+</tr>
+<tr>
+	<td class="row3">&nbsp;</td>
+	<td class="row3"><input type="submit" name="send" value="{L_SUBMIT}" class="button" /></td>
+</tr>
+
 </table>
 {S_HIDDEN_FIELDS2}
 </form>
-<!-- END teams_member -->
+<!-- END team_member -->

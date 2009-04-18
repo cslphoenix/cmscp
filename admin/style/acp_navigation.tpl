@@ -29,12 +29,12 @@
 		</tr>
 		<!-- BEGIN main_row -->
 		<tr>
-			<td class="{display.main_row.CLASS}" align="left">{display.main_row.NAVI_TITLE}</td>
-			<td class="{display.main_row.CLASS}" align="center" width="1%">{display.main_row.NAVI_LANG}</td>
-			<td class="{display.main_row.CLASS}" align="center" width="1%">{display.main_row.NAVI_SHOW}</td>
-			<td class="{display.main_row.CLASS}" align="center" width="1%"><a href="{display.main_row.U_EDIT}">{L_EDIT}</a></td>
-			<td class="{display.main_row.CLASS}" align="center" width="5%" nowrap><a href="{display.main_row.U_MOVE_UP}">{display.main_row.ICON_UP}</a> <a href="{display.main_row.U_MOVE_DOWN}">{display.main_row.ICON_DOWN}</a></td>
-			<td class="{display.main_row.CLASS}" align="center" width="1%"><a href="{display.main_row.U_DELETE}">{L_DELETE}</a></td>
+			<td class="{display.main_row.CLASS}" align="left" width="100%">{display.main_row.NAVI_TITLE}</td>
+			<td class="{display.main_row.CLASS}" align="center">{display.main_row.NAVI_LANG}</td>
+			<td class="{display.main_row.CLASS}" align="center">{display.main_row.NAVI_SHOW}</td>
+			<td class="{display.main_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.main_row.U_EDIT}">{L_EDIT}</a></td>
+			<td class="{display.main_row.CLASS}" align="center" nowrap="nowrap">{display.main_row.MOVE_UP} {display.main_row.MOVE_DOWN}</td>
+			<td class="{display.main_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.main_row.U_DELETE}">{L_DELETE}</a></td>
 		</tr>
 		<!-- END main_row -->
 		</table>
@@ -54,12 +54,12 @@
 		</tr>
 		<!-- BEGIN clan_row -->
 		<tr>
-			<td class="{display.clan_row.CLASS}" align="left">{display.clan_row.NAVI_TITLE}</td>
-			<td class="{display.clan_row.CLASS}" align="center" width="1%">{display.clan_row.NAVI_LANG}</td>
-			<td class="{display.clan_row.CLASS}" align="center" width="1%">{display.clan_row.NAVI_SHOW}</td>
-			<td class="{display.clan_row.CLASS}" align="center" width="1%"><a href="{display.clan_row.U_EDIT}">{L_EDIT}</a></td>
-			<td class="{display.clan_row.CLASS}" align="center" width="5%" nowrap><a href="{display.clan_row.U_MOVE_UP}">{display.clan_row.ICON_UP}</a> <a href="{display.clan_row.U_MOVE_DOWN}">{display.clan_row.ICON_DOWN}</a></td>
-			<td class="{display.clan_row.CLASS}" align="center" width="1%"><a href="{display.clan_row.U_DELETE}">{L_DELETE}</a></td>
+			<td class="{display.clan_row.CLASS}" align="left" width="100%">{display.clan_row.NAVI_TITLE}</td>
+			<td class="{display.clan_row.CLASS}" align="center">{display.clan_row.NAVI_LANG}</td>
+			<td class="{display.clan_row.CLASS}" align="center">{display.clan_row.NAVI_SHOW}</td>
+			<td class="{display.clan_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.clan_row.U_EDIT}">{L_EDIT}</a></td>
+			<td class="{display.clan_row.CLASS}" align="center" nowrap="nowrap">{display.clan_row.MOVE_UP} {display.clan_row.MOVE_DOWN}</td>
+			<td class="{display.clan_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.clan_row.U_DELETE}">{L_DELETE}</a></td>
 		</tr>
 		<!-- END clan_row -->
 		</table>
@@ -79,12 +79,12 @@
 		</tr>
 		<!-- BEGIN com_row -->
 		<tr>
-			<td class="{display.com_row.CLASS}" align="left">{display.com_row.NAVI_TITLE}</td>
-			<td class="{display.com_row.CLASS}" align="center" width="1%">{display.com_row.NAVI_LANG}</td>
-			<td class="{display.com_row.CLASS}" align="center" width="1%">{display.com_row.NAVI_SHOW}</td>
-			<td class="{display.com_row.CLASS}" align="center" width="1%"><a href="{display.com_row.U_EDIT}">{L_EDIT}</a></td>
-			<td class="{display.com_row.CLASS}" align="center" width="5%" nowrap><a href="{display.com_row.U_MOVE_UP}">{display.com_row.ICON_UP}</a> <a href="{display.com_row.U_MOVE_DOWN}">{display.com_row.ICON_DOWN}</a></td>
-			<td class="{display.com_row.CLASS}" align="center" width="1%"><a href="{display.com_row.U_DELETE}">{L_DELETE}</a></td>
+			<td class="{display.com_row.CLASS}" align="left" width="100%">{display.com_row.NAVI_TITLE}</td>
+			<td class="{display.com_row.CLASS}" align="center">{display.com_row.NAVI_LANG}</td>
+			<td class="{display.com_row.CLASS}" align="center">{display.com_row.NAVI_SHOW}</td>
+			<td class="{display.com_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.com_row.U_EDIT}">{L_EDIT}</a></td>
+			<td class="{display.com_row.CLASS}" align="center" nowrap="nowrap">{display.com_row.MOVE_UP} {display.com_row.MOVE_DOWN}</td>
+			<td class="{display.com_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.com_row.U_DELETE}">{L_DELETE}</a></td>
 		</tr>
 		<!-- END com_row -->
 		</table>
@@ -105,12 +105,12 @@
 		</tr>
 		<!-- BEGIN misc_row -->
 		<tr>
-			<td class="{display.misc_row.CLASS}" align="left">{display.misc_row.NAVI_TITLE}</td>
-			<td class="{display.misc_row.CLASS}" align="center" width="1%">{display.misc_row.NAVI_LANG}</td>
-			<td class="{display.misc_row.CLASS}" align="center" width="1%">{display.misc_row.NAVI_SHOW}</td>
-			<td class="{display.misc_row.CLASS}" align="center" width="1%"><a href="{display.misc_row.U_EDIT}">{L_EDIT}</a></td>
-			<td class="{display.misc_row.CLASS}" align="center" width="5%" nowrap><a href="{display.misc_row.U_MOVE_UP}">{display.misc_row.ICON_UP}</a> <a href="{display.misc_row.U_MOVE_DOWN}">{display.misc_row.ICON_DOWN}</a></td>
-			<td class="{display.misc_row.CLASS}" align="center" width="1%"><a href="{display.misc_row.U_DELETE}">{L_DELETE}</a></td>
+			<td class="{display.misc_row.CLASS}" align="left" width="100%">{display.misc_row.NAVI_TITLE}</td>
+			<td class="{display.misc_row.CLASS}" align="center">{display.misc_row.NAVI_LANG}</td>
+			<td class="{display.misc_row.CLASS}" align="center">{display.misc_row.NAVI_SHOW}</td>
+			<td class="{display.misc_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.misc_row.U_EDIT}">{L_EDIT}</a></td>
+			<td class="{display.misc_row.CLASS}" align="center" nowrap="nowrap">{display.misc_row.MOVE_UP} {display.misc_row.MOVE_DOWN}</td>
+			<td class="{display.misc_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.misc_row.U_DELETE}">{L_DELETE}</a></td>
 		</tr>
 		<!-- END misc_row -->
 		</table>
@@ -130,12 +130,12 @@
 		</tr>
 		<!-- BEGIN user_row -->
 		<tr>
-			<td class="{display.user_row.CLASS}" align="left">{display.user_row.NAVI_TITLE}</td>
-			<td class="{display.user_row.CLASS}" align="center" width="1%">{display.user_row.NAVI_LANG}</td>
-			<td class="{display.user_row.CLASS}" align="center" width="1%">{display.user_row.NAVI_SHOW}</td>
-			<td class="{display.user_row.CLASS}" align="center" width="1%"><a href="{display.user_row.U_EDIT}">{L_EDIT}</a></td>
-			<td class="{display.user_row.CLASS}" align="center" width="5%" nowrap><a href="{display.user_row.U_MOVE_UP}">{display.user_row.ICON_UP}</a> <a href="{display.user_row.U_MOVE_DOWN}">{display.user_row.ICON_DOWN}</a></td>
-			<td class="{display.user_row.CLASS}" align="center" width="1%"><a href="{display.user_row.U_DELETE}">{L_DELETE}</a></td>
+			<td class="{display.user_row.CLASS}" align="left" width="100%">{display.user_row.NAVI_TITLE}</td>
+			<td class="{display.user_row.CLASS}" align="center">{display.user_row.NAVI_LANG}</td>
+			<td class="{display.user_row.CLASS}" align="center">{display.user_row.NAVI_SHOW}</td>
+			<td class="{display.user_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.user_row.U_EDIT}">{L_EDIT}</a></td>
+			<td class="{display.user_row.CLASS}" align="center" nowrap="nowrap">{display.user_row.MOVE_UP} {display.user_row.MOVE_DOWN}</td>
+			<td class="{display.user_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.user_row.U_DELETE}">{L_DELETE}</a></td>
 		</tr>
 		<!-- END user_row -->
 		</table>
@@ -195,29 +195,29 @@
 <tr>
 	<td class="row1">{L_NAVI_LANGUAGE}:</td>
 	<td class="row2">
-		<input type="radio" name="navi_lang" value="0" {CHECKED_LANG_NO} /> {L_NO}
 		<input type="radio" name="navi_lang" value="1" {CHECKED_LANG_YES} /> {L_YES}
+		<input type="radio" name="navi_lang" value="0" {CHECKED_LANG_NO} /> {L_NO}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_NAVI_SHOW}:</td>
 	<td class="row2">
-		<input type="radio" name="navi_show" value="0" {CHECKED_SHOW_NO} /> {L_NO}
 		<input type="radio" name="navi_show" value="1" {CHECKED_SHOW_YES} /> {L_YES}
+		<input type="radio" name="navi_show" value="0" {CHECKED_SHOW_NO} /> {L_NO}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_NAVI_INTERN}:</td>
 	<td class="row2">
-		<input type="radio" name="navi_intern" value="0" {CHECKED_INTERN_NO} /> {L_NO}
 		<input type="radio" name="navi_intern" value="1" {CHECKED_INTERN_YES} /> {L_YES}
+		<input type="radio" name="navi_intern" value="0" {CHECKED_INTERN_NO} /> {L_NO}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_NAVI_TARGET}:</td>
 	<td class="row2">
-		<input type="radio" name="navi_target" value="1" {CHECKED_TARGET_NEW} /> {L_NAVI_NEW}
 		<input type="radio" name="navi_target" value="0" {CHECKED_TARGET_SELF} /> {L_NAVI_SELF}
+		<input type="radio" name="navi_target" value="1" {CHECKED_TARGET_NEW} /> {L_NAVI_NEW}
 	</td>
 </tr>
 <tr>

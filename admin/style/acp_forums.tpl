@@ -25,7 +25,7 @@
 	<tr>
 		<td class="rowHead" width="97%"><a href="{display.catrow.U_VIEWCAT}">{display.catrow.CAT_DESC}</a></td>
 		<td class="rowHead" width="97%"><a href="{display.catrow.U_PERMISSIONS}">{display.catrow.PERMISSIONS}</a></td>
-		<td class="rowHead" align="center" valign="middle" width="1%" nowrap><a class="small" href="{display.catrow.U_CAT_MOVE_UP}">{display.catrow.L_MOVE_UP}</a> <a class="small" href="{display.catrow.U_CAT_MOVE_DOWN}">{display.catrow.L_MOVE_DOWN}</a></td>
+		<td class="rowHead" align="center" valign="middle" width="1%" nowrap="nowrap"><a class="small" href="{display.catrow.U_CAT_MOVE_UP}">{display.catrow.L_MOVE_UP}</a> <a class="small" href="{display.catrow.U_CAT_MOVE_DOWN}">{display.catrow.L_MOVE_DOWN}</a></td>
 		<td class="rowHead" align="center" valign="middle" width="1%"><a class="small" href="{display.catrow.U_CAT_EDIT}">{L_EDIT}</a></td>
 		<td class="rowHead" align="center" valign="middle" width="1%"><a class="small" href="{display.catrow.U_CAT_DELETE}">{L_DELETE}</a></td>
 		<td class="rowHead" align="center" valign="middle" width="1%">&nbsp;</td>
@@ -33,8 +33,8 @@
 	<!-- BEGIN forumrow -->
 	<tr> 
 		<td class="{display.catrow.forumrow.CLASS}" width="100%"><span class="gen"><a href="{display.catrow.forumrow.U_VIEWFORUM}">{display.catrow.forumrow.FORUM_NAME}</a></span><br /><span class="small">{display.catrow.forumrow.FORUM_DESC}<br />{display.catrow.forumrow.NUM_TOPICS} / {display.catrow.forumrow.NUM_POSTS}</span></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap><a href="{display.catrow.forumrow.U_FORUM_PERMISSIONS}">{display.catrow.forumrow.PERMISSIONS}</a></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_MOVE_UP}">{display.catrow.forumrow.L_MOVE_UP}</a> <a href="{display.catrow.forumrow.U_FORUM_MOVE_DOWN}">{display.catrow.forumrow.L_MOVE_DOWN}</a></span></td>
+		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap="nowrap"><a href="{display.catrow.forumrow.U_FORUM_PERMISSIONS}">{display.catrow.forumrow.PERMISSIONS}</a></td>
+		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap="nowrap"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_MOVE_UP}">{display.catrow.forumrow.L_MOVE_UP}</a> <a href="{display.catrow.forumrow.U_FORUM_MOVE_DOWN}">{display.catrow.forumrow.L_MOVE_DOWN}</a></span></td>
 		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_EDIT}">{L_EDIT}</a></span></td>
 		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_DELETE}">{L_DELETE}</a></span></td>
 		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_RESYNC}">{L_RESYNC}</a></span></td>

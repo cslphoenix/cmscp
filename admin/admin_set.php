@@ -2,12 +2,24 @@
 
 /***
 
-	
-	admin_games.php
-	
-	Erstellt von Phoenix
-	
-	
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
 ***/
 
 if( !empty($setmodules) )
@@ -155,7 +167,7 @@ else
 	//
 	//	_config Data
 	//
-	$sql = 'SELECT * FROM ' . CONFIG_TABLE;
+	$sql = 'SELECT * FROM ' . CONFIG;
 	if (!$result = $db->sql_query($sql))
 	{
 		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
@@ -190,7 +202,7 @@ else
 					$new_config[$config_name] = implode(',', $new_config[$config_name]);
 				}
 				
-				$sql = 'UPDATE ' . CONFIG_TABLE . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
+				$sql = 'UPDATE ' . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
 				if (!$db->sql_query($sql))
 				{
 					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
@@ -202,7 +214,7 @@ else
 	//
 	//	_settings Data
 	//
-	$sql = 'SELECT * FROM ' . SETTINGS_TABLE;
+	$sql = 'SELECT * FROM ' . SETTINGS;
 	if (!$result = $db->sql_query($sql))
 	{
 		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
@@ -220,7 +232,7 @@ else
 
 			if( isset($HTTP_POST_VARS['submit']) )
 			{
-				$sql = 'UPDATE ' . SETTINGS_TABLE . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
+				$sql = 'UPDATE ' . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
 				if (!$db->sql_query($sql))
 				{
 					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
@@ -616,7 +628,7 @@ else
 		"S_CONFIG_ACTION" => append_sid("admin_set.php")
 	));
 
-	$template->pparse("body");
+	$template->pparse('body');
 
 	include('./page_footer_admin.php');
 }

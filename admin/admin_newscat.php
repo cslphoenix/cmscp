@@ -2,18 +2,30 @@
 
 /***
 
-	
-	admin_newscat.php
-	
-	Erstellt von Phoenix
-	
-	
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
 ***/
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($auth['auth_newscat'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_newscat'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['main']['newscat'] = $filename;
 	}
@@ -29,7 +41,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$auth['auth_newscat'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_newscat'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -142,17 +154,17 @@ else
 				
 				if ( $newscat_title == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
 				
-				$sql = 'SELECT MAX(news_category_order) AS max_order FROM ' . NEWS_CATEGORY_TABLE;
+				$sql = 'SELECT MAX(news_category_order) AS max_order FROM ' . NEWS_CATEGORY;
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 	
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 	
-				$sql = 'INSERT INTO ' . NEWS_CATEGORY_TABLE . " (news_category_title, news_category_image, news_category_order)
+				$sql = 'INSERT INTO ' . NEWS_CATEGORY . " (news_category_title, news_category_image, news_category_order)
 					VALUES ('" . str_replace("\'", "''", $newscat_title) . "', '" . str_replace("\'", "''", $newscat_image) . "', $next_order)";
 				if( !($result = $db->sql_query($sql)) )
 				{
@@ -173,10 +185,10 @@ else
 				
 				if ( $newscat_title == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
 
-				$sql = "UPDATE " . NEWS_CATEGORY_TABLE . " SET
+				$sql = "UPDATE " . NEWS_CATEGORY . " SET
 							news_category_title	= '" . str_replace("\'", "''", $newscat_title) . "',
 							news_category_image	= '" . str_replace("\'", "''", $newscat_image) . "'
 						WHERE news_category_id		= " . intval($HTTP_POST_VARS[POST_NEWSCAT_URL]);
@@ -196,7 +208,7 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . NEWS_CATEGORY_TABLE . " SET news_category_order = news_category_order + $move WHERE news_category_id = $news_category_id";
+				$sql = 'UPDATE ' . NEWS_CATEGORY . " SET news_category_order = news_category_order + $move WHERE news_category_id = $news_category_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
@@ -218,13 +230,13 @@ else
 				{	
 					$newscat = get_data('newscat', $news_category_id);
 					
-					$sql = 'UPDATE ' . NEWS_TABLE . ' SET news_category = 0 WHERE news_category = ' . $news_category_id;
+					$sql = 'UPDATE ' . NEWS . ' SET news_category = 0 WHERE news_category = ' . $news_category_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(GENERAL_ERROR, 'Error getting information', '', __LINE__, __FILE__, $sql);
 					}
 				
-					$sql = 'DELETE FROM ' . NEWS_CATEGORY_TABLE . ' WHERE news_category_id = ' . $news_category_id;
+					$sql = 'DELETE FROM ' . NEWS_CATEGORY . ' WHERE news_category_id = ' . $news_category_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
@@ -254,10 +266,10 @@ else
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['must_select_newscat']);
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_newscat']);
 				}
 				
-				$template->pparse("body");
+				$template->pparse('body');
 				
 				break;
 			
@@ -279,26 +291,25 @@ else
 	$template->assign_vars(array(
 		'L_NEWSCAT_TITLE'	=> $lang['newscat_head'],
 		'L_NEWSCAT_EXPLAIN'	=> $lang['newscat_explain'],
+		'L_NEWSCAT_NAME'	=> $lang['team_name'],
 		'L_NEWSCAT_ADD'		=> $lang['newscat_add'],
-		'L_SETTING'			=> $lang['setting'],
+		'L_SETTINGS'		=> $lang['settings'],
 		'L_EDIT'			=> $lang['edit'],
 		'L_DELETE'			=> $lang['delete'],
-		'L_MOVE_UP'			=> $lang['Move_up'], 
-		'L_MOVE_DOWN'		=> $lang['Move_down'], 
 		
 		'NEWSCAT_PATH'		=> $root_path . $settings['path_news_category'],
 		
 		'S_TEAM_ACTION'		=> append_sid("admin_newscat.php")
 	));
 	
-	$sql = 'SELECT * FROM ' . NEWS_CATEGORY_TABLE . ' ORDER BY news_category_order';
+	$sql = 'SELECT * FROM ' . NEWS_CATEGORY . ' ORDER BY news_category_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
 	}
 	$newscat_data = $db->sql_fetchrowset($result);
 	
-	$sql = 'SELECT MAX(news_category_order) AS max FROM ' . NEWS_CATEGORY_TABLE;
+	$sql = 'SELECT MAX(news_category_order) AS max FROM ' . NEWS_CATEGORY;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
@@ -326,20 +337,17 @@ else
 				'NEWSCAT_NAME'	=> $newscat_data[$i]['news_category_title'],
 				'NEWSCAT_IMAGE'	=> $newscat_data[$i]['news_category_image'],
 				
-				'ICON_UP'		=> $icon_up,
-				'ICON_DOWN'		=> $icon_down,
+				'MOVE_UP'		=> ( $newscat_data[$i]['news_category_order'] != '10' )				? '<a href="' . append_sid("admin_newscat.php?mode=order&amp;move=-15&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $newscat_data[$i]['news_category_order'] != $max_order['max'] )	? '<a href="' . append_sid("admin_newscat.php?mode=order&amp;move=15&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
 				'U_PUBLIC'		=> append_sid("admin_newscat.php?mode=public&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id),
 				'U_DELETE'		=> append_sid("admin_newscat.php?mode=delete&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id),
 				'U_EDIT'		=> append_sid("admin_newscat.php?mode=edit&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id),
-				
-				'U_MOVE_UP'		=> append_sid("admin_newscat.php?mode=order&amp;move=-15&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id),
-				'U_MOVE_DOWN'	=> append_sid("admin_newscat.php?mode=order&amp;move=15&amp;" . POST_NEWSCAT_URL . "=" . $newscat_id),
 			));
 		}
 	}
 	
-	$template->pparse("body");
+	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }

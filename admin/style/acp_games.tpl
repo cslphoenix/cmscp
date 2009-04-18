@@ -58,7 +58,6 @@
 </script>
 
 <form action="{S_GAME_ACTION}" method="post">
-	
 <table class="head" cellspacing="0">
 <tr>
 	<th>

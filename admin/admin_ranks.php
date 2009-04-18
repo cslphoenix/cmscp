@@ -2,18 +2,30 @@
 
 /***
 
-	
-	admin_ranks.php
-	
-	Erstellt von Phoenix
-	
-	
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
 ***/
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($auth['auth_ranks'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_ranks'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['main']['ranks_over'] = $filename;
 	}
@@ -29,7 +41,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$auth['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -137,7 +149,7 @@ else
 					'L_NO'					=> $lang['No'],
 					
 					'RANK_TITLE'			=> $rank['rank_title'],
-					'RANK_IMAGE'			=> ($mode == 'add') ? $root_path . 'images/spacer.gif' : $root_path . $settings['path_ranks'] . '/' . $rank['rank_image'],
+					'RANK_IMAGE'			=> ( $mode != 'add' ) ? ( $rank['rank_image'] ) ? $root_path . $settings['path_ranks'] . '/' . $rank['rank_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
 					'RANK_MIN'				=> $rank['rank_min'],
 					'RANKS_PATH'			=> $root_path . $settings['path_ranks'],
 					'CHECKED_TYPE_PAGE'		=> ($rank['rank_type'] == '1') ? ' checked="checked"' : '',
@@ -164,11 +176,11 @@ else
 				
 				if ( $rank_title == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['back'], '');
 				}
 	
 				$sql = 'SELECT MAX(rank_order) AS max_order
-							FROM ' . RANKS_TABLE . '
+							FROM ' . RANKS . '
 							WHERE rank_type = ' . intval($HTTP_POST_VARS['rank_type']);
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
@@ -176,7 +188,7 @@ else
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 				
-				$sql = 'INSERT INTO ' . RANKS_TABLE . " (rank_title, rank_type, rank_min, rank_special, rank_image, rank_order)
+				$sql = 'INSERT INTO ' . RANKS . " (rank_title, rank_type, rank_min, rank_special, rank_image, rank_order)
 					VALUES ('" . str_replace("\'", "''", $rank_title) . "', '" . intval($HTTP_POST_VARS['rank_type']) . "', $rank_min, $rank_special, '" . str_replace("\'", "''", $rank_image) . "', $next_order)";
 				$result = $db->sql_query($sql);
 				
@@ -196,10 +208,10 @@ else
 				
 				if ( $rank_title == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['back'], '');
 				}
 					
-				$sql = "UPDATE " . RANKS_TABLE . " SET
+				$sql = "UPDATE " . RANKS . " SET
 							rank_title		= '" . str_replace("\'", "''", $rank_title) . "',
 							rank_type		= '" . intval($HTTP_POST_VARS['rank_type']) . "',
 							rank_min		= $rank_min,
@@ -223,7 +235,7 @@ else
 				{	
 					$rank = get_data('rank', $rank_id, 0);
 				
-					$sql = 'DELETE FROM ' . RANKS_TABLE . " WHERE rank_id = $rank_id";
+					$sql = 'DELETE FROM ' . RANKS . " WHERE rank_id = $rank_id";
 					$result = $db->sql_query($sql);
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_delete', $rank['rank_title']);
@@ -252,10 +264,10 @@ else
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['must_select_rank']);
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_rank']);
 				}
 				
-				$template->pparse("body");
+				$template->pparse('body');
 				
 				break;
 			
@@ -263,7 +275,7 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . RANKS_TABLE . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
+				$sql = 'UPDATE ' . RANKS . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
 				$result = $db->sql_query($sql);
 		
 				renumber_order('ranks', RANK_PAGE);
@@ -278,7 +290,7 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . RANKS_TABLE . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
+				$sql = 'UPDATE ' . RANKS . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
 				$result = $db->sql_query($sql);
 		
 				renumber_order('ranks', RANK_FORUM);
@@ -293,7 +305,7 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . RANKS_TABLE . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
+				$sql = 'UPDATE ' . RANKS . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
 				$result = $db->sql_query($sql);
 		
 				renumber_order('ranks', RANK_TEAM);
@@ -334,28 +346,25 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
 		
-		'L_MOVE_UP'				=> $lang['Move_up'], 
-		'L_MOVE_DOWN'			=> $lang['Move_down'], 
-		
 		'S_RANKS_ACTION'		=> append_sid("admin_ranks.php")
 	));
 	
-	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_PAGE;
+	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS . ' WHERE rank_type = ' . RANK_PAGE;
 	$result = $db->sql_query($sql);
 	$max_page = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_FORUM;
+	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS . ' WHERE rank_type = ' . RANK_FORUM . ' AND rank_special = 1';
 	$result = $db->sql_query($sql);
 	$max_forum = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS_TABLE . ' WHERE rank_type = ' . RANK_TEAM;
+	$sql = 'SELECT MAX(rank_order) AS max FROM ' . RANKS . ' WHERE rank_type = ' . RANK_TEAM;
 	$result = $db->sql_query($sql);
 	$max_team = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT * FROM ' . RANKS_TABLE . ' ORDER BY rank_type ASC, rank_special DESC, rank_order ASC';
+	$sql = 'SELECT * FROM ' . RANKS . ' ORDER BY rank_type ASC, rank_special DESC, rank_order ASC';
 	$result = $db->sql_query($sql);
 	
 	$color = '';
@@ -369,21 +378,17 @@ else
 		
 		if ($row['rank_type'] == RANK_PAGE)
 		{
-			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
-			$icon_down	= ( $row['rank_order'] != $max_page['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
-			
 			$template->assign_block_vars('display.page_row', array(
 				'CLASS' 		=> $class,
 				'RANK_TITLE'	=> $row['rank_title'],
 				
-				'ICON_UP'		=> $icon_up,
-				'ICON_DOWN'		=> $icon_down,
+				'MOVE_UP'		=> ( $row['rank_order'] != '10' )				? '<a href="' . append_sid("admin_ranks.php?mode=order_page&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $row['rank_order'] != $max_page['max'] )	? '<a href="' . append_sid("admin_ranks.php?mode=order_page&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 
 				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
 				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
 				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_page&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_page&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				
 			));
 		}
 		else if ($row['rank_type'] == RANK_FORUM)
@@ -397,45 +402,38 @@ else
 				'RANK_MIN'		=> ($row['rank_special'] == '0') ? $row['rank_min'] : ' - ',
 				'RANK_SPECIAL'	=> ($row['rank_special'] == '1') ? $lang['Yes'] : $lang['No'],
 				
-				'ICON_UP'		=> $icon_up,
-				'ICON_DOWN'		=> $icon_down,
-				
-				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_forum&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_forum&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id),
-			));
-		}
-		else if ($row['rank_type'] == RANK_TEAM)
-		{
-			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
-			$icon_down	= ( $row['rank_order'] != $max_team['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
-			
-			$template->assign_block_vars('display.team_row', array(
-				'CLASS' 		=> $class,
-				'RANK_TITLE'	=> $row['rank_title'],
-				
-				'ICON_UP'		=> $icon_up,
-				'ICON_DOWN'		=> $icon_down,
+				'MOVE_UP'		=> ( $row['rank_order'] != '10' && $row['rank_special'] ) ? '<a href="' . append_sid("admin_ranks.php?mode=order_forum&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $row['rank_order'] != $max_forum['max'] && $row['rank_special'] )	? '<a href="' . append_sid("admin_ranks.php?mode=order_forum&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 
 				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
 				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
 				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_MOVE_UP'		=> append_sid("admin_ranks.php?mode=order_team&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id),
-				'U_MOVE_DOWN'	=> append_sid("admin_ranks.php?mode=order_team&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id),
+			));
+		}
+		else if ($row['rank_type'] == RANK_TEAM)
+		{
+			$template->assign_block_vars('display.team_row', array(
+				'CLASS' 		=> $class,
+				'RANK_TITLE'	=> $row['rank_title'],
+				
+				'MOVE_UP'		=> ( $row['rank_order'] != '10' )				? '<a href="' . append_sid("admin_ranks.php?mode=order_team&amp;move=-15&amp;" . POST_RANKS_URL . "=" . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $row['rank_order'] != $max_team['max'] )	? '<a href="' . append_sid("admin_ranks.php?mode=order_team&amp;move=15&amp;" . POST_RANKS_URL . "=" . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+
+				'U_MEMBER'		=> append_sid("admin_ranks.php?mode=member&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_DELETE'		=> append_sid("admin_ranks.php?mode=delete&amp;" . POST_RANKS_URL . "=" . $rank_id),
+				'U_EDIT'		=> append_sid("admin_ranks.php?mode=edit&amp;" . POST_RANKS_URL . "=" . $rank_id),
 			));
 		}
 		
 	}
 	
-	if ($db->sql_numrows($result) == 0)
+	if ( !$db->sql_numrows($result) )
 	{
 		$template->assign_block_vars('no_ranks', array());
 		$template->assign_vars(array('NO_RANKS' => $lang['rank_empty']));
 	}
 	
-	$template->pparse("body");
+	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }

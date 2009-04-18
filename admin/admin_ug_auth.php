@@ -23,8 +23,15 @@
 if( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	$module['permissions']['users'] = $filename . "?mode=user";
-	$module['permissions']['groups'] = $filename . "?mode=group";
+	if ( $userauth['auth_user_perm'] || $userdata['user_level'] == ADMIN )
+	{
+		$module['users']['permissions'] = $filename . "?mode=user";
+	}
+	
+	if ( $userauth['auth_groups_perm'] || $userdata['user_level'] == ADMIN )
+	{
+		$module['groups']['permissions'] = $filename . "?mode=group";
+	}
 
 	return;
 }
@@ -37,7 +44,7 @@ else
 	//
 	$root_path = './../';
 	require('./pagestart.php');
-
+	
 	$params = array('mode' => 'mode', 'user_id' => POST_USERS_URL, 'group_id' => POST_GROUPS_URL, 'adv' => 'adv');
 	
 	while( list($var, $param) = @each($params) )
@@ -56,6 +63,16 @@ else
 	$group_id	= intval($group_id);
 	$adv		= intval($adv);
 	$mode		= htmlspecialchars($mode);
+	
+	if ( $mode == 'user' && !$userauth['auth_user'] && $userdata['user_level'] != ADMIN)
+	{
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
+	}
+	
+	if ( $mode != 'user' && !$userauth['auth_groups'] && $userdata['user_level'] != ADMIN)
+	{
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
+	}
 	
 	//
 	// Start program - define vars
@@ -134,7 +151,7 @@ else
 			// Get group_id for this user_id
 			//
 			$sql = "SELECT g.group_id, u.user_level
-			FROM " . GROUPS_USER_TABLE . " ug, " . USERS_TABLE . " u, " . GROUPS_TABLE . " g
+			FROM " . GROUPS_USERS . " ug, " . USERS . " u, " . GROUPS . " g
 			WHERE u.user_id = $user_id 
 				AND ug.user_id = u.user_id 
 				AND g.group_id = ug.group_id 
@@ -162,7 +179,7 @@ else
 			//
 			if ( $userdata['user_id'] != $user_id )
 			{
-				$sql = "UPDATE " . USERS_TABLE . "
+				$sql = "UPDATE " . USERS . "
 					SET user_level = " . ADMIN . "
 					WHERE user_id = $user_id";
 				if ( !($result = $db->sql_query($sql)) )
@@ -170,7 +187,7 @@ else
 					message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
 				}
 	
-				$sql = "DELETE FROM " . AUTH_ACCESS_TABLE . "
+				$sql = "DELETE FROM " . AUTH_ACCESS . "
 					WHERE group_id = $group_id 
 						AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) )
@@ -182,7 +199,7 @@ else
 				// Delete any entries in auth_access, they are not required if user is becoming an
 				// admin
 				//
-				$sql = "UPDATE " . AUTH_ACCESS_TABLE . "
+				$sql = "UPDATE " . AUTH_ACCESS . "
 					SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0
 					WHERE group_id = $group_id"; 
 				if ( !($result = $db->sql_query($sql)) )
@@ -204,13 +221,13 @@ else
 				//
 				// Update users level, reset
 				//
-				$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . TRIAL . ' WHERE user_id = ' . $user_id; 
+				$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ' WHERE user_id = ' . $user_id; 
 				if (!$result = $db->sql_query($sql)) 
 				{
 					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$sql = "DELETE FROM " . AUTH_ACCESS_TABLE . " WHERE group_id = $group_id AND auth_mod = 0";
+				$sql = "DELETE FROM " . AUTH_ACCESS . " WHERE group_id = $group_id AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) ) 
 				{
 					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
@@ -220,7 +237,7 @@ else
 				// Delete any entries in auth_access, they are not required if user is becoming an 
 				// admin 
 				// 
-				$sql = 'UPDATE ' . AUTH_ACCESS_TABLE . ' 
+				$sql = 'UPDATE ' . AUTH_ACCESS . ' 
 							SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0 
 							WHERE group_id = ' . $group_id; 
 				if ( !($result = $db->sql_query($sql)) )
@@ -241,13 +258,13 @@ else
 				//
 				// Update users level, reset
 				//
-				$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . MEMBER . ' WHERE user_id = ' . $user_id; 
+				$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ' WHERE user_id = ' . $user_id; 
 				if (!$result = $db->sql_query($sql)) 
 				{
 					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$sql = "DELETE FROM " . AUTH_ACCESS_TABLE . " WHERE group_id = $group_id AND auth_mod = 0";
+				$sql = "DELETE FROM " . AUTH_ACCESS . " WHERE group_id = $group_id AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) ) 
 				{
 					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
@@ -257,7 +274,7 @@ else
 				// Delete any entries in auth_access, they are not required if user is becoming an 
 				// admin 
 				// 
-				$sql = 'UPDATE ' . AUTH_ACCESS_TABLE . ' 
+				$sql = 'UPDATE ' . AUTH_ACCESS . ' 
 							SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0 
 							WHERE group_id = ' . $group_id; 
 				if ( !($result = $db->sql_query($sql)) )
@@ -278,13 +295,13 @@ else
 				//
 				// Update users level, reset
 				//
-				$sql = 'UPDATE ' . USERS_TABLE . ' SET user_level = ' . MOD . ' WHERE user_id = ' . $user_id; 
+				$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ' WHERE user_id = ' . $user_id; 
 				if (!$result = $db->sql_query($sql)) 
 				{
 					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$sql = "DELETE FROM " . AUTH_ACCESS_TABLE . " WHERE group_id = $group_id AND auth_mod = 0";
+				$sql = "DELETE FROM " . AUTH_ACCESS . " WHERE group_id = $group_id AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) ) 
 				{
 					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
@@ -294,7 +311,7 @@ else
 				// Delete any entries in auth_access, they are not required if user is becoming an 
 				// admin 
 				// 
-				$sql = 'UPDATE ' . AUTH_ACCESS_TABLE . ' 
+				$sql = 'UPDATE ' . AUTH_ACCESS . ' 
 							SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0 
 							WHERE group_id = ' . $group_id; 
 				if ( !($result = $db->sql_query($sql)) )
@@ -315,7 +332,7 @@ else
 				//
 				if ( $userdata['user_id'] != $user_id )
 				{
-					$sql = "UPDATE " . AUTH_ACCESS_TABLE . "
+					$sql = "UPDATE " . AUTH_ACCESS . "
 						SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0
 						WHERE group_id = $group_id";
 					if ( !($result = $db->sql_query($sql)) )
@@ -326,7 +343,7 @@ else
 					//
 					// Update users level, reset to USER
 					//
-					$sql = "UPDATE " . USERS_TABLE . "
+					$sql = "UPDATE " . USERS . "
 						SET user_level = " . USER . "
 						WHERE user_id = $user_id";
 					if ( !($result = $db->sql_query($sql)) )
@@ -345,7 +362,7 @@ else
 				//
 				if ( $userdata['user_id'] != $user_id )
 				{
-					$sql = "UPDATE " . AUTH_ACCESS_TABLE . " 
+					$sql = "UPDATE " . AUTH_ACCESS . " 
 					 SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0 
 					 WHERE group_id = $group_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
@@ -356,7 +373,7 @@ else
 				  // 
 				  // Update users level, reset to USER 
 				  // 
-				  $sql = "UPDATE " . USERS_TABLE . " 
+				  $sql = "UPDATE " . USERS . " 
 					 SET user_level = " . USER . " 
 					 WHERE user_id = $user_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
@@ -375,7 +392,7 @@ else
 				//
 				if ( $userdata['user_id'] != $user_id )
 				{
-					$sql = "UPDATE " . AUTH_ACCESS_TABLE . " 
+					$sql = "UPDATE " . AUTH_ACCESS . " 
 					 SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0 
 					 WHERE group_id = $group_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
@@ -386,7 +403,7 @@ else
 				  // 
 				  // Update users level, reset to USER 
 				  // 
-				  $sql = "UPDATE " . USERS_TABLE . " 
+				  $sql = "UPDATE " . USERS . " 
 					 SET user_level = " . USER . " 
 					 WHERE user_id = $user_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
@@ -405,7 +422,7 @@ else
 				//
 				if ( $userdata['user_id'] != $user_id )
 				{
-					$sql = "UPDATE " . AUTH_ACCESS_TABLE . " 
+					$sql = "UPDATE " . AUTH_ACCESS . " 
 					 SET auth_view = 0, auth_read = 0, auth_post = 0, auth_reply = 0, auth_edit = 0, auth_delete = 0, auth_sticky = 0, auth_announce = 0 
 					 WHERE group_id = $group_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
@@ -416,7 +433,7 @@ else
 				  // 
 				  // Update users level, reset to USER 
 				  // 
-				  $sql = "UPDATE " . USERS_TABLE . " 
+				  $sql = "UPDATE " . USERS . " 
 					 SET user_level = " . USER . " 
 					 WHERE user_id = $user_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
@@ -434,7 +451,7 @@ else
 				if ( empty($adv) )
 				{
 					$sql = "SELECT f.* 
-						FROM " . FORUMS_TABLE . " f, " . CATEGORIES_TABLE . " c
+						FROM " . FORUMS . " f, " . CATEGORIES . " c
 						WHERE f.cat_id = c.cat_id
 						ORDER BY c.cat_order, f.forum_order ASC";
 					if ( !($result = $db->sql_query($sql)) )
@@ -485,7 +502,7 @@ else
 				}
 	
 				$sql = 'SELECT f.* 
-					FROM ' . FORUMS_TABLE . ' f, ' . CATEGORIES_TABLE . ' c
+					FROM ' . FORUMS . ' f, ' . CATEGORIES . ' c
 					WHERE f.cat_id = c.cat_id
 					ORDER BY c.cat_order, f.forum_order';
 				if ( !($result = $db->sql_query($sql)) )
@@ -500,7 +517,7 @@ else
 				}
 				$db->sql_freeresult($result);
 	
-				$sql = ( $mode == 'user' ) ? "SELECT aa.* FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " ug, " . GROUPS_TABLE. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = " . TRUE : "SELECT * FROM " . AUTH_ACCESS_TABLE . " WHERE group_id = $group_id";
+				$sql = ( $mode == 'user' ) ? "SELECT aa.* FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = " . TRUE : "SELECT * FROM " . AUTH_ACCESS . " WHERE group_id = $group_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
@@ -602,7 +619,7 @@ else
 						$sql_field .= ( ( $sql_field != '' ) ? ', ' : '' ) . 'auth_mod';
 						$sql_value .= ( ( $sql_value != '' ) ? ', ' : '' ) . ( ( !isset($update_mod_status[$forum_id]) ) ? 0 : $update_mod_status[$forum_id]);
 
-						$sql = "INSERT INTO " . AUTH_ACCESS_TABLE . " (forum_id, group_id, $sql_field) 
+						$sql = "INSERT INTO " . AUTH_ACCESS . " (forum_id, group_id, $sql_field) 
 							VALUES ($forum_id, $group_id, $sql_value)";
 					}
 					else
@@ -614,7 +631,7 @@ else
 						}
 						$sql_values .= ( ( $sql_values != '' ) ? ', ' : '' ) . 'auth_mod = ' . ( ( !isset($update_mod_status[$forum_id]) ) ? 0 : $update_mod_status[$forum_id]);
 
-						$sql = "UPDATE " . AUTH_ACCESS_TABLE . " 
+						$sql = "UPDATE " . AUTH_ACCESS . " 
 							SET $sql_values 
 							WHERE group_id = $group_id 
 								AND forum_id = $forum_id";
@@ -628,7 +645,7 @@ else
 	
 				if ( $delete_sql != '' )
 				{
-					$sql = "DELETE FROM " . AUTH_ACCESS_TABLE . " 
+					$sql = "DELETE FROM " . AUTH_ACCESS . " 
 						WHERE group_id = $group_id 
 							AND forum_id IN ($delete_sql)";
 					if( !($result = $db->sql_query($sql)) )
@@ -646,7 +663,7 @@ else
 			// Update user level to mod for appropriate users
 			// 
 			$sql = "SELECT u.user_id 
-				FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " ug, " . USERS_TABLE . " u  
+				FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " ug, " . USERS . " u  
 				WHERE ug.group_id = aa.group_id 
 					AND u.user_id = ug.user_id 
 					AND ug.user_pending = 0
@@ -669,9 +686,9 @@ else
 			// Update user level to user for appropriate users
 			// 
 			$sql = "SELECT u.user_id 
-				FROM ( ( " . USERS_TABLE . " u  
-				LEFT JOIN " . GROUPS_USER_TABLE . " ug ON ug.user_id = u.user_id ) 
-				LEFT JOIN " . AUTH_ACCESS_TABLE . " aa ON aa.group_id = ug.group_id ) 
+				FROM ( ( " . USERS . " u  
+				LEFT JOIN " . GROUPS_USERS . " ug ON ug.user_id = u.user_id ) 
+				LEFT JOIN " . AUTH_ACCESS . " aa ON aa.group_id = ug.group_id ) 
 				WHERE u.user_level NOT IN (" . USER . ", " . ADMIN . ", " . TRIAL . ", " . MEMBER . ", " . MOD . ")
 				GROUP BY u.user_id 
 				HAVING SUM(aa.auth_mod) = 0";
@@ -689,7 +706,7 @@ else
 	
 			if ( $set_mod != '' )
 			{
-				$sql = "UPDATE " . USERS_TABLE . " 
+				$sql = "UPDATE " . USERS . " 
 					SET user_level = " . MOD . " 
 					WHERE user_id IN ($set_mod)";
 				if( !($result = $db->sql_query($sql)) )
@@ -700,7 +717,7 @@ else
 	
 			if ( $unset_mod != '' )
 			{
-				$sql = "UPDATE " . USERS_TABLE . " 
+				$sql = "UPDATE " . USERS . " 
 					SET user_level = " . USER . " 
 					WHERE user_id IN ($unset_mod)";
 				if( !($result = $db->sql_query($sql)) )
@@ -709,7 +726,7 @@ else
 				}
 			}
 	
-			$sql = 'SELECT user_id FROM ' . GROUPS_USER_TABLE . "
+			$sql = 'SELECT user_id FROM ' . GROUPS_USERS . "
 				WHERE group_id = $group_id";
 			$result = $db->sql_query($sql);
 	
@@ -721,7 +738,7 @@ else
 			$db->sql_freeresult($result);
 	
 			$sql = "SELECT ug.user_id, COUNT(auth_mod) AS is_auth_mod 
-				FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " ug 
+				FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " ug 
 				WHERE ug.user_id IN (" . implode(', ', $group_user) . ") 
 					AND aa.group_id = ug.group_id 
 					AND aa.auth_mod = 1
@@ -742,7 +759,7 @@ else
 	
 			if (sizeof($group_user))
 			{
-				$sql = "UPDATE " . USERS_TABLE . " 
+				$sql = "UPDATE " . USERS . " 
 					SET user_level = " . USER . " 
 					WHERE user_id IN (" . implode(', ', $group_user) . ") AND user_level = " . MEMBER;
 				if ( !($result = $db->sql_query($sql)) )
@@ -771,7 +788,7 @@ else
 		// Front end
 		//
 		$sql = "SELECT f.* 
-			FROM " . FORUMS_TABLE . " f, " . CATEGORIES_TABLE . " c
+			FROM " . FORUMS . " f, " . CATEGORIES . " c
 			WHERE f.cat_id = c.cat_id
 			ORDER BY c.cat_order, f.forum_order ASC";
 		if ( !($result = $db->sql_query($sql)) )
@@ -806,7 +823,7 @@ else
 			}
 		}
 	
-		$sql = "SELECT u.user_id, u.username, u.user_level, g.group_id, g.group_name, g.group_single_user, ug.user_pending FROM " . USERS_TABLE . " u, " . GROUPS_TABLE . " g, " . GROUPS_USER_TABLE . " ug WHERE ";
+		$sql = "SELECT u.user_id, u.username, u.user_level, g.group_id, g.group_name, g.group_single_user, ug.user_pending FROM " . USERS . " u, " . GROUPS . " g, " . GROUPS_USERS . " ug WHERE ";
 		$sql .= ( $mode == 'user' ) ? "u.user_id = $user_id AND ug.user_id = u.user_id AND g.group_id = ug.group_id AND g.group_single_user = 0" : "g.group_id = $group_id AND ug.group_id = g.group_id AND u.user_id = ug.user_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -819,7 +836,7 @@ else
 		}
 		$db->sql_freeresult($result);
 	
-		$sql = ( $mode == 'user' ) ? "SELECT aa.*, g.group_single_user FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " ug, " . GROUPS_TABLE. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = 1" : "SELECT * FROM " . AUTH_ACCESS_TABLE . " WHERE group_id = $group_id";
+		$sql = ( $mode == 'user' ) ? "SELECT aa.*, g.group_single_user FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = 1" : "SELECT * FROM " . AUTH_ACCESS . " WHERE group_id = $group_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
@@ -1091,7 +1108,7 @@ else
 		//
 	
 		$template->set_filenames(array(
-			"body" => './../admin/style/auth_ug_body.tpl')
+			'body' => './../admin/style/auth_ug_body.tpl')
 		);
 	
 		$adv_switch = ( empty($adv) ) ? 1 : 0;
@@ -1144,26 +1161,47 @@ else
 	}
 	else
 	{
-		//
-		// Select a user/group
-		//
-		$template->set_filenames(array(
-			'body' => ( $mode == 'user' ) ? './../admin/style/user_select_body.tpl' : './../admin/style/auth_select_body.tpl')
-		);
-	
+		$template->set_filenames(array('body' => './../admin/style/acp_auth_select.tpl'));
+		
 		if ( $mode == 'user' )
 		{
-			$template->assign_vars(array(
-				'L_FIND_USERNAME' => $lang['Find_username'],
-	
-				'U_SEARCH_USER' => append_sid("../search.php?mode=searchuser"))
-			);
+			$template->assign_block_vars('user', array());
 		}
 		else
 		{
-			$sql = "SELECT group_id, group_name
-				FROM " . GROUPS_TABLE . "
-				WHERE group_single_user <> " . TRUE;
+			$template->assign_block_vars('group', array());
+		}
+		
+		if ( $mode == 'user' )
+		{
+			$sql = 'SELECT user_id, username
+						FROM ' . USERS . '
+						WHERE user_id <> ' . ANONYMOUS;
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);
+			}
+			
+			if ( $row = $db->sql_fetchrow($result) )
+			{
+				$u_select_list = '<select class="select" name="' . POST_USERS_URL . '">';
+				do
+				{
+					$u_select_list .= '<option value="' . $row['user_id'] . '">' . $row['username'] . '</option>';
+				}
+				while ( $row = $db->sql_fetchrow($result) );
+				$u_select_list .= '</select>';
+			}
+			
+			$template->assign_vars(array(
+				'S_USERS_SELECT' => $u_select_list
+			));
+		}
+		else
+		{
+			$sql = 'SELECT group_id, group_name
+						FROM ' . GROUPS . '
+						WHERE group_single_user <> ' . TRUE;
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message_die(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);
@@ -1171,23 +1209,23 @@ else
 	
 			if ( $row = $db->sql_fetchrow($result) )
 			{
-				$select_list = '<select name="' . POST_GROUPS_URL . '">';
+				$g_select_list = '<select class="select" name="' . POST_GROUPS_URL . '">';
 				do
 				{
-					$select_list .= '<option value="' . $row['group_id'] . '">' . $row['group_name'] . '</option>';
+					$g_select_list .= '<option value="' . $row['group_id'] . '">' . $row['group_name'] . '</option>';
 				}
 				while ( $row = $db->sql_fetchrow($result) );
-				$select_list .= '</select>';
+				$g_select_list .= '</select>';
 			}
 	
 			$template->assign_vars(array(
-				'S_AUTH_SELECT' => $select_list)
-			);
+				'S_GROUPS_SELECT' => $g_select_list
+			));
 		}
 	
 		$s_hidden_fields = '<input type="hidden" name="mode" value="' . $mode . '" />';
 	
-		$l_type = ( $mode == 'user' ) ? 'USER' : 'AUTH';
+		$l_type = ( $mode == 'user' ) ? 'USER' : 'GROUP';
 	
 		$template->assign_vars(array(
 			'L_' . $l_type . '_TITLE' => ( $mode == 'user' ) ? $lang['Auth_Control_User'] : $lang['Auth_Control_Group'],

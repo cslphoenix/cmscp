@@ -2,20 +2,32 @@
 
 /***
 
-	
-	admin_server.php
-	
-	Erstellt von Phoenix
-	
-	
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
 ***/
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($auth['auth_server'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_server'] || $userdata['user_level'] == ADMIN)
 	{
-		$module['main']['server'] = $filename;
+		$module['server']['gameserver'] = $filename;
 	}
 	return;
 }
@@ -31,7 +43,7 @@ else
 	include($root_path . 'includes/teamspeak_query.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$auth['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -151,7 +163,7 @@ else
 				
 				if ( $mode == 'edit' )
 				{
-					$sql = 'SELECT * FROM ' . SERVER_TABLE . ' WHERE server_id = ' . $server_id;
+					$sql = 'SELECT * FROM ' . SERVER . ' WHERE server_id = ' . $server_id;
 					$result = $db->sql_query($sql);
 			
 					if ( !($server = $db->sql_fetchrow($result)) )
@@ -242,7 +254,7 @@ else
 					message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
 				}
 	
-				$sql = 'SELECT MAX(server_order) AS max_order FROM ' . SERVER_TABLE . ' WHERE server_type = ' . intval($HTTP_POST_VARS['server_type']);
+				$sql = 'SELECT MAX(server_order) AS max_order FROM ' . SERVER . ' WHERE server_type = ' . intval($HTTP_POST_VARS['server_type']);
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 	
@@ -250,7 +262,7 @@ else
 				$next_order = $max_order + 10;
 				
 				// There is no problem having duplicate forum names so we won't check for it.
-				$sql = 'INSERT INTO ' . SERVER_TABLE . " (server_title, server_type, server_min, server_special, server_image, server_order)
+				$sql = 'INSERT INTO ' . SERVER . " (server_title, server_type, server_min, server_special, server_image, server_order)
 					VALUES ('" . str_replace("\'", "''", $server_title) . "', '" . intval($HTTP_POST_VARS['server_type']) . "', $server_min, $server_special, '" . str_replace("\'", "''", $server_image) . "', $next_order)";
 				if (!$result = $db->sql_query($sql))
 				{
@@ -276,7 +288,7 @@ else
 					message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
 				}
 
-				$sql = "UPDATE " . SERVER_TABLE . " SET
+				$sql = "UPDATE " . SERVER . " SET
 							server_title		= '" . str_replace("\'", "''", $server_title) . "',
 							server_type		= '" . intval($HTTP_POST_VARS['server_type']) . "',
 							server_min		= $server_min,
@@ -302,7 +314,7 @@ else
 				
 				if ( $server_id && $confirm )
 				{	
-					$sql = 'SELECT * FROM ' . SERVER_TABLE . " WHERE server_id = $server_id";
+					$sql = 'SELECT * FROM ' . SERVER . " WHERE server_id = $server_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(GENERAL_ERROR, 'Error getting team information', '', __LINE__, __FILE__, $sql);
@@ -313,7 +325,7 @@ else
 						message_die(GENERAL_MESSAGE, $lang['server_not_exist']);
 					}
 				
-					$sql = 'DELETE FROM ' . SERVER_TABLE . " WHERE server_id = $server_id";
+					$sql = 'DELETE FROM ' . SERVER . " WHERE server_id = $server_id";
 					if (!$result = $db->sql_query($sql))
 					{
 						message_die(GENERAL_ERROR, 'Could not delete team', '', __LINE__, __FILE__, $sql);
@@ -345,10 +357,10 @@ else
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['must_select_server']);
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_server']);
 				}
 				
-				$template->pparse("body");
+				$template->pparse('body');
 				
 				break;
 			
@@ -356,7 +368,7 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . SERVER_TABLE . " SET server_order = server_order + $move WHERE server_id = $server_id";
+				$sql = 'UPDATE ' . SERVER . " SET server_order = server_order + $move WHERE server_id = $server_id";
 				$result = $db->sql_query($sql);
 		
 				renumber_server('server');
@@ -379,7 +391,10 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/server_body.tpl'));
+	$template->set_filenames(array('body' => './../admin/style/acp_server.tpl'));
+	$template->assign_block_vars('display', array());
+	
+//	$template->set_filenames(array('body' => './../admin/style/server_body.tpl'));
 			
 	$template->assign_vars(array(
 		'L_SERVER_TITLE'	=> $lang['server'],
@@ -419,7 +434,7 @@ else
 	)
 	*/
 	
-	$sql = 'SELECT * FROM ' . SERVER_TABLE . ' WHERE server_type = ' . SERVER_GAME . '';
+	$sql = 'SELECT * FROM ' . SERVER . ' WHERE server_type = ' . SERVER_GAME . '';
 	$result = $db->sql_query($sql);
 	
 	$color = '';
@@ -437,10 +452,10 @@ else
 			'CLASS' 		=> $class,
 			'SERVER_NAME'	=> ($server['hostname']) ? $server['hostname'] : $row['server_name'],
 
-			'U_DELETE'		=> append_sid("admin_server.php?mode=delete&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_EDIT'		=> append_sid("admin_server.php?mode=edit&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_MOVE_UP'		=> append_sid("admin_server.php?mode=order_page&amp;move=-15&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_MOVE_DOWN'	=> append_sid("admin_server.php?mode=order_page&amp;move=15&amp;" . POST_SERVER_URL . "=".$row['server_id']),
+			'U_DELETE'		=> append_sid("admin_server.php?mode=delete&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_EDIT'		=> append_sid("admin_server.php?mode=edit&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_MOVE_UP'		=> append_sid("admin_server.php?mode=order_page&amp;move=-15&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_MOVE_DOWN'	=> append_sid("admin_server.php?mode=order_page&amp;move=15&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
 		));
 	}
 	
@@ -451,7 +466,7 @@ else
 	}
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT * FROM ' . SERVER_TABLE . ' WHERE server_type = ' . SERVER_VOICE;
+	$sql = 'SELECT * FROM ' . SERVER . ' WHERE server_type = ' . SERVER_VOICE;
 	$result = $db->sql_query($sql);
 	
 	while ( $row = $db->sql_fetchrow($result) )
@@ -463,11 +478,11 @@ else
 			'CLASS' 		=> $class,
 			'SERVER_TITLE'	=> $row['server_name'],
 
-			'U_MEMBER'		=> append_sid("admin_server.php?mode=member&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_DELETE'		=> append_sid("admin_server.php?mode=delete&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_EDIT'		=> append_sid("admin_server.php?mode=edit&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_MOVE_UP'		=> append_sid("admin_server.php?mode=order_page&amp;move=-15&amp;" . POST_SERVER_URL . "=".$row['server_id']),
-			'U_MOVE_DOWN'	=> append_sid("admin_server.php?mode=order_page&amp;move=15&amp;" . POST_SERVER_URL . "=".$row['server_id'])
+			'U_MEMBER'		=> append_sid("admin_server.php?mode=member&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_DELETE'		=> append_sid("admin_server.php?mode=delete&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_EDIT'		=> append_sid("admin_server.php?mode=edit&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_MOVE_UP'		=> append_sid("admin_server.php?mode=order_page&amp;move=-15&amp;" . POST_SERVER_URL . "=" . $row['server_id']),
+			'U_MOVE_DOWN'	=> append_sid("admin_server.php?mode=order_page&amp;move=15&amp;" . POST_SERVER_URL . "=" . $row['server_id'])
 		));
 	}
 	
@@ -478,7 +493,7 @@ else
 	}
 	$db->sql_freeresult($result);
 	
-	$template->pparse("body");
+	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }
