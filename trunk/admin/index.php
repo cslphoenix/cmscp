@@ -49,7 +49,7 @@ function inarray($needle, $haystack)
 
 
 	$template->set_filenames(array(
-		"body" => "./../admin/style/index_body.tpl")
+		'body' => "./../admin/style/index_body.tpl")
 	);
 
 	$template->assign_vars(array(
@@ -60,7 +60,7 @@ function inarray($needle, $haystack)
 		
 		'U_NEWS'			=> append_sid("admin_news.php"),
 		'U_TEAM'			=> append_sid("admin_teams.php"),
-		'U_USER'			=> append_sid("admin_users.php"),
+		'U_USER'			=> append_sid("admin_user.php"),
 		
 		"L_WELCOME" => $lang['Welcome_phpBB'],
 		"L_ADMIN_INTRO" => $lang['Admin_intro'],
@@ -295,7 +295,7 @@ function inarray($needle, $haystack)
 	);
 	*/
 	
-	$template->pparse("body");
+	$template->pparse('body');
 
 	include('./page_footer_admin.php');
 

@@ -36,8 +36,8 @@
 	<td class="{display.contact_row.CLASS}" align="center" width="1%">{display.contact_row.CONTACT_GAME}</td>
 	<td class="{display.contact_row.CLASS}" align="center" width="1%">{display.contact_row.CONTACT_TYPE}</td>
 	<td class="{display.contact_row.CLASS}" align="left" width="1%">{display.contact_row.CONTACT_STATUS}</td>
-	<td class="{display.contact_row.CLASS}" align="left" width="100%" nowrap>{display.contact_row.CONTACT_FROM}</td>
-	<td class="{display.contact_row.CLASS}" align="left" width="1%" nowrap>{display.contact_row.CONTACT_DATE}</td>
+	<td class="{display.contact_row.CLASS}" align="left" width="100%" nowrap="nowrap">{display.contact_row.CONTACT_FROM}</td>
+	<td class="{display.contact_row.CLASS}" align="left" width="1%" nowrap="nowrap">{display.contact_row.CONTACT_DATE}</td>
 
 	<td class="{display.contact_row.CLASS}" align="center" width="1%"><a href="{display.contact_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
@@ -125,8 +125,8 @@
 	<td class="{categorie.contact_row.CLASS}" align="center" width="1%">{categorie.contact_row.CONTACT_GAME}</td>
 	<td class="{categorie.contact_row.CLASS}" align="center" width="1%">{categorie.contact_row.CONTACT_TYPE}</td>
 	<td class="{categorie.contact_row.CLASS}" align="left" width="1%">{categorie.contact_row.CONTACT_STATUS}</td>
-	<td class="{categorie.contact_row.CLASS}" align="left" width="100%" nowrap>{categorie.contact_row.CONTACT_FROM}</td>
-	<td class="{categorie.contact_row.CLASS}" align="left" width="1%" nowrap>{categorie.contact_row.CONTACT_DATE}</td>
+	<td class="{categorie.contact_row.CLASS}" align="left" width="100%" nowrap="nowrap">{categorie.contact_row.CONTACT_FROM}</td>
+	<td class="{categorie.contact_row.CLASS}" align="left" width="1%" nowrap="nowrap">{categorie.contact_row.CONTACT_DATE}</td>
 
 	<td class="{categorie.contact_row.CLASS}" align="center" width="1%"><a href="{categorie.contact_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>

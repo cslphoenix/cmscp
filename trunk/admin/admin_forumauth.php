@@ -23,7 +23,10 @@
 if( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	$module['permissions']['forums']   = $filename;
+	if ( $userauth['auth_forum_auth'] || $userdata['user_level'] == ADMIN )
+	{
+		$module['forums']['permissions'] = $filename;
+	}
 
 	return;
 }
@@ -36,6 +39,11 @@ else
 	//
 	$root_path = './../';
 	require('./pagestart.php');
+	
+	if (!$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN)
+	{
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
+	}
 	
 	//
 	// Start program - define vars
@@ -119,7 +127,7 @@ else
 	
 				if (is_array($simple_ary))
 				{
-					$sql = "UPDATE " . FORUMS_TABLE . " SET $sql WHERE forum_id = $forum_id";
+					$sql = "UPDATE " . FORUMS . " SET $sql WHERE forum_id = $forum_id";
 				}
 			}
 			else
@@ -139,7 +147,7 @@ else
 					$sql .= ( ( $sql != '' ) ? ', ' : '' ) .$forum_auth_fields[$i] . ' = ' . $value;
 				}
 	
-				$sql = "UPDATE " . FORUMS_TABLE . " SET $sql WHERE forum_id = $forum_id";
+				$sql = "UPDATE " . FORUMS . " SET $sql WHERE forum_id = $forum_id";
 			}
 	
 			if ( $sql != '' )
@@ -168,7 +176,7 @@ else
 	// was
 	//
 	$sql = "SELECT f.*
-		FROM " . FORUMS_TABLE . " f, " . CATEGORIES_TABLE . " c
+		FROM " . FORUMS . " f, " . CATEGORIES . " c
 		WHERE c.cat_id = f.cat_id
 		$forum_sql
 		ORDER BY c.cat_order ASC, f.forum_order ASC";

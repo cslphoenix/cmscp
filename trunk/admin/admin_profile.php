@@ -89,7 +89,7 @@ else
 				if ( $mode == 'edit' )
 				{
 					$navi		= get_data('navi', $navi_id, 0);
-					$new_mode	= 'editnavi';
+					$new_mode	= 'editrank';
 				}
 				else if ( $mode == 'add' )
 				{
@@ -219,7 +219,7 @@ else
 
 				break;
 			
-			case 'editnavi':
+			case 'editrank':
 			
 				$navi_name		= ( isset($HTTP_POST_VARS['navi_name']) )	? trim($HTTP_POST_VARS['navi_name']) : '';
 				$navi_type		= ( isset($HTTP_POST_VARS['navi_type']))	? intval($HTTP_POST_VARS['navi_type']) : 0;
@@ -233,21 +233,11 @@ else
 				{
 					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
-				
-				$target = '';
-				if ( $navi_target == '0' )
-				{
-					$target = './';
-				}
-				else
-				{
-					set_http($navi_url);
-				}
 
 				$sql = "UPDATE " . NAVIGATION . " SET
 							navi_name		= '" . str_replace("\'", "''", $navi_name) . "',
 							navi_type		= $navi_type,
-							navi_url		= '" . $target . $navi_url . "',
+							navi_url		= './" . $navi_url . "',
 							navi_lang		= $navi_lang,
 							navi_show		= $navi_show,
 							navi_target		= $navi_target,
@@ -302,7 +292,7 @@ else
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_navigation']);
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_profile']);
 				}
 				
 				$template->pparse('body');

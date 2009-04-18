@@ -29,7 +29,7 @@
 <tr>
 	<td class="{display.training_row_n.CLASS}" align="center" width="1%">{display.training_row_n.I_IMAGE}</td>
 	<td class="{display.training_row_n.CLASS}" align="left" width="100%">{display.training_row_n.NAME}</td>
-	<td class="{display.training_row_n.CLASS}" align="center" nowrap>{display.training_row_n.TRAINING_DATE}</td>
+	<td class="{display.training_row_n.CLASS}" align="center" nowrap="nowrap">{display.training_row_n.TRAINING_DATE}</td>
 	<td class="{display.training_row_n.CLASS}" align="center" width="1%"><a href="{display.training_row_n.U_EDIT}">{L_SETTING}</a></td>		
 	<td class="{display.training_row_n.CLASS}" align="center" width="1%"><a href="{display.training_row_n.U_DELETE}">{L_DELETE}</a></td>
 </tr>
@@ -48,7 +48,7 @@
 <tr>
 	<td class="{display.training_row_o.CLASS}" align="center" width="1%">{display.training_row_o.I_IMAGE}</td>
 	<td class="{display.training_row_o.CLASS}" align="left" width="100%">{display.training_row_o.NAME}</td>
-	<td class="{display.training_row_o.CLASS}" align="center" nowrap>{display.training_row_o.TRAINING_DATE}</td>
+	<td class="{display.training_row_o.CLASS}" align="center" nowrap="nowrap">{display.training_row_o.TRAINING_DATE}</td>
 	<td class="{display.training_row_o.CLASS}" align="center" width="1%"><a href="{display.training_row_o.U_EDIT}">{L_SETTING}</a></td>		
 	<td class="{display.training_row_o.CLASS}" align="center" width="1%"><a href="{display.training_row_o.U_DELETE}">{L_DELETE}</a></td>
 </tr>

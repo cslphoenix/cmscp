@@ -2,18 +2,30 @@
 
 /***
 
-	
-	admin_games.php
-	
-	Erstellt von Phoenix
-	
-	
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
 ***/
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($auth['auth_games'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_games'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['main']['games_over'] = $filename;
 	}
@@ -29,7 +41,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$auth['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -140,17 +152,17 @@ else
 				
 				if ( $game_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
 	
-				$sql = 'SELECT MAX(game_order) AS max_order FROM ' . GAMES_TABLE;
+				$sql = 'SELECT MAX(game_order) AS max_order FROM ' . GAMES;
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 	
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 				
-				$sql = 'INSERT INTO ' . GAMES_TABLE . " (game_name, game_image, game_size, game_order)
+				$sql = 'INSERT INTO ' . GAMES . " (game_name, game_image, game_size, game_order)
 					VALUES ('" . str_replace("\'", "''", $game_name) . "', '" . str_replace("\'", "''", $game_image) . "', $game_size, $next_order)";
 				$result = $db->sql_query($sql);
 				
@@ -169,10 +181,10 @@ else
 				
 				if ( $game_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
 				
-				$sql = "UPDATE " . GAMES_TABLE . " SET
+				$sql = "UPDATE " . GAMES . " SET
 							game_name		= '" . str_replace("\'", "''", $game_name) . "',
 							game_image		= '" . str_replace("\'", "''", $game_image) . "',
 							game_size		= $game_size							
@@ -194,7 +206,7 @@ else
 				{	
 					$game = get_data('games', $game_id, 0);
 				
-					$sql = 'DELETE FROM ' . GAMES_TABLE . " WHERE game_id = $game_id";
+					$sql = 'DELETE FROM ' . GAMES . " WHERE game_id = $game_id";
 					$result = $db->sql_query($sql);
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_delete', $game['game_name']);
@@ -223,10 +235,10 @@ else
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['must_select_games']);
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_games']);
 				}
 				
-				$template->pparse("body");
+				$template->pparse('body');
 				
 				break;
 			
@@ -234,7 +246,7 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . GAMES_TABLE . " SET game_order = game_order + $move WHERE game_id = $game_id";
+				$sql = 'UPDATE ' . GAMES . " SET game_order = game_order + $move WHERE game_id = $game_id";
 				$result = $db->sql_query($sql);
 		
 				renumber_order('games', -1);
@@ -276,7 +288,7 @@ else
 		'S_GAME_ACTION'		=> append_sid("admin_games.php")
 	));
 	
-	$sql = 'SELECT MAX(game_order) AS max FROM ' . GAMES_TABLE;
+	$sql = 'SELECT MAX(game_order) AS max FROM ' . GAMES;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
@@ -284,7 +296,7 @@ else
 	$max_order = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT * FROM ' . GAMES_TABLE . ' WHERE game_id != -1 ORDER BY game_order';
+	$sql = 'SELECT * FROM ' . GAMES . ' WHERE game_id != -1 ORDER BY game_order';
 	$result = $db->sql_query($sql);
 	
 	$color = '';
@@ -320,7 +332,7 @@ else
 		$template->assign_vars(array('NO_GAMES' => $lang['game_empty']));
 	}
 	
-	$template->pparse("body");
+	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }

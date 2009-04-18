@@ -2,29 +2,29 @@
 <table class="row" cellspacing="0">
 <!-- BEGIN logs_row -->
 <tr>
-	<td class="{logs_row.CLASS}" rowspan="6" align="left" valign="top" nowrap><b>{logs_row.TIME}</b><br>Error ID: {logs_row.ERROR_ID}<br>User ID: {logs_row.ERROR_USERID}</td>
-	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap><b>Line:</b></td>
+	<td class="{logs_row.CLASS}" rowspan="6" align="left" valign="top" nowrap="nowrap"><b>{logs_row.TIME}</b><br>Error ID: {logs_row.ERROR_ID}<br>User ID: {logs_row.ERROR_USERID}</td>
+	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Line:</b></td>
 	<td class="{logs_row.CLASS}" align="left" valign="top">{logs_row.ERROR_FILE_LINE}<b> in File: </b>{logs_row.ERROR_FILE}</td>
 	<td class="{logs_row.CLASS}" rowspan="6" width="80" align="center"><a href="{DELETE}">{L_DELETE}</a></td>
 </tr>
 <tr>
-	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap><b>Error:</b></td>
+	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error:</b></td>
 	<td class="{logs_row.CLASS}" align="left" valign="top">{logs_row.ERROR_MSG_TITLE}</td>
 	</tr>
 <tr>
-	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap><b>Error Text:</b></td>
+	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error Text:</b></td>
 	<td class="{logs_row.CLASS}" align="left" valign="top">{logs_row.ERROR_MSG_TEXT}</td>
 	</tr>
 <tr>
-	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap><b>SQL Code:</b></td>
+	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Code:</b></td>
 	<td class="{logs_row.CLASS}" align="left" valign="top">{logs_row.ERROR_SQL_CODE}</td>
 	</tr>
 <tr>
-	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap><b>SQL Text:</b></td>
+	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Text:</b></td>
 	<td class="{logs_row.CLASS}" align="left" valign="top">{logs_row.ERROR_SQL_TEXT}</td>
 </tr>
 <tr>
-	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap><b>SQL Store:</b></td>
+	<td class="{logs_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Store:</b></td>
 	<td class="{logs_row.CLASS}" align="left" valign="top">{logs_row.ERROR_SQL_STORE}</td>
 </tr>
 <!-- END logs_row -->

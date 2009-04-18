@@ -19,16 +19,16 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="2">{L_NEWSCAT_TEAM}</td>
+	<td class="rowHead" colspan="2">{L_NEWSCAT_NAME}</td>
 	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN newscat_row -->
 <tr>
-	<td class="{display.newscat_row.CLASS}" align="left">{display.newscat_row.NEWSCAT_NAME}</td>
-	<td class="{display.newscat_row.CLASS}" align="center"><img src="{NEWSCAT_PATH}/{display.newscat_row.NEWSCAT_IMAGE}" alt=""></td>
-	<td class="{display.newscat_row.CLASS}" align="center" width="1%"><a href="{display.newscat_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.newscat_row.CLASS}" align="center" width="5%"><a href="{display.newscat_row.U_MOVE_UP}">{display.newscat_row.ICON_UP}</a> <a href="{display.newscat_row.U_MOVE_DOWN}">{display.newscat_row.ICON_DOWN}</a></td>
-	<td class="{display.newscat_row.CLASS}" align="center" width="1%"><a href="{display.newscat_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{display.newscat_row.CLASS}" align="left" nowrap="nowrap">{display.newscat_row.NEWSCAT_NAME}</td>
+	<td class="{display.newscat_row.CLASS}" align="center"><img width="50%" src="{NEWSCAT_PATH}/{display.newscat_row.NEWSCAT_IMAGE}" alt=""></td>
+	<td class="{display.newscat_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.newscat_row.U_EDIT}">{L_EDIT}</a></td>		
+	<td class="{display.newscat_row.CLASS}" align="center" nowrap="nowrap">{display.newscat_row.MOVE_UP} {display.newscat_row.MOVE_DOWN}</td>
+	<td class="{display.newscat_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.newscat_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END newscat_row -->
 <!-- BEGIN no_entry -->

@@ -2,35 +2,47 @@
 
 /***
 
-	
-	admin_contact.php
-	
-	Erstellt von Phoenix
-	
-	
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
 ***/
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ( $auth['auth_contact'] || $auth['auth_joinus'] || $auth['auth_fightus'] || $userdata['user_level'] == ADMIN)
+	if ( $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['contact']['contact_over'] = $filename;
 	}
-	if ( $auth['auth_contact'] || $userdata['user_level'] == ADMIN )
+	
+	if ( $userauth['auth_contact'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['contact']['contact'] = $filename . "?mode=contact";
-//		$module['contact']['contact'] = $filename;
 	}
-	if ( $auth['auth_joinus'] || $userdata['user_level'] == ADMIN )
+	
+	if ( $userauth['auth_joinus'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['contact']['contact_joinus'] = $filename . "?mode=joinus";
-//		$module['contact']['contact_joinus'] = $filename;
 	}
-	if ( $auth['auth_fightus'] || $userdata['user_level'] == ADMIN )
+	
+	if ( $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['contact']['contact_fightus'] = $filename . "?mode=fightus";
-//		$module['contact']['contact_fightus'] = $filename;
 	}
 
 	return;
@@ -74,19 +86,19 @@ else
 		$mode = '';
 	}
 	
-	if ( $mode == 'contact' && !$auth['auth_contact'] && $userdata['user_level'] != ADMIN)
+	if ( $mode == 'contact' && !$userauth['auth_contact'] && $userdata['user_level'] != ADMIN)
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail'] . '1');
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ( $mode == 'joinus' && (!$auth['auth_joinus'] && $userdata['user_level'] != ADMIN))
+	if ( $mode == 'joinus' && (!$userauth['auth_joinus'] && $userdata['user_level'] != ADMIN))
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail'] . '2');
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ( $mode == 'fightus' && !$auth['auth_fightus'] && $userdata['user_level'] != ADMIN)
+	if ( $mode == 'fightus' && !$userauth['auth_fightus'] && $userdata['user_level'] != ADMIN)
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail'] . '3');
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	$show_index = '';
@@ -102,17 +114,17 @@ else
 				$template->set_filenames(array('body' => './../admin/style/acp_contact.tpl'));
 				$template->assign_block_vars('categorie', array());
 				
-				if ( $auth['auth_contact'] || $userdata['user_level'] == ADMIN )
+				if ( $userauth['auth_contact'] || $userdata['user_level'] == ADMIN )
 				{
 					$template->assign_block_vars('categorie.contact', array());
 				}
 				
-				if ( $auth['auth_joinus'] || $userdata['user_level'] == ADMIN )
+				if ( $userauth['auth_joinus'] || $userdata['user_level'] == ADMIN )
 				{
 					$template->assign_block_vars('categorie.joinus', array());
 				}
 				
-				if ( $auth['auth_fightus'] || $userdata['user_level'] == ADMIN )
+				if ( $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 				{
 					$template->assign_block_vars('categorie.fightus', array());
 				}
@@ -172,9 +184,9 @@ else
 				));
 									
 				$sql = 'SELECT c.*, t.team_name, g.game_image, g.game_size
-						FROM ' . CONTACT_TABLE . ' c
-							LEFT JOIN ' . TEAMS_TABLE . ' t ON c.contact_team = t.team_id
-							LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+						FROM ' . CONTACT . ' c
+							LEFT JOIN ' . TEAMS . ' t ON c.contact_team = t.team_id
+							LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 							' . $where . '
 						ORDER BY c.contact_time DESC';
 				$result = $db->sql_query($sql);
@@ -219,7 +231,7 @@ else
 					'L_GOTO_PAGE' => $lang['Goto_page'])
 				);
 			
-				$template->pparse("body");
+				$template->pparse('body');
 				
 			break;
 			
@@ -262,24 +274,25 @@ else
 	));
 	
 	$where = '';
-	if ( $auth['auth_contact'] || $userdata['user_level'] == ADMIN )
+	if ( $userauth['auth_contact'] || $userdata['user_level'] == ADMIN )
 	{
 		$where .= ( isset($where) ) ? ' WHERE contact_type IN ( ' . CONTACT_NORMAL : ' WHERE contact_type IN ( ' . CONTACT_NORMAL;
 		$template->assign_block_vars('display.contact', array());
 	}
 	
-	if ( $auth['auth_joinus'] || $userdata['user_level'] == ADMIN )
+	if ( $userauth['auth_joinus'] || $userdata['user_level'] == ADMIN )
 	{
 		$where .= ( isset($where) ) ? ', ' . CONTACT_JOINUS : ' WHERE contact_type IN ( ' . CONTACT_JOINUS;
 		$template->assign_block_vars('display.joinus', array());
 	}
 	
-	if ( $auth['auth_fightus'] || $userdata['user_level'] == ADMIN )
+	if ( $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
 		$where .= ( isset($where) ) ? ', ' . CONTACT_FIGHTUS : ' WHERE contact_type IN ( ' . CONTACT_FIGHTUS;
-		$where .= ')';
+		
 		$template->assign_block_vars('display.fightus', array());
 	}
+	$where .= ')';
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
@@ -287,9 +300,9 @@ else
 	}
 	
 	$sql = 'SELECT c.*, t.team_name, g.game_image, g.game_size
-			FROM ' . CONTACT_TABLE . ' c
-				LEFT JOIN ' . TEAMS_TABLE . ' t ON c.contact_team = t.team_id
-				LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
+			FROM ' . CONTACT . ' c
+				LEFT JOIN ' . TEAMS . ' t ON c.contact_team = t.team_id
+				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 				' . $where . '
 			ORDER BY c.contact_time DESC';
 	$result = $db->sql_query($sql);
@@ -335,7 +348,7 @@ else
 		'L_GOTO_PAGE' => $lang['Goto_page'])
 	);
 
-	$template->pparse("body");
+	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }

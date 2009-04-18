@@ -40,6 +40,20 @@ if ( $config['gzip_compress'] )
 	}
 }
 
+$time_reg = '([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)';
+eregi($time_reg, $config['default_dateformat'], $regs);
+$config['default_timeformat'] = $regs[1];
+unset($time_reg);
+unset($regs);
+
+//
+// GET THE TIME TODAY AND YESTERDAY
+//
+$today_ary = explode('|', create_date('m|d|Y', time(), $config['board_timezone']));
+$config['time_today'] = gmmktime(0 - $config['board_timezone'] - $config['board_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+$config['time_yesterday'] = $config['time_today'] - 86400;
+unset($today_ary);
+
 $template->set_filenames(array('header' => './../admin/style/page_header.tpl'));
 
 // Format Timezone. We are unable to use array_pop here, because of PHP3 compatibility

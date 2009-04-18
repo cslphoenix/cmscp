@@ -30,7 +30,7 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($auth['auth_forum'] || $userdata['user_level'] == ADMIN)
+	if ($userauth['auth_forum'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['forums']['set'] = $filename;
 	}
@@ -48,7 +48,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 //	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$auth['auth_forum'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_forum'] && $userdata['user_level'] != ADMIN)
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -159,13 +159,13 @@ else
 		switch($mode)
 		{
 			case 'category':
-				$table = CATEGORIES_TABLE;
+				$table = CATEGORIES;
 				$idfield = 'cat_id';
 				$namefield = 'cat_title';
 				break;
 	
 			case 'forum':
-				$table = FORUMS_TABLE;
+				$table = FORUMS;
 				$idfield = 'forum_id';
 				$namefield = 'forum_name';
 				break;
@@ -209,13 +209,13 @@ else
 		switch($mode)
 		{
 			case 'category':
-				$table = CATEGORIES_TABLE;
+				$table = CATEGORIES;
 				$idfield = 'cat_id';
 				$namefield = 'cat_title';
 				break;
 	
 			case 'forum':
-				$table = FORUMS_TABLE;
+				$table = FORUMS;
 				$idfield = 'forum_id';
 				$namefield = 'forum_name';
 				break;
@@ -369,7 +369,7 @@ else
 					'FORUM_NAME' => $forumname,
 					'DESCRIPTION' => $forumdesc)
 				);
-				$template->pparse("body");
+				$template->pparse('body');
 				break;
 	
 			case 'createforum':
@@ -378,11 +378,11 @@ else
 				//
 				if( trim($HTTP_POST_VARS['forum_name']) == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['wrong_back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
 	
 				$sql = 'SELECT MAX(forum_order) AS max_order
-							FROM ' . FORUMS_TABLE . '
+							FROM ' . FORUMS . '
 							WHERE cat_id = ' . intval($HTTP_POST_VARS[POST_CAT_URL]);
 				if( !$result = $db->sql_query($sql) )
 				{
@@ -394,7 +394,7 @@ else
 				$next_order = $max_order + 10;
 				
 				$sql = 'SELECT MAX(forum_id) AS max_id
-							FROM ' . FORUMS_TABLE;
+							FROM ' . FORUMS;
 				if( !$result = $db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't get order number from forums table", "", __LINE__, __FILE__, $sql);
@@ -414,7 +414,7 @@ else
 					$value_sql .= ', ' . $forum_auth_ary[$i];
 				}
 	
-				$sql = "INSERT INTO " . FORUMS_TABLE . " (forum_id, forum_name, cat_id, forum_desc, forum_order, forum_status " . $field_sql . ")
+				$sql = "INSERT INTO " . FORUMS . " (forum_id, forum_name, cat_id, forum_desc, forum_order, forum_status " . $field_sql . ")
 					VALUES ('" . $next_id . "', '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_name']) . "', " . intval($HTTP_POST_VARS[POST_CAT_URL]) . ", '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_desc']) . "', $next_order, " . intval($HTTP_POST_VARS['forum_status']) . $value_sql . ")";
 				if( !$result = $db->sql_query($sql) )
 				{
@@ -440,7 +440,7 @@ else
 				if ( $get_cat_id != $cat_id )
 				{
 					$sql = 'SELECT MAX(forum_order) AS max_order
-								FROM ' . FORUMS_TABLE . '
+								FROM ' . FORUMS . '
 								WHERE cat_id = ' . intval($HTTP_POST_VARS[POST_CAT_URL]);
 					if( !$result = $db->sql_query($sql) )
 					{
@@ -465,7 +465,7 @@ else
 					}
 				}
 	
-				$sql = "UPDATE " . FORUMS_TABLE . "
+				$sql = "UPDATE " . FORUMS . "
 							SET
 								forum_name = '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_name']) . "',
 								cat_id = " . intval($HTTP_POST_VARS[POST_CAT_URL]) . ",
@@ -494,7 +494,7 @@ else
 				}
 	
 				$sql = "SELECT MAX(cat_order) AS max_order
-					FROM " . CATEGORIES_TABLE;
+					FROM " . CATEGORIES;
 				if( !$result = $db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't get order number from categories table", "", __LINE__, __FILE__, $sql);
@@ -507,7 +507,7 @@ else
 				//
 				// There is no problem having duplicate forum names so we won't check for it.
 				//
-				$sql = "INSERT INTO " . CATEGORIES_TABLE . " (cat_title, cat_order)
+				$sql = "INSERT INTO " . CATEGORIES . " (cat_title, cat_order)
 					VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['categoryname']) . "', $next_order)";
 				if( !$result = $db->sql_query($sql) )
 				{
@@ -550,13 +550,13 @@ else
 					'S_FORUM_ACTION' => append_sid("admin_forums.php"))
 				);
 				
-				$template->pparse("body");
+				$template->pparse('body');
 	
 				break;
 	
 			case 'modcat':
 				// Modify a category in the DB
-				$sql = "UPDATE " . CATEGORIES_TABLE . "
+				$sql = "UPDATE " . CATEGORIES . "
 					SET cat_title = '" . str_replace("\'", "''", $HTTP_POST_VARS['cat_title']) . "'
 					WHERE cat_id = " . intval($HTTP_POST_VARS[POST_CAT_URL]);
 				if( !$result = $db->sql_query($sql) )
@@ -587,7 +587,7 @@ else
 				$name = $foruminfo['forum_name'];
 	
 				$template->set_filenames(array(
-					"body" => "admin/forum_delete_body.tpl")
+					'body' => "admin/forum_delete_body.tpl")
 				);
 	
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $forum_id . '" />';
@@ -606,7 +606,7 @@ else
 					'S_SUBMIT_VALUE' => $buttonvalue)
 				);
 	
-				$template->pparse("body");
+				$template->pparse('body');
 				break;
 	
 			case 'movedelforum':
@@ -622,7 +622,7 @@ else
 				{
 					// Delete polls in this forum
 					$sql = "SELECT v.vote_id 
-						FROM " . VOTE_DESC_TABLE . " v, " . TOPICS_TABLE . " t 
+						FROM " . VOTE_DESC . " v, " . TOPICS . " t 
 						WHERE t.forum_id = $from_id 
 							AND v.topic_id = t.topic_id";
 					if (!($result = $db->sql_query($sql)))
@@ -639,15 +639,15 @@ else
 						}
 						while ($row = $db->sql_fetchrow($result));
 	
-						$sql = "DELETE FROM " . VOTE_DESC_TABLE . " 
+						$sql = "DELETE FROM " . VOTE_DESC . " 
 							WHERE vote_id IN ($vote_ids)";
 						$db->sql_query($sql);
 	
-						$sql = "DELETE FROM " . VOTE_RESULTS_TABLE . " 
+						$sql = "DELETE FROM " . VOTE_RESULTS . " 
 							WHERE vote_id IN ($vote_ids)";
 						$db->sql_query($sql);
 	
-						$sql = "DELETE FROM " . VOTE_USERS_TABLE . " 
+						$sql = "DELETE FROM " . VOTE_USERS . " 
 							WHERE vote_id IN ($vote_ids)";
 						$db->sql_query($sql);
 					}
@@ -659,7 +659,7 @@ else
 				else
 				{
 					$sql = "SELECT *
-						FROM " . FORUMS_TABLE . "
+						FROM " . FORUMS . "
 						WHERE forum_id IN ($from_id, $to_id)";
 					if( !$result = $db->sql_query($sql) )
 					{
@@ -670,14 +670,14 @@ else
 					{
 						message_die(GENERAL_ERROR, "Ambiguous forum ID's", "", __LINE__, __FILE__);
 					}
-					$sql = "UPDATE " . TOPICS_TABLE . "
+					$sql = "UPDATE " . TOPICS . "
 						SET forum_id = $to_id
 						WHERE forum_id = $from_id";
 					if( !$result = $db->sql_query($sql) )
 					{
 						message_die(GENERAL_ERROR, "Couldn't move topics to other forum", "", __LINE__, __FILE__, $sql);
 					}
-					$sql = "UPDATE " . POSTS_TABLE . "
+					$sql = "UPDATE " . POSTS . "
 						SET	forum_id = $to_id
 						WHERE forum_id = $from_id";
 					if( !$result = $db->sql_query($sql) )
@@ -689,7 +689,7 @@ else
 	
 				// Alter Mod level if appropriate - 2.0.4
 				$sql = "SELECT ug.user_id 
-					FROM " . AUTH_ACCESS_TABLE . " a, " . USER_GROUP_TABLE . " ug 
+					FROM " . AUTH_ACCESS . " a, " . USER_GROUP . " ug 
 					WHERE a.forum_id <> $from_id 
 						AND a.auth_mod = 1
 						AND ug.group_id = a.group_id";
@@ -708,7 +708,7 @@ else
 					while ($row = $db->sql_fetchrow($result));
 	
 					$sql = "SELECT ug.user_id 
-						FROM " . AUTH_ACCESS_TABLE . " a, " . USER_GROUP_TABLE . " ug 
+						FROM " . AUTH_ACCESS . " a, " . USER_GROUP . " ug 
 						WHERE a.forum_id = $from_id 
 							AND a.auth_mod = 1 
 							AND ug.group_id = a.group_id
@@ -727,7 +727,7 @@ else
 						}
 						while ($row = $db->sql_fetchrow($result2));
 	
-						$sql = "UPDATE " . USERS_TABLE . " 
+						$sql = "UPDATE " . USERS . " 
 							SET user_level = " . USER . " 
 							WHERE user_id IN ($user_ids) 
 								AND user_level <> " . ADMIN;
@@ -738,21 +738,21 @@ else
 				}
 				$db->sql_freeresult($result2);
 	
-				$sql = "DELETE FROM " . FORUMS_TABLE . "
+				$sql = "DELETE FROM " . FORUMS . "
 					WHERE forum_id = $from_id";
 				if( !$result = $db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't delete forum", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$sql = "DELETE FROM " . AUTH_ACCESS_TABLE . "
+				$sql = "DELETE FROM " . AUTH_ACCESS . "
 					WHERE forum_id = $from_id";
 				if( !$result = $db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't delete forum", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$sql = "DELETE FROM " . PRUNE_TABLE . "
+				$sql = "DELETE FROM " . PRUNE . "
 					WHERE forum_id = $from_id";
 				if( !$result = $db->sql_query($sql) )
 				{
@@ -779,7 +779,7 @@ else
 				if ($catinfo['number'] == 1)
 				{
 					$sql = "SELECT count(*) as total
-						FROM ". FORUMS_TABLE;
+						FROM ". FORUMS;
 					if( !$result = $db->sql_query($sql) )
 					{
 						message_die(GENERAL_ERROR, "Couldn't get Forum count", "", __LINE__, __FILE__, $sql);
@@ -804,7 +804,7 @@ else
 				}
 	
 				$template->set_filenames(array(
-					"body" => "admin/forum_delete_body.tpl")
+					'body' => "admin/forum_delete_body.tpl")
 				);
 	
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $cat_id . '" />';
@@ -823,7 +823,7 @@ else
 					'S_SUBMIT_VALUE' => $buttonvalue)
 				);
 	
-				$template->pparse("body");
+				$template->pparse('body');
 				break;
 	
 			case 'movedelcat':
@@ -836,7 +836,7 @@ else
 				if (!empty($to_id))
 				{
 					$sql = "SELECT *
-						FROM " . CATEGORIES_TABLE . "
+						FROM " . CATEGORIES . "
 						WHERE cat_id IN ($from_id, $to_id)";
 					if( !$result = $db->sql_query($sql) )
 					{
@@ -847,7 +847,7 @@ else
 						message_die(GENERAL_ERROR, "Ambiguous category ID's", "", __LINE__, __FILE__);
 					}
 	
-					$sql = "UPDATE " . FORUMS_TABLE . "
+					$sql = "UPDATE " . FORUMS . "
 						SET cat_id = $to_id
 						WHERE cat_id = $from_id";
 					if( !$result = $db->sql_query($sql) )
@@ -856,7 +856,7 @@ else
 					}
 				}
 	
-				$sql = "DELETE FROM " . CATEGORIES_TABLE ."
+				$sql = "DELETE FROM " . CATEGORIES ."
 					WHERE cat_id = $from_id";
 					
 				if( !$result = $db->sql_query($sql) )
@@ -881,7 +881,7 @@ else
 	
 				$cat_id = $forum_info['cat_id'];
 	
-				$sql = "UPDATE " . FORUMS_TABLE . "
+				$sql = "UPDATE " . FORUMS . "
 					SET forum_order = forum_order + $move
 					WHERE forum_id = $forum_id";
 				if( !$result = $db->sql_query($sql) )
@@ -901,7 +901,7 @@ else
 				$move = intval($HTTP_GET_VARS['move']);
 				$cat_id = intval($HTTP_GET_VARS[POST_CAT_URL]);
 	
-				$sql = "UPDATE " . CATEGORIES_TABLE . "
+				$sql = "UPDATE " . CATEGORIES . "
 					SET cat_order = cat_order + $move
 					WHERE cat_id = $cat_id";
 				if( !$result = $db->sql_query($sql) )
@@ -951,13 +951,13 @@ else
 		'S_FORUM_ACTION'	=> append_sid("admin_forums.php"),
 	));
 	
-	$sql = 'SELECT MAX(cat_order) AS max FROM ' . CATEGORIES_TABLE;
+	$sql = 'SELECT MAX(cat_order) AS max FROM ' . CATEGORIES;
 	$result = $db->sql_query($sql);
 	$max_cat = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
 	$sql = 'SELECT cat_id, cat_title, cat_order
-				FROM ' . CATEGORIES_TABLE . '
+				FROM ' . CATEGORIES . '
 				ORDER BY cat_order';
 	if( !$q_categories = $db->sql_query($sql) )
 	{
@@ -969,7 +969,7 @@ else
 		$category_rows = $db->sql_fetchrowset($q_categories);
 		
 		$sql = "SELECT *
-			FROM " . FORUMS_TABLE . "
+			FROM " . FORUMS . "
 			ORDER BY cat_id, forum_order";
 		if(!$q_forums = $db->sql_query($sql))
 		{
@@ -990,7 +990,7 @@ else
 		{
 			$cat_id = $category_rows[$i]['cat_id'];
 			
-			$sql = "SELECT MAX(forum_order) AS max$cat_id FROM " . FORUMS_TABLE . " WHERE cat_id = $cat_id";
+			$sql = "SELECT MAX(forum_order) AS max$cat_id FROM " . FORUMS . " WHERE cat_id = $cat_id";
 			$result = $db->sql_query($sql);
 			$max_forum = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -1057,7 +1057,7 @@ else
 	}// if ... total_categories
 }
 
-$template->pparse("body");
+$template->pparse('body');
 
 include('./page_footer_admin.php');
 

@@ -30,7 +30,7 @@
 <tr>
 	<td class="{display.match_row_n.CLASS}" align="center" width="1%">{display.match_row_n.MATCH_GAME}</td>
 	<td class="{display.match_row_n.CLASS}" align="left" width="100%">{display.match_row_n.MATCH_NAME}</td>
-	<td class="{display.match_row_n.CLASS}" align="center" nowrap>{display.match_row_n.MATCH_DATE}</td>
+	<td class="{display.match_row_n.CLASS}" align="center" nowrap="nowrap">{display.match_row_n.MATCH_DATE}</td>
 	<td class="{display.match_row_n.CLASS}" align="center"><a href="{display.match_row_n.U_TRAINING}">{display.match_row_n.TRAINING}</a></td>
 	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_EDIT}">{L_MATCH_SETTING}</a></td>
 	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
@@ -49,7 +49,7 @@
 <tr>
 	<td class="{display.match_row_o.CLASS}" align="center" width="1%">{display.match_row_o.MATCH_GAME}</td>
 	<td class="{display.match_row_o.CLASS}" align="left" width="100%">{display.match_row_o.MATCH_NAME}</td>
-	<td class="{display.match_row_o.CLASS}" align="center" nowrap>{display.match_row_n.MATCH_DATE}</td>
+	<td class="{display.match_row_o.CLASS}" align="center" nowrap="nowrap">{display.match_row_n.MATCH_DATE}</td>
 	<td class="{display.match_row_o.CLASS}" align="center"> - </td>
 	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_EDIT}">{L_MATCH_SETTING}</a></td>
 	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
