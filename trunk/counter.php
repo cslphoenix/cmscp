@@ -49,7 +49,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 			else
 			{
 				// Prüfen, ob zu dem ausgewählten Datum ein Counter existiert 
-				$sql = 'SELECT COUNT(*) FROM ' . COUNTER_COUNTER_TABLE . ' 
+				$sql = 'SELECT COUNT(*) FROM ' . COUNTER_COUNTER . ' 
 						WHERE
 							YEAR(counter_date)			= ' . ($HTTP_POST_VARS['year']) . ' AND 
 							MONTH(counter_date)			= ' . ($HTTP_POST_VARS['month']) . ' AND 
@@ -127,7 +127,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	$select_year .= '</select>';
 	
 	$sql = 'SELECT counter_entry
-				FROM ' . COUNTER_COUNTER_TABLE . '
+				FROM ' . COUNTER_COUNTER . '
 				WHERE
 					YEAR(counter_date) = "'.$year.'" AND
 					MONTH(counter_date) = "'.$month.'" AND
@@ -136,7 +136,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	$anzahl_tag = (int) $row_day['counter_entry'];
 	
     $sql = 'SELECT SUM(counter_entry) AS sum
-				FROM ' . COUNTER_COUNTER_TABLE . '
+				FROM ' . COUNTER_COUNTER . '
 				WHERE 
 					YEAR(counter_date) = "'.$year.'" AND
 					MONTH(counter_date) = "'.$month.'"'; 
@@ -144,14 +144,14 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	$anzahl_monat = (int) $row_month['sum'];
 
     $sql = 'SELECT SUM(counter_entry) AS sum
-				FROM ' . COUNTER_COUNTER_TABLE . '
+				FROM ' . COUNTER_COUNTER . '
 				WHERE YEAR(counter_date) = "'.$year.'"';
 	$row_year = _cached($sql, 'counter_year_' . $day . $month . $year, 1);
 	$anzahl_jahr = (int) $row_year['sum'];
 	
 	$diagramme = array();
     $diagramme['Tag'] = array();
-    $diagramme['Tag']['Name'] = $Monatsnamen[$month]." ".$year;
+    $diagramme['Tag']['Name'] = $Monatsnamen[$month]." " . $year;
 	$diagramme['Tag']['Hoehe'] = 20;
     $diagramme['Tag']['Breite'] = 200;
     $diagramme['Tag']['Balken'] = 200;
@@ -185,11 +185,11 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	for ( $i=1; $i<=$stellen; $i++ )
 	{
 		$sql = "SELECT counter_entry
-					FROM " . COUNTER_COUNTER_TABLE . "
+					FROM " . COUNTER_COUNTER . "
 					WHERE
-						YEAR(counter_date) = ".$year." AND
-						MONTH(counter_date) = ".$month." AND
-						DAYOFMONTH(counter_date) = ".$i."";
+						YEAR(counter_date) = " . $year." AND
+						MONTH(counter_date) = " . $month." AND
+						DAYOFMONTH(counter_date) = " . $i."";
 		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
@@ -215,10 +215,10 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	for ($i=1; $i<=12; $i++)
 	{
 		$sql = "SELECT SUM(counter_entry) AS sum
-					FROM " . COUNTER_COUNTER_TABLE . "
+					FROM " . COUNTER_COUNTER . "
 					WHERE
-						YEAR(counter_date) = '".$year."' AND
-						MONTH(counter_date) = '".$i."'";
+						YEAR(counter_date) = '" . $year."' AND
+						MONTH(counter_date) = '" . $i."'";
 		if( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
@@ -243,7 +243,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 		$sql = 'SELECT
 					SUM(counter_entry) AS sum
 				FROM 
-                     ' . COUNTER_COUNTER_TABLE . '
+                     ' . COUNTER_COUNTER . '
                 WHERE 
                      YEAR(counter_date) = "'.$i.'"';
 		if( !($result = $db->sql_query($sql)) )

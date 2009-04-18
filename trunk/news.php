@@ -55,14 +55,14 @@ if ($mode == '')
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
-					FROM ' . NEWS_TABLE . ' n
-						LEFT JOIN ' . USERS_TABLE . ' u ON n.user_id = u.user_id
-						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWS_CATEGORY_TABLE . ' nc ON n.news_category = nc.news_category_id
-					WHERE n.news_time_public < ' . time() . '
+					FROM ' . NEWS . ' n
+						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
+						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+						LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
+					WHERE n.news_time_public < ' . time() . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -74,14 +74,14 @@ if ($mode == '')
 	else
 	{
 		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
-					FROM ' . NEWS_TABLE . ' n
-						LEFT JOIN ' . USERS_TABLE . ' u ON n.user_id = u.user_id
-						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWS_CATEGORY_TABLE . ' nc ON n.news_category = nc.news_category_id
-					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0
+					FROM ' . NEWS . ' n
+						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
+						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+						LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
+					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -90,6 +90,8 @@ if ($mode == '')
 		$news_data = $db->sql_fetchrowset($result);
 //		$news_data = _cached($sql, 'news_list_guest');
 	}
+	
+//	_debug_post($news_data);
 	
 	if ( !$news_data )
 	{
@@ -101,6 +103,7 @@ if ($mode == '')
 		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($news_data)); $i++)
 		{
 			$class = ($i % 2) ? 'row1' : 'row2';
+			$news_date = create_date($userdata['user_dateformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone']); 
 			
 			if ( $config['time_today'] < $news_data[$i]['news_time_public'])
 			{ 
@@ -117,12 +120,9 @@ if ($mode == '')
 				'NEWS_TITLE'		=> $news_data[$i]['news_title'],
 				'NEWS_TEXT'			=> html_entity_decode($news_data[$i]['news_text'], ENT_QUOTES),
 				'NEWS_COMMENTS'		=> $news_data[$i]['news_comment'],
-				'NEWS_AUTHOR'		=> '<a class="small" href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $news_data[$i]['user_id']) . '" style="color:#' . $news_data[$i]['user_color'] . '"><b>' . $news_data[$i]['username'] . '</b></a>',
+				'NEWS_AUTHOR'		=> '<a href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $news_data[$i]['user_id']) . '" style="color:' . $news_data[$i]['user_color'] . '"><b>' . $news_data[$i]['username'] . '</b></a>',
 				'NEWS_PUBLIC_TIME'	=> $news_date,
-				'NEWS_URL1'			=> $news_data[$i]['news_url1'],
-				'NEWS_LINK1'		=> $news_data[$i]['news_link1'],
-				'NEWS_URL2'			=> $news_data[$i]['news_url2'],
-				'NEWS_LINK2'		=> $news_data[$i]['news_link2'],
+				
 				
 				'NEWSCAT_TITLE'		=> ( $news_data[$i]['news_category_title'] ) ? $news_data[$i]['news_category_title'] : '',
 				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news_data[$i]['news_category_image'] : '',
@@ -131,13 +131,30 @@ if ($mode == '')
 				
 			));
 			
-			if ( $news_data[$i]['news_url1'] )
+			if ( unserialize($news_data[$i]['news_url']) )
 			{
+				$links		= array();
+				$news_url	= unserialize($news_data[$i]['news_url']);
+				$news_link	= unserialize($news_data[$i]['news_link']);
+				
+				foreach ( $news_url as $u_key => $u_value )
+				{
+					foreach ( $news_link as $l_key => $l_value )
+					{
+						if ( $u_key == $l_key )
+						{
+							$links[] .= '<a href="' . $u_value . '" target="_new">' . $l_value . '</a>';
+						}
+					}
+				}
+				
+				$links = implode(', ', $links);
+					
+	//			_debug_post($links);
+				
 				$template->assign_block_vars('news_row.links', array(
-					'NEWS_URL1'		=> $news_data[$i]['news_url1'],
-					'NEWS_LINK1'	=> $news_data[$i]['news_link1'],
-					'NEWS_URL2'		=> $news_data[$i]['news_url2'],
-					'NEWS_LINK2'	=> $news_data[$i]['news_link2'],
+					'L_LINK'	=> ( count($news_url) > 1 ) ? $lang['news_info_urls'] : $lang['news_info_url'],
+					'NEWS_LINK'	=> $links,
 				));
 			}
 			
@@ -167,13 +184,13 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
 	{
 		$sql = 'SELECT n.*, u.username, u.user_color
-					FROM ' . NEWS_TABLE . ' n
-						LEFT JOIN ' . USERS_TABLE . ' u ON n.user_id = u.user_id
-						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-					WHERE n.news_time_public < ' . time() . ' AND n.news_id = ' . $news_id . '
+					FROM ' . NEWS . ' n
+						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
+						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+					WHERE n.news_time_public < ' . time() . ' AND n.news_id = ' . $news_id . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -185,13 +202,13 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 	else
 	{
 		$sql = 'SELECT n.*, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
-					FROM ' . NEWS_TABLE . ' n
-						LEFT JOIN ' . USERS_TABLE . ' u ON n.user_id = u.user_id
-						LEFT JOIN ' . MATCH_TABLE . ' m ON n.match_id = m.match_id
-						LEFT JOIN ' . TEAMS_TABLE . ' t ON m.team_id = t.team_id
-						LEFT JOIN ' . GAMES_TABLE . ' g ON t.team_game = g.game_id
-						LEFT JOIN ' . MATCH_DETAILS_TABLE . ' md ON m.match_id = md.match_id
-					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND n.news_id = ' . $news_id . '
+					FROM ' . NEWS . ' n
+						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
+						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
+						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
+					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND n.news_id = ' . $news_id . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -218,8 +235,8 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 		$template->assign_block_vars('news_comments', array());
 		
 		$sql = 'SELECT mc.*, u.username, u.user_email
-					FROM ' . NEWS_COMMENTS_TABLE . ' mc
-						LEFT JOIN ' . USERS_TABLE . ' u ON mc.poster_id = u.user_id
+					FROM ' . NEWS_COMMENTS . ' mc
+						LEFT JOIN ' . USERS . ' u ON mc.poster_id = u.user_id
 					WHERE news_id = ' . $news_id . ' ORDER BY time_create DESC';
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -231,7 +248,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 		if ( $userdata['session_logged_in'] )
 		{
 			$sql = 'SELECT read_time
-						FROM ' . NEWS_COMMENTS_READ_TABLE . '
+						FROM ' . NEWS_COMMENTS_READ . '
 						WHERE user_id = ' . $userdata['user_id'] . ' AND news_id = ' . $news_id;
 			$result = $db->sql_query($sql);
 			$unread = $db->sql_fetchrow($result);
@@ -240,7 +257,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 			{
 				$unreads = false;
 				
-				$sql = 'UPDATE ' . NEWS_COMMENTS_READ_TABLE . '
+				$sql = 'UPDATE ' . NEWS_COMMENTS_READ . '
 							SET read_time = ' . time() . '
 						WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];
 				$result = $db->sql_query($sql);
@@ -249,7 +266,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 			{
 				$unreads = true;
 				
-				$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ_TABLE . ' (news_id, user_id, read_time)
+				$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
 					VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 				$result = $db->sql_query($sql);
 			}
@@ -295,8 +312,8 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 					
 					'ICON'			=> $icon,
 	
-					'U_EDIT'		=> append_sid("news.php?mode=edit&amp;" . POST_NEWS_URL . "=".$comment_entry[$i]['news_id']),
-					'U_DELETE'		=> append_sid("news.php?mode=delete&amp;" . POST_NEWS_URL . "=".$comment_entry[$i]['news_id'])
+					'U_EDIT'		=> append_sid("news.php?mode=edit&amp;" . POST_NEWS_URL . "=" . $comment_entry[$i]['news_id']),
+					'U_DELETE'		=> append_sid("news.php?mode=delete&amp;" . POST_NEWS_URL . "=" . $comment_entry[$i]['news_id'])
 				));
 			}
 		
@@ -393,7 +410,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 			if ( !$error )
 			{
 				//	Test: hier werden/sollen Kommentare als gelesen markiert werden
-				$sql = 'SELECT * FROM ' . NEWS_COMMENTS_READ_TABLE . ' WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];
+				$sql = 'SELECT * FROM ' . NEWS_COMMENTS_READ . ' WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -401,7 +418,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				if ( $db->sql_numrows($result) )
 				{
-					$sql = 'UPDATE ' . NEWS_COMMENTS_READ_TABLE . '
+					$sql = 'UPDATE ' . NEWS_COMMENTS_READ . '
 								SET read_time = ' . time() . '
 							WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];					
 					if ( !($result = $db->sql_query($sql)) )
@@ -411,7 +428,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				}
 				else
 				{				
-					$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ_TABLE . ' (news_id, user_id, read_time)
+					$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
 						VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 					if ( !($result = $db->sql_query($sql)) )
 					{

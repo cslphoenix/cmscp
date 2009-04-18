@@ -23,7 +23,7 @@ $start = ($start < 0) ? 0 : $start;
 if ( !empty($forum_id) )
 {
 	$sql = "SELECT *
-		FROM " . FORUMS_TABLE . "
+		FROM " . FORUMS . "
 		WHERE forum_id = $forum_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -62,7 +62,7 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 }
 
 $sql = "SELECT u.user_id, u.username, u.user_color 
-	FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " gu, " . GROUPS_TABLE . " g, " . USERS_TABLE . " u
+	FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g, " . USERS . " u
 	WHERE aa.forum_id = $forum_id 
 		AND aa.auth_mod = " . TRUE . " 
 		AND g.group_single_user = 1
@@ -83,7 +83,7 @@ while( $row = $db->sql_fetchrow($result) )
 }
 //	AND g.group_type <> ". GROUP_HIDDEN ."
 $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
-	FROM " . AUTH_ACCESS_TABLE . " aa, " . GROUPS_USER_TABLE . " gu, " . GROUPS_TABLE . " g 
+	FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g 
 	WHERE aa.forum_id = $forum_id
 		AND aa.auth_mod = " . TRUE . " 
 		AND g.group_single_user = 0
@@ -131,7 +131,7 @@ if ( $is_auth['auth_mod'] )
 // on each viewforum page ...
 //
 $sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as id2, p.post_time, p.post_username
-	FROM " . TOPICS_TABLE . " t, " . USERS_TABLE . " u, " . POSTS_TABLE . " p, " . USERS_TABLE . " u2
+	FROM " . TOPICS . " t, " . USERS . " u, " . POSTS . " p, " . USERS . " u2
 	WHERE t.forum_id = $forum_id 
 		AND t.topic_poster = u.user_id
 		AND p.post_id = t.topic_last_post_id
@@ -158,7 +158,7 @@ $db->sql_freeresult($result);
 // for this forum
 //
 $sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as id2, p.post_username, p2.post_username AS post_username2, p2.post_time 
-	FROM " . TOPICS_TABLE . " t, " . USERS_TABLE . " u, " . POSTS_TABLE . " p, " . POSTS_TABLE . " p2, " . USERS_TABLE . " u2
+	FROM " . TOPICS . " t, " . USERS . " u, " . POSTS . " p, " . POSTS . " p2, " . USERS . " u2
 	WHERE t.forum_id = $forum_id
 		AND t.topic_poster = u.user_id
 		AND p.post_id = t.topic_first_post_id
@@ -477,7 +477,7 @@ else
 
 }
 
-$template->pparse("body");
+$template->pparse('body');
 	
 include($root_path . 'includes/page_tail.php');
 

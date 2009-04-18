@@ -37,7 +37,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		$password = isset($HTTP_POST_VARS['password']) ? $HTTP_POST_VARS['password'] : '';
 
 		$sql = "SELECT user_id, username, user_password, user_active, user_level, user_login_tries, user_last_login_try
-			FROM " . USERS_TABLE . "
+			FROM " . USERS . "
 			WHERE username = '" . str_replace("\\'", "''", $username) . "'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -50,14 +50,14 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			$disable_mode = explode(',', $config['page_disable_mode']);
 			if ($config['page_disable'] && $row['user_level'] != ADMIN && in_array($row['user_level'], $disable_mode))
 			{
-				redirect(append_sid("index.php", true));
+				redirect(append_sid("news.php", true));
 			}
 			else
 			{
 				// If the last login is more than x minutes ago, then reset the login tries/time
 				if ($row['user_last_login_try'] && $config['login_reset_time'] && $row['user_last_login_try'] < (time() - ($config['login_reset_time'] * 60)))
 				{
-					$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_login_tries = 0, user_last_login_try = 0 WHERE user_id = ' . $row['user_id']);
+					$db->sql_query('UPDATE ' . USERS . ' SET user_login_tries = 0, user_last_login_try = 0 WHERE user_id = ' . $row['user_id']);
 					$row['user_last_login_try'] = $row['user_login_tries'] = 0;
 				}
 				
@@ -72,7 +72,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				{
 					if ( isset($HTTP_POST_VARS['admin']) && $userdata['username'] != $username )
 					{
-						$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+						$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
 						message_die(GENERAL_MESSAGE, $message);
 					}
 					$autologin = ( isset($HTTP_POST_VARS['autologin']) ) ? TRUE : 0;
@@ -81,7 +81,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					$session_id = session_begin($row['user_id'], $user_ip, PAGE_INDEX, FALSE, $autologin, $admin);
 
 					// Reset login tries
-					$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_login_tries = 0, user_last_login_try = 0 WHERE user_id = ' . $row['user_id']);
+					$db->sql_query('UPDATE ' . USERS . ' SET user_login_tries = 0, user_last_login_try = 0 WHERE user_id = ' . $row['user_id']);
 					
 					if (isset($HTTP_POST_VARS['admin']))
 					{
@@ -92,7 +92,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 
 					if( $session_id )
 					{
-						$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "index.php";
+						$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "ucp.php";
 						redirect(append_sid($url, true));
 					}
 					else
@@ -106,7 +106,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					// Save login tries and last login
 					if ($row['user_id'] != ANONYMOUS)
 					{
-						$sql = 'UPDATE ' . USERS_TABLE . '
+						$sql = 'UPDATE ' . USERS . '
 							SET user_login_tries = user_login_tries + 1, user_last_login_try = ' . time() . '
 							WHERE user_id = ' . $row['user_id'];
 						$db->sql_query($sql);
@@ -130,7 +130,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				
 				$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
-				$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+				$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
 
 				message_die(GENERAL_MESSAGE, $message);
 			}
@@ -152,11 +152,9 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_login_false');
 			}
 
-			$template->assign_vars(array(
-				'META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">")
-			);
+			$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
-			$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+			$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -171,7 +169,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			message_die(GENERAL_ERROR, 'Invalid_session');
 		}
 		
-		$sql = "UPDATE " . SESSIONS_TABLE . " SET session_admin = 0 WHERE session_id = '" . $userdata['session_id'] . "'";
+		$sql = "UPDATE " . SESSIONS . " SET session_admin = 0 WHERE session_id = '" . $userdata['session_id'] . "'";
 		if (!($result = $db->sql_query($sql)))
 		{
 			message_die(CRITICAL_ERROR, 'Couldn\'t update Sessions Table', '', __LINE__, __FILE__, $sql);
@@ -179,7 +177,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_acp_logout');
 		
-		redirect(append_sid("index.php", true));
+		redirect(append_sid("news.php", true));
 	}
 	else if( ( isset($HTTP_GET_VARS['logout']) || isset($HTTP_POST_VARS['logout']) ) && $userdata['session_logged_in'] )
 	{
@@ -202,12 +200,12 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		}
 		else
 		{
-			redirect(append_sid("index.php", true));
+			redirect(append_sid("news.php", true));
 		}
 	}
 	else
 	{
-		$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "index.php";
+		$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "news.php";
 		redirect(append_sid($url, true));
 	}
 }
@@ -217,38 +215,18 @@ else
 	// Do a full login page dohickey if
 	// user not already logged in
 	//
-	
-	$group_auth_fields = array(
-		'auth_contact',
-		'auth_fightus',
-		'auth_forum',
-		'auth_forum_auth',
-		'auth_games',
-		'auth_groups',
-		'auth_joinus',
-		'auth_match',
-		'auth_navi',
-		'auth_news',
-		'auth_news_public',
-		'auth_newscat',
-		'auth_ranks',
-		'auth_server',
-		'auth_teams',
-		'auth_teamspeak',
-		'auth_training',
-		'auth_user',
-	);
-	
-	for ( $i = 0; $i < count($group_auth_fields); $i++ )
-	{
-		$split .= ' || $auth[\'' . $group_auth_fields[$i] . '\']';
-	}
 
-	if ( !$userdata['session_logged_in'] || (
-			isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && (
-				$userdata['user_level'] == ADMIN || $split )
-			)
-		)
+	$userauth = auth_acp_check($userdata['user_id']);
+	$auth = array();
+	foreach ($userauth as $key => $value)
+	{
+		if ($value != '0')
+		{
+			$auth[$key] = $value;
+		}
+	}
+	
+	if ( !$userdata['session_logged_in'] || ( isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && ( $userdata['user_level'] == ADMIN || $auth ) ) )
 	{
 		$page_title = $lang['Login'];
 		include($root_path . 'includes/page_header.php');
@@ -310,7 +288,7 @@ else
 	}
 	else
 	{
-		redirect(append_sid("index.php", true));
+		redirect(append_sid("news.php", true));
 	}
 
 }

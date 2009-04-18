@@ -236,7 +236,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 			$contact_categorie	= ( $mode == 'fightus' ) ? intval($HTTP_POST_VARS['contact_categorie']) : '';
 			$contact_wartype	= ( $mode == 'fightus' ) ? intval($HTTP_POST_VARS['contact_wartype']) : '';
 				
-			$sql = "INSERT INTO " . CONTACT_TABLE . " (contact_from, contact_type, contact_mail, contact_homepage, contact_rival_name, contact_rival_tag, contact_maps, contact_message, contact_team, contact_age, contact_date, contact_categorie, contact_wartype, contact_status, contact_time)
+			$sql = "INSERT INTO " . CONTACT . " (contact_from, contact_type, contact_mail, contact_homepage, contact_rival_name, contact_rival_tag, contact_maps, contact_message, contact_team, contact_age, contact_date, contact_categorie, contact_wartype, contact_status, contact_time)
 				VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['contact_nick']) . "', $contact_type, '" . str_replace("\'", "''", $HTTP_POST_VARS['contact_mail']) . "', '" . str_replace("\'", "''", $HTTP_POST_VARS['contact_hp']) . "', '$contact_rival_name', '$contact_rival_tag', '$contact_maps', '$contact_message', '$contact_team', '$contact_age', '$contact_date', '$contact_categorie', '$contact_wartype', 0, '" . time() . "')";
 			if (!$result = $db->sql_query($sql))
 			{
