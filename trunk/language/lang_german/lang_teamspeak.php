@@ -1,5 +1,9 @@
 <?php
 
+$lang['teamspeak']			= 'Teamspeak';
+$lang['teamspeak_viewer']	= 'Teamspeak-Viewer';
+$lang['teamspeak_plist']	= 'Benutzer Übersicht';
+
 $lang['_ts_head']		= 'Teamspeak';
 $lang['_ts_name']		= 'Servername';
 $lang['_ts_os']		= 'Betriebsystem';
