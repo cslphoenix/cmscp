@@ -6,7 +6,7 @@
 <tr>
 	<td class="{training_row_new.CLASS}" align="center" width="1%">{training_row_new.TRAINING_GAME}</td>
 	<td class="{training_row_new.CLASS}" align="left" width="100%">{training_row_new.TRAINING_NAME}</td>
-	<td class="{training_row_new.CLASS}" align="center" nowrap>{training_row_new.TRAINING_DATE}</td>
+	<td class="{training_row_new.CLASS}" align="center" nowrap="nowrap">{training_row_new.TRAINING_DATE}</td>
 	<td class="{training_row_new.CLASS}" align="center" width="1%"><a href="{training_row_new.U_DETAILS}">{L_DETAILS}</a></td>
 </tr>
 <!-- END training_row_new -->
@@ -27,7 +27,7 @@
 <tr>
 	<td class="{training_row_old.CLASS}" align="center" width="1%">{training_row_old.TRAINING_GAME}</td>
 	<td class="{training_row_old.CLASS}" align="left" width="100%">{training_row_old.TRAINING_NAME}</td>
-	<td class="{training_row_old.CLASS}" align="center" nowrap>{training_row_old.TRAINING_DATE}</td>
+	<td class="{training_row_old.CLASS}" align="center" nowrap="nowrap">{training_row_old.TRAINING_DATE}</td>
 	<td class="{training_row_old.CLASS}" align="center" width="1%"><a href="{training_row_old.U_DETAILS}">{L_DETAILS}</a></td>
 </tr>
 <!-- END training_row_old -->
@@ -57,7 +57,7 @@
 		<td class="{teams_row.CLASS}" align="center" width="1%">{teams_row.TEAM_GAME}</td>
 		<td class="{teams_row.CLASS}" align="left" style="vertical-align:middle">{teams_row.TEAM_NAME}</td>
 		
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
+		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap="nowrap"><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
 	</tr>
 	<!-- END teams_row -->
 	<!-- BEGIN no_entry_team -->

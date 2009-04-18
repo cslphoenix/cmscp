@@ -1,0 +1,11 @@
+/*
+td.bt_new			{ background-color: #FF6347; padding: 2px; }
+td.bt_completed		{ background-color: #228B22; padding: 2px; }
+td.bt_processing	{ background-color: #87CEEB; padding: 2px; }
+td.bt_pending		{ background-color: #FFA500; padding: 2px; }
+*/
+
+td.bt_new			{ background-color: #600; padding: 2px; }
+td.bt_completed		{ background-color: #360; padding: 2px; }
+td.bt_processing	{ background-color: #009; padding: 2px; }
+td.bt_pending		{ background-color: #C60; padding: 2px; }

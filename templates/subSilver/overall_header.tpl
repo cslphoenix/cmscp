@@ -2,17 +2,20 @@
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
-	<title>{SITENAME} :: {PAGE_TITLE}</title>
+	
+<title>{SITENAME} :: {PAGE_TITLE}</title>
 <link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
+
+
 	
 <!--<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>-->
 <!--<link rel="stylesheet" type="text/css" href="includes/teamspeak/stylesheet.css">-->
 
 	<!--[if lte IE 6]>
-	<link rel="stylesheet" media="all" type="text/css" href="templates/subSilver/dropdown_ie.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="templates/subSilver/theme/dropdown_ie.css" />
 	<![endif]-->
 
-<!--	
+	
 	<script type="text/javascript">
 	// <![CDATA[
 				
@@ -22,7 +25,6 @@
 	*	
 	***/
 	
-
 	function checkEntry(element)
 	{
 		id = element.id;
@@ -30,7 +32,7 @@
 		if ( document.getElementById(id).value.length == 0 )
 		{
 			document.getElementById(id).style.border='solid #FF0000 2px';
-			document.getElementById('msg').innerHTML = 'Fehler: wichtige Eingaben fehlen!';
+			document.getElementById('msg').innerHTML = 'Fehler: wichtige Eingaben fehlen!<br /><br />';
 			return false;
 		}
 		else
@@ -79,7 +81,7 @@
 	
 	// ]]>
 	</script>
--->
+
 	
 	<!--	
 	/***
@@ -142,21 +144,39 @@
 		<tr>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br />{SITE_DESCRIPTION}</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
-				<!-- BEGIN switch_user_logged_out -->
-				<form method="post" action="{S_LOGIN_ACTION}">
-					<input class="post" type="text" name="username" size="10" />
-					<input class="post" type="password" name="password" size="10" maxlength="32" />
-					<!--
-					<- BEGIN switch_allow_autologin ->
-					<input class="text" type="checkbox" name="autologin" />
-					<- END switch_allow_autologin ->
-					-->
-					<input type="submit" class="button2" name="login" value="{L_LOGIN}" />
-				</form>
-				<!-- END switch_user_logged_out -->	
-			<!-- BEGIN switch_user_logged_in -->
-			<br /><a href="index.php?mode=cache">Cache Leeren</a>
-			<!-- END switch_user_logged_in -->
+				<table width="90%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td align="right">
+						<!-- BEGIN switch_user_logged_out -->
+						<form method="post" action="{S_LOGIN_ACTION}">
+							<input class="post" type="text" name="username" size="10" />
+							<input class="post" type="password" name="password" size="10" maxlength="32" />
+							<!--<input class="post" type="hidden" name="redirect" size="10" maxlength="32" value="{redirect}"/>-->
+							
+							<!--
+							<- BEGIN switch_allow_autologin ->
+							<input class="text" type="checkbox" name="autologin" />
+							<- END switch_allow_autologin ->
+							-->
+							<input type="submit" class="button2" name="login" value="{L_LOGIN}" />
+						</form>
+						<!-- END switch_user_logged_out -->
+						&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						CMS Version: {CMS_VERSION}
+						<br />
+						<!-- BEGIN switch_user_logged_in -->
+						<a href="index.php?mode=cache">Cache Leeren</a>
+						<!-- END switch_user_logged_in -->
+					</td>
+				</tr>
+				</table>
+
+				
+			
 			</td>
 		</tr>
 		</table>
@@ -259,7 +279,7 @@
 					</li>
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<!-- END navi_misc -->
-					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_22.png); height:32px; width:{WIDTH}px;"></li>
+					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_22.png); height:32px; width:476px;"></li>
 					<!-- BEGIN navi_user -->
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<li>
@@ -275,6 +295,7 @@
 							<li><a href="{navi_user.navi_user_row.NAVI_URL}" target="{navi_user.navi_user_row.NAVI_TARGET}" title="{navi_user.navi_user_row.NAVI_NAME}">{navi_user.navi_user_row.NAVI_NAME}</a></li>
 							<!-- END navi_user_row -->
 							<li><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></li>
+							<li>{ADMIN_LINK}</li>
 						</ul>	
 					<!--[if lte IE 6]>
 					</td></tr></table>
@@ -316,7 +337,7 @@
 				<tr>
 					<td class="{display_subnavi_match.CLASS}" align="center" width="1%">{display_subnavi_match.MATCH_GAME}</td>
 					<td class="{display_subnavi_match.CLASS}" align="left" width="100%">{display_subnavi_match.MATCH_NAME}</td>
-					<td class="{display_subnavi_match.CLASS}" align="center" nowrap><span class="{display_subnavi_match.CLASS_RESULT}">{display_subnavi_match.MATCH_RESULT}</span></td>
+					<td class="{display_subnavi_match.CLASS}" align="center" nowrap="nowrap"><span class="{display_subnavi_match.CLASS_RESULT}">{display_subnavi_match.MATCH_RESULT}</span></td>
 					<td class="{display_subnavi_match.CLASS}" align="center" width="1%"><a href="{display_subnavi_match.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
 				<!-- END display_subnavi_match -->
@@ -332,7 +353,7 @@
 				<tr>
 					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
 					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
+					<td class="{match_row.CLASS}" align="center" nowrap="nowrap"><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
 					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
 				<!-- END match_row -->
@@ -348,7 +369,7 @@
 				<tr>
 					<td class="{match_row.CLASS}" align="center" width="1%">{match_row.MATCH_GAME}</td>
 					<td class="{match_row.CLASS}" align="left" width="100%">{match_row.MATCH_NAME}</td>
-					<td class="{match_row.CLASS}" align="center" nowrap><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
+					<td class="{match_row.CLASS}" align="center" nowrap="nowrap"><span class="{match_row.CLASS_RESULT}">{match_row.MATCH_RESULT}</span></td>
 					<td class="{match_row.CLASS}" align="center" width="1%"><a href="{match_row.U_DETAILS}">{L_DETAILS}</a></td>
 				</tr>
 				<!-- END match_row -->

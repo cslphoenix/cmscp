@@ -1,4 +1,4 @@
-<table class="out" width="100%" cellspacing="0">
+<table class="out" width="100%" cellspacing="3">
 <tr>
 	<td class="info_head" colspan="3">News-&Uuml;bersicht</td>
 </tr>
@@ -14,9 +14,12 @@
 	<td width="2%">&nbsp;</td>
 </tr>
 <tr>
-	<td>&nbsp;</td>
-	<td><a href="{news_row.U_NEWS}"><b>{news_row.NEWS_TITLE}</b></a> {news_row.NEWS_ID}</td>
-	<td>&nbsp;</td>
+	<td width="2%">&nbsp;</td>
+	<td width="96%" align="left">
+		<a href="{news_row.U_NEWS}"><b>{news_row.NEWS_TITLE}</b></a>
+		Kommentare: {news_row.NEWS_COMMENTS}
+	</td>
+	<td width="2%">&nbsp;</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -25,18 +28,13 @@
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><span style="float: right;">{news_row.NEWS_AUTHOR}, {news_row.NEWS_PUBLIC_TIME}</span>Kommentare: {news_row.NEWS_COMMENTS}</td>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
+	<td><span style="float: right;">{news_row.NEWS_AUTHOR}, {news_row.NEWS_PUBLIC_TIME}</span></td>
 	<td>&nbsp;</td>
 </tr>
 <!-- BEGIN links -->
 <tr>
 	<td>&nbsp;</td>
-	<td> Links: <a href="{news_row.NEWS_URL1}">{news_row.NEWS_LINK1}</a> <a href="{news_row.links.NEWS_URL2}">{news_row.links.NEWS_LINK2}</a>  </td>
+	<td>{news_row.links.L_LINK}{news_row.links.NEWS_LINK}</td>
 	<td>&nbsp;</td>
 </tr>
 <!-- END links -->
@@ -53,7 +51,7 @@
 </tr>
 <!-- BEGIN no_entry -->
 <tr>
-	<td colspan="3">{NO_ENTRY}</td>
+	<td colspan="3" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>

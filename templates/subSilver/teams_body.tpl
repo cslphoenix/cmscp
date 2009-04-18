@@ -16,10 +16,10 @@
 <!-- BEGIN team_row -->
 <tr>
 	<td class="{game_row.team_row.CLASS}" align="left" style="vertical-align:middle">{game_row.team_row.TEAM_NAME}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap>{game_row.team_row.TEAM_FIGHTUS}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap>{game_row.team_row.TEAM_JOINUS}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap>{game_row.team_row.TEAM_MATCH}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap><a href="{game_row.team_row.TO_TEAM}">{L_TO_TEAM}</a></td>
+	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap">{game_row.team_row.TEAM_FIGHTUS}</td>
+	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap">{game_row.team_row.TEAM_JOINUS}</td>
+	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap">{game_row.team_row.TEAM_MATCH}</td>
+	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap"><a href="{game_row.team_row.TO_TEAM}">{L_TO_TEAM}</a></td>
 </tr>
 <!-- END team_row -->
 <tr>

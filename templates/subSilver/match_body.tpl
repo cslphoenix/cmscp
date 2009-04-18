@@ -6,7 +6,7 @@
 <tr>
 	<td class="{match_row_n.CLASS}" align="center" width="1%">{match_row_n.MATCH_GAME}</td>
 	<td class="{match_row_n.CLASS}" align="left" width="100%">{match_row_n.MATCH_NAME}</td>
-	<td class="{match_row_n.CLASS}" align="center" nowrap>{match_row_n.MATCH_DATE}</td>
+	<td class="{match_row_n.CLASS}" align="center" nowrap="nowrap">{match_row_n.MATCH_DATE}</td>
 	<td class="{match_row_n.CLASS}" align="center" width="1%"><a href="{match_row_n.U_DETAILS}">{L_DETAILS}</a></td>
 </tr>
 <!-- END match_row_n -->
@@ -27,7 +27,7 @@
 <tr>
 	<td class="{match_row_o.CLASS}" align="center" width="1%">{match_row_o.MATCH_GAME}</td>
 	<td class="{match_row_o.CLASS}" align="left" width="100%">{match_row_o.MATCH_NAME}</td>
-	<td class="{match_row_o.CLASS}" align="center" nowrap>{match_row_o.MATCH_DATE}</td>
+	<td class="{match_row_o.CLASS}" align="center" nowrap="nowrap">{match_row_o.MATCH_DATE}</td>
 	<td class="{match_row_o.CLASS}" align="center" width="1%"><a href="{match_row_o.U_DETAILS}">{L_DETAILS}</a></td>
 </tr>
 <!-- END match_row_o -->
@@ -56,9 +56,9 @@
 	<tr>
 		<td class="{teams_row.CLASS}" align="center" width="1%">{teams_row.TEAM_GAME}</td>
 		<td class="{teams_row.CLASS}" align="left" style="vertical-align:middle">{teams_row.TEAM_NAME}</td>
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap>{teams_row.FIGHTUS}</td>
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap>{teams_row.ALL_MATCHES}</td>
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
+		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap="nowrap">{teams_row.FIGHTUS}</td>
+		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap="nowrap">{teams_row.ALL_MATCHES}</td>
+		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap="nowrap"><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
 	</tr>
 	<!-- END teams_row -->
 	<!-- BEGIN no_entry_team -->
