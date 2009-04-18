@@ -1,5 +1,38 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
+$lang['page_newsletter']	= 'Newsletter';
+
+$lang['newsletter_subscribe']			= 'Erfolgreiches eintragen im Newsletter.';
+$lang['newsletter_subscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse.';
+$lang['newsletter_unsubscribe']			= 'Erfolgreiches austragen im Newsletter.';
+$lang['newsletter_unsubscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse2.';
+
+$lang['news_info_url']		= 'Link: ';
+$lang['news_info_urls']		= 'Links: ';
+
+
 $lang['group_set_mod']		= 'Gruppenrechte geändert.';
 $lang['group_is_moderator'] = 'Du bist der Moderator dieser Gruppe.';
 
@@ -86,12 +119,6 @@ $lang['select_team']			= 'Team auswählen';
 //	Header
 //
 $lang['newest_users']		= '%s neuesten Mitglieder';
-
-//
-//	Teamspeak
-//
-$lang['teamspeak']			= 'Teamspeak';
-
 
 //
 //	Forum
@@ -196,8 +223,8 @@ $lang['403'] = "403 - Access Denied";
 $lang['403_Description'] = "You don't have the proper rights to view this page.<br />You can browse the forum by following one of the links above."; 
 $lang['500'] = "500 - Internal Server Error"; 
 $lang['500_Description'] = "An Internal Server Error occurred.<br />If reloading the page doens't help, please contact the system administrator."; 
-//$lang['wrong_back']			= '<br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zur&uuml;ck</a>';
-$lang['wrong_back']			= '%s&laquo; Zur&uuml;ck%s';
+//$lang['back']			= '<br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zur&uuml;ck</a>';
+$lang['back']			= '%s&laquo; Zur&uuml;ck%s';
 
 //
 //	Log
@@ -285,6 +312,12 @@ $lang['Enabled'] = 'Aktiviert';
 $lang['Disabled'] = 'Deaktiviert';
 $lang['Error'] = 'Fehler';
 
+$lang['yes']	= 'Ja';
+$lang['no']		= 'Nein';
+$lang['show']	= 'Anzeigen';
+$lang['noshow']	= 'nicht Anzeigen';
+
+
 $lang['Next'] = 'Weiter';
 $lang['Previous'] = 'Zurück';
 $lang['Goto_page'] = 'Gehe zu Seite';
@@ -314,7 +347,7 @@ $lang['Click_view_message'] = '%sHier klicken%s, um deine Nachricht anzuzeigen';
 $lang['Click_return_modcp'] = '%sHier klicken%s, um zur Moderatorenkontrolle zurückzukehren';
 $lang['Click_return_group'] = '%sHier klicken%s, um zur Gruppeninfo zurückzukehren';
 
-$lang['Admin_panel'] = 'Administrations-Bereich';
+$lang['Admin_panel'] = 'Administrations';
 
 $lang['Board_disable'] = 'Sorry, aber dieses Board ist im Moment nicht verfügbar. Probier es bitte später wieder.';
 
@@ -936,6 +969,7 @@ $lang['Group_open'] = 'Offene Gruppe';
 $lang['Group_quest'] = 'Anfrage Gruppe';
 $lang['Group_closed'] = 'Geschlossene Gruppe';
 $lang['Group_hidden'] = 'Versteckte Gruppe';
+$lang['Group_system'] = 'System Gruppe';
 
 $lang['Current_memberships'] = 'Aktuelle Mitgliedschaften';
 $lang['Non_member_groups'] = 'Gruppen ohne deine Mitgliedschaft';
@@ -1260,7 +1294,8 @@ $lang['Critical_Error'] = 'Kritischer Fehler';
 $lang['An_error_occured'] = 'Ein Fehler ist aufgetreten.';
 $lang['A_critical_error'] = 'Ein kritischer Fehler ist aufgetreten.';
 
-$lang['Admin_reauthenticate'] = 'Für den Zugriff auf den Administrations-Bereich musst du deinen Benutzernamen und dein Passwort erneut eingeben.';
+//$lang['Admin_reauthenticate'] = 'Für den Zugriff auf den Administrations-Bereich musst du deinen Benutzernamen und dein Passwort erneut eingeben.';
+$lang['Admin_reauthenticate'] = 'Benutzernamen und dein Passwort erneut eingeben!';
 $lang['Login_attempts_exceeded'] = 'Die maximale Anzahl von %s zulässigen Login-Versuchen wurde überschritten. Du kannst dich in den nächsten %s Minuten nicht einloggen.';
 $lang['Please_remove_install_contrib'] = 'Bitte stelle sicher, dass du die Verzeichnisse install/ und contrib/ gelöscht hast.';
 
@@ -1296,8 +1331,24 @@ $lang['dbg_line'] = 'Line: %s';
 $lang['dbg_file'] = 'File: %s';
 $lang['dbg_empty'] = 'Empty';
 
-//
-// That's all Folks!
-// -------------------------------------------------
-
+$lang['auths'] = array(
+	'auth_contact'		=> $lang['auth_contact'],
+	'auth_fightus'		=> $lang['auth_fightus'],
+	'auth_forum'		=> $lang['auth_forum'],
+	'auth_forum_auth'	=> $lang['auth_forum_auth'],
+	'auth_games'		=> $lang['auth_games'],
+	'auth_groups'		=> $lang['auth_groups'],
+	'auth_joinus'		=> $lang['auth_joinus'],
+	'auth_match'		=> $lang['auth_match'],
+	'auth_navi'			=> $lang['auth_navi'],
+	'auth_news'			=> $lang['auth_news'],
+	'auth_news_public'	=> $lang['auth_news_public'],
+	'auth_newscat'		=> $lang['auth_newscat'],
+	'auth_ranks'		=> $lang['auth_ranks'],
+	'auth_server'		=> $lang['auth_server'],
+	'auth_teams'		=> $lang['auth_teams'],
+	'auth_teamspeak'	=> $lang['auth_teamspeak'],
+	'auth_training'		=> $lang['auth_training'],
+	'auth_user'			=> $lang['auth_user'],
+);
 ?>
