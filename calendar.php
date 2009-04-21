@@ -268,9 +268,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
-					$list			= implode('<br />', $list);	
+					$list			= implode('<br>', $list);	
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="birthday">' . $language . '</em><br />' . $list : '<br /><em class="birthday">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="birthday">' . $language . '</em><br>' . $list : '<br><em class="birthday">' . $language . '</em><br>' . $list;
 				}
 				
 				if ( is_array($monat_events[$i]) )
@@ -282,9 +282,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_event'] : $lang['cal_events'];
-					$list			= implode('<br />', $list);
+					$list			= implode('<br>', $list);
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="events">' . $language . '</em><br />' . $list : '<br /><em class="events">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="events">' . $language . '</em><br>' . $list : '<br><em class="events">' . $language . '</em><br>' . $list;
 				}
 				
 				if ( is_array($monat_matchs[$i]) )
@@ -296,9 +296,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_match'] : $lang['cal_matchs'];
-					$list			= implode('<br />', $list);
+					$list			= implode('<br>', $list);
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="wars">' . $language . '</em><br />' . $list : '<br /><em class="wars">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="wars">' . $language . '</em><br>' . $list : '<br><em class="wars">' . $language . '</em><br>' . $list;
 				}
 				
 				if ( is_array($monat_trainings[$i]) )
@@ -310,9 +310,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_training'] : $lang['cal_trainings'];
-					$list			= implode('<br />', $list);
+					$list			= implode('<br>', $list);
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="trains">' . $language . '</em><br />' . $list : '<br /><em class="trains">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="trains">' . $language . '</em><br>' . $list : '<br><em class="trains">' . $language . '</em><br>' . $list;
 				}
 			}
 			else
@@ -353,9 +353,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
-					$list			= implode('<br />', $list);	
+					$list			= implode('<br>', $list);	
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="birthday">' . $language . '</em><br />' . $list : '<br /><em class="birthday">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="birthday">' . $language . '</em><br>' . $list : '<br><em class="birthday">' . $language . '</em><br>' . $list;
 				}
 				
 				if ( is_array($monat_events[$i]) )
@@ -367,9 +367,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_event'] : $lang['cal_events'];
-					$list			= implode('<br />', $list);
+					$list			= implode('<br>', $list);
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="events">' . $language . '</em><br />' . $list : '<br /><em class="events">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="events">' . $language . '</em><br>' . $list : '<br><em class="events">' . $language . '</em><br>' . $list;
 				}
 				
 				if ( is_array($monat_matchs[$i]) )
@@ -381,9 +381,9 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_match'] : $lang['cal_matchs'];
-					$list			= implode('<br />', $list);
+					$list			= implode('<br>', $list);
 					$cal_day		= $i;
-					$cal_event		.= (empty($cal_event)) ? '<span><em class="wars">' . $language . '</em><br />' . $list : '<br /><em class="wars">' . $language . '</em><br />' . $list;
+					$cal_event		.= (empty($cal_event)) ? '<span><em class="wars">' . $language . '</em><br>' . $list : '<br><em class="wars">' . $language . '</em><br>' . $list;
 				}
 			}
 			else

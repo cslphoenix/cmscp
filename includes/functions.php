@@ -5,7 +5,7 @@ function get_authlist()
 	global $db;
 	
 	$sql = 'SELECT auth_name FROM ' . AUTHLIST . ' ORDER BY auth_name';
-//	if( !($result = $db->sql_query($sql)) )
+//	if ( !($result = $db->sql_query($sql)) )
 //	{
 //		message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 //	}
@@ -457,23 +457,23 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
     switch ($errno)
 	{
 		case E_USER_ERROR:
-			echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
+			echo "<b>My ERROR</b> [$errno] $errstr<br>\n";
 			echo "  Fatal error on line $errline in file $errfile";
-			echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-			echo "Aborting...<br />\n";
+			echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br>\n";
+			echo "Aborting...<br>\n";
 			exit(1);
 			break;
 		
 		case E_USER_WARNING:
-			echo "<b>My WARNING</b> [$errno] $errstr<br />\n";
+			echo "<b>My WARNING</b> [$errno] $errstr<br>\n";
 			break;
 		case E_USER_NOTICE:
-			echo "<b>My NOTICE</b> [$errno] $errstr<br />\n";
+			echo "<b>My NOTICE</b> [$errno] $errstr<br>\n";
 			break;
 			
 			case E_NOTICE:
 			
-		echo "<b>NOTICE</b> $errfile $errstr<br />\n";
+		echo "<b>NOTICE</b> $errfile $errstr<br>\n";
         break;
 
     }
@@ -487,28 +487,28 @@ $old_error_handler = set_error_handler("myErrorHandler");
 
 function _debug_poste($data)
 {
-	print '<br />';
+	print '<br>';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
-	print '<br />';
+	print '<br>';
 	exit;
 }
 
 function _debug_post($data)
 {
-	print '<br />';
+	print '<br>';
 	print '<-- start -->';
-	print '<br />';
-	print '<br />';
+	print '<br>';
+	print '<br>';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
-	print '<br />';
+	print '<br>';
 //	var_dump($data);
-//	print '<br />';
+//	print '<br>';
 	print '<-- end -->';
-	print '<br />';
+	print '<br>';
 }
 
 function check_image_type(&$type)
@@ -1454,7 +1454,7 @@ function obtain_word_list(&$orig_word, &$replacement_word)
 	//
 	$sql = "SELECT word, replacement
 		FROM  " . WORDS;
-	if( !($result = $db->sql_query($sql)) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not get censored words from database', '', __LINE__, __FILE__, $sql);
 	}
@@ -1513,7 +1513,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 	
 	if(defined('HAS_DIED'))
 	{
-		die("message_die() was called multiple times. This isn't supposed to happen. Was message_die() used in page_tail.php?");
+	//	die("message_die() was called multiple times. This isn't supposed to happen. Was message_die() used in page_tail.php?");
 		//
 		// This message is printed at the end of the report.
 		// Of course, you can change it to suit your own needs. ;-)
@@ -1527,22 +1527,22 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		{
 			$custom_error_message = sprintf($custom_error_message, '', '');
 		}
-		echo "<html>\n<body>\n<b>Critical Error!</b><br />\nmessage_die() was called multiple times.<br />&nbsp;<hr />";
+		echo "<html>\n<body>\n<b>Critical Error!</b><br>\nmessage_die() was called multiple times.<br>&nbsp;<hr />";
 		for( $i = 0; $i < count($msg_history); $i++ )
 		{
-			echo '<b>Error #' . ($i+1) . "</b>\n<br />\n";
+			echo '<b>Error #' . ($i+1) . "</b>\n<br>\n";
 			if( !empty($msg_history[$i]['msg_title']) )
 			{
-				echo '<b>' . $msg_history[$i]['msg_title'] . "</b>\n<br />\n";
+				echo '<b>' . $msg_history[$i]['msg_title'] . "</b>\n<br>\n";
 			}
-			echo $msg_history[$i]['msg_text'] . "\n<br /><br />\n";
+			echo $msg_history[$i]['msg_text'] . "\n<br><br>\n";
 			if( !empty($msg_history[$i]['err_line']) )
 			{
-				echo '<b>Line :</b> ' . $msg_history[$i]['err_line'] . '<br /><b>File :</b> ' . $msg_history[$i]['err_file'] . "</b>\n<br />\n";
+				echo '<b>Line :</b> ' . $msg_history[$i]['err_line'] . '<br><b>File :</b> ' . $msg_history[$i]['err_file'] . "</b>\n<br>\n";
 			}
 			if( !empty($msg_history[$i]['sql']) )
 			{
-				echo '<b>SQL :</b> ' . $msg_history[$i]['sql'] . "\n<br />\n";
+				echo '<b>SQL :</b> ' . $msg_history[$i]['sql'] . "\n<br>\n";
 			}
 			echo "&nbsp;<hr />\n";
 		}
@@ -1567,17 +1567,17 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 
 		if ( $sql_error['message'] != '' )
 		{
-			$debug_text .= '<br /><br />SQL Error : ' . $sql_error['code'] . ' ' . $sql_error['message'];
+			$debug_text .= '<br><br>SQL Error : ' . $sql_error['code'] . ' ' . $sql_error['message'];
 		}
 
 		if ( $sql_store != '' )
 		{
-			$debug_text .= "<br /><br />$sql_store";
+			$debug_text .= "<br><br>$sql_store";
 		}
 
 		if ( $err_line != '' && $err_file != '' )
 		{
-			$debug_text .= '<br /><br />Line : ' . $err_line . '<br />File : ' . basename($err_file);
+			$debug_text .= '<br><br>Line : ' . $err_line . '<br>File : ' . basename($err_file);
 		}
 	}
 
@@ -1694,11 +1694,11 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		
 		if (!($result = $db->sql_query($sql)))
 		{
-			$error_message = '<br /><br /><b>Error Message not saved in Database</b>';
+			$error_message = '<br><br><b>Error Message not saved in Database</b>';
 		}
 		else
 		{
-			$error_message = '<br /><br /><b>Error Message saved in Database</b>';
+			$error_message = '<br><br><b>Error Message saved in Database</b>';
 		}
     }
 	//
@@ -1710,7 +1710,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 	{
 		if ( $debug_text != '' )
 		{
-			$msg_text = $msg_text . '<br /><br /><b><u>DEBUG MODE</u></b>' . $debug_text . $error_message;
+			$msg_text = $msg_text . '<br><br><b><u>DEBUG MODE</u></b>' . $debug_text . $error_message;
 		}
 	}
 
@@ -1753,7 +1753,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 	}
 	else
 	{
-		echo "<html>\n<body>\n" . $msg_title . "\n<br /><br />\n" . $msg_text . "</body>\n</html>";
+		echo "<html>\n<body>\n" . $msg_title . "\n<br><br>\n" . $msg_text . "</body>\n</html>";
 	}
 
 	exit;
@@ -1827,7 +1827,7 @@ function board_disable()
 		if (in_array($user_level, $disable_mode))
 		{
 			$disable_message = (!empty($config['page_disable_msg'])) ? htmlspecialchars($config['page_disable_msg']) : $lang['Board_disable'];
-			message_die(GENERAL_MESSAGE, str_replace("\n", '<br />', $disable_message));
+			message_die(GENERAL_MESSAGE, str_replace("\n", '<br>', $disable_message));
 		}
 		else
 		{

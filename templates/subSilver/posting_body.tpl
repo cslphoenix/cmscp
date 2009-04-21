@@ -299,7 +299,7 @@ function storeCaret(textEl) {
 			<td><span class="gen"><b>{L_MESSAGE_BODY}</b></span> </td>
 		  </tr>
 		  <tr> 
-			<td valign="middle" align="center"> <br />
+			<td valign="middle" align="center"> <br>
 			  <table width="100" border="0" cellspacing="0" cellpadding="5">
 				<tr align="center"> 
 				  <td colspan="{S_SMILIES_COLSPAN}" class="gensmall"><b>{L_EMOTICONS}</b></td>
@@ -401,7 +401,7 @@ function storeCaret(textEl) {
 		</span></td>
 	</tr>
 	<tr> 
-	  <td class="row1" valign="top"><span class="gen"><b>{L_OPTIONS}</b></span><br /><span class="gensmall">{HTML_STATUS}<br />{BBCODE_STATUS}<br />{SMILIES_STATUS}</span></td>
+	  <td class="row1" valign="top"><span class="gen"><b>{L_OPTIONS}</b></span><br><span class="gensmall">{HTML_STATUS}<br>{BBCODE_STATUS}<br>{SMILIES_STATUS}</span></td>
 	  <td class="row2"><span class="gen"> </span> 
 		<table cellspacing="0" cellpadding="1" border="0">
 		  <!-- BEGIN switch_html_checkbox -->

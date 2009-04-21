@@ -50,6 +50,11 @@ function get_data($mode, $id, $type)
 			$idfield	= 'news_category_id';
 		break;
 		
+		case 'newsletter':
+			$table		= NEWSLETTER;
+			$idfield	= 'newsletter_id';
+		break;
+		
 		case 'server':
 			$table		= SERVER;
 			$idfield	= 'server_id';

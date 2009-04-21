@@ -125,7 +125,7 @@ if ( $mode == 'list' )
 				' . $order_by;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$bugtracker_data = $db->sql_fetchrowset($result);
 //	$bugtracker_data = _cached($sql, 'bugtracker_list');
@@ -224,7 +224,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 					WHERE bugtracker_id = ' . $bugtracker_id;
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$bugtracker_data = $db->sql_fetchrow($result);
 		
@@ -245,8 +245,6 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 	
 	if ( isset($HTTP_POST_VARS['submit']) )
 	{
-		_debug_poste($_POST);
-		
 		$error = '';
 		$error_msg = '';
 		
@@ -268,25 +266,25 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 		if ( empty($bt_title) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_title'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_title'];
 		}
 		
 		if ( empty($bt_desc) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_desc'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_desc'];
 		}
 			
 		if ( empty($bt_type) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_type'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_type'];
 		}
 		
 		if ( empty($bt_message) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_message'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_message'];
 		}
 
 		if ( $error )
@@ -309,12 +307,13 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 			}
 			
 			$message = ( $mode == 'add' ) ? $lang['bt_add'] : $lang['bt_edit'];
-			$message .= '<br /><br />' . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid("bugtracker.php") . '">', '</a>');
+			$message .= '<br><br>' . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid("bugtracker.php") . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}
 	
 	$template->assign_vars(array(
+		'L_REQUIRED'			=> $lang['required'],
 		'L_TITLE'				=> $lang['bt_title'],
 		'L_DESC'				=> $lang['bt_desc'],
 		'L_TYPE'				=> $lang['bt_type'],
@@ -480,13 +479,13 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 				if ( empty($HTTP_POST_VARS['poster_nick']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'user_nick';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'user_nick';
 				}
 				
 				if ( empty($HTTP_POST_VARS['poster_mail']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'poster_mail';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'poster_mail';
 				}
 				
 				unset($_SESSION['captcha']);
@@ -495,7 +494,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 			if ( empty($HTTP_POST_VARS['comment']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'comment';
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
 			}
 	
 			if ( $error )
@@ -540,7 +539,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 				
 				_comment_message('add', 'match', $match_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
-				$message = $lang['add_comment'] . '<br /><br />' . sprintf($lang['click_return_match'],  '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id) . '">', '</a>');
+				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_match'],  '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}

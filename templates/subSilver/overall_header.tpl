@@ -8,7 +8,7 @@
 
 
 	
-<!--<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>-->
+<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>
 <!--<link rel="stylesheet" type="text/css" href="includes/teamspeak/stylesheet.css">-->
 
 	<!--[if lte IE 6]>
@@ -32,7 +32,7 @@
 		if ( document.getElementById(id).value.length == 0 )
 		{
 			document.getElementById(id).style.border='solid #FF0000 2px';
-			document.getElementById('msg').innerHTML = 'Fehler: wichtige Eingaben fehlen!<br /><br />';
+			document.getElementById('msg').innerHTML = 'Fehler: wichtige Eingaben fehlen!<br><br>';
 			return false;
 		}
 		else
@@ -102,13 +102,13 @@
 	<td><table width="100%" cellspacing="0" cellpadding="0" border="0">
 		<tr> 
 			<td align="center" width="100%" valign="middle">
-				{SITENAME}<br />{SITE_DESCRIPTION}<br />
+				{SITENAME}<br>{SITE_DESCRIPTION}<br>
 				
 			</td>
 		</tr>
 	</table>
 
-	<br />
+	<br>
 -->
 <div align="center">
 <table width="986" border="0" cellspacing="0" cellpadding="0" align="center" class="table">
@@ -142,7 +142,7 @@
 	<td>
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br />{SITE_DESCRIPTION}</td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
 				<table width="90%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -167,7 +167,7 @@
 				<tr>
 					<td align="right">
 						CMS Version: {CMS_VERSION}
-						<br />
+						<br>
 						<!-- BEGIN switch_user_logged_in -->
 						<a href="index.php?mode=cache">Cache Leeren</a>
 						<!-- END switch_user_logged_in -->

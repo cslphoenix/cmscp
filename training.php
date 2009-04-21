@@ -444,7 +444,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			if ( empty($HTTP_POST_VARS['comment']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'comment';
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
 			}
 	
 			if ( $error )
@@ -490,7 +490,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				
 				_comment_message('add', 'training', $training_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
-				$message = $lang['add_comment'] . '<br /><br />' . sprintf($lang['click_return_training'],  '<a href="' . append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id) . '">', '</a>');
+				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_training'],  '<a href="' . append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $training_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}

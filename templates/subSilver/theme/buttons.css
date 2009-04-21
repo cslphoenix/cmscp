@@ -1,6 +1,5 @@
-
 .button, .button:link, .button:visited, .button:active,
-.button2, .button2:link, .button2:visited, .button2:active{
+.button2, .button2:link, .button2:visited, .button2:active {
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 1px 4px 1px;
 	color:	#000;
@@ -16,7 +15,6 @@
 	color: #F00;
 	border: #F00 1px solid;
 	background:	#FAFAFA;
-	
 }
 
 .button2, .button2:link, .button2:visited, .button2:active {

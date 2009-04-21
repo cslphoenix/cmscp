@@ -156,7 +156,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_bugtracker, 'acp_bugtracker_add');
 	
-				$message = $lang['create_bugtracker'] . '<br /><br />' . sprintf($lang['click_return_bugtracker'], '<a href="' . append_sid("admin_bugtracker.php") . '">', '</a>');
+				$message = $lang['create_bugtracker'] . '<br><br>' . sprintf($lang['click_return_bugtracker'], '<a href="' . append_sid("admin_bugtracker.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -188,7 +188,7 @@ else
 							
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_bugtracker, 'acp_bugtracker_edit');
 				
-				$message = $lang['update_bugtracker'] . '<br /><br />' . sprintf($lang['click_return_bugtracker'], '<a href="' . append_sid("admin_bugtracker.php") . '">', '</a>');
+				$message = $lang['update_bugtracker'] . '<br><br>' . sprintf($lang['click_return_bugtracker'], '<a href="' . append_sid("admin_bugtracker.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -215,7 +215,7 @@ else
 					
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_bugtracker, 'acp_bugtracker_delete', $bugtracker['game_name']);
 					
-					$message = $lang['delete_bugtracker'] . '<br /><br />' . sprintf($lang['click_return_bugtracker'], '<a href="' . append_sid("admin_bugtracker.php") . '">', '</a>');
+					$message = $lang['delete_bugtracker'] . '<br><br>' . sprintf($lang['click_return_bugtracker'], '<a href="' . append_sid("admin_bugtracker.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -306,7 +306,7 @@ else
 				' . $order_by;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$bugtracker_data = $db->sql_fetchrowset($result);
 	

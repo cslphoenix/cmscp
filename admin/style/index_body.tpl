@@ -13,7 +13,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <!--
 <table class="head" cellspacing="0">
@@ -75,7 +75,7 @@
 </table>
 
 
-<br />
+<br>
 
 <table class="head" cellspacing="0">
 <tr>
@@ -119,4 +119,4 @@
 	</tr>
 </table>
 -->
-<br />
+<br>

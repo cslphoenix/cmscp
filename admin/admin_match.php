@@ -321,25 +321,25 @@ else
 				if ( intval($HTTP_POST_VARS['match_type']) == '0' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_type'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_type'];
 				}
 				
 				if ( intval($HTTP_POST_VARS['match_categorie']) == '0' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_cat'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_cat'];
 				}
 				
 				if ( intval($HTTP_POST_VARS['match_league']) == '0' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_league'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_league'];
 				}
 				
 				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_date'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_date'];
 				}
 				
 				if ($error)
@@ -415,7 +415,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_add');
 	
-				$message = $lang['create_match'] . '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
+				$message = $lang['create_match'] . '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 			break;
@@ -434,25 +434,25 @@ else
 				if ( intval($HTTP_POST_VARS['match_type']) == '0' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_type'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_type'];
 				}
 				
 				if ( intval($HTTP_POST_VARS['match_categorie']) == '0' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_cat'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_cat'];
 				}
 				
 				if ( intval($HTTP_POST_VARS['match_league']) == '0' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_league'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_league'];
 				}
 				
 				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_date'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_date'];
 				}
 				
 				if ( $error )
@@ -510,7 +510,7 @@ else
 				$oCache -> deleteCache('display_subnavi_matchs_guest');
 				$oCache -> deleteCache('display_subnavi_matchs_member');
 				
-				$message = $lang['match_update'] . '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
+				$message = $lang['match_update'] . '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
@@ -596,7 +596,7 @@ else
 					$oCache -> deleteCache('display_subnavi_matchs_guest');
 					$oCache -> deleteCache('display_subnavi_matchs_member');
 					
-					$message = $lang['match_delete'] . '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
+					$message = $lang['match_delete'] . '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -1088,8 +1088,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_edit');
 				
 				$message = $lang['team_update']
-					. '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 			break;
@@ -1129,8 +1129,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_lineup_change');
 				
 				$message = $lang['match_lineup_change']
-					. '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 				break;
@@ -1212,8 +1212,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_add_lineup');
 			
 				$message = $lang['match_lineup_add_yes']
-					. '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 			break;
@@ -1238,8 +1238,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_MATCH, 'acp_match_del_lineup');
 			
 				$message = $lang['match_lineup_del_yes']
-					. '<br /><br />' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_match'], '<a href="' . append_sid("admin_match.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("admin_match.php?mode=details&amp;". POST_MATCH_URL ."=$match_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;

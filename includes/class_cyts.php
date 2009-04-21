@@ -1,12 +1,12 @@
 <?php
 /**
- *                              cyts.class.php								<br />
- *                            ------------------							<br />
- *   begin                : Saturday, Oct 16, 2004							<br />
- *   copyright            : (C) 2004-2005 Steven Barth						<br />
- *   email                : phpdev@midlink.org								<br />
- *   version              : 2.4.1										<br />
- *   last modified        : Saturday, Sep 10, 2005							<br />
+ *                              cyts.class.php								<br>
+ *                            ------------------							<br>
+ *   begin                : Saturday, Oct 16, 2004							<br>
+ *   copyright            : (C) 2004-2005 Steven Barth						<br>
+ *   email                : phpdev@midlink.org								<br>
+ *   version              : 2.4.1										<br>
+ *   last modified        : Saturday, Sep 10, 2005							<br>
  *
  * @package	CYTS-DELTA
  * @author	Steven Barth <phpdev@midlink.org>
@@ -14,7 +14,7 @@
  * @version	2.4.1
  
 
-    This file is part of CyTS2 - A PHP library for querying TeamSpeak2 servers.<br />																			
+    This file is part of CyTS2 - A PHP library for querying TeamSpeak2 servers.<br>																			
     CyTS2 is free software; you can redistribute it and/or modify			
     it under the terms of the GNU General Public License as published by	
     the Free Software Foundation; either version 2 of the License, or		
@@ -259,24 +259,24 @@ class cyts {
 
 /**
   * info_playerList: Returns a list of players that are connected to the server
-  * 			array:<br />
-  *				[0], [unparsed]		=> Unparsed playerstring<br />
-  *				[1], [p_id]			=> PlayerID<br />
-  *             [2], [c_id]			=> ChannelID<br />
-  *				[3], [ps]			=> Packets sent by server<br />
-  * 			[4], [bs]			=> Bytes sent by server<br />
-  * 			[5], [pr]			=> Packets received by server<br />
-  * 			[6], [br]			=> Bytes received by server<br />
-  *         	[7], [pl]			=> Packet Loss<br />
-  *             [8], [ping]			=> Ping<br />
-  *             [9], [logintime]	=> Seconds since Login<br />
-  *        		[10], [idletime]	=> Idletime in seconds<br />
-  *             [11], [cprivs] 		=> Channelflags (1 - CA, 2 - O, 4 - V, 8 - AO, 16 - AV)<br />
-  *         	[12], [pprivs] 		=> Serverflags (1 - SA, 2 - Allowed To Register(AR), 4 - R, 8 - ???, 16 - Sticky) <br />
-  *         	[13], [pflags] 		=> Playerflags (1 - Channel Commander(CC), 2 - Voice Request(VR), 4 - No Whisper(NW), 8 - Away(AW), 16 - Mic Muted(MM), 32 - Snd Muted(SM), 64 - Rec(RC))<br />
-  *         	[14], [ip]			=> IP-Adress (Note: This will be 0.0.0.0 for all players if you are not logged in as a server admin)<br />
-  *             [15], [nick]		=> Nickname<br />
-  *         	[16], [loginname]	=> Loginname (empty if user is not registered)<br />
+  * 			array:<br>
+  *				[0], [unparsed]		=> Unparsed playerstring<br>
+  *				[1], [p_id]			=> PlayerID<br>
+  *             [2], [c_id]			=> ChannelID<br>
+  *				[3], [ps]			=> Packets sent by server<br>
+  * 			[4], [bs]			=> Bytes sent by server<br>
+  * 			[5], [pr]			=> Packets received by server<br>
+  * 			[6], [br]			=> Bytes received by server<br>
+  *         	[7], [pl]			=> Packet Loss<br>
+  *             [8], [ping]			=> Ping<br>
+  *             [9], [logintime]	=> Seconds since Login<br>
+  *        		[10], [idletime]	=> Idletime in seconds<br>
+  *             [11], [cprivs] 		=> Channelflags (1 - CA, 2 - O, 4 - V, 8 - AO, 16 - AV)<br>
+  *         	[12], [pprivs] 		=> Serverflags (1 - SA, 2 - Allowed To Register(AR), 4 - R, 8 - ???, 16 - Sticky) <br>
+  *         	[13], [pflags] 		=> Playerflags (1 - Channel Commander(CC), 2 - Voice Request(VR), 4 - No Whisper(NW), 8 - Away(AW), 16 - Mic Muted(MM), 32 - Snd Muted(SM), 64 - Rec(RC))<br>
+  *         	[14], [ip]			=> IP-Adress (Note: This will be 0.0.0.0 for all players if you are not logged in as a server admin)<br>
+  *             [15], [nick]		=> Nickname<br>
+  *         	[16], [loginname]	=> Loginname (empty if user is not registered)<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -331,17 +331,17 @@ class cyts {
 
 /**
   * info_channelList: Returns a list of channels that are available on the server
-  * 			array:<br />
-  *				[0], [unparsed]	=> Unparsed channelstring<br />
-  *				[1], [id]		=> ChannelID<br />
-  *             [2], [codec]	=> Codec (from 0 to 13):<br />
-  *				[3], [parent]	=> Parent ChannelID (-1 if no Subchannel)<br />
-  * 			[4], [order]	=> Channel Order<br />
-  * 			[5], [maxusers]	=> Max Users<br />
-  * 			[6], [name]		=> Name<br />
-  *         	[7], [flags]	=> Flags (1 - Unregistered(U), 2 - Moderated(M), 4 - Private(P), 8 - Subchannels(S), 16 - Default(D))<br />
-  *             [8], [password]	=> Passworded (1 - True, 0 - False)<br />
-  *             [9], [topic]	=> Topic<br />
+  * 			array:<br>
+  *				[0], [unparsed]	=> Unparsed channelstring<br>
+  *				[1], [id]		=> ChannelID<br>
+  *             [2], [codec]	=> Codec (from 0 to 13):<br>
+  *				[3], [parent]	=> Parent ChannelID (-1 if no Subchannel)<br>
+  * 			[4], [order]	=> Channel Order<br>
+  * 			[5], [maxusers]	=> Max Users<br>
+  * 			[6], [name]		=> Name<br>
+  *         	[7], [flags]	=> Flags (1 - Unregistered(U), 2 - Moderated(M), 4 - Private(P), 8 - Subchannels(S), 16 - Default(D))<br>
+  *             [8], [password]	=> Passworded (1 - True, 0 - False)<br>
+  *             [9], [topic]	=> Topic<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -567,30 +567,30 @@ class cyts {
 	}
 
 /**
-  * info_serverInfo: Returns some information about the sub-server<br />
-  * array:<br />
-  * [server_id] => Server ID (not UDP-Port)<br />
-  * [server_name] => Server name<br />
-  * [server_platform] => Server OS<br />
-  * [server_welcomemessage] => Server welcome message<br />
-  * [server_webpost_linkurl] => Server webpost linkurl<br />
-  * [server_webpost_posturl] => Server webpost posturl<br />
-  * [server_password] => Server passworded (1 - True, 0 - False)<br />
-  * [server_clan_server] => Clan server (1 - True, 0 - False)<br />
-  * [server_udpport] => UDP-Port<br />
-  * [server_maxusers] => Slots<br />
-  * [server_packetssend] => Packets sent by sub-server<br />
-  * [server_bytessend] => Bytes sent by sub-server<br />
-  * [server_packetsreceived] => Packets received by sub-server<br />
-  * [server_bytesreceived] => Bytes received by sub-server<br />
-  * [server_uptime] => Server uptime in seconds<br />
-  * [server_currentusers] => Connected players<br />
-  * [server_currentchannels] => Existing channels<br />
-  * [server_bwinlastsec] => Incoming bandwith (last second)<br />
-  * [server_bwoutlastsec] => Outgoing bandwith (last second)<br />
-  * [server_bwinlastmin] => Incoming bandwith (last minute)<br />
-  * [server_bwoutlastmin] => Outgoing bandwith (last minute)<br />
-  * [average_packet_loss] => Average Packet Loss<br />
+  * info_serverInfo: Returns some information about the sub-server<br>
+  * array:<br>
+  * [server_id] => Server ID (not UDP-Port)<br>
+  * [server_name] => Server name<br>
+  * [server_platform] => Server OS<br>
+  * [server_welcomemessage] => Server welcome message<br>
+  * [server_webpost_linkurl] => Server webpost linkurl<br>
+  * [server_webpost_posturl] => Server webpost posturl<br>
+  * [server_password] => Server passworded (1 - True, 0 - False)<br>
+  * [server_clan_server] => Clan server (1 - True, 0 - False)<br>
+  * [server_udpport] => UDP-Port<br>
+  * [server_maxusers] => Slots<br>
+  * [server_packetssend] => Packets sent by sub-server<br>
+  * [server_bytessend] => Bytes sent by sub-server<br>
+  * [server_packetsreceived] => Packets received by sub-server<br>
+  * [server_bytesreceived] => Bytes received by sub-server<br>
+  * [server_uptime] => Server uptime in seconds<br>
+  * [server_currentusers] => Connected players<br>
+  * [server_currentchannels] => Existing channels<br>
+  * [server_bwinlastsec] => Incoming bandwith (last second)<br>
+  * [server_bwoutlastsec] => Outgoing bandwith (last second)<br>
+  * [server_bwinlastmin] => Incoming bandwith (last minute)<br>
+  * [server_bwoutlastmin] => Outgoing bandwith (last minute)<br>
+  * [average_packet_loss] => Average Packet Loss<br>
   * 
   * @author     Steven Barth
   * @version    2.0
@@ -614,27 +614,27 @@ class cyts {
 	}
 
 /**
-  * info_globalInfo: Returns some information about the server<br />
-  * array:<br />
-  * [total_server_uptime] => Server uptime (String)<br />
-  * [total_server_version] => Server version<br />
-  * [total_server_platform] => Server OS<br />
-  * [total_servers] => Total sub-servers<br />
-  * [total_users_online] => Total users online on all sub-servers<br />
-  * [total_users_maximal] => Users maximum on all sub-servers<br />
-  * [total_channels] => Total channels on all servers<br />
-  * [total_bytesreceived] => Total bytes received by server<br />
-  * [total_bytessend] => Total bytes sent by server<br />
-  * [total_packetssend] => Total packets sent by server<br />
-  * [total_packetsreceived] => Total bytes received by server<br />
-  * [total_bwoutlastmin] => Outgoing bandwith (last minute)<br />
-  * [total_bwoutlastsec] => Outgoing bandwith (last second)<br />
-  * [total_bwinlastmin] => Incoming bandwith (last minute)<br />
-  * [total_bwinlastsec] => Incoming bandwith (last second)<br />
-  * [isp_ispname] => Server ISP<br />
-  * [isp_linkurl] => Server ISP - Homepage<br />
-  * [isp_adminemail] => Server ISP - Admin E-Mail<br />
-  * [isp_countrynumber] => Server ISP - Contrynumber<br />
+  * info_globalInfo: Returns some information about the server<br>
+  * array:<br>
+  * [total_server_uptime] => Server uptime (String)<br>
+  * [total_server_version] => Server version<br>
+  * [total_server_platform] => Server OS<br>
+  * [total_servers] => Total sub-servers<br>
+  * [total_users_online] => Total users online on all sub-servers<br>
+  * [total_users_maximal] => Users maximum on all sub-servers<br>
+  * [total_channels] => Total channels on all servers<br>
+  * [total_bytesreceived] => Total bytes received by server<br>
+  * [total_bytessend] => Total bytes sent by server<br>
+  * [total_packetssend] => Total packets sent by server<br>
+  * [total_packetsreceived] => Total bytes received by server<br>
+  * [total_bwoutlastmin] => Outgoing bandwith (last minute)<br>
+  * [total_bwoutlastsec] => Outgoing bandwith (last second)<br>
+  * [total_bwinlastmin] => Incoming bandwith (last minute)<br>
+  * [total_bwinlastsec] => Incoming bandwith (last second)<br>
+  * [isp_ispname] => Server ISP<br>
+  * [isp_linkurl] => Server ISP - Homepage<br>
+  * [isp_adminemail] => Server ISP - Admin E-Mail<br>
+  * [isp_countrynumber] => Server ISP - Contrynumber<br>
   * 
   * @author     Steven Barth
   * @version    2.0
@@ -739,7 +739,7 @@ class cyts {
 	}
 
 /**
-  * admin_kickFromChannel: Moves the target player from his/her current channel to the default channel<br />
+  * admin_kickFromChannel: Moves the target player from his/her current channel to the default channel<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -754,7 +754,7 @@ class cyts {
 	}
 
 /**
-  * admin_kick: Kicks the target player from the server<br />
+  * admin_kick: Kicks the target player from the server<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -769,7 +769,7 @@ class cyts {
 	}
 	
 /**
-  * admin_remove: Silently removes the target player from the server<br />
+  * admin_remove: Silently removes the target player from the server<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -783,7 +783,7 @@ class cyts {
 	}
 	
 /**
-  * admin_move: Moves the target player $pID to the target channel $cID<br />
+  * admin_move: Moves the target player $pID to the target channel $cID<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -799,7 +799,7 @@ class cyts {
 	}
 	
 /**
-  * admin_clearChannel: Removes all players from the target Channel	<br />
+  * admin_clearChannel: Removes all players from the target Channel	<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -833,7 +833,7 @@ class cyts {
 	}
 
 /**
-  * admin_kickIdler: Removes the target idle players (Evaluates the KI function)<br />
+  * admin_kickIdler: Removes the target idle players (Evaluates the KI function)<br>
   *		  Note: If you want to use two or more flags, sum them (e.g. 7 for Unregistered & Registered Users in Unregistered Channels)
   *
   * @author     Steven Barth
@@ -882,14 +882,14 @@ class cyts {
 	}
 	
 /**
-  * admin_dbUserList: Returns a list of all known users in the database<br />
-  * 	  array:<br />
-  *       [0] => Unparsed DB-Row<br />
-  *       [1] => Userid<br />
-  *       [2] => Serveradmin (0 - False, -1 - True)<br />
-  *		  [3] => Account created<br />
-  *       [4] => Last Login<br />
-  *		  [5] => Username<br />
+  * admin_dbUserList: Returns a list of all known users in the database<br>
+  * 	  array:<br>
+  *       [0] => Unparsed DB-Row<br>
+  *       [1] => Userid<br>
+  *       [2] => Serveradmin (0 - False, -1 - True)<br>
+  *		  [3] => Account created<br>
+  *       [4] => Last Login<br>
+  *		  [5] => Username<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -909,7 +909,7 @@ class cyts {
 	}
 	
 /**
-  * admin_getDBUserByName: Returns the ID of the user $uName<br />
+  * admin_getDBUserByName: Returns the ID of the user $uName<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -926,7 +926,7 @@ class cyts {
 	}
 	
 /**
-  * admin_getDBUserData: Returns the data of the user $uID<br />
+  * admin_getDBUserData: Returns the data of the user $uID<br>
   *
   * @author     Steven Barth
   * @version    1.0
@@ -943,7 +943,7 @@ class cyts {
 	}
 	
 /**
-  * admin_dbUserAdd: Adds a user to the UserDB<br />
+  * admin_dbUserAdd: Adds a user to the UserDB<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -986,7 +986,7 @@ class cyts {
 	}
 
 /**
-  * admin_dbUserChangeSA: Changes the Server Admin status of a user<br />
+  * admin_dbUserChangeSA: Changes the Server Admin status of a user<br>
   *       Note: This function requires a login with a server admin account
   *
   * @author     Steven Barth
@@ -1002,13 +1002,13 @@ class cyts {
 	}
 
 /**
-  * sadmin_dbSUserList: Returns a list of all known users in the database<br />
-  * 	  array:<br />
-  *       [0] => Unparsed DB-Row<br />
-  *       [1] => Userid<br />
-  *		  [2] => Account created<br />
-  *       [3] => Last Login<br />
-  *		  [4] => Username<br />
+  * sadmin_dbSUserList: Returns a list of all known users in the database<br>
+  * 	  array:<br>
+  *       [0] => Unparsed DB-Row<br>
+  *       [1] => Userid<br>
+  *		  [2] => Account created<br>
+  *       [3] => Last Login<br>
+  *		  [4] => Username<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -1028,7 +1028,7 @@ class cyts {
 	}
 	
 /**
-  * sadmin_getDBSUserByName: Returns the ID of the user $uName<br />
+  * sadmin_getDBSUserByName: Returns the ID of the user $uName<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -1045,7 +1045,7 @@ class cyts {
 	}
 	
 /**
-  * sadmin_getDBSUserData: Returns the data of the user $uID<br />
+  * sadmin_getDBSUserData: Returns the data of the user $uID<br>
   *
   * @author     Steven Barth
   * @version    1.0
@@ -1062,7 +1062,7 @@ class cyts {
 	}
 	
 /**
-  * sadmin_dbSUserAdd: Adds a user to the UserDB<br />
+  * sadmin_dbSUserAdd: Adds a user to the UserDB<br>
   *
   * @author     Steven Barth
   * @version    2.0
@@ -1265,16 +1265,16 @@ class cyts {
   *       Note: This function requires a login with a super admin account
   *		  Output: 
   * [0] => Array (
-  *				[0], [unparsed]		=> Unparsed playerstring<br />
-  *				[1], [p_id]			=> PlayerID<br />
-  *             [2], [p_dbid]		=> Player Database ID<br />
-  *				[3], [c_id]			=> Channel ID<br />
-  * 			[4], [nickname]		=> Nickname<br />
-  * 			[5], [loginname]	=> Loginname<br />
-  * 			[6], [sa]			=> Server Administrator<br />
+  *				[0], [unparsed]		=> Unparsed playerstring<br>
+  *				[1], [p_id]			=> PlayerID<br>
+  *             [2], [p_dbid]		=> Player Database ID<br>
+  *				[3], [c_id]			=> Channel ID<br>
+  * 			[4], [nickname]		=> Nickname<br>
+  * 			[5], [loginname]	=> Loginname<br>
+  * 			[6], [sa]			=> Server Administrator<br>
 
-  *         	[7], [st]			=> Channel Sticky<br />
-  *             [8], [ip]			=> IP<br />
+  *         	[7], [st]			=> Channel Sticky<br>
+  *             [8], [ip]			=> IP<br>
   * )
   * [1, 2, 3, ...] => Array (
   *		[0], [unparsed] 		=> Unparsed Channelstring

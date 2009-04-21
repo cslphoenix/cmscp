@@ -1,14 +1,52 @@
+
 <table class="out" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head">{L_TS_VIEWER}</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-</tr>
-<tr>
 	<td>
+		<!-- BEGIN show_sstats -->
+		<table class="out" width="100%" cellspacing="0">
+		<tr>
+			<td class="info_head" colspan="2">{L_SSTATS}AS</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_NAME}</td>
+			<td>{SERVER_NAME}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_PLATFORM}</td>
+			<td>{SERVER_PLATFORM}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_WELCOME_MSG}</td>
+			<td>{SERVER_WELCOME_MSG}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_TYPE}</td>
+			<td>{SERVER_TYPE}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_USER_MAX}</td>
+			<td>{SERVER_USER_MAX}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_USER_CURRENT}</td>
+			<td>{SERVER_USER_CURRENT}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_UPTIME}</td>
+			<td>{SERVER_UPTIME}</td>
+		</tr>
+		<tr>
+			<td>{L_SERVER_NUM_CHANNELS}</td>
+			<td>{SERVER_NUM_CHANNELS}</td>
+		</tr>
+		</table>
+		<!-- END show_sstats -->
+	
 		<!-- BEGIN show_userist -->
 		<table class="out" width="100%" cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
 		<tr>
 			<td class="info_head" colspan="2">{L_TS_PLIST}</td>
 		</tr>
@@ -19,7 +57,7 @@
 		</tr>
 		<!-- END userlist -->
 		<tr>
-			<td>&nbsp;</td>
+			<td colspan="2">&nbsp;</td>
 		</tr>
 		</table>
 		<!-- END show_userist -->

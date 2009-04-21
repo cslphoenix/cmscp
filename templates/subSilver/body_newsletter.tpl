@@ -10,10 +10,10 @@
 <form action="{S_NEWSLETTER_ACTION}" method="post">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td><input type="text" class="post" name="user_name" maxlength="25" value="{USER}" /> <input type="submit" name="submit" class="button2" value="GO" /></td>
+	<td><input type="submit" name="submit" class="button2" value="GO" /></td>
 </tr>
 <tr>
-	<td><input type="text" class="post" name="user_mail"  maxlength="100" size="25" value="email@adresse" onblur="this.className='post'; if(this.value=='')this.value='email@adresse'" onfocus="this.className='post';if(this.value=='email@adresse') this.value='';" /></td>
+	<td><input type="text" class="post" name="mail"  maxlength="100" size="25" value="email@adresse" onblur="this.className='post'; if(this.value=='')this.value='email@adresse'" onfocus="this.className='post';if(this.value=='email@adresse') this.value='';" /></td>
 </tr>
 <tr>
 	<td> <input type="checkbox" name="unsubscribe" /> Austragen</td>

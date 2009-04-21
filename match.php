@@ -197,8 +197,6 @@ if ($mode == '')
 }
 else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 {	
-	session_start();
-	
 	$page_title = $lang['match_details'];
 	include($root_path . 'includes/page_header.php');
 	
@@ -234,7 +232,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		message_die(GENERAL_ERROR, 'Falsche ID ?');
 	}
 	
-	if ($userauth['auth_match'] || $userdata['user_level'] == ADMIN)
+	if ( $userauth['auth_match'] || $userdata['user_level'] == ADMIN )
 	{
 		$template->assign_block_vars('match_edit', array(
 			'EDIT_MATCH' => '<a href="' . append_sid("admin/admin_match.php?mode=edit&" . POST_MATCH_URL . "=" . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match'] . '</a>',
@@ -656,6 +654,8 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		//	Erlaubt nach Absenden kein Doppelbeitrag erst nach 20 Sekunden
 		if ( isset($HTTP_POST_VARS['submit']) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || $last_entry['time_create']+20 < time() ) )
 		{
+			session_start();
+
 			//	Laden der Funktion zum eintragen von Kommentaren
 			include($root_path . 'includes/functions_post.php');
 			
@@ -685,13 +685,13 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				if ( empty($HTTP_POST_VARS['poster_nick']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'user_nick';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'user_nick';
 				}
 				
 				if ( empty($HTTP_POST_VARS['poster_mail']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'poster_mail';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'poster_mail';
 				}
 				
 				unset($_SESSION['captcha']);
@@ -700,7 +700,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 			if ( empty($HTTP_POST_VARS['comment']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'comment';
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
 			}
 	
 			if ( $error )
@@ -745,7 +745,7 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				
 				_comment_message('add', 'match', $match_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
-				$message = $lang['add_comment'] . '<br /><br />' . sprintf($lang['click_return_match'],  '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id) . '">', '</a>');
+				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_match'],  '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}

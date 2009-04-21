@@ -15,7 +15,6 @@ include($root_path . 'includes/page_header.php');
 
 $template->set_filenames(array('body' => 'counter_body.tpl'));
 
-
 	//	heutiges Datum auswählen
 	$day	= date("d", time());	// Heutiger Tag: z. B. "1"
 	$month	= date("n", time());	// Heutiger Monat
@@ -55,9 +54,9 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 							MONTH(counter_date)			= ' . ($HTTP_POST_VARS['month']) . ' AND 
 							DAYOFMONTH(counter_date)	= ' . ($HTTP_POST_VARS['day']) . ' 
 						'; 
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if(!mysql_result($result, 0))
@@ -190,7 +189,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 						YEAR(counter_date) = " . $year." AND
 						MONTH(counter_date) = " . $month." AND
 						DAYOFMONTH(counter_date) = " . $i."";
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
 		}
@@ -219,7 +218,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 					WHERE
 						YEAR(counter_date) = '" . $year."' AND
 						MONTH(counter_date) = '" . $i."'";
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
 		}
@@ -238,7 +237,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 
     $diagramme['Jahr']['Name'] = ""; 
     
-	for ( $i=2009; $i<=2009; $i++ )
+	for ( $i=2009; $i<=2012; $i++ )
 	{
 		$sql = 'SELECT
 					SUM(counter_entry) AS sum
@@ -246,7 +245,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
                      ' . COUNTER_COUNTER . '
                 WHERE 
                      YEAR(counter_date) = "'.$i.'"';
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
 		}

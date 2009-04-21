@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -81,7 +81,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -167,20 +167,20 @@
 				</tr>
 				<!-- BEGIN team_logo_upload -->
 				<tr>
-					<td class="row1" width="160">{L_TEAM_LOGO_UP}:<br /><span class="small">{L_LOGO_UP_EXPLAIN}</span></td>
+					<td class="row1" width="160">{L_TEAM_LOGO_UP}:<br><span class="small">{L_LOGO_UP_EXPLAIN}</span></td>
 					<td class="row3"><input class="post" type="file" name="team_logo"></td>
 				</tr>
 				<tr>
-					<td colspan="2">{TEAM_LOGO}<br /><input type="checkbox" name="logodel" /></td>
+					<td colspan="2">{TEAM_LOGO}<br><input type="checkbox" name="logodel" /></td>
 				</tr>
 				<!-- END team_logo_upload -->
 				<!-- BEGIN team_logos_upload -->
 				<tr>
-					<td class="row1">{L_TEAM_LOGOS_UP}:<br /><span class="small">{L_LOGOS_UP_EXPLAIN}</span></td>
+					<td class="row1">{L_TEAM_LOGOS_UP}:<br><span class="small">{L_LOGOS_UP_EXPLAIN}</span></td>
 					<td class="row3"><input class="post" type="file" name="team_logos"></td>
 				</tr>
 				<tr>
-					<td colspan="2">{TEAM_LOGOS}<br /><input type="checkbox" name="logosdel" /></td>
+					<td colspan="2">{TEAM_LOGOS}<br><input type="checkbox" name="logosdel" /></td>
 				</tr>
 				<!-- END team_logos_upload -->
 				</table>
@@ -224,7 +224,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -313,12 +313,12 @@
 	<td class="row3" width="75%">{S_RANK_SELECT}</td>
 </tr>
 <tr>
-	<td class="row1" valign="top"><b>{L_TEAM_ADD}:</b><br /><span class="small">{L_TEAM_ADD_MEMBER_EX}</span></td>
+	<td class="row1" valign="top"><b>{L_TEAM_ADD}:</b><br><span class="small">{L_TEAM_ADD_MEMBER_EX}</span></td>
 	<td class="row3">
 		<textarea class="textarea" name="members" cols="40" rows="5"></textarea>
-		<br /><br />
+		<br><br>
 		{S_ACTION_ADDUSERS}
-		<br /><br />
+		<br><br>
 		<input type="checkbox" name="mod" /> Moderatorstatus
 	</td>
 </tr>

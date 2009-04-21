@@ -16,11 +16,13 @@ $template->set_filenames(array('body' => 'body_ucp.tpl'));
 
 if ( $userdata['session_logged_in'] )
 {
+	//
 	//	News / Newskommentare
+	//
 	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT n.* FROM ' . NEWS . " n ORDER BY n.news_time_public";
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
@@ -30,7 +32,7 @@ if ( $userdata['session_logged_in'] )
 	else
 	{
 		$sql = 'SELECT n.* FROM ' . NEWS . ' n WHERE n.news_intern = 0 ORDER BY n.news_time_public';
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}

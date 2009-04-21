@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -46,7 +46,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="out" cellspacing="0">
 <!-- BEGIN forum_auth_data -->

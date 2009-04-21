@@ -38,7 +38,7 @@ function emoticon(text) {
 				</table></td>
 			</tr>
 			<tr>
-				<td align="center"><br /><span class="genmed"><a href="javascript:window.close();" class="genmed">{L_CLOSE_WINDOW}</a></span></td>
+				<td align="center"><br><span class="genmed"><a href="javascript:window.close();" class="genmed">{L_CLOSE_WINDOW}</a></span></td>
 			</tr>
 		</table></td>
 	</tr>

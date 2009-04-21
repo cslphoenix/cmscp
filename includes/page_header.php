@@ -110,70 +110,113 @@ $s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($config['defaul
 //	Counter
 //	von http://www.mywebsolution.de/
 //
-if ($settings['site_counter'] == '1')
+if ( $settings['site_counter'] == '1' )
 {
 	// Prüfen, ob bereits ein Counter für den  
     // heutigen Tag erstellt wurde 
     $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()'; 
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	
     // ist der Tag nocht nicht vorhanden,  
     // wird ein neuer Tagescounter erstellt 
     if (!$db->sql_numrows($result))
 	{
 		$sql = 'INSERT INTO ' . COUNTER_COUNTER . ' SET counter_date = CURDATE()'; 
-		$result = $db->sql_query($sql);
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
     }
 	
 	// Alte (mehr als 1 Tag) IPs in 'Online' löschen 
 	// damit die Datenbank nicht überfüllt wird
-	$sql = 'DELETE FROM ' . COUNTER_ONLINE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_date'; 
-	$result = $db->sql_query($sql);
+	$sql = 'DELETE FROM ' . COUNTER_ONLINE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_start'; 
+	if ( !$result = $db->sql_query($sql) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	
 	// Überprüfe, ob die IP bereits gespeichert ist
 	$sql = 'SELECT online_ip FROM ' . COUNTER_ONLINE . ' WHERE online_ip = "' . $userdata['session_ip'] . '"';
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 		
 	// Falls nicht, wird sie gespeichert 
     if (!$db->sql_numrows($result))
 	{
-		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date) VALUES ("' . $userdata['session_ip'] . '", NOW())'; 
-		$result = $db->sql_query($sql);
+		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date, online_start) VALUES ("' . $userdata['session_ip'] . '", NOW(), NOW())'; 
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 		
 		// ... und die Anzahl wird um 1 erhöht 
-		$sql = 'UPDATE ' . COUNTER_COUNTER . ' SET counter_entry = counter_entry+1 WHERE counter_date = CURDATE()'; 
-		$result = $db->sql_query($sql);
+		$sql = 'UPDATE ' . COUNTER_COUNTER . ' SET counter_entry = counter_entry + 1 WHERE counter_date = CURDATE()'; 
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
     } 
     // Falls ja, wird ihr Datum aktualisiert 
     else
 	{
 		$sql = 'UPDATE ' . COUNTER_ONLINE . ' SET online_date = NOW() WHERE online_ip = "' . $userdata['session_ip'] . '"';
-		$result = $db->sql_query($sql);
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 	}
 	
 	// User die 'heute' auf der Seite waren 
-    $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()'; 
-	$result = $db->sql_query($sql);
+    $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	$row = $db->sql_fetchrow($result);
+//	$row = _cached($sql, 'counter_stats_today', 1, 1800);
 	$stats_day = (int) $row['counter_entry'];
 	$db->sql_freeresult($result);
 	
 	// User die 'gestern' auf der Seite waren 
 	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
-	$row = _cached($sql, 'counter_stats_yesterday', 1, 3600);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrow($result);
+//	$row = _cached($sql, 'counter_stats_yesterday', 1, 1800);
 	$stats_yesterday = (int) $row['sum'];
+	$db->sql_freeresult($result);
 	
 	// user-monat: 
 	$sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')"; 
-	$row = _cached($sql, 'counter_stats_month', 1, 3600);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrow($result);
+//	$row = _cached($sql, 'counter_stats_month', 1, 1800);
 	$stats_month = (int) $row['sum'];
-	
+	$db->sql_freeresult($result);
+
 	// User die insgesamt die Seite besucht haben. 
     // Dazu wird die Gruppenfunktion SUM() 
     // verwendet, die alle Werte der Spalte 'Anzahl' summiert 
     $sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER;
-	$row = _cached($sql, 'counter_stats_total', 1, 3600);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrow($result);
+//	$row = _cached($sql, 'counter_stats_total', 1, 1800);
 	$stats_year = (int) $row['sum'];
+	$db->sql_freeresult($result);
 	
 	$l_counter_head = sprintf($lang['counter_today'], $stats_day);
 	$l_counter_head .= sprintf($lang['counter_yesterday'], $stats_yesterday);
@@ -202,9 +245,9 @@ if ($settings['site_counter'] == '1')
 
 $sql = 'SELECT group_id, group_name, group_color, group_order FROM ' . GROUPS . ' WHERE group_legend = 1 ORDER BY group_order';
 //$group_data = _cached($sql, 'list_overall_group');
-if( !($result = $db->sql_query($sql)) )
+if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'Could not obtain user/online information', '', __LINE__, __FILE__, $sql);
+	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 }
 $groups_data = $db->sql_fetchrowset($result);
 
@@ -240,9 +283,9 @@ $sql = "SELECT u.username, u.user_id, u.user_allow_viewonline, u.user_level, u.u
 		AND s.session_time >= ".( time() - 300 ) . "
 		$user_forum_sql
 	ORDER BY u.username ASC, s.session_ip ASC";
-if( !($result = $db->sql_query($sql)) )
+if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'Could not obtain user/online information', '', __LINE__, __FILE__, $sql);
+	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 }
 
 $userlist_ary = array();
@@ -470,10 +513,10 @@ foreach ($userauth as $key => $value)
 //
 // Show the overall footer.
 //
-$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br /><br />' : '';
+$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br><br>' : '';
 
 $sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
-if( !($result = $db->sql_query($sql)) )
+if ( !($result = $db->sql_query($sql)) )
 {
 	message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 }
@@ -498,7 +541,9 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 //
 $template->assign_vars(array(
 							 
-	'CMS_VERSION'		=> $changelog['changelog_number'],
+	
+	'VERSION'		=> $config['version'],
+	'CMS_VERSION'	=> $changelog['changelog_number'],
 							 
 	'NEW_USERS'		=> sprintf($lang['newest_users'], $settings['subnavi_newusers_limit']),
 	'SITENAME' => $config['sitename'],
@@ -610,7 +655,7 @@ else
 if (defined('PAGE_DISABLE'))
 {
 	$disable_message = (!empty($config['page_disable_msg'])) ? htmlspecialchars($config['page_disable_msg']) : $lang['Board_disable'];
-	$template->assign_block_vars('page_disable', array('MSG' => str_replace("\n", '<br />', $disable_message)));
+	$template->assign_block_vars('page_disable', array('MSG' => str_replace("\n", '<br>', $disable_message)));
 }
 
 // Add no-cache control for cookies if they are set

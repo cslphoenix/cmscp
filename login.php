@@ -72,7 +72,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				{
 					if ( isset($HTTP_POST_VARS['admin']) && $userdata['username'] != $username )
 					{
-						$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
+						$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
 						message_die(GENERAL_MESSAGE, $message);
 					}
 					$autologin = ( isset($HTTP_POST_VARS['autologin']) ) ? TRUE : 0;
@@ -130,7 +130,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				
 				$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
-				$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
+				$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
 
 				message_die(GENERAL_MESSAGE, $message);
 			}
@@ -154,7 +154,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 
 			$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
-			$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
+			$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}

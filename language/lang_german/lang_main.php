@@ -22,12 +22,20 @@
 
 ***/
 
+$lang['click_return_index'] = 'Klick %shier%s um zum Index zurückzukehren';
+
 $lang['page_newsletter']	= 'Newsletter';
 
-$lang['newsletter_subscribe']			= 'Erfolgreiches eintragen im Newsletter.';
-$lang['newsletter_subscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse.';
-$lang['newsletter_unsubscribe']			= 'Erfolgreiches austragen im Newsletter.';
-$lang['newsletter_unsubscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse2.';
+$lang['newsletter_added']		= 'Du bist nun im Newslettersystem';
+$lang['newsletter_accept']		= 'Bestätigit und Aktiviert';
+$lang['newsletter_delete']		= 'Du bist nun nicht mehr im Newslettersystem';
+$lang['newsletter_deaccept']	= 'Bestätigit und Löschung';
+
+$lang['newsletter_fail']				= 'Fehlschlag beim bestätigen der Mailadresse.';
+$lang['newsletter_subscribe']			= 'Erfolgreiches eintragen im Newsletter. Du wirst eine eMail erhalten mit einem Bestätigungslink.';
+$lang['newsletter_subscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse. Deine eMail Adresse wurde aktiviert und eingetragen im System.';
+$lang['newsletter_unsubscribe']			= 'Erfolgreiches austragen im Newsletter. Du wirst eine eMail erhalten mit einem Bestätigungslink.';
+$lang['newsletter_unsubscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse. Deine eMail Adresse wurde aus dem System Entfernt.';
 
 $lang['news_info_url']		= 'Link: ';
 $lang['news_info_urls']		= 'Links: ';
@@ -216,14 +224,14 @@ $lang['year']				= 'Jahr';
 //
 $lang['Unknown_error'] = "Unknown Error"; 
 $lang['404'] = "404 - Not Found"; 
-$lang['404_Description'] = "The page you are trying to reach does not exist on this server.<br />You can browse the forum by following one of the links above.<br /><br />We apologise for the inconvenience."; 
+$lang['404_Description'] = "The page you are trying to reach does not exist on this server.<br>You can browse the forum by following one of the links above.<br><br>We apologise for the inconvenience."; 
 $lang['401'] = "401 - Incorrect Password"; 
-$lang['401_Description'] = "The username or password you supplied is not correct.<br />You can browse the forum by following one of the links above."; 
+$lang['401_Description'] = "The username or password you supplied is not correct.<br>You can browse the forum by following one of the links above."; 
 $lang['403'] = "403 - Access Denied"; 
-$lang['403_Description'] = "You don't have the proper rights to view this page.<br />You can browse the forum by following one of the links above."; 
+$lang['403_Description'] = "You don't have the proper rights to view this page.<br>You can browse the forum by following one of the links above."; 
 $lang['500'] = "500 - Internal Server Error"; 
-$lang['500_Description'] = "An Internal Server Error occurred.<br />If reloading the page doens't help, please contact the system administrator."; 
-//$lang['back']			= '<br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zur&uuml;ck</a>';
+$lang['500_Description'] = "An Internal Server Error occurred.<br>If reloading the page doens't help, please contact the system administrator."; 
+//$lang['back']			= '<br><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zur&uuml;ck</a>';
 $lang['back']			= '%s&laquo; Zur&uuml;ck%s';
 
 //
@@ -514,7 +522,7 @@ $lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen teilnehmen.';
 $lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen <b>nicht</b> teilnehmen.';
 $lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.'; // %s replaced by a href links, do not remove!
 
-$lang['No_topics_post_one'] = 'In diesem Forum sind keine Beiträge vorhanden.<br />Klicke auf <b>Neues Thema</b>, um den ersten Beitrag zu erstellen.';
+$lang['No_topics_post_one'] = 'In diesem Forum sind keine Beiträge vorhanden.<br>Klicke auf <b>Neues Thema</b>, um den ersten Beitrag zu erstellen.';
 
 
 //
@@ -894,7 +902,7 @@ $lang['Already_activated'] = 'Dein Account ist bereits aktiv';
 $lang['COPPA'] = 'Dein Account wurde erstellt, muss aber zuerst überprüft werden. Mehr Details dazu wurden dir per E-Mail gesendet.';
 
 $lang['Registration'] = 'Einverständniserklärung';
-$lang['Reg_agreement'] = 'Die Administratoren und Moderatoren dieses Forums bemühen sich, Beiträge mit fragwürdigem Inhalt so schnell wie möglich zu bearbeiten oder ganz zu löschen; aber es ist nicht möglich, jede einzelne Nachricht zu überprüfen. Du bestätigst mit Absenden dieser Einverständniserklärung, dass du akzeptierst, dass jeder Beitrag in diesem Forum die Meinung seines Urhebers wiedergibt und dass die Administratoren, Moderatoren und Betreiber dieses Forums nur für ihre eigenen Beiträge verantwortlich sind.<br /><br />Du verpflichtest dich, keine beleidigenden, obszönen, vulgären, verleumderischen, gewaltverherrlichenden oder aus anderen Gründen strafbare Inhalte in diesem Forum zu veröffentlichen. Verstöße gegen diese Regel führen zu sofortiger und permanenter Sperrung. Die Betreiber behalten sich vor, Verbindungsdaten u. ä. an die strafverfolgenden Behörden weiterzugeben. Du räumst den Betreibern, Administratoren und Moderatoren dieses Forums das Recht ein, Beiträge nach eigenem Ermessen zu entfernen, zu bearbeiten, zu verschieben oder zu sperren. Du stimmst zu, dass die im Rahmen der Registrierung erhobenen Daten in einer Datenbank gespeichert werden.<br /><br />Dieses System verwendet Cookies, um Informationen auf deinem Computer zu speichern. Diese Cookies enthalten keine der oben angegebenen Informationen, sondern dienen ausschließlich dem Bedienungskomfort. Deine Mail-Adresse wird nur zur Bestätigung der Registrierung und ggf. zum Versand eines neuen Passwortes verwendet.<br /><br />Durch das Abschließen der Registrierung stimmst du diesen Nutzungsbedingungen zu.';
+$lang['Reg_agreement'] = 'Die Administratoren und Moderatoren dieses Forums bemühen sich, Beiträge mit fragwürdigem Inhalt so schnell wie möglich zu bearbeiten oder ganz zu löschen; aber es ist nicht möglich, jede einzelne Nachricht zu überprüfen. Du bestätigst mit Absenden dieser Einverständniserklärung, dass du akzeptierst, dass jeder Beitrag in diesem Forum die Meinung seines Urhebers wiedergibt und dass die Administratoren, Moderatoren und Betreiber dieses Forums nur für ihre eigenen Beiträge verantwortlich sind.<br><br>Du verpflichtest dich, keine beleidigenden, obszönen, vulgären, verleumderischen, gewaltverherrlichenden oder aus anderen Gründen strafbare Inhalte in diesem Forum zu veröffentlichen. Verstöße gegen diese Regel führen zu sofortiger und permanenter Sperrung. Die Betreiber behalten sich vor, Verbindungsdaten u. ä. an die strafverfolgenden Behörden weiterzugeben. Du räumst den Betreibern, Administratoren und Moderatoren dieses Forums das Recht ein, Beiträge nach eigenem Ermessen zu entfernen, zu bearbeiten, zu verschieben oder zu sperren. Du stimmst zu, dass die im Rahmen der Registrierung erhobenen Daten in einer Datenbank gespeichert werden.<br><br>Dieses System verwendet Cookies, um Informationen auf deinem Computer zu speichern. Diese Cookies enthalten keine der oben angegebenen Informationen, sondern dienen ausschließlich dem Bedienungskomfort. Deine Mail-Adresse wird nur zur Bestätigung der Registrierung und ggf. zum Versand eines neuen Passwortes verwendet.<br><br>Durch das Abschließen der Registrierung stimmst du diesen Nutzungsbedingungen zu.';
 
 $lang['Agree_under_13'] = 'Ich bin mit den Konditionen dieses Forums einverstanden und <b>unter</b> 12 Jahre alt.';
 $lang['Agree_over_13'] = 'Ich bin mit den Konditionen dieses Forums einverstanden und <b>über</b> oder <b>exakt</b> 12 Jahre alt.';
@@ -982,13 +990,13 @@ $lang['group_no_members'] = 'Diese Gruppe hat keine Mitglieder.';
 $lang['group_no_moderators'] = 'Diese Gruppe hat keine Moderatoren.';
 
 $lang['group_msg_open'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.';
-$lang['group_msg_request'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.<br />Du wirst benachrichtigt, wenn der Gruppenmoderator deine Mitgliedschaft akzeptiert hat.';
+$lang['group_msg_request'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.<br>Du wirst benachrichtigt, wenn der Gruppenmoderator deine Mitgliedschaft akzeptiert hat.';
 
 $lang['Join_group'] = 'Gruppe beitreten';
 $lang['No_group_members'] = 'Diese Gruppe hat keine Mitglieder.';
 $lang['Group_hidden_members'] = 'Diese Gruppe ist versteckt, du kannst keine Mitgliedschaften anzeigen.';
 $lang['No_pending_group_members'] = 'Diese Gruppe hat keine wartenden Mitglieder.';
-$lang['Group_joined'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.<br />Du wirst benachrichtigt, wenn der Gruppenmoderator deine Mitgliedschaft akzeptiert hat.';
+$lang['Group_joined'] = 'Du wurdest erfolgreich bei dieser Gruppe angemeldet.<br>Du wirst benachrichtigt, wenn der Gruppenmoderator deine Mitgliedschaft akzeptiert hat.';
 $lang['Group_request'] = 'Eine Anfrage zum Beitritt in diese Gruppe wurde erstellt.';
 $lang['Group_approved'] = 'Deine Anfrage wurde akzeptiert.';
 $lang['Group_added'] = 'Du bist dieser Gruppe beigetreten.';
@@ -1092,7 +1100,7 @@ $lang['auth_administrators']		= '<b>Administratoren</b>';
 $lang['Not_Moderator'] = 'Du bist nicht Moderator dieses Forums.';
 $lang['Not_Authorised'] = 'Nicht berechtigt';
 
-$lang['You_been_banned'] = 'Du wurdest von diesem Forum verbannt.<br />Kontaktiere den Administrator, um mehr Informationen zu erhalten.';
+$lang['You_been_banned'] = 'Du wurdest von diesem Forum verbannt.<br>Kontaktiere den Administrator, um mehr Informationen zu erhalten.';
 
 
 //
@@ -1331,24 +1339,7 @@ $lang['dbg_line'] = 'Line: %s';
 $lang['dbg_file'] = 'File: %s';
 $lang['dbg_empty'] = 'Empty';
 
-$lang['auths'] = array(
-	'auth_contact'		=> $lang['auth_contact'],
-	'auth_fightus'		=> $lang['auth_fightus'],
-	'auth_forum'		=> $lang['auth_forum'],
-	'auth_forum_auth'	=> $lang['auth_forum_auth'],
-	'auth_games'		=> $lang['auth_games'],
-	'auth_groups'		=> $lang['auth_groups'],
-	'auth_joinus'		=> $lang['auth_joinus'],
-	'auth_match'		=> $lang['auth_match'],
-	'auth_navi'			=> $lang['auth_navi'],
-	'auth_news'			=> $lang['auth_news'],
-	'auth_news_public'	=> $lang['auth_news_public'],
-	'auth_newscat'		=> $lang['auth_newscat'],
-	'auth_ranks'		=> $lang['auth_ranks'],
-	'auth_server'		=> $lang['auth_server'],
-	'auth_teams'		=> $lang['auth_teams'],
-	'auth_teamspeak'	=> $lang['auth_teamspeak'],
-	'auth_training'		=> $lang['auth_training'],
-	'auth_user'			=> $lang['auth_user'],
-);
+
+
+$lang['required']		= 'Mit * markierte Felder sind erforderlich';
 ?>

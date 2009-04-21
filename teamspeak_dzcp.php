@@ -187,11 +187,11 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 				
 				if($innerArr[0]==$innerUArray[1])
 				{
-					$users .= "<img src=\"images/teamspeak/trenner.gif\" alt=\"\" class=\"tsicon\" />".setUserStatus($innerUArray[12])."<span class=\"fontBold\">".removeChar($innerUArray[14])."</span>&nbsp;(".setPPriv($innerUArray[11])."".setCPriv($innerUArray[10]).")<br />";
+					$users .= "<img src=\"images/teamspeak/trenner.gif\" alt=\"\" class=\"tsicon\" />".setUserStatus($innerUArray[12])."<span class=\"fontBold\">".removeChar($innerUArray[14])."</span>&nbsp;(".setPPriv($innerUArray[11])."".setCPriv($innerUArray[10]).")<br>";
 				}
 			}
 			
-			$channels = "<img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" />&nbsp;<a style=\"font-weight:bold\" href=\"teamspeak.php?cID=".trim($innerArr[0])."&amp;type=1\">".removeChar($innerArr[1])."&nbsp;</a><br /> " . $users."";
+			$channels = "<img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" />&nbsp;<a style=\"font-weight:bold\" href=\"teamspeak.php?cID=".trim($innerArr[0])."&amp;type=1\">".removeChar($innerArr[1])."&nbsp;</a><br> " . $users."";
 			
 //			$chan .= show($dir."/channel", array(
 			$template->assign_block_vars('channel', array(
@@ -211,11 +211,11 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 							$innerUArray=$uArr[$p];
 							if($innerCCArray[0]==$innerUArray[1])
 							{
-								$subusers .= "&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"images/teamspeak/trenner.gif\" alt=\"\" class=\"tsicon\" />".setUserStatus($innerUArray[12])."&nbsp;<span class=\"fontBold\">".removeChar($innerUArray[14])."</span>&nbsp;(".setPPriv($innerUArray[11])."".setCPriv($innerUArray[10]).")<br />";
+								$subusers .= "&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"images/teamspeak/trenner.gif\" alt=\"\" class=\"tsicon\" />".setUserStatus($innerUArray[12])."&nbsp;<span class=\"fontBold\">".removeChar($innerUArray[14])."</span>&nbsp;(".setPPriv($innerUArray[11])."".setCPriv($innerUArray[10]).")<br>";
 							}
 						}
 					}
-					$subchannels = "<img src=\"images/teamspeak/trenner.gif\" alt=\"\"  /><img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" /><a style=\"font-weight:normal\" href=\"teamspeak.php?cID=" . $innerCCArray[0]."&amp;type=1\">&nbsp;".removeChar($innerCCArray[1])."&nbsp;</a><br /> " . $subusers."";
+					$subchannels = "<img src=\"images/teamspeak/trenner.gif\" alt=\"\"  /><img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" /><a style=\"font-weight:normal\" href=\"teamspeak.php?cID=" . $innerCCArray[0]."&amp;type=1\">&nbsp;".removeChar($innerCCArray[1])."&nbsp;</a><br> " . $subusers."";
 					
 //					$subchan .= show($dir."/", array(
 					$template->assign_block_vars('channel.subchannel', array(

@@ -153,13 +153,13 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 		if ( empty($HTTP_POST_VARS['contact_nick']) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_nick'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_nick'];
 		}
 		
 		if ( empty($HTTP_POST_VARS['contact_mail']) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_mail'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_mail'];
 		}
 		
 		if ( $mode == 'fightus' )
@@ -167,37 +167,37 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 			if ( empty($HTTP_POST_VARS['contact_rival_name']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_rival_name'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_rival_name'];
 			}
 			
 			if ( empty($HTTP_POST_VARS['contact_rival_tag']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_rival_tag'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_rival_tag'];
 			}
 			
 			if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_date'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_date'];
 			}
 			
 			if ( intval($HTTP_POST_VARS['team_id']) == '0' || intval($HTTP_POST_VARS['team_id']) == '' )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_team'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_team'];
 			}
 			
 			if ( intval($HTTP_POST_VARS['contact_categorie']) == '0' || intval($HTTP_POST_VARS['contact_categorie']) == '' )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_categorie'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_categorie'];
 			}
 			
 			if ( intval($HTTP_POST_VARS['contact_wartype']) == '0' || intval($HTTP_POST_VARS['contact_wartype']) == '' )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_type'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_type'];
 			}
 		}
 		
@@ -206,14 +206,14 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 			if ( intval($HTTP_POST_VARS['team_id']) == '0' || intval($HTTP_POST_VARS['team_id']) == '' )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_team'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_team'];
 			}
 		}
 		
 		if ( empty($HTTP_POST_VARS['contact_message']) )
 		{
 			$error = true;
-			$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['contact_fail_message'];
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['contact_fail_message'];
 		}
 
 		if ( $error )
@@ -243,7 +243,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
 			}
 		
-			$message = $lang['contact_save'] . '<br /><br />' . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
+			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}

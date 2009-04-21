@@ -230,7 +230,7 @@ if ( !defined('IN_ADMIN') )
 	else
 	{
 		$sql = 'SELECT * FROM ' . CONFIG;
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 		}
@@ -241,7 +241,7 @@ if ( !defined('IN_ADMIN') )
 		}
 		
 		$sql = 'SELECT * FROM ' . SETTINGS;
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
 		}
@@ -255,7 +255,7 @@ if ( !defined('IN_ADMIN') )
 else
 {
 	$sql = 'SELECT * FROM ' . CONFIG;
-	if( !($result = $db->sql_query($sql)) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 	}
@@ -266,7 +266,7 @@ else
 	}
 	
 	$sql = 'SELECT * FROM ' . SETTINGS;
-	if( !($result = $db->sql_query($sql)) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
 	}

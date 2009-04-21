@@ -10,7 +10,7 @@
 	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.member.grouprow.GROUP_NAME}" title="{select.joined.member.grouprow.GROUP_NAME}" /></td>
 	<td class="row1" height="50">
 		<span class="forumlink">
-			<a href="{select.joined.member.grouprow.U_GROUP}" class="forumlink">{select.joined.member.grouprow.GROUP_NAME}</a><br />
+			<a href="{select.joined.member.grouprow.U_GROUP}" class="forumlink">{select.joined.member.grouprow.GROUP_NAME}</a><br>
 			</span> <span class="genmed">{select.joined.member.grouprow.GROUP_DESC}</span>
 	</td>
 	<td class="row2" align="center" valign="middle" height="50" nowrap="nowrap"> <span class="gensmall">{select.joined.member.grouprow.GROUP_TYPE}</span></td>
@@ -29,7 +29,7 @@
 	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.pending.grouprow.GROUP_NAME}" title="{select.joined.pending.grouprow.GROUP_NAME}" /></td>
 	<td class="row1" height="50">
 		<span class="forumlink">
-			<a href="{select.joined.pending.grouprow.U_GROUP}" class="forumlink">{select.joined.pending.grouprow.GROUP_NAME}</a><br />
+			<a href="{select.joined.pending.grouprow.U_GROUP}" class="forumlink">{select.joined.pending.grouprow.GROUP_NAME}</a><br>
 			</span> <span class="genmed">{select.joined.pending.grouprow.GROUP_DESC}
 		</span>
 	</td>
@@ -49,7 +49,7 @@
 	  <tr>
 		<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.remaining.grouprow.GROUP_NAME}" title="{select.remaining.grouprow.GROUP_NAME}" /></td>
 	   <td class="row1" height="50"><span class="forumlink">
- 			<a href="{select.remaining.grouprow.U_GROUP}" class="forumlink">{select.remaining.grouprow.GROUP_NAME}</a><br />
+ 			<a href="{select.remaining.grouprow.U_GROUP}" class="forumlink">{select.remaining.grouprow.GROUP_NAME}</a><br>
 		  </span> <span class="genmed">{select.remaining.grouprow.GROUP_DESC}
 		  </span>
 	   </td>

@@ -13,9 +13,9 @@
 	<td class="row2l">
 	<!-- END light_ELSE -->
 	<span class="gensmall">
-		<b>{stat_run.STAT_FILE}</b><br />
-		{stat_run.STAT_LINE}<br />
-		{stat_run.STAT_TIME}<br />
+		<b>{stat_run.STAT_FILE}</b><br>
+		{stat_run.STAT_LINE}<br>
+		{stat_run.STAT_TIME}<br>
 	</span></td>
 	<!-- BEGIN light -->
 	<td class="row1l">

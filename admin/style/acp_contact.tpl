@@ -24,7 +24,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -113,7 +113,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>

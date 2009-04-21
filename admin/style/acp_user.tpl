@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -71,7 +71,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
 <table class="edit" cellspacing="1">
@@ -111,11 +111,11 @@
 <tr>
 	<td class="row1" width="160">{L_PASSWORD}:</td>
 	<td class="row3">
-		<input type="radio" name="random" value="0" /> {PASS_1}<br />
-		<input type="radio" name="random" value="1" /> {PASS_2}<br />
-		<input type="radio" name="random" value="2" /> {PASS_3}<br />
-		<input type="radio" name="random" value="3" /> {PASS_4}<br />
-		<input type="radio" name="random" value="4" /> {PASS_5}<br />
+		<input type="radio" name="random" value="0" /> {PASS_1}<br>
+		<input type="radio" name="random" value="1" /> {PASS_2}<br>
+		<input type="radio" name="random" value="2" /> {PASS_3}<br>
+		<input type="radio" name="random" value="3" /> {PASS_4}<br>
+		<input type="radio" name="random" value="4" /> {PASS_5}<br>
 		<input type="radio" name="random" value="5" /> {PASS_6}
 	</td>
 </tr>
@@ -157,7 +157,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -223,7 +223,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 
 <script>

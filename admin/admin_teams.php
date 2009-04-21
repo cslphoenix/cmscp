@@ -312,7 +312,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_teams');
 	
-				$message = $lang['team_create'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
+				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 			break;
@@ -422,7 +422,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_teams');
 				
-				$message = $lang['team_update'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
+				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
@@ -479,7 +479,7 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('display_subnavi_teams');
 					
-					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
+					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -542,7 +542,7 @@ else
 						ORDER BY r.rank_order';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$team_members = $db->sql_fetchrowset($result);
 				
@@ -724,8 +724,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_change_rank');
 				
 				$message = $lang['team_change_member']
-					. '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 				break;
@@ -790,8 +790,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_change_level');
 					
 					$message = $lang['team_change_member']
-						. '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
+						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
 					message_die(GENERAL_MESSAGE, $message);
 
 				}
@@ -837,7 +837,7 @@ else
 									WHERE username IN ("' . $sql_in . '")';
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_MESSAGE, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+							message_die(GENERAL_MESSAGE, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if (!($row = $db->sql_fetchrow($result)))
@@ -865,7 +865,7 @@ else
 									AND team_id = ' . $team_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$add_id_ary = $user_id_ary_im = array();
@@ -922,8 +922,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_add_member');
 			
 					$message = $lang['team_add_member']
-						. '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				
@@ -947,8 +947,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_delete_member');
 			
 				$message = $lang['team_del_member']
-					. '<br /><br />' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -989,7 +989,7 @@ else
 	$sql = 'SELECT MAX(team_order) AS max FROM ' . TEAMS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$max_order = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
@@ -998,7 +998,7 @@ else
 	$sql = 'SELECT t.*, g.* FROM ' . TEAMS . ' t, ' . GAMES . ' g WHERE t.team_game = g.game_id ORDER BY t.team_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	if ( $db->sql_numrows($result) )

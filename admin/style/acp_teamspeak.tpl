@@ -19,7 +19,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -237,7 +237,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -259,6 +259,10 @@
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_PASS}: *</td>
 	<td class="row3"><input id="teamspeak_pass" class="post" type="text" name="teamspeak_pass" value="{TEAMSPEAK_PASS}" ></td>
+</tr>
+<tr>
+	<td class="row1" width="20%">{L_TEAMSPEAK_JOIN}: *</td>
+	<td class="row3"><input id="teamspeak_join_name" class="post" type="text" name="teamspeak_join_name" value="{TEAMSPEAK_JOIN}" ></td>
 </tr>
 <tr>
 	<td class="row1">{L_TEAMSPEAK_CSTATS}:</td>
@@ -323,7 +327,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>

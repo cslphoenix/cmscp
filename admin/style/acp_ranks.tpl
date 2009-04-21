@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -135,7 +135,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>

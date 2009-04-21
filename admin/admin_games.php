@@ -168,7 +168,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_add', $game_name);
 	
-				$message = $lang['create_game'] . '<br /><br />' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
+				$message = $lang['create_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -193,7 +193,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_edit', $game_name);
 				
-				$message = $lang['update_game'] . '<br /><br />' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
+				$message = $lang['update_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -211,7 +211,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_delete', $game['game_name']);
 					
-					$message = $lang['delete_game'] . '<br /><br />' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
+					$message = $lang['delete_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -291,7 +291,7 @@ else
 	$sql = 'SELECT MAX(game_order) AS max FROM ' . GAMES;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$max_order = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
