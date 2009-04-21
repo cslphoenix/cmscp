@@ -25,21 +25,23 @@ define('LOG_USERS',		2);
 
 //	Log Sektion
 //	- Unterteilung im Admin, Moderations oder Benutzerbreich
-define('LOG_SEK_NEWS',		0);
-define('LOG_SEK_TEAM',		1);
-define('LOG_SEK_RANK',		2);
-define('LOG_SEK_USER',		3);
-define('LOG_SEK_GAME',		4);
-define('LOG_SEK_MATCH',		5);
-define('LOG_SEK_TRAINING',	6);
-define('LOG_SEK_LOGIN',		7);
-define('LOG_SEK_NAVI',		8);
-define('LOG_SEK_FORUM',		9);
-define('LOG_SEK_COMMENT',	21);
-define('LOG_SEK_AUTHLIST',	22);
-define('LOG_SEK_TEAMSPEAK', 10);
-define('LOG_SEK_GROUPS',	11);
-define('LOG_SEK_LOG',		13);
+define('LOG_SEK_NEWS',			0);
+define('LOG_SEK_TEAM',			1);
+define('LOG_SEK_RANK',			2);
+define('LOG_SEK_USER',			3);
+define('LOG_SEK_GAME',			4);
+define('LOG_SEK_MATCH',			5);
+define('LOG_SEK_TRAINING',		6);
+define('LOG_SEK_LOGIN',			7);
+define('LOG_SEK_NAVI',			8);
+define('LOG_SEK_FORUM',			9);
+define('LOG_SEK_COMMENT',		21);
+define('LOG_SEK_AUTHLIST',		22);
+define('LOG_SEK_TEAMSPEAK',		10);
+define('LOG_SEK_GROUPS',		11);
+define('LOG_SEK_NEWSLETTER',	12);
+define('LOG_SEK_LOG',			13);
+define('LOG_SEK_GAMESERVER',	14);
 
 define('LOG_SEK_CHANGELOG',	98);
 define('LOG_SEK_BUGTRACKER',99);
@@ -61,9 +63,6 @@ define('CONTACT_NORMAL',	0);
 define('CONTACT_FIGHTUS',	1);
 define('CONTACT_JOINUS',	2);
 
-//	Server types
-define('SERVER_GAME',	1);
-define('SERVER_VOICE',	2);
 
 //	Benutzeraccount aktivierung
 define('USER_ACTIVATION_NONE',	0);
@@ -106,6 +105,13 @@ define('AUTH_DISALLOWED',	0);		//	nicht erlaubt
 define('AUTH_ALLOWED',		1);		//	erlaubt
 define('AUTH_SPECIAL',		2);		//	Special für Benutzer
 define('AUTH_DEFAULT',		3);		//	Vorgabe Einstellung
+
+
+//	Newsletter Status
+define('NL_ADD',		0);
+define('NL_CONFIRM',	1);
+define('NL_DELETE',		2);
+
 
 //	Logo Upload
 define('LOGO_NONE',		0);
@@ -170,7 +176,6 @@ define('POST_GAMES_URL',		'g');
 define('POST_GROUPS_URL',		'g');
 define('POST_MATCH_URL',		'm');
 define('POST_TRAINING_URL',		'tr');
-define('POST_SERVER_URL',		's');
 define('POST_GROUPS_URL',		'g');
 define('POST_CONTACT_URL',		'c');
 define('POST_NAVIGATION_URL',	'n');
@@ -179,6 +184,8 @@ define('POST_TEAMSPEAK_URL',	't');
 define('POST_NEWSCAT_URL',		'nc');
 define('POST_AUTHLIST_URL',		'al');
 define('POST_BUGTRACKER_URL',	'bt');
+define('POST_NEWSLETTER_URL',	'nl');
+define('POST_GAMESERVER_URL',	'gs');
 
 //	fürs Forum
 define('POST_POST_URL',			'p');

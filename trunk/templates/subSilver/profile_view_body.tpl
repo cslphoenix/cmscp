@@ -14,7 +14,7 @@
 	<td class="catRight" width="60%"><b><span class="gen">{L_ABOUT_USER}</span></b></td>
   </tr>
   <tr> 
-	<td class="row1" height="6" valign="top" align="center">{AVATAR_IMG}<br /><span class="postdetails">{POSTER_RANK}</span></td>
+	<td class="row1" height="6" valign="top" align="center">{AVATAR_IMG}<br><span class="postdetails">{POSTER_RANK}</span></td>
 	<td class="row1" rowspan="3" valign="top"><table width="100%" border="0" cellspacing="1" cellpadding="3">
 		<tr> 
 		  <td valign="middle" align="right" nowrap="nowrap"><span class="gen">{L_JOINED}:&nbsp;</span></td>
@@ -22,7 +22,7 @@
 		</tr>
 		<tr> 
 		  <td valign="top" align="right" nowrap="nowrap"><span class="gen">{L_TOTAL_POSTS}:&nbsp;</span></td>
-		  <td valign="top"><b><span class="gen">{POSTS}</span></b><br /><span class="genmed">[{POST_PERCENT_STATS} / {POST_DAY_STATS}]</span> <br /><span class="genmed"><a href="{U_SEARCH_USER}" class="genmed">{L_SEARCH_USER_POSTS}</a></span></td>
+		  <td valign="top"><b><span class="gen">{POSTS}</span></b><br><span class="genmed">[{POST_PERCENT_STATS} / {POST_DAY_STATS}]</span> <br><span class="genmed"><a href="{U_SEARCH_USER}" class="genmed">{L_SEARCH_USER_POSTS}</a></span></td>
 		</tr>
 		<tr> 
 		  <td valign="middle" align="right" nowrap="nowrap"><span class="gen">{L_LOCATION}:&nbsp;</span></td>
@@ -86,6 +86,6 @@
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
   <tr> 
-	<td align="right"><span class="nav"><br />{JUMPBOX}</span></td>
+	<td align="right"><span class="nav"><br>{JUMPBOX}</span></td>
   </tr>
 </table>

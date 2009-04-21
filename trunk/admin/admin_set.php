@@ -247,8 +247,8 @@ else
 		$oCache -> deleteCache('config');
 		$oCache -> deleteCache('settings');
 	
-		$message = $lang['Config_updated'] . '<br /><br />' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
-			. '<br /><br />' . sprintf($lang['click_return_set'], '<a href="' . append_sid("admin_set.php") . '">', '</a>');
+		$message = $lang['Config_updated'] . '<br><br>' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
+			. '<br><br>' . sprintf($lang['click_return_set'], '<a href="' . append_sid("admin_set.php") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	

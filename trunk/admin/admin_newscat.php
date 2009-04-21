@@ -27,7 +27,7 @@ if ( !empty($setmodules) )
 	$filename = basename(__FILE__);
 	if ($userauth['auth_newscat'] || $userdata['user_level'] == ADMIN)
 	{
-		$module['main']['newscat'] = $filename;
+		$module['news']['newscat'] = $filename;
 	}
 	return;
 }
@@ -166,14 +166,14 @@ else
 	
 				$sql = 'INSERT INTO ' . NEWS_CATEGORY . " (news_category_title, news_category_image, news_category_order)
 					VALUES ('" . str_replace("\'", "''", $newscat_title) . "', '" . str_replace("\'", "''", $newscat_image) . "', $next_order)";
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newscat_add', $newscat_title);
 	
-				$message = $lang['create_newscat'] . '<br /><br />' . sprintf($lang['click_return_newscat'], '<a href="' . append_sid("admin_newscat.php") . '">', '</a>');
+				$message = $lang['create_newscat'] . '<br><br>' . sprintf($lang['click_return_newscat'], '<a href="' . append_sid("admin_newscat.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -192,14 +192,14 @@ else
 							news_category_title	= '" . str_replace("\'", "''", $newscat_title) . "',
 							news_category_image	= '" . str_replace("\'", "''", $newscat_image) . "'
 						WHERE news_category_id		= " . intval($HTTP_POST_VARS[POST_NEWSCAT_URL]);
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newscat_edit');
 				
-				$message = $lang['update_news'] . '<br /><br />' . sprintf($lang['click_return_newscat'], '<a href="' . append_sid("admin_newscat.php") . '">', '</a>');
+				$message = $lang['update_news'] . '<br><br>' . sprintf($lang['click_return_newscat'], '<a href="' . append_sid("admin_newscat.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -211,7 +211,7 @@ else
 				$sql = 'UPDATE ' . NEWS_CATEGORY . " SET news_category_order = news_category_order + $move WHERE news_category_id = $news_category_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 		
 				renumber_order('newscat');
@@ -239,12 +239,12 @@ else
 					$sql = 'DELETE FROM ' . NEWS_CATEGORY . ' WHERE news_category_id = ' . $news_category_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_category_delete', $newscat['news_category_title']);
 					
-					$message = $lang['delete_newscat'] . '<br /><br />' . sprintf($lang['click_return_newscat'], '<a href="' . append_sid("admin_newscat.php") . '">', '</a>');
+					$message = $lang['delete_newscat'] . '<br><br>' . sprintf($lang['click_return_newscat'], '<a href="' . append_sid("admin_newscat.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -305,14 +305,14 @@ else
 	$sql = 'SELECT * FROM ' . NEWS_CATEGORY . ' ORDER BY news_category_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$newscat_data = $db->sql_fetchrowset($result);
 	
 	$sql = 'SELECT MAX(news_category_order) AS max FROM ' . NEWS_CATEGORY;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$max_order = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);

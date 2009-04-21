@@ -17,7 +17,7 @@ $sql = 'SELECT c.cat_id, c.cat_title, c.cat_order
 			ORDER BY c.cat_order';
 //$category_rows = _cached($sql, 'forum_cat');
 
-if( !($result = $db->sql_query($sql)) )
+if ( !($result = $db->sql_query($sql)) )
 {
 	message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 }
@@ -202,7 +202,7 @@ if( ( $total_categories = count($category_rows) ) )
 							{
 								$last_post_time = create_date($config['default_dateformat'], $forum_data[$j]['post_time'], $config['board_timezone']);
 
-								$last_post = $last_post_time . '<br />';
+								$last_post = $last_post_time . '<br>';
 
 								$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
 								

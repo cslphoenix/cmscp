@@ -37,6 +37,8 @@ $lang['page']				= 'WebSeite';
 // Menue
 //
 $lang['teams']				= 'Teams';
+$lang['news']				= 'News';
+$lang['newsletter']			= 'Newsletter';
 $lang['ranks']				= 'Ränge';
 $lang['main']				= 'Allgemein';
 $lang['logs']				= 'Protokolle';
@@ -131,7 +133,7 @@ $lang['auths'] = array(
 //
 $lang['authlist']			= 'Auth Felder';
 $lang['authlist_head']		= 'Berechtigungsfelder Administration';
-$lang['authlist_explain']	= 'Hier können Sie die Berechtigungsfelder der Seite verwalten, erleichtert das hinzufügen von Modifikationen die Extra Rechte haben sollen. Bitte nur was verstellen wenn man ein Backup der Datenbank gemacht hat!<br /><b>Wichtig:</b> neue Felder werden direkt in der DB eingetragen und das \'auth_\' wird automatisch davor eingetragen!';
+$lang['authlist_explain']	= 'Hier können Sie die Berechtigungsfelder der Seite verwalten, erleichtert das hinzufügen von Modifikationen die Extra Rechte haben sollen. Bitte nur was verstellen wenn man ein Backup der Datenbank gemacht hat!<br><b>Wichtig:</b> neue Felder werden direkt in der DB eingetragen und das \'auth_\' wird automatisch davor eingetragen!';
 
 $lang['authlist_add']		= 'Neues Feld erstellen';
 $lang['authlist_new_add']	= 'Feld hinzufügen';
@@ -241,7 +243,7 @@ $lang['group_add_member']		= 'Mitglieder hinzufügen';
 $lang['group_edit_member']		= 'Mitglieder bearbeiten';
 $lang['group_view_member']		= 'Mitglieder Übersicht';
 $lang['group_view_member']		= 'Mitglieder Übersicht';
-$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufügen.<br />Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
+$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufügen.<br>Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
 
 $lang['group_name']			= 'Gruppenname';
 $lang['group_membercount']	= 'Mitgliederanzahl';
@@ -451,6 +453,31 @@ $lang['newscat_name']		= 'Newskategorie Name';
 $lang['newscat_title']		= 'Name';
 $lang['newscat_image']		= 'Bild';
 
+
+//
+//	Newsletter
+//
+$lang['newsletter_head']		= 'Newsletter Administration';
+$lang['newsletter_explain']		= 'Text';
+
+$lang['newsletter_add']			= 'Adresse Eintragen';
+$lang['newsletter_edit']		= 'Adresse bearbeiten';
+$lang['newsletter_email']		= 'eMail Adressen';
+$lang['newsletter_mail']		= 'eMail Adresse';
+
+$lang['newsletter_status_0']	= 'Eingetragen, nicht bestätigt';
+$lang['newsletter_status_1']	= 'Bestätigt';
+$lang['newsletter_status_2']	= 'Ausgetragen, nicht bestätigt';
+
+$lang['newsletter_type']			= 'Status Mail?';
+$lang['newsletter_type_explain']	= 'Der Benutzer bekommt eine Mail zugesendet mit einem Bestätigunslink oder mit der Bestätigung, dass seine Adresse eingetragen wurde.';
+
+$lang['newsletter_semd_new']	= 'Neue eMail zusenden zum Bestätigen';
+$lang['newsletter_send_new2']	= 'Erneutes Bestätigen erzwingen';
+
+$lang['newsletter_type_new']	= 'Bestätigungsmail zusenden?';
+$lang['newsletter_type_active']	= 'Als Aktiviert eintragen?';
+
 //
 //	Profilfelder
 //
@@ -477,18 +504,18 @@ $lang['rank_type']			= 'Rangtype';
 
 
 //
-//	Server
+//	Gameserver
 //
-$lang['server_head']		= 'Server Administration';
-$lang['server_explain']		= 'Hier kannst du die Server (Game/Voice) der Seite überwachen. Du kannst bestehende Server löschen, editieren oder neue anlegen.';
+$lang['gs_head']		= 'Server Administration';
+$lang['gs_explain']		= 'Hier kannst du die Gameserver der Seite überwachen. Du kannst bestehende Server löschen, editieren oder neue anlegen.';
 
-$lang['server_add']			= 'Neuen Server eintragen';
-$lang['server_new_add']		= 'Server eintragen';
-$lang['server_edit']		= 'Server bearbeiten';
+$lang['gs_add']			= 'Neuen Server eintragen';
+$lang['gs_new_add']		= 'Server eintragen';
+$lang['gs_edit']		= 'Server bearbeiten';
 
-$lang['server_game']		= 'Gameserver';
-$lang['server_voice']		= 'Voiceserver';
-$lang['select_live']		= 'Live Status auswählen';
+$lang['gs_name']		= 'Gameservername';
+
+$lang['select_live']	= 'Live Status auswählen';
 
 //
 //	Einstellungen (Settings)
@@ -500,7 +527,7 @@ $lang['select_live']		= 'Live Status auswählen';
 //
 $lang['team_head']			= 'Team Administration';
 $lang['team_explain']		= 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.';
-$lang['team_add_member_ex']	= 'Hier kannst du, Member hinzufügen.<br />Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
+$lang['team_add_member_ex']	= 'Hier kannst du, Member hinzufügen.<br>Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
 
 $lang['team_add']			= 'Neues Team erstellen';
 $lang['team_new_add']		= 'Team hinzufügen';
@@ -594,6 +621,7 @@ $lang['teamspeak_ip']			= 'Server IP';
 $lang['teamspeak_port']			= 'Server Port';
 $lang['teamspeak_qport']		= 'Server QueryPort';
 $lang['teamspeak_pass']			= 'Server Passwort';
+$lang['teamspeak_join']			= 'Nickname für Gäste';
 $lang['teamspeak_cstats']		= 'Channel Rechte';
 $lang['teamspeak_ustats']		= 'Benutzer Rechte';
 $lang['teamspeak_sstats']		= 'Server Statistik';
@@ -654,7 +682,7 @@ $lang['confirm']		= 'Bestätigen';
 $lang['mark_all']		= 'Alle markieren';
 $lang['mark_deall']		= 'Keine Auswahl';
 
-$lang['no_mode']		= 'Bitte eine gültige Aktion wählen.<br /><br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(1)">Zur&uuml;ck</a>';
+$lang['no_mode']		= 'Bitte eine gültige Aktion wählen.<br><br><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(1)">Zur&uuml;ck</a>';
 
 $lang['no_members'] = 'Diese Gruppe hat keine Mitglieder.';
 $lang['no_moderators'] = 'Diese Gruppe hat keine Moderatoren.';
@@ -693,6 +721,7 @@ $lang['update_game']				= 'Spieldaten erfolgreich geändert';
 $lang['update_training']			= 'Trainingsdaten erfolgreich geändert';
 $lang['update_news']				= 'Newsdaten erfolgreich geändert';
 $lang['update_newscat']				= 'Newskategoriedaten erfolgreich geändert';
+$lang['update_newsletter']			= 'eMailadresse erfolgreich geändert';
 $lang['update_navigation']			= 'Link erfolgreich geändert';
 $lang['update_forum']				= 'Forumdaten erfolgreich geändert';
 $lang['update_group']				= 'Gruppendaten erfolgreich geändert';
@@ -707,24 +736,27 @@ $lang['delete_game']				= 'Das Spiel wurde gelöscht';
 $lang['delete_training']			= 'Der Rang wurde gelöscht';
 $lang['delete_news']				= 'Die News wurde gelöscht';
 $lang['delete_newscat']				= 'Der Newskategorie wurde gelöscht';
+$lang['delete_newsletter']			= 'Die eMailadresse wurde gelöscht';
 $lang['delete_navigation']			= 'Der Link wurde gelöscht';
 $lang['delete_group']				= 'Die Gruppe wurde gelöscht';
 $lang['delete_authlist']			= 'Das Berechtigungsfeld wurde gelöscht';
 $lang['delete_log']					= 'Der oder die Logeinträge wurde gelöscht';
 $lang['delete_log_error']			= 'Der oder die Fehlermeldungen wurde gelöscht';
 
-$lang['confirm_delete_team']		= 'Bist du sicher, das dieses Team gelöscht werden soll?';
-$lang['confirm_delete_teamspeak']	= 'Bist du sicher, das dieser Teamspeak gelöscht werden soll?';
-$lang['confirm_delete_rank']		= 'Bist du sicher, das dieser Rang gelöscht werden soll?';
-$lang['confirm_delete_game']		= 'Bist du sicher, das dieses Spiel gelöscht werden soll?';
-$lang['confirm_delete_training']	= 'Bist du sicher, das dieses Training gelöscht werden soll?';
-$lang['confirm_delete_news']		= 'Bist du sicher, das die News gelöscht werden soll?';
-$lang['confirm_delete_newscat']		= 'Bist du sicher, das die Newskategorie gelöscht werden soll?';
-$lang['confirm_delete_navigation']	= 'Bist du sicher, das der Link gelöscht werden soll?';
-$lang['confirm_delete_group']		= 'Bist du sicher, das die Gruppe gelöscht werden soll?';
-$lang['confirm_delete_authlist']	= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
-$lang['confirm_delete_log']			= 'Bist du sicher, das dieser oder diese Logeinträge gelöscht werden soll?';
-$lang['confirm_delete_log_error']	= 'Bist du sicher, das dieser oder diese Fehlermeldungen gelöscht werden soll?';
+$lang['confirm_delete_team']			= 'Bist du sicher, das dieses Team gelöscht werden soll?';
+$lang['confirm_delete_teamspeak']		= 'Bist du sicher, das dieser Teamspeak gelöscht werden soll?';
+$lang['confirm_delete_rank']			= 'Bist du sicher, das dieser Rang gelöscht werden soll?';
+$lang['confirm_delete_game']			= 'Bist du sicher, das dieses Spiel gelöscht werden soll?';
+$lang['confirm_delete_training']		= 'Bist du sicher, das dieses Training gelöscht werden soll?';
+$lang['confirm_delete_news']			= 'Bist du sicher, das die News gelöscht werden soll?';
+$lang['confirm_delete_newscat']			= 'Bist du sicher, das die Newskategorie gelöscht werden soll?';
+$lang['confirm_delete_newsletter']		= 'Bist du sicher, das die eMailadresse gelöscht werden soll?';
+$lang['confirm_delete_newsletter_all']	= 'Bist du sicher, das alle eMailadresse gelöscht werden sollen?';
+$lang['confirm_delete_navigation']		= 'Bist du sicher, das der Link gelöscht werden soll?';
+$lang['confirm_delete_group']			= 'Bist du sicher, das die Gruppe gelöscht werden soll?';
+$lang['confirm_delete_authlist']		= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
+$lang['confirm_delete_log']				= 'Bist du sicher, das dieser oder diese Logeinträge gelöscht werden soll?';
+$lang['confirm_delete_log_error']		= 'Bist du sicher, das dieser oder diese Fehlermeldungen gelöscht werden soll?';
 
 $lang['click_admin_index']			= 'Klicke %shier%s, um zum Adminstart zurückzukehren';
 $lang['click_return_team']			= 'Klicke %shier%s, um zur Team Administration zurückzukehren';
@@ -739,6 +771,7 @@ $lang['click_return_details']		= 'Klicke %shier%s, um zur Detail Administration 
 $lang['click_return_training']		= 'Klicke %shier%s, um zur Trainings Administration zurückzukehren';
 $lang['click_return_news']			= 'Klicke %shier%s, um zur News Administration zurückzukehren';
 $lang['click_return_newscat']		= 'Klicke %shier%s, um zur Newskategorie Administration zurückzukehren';
+$lang['click_return_newsletter']	= 'Klicke %shier%s, um zur Newsletter Administration zurückzukehren';
 $lang['click_return_navigation']	= 'Klicke %shier%s, um zur Navigations Administration zurückzukehren';
 $lang['click_return_forum']			= 'Klicke %shier%s, um zur Forum Administration zurückzukehren';
 $lang['click_return_group']			= 'Klicke %shier%s, um zur Gruppen Administration zurückzukehren';
@@ -768,7 +801,7 @@ $lang['msg_select_map']			= 'Map eintragen';
 $lang['game_select']	= 'Spiel auswählen';
 $lang['select_match']	= 'Match auswählen';
 
-$lang['back']			= '<br /><br /><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(1)">&laquo; Zur&uuml;ck</a>';
+$lang['back']			= '<br><br><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(1)">&laquo; Zur&uuml;ck</a>';
 
 
 
@@ -910,6 +943,7 @@ $lang['team_logos_size_explain']		= 'Team Logo Größe Beschreibung';
 //
 $lang['empty_name']			= 'Bitte einen Namen eingeben!';
 $lang['empty_title']		= 'Bitte einen Titel eingeben!';
+$lang['empty_mail']			= 'Bitte eine gültige eMail Adresse eingeben!';
 $lang['no_select_module']	= 'Kein Modul ausgewählt!';
 $lang['auth_fail']			= 'Keine Berechtiung für dieses Modul';
 $lang['wrong_filetype']		= 'Falscher Dateityp!';
@@ -942,6 +976,6 @@ $lang['type']					= 'Typ / Art';
 $lang['message']				= 'Nachricht';
 
 
-
+$lang['alldelete']				= 'Alle Einträge löschen';
 
 ?>

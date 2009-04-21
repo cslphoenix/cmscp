@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -32,7 +32,7 @@
 	</tr>
 	<!-- BEGIN forumrow -->
 	<tr> 
-		<td class="{display.catrow.forumrow.CLASS}" width="100%"><span class="gen"><a href="{display.catrow.forumrow.U_VIEWFORUM}">{display.catrow.forumrow.FORUM_NAME}</a></span><br /><span class="small">{display.catrow.forumrow.FORUM_DESC}<br />{display.catrow.forumrow.NUM_TOPICS} / {display.catrow.forumrow.NUM_POSTS}</span></td>
+		<td class="{display.catrow.forumrow.CLASS}" width="100%"><span class="gen"><a href="{display.catrow.forumrow.U_VIEWFORUM}">{display.catrow.forumrow.FORUM_NAME}</a></span><br><span class="small">{display.catrow.forumrow.FORUM_DESC}<br>{display.catrow.forumrow.NUM_TOPICS} / {display.catrow.forumrow.NUM_POSTS}</span></td>
 		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap="nowrap"><a href="{display.catrow.forumrow.U_FORUM_PERMISSIONS}">{display.catrow.forumrow.PERMISSIONS}</a></td>
 		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap="nowrap"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_MOVE_UP}">{display.catrow.forumrow.L_MOVE_UP}</a> <a href="{display.catrow.forumrow.U_FORUM_MOVE_DOWN}">{display.catrow.forumrow.L_MOVE_DOWN}</a></span></td>
 		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_EDIT}">{L_EDIT}</a></span></td>
@@ -69,7 +69,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -106,7 +106,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>

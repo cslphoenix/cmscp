@@ -98,7 +98,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 			{
 				$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("index.$phpEx") . '">'));
 				
-				$message = $lang['Already_member_group'] . '<br /><br />' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groupcp.$phpEx?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+				$message = $lang['Already_member_group'] . '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groupcp.$phpEx?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 			
@@ -148,7 +148,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 					$emailer->assign_vars(array(
 						'SITENAME' => $config['sitename'],
 						'GROUP_MODERATOR' => $email['username'],
-						'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br />', "\n", "-- \n" . $config['page_email_sig']) : '', 
+						'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
 						'U_GROUPCP' => $server_url . '?' . POST_GROUPS_URL . "=$group_id&validate=true",
 					));
 					
@@ -160,15 +160,15 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 //			$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 			
 			$message = ( $row['group_type'] == GROUP_REQUEST ) ? $lang['group_msg_request'] : $lang['group_msg_open'];
-			$message .= '<br /><br />' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>')
-				. '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+			$message .= '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>')
+				. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 		else if ( $group['group_type'] == GROUP_CLOSED || $group['group_type'] == GROUP_HIDDEN || $group['group_type'] == GROUP_SYSTEM )
 		{
 //			$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 			
-			$message = $lang['This_closed_group'] . '<br /><br />' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+			$message = $lang['This_closed_group'] . '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -209,8 +209,8 @@ else if ( isset($HTTP_POST_VARS['unsub']) || isset($HTTP_POST_VARS['unsubpending
 //		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 
 		$message = $lang['Unsub_success']
-			. '<br /><br />' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>')
-			. '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+			. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>')
+			. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	else
@@ -297,7 +297,7 @@ else if ( $group_id )
 			{
 //				$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 
-				$message = $lang['Not_group_moderator'] . '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+				$message = $lang['Not_group_moderator'] . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 
@@ -341,7 +341,7 @@ else if ( $group_id )
 				$emailer->assign_vars(array(
 					'SITENAME' => $config['sitename'], 
 					'GROUP_NAME' => $group_name,
-					'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br />', "\n", "-- \n" . $config['page_email_sig']) : '', 
+					'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
 
 					'U_GROUPCP' => $server_url . '?' . POST_GROUPS_URL . "=$group_id")
 				);
@@ -409,8 +409,8 @@ else if ( $group_id )
 //					$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">'));
 					
 					$message = $lang['group_set_mod']
-						. '<br /><br />' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+						. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid("groups.php?" . POST_GROUPS_URL . "=$group_id") . '">', '</a>')
+						. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 
 				}
@@ -494,7 +494,7 @@ else if ( $group_id )
 						$emailer->assign_vars(array(
 							'SITENAME' => $config['sitename'], 
 							'GROUP_NAME' => $group_name,
-							'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br />', "\n", "-- \n" . $config['board_email_sig']) : '', 
+							'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['board_email_sig']) : '', 
 
 							'U_GROUPCP' => $server_url . '?' . POST_GROUPS_URL . "=$group_id")
 						);
@@ -960,7 +960,7 @@ else
 					ORDER BY g.group_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$groups_in = $db->sql_fetchrowset($result);
 		
@@ -1070,7 +1070,7 @@ else
 				ORDER BY g.group_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$groups_out = $db->sql_fetchrowset($result);
 

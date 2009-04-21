@@ -27,7 +27,7 @@ if ( !empty($setmodules) )
 	$filename = basename(__FILE__);
 	if ($userauth['auth_news'] || $userdata['user_level'] == ADMIN)
 	{
-		$module['main']['news'] = $filename;
+		$module['news']['news'] = $filename;
 	}
 	return;
 }
@@ -234,7 +234,7 @@ else
 	
 				$sql = 'INSERT INTO ' . NEWS . " (news_title, news_category, news_text, news_url, news_link, user_id, match_id, news_time_create, news_time_public, news_public, news_intern, news_rating)
 					VALUES ('" . $news_title . "', $news_category, '" . $news_text . "', '" . $news_url . "', '" . $news_link . "', $user_id, $match_id, '" . time() . "', $news_time_public, $news_public, $news_intern, $news_rating)";
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 				}
@@ -250,7 +250,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_news_add', $news_title);
 	
-				$message = $lang['create_news'] . '<br /><br />' . sprintf($lang['click_return_news'], '<a href="' . append_sid("admin_news.php") . '">', '</a>');
+				$message = $lang['create_news'] . '<br><br>' . sprintf($lang['click_return_news'], '<a href="' . append_sid("admin_news.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -312,14 +312,14 @@ else
 							news_rating			= $news_rating,
 							news_time_update	= '" . time() . "'
 						WHERE news_id = " . intval($HTTP_POST_VARS[POST_NEWS_URL]);
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_news_edit');
 				
-				$message = $lang['update_news'] . '<br /><br />' . sprintf($lang['click_return_news'], '<a href="' . append_sid("admin_news.php") . '">', '</a>');
+				$message = $lang['update_news'] . '<br><br>' . sprintf($lang['click_return_news'], '<a href="' . append_sid("admin_news.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -362,14 +362,14 @@ else
 				
 				if ( $news_id && $confirm )
 				{	
-					$news = get_data('news', $news_id);
+					$news = get_data('news', $news_id, 0);
 					
 					$sql = 'DELETE FROM ' . NEWS . ' WHERE news_id = ' . $news_id;
 					$result = $db->sql_query($sql);
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, ACP_NEWS_DELETE, $news['news_title']);
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_news_delete', $news['news_title']);
 					
-					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_return_news'], '<a href="' . append_sid("admin_news.php") . '">', '</a>');
+					$message = $lang['delete_news'] . '<br><br>' . sprintf($lang['click_return_news'], '<a href="' . append_sid("admin_news.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}

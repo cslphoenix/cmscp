@@ -3,7 +3,7 @@
 	<td class="info_head">{L_CONTACT}</td>
 </tr>
 <tr>
-	<td class="row4"><span class="small">{L_CONTACT_INFO}<br />{L_REQUIRED}</span></td>
+	<td class="row4"><span class="small">{L_CONTACT_INFO}<br>{L_REQUIRED}</span></td>
 </tr>
 </table>
 

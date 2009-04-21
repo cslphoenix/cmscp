@@ -53,7 +53,7 @@ function _dump($message, $line='', $file='')
 		$title[] = sprintf($lang['dbg_file'], $file);
 	}
 
-	echo '<div class="bodyline"><pre class="genmed"><b>' . (empty($title) ? '' : implode(' - ', $title) . '</b><br />');
+	echo '<div class="bodyline"><pre class="genmed"><b>' . (empty($title) ? '' : implode(' - ', $title) . '</b><br>');
 	if ( empty($message) )
 	{
 		echo $lang['dbg_empty'];

@@ -179,7 +179,7 @@ else
 					
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_error');
 					
-					$message = $lang['delete_log_error'] . '<br /><br />' . sprintf($lang['click_return_log_error'], '<a href="' . append_sid("admin_logs.php?mode=error") . '">', '</a>');
+					$message = $lang['delete_log_error'] . '<br><br>' . sprintf($lang['click_return_log_error'], '<a href="' . append_sid("admin_logs.php?mode=error") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -226,7 +226,7 @@ else
 					
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete');
 					
-					$message = $lang['delete_log'] . '<br /><br />' . sprintf($lang['click_return_log'], '<a href="' . append_sid("admin_logs.php") . '">', '</a>');
+					$message = $lang['delete_log'] . '<br><br>' . sprintf($lang['click_return_log'], '<a href="' . append_sid("admin_logs.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}

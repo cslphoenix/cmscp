@@ -367,7 +367,7 @@ function display_minical()
 				
 				if ( $i == $tag )
 				{
-					$day_event		= '<span><em class="today">' . $lang['cal_today'] . '</em><br />';
+					$day_event		= '<span><em class="today">' . $lang['cal_today'] . '</em><br>';
 					$day_class		= 'today';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -392,8 +392,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
-					$list			= implode('<br />', $list);	
-					$day_event		.= (empty($day_event)) ? '<span><em class="birthday">' . $language . '</em><br />' . $list : '<br /><em class="birthday">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);	
+					$day_event		.= (empty($day_event)) ? '<span><em class="birthday">' . $language . '</em><br>' . $list : '<br><em class="birthday">' . $language . '</em><br>' . $list;
 					$day_class		= 'birthday';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -407,8 +407,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_event'] : $lang['cal_events'];
-					$list			= implode('<br />', $list);
-					$day_event		.= (empty($day_event)) ? '<span><em class="events">' . $language . '</em><br />' . $list : '<br /><em class="events">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);
+					$day_event		.= (empty($day_event)) ? '<span><em class="events">' . $language . '</em><br>' . $list : '<br><em class="events">' . $language . '</em><br>' . $list;
 					$day_class		= 'events';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -422,8 +422,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_match'] : $lang['cal_matchs'];
-					$list			= implode('<br />', $list);
-					$day_event		.= (empty($day_event)) ? '<span><em class="wars">' . $language . '</em><br />' . $list : '<br /><em class="wars">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);
+					$day_event		.= (empty($day_event)) ? '<span><em class="wars">' . $language . '</em><br>' . $list : '<br><em class="wars">' . $language . '</em><br>' . $list;
 					$day_class		= 'wars';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -437,8 +437,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_training'] : $lang['cal_trainings'];
-					$list			= implode('<br />', $list);
-					$day_event		.= (empty($day_event)) ? '<span><em class="trains">' . $language . '</em><br />' . $list : '<br /><em class="trains">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);
+					$day_event		.= (empty($day_event)) ? '<span><em class="trains">' . $language . '</em><br>' . $list : '<br><em class="trains">' . $language . '</em><br>' . $list;
 					$day_class		= 'trains';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -462,7 +462,7 @@ function display_minical()
 				
 				if ( $i == $tag )
 				{
-					$day_event		= '<span><em class="today">' . $lang['cal_today'] . '</em><br />';
+					$day_event		= '<span><em class="today">' . $lang['cal_today'] . '</em><br>';
 					$day_class		= 'today';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -487,8 +487,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
-					$list			= implode('<br />', $list);	
-					$day_event		.= (empty($day_event)) ? '<span><em class="birthday">' . $language . '</em><br />' . $list : '<br /><em class="birthday">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);	
+					$day_event		.= (empty($day_event)) ? '<span><em class="birthday">' . $language . '</em><br>' . $list : '<br><em class="birthday">' . $language . '</em><br>' . $list;
 					$day_class		= 'birthday';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -502,8 +502,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_event'] : $lang['cal_events'];
-					$list			= implode('<br />', $list);
-					$day_event		.= (empty($day_event)) ? '<span><em class="events">' . $language . '</em><br />' . $list : '<br /><em class="events">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);
+					$day_event		.= (empty($day_event)) ? '<span><em class="events">' . $language . '</em><br>' . $list : '<br><em class="events">' . $language . '</em><br>' . $list;
 					$day_class		= 'events';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -517,8 +517,8 @@ function display_minical()
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_match'] : $lang['cal_matchs'];
-					$list			= implode('<br />', $list);
-					$day_event		.= (empty($day_event)) ? '<span><em class="wars">' . $language . '</em><br />' . $list : '<br /><em class="wars">' . $language . '</em><br />' . $list;
+					$list			= implode('<br>', $list);
+					$day_event		.= (empty($day_event)) ? '<span><em class="wars">' . $language . '</em><br>' . $list : '<br><em class="wars">' . $language . '</em><br>' . $list;
 					$day_class		= 'wars';
 					$day_event_num	= $day_event_num + 1;
 				}
@@ -790,13 +790,12 @@ function display_subnavi_news()
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					WHERE n.news_time_public < ' . time() . ' AND news_public = 1
-				ORDER BY n.news_time_public DESC';
-		if( !($result = $db->sql_query($sql)) )
+				ORDER BY n.news_time_public DESC, n.news_id DESC LIMIT 0,' . $settings['subnavi_news_limit'];
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
 		$news_last = $db->sql_fetchrowset($result);
-		
 //		$news_last = _cached($sql, 'display_subnavi_news_member');
 	}
 	else
@@ -807,8 +806,8 @@ function display_subnavi_news()
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
-				ORDER BY n.news_time_public DESC';
-		if( !($result = $db->sql_query($sql)) )
+				ORDER BY n.news_time_public DESC, n.news_id DESC LIMIT 0,' . $settings['subnavi_news_limit'];
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
@@ -822,7 +821,7 @@ function display_subnavi_news()
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 						
-			$news_title = (strlen($news_last[$i]['news_title']) < 15) ? $news_last[$i]['news_title'] : substr($news_last[$i]['news_title'], 0, 12) . ' ...';
+			$news_title = (strlen($news_last[$i]['news_title']) < 25) ? $news_last[$i]['news_title'] : substr($news_last[$i]['news_title'], 0, 22) . ' ...';
 			
 			if ( $config['time_today'] < $news_last[$i]['news_time_public'])
 			{ 

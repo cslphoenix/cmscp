@@ -114,7 +114,7 @@ $lang['Gzip_compress'] = 'GZip-Komprimierungs Datei';
 $lang['Select_file'] = 'Wähle eine Datei';
 $lang['Start_Restore'] = 'Wiederherstellung beginnen';
 
-$lang['Restore_success'] = 'Die Datenbank wurde wieder hergestellt.<br /><br />Dein Board sollte jetzt wieder den Stand des Backups haben.';
+$lang['Restore_success'] = 'Die Datenbank wurde wieder hergestellt.<br><br>Dein Board sollte jetzt wieder den Stand des Backups haben.';
 $lang['Backup_download'] = 'Dein Download wird in Kürze beginnen - bitte etwas Geduld';
 $lang['Backups_not_supported'] = 'Fehler: Dein Datenbanksystem unterstützt Datenbank-Backups nicht!';
 
@@ -700,7 +700,7 @@ $lang['Installer_Error'] = 'Während der Installation trat ein Fehler auf';
 $lang['Previous_Install'] = 'Eine vorherige Installation wurde entdeckt';
 $lang['Install_db_error'] = 'Beim Update der Datenbank trat ein Fehler auf';
 
-$lang['Re_install'] = 'Deine vorherige Installation ist noch aktiv.<br /><br />Falls du phpBB2 neu installieren möchtest, aktiviere den unten stehenden Ja-Knopf. Beachte jedoch, dass dieser Vorgang sämtliche existierenden Daten zerstören wird und keine Sicherungen vorgenommen werden. Der Administrator-Benutzername und das Passwort, das du benutzt hast, um dich im Board einzuloggen, werden nach der Neuinstallation erneut erstellt. Es bleiben sonst keine Einstellungen zurück.<br /><br />Überlege es dir gut, bevor du auf Ja klickst.';
+$lang['Re_install'] = 'Deine vorherige Installation ist noch aktiv.<br><br>Falls du phpBB2 neu installieren möchtest, aktiviere den unten stehenden Ja-Knopf. Beachte jedoch, dass dieser Vorgang sämtliche existierenden Daten zerstören wird und keine Sicherungen vorgenommen werden. Der Administrator-Benutzername und das Passwort, das du benutzt hast, um dich im Board einzuloggen, werden nach der Neuinstallation erneut erstellt. Es bleiben sonst keine Einstellungen zurück.<br><br>Überlege es dir gut, bevor du auf Ja klickst.';
 
 $lang['Inst_Step_0'] = 'Danke, dass du dich für phpBB 2 entschieden hast. Um die Installation abzuschließen, gib bitte die unten geforderten Daten ein. Beachte, dass die Datenbank, in welche du installierst, bereits vorhanden sein sollte. Solltest du in eine Datenbank installieren, die ODBC nutzt, z. B. MS Access, solltest du erst einen DSN für sie erstellen, bevor du fortfährst.';
 
@@ -726,7 +726,7 @@ $lang['Unwriteable_config'] = 'Momentan ist deine Konfigurationsdatei nicht besc
 $lang['Download_config'] = 'Konfigurationsdatei herunterladen';
 
 $lang['ftp_choose'] = 'Wähle Downloadmethode';
-$lang['ftp_option'] = '<br />Da FTP Erweiterungen in dieser Version von PHP aktiviert sind, könntest du die Möglichkeit haben, die Konfigurationsdatei automatisch per FTP vor Ort zu ändern.';
+$lang['ftp_option'] = '<br>Da FTP Erweiterungen in dieser Version von PHP aktiviert sind, könntest du die Möglichkeit haben, die Konfigurationsdatei automatisch per FTP vor Ort zu ändern.';
 $lang['ftp_instructs'] = 'Du hast dich dazu entschieden, die Datei automatisch und vor Ort zu ändern. Bitte gib die unten geforderten Informationen an, um den Prozess zu starten. Beachte, dass der FTP-Pfad der exakte Pfad zu deinem phpBB2-Ordner sein muss.';
 $lang['ftp_info'] = 'Eingabe der FTP Informationen';
 $lang['Attempt_ftp'] = 'Die Konfigurationsdatei vor Ort umschreiben';
@@ -754,7 +754,7 @@ $lang['Version_up_to_date'] = 'Dein Forum ist auf dem neuesten Stand; es sind ke
 $lang['Version_not_up_to_date'] = 'Dein Forum ist wahrscheinlich <b>nicht</b> auf dem neuesten Stand. Es sind Updates für deine phpBB-Version verfügbar, bitte besuche <a href="http://www.phpbb.com/downloads.php" target="_new">http://www.phpbb.com/downloads.php</a>, um die aktuellste Version zu erhalten.';
 $lang['Latest_version_info'] = 'Die neueste verfügbare Version ist <b>phpBB %s</b>.';
 $lang['Current_version_info'] = 'Du verwendest <b>phpBB %s</b>.';
-$lang['Connect_socket_error'] = 'Die Verbindung zum phpBB-Server konnte nicht aufgebaut werden. Es trat folgender Fehler auf:<br />%s';
+$lang['Connect_socket_error'] = 'Die Verbindung zum phpBB-Server konnte nicht aufgebaut werden. Es trat folgender Fehler auf:<br>%s';
 $lang['Socket_functions_disabled'] = 'Die Socket-Funktionen konnten nicht benutzt werden.';
 $lang['Mailing_list_subscribe_reminder'] = 'Um immer die neuesten Informationen zu Updates von phpBB zu erhalten, solltest du dich <a href="http://www.phpbb.com/support/" target="_new">beim phpBB Newsletter anmelden</a>.';
 $lang['Version_information'] = 'Versions-Information';

@@ -16,7 +16,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -243,7 +243,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 <table class="edit" cellspacing="0">
 <tr>
 	<td valign="top">
@@ -381,7 +381,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -471,14 +471,14 @@
 
 <table class="edit" cellspacing="1">
 <tr>
-	<td class="row1" width="25%" valign="top"><b>{L_GROUP_ADD}:</b><br /><span class="small">{L_GROUP_ADD_MEMBER_EX}</span></td>
+	<td class="row1" width="25%" valign="top"><b>{L_GROUP_ADD}:</b><br><span class="small">{L_GROUP_ADD_MEMBER_EX}</span></td>
 	<td class="row3" width="75%" valign="top">
 		<textarea class="textarea" name="members" cols="40" rows="5"></textarea>
-		<br />
-		<br />
+		<br>
+		<br>
 		{S_ACTION_ADDUSERS}
-		<br />
-		<br />
+		<br>
+		<br>
 		<input type="checkbox" name="mod" /> Moderatorstatus
 	</td>
 </tr>
@@ -515,7 +515,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="0">
 <tr>

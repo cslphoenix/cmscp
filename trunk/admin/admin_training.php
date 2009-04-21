@@ -193,23 +193,23 @@ else
 				if ( intval($HTTP_POST_VARS['dmin']) == '00' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_duration'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_duration'];
 				}
 				
 //				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) || time() > mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_date'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_date'];
 				}
 				
 				if ( $HTTP_POST_VARS['training_maps'] == '' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['msg_select_map'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_map'];
 				}
 				
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['back'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['back'];
 				
 				if ($error)
 				{
@@ -238,7 +238,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 	
-				$message = $lang['training_create'] . '<br /><br />' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
+				$message = $lang['training_create'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -257,23 +257,23 @@ else
 				if ( intval($HTTP_POST_VARS['dmin']) == '00' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_duration'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['select_fail_duration'];
 				}
 				
 //				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) || time() > mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 				if ( !checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_date'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['select_fail_date'];
 				}
 				
 				if ( $HTTP_POST_VARS['training_maps'] == '' )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['select_fail_map'];
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['select_fail_map'];
 				}
 				
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['back'];
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['back'];
 				
 				if ($error)
 				{
@@ -300,7 +300,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 				
-				$message = $lang['training_update'] . '<br /><br />' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
+				$message = $lang['training_update'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -333,7 +333,7 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('subnavi_trains');
 					
-					$message = $lang['team_delete'] . '<br /><br />' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
+					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}

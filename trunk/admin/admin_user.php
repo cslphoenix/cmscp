@@ -215,7 +215,7 @@ else
 					if ( $result['error'] )
 					{
 						$error = TRUE;
-						$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $result['error_msg'];
+						$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $result['error_msg'];
 					}
 		
 					if (!$error)
@@ -249,13 +249,13 @@ else
 						
 			
 						$error = TRUE;
-						$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $result['error_msg'];
+						$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $result['error_msg'];
 					}
 				}
 				else
 				{
 					$error = TRUE;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'ungleiche mail addy';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'ungleiche mail addy';
 				}
 				
 				if ( $HTTP_POST_VARS['pass'] == '1' )
@@ -263,7 +263,7 @@ else
 					if ( ( empty($new_password) && !empty($password_confirm) ) || ( !empty($new_password) && empty($password_confirm) ) || ( $new_password != $password_confirm ) )
 					{
 						$error = TRUE;
-						$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . $lang['Password_mismatch'];
+						$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['Password_mismatch'];
 					}
 					
 					$new_password = md5($new_password);
@@ -355,7 +355,7 @@ else
 						'WELCOME_MSG' => sprintf($lang['Welcome_subject'], $config['sitename']),
 						'USERNAME' => substr(str_replace("\'", "'", $username), 0, 25),
 						'PASSWORD' => $new_password,
-						'EMAIL_SIG' => str_replace('<br />', "\n", "-- \n" . $config['page_email_sig']),
+						'EMAIL_SIG' => str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']),
 					));
 			
 					$emailer->send();
@@ -366,7 +366,7 @@ else
 				//	$oCache -> sCachePath = './../cache/';
 				//	$oCache -> deleteCache('display_subnavi_user');
 		
-					$message = $lang['create_user'] . '<br /><br />' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
+					$message = $lang['create_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -483,7 +483,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_user');
 				
-				$message = $lang['user_update'] . '<br /><br />' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
+				$message = $lang['user_update'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
@@ -506,7 +506,7 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('display_subnavi_user');
 					
-					$message = $lang['delete_user'] . '<br /><br />' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
+					$message = $lang['delete_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -878,7 +878,7 @@ else
 					$emailer->assign_vars(array(
 						'SITENAME' => $board_config['sitename'],
 						'GROUP_NAMES' => $group_name,
-						'EMAIL_SIG' => (!empty($board_config['board_email_sig'])) ? str_replace('<br />', "\n", "-- \n" . $board_config['board_email_sig']) : ''
+						'EMAIL_SIG' => (!empty($board_config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $board_config['board_email_sig']) : ''
 					));
 					
 					$emailer->send();
@@ -889,8 +889,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_groups');
 			
 				$message = $lang['user_change_groups']
-					. '<br /><br />' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_user_groups'], '<a href="' . append_sid("admin_user.php?mode=groups&" . POST_USERS_URL . "=$user_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_user_groups'], '<a href="' . append_sid("admin_user.php?mode=groups&" . POST_USERS_URL . "=$user_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 			break;
@@ -1133,8 +1133,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_auths_edit');
 				
 				$message = $lang['user_change_auths']
-					. '<br /><br />' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_user_auths'], '<a href="' . append_sid("admin_user.php?mode=auths&" . POST_USERS_URL . "=$user_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_user_auths'], '<a href="' . append_sid("admin_user.php?mode=auths&" . POST_USERS_URL . "=$user_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;

@@ -136,7 +136,7 @@ else
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				$sql = 'ALTER TABLE ' . GROUPS . " ADD 'auth_" . $auth_name . "' TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+				$sql = 'ALTER TABLE ' . GROUPS . " ADD `auth_" . $auth_name . "` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 				if ( !$db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -147,7 +147,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_add');
 	
-				$message = $lang['create_authlist'] . '<br /><br />' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
+				$message = $lang['create_authlist'] . '<br><br>' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -182,7 +182,7 @@ else
 							
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_edit');
 				
-				$message = $lang['update_authlist'] . '<br /><br />' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
+				$message = $lang['update_authlist'] . '<br><br>' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -210,9 +210,9 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('authlist');
 					
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_delete', $authlist['game_name']);
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_delete', $authlist['auth_name']);
 					
-					$message = $lang['delete_authlist'] . '<br /><br />' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
+					$message = $lang['delete_authlist'] . '<br><br>' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -274,7 +274,7 @@ else
 	$sql = 'SELECT * FROM ' . AUTHLIST . ' ORDER BY auth_id';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$authlist_data = $db->sql_fetchrowset($result);
 	

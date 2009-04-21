@@ -103,9 +103,9 @@ function bt_edit($bt_id, $title, $desc, $type, $php, $sql, $message)
 					bugtracker_type			= '" . str_replace("\'", "''", $type) . "',
 					bugtracker_update		= '" . time() . "'
 				WHERE bugtracker_id = $bt_id";
-	if( !$result = $db->sql_query($sql) )
+	if ( !$result = $db->sql_query($sql) )
 	{
-		message_die(GENERAL_ERROR, "Couldn't update forum information", "", __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	_log(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_BUGTRACKER, 'bt_edit');

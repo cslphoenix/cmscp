@@ -1,5 +1,5 @@
-<br />
-<br />
+<br>
+<br>
 <table class="{CLASS}" cellspacing="1">
 <tr>
 	<th class="{CLASS}">{MESSAGE_TITLE}</th>

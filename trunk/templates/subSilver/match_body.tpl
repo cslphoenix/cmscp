@@ -17,7 +17,7 @@
 <!-- END no_entry_n -->
 </table>
 
-<br />
+<br>
 
 <table class="out" width="100%" cellspacing="0">
 <tr>
@@ -45,7 +45,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <div align="center">
 	<table class="info" width="60%" cellspacing="0">

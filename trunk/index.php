@@ -55,7 +55,7 @@ if ( $mode == 'cache')
 //
 //	Gruppen in der der Benutzer vertreten ist
 //
-$sql = 'SELECT g.group_id, ' . implode(', ', $group_auth_fields) . '
+$sql = 'SELECT g.group_id, ' . implode(', g.', $group_auth_fields) . '
 			FROM ' . GROUPS . ' g, ' . GROUPS_USERS . ' gu
 			WHERE g.group_id = gu.group_id
 				AND gu.user_id = ' . $userdata['user_id'] . ' ORDER BY group_id';
@@ -73,7 +73,6 @@ while ( $row_user = $db->sql_fetchrow($result) )
 	unset($usergroup_index_data[$row_user['group_id']]['group_id']);
 }
 $db->sql_freeresult($result);
-
 
 $sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . '
 			FROM ' . GROUPS . '
@@ -94,30 +93,40 @@ while ( $row_group = $db->sql_fetchrow($result) )
 }
 $db->sql_freeresult($result);
 
-
 $authi		= array();
 $group_ids	= array_keys($group_index_data);
+
 foreach ( $usergroup_index_data as $key => $value )
 {
-	foreach ($group_ids as $group_key => $group_id)
+	if ( $group_ids )
 	{
-		foreach( $value as $v_key => $v_value )
+		foreach ($group_ids as $group_key => $group_id)
 		{
-			if ( $v_value == '0' )
+			foreach( $value as $v_key => $v_value )
 			{
-				if ( !array_key_exists($v_key, $authi) )
+				if ( $v_value == '0' )
 				{
-					$authi[$v_key] = $group_index_data[$group_id][$v_key];
+					if ( !array_key_exists($v_key, $authi) )
+					{
+						$authi[$v_key] = $group_index_data[$group_id][$v_key];
+					}
+					else if ( !$authi[$v_key] )
+					{
+						$authi[$v_key] = $group_index_data[$group_id][$v_key];
+					}
 				}
-				else if ( !$authi[$v_key] )
+				else
 				{
-					$authi[$v_key] = $group_index_data[$group_id][$v_key];
+					$authi[$v_key] = $v_value;
 				}
 			}
-			else
-			{
-				$authi[$v_key] = $v_value;
-			}
+		}
+	}
+	else
+	{
+		foreach ( $value as $v_key => $v_value )
+		{
+			$authi[$v_key] = $v_value;
 		}
 	}
 }

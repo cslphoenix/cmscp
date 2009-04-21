@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -96,7 +96,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
 <table class="edit" cellspacing="1">

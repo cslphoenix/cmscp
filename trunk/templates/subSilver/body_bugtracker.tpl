@@ -13,13 +13,13 @@
 	<td class="{list.bt_row.CLASS} {list.bt_row.CLASS_STATUS}" align="center" nowrap="nowrap" width="5%">{list.bt_row.BT_ID}</td>
 	<td class="{list.bt_row.CLASS}" align="left" width="100%">
 		&nbsp;<a href="{list.bt_row.U_DETAILS}">{list.bt_row.BT_TITLE}</a>
-		<br />
+		<br>
 		&nbsp;{list.bt_row.BT_CREATE}
-		<br />
+		<br>
 		&nbsp;{list.bt_row.BT_DESC}
 	</td>
 	<td class="{list.bt_row.CLASS}" align="center" nowrap="nowrap">&nbsp;{list.bt_row.BT_WORKER}&nbsp;</td>
-	<td class="{list.bt_row.CLASS}" align="center" nowrap="nowrap">{list.bt_row.BT_STATUS}<br />{list.bt_row.BT_TYPE}</td>
+	<td class="{list.bt_row.CLASS}" align="center" nowrap="nowrap">{list.bt_row.BT_STATUS}<br>{list.bt_row.BT_TYPE}</td>
 </tr>
 <!-- END list.bt_row -->
 <!-- BEGIN no_entry -->
@@ -48,12 +48,28 @@
 
 <!-- BEGIN entry -->
 
-<script type="text/javascript" src="includes/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="./includes/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 tinyMCE.init({
+	language : "de",
+	theme : "advanced",
 	mode : "textareas",
-	theme : "none",
-	plugins : "bbcode",
+	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager",
+	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,removeformat,cleanup,code,preview",
+	theme_advanced_buttons2 : "",
+	theme_advanced_buttons3 : "",
+	plugin_preview_width : "500",
+	plugin_preview_height : "600",
+	theme_advanced_toolbar_location : "top",
+	theme_advanced_toolbar_align : "left",
+	theme_advanced_statusbar_location : "bottom",
+	theme_advanced_resizing : true,
+	entity_encoding : "raw",
+	add_unload_trigger : false,
+	remove_linebreaks : false,
+	inline_styles : false,
+	convert_fonts_to_spans : false,
+	
 });
 </script>
 
@@ -66,10 +82,10 @@ tinyMCE.init({
 	<td>
 		<table class="info" width="100%" cellspacing="0">
 		<tr>
-			<td class="row2" colspan="2"><span class="small">{L_REQUIRED}sa</span></td>
+			<td class="row1 row4" colspan="2"><span class="small">{L_REQUIRED}</span></td>
 		</tr>
 		<tr>
-			<td class="row2" colspan="2">{ERROR_BOX}<div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#FFF;"></div></td>
+			<td class="row1 row4" colspan="2">{ERROR_BOX}<div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#FFF;"></div></td>
 		</tr>
 		<tr>
 			<td class="row1_form" width="25%">{L_TITLE}:</td>
@@ -93,7 +109,7 @@ tinyMCE.init({
 		</tr>
 		<tr>
 			<td class="row1_form" valign="top">{L_MESSAGE}:</td>
-			<td class="row2"><textarea id="bt_message" onBlur="javascript:checkEntry(this)" class="textarea" name="bt_message" cols="40" rows="5">{BT_MESSAGE}</textarea></td>
+			<td class="row2"><textarea id="bt_message" onBlur="javascript:checkEntry(this)" class="textarea" name="bt_message" style="width:100%;">{BT_MESSAGE}</textarea></td>
 		</tr>
 		<tr>
 			<td class="row4" colspan="2" align="center">

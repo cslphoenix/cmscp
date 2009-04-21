@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -101,7 +101,7 @@ tinyMCE.init({
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "left",
 	theme_advanced_statusbar_location : "bottom",
-theme_advanced_resizing : true,
+	theme_advanced_resizing : true,
 	entity_encoding : "raw",
 	add_unload_trigger : false,
 	remove_linebreaks : false,
@@ -128,7 +128,7 @@ theme_advanced_resizing : true,
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -137,7 +137,7 @@ theme_advanced_resizing : true,
 </tr>
 <tr>
 	<td class="row1">{L_NEWSCAT}:</td>
-	<td class="row2">{S_NEWSCAT_LIST}<br /><img src="{NEWSCAT_IMAGE}" id="image" alt="" /></td>
+	<td class="row2">{S_NEWSCAT_LIST}<br><img src="{NEWSCAT_IMAGE}" id="image" alt="" /></td>
 </tr>
 <tr>
 	<td class="row1">{L_NEWS_MATCH}:</td>

@@ -391,31 +391,42 @@ function auth_acp_check($user_id)
 	
 	$userauth	= array();
 	$group_ids	= array_keys($group_data);
+	
 	foreach ( $usergroups_data as $key => $value )
 	{
-		foreach ($group_ids as $group_key => $group_id)
+		if ( $group_ids )
 		{
-			foreach( $value as $v_key => $v_value )
+			foreach ($group_ids as $group_key => $group_id)
 			{
-				if ( $v_value == '0' )
+				foreach( $value as $v_key => $v_value )
 				{
-					if ( !array_key_exists($v_key, $userauth) )
+					if ( $v_value == '0' )
 					{
-						$userauth[$v_key] = $group_data[$group_id][$v_key];
+						if ( !array_key_exists($v_key, $userauth) )
+						{
+							$userauth[$v_key] = $group_data[$group_id][$v_key];
+						}
+						else if ( !$userauth[$v_key] )
+						{
+							$userauth[$v_key] = $group_data[$group_id][$v_key];
+						}
 					}
-					else if ( !$userauth[$v_key] )
+					else if ( $v_value == '2' )
 					{
-						$userauth[$v_key] = $group_data[$group_id][$v_key];
+						$userauth[$v_key] = $v_value;
+					}
+					else
+					{
+						$userauth[$v_key] = $v_value;
 					}
 				}
-				else if ( $v_value == '2' )
-				{
-					$userauth[$v_key] = $v_value;
-				}
-				else
-				{
-					$userauth[$v_key] = $v_value;
-				}
+			}
+		}
+		else
+		{
+			foreach ( $value as $v_key => $v_value )
+			{
+				$userauth[$v_key] = $v_value;
 			}
 		}
 	}

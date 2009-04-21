@@ -13,18 +13,46 @@ $page_title = $lang['teamspeak'];
 
 $template->set_filenames(array('body' => 'body_teamspeak.tpl'));
 
-$sql = 'SELECT * FROM ' . TEAMSPEAK . ' WHERE teamspeak_show = 1 LIMIT 0,1';
-$server = _cached($sql, 'teamspeak_data', 1);
+$sql = 'SELECT * FROM ' . TEAMSPEAK . ' WHERE teamspeak_show = 1';
+$teamspeak = _cached($sql, 'teamspeak_data', 1);
 
 include($root_path . 'includes/teamspeak/ts_config.php');
 include($root_path . 'includes/teamspeak/ts_functions.php');
+include($root_path . 'includes/class_cyts.php');
 
-$tss2info->serverAddress=$server['teamspeak_ip'];
-$tss2info->serverUDPPort=$server['teamspeak_port'];
-$tss2info->serverQueryPort=$server['teamspeak_qport'];
-
+$tss2info->serverAddress=$teamspeak['teamspeak_ip'];
+$tss2info->serverUDPPort=$teamspeak['teamspeak_port'];
+$tss2info->serverQueryPort=$teamspeak['teamspeak_qport'];
 
 $tss2info->getInfo();
+
+$cyts = new cyts;
+$cyts->connect($teamspeak['teamspeak_ip'], $teamspeak['teamspeak_qport'], $teamspeak['teamspeak_port']);
+$info = $cyts->info_serverInfo();
+
+if ( $info )
+{
+	$template->assign_block_vars('show_sstats', array());
+	
+	$template->assign_vars(array(
+		'L_SERVER_NAME'				=> $lang['teamspeak_server_name'],
+		'L_SERVER_PLATFORM'			=> $lang['teamspeak_server_platform'],
+		'L_SERVER_TYPE'				=> $lang['teamspeak_server_clan_server'],
+		'L_SERVER_USER_MAX'			=> $lang['teamspeak_server_maxusers'],
+		'L_SERVER_USER_CURRENT'		=> $lang['teamspeak_server_currentusers'],
+		'L_SERVER_UPTIME'			=> $lang['teamspeak_server_uptime'],
+		'L_SERVER_NUM_CHANNELS'		=> $lang['teamspeak_server_currentchannels'],
+	
+		'SERVER_NAME'				=> $info['server_name'],
+		'SERVER_PLATFORM'			=> $info['server_platform'],
+		'SERVER_TYPE'				=> ( $info['server_clan_server'] == '1' ) ? 'Clan' : 'Public',
+		'SERVER_USER_MAX'			=> $info['server_maxusers'],
+		'SERVER_USER_CURRENT'		=> $info['server_currentusers'],
+		'SERVER_UPTIME'				=> $info['server_uptime'],
+		'SERVER_NUM_CHANNELS'		=> $info['server_currentchannels'],
+	));
+}		
+$cyts->disconnect();
 
 //
 //	Userliste 
@@ -84,7 +112,7 @@ foreach ( $tss2info_playerlist as $player )
 $tsv_array_1 = array(" ","-","(",")","[","]","{","}","&");
 $tsv_array_2 = array("_","_","","","","","","","");
 
-$tsv_username = ( $userdata['user_id'] == ANONYMOUS ) ? $server['server_join_name'] : $userdata['username'];
+$tsv_username = ( $userdata['user_id'] == ANONYMOUS ) ? $teamspeak['teamspeak_join_name'] : $userdata['username'];
 
 for ( $x=0; $x < count($tsv_array_1); $x++ )
 {
@@ -144,50 +172,31 @@ foreach ($tss2info->channelList as $channelInfo)
 				//
 				//	Mouseover
 				//
-				$channel_mouseover1 = "Join als: " . $tsv_username." | Channelname: " . $channelInfo['channelname']." | Topic: " . $channelInfo['channeltopic']." | Maximale User: " . $channelInfo['channelmaxplayers']." | Derzeitige User: " . $channelInfo['channelcurrentplayers']." | Codec: " . $channelInfo['channelcodec']."";
-				$channel_mouseover2 = "Kein Joinen möglich | Channelname: " . $channelInfo['channelname']." | Topic: " . $channelInfo['channeltopic']." | Maximale User: " . $channelInfo['channelmaxplayers']." | Derzeitige User: " . $channelInfo['channelcurrentplayers']." | Codec: " . $channelInfo['channelcodec']."";
-				$channel_mouseover3 = "<b>Join als:</b> " . $tsv_username."<br><br><b>Channelname:</b><br>" . $channelInfo['channelname']."<br><br><b>Topic:</b><br>" . $channelInfo['channeltopic']."<br><br><b>Maximale User:</b> " . $channelInfo['channelmaxplayers']."<br><b>Derzeitige User:</b> " . $channelInfo['channelcurrentplayers']."<br><br><b>Codec:</b><br>" . $channelInfo['channelcodec']."";
-				$channel_mouseover4 = "<b>Kein Joinen möglich</b><br><br><b>Channelname:</b><br>" . $channelInfo['channelname']."<br><br><b>Topic:</b><br>" . $channelInfo['channeltopic']."<br><br><b>Maximale User:</b> " . $channelInfo['channelmaxplayers']."<br><b>Derzeitige User:</b> " . $channelInfo['channelcurrentplayers']."<br><br><b>Codec:</b><br>" . $channelInfo['channelcodec']."";
+				$channel_mouseover1 = sprintf($lang['ts_info_1'], $tsv_username, $channelInfo['channelname'], $channelInfo['channeltopic'], $channelInfo['channelmaxplayers'], $channelInfo['channelcurrentplayers'], $channelInfo['channelcodec']);
+				$channel_mouseover2 = sprintf($lang['ts_info_2'], $channelInfo['channelname'], $channelInfo['channeltopic'], $channelInfo['channelmaxplayers'], $channelInfo['channelcurrentplayers'], $channelInfo['channelcodec']);
 				
 				//
 				//	Passwortabfrage
 				//
-				if ( $channelInfo['channelpasswort'] == "0" )
+				if ( !$channelInfo['channelpasswort'] )
 				{
-					if ( $tss2info->TS_overlib_mouseover == 1 )
-					{
-						$channel_mouseover3 = 'onmouseover="return overlib(' . str_replace("'","\'",$channel_mouseover3) . ', WIDTH, 200);" onmouseout="return nd();"';
-					}
-					else
-					{
-						$channel_mouseover3 = 'title="' . $channel_mouseover1 . '"';
-					}
+					$channel_mouseover = "title=\"" . $channel_mouseover1 . "\"";
 					
 					$channelicon = 'channel.gif';
-					$channellink = '<a class="channellink" href="teamspeak://' . $tss2info->serverAddress . ':' . $tss2info->serverUDPPort . '/?channel=' . rawurlencode($channelInfo['channelname']) . '?password=' . $tss2info->serverPasswort . '?nickname=' . rawurlencode($tsv_username)."\" " . $channel_mouseover3.">" . $channelInfo['channelname']."</a>";
+					$channellink = '<a class="channellink" href="teamspeak://' . $teamspeak['teamspeak_ip'] . ':' . $teamspeak['teamspeak_port'] . '/?channel=' . rawurlencode($channelInfo['channelname']) . '?password=' . $teamspeak['teamspeak_pass'] . '?nickname=' . rawurlencode($tsv_username) . ' "'.$channel_mouseover.'">' . $channelInfo['channelname'] . '</a>';
 				}
 				else
 				{
-					if ($tss2info->TS_overlib_mouseover == 1)
-					{
-						$channel_mouseover4 = "style=\"cursor: help;\" onmouseover=\"return overlib('".str_replace("'","\'",$channel_mouseover4)."', WIDTH, 200);\"  onmouseout=\"return nd();\"";
-					}
-					else
-					{
-						$channel_mouseover4 = "title=\"" . $channel_mouseover2."\"";
-					}
+					$channel_mouseover = "title=\"" . $channel_mouseover2 . "\"";
 					
 					$channelicon = 'channel_close.gif';
-					$channellink = "<span " . $channel_mouseover4.">" . $channelInfo['channelname']."</span>";
+					$channellink = "<span " . $channel_mouseover2 . ">" . $channelInfo['channelname'] . "</span>";
 				}
 				
 				//
 				//	Channelflags
 				//
-				if ( $tss2info->TS_channelflags_ausgabe == 1 )
-				{
-					$channellink .= ' (' . TS_channelflags($channelInfo['channelflags']) . ')';
-				}
+				$channellink .= ( $teamspeak['teamspeak_cstats'] ) ? ' (' . TS_channelflags($channelInfo['channelflags']) . ')' : '';
 				
 				//
 				//	Channel
@@ -225,27 +234,17 @@ foreach ($tss2info->channelList as $channelInfo)
 					$playercounter1 = $counter_player + 1;
 					$playercounter2 = $channelInfo['channelcurrentplayers'];
 					
-					$player_mouse_over1 = $playerInfo['playername'] . ' | Online seit: ' . TS_totaltime($playerInfo['totaltime']) . ' | Idle seit: ' . TS_idletime($playerInfo['idletime']) . ' | Ping: ' . $playerInfo['pingtime'] . ' ms';
-					$player_mouse_over2 = '<b>' . $playerInfo['playername'] . '</b><br /><br /><b>Online seit:</b><br />' . TS_totaltime($playerInfo['totaltime']) . '<br /><br /><b>Idle seit:</b><br />' . TS_idletime($playerInfo['idletime']) . '<br /><br /><b>Ping:</b><br /> '. $playerInfo['pingtime'] . ' ms';
-					
-					if ( $tss2info->TS_overlib_mouseover == 1)
-					{
-						$player_mouse_over = 'style="cursor: help;" onmouseover="return overlib(' . str_replace("'","\'",$player_mouse_over2) . ', WIDTH, 150);" onmouseout="return nd();"';
-					}
-					else
-					{
-						$player_mouse_over = 'title="' . $player_mouse_over1 . '"';
-					}
+					$player_mouse_over = sprintf($lang['ts_info_u'], $playerInfo['playername'], TS_totaltime($playerInfo['totaltime']), TS_idletime($playerInfo['idletime']), $playerInfo['pingtime']);
+					$player_mouse_over = 'title="' . $player_mouse_over . '"';
 					
 					//
 					//	Player
 					//
 					$template->assign_block_vars('channel.user', array(
 						'USERNAME'		=> $playerInfo['playername'],
-						'USERSTATUS'	=> ($tss2info->TS_userstatus_ausgabe == 1) ? ' ('.TS_userstatus($playerInfo['userstatus']).TS_privileg($playerInfo['privileg'],$playerInfo['attribute']).')' : '',
+						'USERSTATUS'	=> ( $teamspeak['teamspeak_ustats'] ) ? ' ('.TS_userstatus($playerInfo['userstatus']).TS_privileg($playerInfo['privileg'],$playerInfo['attribute']).')' : '',
 						'USERPIC'		=> TS_attribute($playerInfo['attribute']),
-						'USERHOVER'		=> 'test' . $player_mouse_over,											   
-						
+						'USERHOVER'		=> $player_mouse_over,											   
 					));
 
 					$counter_player++;	// Playercounter hochzählen
@@ -271,33 +270,29 @@ foreach ($tss2info->channelList as $channelInfo)
 			{
 				if ( $subchannelInfo['channelparent'] == $channelInfo['channelid'] )
 				{
+					$subchannel_mouseover1 = sprintf($lang['ts_info_1'], $tsv_username, $subchannelInfo['channelname'], $subchannelInfo['channeltopic'], $subchannelInfo['channelmaxplayers'], $subchannelInfo['channelcurrentplayers'], $subchannelInfo['channelcodec']);
+					$subchannel_mouseover2 = sprintf($lang['ts_info_2'], $subchannelInfo['channelname'], $subchannelInfo['channeltopic'], $subchannelInfo['channelmaxplayers'], $subchannelInfo['channelcurrentplayers'], $subchannelInfo['channelcodec']);
 					
-						$subchannel_mouseover1 = "Join als: " . $tsv_username." | Channelname: " . $subchannelInfo['channelname']." | Subchannel von: " . $channelInfo['channelname']." | Topic: " . $subchannelInfo['channeltopic']." | Maximale User: " . $subchannelInfo['channelmaxplayers']." | Derzeitige User: " . $subchannelInfo['channelcurrentplayers']." | Codec: " . $subchannelInfo['channelcodec']."";
-						$subchannel_mouseover2 = "Kein Joinen möglich | Channelname: " . $subchannelInfo['channelname']." | Subchannel von: " . $channelInfo['channelname']." | Topic: " . $subchannelInfo['channeltopic']." | Maximale User: " . $subchannelInfo['channelmaxplayers']." | Derzeitige User: " . $subchannelInfo['channelcurrentplayers']." | Codec: " . $subchannelInfo['channelcodec']."";
-						$subchannel_mouseover3 = "<b>Join als:</b> " . $tsv_username."<br><br><b>Channelname:</b><br>" . $subchannelInfo['channelname']."<br><b>Subchannel von:</b><br>" . $channelInfo['channelname']."<br><br><b>Topic:</b><br>" . $subchannelInfo['channeltopic']."<br><br><b>Maximale User:</b> " . $subchannelInfo['channelmaxplayers']."<br><b>Derzeitige User:</b> " . $subchannelInfo['channelcurrentplayers']."<br><br><b>Codec:</b><br>" . $subchannelInfo['channelcodec']."";
-						$subchannel_mouseover4 = "<b>Kein Joinen möglich</b><br><br><b>Channelname:</b><br>" . $subchannelInfo['channelname']."<br><b>Subchannel von:</b><br>" . $channelInfo['channelname']."<br><br><b>Topic:</b><br>" . $subchannelInfo['channeltopic']."<br><br><b>Maximale User:</b> " . $subchannelInfo['channelmaxplayers']."<br><b>Derzeitige User:</b> " . $subchannelInfo['channelcurrentplayers']."<br><br><b>Codec:</b><br>" . $subchannelInfo['channelcodec']."";
-						
-						if ($channelInfo['channelpasswort'] == "0")
-						{
-							if($tss2info->TS_overlib_mouseover == 1) $subchannel_mouseover3 = "onmouseover=\"return overlib('".str_replace("'","\'",$subchannel_mouseover3)."', WIDTH, 200);\"  onmouseout=\"return nd();\"";
-							else $subchannel_mouseover3 = "title=\"" . $channel_mouseover1."\"";
-							
-							$subchannelicon = 'channel.gif';
-							$subchannellink = "<a class=\"channellink\" href=\"teamspeak://" . $tss2info->serverAddress.":" . $tss2info->serverUDPPort."/?channel=".rawurlencode($subchannelInfo['channelname'])."?password=" . $tss2info->serverPasswort."?nickname=".rawurlencode($tsv_username)."\" " . $subchannel_mouseover3.">" . $subchannelInfo['channelname']."</a>";
-						}
-						else
-						{
-							if($tss2info->TS_overlib_mouseover == 1) $subchannel_mouseover4 = "style=\"cursor: help;\" onmouseover=\"return overlib('".str_replace("'","\'",$subchannel_mouseover4)."', WIDTH, 200);\"  onmouseout=\"return nd();\"";
-							else $subchannel_mouseover4 = "title=\"" . $channel_mouseover2."\"";
-							$subchannelicon = 'channel_close.gif';
-							$subchannellink = "<span " . $subchannel_mouseover4.">" . $subchannelInfo['channelname']."</span>";
-						}
+					if ( !$subchannelInfo['channelpasswort'] )
+					{
+						$subchannel_mouseover = "title=\"" . $subchannel_mouseover1 . "\"";
+				
+						$subchannelicon = 'channel.gif';
+						$subchannellink = '<a class="channellink" href="teamspeak://' . $teamspeak['teamspeak_ip'] . ':' . $teamspeak['teamspeak_port'] . '/?channel=' . rawurlencode($subchannelInfo['channelname']) . '?password=' . $teamspeak['teamspeak_pass'] . '?nickname=' . rawurlencode($tsv_username) . ' "'.$subchannel_mouseover.'">' . $subchannelInfo['channelname'] . '</a>';
+					}
+					else
+					{
+						$subchannel_mouseover = "title=\"" . $subchannel_mouseover2 . "\"";
+					
+						$subchannelicon = 'channel_close.gif';
+						$subchannellink = "<span " . $subchannel_mouseover2 . ">" . $subchannelInfo['channelname'] . "</span>";
+					}
 
-						$template->assign_block_vars('channel.subchannel', array(
-							'SUBCHANNEL'		=> $subchannellink,
-							'SUBCHANNEL_ICON'	=> $subchannelicon,
-						));
-						
+					$template->assign_block_vars('channel.subchannel', array(
+						'SUBCHANNEL'		=> $subchannellink,
+						'SUBCHANNEL_ICON'	=> $subchannelicon,
+					));
+					
 					$counter_player = 0;
 					
 					//---> Sortierung <---\\ Anfang
@@ -312,30 +307,22 @@ foreach ($tss2info->channelList as $channelInfo)
 					//---> Sortierung <---\\ Ende
 					
 					//---> SubPlayerList <---\\ Anfang
-					foreach($tss2info->playerList as $playerInfo)
+					foreach( $tss2info->playerList as $playerInfo )
 					{
-						if ($playerInfo['channelid'] == $subchannelInfo['channelid'] && $subchannelInfo['channelparent'] == $channelInfo['channelid'])
+						if ( $playerInfo['channelid'] == $subchannelInfo['channelid'] && $subchannelInfo['channelparent'] == $channelInfo['channelid'] )
 						{
 							unset($subuserstatus);
 							
 							$playercounter1 = $counter_player + 1;
 							$playercounter2 = $subchannelInfo['channelcurrentplayers'];
 							
-							$player_mouse_over1 = $playerInfo['playername'] . ' | Online seit: ' . TS_totaltime($playerInfo['totaltime']) . ' | Idle seit: ' . TS_idletime($playerInfo['idletime']) . ' | Ping: ' . $playerInfo['pingtime'] . ' ms';
-							$player_mouse_over2 = '<b>' . $playerInfo['playername'] . '</b><br /><br /><b>Online seit:</b><br />' . TS_totaltime($playerInfo['totaltime']) . '<br /><br /><b>Idle seit:</b><br />' . TS_idletime($playerInfo['idletime']) . '<br /><br /><b>Ping:</b><br /> '. $playerInfo['pingtime'] . ' ms';
-							
-							if ( $tss2info->TS_overlib_mouseover == 1)
-							{
-								$player_mouse_over = 'style="cursor: help;" onmouseover="return overlib(' . str_replace("'","\'",$player_mouse_over2) . ', WIDTH, 150);" onmouseout="return nd();"';
-							}
-							else
-							{
-								$player_mouse_over = 'title="' . $player_mouse_over1 . '"';
-							}
+							$player_mouse_over = sprintf($lang['ts_info_u'], $playerInfo['playername'], TS_totaltime($playerInfo['totaltime']), TS_idletime($playerInfo['idletime']), $playerInfo['pingtime']);
+
+							$player_mouse_over = 'title="' . $player_mouse_over . '"';
 							
 							$template->assign_block_vars('channel.subchannel.subuser', array(
 								'USERNAME'		=> $playerInfo['playername'],
-								'USERSTATUS'	=> ($tss2info->TS_userstatus_ausgabe == 1) ? ' ('.TS_userstatus($playerInfo['userstatus']).TS_privileg($playerInfo['privileg'],$playerInfo['attribute']).')' : '',
+								'USERSTATUS'	=> ( $teamspeak['teamspeak_ustats'] ) ? ' ('.TS_userstatus($playerInfo['userstatus']).TS_privileg($playerInfo['privileg'],$playerInfo['attribute']).')' : '',
 								'USERPIC'		=> TS_attribute($playerInfo['attribute']),
 								'USERHOVER'		=> $player_mouse_over,
 							));
@@ -361,47 +348,6 @@ if ($counter == 0)
 	$template->assign_block_vars('offline', array());
 }
 //---> OFFLINE <---\\ Ende
-
-/*
-if ( is_array($player_without_channel) )
-{
-	unset($ts_viewer_ausgabe);
-	
-	//---> Sortierung <---\\ Anfang
-	unset($s1);
-	unset($s2);
-	unset($v);
-	$s1 = array();
-	$s2 = array();
-	foreach($player_without_channel as $v) $s1[] = $v['userstatus'];    // Sortierung nach Order
-	foreach($player_without_channel as $v) $s2[] = $v['playername'];    // Wenn Order gleich Sortierung nach Name
-	
-	array_multisort($s1, SORT_DESC, $s2, SORT_ASC, $player_without_channel); // ASC = auf-, DESC = absteigend
-	//---> Sortierung <---\\ Ende
-
-  //---> PlayerList <---\\ Anfang
-  foreach($player_without_channel as $playerInfo) {
-    $player_mouse_over1 = "" . $playerInfo['playername']." | Online seit: ".TS_totaltime($playerInfo['totaltime'])." | Idle seit: ".TS_idletime($playerInfo['idletime'])." | Ping: " . $playerInfo['pingtime']." ms";
-    $player_mouse_over2 = "<b>" . $playerInfo['playername']."</b><br><br><b>Online seit:</b><br>".TS_totaltime($playerInfo['totaltime'])."<br><br><b>Idle seit:</b><br>".TS_idletime($playerInfo['idletime'])."<br><br><b>Ping:</b> " . $playerInfo['pingtime']." ms";
-    if($tss2info->TS_overlib_mouseover == 1) $player_mouse_over = "style=\"cursor: help;\" onmouseover=\"return overlib('".str_replace("'","\'",$player_mouse_over2)."', WIDTH, 150);\" onmouseout=\"return nd();\"";
-    else $player_mouse_over = "title=\"" . $player_mouse_over1."\"";
-    unset($userstatus);
-    if($tss2info->TS_userstatus_ausgabe == 1) $userstatus = ' ('.TS_userstatus($playerInfo['userstatus']).TS_privileg($playerInfo['privileg'],$playerInfo['attribute']).')';
-    $ts_viewer_ausgabe .= '
-        <tr>
-          <td>
-            <table border="0" width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td class="player" width="20" nowrap="nowrap"><img src="images/teamspeak/'.TS_attribute($playerInfo['attribute']).'" width="20" height="16" border="0" alt=""></td>
-                <td class="player" width="100%">&nbsp;<span '.$player_mouse_over.'>'.$playerInfo['playername'].$userstatus.'</span></td>
-              </tr>
-            </table>
-          </td>
-        </tr>';
-  }
-  //---> PlayerList <---\\ Anfang
-}
-*/
 
 $template->assign_vars(array(
 	'L_TS_VIEWER'			=> $lang['teamspeak_viewer'],

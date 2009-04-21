@@ -203,7 +203,7 @@ else
 		}
 	
 		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_forumauth_list.php") . '">'));
-		$message = $lang['Forum_auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid("admin_forumauth_list.php") . '">', "</a>");
+		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid("admin_forumauth_list.php") . '">', "</a>");
 		message_die(GENERAL_MESSAGE, $message);
 	
 	} // End of submit
@@ -252,7 +252,7 @@ else
 		$sql = "SELECT c.cat_id, c.cat_title, c.cat_order
 			FROM " . CATEGORIES . " c 
 			ORDER BY c.cat_order";
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 		}
@@ -431,7 +431,7 @@ else
 					FROM ' . CATEGORIES . ' c
 					WHERE c.cat_id = ' . $cat_id . '
 				ORDER BY c.cat_order';
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 		}

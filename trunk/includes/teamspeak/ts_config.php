@@ -10,11 +10,11 @@
 class tss2info
 {
 	////// TeamSpeak Einstellungen ///////////////////////////
-	var $sitetitle       = "TS"; // SeitenTitle und Scriptversion
+//	var $sitetitle       = "TS"; // SeitenTitle und Scriptversion
 //	var $serverAddress   = '88.198.52.237'; // Hier die TeamSpeak IP Adresse eintragen !!wichtig!! (Beispiel: 192.168.7.1)
 //	var $serverQueryPort = "26384"; // TeamSpeak QueryPort.. Schau in die server.ini von TeamSpeak (Standard 51234)
 //	var $serverUDPPort   = "8767"; // UDP Port für Teamspeak der auch hinter der IP Adresse genutzt wird (Standard 8767)
-	var $serverPasswort  = ""; // Serverpasswort das bei Serversettings eingestellt wird (wenn kein Passwort erteilt, dann leer lassen)
+//	var $serverPasswort  = ""; // Serverpasswort das bei Serversettings eingestellt wird (wenn kein Passwort erteilt, dann leer lassen)
 //	var $serverAddress   = "tempelball.de"; // Hier die TeamSpeak IP Adresse eintragen !!wichtig!! (Beispiel: 192.168.7.1)
 //	var $serverQueryPort = "51234"; // TeamSpeak QueryPort.. Schau in die server.ini von TeamSpeak (Standard 51234)
 //	var $serverUDPPort   = "6002"; // UDP Port für Teamspeak der auch hinter der IP Adresse genutzt wird (Standard 8767)
@@ -26,18 +26,18 @@ class tss2info
 	////// Erweiterte Einstellungen //////////////////////////
 	//
 //	var $tabellenbreite    = "150"; // Mindestbreite der Teamspeaktabelle (die einbindung mit einem IFRAME sollte 20px mehr betragen)
-	var $alternativer_nick = "TS-Viewer-Guest"; // Alternativer Gastname
+//	var $alternativer_nick = "TS-Viewer-Guest"; // Alternativer Gastname
 	
-	var $TS_userstatus_ausgabe     = 1;   // Soll der Status des Players angezeigt werden? (U,R,SA etc.)
+//	var $TS_userstatus_ausgabe     = 1;   // Soll der Status des Players angezeigt werden? (U,R,SA etc.)
 	var $TS_leerchannel_anzeigen   = 1;   // Sollen die leeren Channel angezeigt werden?
 //	var $TS_title_anzeigen         = 0;   // Soll der Title über den Channels sichtbar sein?
-	var $TS_channelflags_ausgabe   = 1;   // Sollen die Channelrechte angezeigt werden? (R,M,S,P etc.)
+//	var $TS_channelflags_ausgabe   = 1;   // Sollen die Channelrechte angezeigt werden? (R,M,S,P etc.)
 	
 	var $TS_refresh                = 1;   // Refreshen generell erlauben (inkl. Refreshlink)
 	var $TS_autorefresh            = 1;   // Autorefresh erlauben oder nicht
 	var $TS_autorefresh_zeit       = 10;  // Zeit in Sekunden angeben (Funktioniert nur, wenn autorefresh aktiviert wurde)
 	
-	var $TS_overlib_mouseover      = 0;   // Soll der Mouseover Effekt vorhanden sein?
+//	var $TS_overlib_mouseover      = 1;   // Soll der Mouseover Effekt vorhanden sein?
 	
 //	var $TS_channel_anzeigen       = 1;   // Sollen die Channel angezeigt werden? (0 = nur Playerausgabe)
 

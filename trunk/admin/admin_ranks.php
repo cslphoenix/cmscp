@@ -194,7 +194,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_add', $rank_title);
 	
-				$message = $lang['create_rank'] . '<br /><br />' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
+				$message = $lang['create_rank'] . '<br><br>' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -222,7 +222,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_edit');
 				
-				$message = $lang['update_rank'] . '<br /><br />' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
+				$message = $lang['update_rank'] . '<br><br>' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -240,7 +240,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_delete', $rank['rank_title']);
 					
-					$message = $lang['delete_rank'] . '<br /><br />' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
+					$message = $lang['delete_rank'] . '<br><br>' . sprintf($lang['click_return_rank'], '<a href="' . append_sid("admin_ranks.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}

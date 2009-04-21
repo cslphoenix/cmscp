@@ -12,10 +12,10 @@
 			<td class="row1" width="100%" height="50">
 				<span style="float:right;">{L_TOPICS}: {catrow.forumrow.TOPICS} / {L_POSTS}: {catrow.forumrow.POSTS}</span>
 				<span>
-					<a href="{catrow.forumrow.U_VIEWFORUM}">{catrow.forumrow.FORUM_NAME}</a><br />
+					<a href="{catrow.forumrow.U_VIEWFORUM}">{catrow.forumrow.FORUM_NAME}</a><br>
 				</span>
 				<span>
-					{catrow.forumrow.FORUM_DESC}<br />
+					{catrow.forumrow.FORUM_DESC}<br>
 				</span>
 				<!-- BEGIN parent -->
 				{L_SUBFORUMS}: <a href="{catrow.forumrow.parent.U_VIEWFORUM}">{catrow.forumrow.parent.FORUM_NAME}</a>

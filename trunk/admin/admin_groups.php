@@ -270,14 +270,14 @@ else
 				
 				$sql = 'INSERT INTO ' . GROUPS . " (group_name, $sql_field, group_color, group_legend, group_rank, group_order)
 					VALUES ('" . str_replace("\'", "''", $group_name) . "', $sql_value, '$group_color', $group_legend, $group_rank, $next_order)";
-				if( !$result = $db->sql_query($sql) )
+				if ( !$result = $db->sql_query($sql) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update forum information", "", __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add', $group_name);
 	
-				$message = $lang['create_group'] . '<br /><br />' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
+				$message = $lang['create_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -367,7 +367,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_edit', $group_name);
 				
-				$message = $lang['update_group'] . '<br /><br />' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
+				$message = $lang['update_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -382,7 +382,7 @@ else
 								WHERE gu.group_id = ' . $group_id . ' AND gu.user_id = u.user_id';
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$group_members = $db->sql_fetchrowset($result);
 					
@@ -639,7 +639,7 @@ else
 						$emailer->assign_vars(array(
 							'SITENAME' => $config['sitename'], 
 							'GROUP_NAME' => $group_name,
-							'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br />', "\n", "-- \n" . $config['board_email_sig']) : '', 
+							'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['board_email_sig']) : '', 
 
 							'U_GROUPCP' => $server_url . '?' . POST_GROUPS_URL . "=$group_id")
 						);
@@ -708,8 +708,8 @@ else
 					}
 
 					$message = $lang['group_set_mod']
-						. '<br /><br />' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 
 				}
@@ -812,7 +812,7 @@ else
 									WHERE username IN ("' . $sql_in . '")';
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_MESSAGE, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+							message_die(GENERAL_MESSAGE, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if (!($row = $db->sql_fetchrow($result)))
@@ -840,7 +840,7 @@ else
 									AND group_id = ' . $group_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$add_id_ary = $user_id_ary_im = array();
@@ -898,8 +898,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add_member');
 			
 					$message = $lang['msg_group_add_member']
-						. '<br /><br />' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
-						. '<br /><br />' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				
@@ -922,8 +922,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_delete_member');
 			
 				$message = $lang['msg_group_del_member']
-					. '<br /><br />' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
-					. '<br /><br />' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -962,7 +962,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_delete', $group['group_name']);
 					
-					$message = $lang['delete_group'] . '<br /><br />' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
+					$message = $lang['delete_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -1031,14 +1031,14 @@ else
 	$sql = 'SELECT MAX(group_order) AS max FROM ' . GROUPS . ' WHERE group_single_user = 0';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$max_order = $db->sql_fetchrow($result);
 	
 	$sql = 'SELECT * FROM ' . GROUPS . ' WHERE group_single_user = 0 ORDER BY group_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	if ( $db->sql_numrows($result) )
@@ -1058,7 +1058,7 @@ else
 				GROUP BY gu.group_id';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		while ($row = $db->sql_fetchrow($result))

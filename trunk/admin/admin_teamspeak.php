@@ -152,6 +152,7 @@ else
 					'L_TEAMSPEAK_SSTATS'	=> $lang['teamspeak_sstats'],
 					'L_TEAMSPEAK_MOUSEO'	=> $lang['teamspeak_mouseo'],
 					'L_TEAMSPEAK_VIEWER'	=> $lang['teamspeak_viewer'],
+					'L_TEAMSPEAK_JOIN'		=> $lang['teamspeak_join'],
 					
 					'L_TEAMSPEAK_SHOW'		=> $lang['teamspeak_show'],
 					'L_TEAMSPEAK_NOSHOW'	=> $lang['teamspeak_noshow'],
@@ -166,9 +167,8 @@ else
 					'TEAMSPEAK_PORT'		=> $teamspeak['teamspeak_port'],
 					'TEAMSPEAK_QPORT'		=> $teamspeak['teamspeak_qport'],
 					'TEAMSPEAK_PASS'		=> $teamspeak['teamspeak_pass'],
-					'TEAMSPEAK_JOIN_NAME'	=> $teamspeak['teamspeak_join_name'],
+					'TEAMSPEAK_JOIN'		=> $teamspeak['teamspeak_join_name'],
 					
-								
 					'S_CHECKED_CSTATS_YES'	=> ( $teamspeak['teamspeak_cstats'] ) ? ' checked="checked"' : '',
 					'S_CHECKED_CSTATS_NO'	=> ( !$teamspeak['teamspeak_cstats'] ) ? ' checked="checked"' : '',
 					'S_CHECKED_USTATS_YES'	=> ( $teamspeak['teamspeak_ustats'] ) ? ' checked="checked"' : '',
@@ -253,7 +253,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_add');
 	
-				$message = $lang['create_teamspeak'] . '<br /><br />' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid("admin_teamspeak.php") . '">', '</a>');
+				$message = $lang['create_teamspeak'] . '<br><br>' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid("admin_teamspeak.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -322,7 +322,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_edit');
 				
-				$message = $lang['update_teamspeak'] . '<br /><br />' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid("admin_teamspeak.php") . '">', '</a>');
+				$message = $lang['update_teamspeak'] . '<br><br>' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid("admin_teamspeak.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -341,7 +341,7 @@ else
 					$sql = 'SELECT * FROM ' . $ts_prefix . 'clients WHERE i_client_server_id = ' . $ts_server;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$teamspeak_user = $db->sql_fetchrowset($result);
 					
@@ -415,7 +415,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_delete', $teamspeak['teamspeak_name']);
 					
-					$message = $lang['delete_teamspeak'] . '<br /><br />' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid("admin_teamspeak.php") . '">', '</a>');
+					$message = $lang['delete_teamspeak'] . '<br><br>' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid("admin_teamspeak.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -468,14 +468,14 @@ else
 	$sql = 'SELECT * FROM ' . TEAMSPEAK . ' WHERE teamspeak_show = 1';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$teamspeak = $db->sql_fetchrow($result);
 	
 	$sql = 'SELECT * FROM ' . TEAMSPEAK;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	$color = '0';

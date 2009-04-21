@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -171,7 +171,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -185,11 +185,11 @@
 <tr>
 	<td class="row1">{L_NAVI_TYPE}:</td>
 	<td class="row2">
-		<input type="radio" name="navi_type" value="1" {CHECKED_TYPE_MAIN} /> {L_TYPE_MAIN}<br />
-		<input type="radio" name="navi_type" value="2" {CHECKED_TYPE_CLAN} /> {L_TYPE_CLAN}<br />
-		<input type="radio" name="navi_type" value="3" {CHECKED_TYPE_COM} /> {L_TYPE_COM}<br />
-		<input type="radio" name="navi_type" value="4" {CHECKED_TYPE_MISC} /> {L_TYPE_MISC}<br />
-		<input type="radio" name="navi_type" value="5" {CHECKED_TYPE_USER} /> {L_TYPE_USER}<br />
+		<input type="radio" name="navi_type" value="1" {CHECKED_TYPE_MAIN} /> {L_TYPE_MAIN}<br>
+		<input type="radio" name="navi_type" value="2" {CHECKED_TYPE_CLAN} /> {L_TYPE_CLAN}<br>
+		<input type="radio" name="navi_type" value="3" {CHECKED_TYPE_COM} /> {L_TYPE_COM}<br>
+		<input type="radio" name="navi_type" value="4" {CHECKED_TYPE_MISC} /> {L_TYPE_MISC}<br>
+		<input type="radio" name="navi_type" value="5" {CHECKED_TYPE_USER} /> {L_TYPE_USER}<br>
 	</td> 
 </tr>
 <tr>

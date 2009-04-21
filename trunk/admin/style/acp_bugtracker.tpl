@@ -57,7 +57,7 @@ function hdr_toggle(object, open_close, open_icon, close_icon)
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -164,7 +164,7 @@ function hdr_toggle(object, open_close, open_icon, close_icon)
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>

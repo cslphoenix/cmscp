@@ -47,12 +47,13 @@ if ($mode == '')
 	$page_title = $lang['news'];
 	include($root_path . 'includes/page_header.php');
 	
-	$template->set_filenames(array('body' => 'news_body.tpl'));
+	$template->set_filenames(array('body' => 'body_news.tpl'));
+	$template->assign_block_vars('show', array());
 	
 	//
 	//	List News
 	//
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS . ' n
@@ -63,8 +64,8 @@ if ($mode == '')
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
 						LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
 					WHERE n.news_time_public < ' . time() . ' AND news_public = 1
-				ORDER BY n.news_time_public DESC';
-		if( !($result = $db->sql_query($sql)) )
+				ORDER BY n.news_time_public DESC, n.news_id DESC';
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
@@ -82,8 +83,8 @@ if ($mode == '')
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
 						LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
-				ORDER BY n.news_time_public DESC';
-		if( !($result = $db->sql_query($sql)) )
+				ORDER BY n.news_time_public DESC, n.news_id DESC';
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
@@ -91,18 +92,15 @@ if ($mode == '')
 //		$news_data = _cached($sql, 'news_list_guest');
 	}
 	
-//	_debug_post($news_data);
-	
 	if ( !$news_data )
 	{
-		$template->assign_block_vars('no_entry', array());
+		$template->assign_block_vars('show.no_entry', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($news_data)); $i++)
+		for ($i = $start; $i < min($settings['news_limit'] + $start, count($news_data)); $i++)
 		{
-			$class = ($i % 2) ? 'row1' : 'row2';
 			$news_date = create_date($userdata['user_dateformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone']); 
 			
 			if ( $config['time_today'] < $news_data[$i]['news_time_public'])
@@ -114,8 +112,7 @@ if ($mode == '')
 				$news_date = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone'])); 
 			}
 			
-			$template->assign_block_vars('news_row', array(
-				'CLASS' 			=> $class,
+			$template->assign_block_vars('show.news_row', array(
 				'NEWS_ID'			=> $news_data[$i]['news_id'],
 				'NEWS_TITLE'		=> $news_data[$i]['news_title'],
 				'NEWS_TEXT'			=> html_entity_decode($news_data[$i]['news_text'], ENT_QUOTES),
@@ -150,9 +147,7 @@ if ($mode == '')
 				
 				$links = implode(', ', $links);
 					
-	//			_debug_post($links);
-				
-				$template->assign_block_vars('news_row.links', array(
+				$template->assign_block_vars('show.news_row.links', array(
 					'L_LINK'	=> ( count($news_url) > 1 ) ? $lang['news_info_urls'] : $lang['news_info_url'],
 					'NEWS_LINK'	=> $links,
 				));
@@ -160,28 +155,33 @@ if ($mode == '')
 			
 			if ( $news_data[$i]['match_id'] )
 			{
-				$template->assign_block_vars('news_row.match', array(
+				$template->assign_block_vars('show.news_row.match', array(
 					
 				));
 			}
 		}
 		
-		$current_page = ( !count($news_data) ) ? 1 : ceil( count($news_data) / $settings['site_comment_per_page'] );
+		if ( $settings['news_browse'] )
+		{
+			$current_page = ( !count($news_data) ) ? 1 : ceil( count($news_data) / $settings['news_limit'] );
+				
+			$template->assign_vars(array(
+				'PAGINATION' => generate_pagination("news.php", count($news_data), $settings['news_limit'], $start),
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['news_limit'] ) + 1 ), $current_page ), 
 			
-		$template->assign_vars(array(
-			'PAGINATION' => generate_pagination("news.php?" . POST_NEWS_URL . "=" . $news_data, count($news_data), $settings['site_comment_per_page'], $start),
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
-		
-			'L_GOTO_PAGE' => $lang['Goto_page'])
-		);
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+			));
+		}
 	}
 	
 }
 else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 {
 	session_start();
+	$template->set_filenames(array('body' => 'body_news.tpl'));
+	$template->assign_block_vars('details', array());
 	
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT n.*, u.username, u.user_color
 					FROM ' . NEWS . ' n
@@ -192,12 +192,12 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_id = ' . $news_id . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC';
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
-		$news_info = $db->sql_fetchrow($result);
-//		$news_info = _cached($sql, 'news_view_' . $news_id . '_member', 1);
+		$news_details = $db->sql_fetchrow($result);
+//		$news_details = _cached($sql, 'news_details_' . $news_id . '_member', 1);
 	}
 	else
 	{
@@ -210,35 +210,33 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND n.news_id = ' . $news_id . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC';
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
-		$news_info = $db->sql_fetchrow($result);
-//		$news_info = _cached($sql, 'news_view_' . $news_id . '_guest', 1);
+		$news_details = $db->sql_fetchrow($result);
+//		$news_details = _cached($sql, 'news_details_' . $news_id . '_guest', 1);
 	}
 	
-	if (!$news_info)
+	if ( !$news_details )
 	{
 		message_die(GENERAL_ERROR, 'Falsche ID ?');
 	}
 	
-	$page_title = sprintf($lang['news_head_info'], $news_info['news_title']);
+	$page_title = sprintf($lang['news_head_info'], $news_details['news_title']);
 	include($root_path . 'includes/page_header.php');
-	
-	$template->set_filenames(array('body' => 'news_view_body.tpl'));
 	
 	//	Kommentarfunktion
 	//	Nur wenn die Generelle Funktion aktiviert ist und für das Match selber
-	if ($settings['comments_news'] && $news_info['news_comments'])
+	if ( $settings['comments_news'] && $news_details['news_comments'] )
 	{
-		$template->assign_block_vars('news_comments', array());
+		$template->assign_block_vars('details.news_comments', array());
 		
 		$sql = 'SELECT mc.*, u.username, u.user_email
 					FROM ' . NEWS_COMMENTS . ' mc
 						LEFT JOIN ' . USERS . ' u ON mc.poster_id = u.user_id
 					WHERE news_id = ' . $news_id . ' ORDER BY time_create DESC';
-		if( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 		}
@@ -250,7 +248,10 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 			$sql = 'SELECT read_time
 						FROM ' . NEWS_COMMENTS_READ . '
 						WHERE user_id = ' . $userdata['user_id'] . ' AND news_id = ' . $news_id;
-			$result = $db->sql_query($sql);
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			}
 			$unread = $db->sql_fetchrow($result);
 
 			if ( $db->sql_numrows($result) )
@@ -260,7 +261,10 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				$sql = 'UPDATE ' . NEWS_COMMENTS_READ . '
 							SET read_time = ' . time() . '
 						WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];
-				$result = $db->sql_query($sql);
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 			}
 			else
 			{
@@ -268,13 +272,16 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
 					VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-				$result = $db->sql_query($sql);
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 			}
 		}
 		
 		if (!$comment_entry)
 		{
-			$template->assign_block_vars('news_comments.no_entry', array());
+			$template->assign_block_vars('details.news_comments.no_entry', array());
 			$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 			$last_entry = array('poster_ip' => '', 'time_create' => '');
 		}
@@ -302,7 +309,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
 	
-				$template->assign_block_vars('news_comments.comments', array(
+				$template->assign_block_vars('details.news_comments.comments', array(
 					'CLASS' 		=> $class,
 					'ID' 			=> $comment_entry[$i]['news_comments_id'],
 					'L_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_nick'] : $comment_entry[$i]['username'],
@@ -335,16 +342,15 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 		}
 		
 		//	Wer darf Kommentare schreiben?!?
-//		if ($settings['comments_news_guest'] && !$userdata['session_logged_in'] && $last_entry['poster_ip'] != $userdata['session_ip'])
 		if ($settings['comments_news_guest'] && !$userdata['session_logged_in'])
 		{
-			$template->assign_block_vars('news_comments.news_comments_guest', array());
+			$template->assign_block_vars('details.news_comments.news_comments_guest', array());
 		}
 		
 		//	Eingeloggte Benutzer können immer kommentieren
 		if ($userdata['session_logged_in'])
 		{
-			$template->assign_block_vars('news_comments.news_comments_member', array());
+			$template->assign_block_vars('details.news_comments.news_comments_member', array());
 		}
 		
 		$error = '';
@@ -371,6 +377,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 			
 			if (!$userdata['session_logged_in'])
 			{
+				
 				$captcha = $HTTP_POST_VARS['captcha'];
 				
 				if ($captcha != $HTTP_SESSION_VARS['captcha'])
@@ -382,13 +389,13 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				if ( empty($HTTP_POST_VARS['poster_nick']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'user_nick';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'user_nick';
 				}
 				
 				if ( empty($HTTP_POST_VARS['poster_mail']) )
 				{
 					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'poster_mail';
+					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'poster_mail';
 				}
 				
 				unset($_SESSION['captcha']);
@@ -397,7 +404,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 			if ( empty($HTTP_POST_VARS['comment']) )
 			{
 				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br />' : '' ) . 'comment';
+				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
 			}
 	
 			if ( $error )
@@ -421,7 +428,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 					$sql = 'UPDATE ' . NEWS_COMMENTS_READ . '
 								SET read_time = ' . time() . '
 							WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];					
-					if ( !($result = $db->sql_query($sql)) )
+					if (!$db->sql_query($sql))
 					{
 						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
@@ -430,7 +437,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				{				
 					$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
 						VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-					if ( !($result = $db->sql_query($sql)) )
+					if (!$db->sql_query($sql))
 					{
 						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
@@ -443,7 +450,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				_comment_message('add', 'news', $news_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
-				$message = $lang['add_comment'] . '<br /><br />' . sprintf($lang['click_return_news'],  '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_id) . '">', '</a>');
+				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_news'],  '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}
@@ -452,7 +459,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 	$template->assign_vars(array(
 		
 		'NEWS_TITLE'	=> $page_title,
-		'NEWS_TEXT'		=> html_entity_decode($news_info['news_text'], ENT_QUOTES),
+		'NEWS_TEXT'		=> html_entity_decode($news_details['news_text'], ENT_QUOTES),
 								 
 	));
 

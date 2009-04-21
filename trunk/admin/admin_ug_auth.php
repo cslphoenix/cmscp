@@ -208,7 +208,7 @@ else
 				}
 			}
 	
-			$message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
+			$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 		else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'trial' && $user_level != TRIAL )
@@ -245,7 +245,7 @@ else
 					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
-			$message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
+			$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
 			message_die(GENERAL_MESSAGE, $message); 
 		}
 		else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'member' && $user_level != MEMBER )
@@ -282,7 +282,7 @@ else
 					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
-			$message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
+			$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
 			message_die(GENERAL_MESSAGE, $message); 
 		}
 		else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'mod' && $user_level != MOD )
@@ -319,7 +319,7 @@ else
 					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
-			$message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
+			$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
 			message_die(GENERAL_MESSAGE, $message); 
 		}
 		else
@@ -352,7 +352,7 @@ else
 					}
 				}
 	
-				$message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
+				$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 			}
 			else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'user' && $user_level == TRIAL )
 			{
@@ -382,7 +382,7 @@ else
 				  } 
 			   } 
 			
-			   $message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
+			   $message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
 			}
 			else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'user' && $user_level == MEMBER )
 			{
@@ -412,7 +412,7 @@ else
 				  } 
 			   } 
 			
-			   $message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
+			   $message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
 			}
 			else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'user' && $user_level == MOD )
 			{
@@ -442,7 +442,7 @@ else
 				  } 
 			   } 
 			
-			   $message = $lang['Auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
+			   $message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>'); 
 			}
 			else
 			{
@@ -636,7 +636,7 @@ else
 							WHERE group_id = $group_id 
 								AND forum_id = $forum_id";
 					}
-						if( !($result = $db->sql_query($sql)) )
+						if ( !($result = $db->sql_query($sql)) )
 						{
 							message_die(GENERAL_ERROR, "Couldn't update private forum permissions", "", __LINE__, __FILE__, $sql);
 						}
@@ -648,14 +648,14 @@ else
 					$sql = "DELETE FROM " . AUTH_ACCESS . " 
 						WHERE group_id = $group_id 
 							AND forum_id IN ($delete_sql)";
-					if( !($result = $db->sql_query($sql)) )
+					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(GENERAL_ERROR, "Couldn't delete permission entries", "", __LINE__, __FILE__, $sql);
 					}
 				}
 	
 				$l_auth_return = ( $mode == 'user' ) ? $lang['Click_return_userauth'] : $lang['Click_return_groupauth'];
-				$message = $lang['Auth_updated'] . '<br /><br />' . sprintf($l_auth_return, '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
+				$message = $lang['Auth_updated'] . '<br><br>' . sprintf($l_auth_return, '<a href="' . append_sid("admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 			}
 			
 			/*
@@ -709,7 +709,7 @@ else
 				$sql = "UPDATE " . USERS . " 
 					SET user_level = " . MOD . " 
 					WHERE user_id IN ($set_mod)";
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
@@ -720,7 +720,7 @@ else
 				$sql = "UPDATE " . USERS . " 
 					SET user_level = " . USER . " 
 					WHERE user_id IN ($unset_mod)";
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
@@ -1136,7 +1136,7 @@ else
 	
 			$template->assign_vars(array(
 				'USERNAME' => $t_groupname,
-				'GROUP_MEMBERSHIP' => $lang['Usergroup_members'] . ' : ' . $t_usergroup_list . '<br />' . $lang['Pending_members'] . ' : ' . $t_pending_list)
+				'GROUP_MEMBERSHIP' => $lang['Usergroup_members'] . ' : ' . $t_usergroup_list . '<br>' . $lang['Pending_members'] . ' : ' . $t_pending_list)
 			);
 		}
 	

@@ -271,7 +271,7 @@ function inarray($needle, $haystack)
 		else
 		{
 			$version_info = '<p style="color:red">' . $lang['Version_not_up_to_date'];
-			$version_info .= '<br />' . sprintf($lang['Latest_version_info'], $latest_version) . ' ' . sprintf($lang['Current_version_info'], '2' . $config['version']) . '</p>';
+			$version_info .= '<br>' . sprintf($lang['Latest_version_info'], $latest_version) . ' ' . sprintf($lang['Current_version_info'], '2' . $config['version']) . '</p>';
 		}
 	}
 	else

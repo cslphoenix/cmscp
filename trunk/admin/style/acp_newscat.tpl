@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -74,7 +74,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -83,7 +83,7 @@
 </tr>
 <tr>
 	<td class="row1">{L_NEWSCAT_IMAGE}:</td>
-	<td class="row2">{S_NEWSCAT_LIST}<br /><img src="{NEWSCAT_IMAGE}" id="image" alt="" /></td>
+	<td class="row2">{S_NEWSCAT_LIST}<br><img src="{NEWSCAT_IMAGE}" id="image" alt="" /></td>
 </tr>
 <tr>
 	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>

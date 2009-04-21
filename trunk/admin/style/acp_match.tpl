@@ -15,7 +15,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="row" cellspacing="1">
 <tr>
@@ -100,7 +100,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
 <table class="edit" cellspacing="1">
@@ -233,7 +233,7 @@
 </tr>
 </table>
 
-<br />
+<br>
 
 <table class="normal" cellspacing="0">
 <tr>
@@ -311,7 +311,7 @@
 	<td class="row3" colspan="5"><input class="post" type="text" size="50" name="details_lineup_rival" value="{DETAILS_LINEUP_RIVAL}" ></td>
 </tr>
 <tr>
-	<td class="row1" width="160">{L_MAP} {L_POINTS}:{L_POINTS}<br /><span class="small">{L_POINTS_EXPLAIN}</span></td>
+	<td class="row1" width="160">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapa" value="{DETAILS_MAPA}" > <input class="post" type="text" name="details_mapa_clan" value="{DETAILS_MAPA_CLAN}" size="2" > : <input class="post" type="text" name="details_mapa_rival" value="{DETAILS_MAPA_RIVAL}" size="2" >
 	<td rowspan="3" width="1%">{DETAILS_PIC_A}</td>
 	<td rowspan="3" width="1%">
@@ -336,7 +336,7 @@
 </tr>
 
 <tr>
-	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br /><span class="small">{L_POINTS_EXPLAIN}</span></td>
+	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapb" value="{DETAILS_MAPB}" > <input class="post" type="text" name="details_mapb_clan" value="{DETAILS_MAPB_CLAN}" size="2" > : <input class="post" type="text" name="details_mapb_rival" value="{DETAILS_MAPB_RIVAL}" size="2" >
 	<td rowspan="3" width="1%">{DETAILS_PIC_C}</td>
 	<td rowspan="3" width="1%">
@@ -365,7 +365,7 @@
 
 <tbody id="mapc" style="display:{MAPC};">
 <tr>
-	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br /><span class="small">{L_POINTS_EXPLAIN}</span></td>
+	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapc" value="{DETAILS_MAPC}" > <input class="post" type="text" name="details_mapc_clan" value="{DETAILS_MAPC_CLAN}" size="2" > : <input class="post" type="text" name="details_mapc_rival" value="{DETAILS_MAPC_RIVAL}" size="2" >
 	<td rowspan="3" width="1%">{DETAILS_PIC_E}</td>
 	<td rowspan="3" width="1%">
@@ -395,7 +395,7 @@
 </tbody>
 <tbody id="mapd" style="display:{MAPD};">
 <tr>
-	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br /><span class="small">{L_POINTS_EXPLAIN}</span></td>
+	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapd" value="{DETAILS_MAPD}" > <input class="post" type="text" name="details_mapd_clan" value="{DETAILS_MAPD_CLAN}" size="2" > : <input class="post" type="text" name="details_mapd_rival" value="{DETAILS_MAPD_RIVAL}" size="2" >
 	<td rowspan="3" width="1%">{DETAILS_PIC_G}</td>
 	<td rowspan="3" width="1%">
@@ -450,7 +450,7 @@
 	<td class="row3" width="70%"><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_PLAYER}&nbsp;&nbsp;<input type="radio" name="status" value="1" />&nbsp;{L_REPLACE}</td>
 </tr>
 <tr>
-	<td class="row1" valign="top">{L_MATCH_LINUP_ADD}:<br /><span class="small">{L_MATCH_LINUP_ADD_EX}</span></td>
+	<td class="row1" valign="top">{L_MATCH_LINUP_ADD}:<br><span class="small">{L_MATCH_LINUP_ADD_EX}</span></td>
 	<td class="row3">{S_ADDUSERS}</td>
 </tr>
 <tr>

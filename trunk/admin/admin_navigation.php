@@ -207,14 +207,14 @@ else
 				// There is no problem having duplicate forum names so we won't check for it.
 				$sql = 'INSERT INTO ' . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
 					VALUES ('" . str_replace("\'", "''", $navi_name) . "', '" . $navi_type . "', '" . str_replace("\'", "''", $navi_url) . "', $navi_lang, $navi_show, $navi_target, $navi_intern, $next_order)";
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_add', $navi_name);
 	
-				$message = $lang['create_navigation'] . '<br /><br />' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
+				$message = $lang['create_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -253,14 +253,14 @@ else
 							navi_target		= $navi_target,
 							navi_intern		= $navi_intern
 						WHERE navi_id = " . intval($HTTP_POST_VARS[POST_NAVIGATION_URL]);
-				if( !($result = $db->sql_query($sql)) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_edit');
 				
-				$message = $lang['update_navigation'] . '<br /><br />' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
+				$message = $lang['update_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -278,7 +278,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_delete', $navi['navi_name']);
 					
-					$message = $lang['delete_navigation'] . '<br /><br />' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
+					$message = $lang['delete_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
