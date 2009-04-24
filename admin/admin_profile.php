@@ -25,9 +25,9 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userauth['auth_navi'] || $userdata['user_level'] == ADMIN)
+	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['main']['navi'] = $filename;
+		$module['main']['profile'] = $filename;
 	}
 	return;
 }
@@ -48,16 +48,25 @@ else
 	
 	if ($cancel)
 	{
-		redirect('admin/' . append_sid("admin_navigation.php", true));
+		redirect('admin/' . append_sid("admin_profile.php", true));
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_NAVIGATION_URL]) || isset($HTTP_GET_VARS[POST_NAVIGATION_URL]) )
+	if ( isset($HTTP_POST_VARS[POST_PROFILE_URL]) || isset($HTTP_GET_VARS[POST_PROFILE_URL]) )
 	{
-		$navi_id = ( isset($HTTP_POST_VARS[POST_NAVIGATION_URL]) ) ? intval($HTTP_POST_VARS[POST_NAVIGATION_URL]) : intval($HTTP_GET_VARS[POST_NAVIGATION_URL]);
+		$profile_id = ( isset($HTTP_POST_VARS[POST_PROFILE_URL]) ) ? intval($HTTP_POST_VARS[POST_PROFILE_URL]) : intval($HTTP_GET_VARS[POST_PROFILE_URL]);
 	}
 	else
 	{
-		$navi_id = 0;
+		$profile_id = 0;
+	}
+	
+	if ( isset($HTTP_POST_VARS[POST_CAT_URL]) || isset($HTTP_GET_VARS[POST_CAT_URL]) )
+	{
+		$cat_id = ( isset($HTTP_POST_VARS[POST_CAT_URL]) ) ? intval($HTTP_POST_VARS[POST_CAT_URL]) : intval($HTTP_GET_VARS[POST_CAT_URL]);
+	}
+	else
+	{
+		$cat_id = 0;
 	}
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
@@ -77,180 +86,269 @@ else
 		}
 	}
 	
+	if( isset($HTTP_POST_VARS['add_profile']) || isset($HTTP_POST_VARS['addcategory']) )
+	{
+		$mode = ( isset($HTTP_POST_VARS['add_profile']) ) ? 'add_profile' : 'addcat';
+	
+		if ( $mode == 'add_profile' )
+		{
+			list($cat_id) = each($HTTP_POST_VARS['add_profile']);
+			$cat_id = intval($cat_id);
+
+			$profile_name = stripslashes($HTTP_POST_VARS['profile_name'][$cat_id]);
+		}
+	}
+	
+	function _select_category($select)
+	{
+		global $db;
+		
+		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		$category = '<select name="profile_category" class="post">';
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$selected = ( $row['profile_category_id'] == $select ) ? ' selected="selected"' : '';
+			$category .= '<option value="' . $row['profile_category_id'] . '"' . $selected . '>' . $row['category_name'] . '</option>';
+		}
+		$category .= '</select>';
+		
+		return $category;	
+	}
+	
 	$show_index = '';
 	
 	if( !empty($mode) ) 
 	{
 		switch($mode)
 		{
-			case 'add':
-			case 'edit':
+			case 'add_profile':
+			case 'edit_profile':
 				
-				if ( $mode == 'edit' )
+				if ( $mode == 'edit_profile' )
 				{
-					$navi		= get_data('navi', $navi_id, 0);
-					$new_mode	= 'editrank';
+					$profile	= get_data('profile', $profile_id, 0);
+					$new_mode	= 'updateprofile';
+					
+					$profile_name	= $profile['profile_name'];
+					$cat_id			= $profile['profile_category'];
+					
+					
+					
+					
 				}
-				else if ( $mode == 'add' )
+				else if ( $mode == 'add_profile' )
 				{
-					$navi = array (
-						'navi_name'		=> trim($HTTP_POST_VARS['navi_name']),
-						'navi_type'		=> '1',
-						'navi_url'		=> '',
-						'navi_lang'		=> '1',
-						'navi_show'		=> '1',
-						'navi_target'	=> '0',
-						'navi_intern'	=> '0',
+					$profile = array (
+						'profile_category'		=> _select_category($cat_id),
+						'profile_field'			=> '',
+						'profile_type'			=> '0',
+						'profile_show_guest'	=> '0',
+						'profile_show_member'	=> '0',
+						'profile_show_register'	=> '0',
 					);
+					
+					
 
-					$new_mode = 'addnavi';
+					$new_mode = 'createprofile';
 				}
-				$template->set_filenames(array('body' => './../admin/style/acp_navigation.tpl'));
-				$template->assign_block_vars('navigation_edit', array());
+				$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
+				$template->assign_block_vars('profile_edit', array());
 
-				$navi_url = str_replace('./', '', $navi['navi_url']);
-				
-				$folder = $root_path;
-				$files = scandir($folder);
-				
-				$filename_list = '';
-				$filename_list .= '<select name="navi_url" class="post" onchange="select.value = this.value;">';
-				$filename_list .= '<option value="">----------</option>';
-				
-				foreach ($files as $file)
-				{
-					if ( strstr($file, '.php') )
-					{
-						$selected = ( $file == $navi_url ) ? ' selected="selected"' : '';
-						$filename_list .= '<option value="' . $file . '" ' . $selected . '>' . $file . '&nbsp;</option>';
-					}
-				}
-				$filename_list .= '</select>';
-				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_NAVIGATION_URL . '" value="' . $navi_id . '" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $profile_id . '" />';
 
 				$template->assign_vars(array(
-					'L_NAVI_HEAD'			=> $lang['navi_head'],
-					'L_NAVI_NEW_EDIT'		=> ($mode == 'add') ? $lang['navi_add'] : $lang['navi_edit'],
+					'L_PROFILE_HEAD'		=> $lang['profile_head'],
+					'L_PROFILE_NEW_EDIT'	=> ($mode == 'add_profile') ? $lang['profile_add'] : $lang['profile_edit'],
 					'L_REQUIRED'			=> $lang['required'],
 					
-					'L_NAVI_NAME'			=> $lang['navi_name'],
-					'L_NAVI_URL'			=> $lang['navi_url'],
-					'L_NAVI_TYPE'			=> $lang['navi_type'],
-					'L_NAVI_LANGUAGE'		=> $lang['navi_language'],
-					'L_NAVI_SHOW'			=> $lang['navi_show'],
-					'L_NAVI_INTERN'			=> $lang['navi_intern'],
-					'L_NAVI_TARGET'			=> $lang['navi_target'],
-					'L_NAVI_NEW'			=> $lang['navi_new'],
-					'L_NAVI_SELF'			=> $lang['navi_self'],
-					'L_TYPE_MAIN'			=> $lang['navi_main'],
-					'L_TYPE_CLAN'			=> $lang['navi_clan'],
-					'L_TYPE_COM'			=> $lang['navi_com'],
-					'L_TYPE_MISC'			=> $lang['navi_misc'],
-					'L_TYPE_USER'			=> $lang['navi_user'],
+					'L_PROFILE_NAME'		=> $lang['profile_name'],
+					'L_PROFILE_FILED'		=> $lang['profile_field'],
+					'L_PROFILE_CATEGORY'	=> $lang['profile_categpry'],
+					'L_PROFILE_TYPE'		=> $lang['profile_type'],
+					'L_PROFILE_LANGUAGE'	=> $lang['profile_language'],
+					'L_PROFILE_SGUEST'		=> $lang['profile_sguest'],
+					'L_PROFILE_SMEMBER'		=> $lang['profile_smember'],
+					'L_PROFILE_SREG'		=> $lang['profile_sreg'],
+
+					'L_TYPE_TEXT'			=> $lang['profile_text'],
+					'L_TYPE_AREA'			=> $lang['profile_area'],
 					
 					'L_SUBMIT'				=> $lang['Submit'],
 					'L_RESET'				=> $lang['Reset'],
 					'L_YES'					=> $lang['Yes'],
 					'L_NO'					=> $lang['No'],
 					
-					'NAVI_NAME'				=> $navi['navi_name'],
-					'NAVI_URL'				=> $navi_url,
+					'PROFILE_NAME'			=> $profile_name,
+					'PROFILE_FIELD'			=> str_replace('profile_', '', $profile['profile_field']),
 					
-					'CHECKED_LANG_YES'		=> ( $navi['navi_lang'] ) ? ' checked="checked"' : '',
-					'CHECKED_LANG_NO'		=> ( !$navi['navi_lang'] ) ? ' checked="checked"' : '',
-					'CHECKED_SHOW_YES'		=> ( $navi['navi_show'] ) ? ' checked="checked"' : '',
-					'CHECKED_SHOW_NO'		=> ( !$navi['navi_show'] ) ? ' checked="checked"' : '',
-					'CHECKED_INTERN_YES'	=> ( $navi['navi_intern'] ) ? ' checked="checked"' : '',
-					'CHECKED_INTERN_NO'		=> ( !$navi['navi_intern'] ) ? ' checked="checked"' : '',
-					'CHECKED_TARGET_NEW'	=> ( $navi['navi_target'] ) ? ' checked="checked"' : '',
-					'CHECKED_TARGET_SELF'	=> ( !$navi['navi_target'] ) ? ' checked="checked"' : '',
-					'CHECKED_TYPE_MAIN'		=> ( $navi['navi_type'] == '1' ) ? ' checked="checked"' : '',
-					'CHECKED_TYPE_CLAN'		=> ( $navi['navi_type'] == '2' ) ? ' checked="checked"' : '',
-					'CHECKED_TYPE_COM'		=> ( $navi['navi_type'] == '3' ) ? ' checked="checked"' : '',
-					'CHECKED_TYPE_MISC'		=> ( $navi['navi_type'] == '4' ) ? ' checked="checked"' : '',
-					'CHECKED_TYPE_USER'		=> ( $navi['navi_type'] == '5' ) ? ' checked="checked"' : '',
+					'S_PROFILE_CATEGORY'	=> _select_category($cat_id),
 					
-					'S_FILENAME_LIST'		=> $filename_list,
+					'S_CHECKED_TYPE_TEXT'	=> ( $profile['profile_type'] == '0' ) ? ' checked="checked"' : '',
+					'S_CHECKED_TYPE_AREA'	=> ( $profile['profile_type'] == '1' ) ? ' checked="checked"' : '',
+					'S_CHECKED_SGUEST_YES'	=> ( $profile['profile_show_guest'] ) ? ' checked="checked"' : '',
+					'S_CHECKED_SGUEST_NO'	=> ( !$profile['profile_show_guest'] ) ? ' checked="checked"' : '',
+					'S_CHECKED_SMEMBER_YES'	=> ( $profile['profile_show_member'] ) ? ' checked="checked"' : '',
+					'S_CHECKED_SMEMBER_NO'	=> ( !$profile['profile_show_member'] ) ? ' checked="checked"' : '',
+					'S_CHECKED_SREG_YES'	=> ( $profile['profile_show_register'] ) ? ' checked="checked"' : '',
+					'S_CHECKED_SREG_NO'		=> ( !$profile['profile_show_register'] ) ? ' checked="checked"' : '',
+
+					
+					
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_NAVI_ACTION'			=> append_sid("admin_navigation.php")
+					'S_NAVI_ACTION'			=> append_sid("admin_profile.php")
 				));
 			
 				$template->pparse('body');
 				
 			break;
+/*
+CREATE TABLE IF NOT EXISTS `cms_profile` (
+  `profile_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `profile_category` smallint(2) unsigned NOT NULL,
+  `profile_name` varchar(100) COLLATE utf8_bin NOT NULL,
+  `profile_language` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `profile_type` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `profile_show_guest` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `profile_show_member` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `profile_show_register` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `profile_order` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY (`profile_id`)
+)
+*/
 			
-			case 'addnavi':
+			case 'createprofile':
+			
+				$profile_name		= ( isset($HTTP_POST_VARS['profile_name']) )		? str_replace("\'", "''", $HTTP_POST_VARS['profile_name']) : '';
+				$profile_field		= ( isset($HTTP_POST_VARS['profile_field']) )		? str_replace("\'", "''", $HTTP_POST_VARS['profile_field']) : '';
+				$profile_category	= ( isset($HTTP_POST_VARS['profile_category']) )	? intval($HTTP_POST_VARS['profile_category']) : 0;
+				$profile_type		= ( isset($HTTP_POST_VARS['profile_type']) )		? intval($HTTP_POST_VARS['profile_type']) : 0;
+				$profile_sguest		= ( isset($HTTP_POST_VARS['profile_sguest']) )		? intval($HTTP_POST_VARS['profile_sguest']) : 0;
+				$profile_smember	= ( isset($HTTP_POST_VARS['profile_smember']) )		? intval($HTTP_POST_VARS['profile_smember']) : 0;
 				
-				$navi_name		= ( isset($HTTP_POST_VARS['navi_name']) )	? trim($HTTP_POST_VARS['navi_name']) : '';
-				$navi_type		= ( isset($HTTP_POST_VARS['navi_type']))	? intval($HTTP_POST_VARS['navi_type']) : 0;
-				$navi_url		= ( isset($HTTP_POST_VARS['navi_url']) )	? trim($HTTP_POST_VARS['navi_url']) : '';
-				$navi_lang		= ( $HTTP_POST_VARS['navi_lang'] == 1 )		? 1 : 0;
-				$navi_show		= ( $HTTP_POST_VARS['navi_show'] == 1 )		? 1 : 0;
-				$navi_target	= ( $HTTP_POST_VARS['navi_target'] == 1 )	? 1 : 0;
-				$navi_intern	= ( $HTTP_POST_VARS['navi_intern'] == 1 )	? 1 : 0;
-				
-				if ( $navi_name == '' )
+				if ( $profile_name == '' || $profile_field == '' )
 				{
 					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
 	
-				$sql = 'SELECT MAX(navi_order) AS max_order FROM ' . NAVIGATION . ' WHERE navi_type = ' . intval($HTTP_POST_VARS['navi_type']);
-				$result = $db->sql_query($sql);
+				$sql = 'SELECT MAX(profile_order) AS max_order FROM ' . PROFILE . ' WHERE profile_category = ' . $profile_category;
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$row = $db->sql_fetchrow($result);
 
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 				
-				// There is no problem having duplicate forum names so we won't check for it.
-				$sql = 'INSERT INTO ' . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
-					VALUES ('" . str_replace("\'", "''", $navi_name) . "', '" . $navi_type . "', '" . str_replace("\'", "''", $navi_url) . "', $navi_lang, $navi_show, $navi_target, $navi_intern, $next_order)";
-				if ( !($result = $db->sql_query($sql)) )
+				$sql = 'INSERT INTO ' . PROFILE . " (profile_name, profile_field, profile_category, profile_type, profile_show_guest, profile_show_member, profile_order)
+					VALUES ('" . str_replace("\'", "''", $profile_name) . "', 'profile_" . str_replace("\'", "''", $profile_field) . "', '" . $profile_category . "', '" . $profile_type . "', '" . $profile_sguest . "', '" . $profile_smember . "', $next_order)";
+				if (!$result = $db->sql_query($sql))
 				{
-					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_add', $navi_name);
+				if ( !$profile_type )
+				{
+					$sql = 'ALTER TABLE ' . PROFILE_DATA . ' ADD `profile_' . $profile_field . '` VARCHAR( 255 ) NOT NULL';
+					if (!$result = $db->sql_query($sql))
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				}
+				else
+				{
+					$sql = 'ALTER TABLE ' . PROFILE_DATA . ' ADD `profile_' . $profile_field . '` TEXT NOT NULL';
+					if (!$result = $db->sql_query($sql))
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_add', $profile_name);
 	
-				$message = $lang['create_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
+				$message = $lang['create_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
 			
-			case 'editrank':
+			case 'updateprofile':
 			
-				$navi_name		= ( isset($HTTP_POST_VARS['navi_name']) )	? trim($HTTP_POST_VARS['navi_name']) : '';
-				$navi_type		= ( isset($HTTP_POST_VARS['navi_type']))	? intval($HTTP_POST_VARS['navi_type']) : 0;
-				$navi_url		= ( isset($HTTP_POST_VARS['navi_url']) )	? trim($HTTP_POST_VARS['navi_url']) : '';
-				$navi_lang		= ( $HTTP_POST_VARS['navi_lang'] == 1 )		? 1 : 0;
-				$navi_show		= ( $HTTP_POST_VARS['navi_show'] == 1 )		? 1 : 0;
-				$navi_target	= ( $HTTP_POST_VARS['navi_target'] == 1 )	? 1 : 0;
-				$navi_intern	= ( $HTTP_POST_VARS['navi_intern'] == 1 )	? 1 : 0;
+				$row		= get_data('profile', $profile_id, 0);
+				$p_cat		= $row['profile_category'];
+				$p_type		= $row['profile_type'];
+				$p_field	= $row['profile_field'];
+			
+				$profile_name		= ( isset($HTTP_POST_VARS['profile_name']) )		? str_replace("\'", "''", $HTTP_POST_VARS['profile_name']) : '';
+				$profile_field		= ( isset($HTTP_POST_VARS['profile_field']) )		? str_replace("\'", "''", $HTTP_POST_VARS['profile_field']) : '';
+				$profile_category	= ( isset($HTTP_POST_VARS['profile_category']) )	? intval($HTTP_POST_VARS['profile_category']) : 0;
+				$profile_type		= ( isset($HTTP_POST_VARS['profile_type']) )		? intval($HTTP_POST_VARS['profile_type']) : 0;
+				$profile_sguest		= ( isset($HTTP_POST_VARS['profile_sguest']) )		? intval($HTTP_POST_VARS['profile_sguest']) : 0;
+				$profile_smember	= ( isset($HTTP_POST_VARS['profile_smember']) )		? intval($HTTP_POST_VARS['profile_smember']) : 0;
 				
-				if ( $navi_name == '' )
+				if ( $profile_name == '' || $profile_field == '' )
 				{
 					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
 				}
-
-				$sql = "UPDATE " . NAVIGATION . " SET
-							navi_name		= '" . str_replace("\'", "''", $navi_name) . "',
-							navi_type		= $navi_type,
-							navi_url		= './" . $navi_url . "',
-							navi_lang		= $navi_lang,
-							navi_show		= $navi_show,
-							navi_target		= $navi_target,
-							navi_intern		= $navi_intern
-						WHERE navi_id = " . intval($HTTP_POST_VARS[POST_NAVIGATION_URL]);
+				
+				$sql_order = '';
+				if ( $p_cat != $profile_category )
+				{
+					$sql = 'SELECT MAX(profile_order) AS max_order FROM ' . PROFILE . ' WHERE profile_category = ' . $profile_category;
+					if ( !$result = $db->sql_query($sql) )
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$row = $db->sql_fetchrow($result);
+	
+					$max_order = $row['max_order'];
+					$next_order = $max_order + 10;
+					
+					$sql_order .= ', profile_order = ' . $next_order;
+				}
+				
+				if ( $p_type != $profile_type )
+				{
+					if ( $profile_type )
+					{
+						$sql = 'ALTER TABLE ' . PROFILE_DATA . ' CHANGE `' . $p_field . '` `profile_' . str_replace("\'", "''", $profile_field) . '` TEXT NOT NULL';
+						if ( !$result = $db->sql_query($sql) )
+						{
+							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+					}
+					else
+					{
+						$sql = 'ALTER TABLE ' . PROFILE_DATA . ' CHANGE `' . $p_field . '` `profile_' . str_replace("\'", "''", $profile_field) . '` VARCHAR( 255 ) NOT NULL';
+						if ( !$result = $db->sql_query($sql) )
+						{
+							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+					}
+				}
+				
+				$sql = "UPDATE " . PROFILE . " SET
+							profile_name		= '" . str_replace("\'", "''", $profile_name) . "',
+							profile_field		= 'profile_" . str_replace("\'", "''", $profile_field) . "',
+							profile_category	= $profile_category,
+							profile_type		= $profile_type,
+							profile_show_guest	= $profile_sguest,
+							profile_show_member	= $profile_smember
+						WHERE profile_id = " . $profile_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_edit');
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_edit');
 				
-				$message = $lang['update_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
+				$message = $lang['update_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -259,34 +357,34 @@ else
 			
 				$confirm = isset($HTTP_POST_VARS['confirm']);
 				
-				if ( $navi_id && $confirm )
+				if ( $profile_id && $confirm )
 				{	
-					$navi = get_data('navi', $navi_id, 0);
+					$profile = get_data('profile', $profile_id, 0);
 
-					$sql = 'DELETE FROM ' . NAVIGATION . " WHERE navi_id = $navi_id";
+					$sql = 'DELETE FROM ' . NAVIGATION . " WHERE profile_id = $profile_id";
 					$result = $db->sql_query($sql);
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_delete', $navi['navi_name']);
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_delete', $profile['profile_name']);
 					
-					$message = $lang['delete_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid("admin_navigation.php") . '">', '</a>');
+					$message = $lang['delete_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $navi_id && !$confirm)
+				else if ( $profile_id && !$confirm)
 				{
 					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_NAVIGATION_URL . '" value="' . $navi_id . '" />';
+					$hidden_fields .= '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $profile_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['confirm'],
-						'MESSAGE_TEXT'		=> $lang['confirm_delete_navigation'],
+						'MESSAGE_TEXT'		=> $lang['confirm_delete_profile'],
 		
 						'L_YES'				=> $lang['Yes'],
 						'L_NO'				=> $lang['No'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_navigation.php"),
+						'S_CONFIRM_ACTION'	=> append_sid("admin_profile.php"),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields
 					));
 				}
@@ -303,77 +401,98 @@ else
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
-				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
+				$sql = 'UPDATE ' . NAVIGATION . " SET profile_order = profile_order + $move WHERE profile_id = $profile_id";
 				$result = $db->sql_query($sql);
 		
-				renumber_order('navi', NAVI_MAIN);
+				renumber_order('profile', NAVI_MAIN);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_order', NAVI_MAIN);
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_order', NAVI_MAIN);
 				
 				$show_index = TRUE;
 	
 				break;
-			
-			case 'order_clan':
 				
-				$move = intval($HTTP_GET_VARS['move']);
+			case 'addcat':
 				
-				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
-		
-				renumber_order('navi', NAVI_CLAN);
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_order', NAVI_CLAN);
-				
-				$show_index = TRUE;
+				if ( trim($HTTP_POST_VARS['categoryname']) == '' )
+				{
+					message_die(GENERAL_ERROR, "Can't create a category without a name");
+				}
+	
+				$sql = 'SELECT MAX(category_order) AS max_order
+							FROM ' . PROFILE_CATEGORY;
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$row = $db->sql_fetchrow($result);
+	
+				$max_order = $row['max_order'];
+				$next_order = $max_order + 10;
+	
+				$sql = 'INSERT INTO ' . PROFILE_CATEGORY . " (category_name, category_order)
+						VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['categoryname']) . "', $next_order)";
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+	
+				$message = $lang['create_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
-			
-			case 'order_com':
 				
-				$move = intval($HTTP_GET_VARS['move']);
+			case 'editcat':
+
+				$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
+				$template->assign_block_vars('category_edit', array());
 				
-				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
-		
-				renumber_order('navi', NAVI_COM);
+				$cat_id = intval($HTTP_GET_VARS[POST_CAT_URL]);
+				$row = get_data('profile_category', $cat_id, 0);
+				
+				$s_hidden_fields = '<input type="hidden" name="mode" value="update_cat" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $cat_id . '" />';
+	
+				$template->assign_vars(array(
+					'L_PROFILE_HEAD'			=> $lang['profile_head'],
+					'L_PROFILE_EDIT_CATEGORY'	=> $lang['profile_edit_categpry'],
+											 
+					'L_CATEGORY'		=> $lang['Category'], 
 					
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_order', NAVI_COM);
-				
-				$show_index = TRUE;
 	
-				break;
-			
-			case 'order_misc':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
-		
-				renumber_order('navi', NAVI_MISC);
+					'CAT_TITLE'			=> $row['category_name'],
+	
+					'S_HIDDEN_FIELDS' => $s_hidden_fields, 
 					
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_order', NAVI_MISC);
+					'S_SUBMIT_VALUE' => $lang['profile_cat_edit'], 
+					'S_PROFILE_ACTION' => append_sid("admin_profile.php"))
+				);
 				
-				$show_index = TRUE;
-	
-				break;
-				
-			case 'order_user':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
-		
-				renumber_order('navi', NAVI_USER);
-					
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_order', NAVI_USER);
-				
-				$show_index = TRUE;
+				$template->pparse('body');
 	
 				break;
 	
+			case 'update_cat':
+				
+				if ( trim($HTTP_POST_VARS['categoryname']) == '' )
+				{
+					message_die(GENERAL_ERROR, "Can't create a category without a name");
+				}
+				
+				$sql = "UPDATE " . PROFILE_CATEGORY . "
+							SET
+								category_name = '" . str_replace("\'", "''", $HTTP_POST_VARS['category_name']) . "'
+							WHERE profile_category_id = " . intval($HTTP_POST_VARS[POST_CAT_URL]);
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+	
+				$message = $lang['update_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
+	
+				break;
+				
 			default:
 				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
 				break;
@@ -386,23 +505,18 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_navigation.tpl'));
+	$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
-		'L_NAVI_TITLE'		=> $lang['navi_head'],
-		'L_NAVI_EXPLAIN'	=> $lang['navi_explain'],
+		'L_PROFILE_HEAD'	=> $lang['profile_head'],
+		'L_PROFILE_EXPLAIN'	=> $lang['profile_explain'],
 		
-		'L_NAVI_MAIN'		=> $lang['navi_main'],
-		'L_NAVI_CLAN'		=> $lang['navi_clan'],
-		'L_NAVI_COM'		=> $lang['navi_com'],
-		'L_NAVI_MISC'		=> $lang['navi_misc'],
-		'L_NAVI_USER'		=> $lang['navi_user'],
 		
-		'L_LANGUAGE'		=> $lang['navi_language'],
-		'L_SHOW'			=> $lang['navi_show'],
 		
-		'L_NAVI_ADD'		=> $lang['navi_add'],
+		
+		'L_CREATE_PROFILE'	=> $lang['create_profile'], 
+		'L_CREATE_CATEGORY'	=> $lang['create_category'], 
 		
 		'L_EDIT'			=> $lang['edit'],
 		'L_SETTINGS'		=> $lang['settings'],
@@ -411,128 +525,107 @@ else
 		'L_MOVE_UP'			=> $lang['Move_up'], 
 		'L_MOVE_DOWN'		=> $lang['Move_down'], 
 		
-		'S_TEAM_ACTION'		=> append_sid("admin_navigation.php")
+		'S_TEAM_ACTION'		=> append_sid("admin_profile.php")
 	));
 	
-	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_MAIN;
-	$result = $db->sql_query($sql);
-	$max_main = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_CLAN;
-	$result = $db->sql_query($sql);
-	$max_clan = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_COM;
-	$result = $db->sql_query($sql);
-	$max_com = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_MISC;
-	$result = $db->sql_query($sql);
-	$max_misc = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_USER;
-	$result = $db->sql_query($sql);
-	$max_user = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT * FROM ' . NAVIGATION . ' ORDER BY navi_type ASC, navi_order ASC';
-	$result = $db->sql_query($sql);
-	
-	$color = '';
-	
-	while ( $row = $db->sql_fetchrow($result) )
+	$sql = 'SELECT MAX(category_order) AS max FROM ' . PROFILE_CATEGORY;
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		$class = ($color % 2) ? 'row_class1' : 'row_class2';
-		$color++;
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$max_order = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	
+	$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	if ( $total_categories = $db->sql_numrows($result) )
+	{
+		$category_rows = $db->sql_fetchrowset($result);
 		
-		$navi_id	= $row['navi_id'];
-		$navi_lang	= ($row['navi_lang']) ? $lang[$row['navi_name']] : $row['navi_name'];
-		
-		if ($row['navi_type'] == NAVI_MAIN)
+		$sql = 'SELECT *
+					FROM ' . PROFILE . '
+					ORDER BY profile_category, profile_order';
+		if (!$result = $db->sql_query($sql))
 		{
-			$template->assign_block_vars('display.main_row', array(
-				'CLASS' 		=> $class,
-				'NAVI_TITLE'	=> ( $row['navi_intern']) ? '<em><b>' . $navi_lang . '</b></em>' : $navi_lang,
-				
-				'NAVI_LANG'		=> ( $row['navi_lang'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				'NAVI_SHOW'		=> ( $row['navi_show'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				
-				'MOVE_UP'		=> ( $row['navi_order'] != '10' )				? '<a href="' . append_sid("admin_navigation.php?mode=order_main&amp;move=-15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_main['max'] )	? '<a href="' . append_sid("admin_navigation.php?mode=order_main&amp;move=15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-
-				'U_DELETE'		=> append_sid("admin_navigation.php?mode=delete&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-				'U_EDIT'		=> append_sid("admin_navigation.php?mode=edit&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-			));
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
-		else if ($row['navi_type'] == NAVI_CLAN)
+	
+		if( $total_profile = $db->sql_numrows($result) )
 		{
-			$template->assign_block_vars('display.clan_row', array(
-				'CLASS' 		=> $class,
-				'NAVI_TITLE'	=> ( $row['navi_intern']) ? '<em><b>' . $navi_lang . '</b></em>' : $navi_lang,
-				
-				'NAVI_LANG'		=> ( $row['navi_lang'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				'NAVI_SHOW'		=> ( $row['navi_show'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				
-				'MOVE_UP'		=> ( $row['navi_order'] != '10' )				? '<a href="' . append_sid("admin_navigation.php?mode=order_clan&amp;move=-15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_clan['max'] )	? '<a href="' . append_sid("admin_navigation.php?mode=order_clan&amp;move=15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-
-				'U_DELETE'		=> append_sid("admin_navigation.php?mode=delete&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-				'U_EDIT'		=> append_sid("admin_navigation.php?mode=edit&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-			));
-		}
-		else if ($row['navi_type'] == NAVI_COM)
-		{
-			$template->assign_block_vars('display.com_row', array(
-				'CLASS' 		=> $class,
-				'NAVI_TITLE'	=> ( $row['navi_intern']) ? '<em><b>' . $navi_lang . '</b></em>' : $navi_lang,
-				
-				'NAVI_LANG'		=> ( $row['navi_lang'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				'NAVI_SHOW'		=> ( $row['navi_show'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				
-				'MOVE_UP'		=> ( $row['navi_order'] != '10' )				? '<a href="' . append_sid("admin_navigation.php?mode=order_com&amp;move=-15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_com['max'] )	? '<a href="' . append_sid("admin_navigation.php?mode=order_com&amp;move=15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-
-				'U_DELETE'		=> append_sid("admin_navigation.php?mode=delete&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-				'U_EDIT'		=> append_sid("admin_navigation.php?mode=edit&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-			));
-		}
-		else if ($row['navi_type'] == NAVI_MISC)
-		{
-			$template->assign_block_vars('display.misc_row', array(
-				'CLASS' 		=> $class,
-				'NAVI_TITLE'	=> ( $row['navi_intern']) ? '<em><b>' . $navi_lang . '</b></em>' : $navi_lang,
-				
-				'NAVI_LANG'		=> ( $row['navi_lang'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				'NAVI_SHOW'		=> ( $row['navi_show'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-
-				'MOVE_UP'		=> ( $row['navi_order'] != '10' )				? '<a href="' . append_sid("admin_navigation.php?mode=order_misc&amp;move=-15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_misc['max'] )	? '<a href="' . append_sid("admin_navigation.php?mode=order_misc&amp;move=15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-				
-				'U_DELETE'		=> append_sid("admin_navigation.php?mode=delete&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-				'U_EDIT'		=> append_sid("admin_navigation.php?mode=edit&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-			));
-		}
-		else if ($row['navi_type'] == NAVI_USER)
-		{
-			$template->assign_block_vars('display.user_row', array(
-				'CLASS' 		=> $class,
-				'NAVI_TITLE'	=> ( $row['navi_intern']) ? '<em><b>' . $navi_lang . '</b></em>' : $navi_lang,
-				
-				'NAVI_LANG'		=> ( $row['navi_lang'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				'NAVI_SHOW'		=> ( $row['navi_show'] ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
-				
-				'MOVE_UP'		=> ( $row['navi_order'] != '10' )				? '<a href="' . append_sid("admin_navigation.php?mode=order_user&amp;move=-15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_user['max'] )	? '<a href="' . append_sid("admin_navigation.php?mode=order_user&amp;move=15&amp;" . POST_NAVIGATION_URL . "=" . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-
-				'U_DELETE'		=> append_sid("admin_navigation.php?mode=delete&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-				'U_EDIT'		=> append_sid("admin_navigation.php?mode=edit&amp;" . POST_NAVIGATION_URL . "=" . $navi_id),
-			));
+			$profile_rows = $db->sql_fetchrowset($result);
 		}
 		
+		//
+		// Okay, let's build the index
+		//
+		for ( $i = 0; $i < $total_categories; $i++ )
+		{
+			$cat_id = $category_rows[$i]['profile_category_id'];
+			
+			$sql = "SELECT MAX(profile_order) AS max$cat_id FROM " . PROFILE . " WHERE profile_category = $cat_id";
+			if (!$result = $db->sql_query($sql))
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$max_profile = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			$icon_up	= ( $category_rows[$i]['category_order'] != '10' ) ? $lang['Move_up'] : '';
+			$icon_down	= ( $category_rows[$i]['category_order'] != $max_order['max'] ) ? $lang['Move_down'] : '';
+	
+			$template->assign_block_vars('display.catrow', array( 
+				'S_ADD_PROFILE_SUBMIT'	=> "add_profile[$cat_id]",
+				'S_ADD_PROFILE_NAME'		=> "profile_name[$cat_id]",
+				
+				'CATEGORY_ID'			=> $cat_id,
+				'CATEGORY_NAME'			=> $category_rows[$i]['category_name'],
+				
+				'L_MOVE_UP'				=> $icon_up,
+				'L_MOVE_DOWN'			=> $icon_down,
+				
+				'U_CAT_EDIT'			=> append_sid("admin_profile.php?mode=editcat&amp;" . POST_CAT_URL . "=$cat_id"),
+//				'U_CAT_DELETE'			=> append_sid("admin_profile.php?mode=deletecat&amp;" . POST_CAT_URL . "=$cat_id"),
+				'U_CAT_MOVE_UP'			=> append_sid("admin_profile.php?mode=cat_order&amp;move=-15&amp;" . POST_CAT_URL . "=$cat_id"),
+				'U_CAT_MOVE_DOWN'		=> append_sid("admin_profile.php?mode=cat_order&amp;move=15&amp;" . POST_CAT_URL . "=$cat_id"),
+				'U_VIEWCAT'				=> append_sid($root_path."profile.php?" . POST_CAT_URL . "=$cat_id"))
+			);
+	
+			for($j = 0; $j < $total_profile; $j++)
+			{
+				$class = ($j % 2) ? 'row_class1' : 'row_class2';
+				$profile_id = $profile_rows[$j]['profile_id'];
+
+				if ( $profile_rows[$j]['profile_category'] == $cat_id )
+				{
+					$icon_up	= ( $profile_rows[$j]['profile_order'] != '10' ) ? $lang['Move_up'] : '';
+					$icon_down	= ( $profile_rows[$j]['profile_order'] != $max_profile['max'.$cat_id] ) ? $lang['Move_down'] : '';
+					
+			
+					$template->assign_block_vars('display.catrow.profilerow',	array(
+						'CLASS'			=> $class,
+						'PROFILE_NAME'	=> $profile_rows[$j]['profile_name'],
+						'PROFILE_FIELD'	=> $profile_rows[$j]['profile_field'],
+						'ROW_COLOR' => $row_color,
+						
+						'L_MOVE_UP'		=> $icon_up,
+						'L_MOVE_DOWN'		=> $icon_down,
+						
+						'U_PROFILE_PERMISSIONS' => append_sid("admin_profileauth.php?" . POST_PROFILE_URL . "=$profile_id&amp;adv=1"),
+	
+						'U_VIEWFORUM' => append_sid($root_path."viewprofile.php?" . POST_PROFILE_URL . "=$profile_id"),
+						'U_PROFILE_EDIT' => append_sid("admin_profile.php?mode=edit_profile&amp;" . POST_PROFILE_URL . "=$profile_id"),
+						'U_PROFILE_DELETE' => append_sid("admin_profile.php?mode=deleteprofile&amp;" . POST_PROFILE_URL . "=$profile_id"),
+						'U_PROFILE_MOVE_UP' => append_sid("admin_profile.php?mode=profile_order&amp;move=-15&amp;" . POST_PROFILE_URL . "=$profile_id"),
+						'U_PROFILE_MOVE_DOWN' => append_sid("admin_profile.php?mode=profile_order&amp;move=15&amp;" . POST_PROFILE_URL . "=$profile_id"),
+						'U_PROFILE_RESYNC' => append_sid("admin_profile.php?mode=profile_sync&amp;" . POST_PROFILE_URL . "=$profile_id"))
+					);
+				}
+			}
+		}
 	}
 	
 	$template->pparse('body');

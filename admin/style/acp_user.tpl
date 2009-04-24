@@ -129,6 +129,17 @@
 	<td class="row2"><input class="post" type="password" name="password_confirm" value="" ></td>
 </tr>
 </tbody>
+<!-- BEGIN catrow -->
+<tr>
+	<td class="row1" colspan="2">{user_edit.catrow.CATEGORY_NAME}</td>
+</tr>
+<!-- BEGIN profilerow -->
+<tr> 
+	<td class="row1" >{user_edit.catrow.profilerow.NAME}</td>
+	<td class="row3">{user_edit.catrow.profilerow.FIELD}</td>
+</tr>
+<!-- END profilerow -->
+<!-- END catrow -->
 <tr>
 	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
 </tr>
@@ -161,25 +172,28 @@
 
 <table class="edit" cellspacing="1">
 <tr>
-	<th colspan="3">{L_USER_GROUPS}</th>
+	<th colspan="2">{L_USER_GROUPS}</th>
 </tr>
 <!-- BEGIN groups_row -->
 <tr>
 	<td class="row1">{user_groups.groups_row.U_GROUP_NAME}</td>
-	<td class="row3" width="1%"><input type="checkbox" name="mod_{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_MOD_GROUP} /></td>
 	<td class="row3">
-		<input type="radio" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_ASSIGNED_GROUP}  />&nbsp;{L_YES}&nbsp;
-		<input type="radio" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_NEG_MARK_ID}" {user_groups.groups_row.S_UNASSIGNED_GROUP}  />&nbsp;{L_NO}
+		<input type="radio" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_ASSIGNED_GROUP}  />&nbsp;{L_YES}&nbsp;&nbsp;
+		<input type="radio" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_NEG_MARK_ID}" {user_groups.groups_row.S_UNASSIGNED_GROUP}  />&nbsp;{L_NO}&nbsp;&nbsp;
+		<input type="checkbox" name="mod_{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_MOD_GROUP} />&nbsp;{L_MODERATOR}&nbsp;&nbsp;
 		{user_groups.groups_row.U_USER_PENDING}
 	</td>
 </tr>
 <!-- END groups_row -->
 <tr>
-	<td class="row1" colspan="2">{L_EMAIL_NOTIFICATION}mail</td>
-	<td class="row3">
-		<input type="radio" name="email_notification" value="1" checked="checked" />&nbsp;{L_YES}&nbsp;
-		<input type="radio" name="email_notification" value="0"/> {L_NO}
-	</td>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td class="row1">{L_EMAIL_NOTIFICATION}</td>
+	<td class="row3"><input type="radio" name="email_notification" value="1" />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="email_notification" value="0" checked="checked" /> {L_NO}</td>
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
 </tr>
 <tr>
 	<th colspan="2">{L_USER_TEAMS}</th>
@@ -187,10 +201,11 @@
 <!-- BEGIN teams_row -->
 <tr>
 	<td class="row1">{user_groups.teams_row.U_TEAM_NAME}</td>
-	<td class="row3" width="1%"><input type="checkbox" name="mod_{user_groups.teams_row.S_MARK_ID}" {user_groups.teams_row.S_MOD_TEAM} /></td>
 	<td class="row3">
+		
 		<input type="radio" name="{user_groups.teams_row.S_MARK_NAME}" value="{user_groups.teams_row.S_MARK_ID}" {user_groups.teams_row.S_ASSIGNED_TEAM}  />&nbsp;{L_YES}&nbsp;
-		<input type="radio" name="{user_groups.teams_row.S_MARK_NAME}" value="{user_groups.teams_row.S_NEG_MARK_ID}" {user_groups.teams_row.S_UNASSIGNED_TEAM}  />&nbsp;{L_NO}
+		<input type="radio" name="{user_groups.teams_row.S_MARK_NAME}" value="{user_groups.teams_row.S_NEG_MARK_ID}" {user_groups.teams_row.S_UNASSIGNED_TEAM}  />&nbsp;{L_NO}&nbsp;&nbsp;
+		<input type="checkbox" name="mod_{user_groups.teams_row.S_MARK_ID}" {user_groups.teams_row.S_MOD_TEAM} />&nbsp;{L_MODERATOR}
 	</td>
 </tr>
 <!-- END teams_row -->

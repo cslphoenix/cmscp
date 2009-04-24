@@ -87,6 +87,21 @@ function get_data($mode, $id, $type)
 			$table2		= NEWS_CATEGORY;
 			$idfield2	= 'news_category_id';
 		break;
+		
+		case 'profile':
+			$table		= PROFILE;
+			$idfield	= 'profile_id';
+			break;
+			
+		case 'profile_category':
+			$table		= PROFILE_CATEGORY;
+			$idfield	= 'profile_category_id';
+			break;
+			
+		case 'profile_data':
+			$table		= PROFILE_DATA;
+			$idfield	= 'user_id';
+			break;
 
 		default:
 			message_die(GENERAL_ERROR, "Wrong mode for data", "", __LINE__, __FILE__);

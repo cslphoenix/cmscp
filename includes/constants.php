@@ -42,6 +42,7 @@ define('LOG_SEK_GROUPS',		11);
 define('LOG_SEK_NEWSLETTER',	12);
 define('LOG_SEK_LOG',			13);
 define('LOG_SEK_GAMESERVER',	14);
+define('LOG_SEK_PROFILE',		15);
 
 define('LOG_SEK_CHANGELOG',	98);
 define('LOG_SEK_BUGTRACKER',99);
@@ -145,6 +146,10 @@ define('PRIVMSGS_UNREAD_MAIL',		5);
 define('SESSION_METHOD_COOKIE',		100);
 define('SESSION_METHOD_GET',		101);
 
+define('PROFILE_TEXT',		0);
+define('PROFILE_TEXTAREA',	1);
+define('PROFILE_NUMMERIC',	2);
+define('PROFILE_EMAIL',		3);
 
 //	Page numbers for session handling
 define('PAGE_INDEX',		0);
@@ -175,12 +180,13 @@ define('POST_LOG_URL',			'l');
 define('POST_GAMES_URL',		'g');
 define('POST_GROUPS_URL',		'g');
 define('POST_MATCH_URL',		'm');
-define('POST_TRAINING_URL',		'tr');
 define('POST_GROUPS_URL',		'g');
 define('POST_CONTACT_URL',		'c');
 define('POST_NAVIGATION_URL',	'n');
 define('POST_NEWS_URL',			'n');
 define('POST_TEAMSPEAK_URL',	't');
+define('POST_PROFILE_URL',		'p');
+define('POST_TRAINING_URL',		'tr');
 define('POST_NEWSCAT_URL',		'nc');
 define('POST_AUTHLIST_URL',		'al');
 define('POST_BUGTRACKER_URL',	'bt');
@@ -235,6 +241,11 @@ define('USERS',						$db_prefix . 'users');
 //	Gruppen
 define('GROUPS',					$db_prefix . 'groups');
 define('GROUPS_USERS',				$db_prefix . 'groups_users');
+
+//	Profilefelder
+define('PROFILE',					$db_prefix . 'profile');
+define('PROFILE_CATEGORY',			$db_prefix . 'profile_category');
+define('PROFILE_DATA',				$db_prefix . 'profile_data');
 
 //	News
 define('NEWS',						$db_prefix . 'news');

@@ -196,7 +196,12 @@ if ($mode == '')
 	));
 }
 else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
-{	
+{
+	if ( !$userdata['session_logged_in'] )
+	{
+		session_start();
+	}
+	
 	$page_title = $lang['match_details'];
 	include($root_path . 'includes/page_header.php');
 	
@@ -654,7 +659,9 @@ else if ( $mode == 'matchdetails' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		//	Erlaubt nach Absenden kein Doppelbeitrag erst nach 20 Sekunden
 		if ( isset($HTTP_POST_VARS['submit']) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || $last_entry['time_create']+20 < time() ) )
 		{
-			session_start();
+			
+			
+			_debug_post($_SESSION);
 
 			//	Laden der Funktion zum eintragen von Kommentaren
 			include($root_path . 'includes/functions_post.php');

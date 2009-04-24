@@ -100,7 +100,10 @@ else
 				if ( $mode == 'edit' )
 				{
 					$user		= get_data('user', $user_id, 0);
+					$user_data	= get_data('profile_data', $user_id, 0);
 					$new_mode	= 'edituser';
+					
+					_debug_post($user_data);
 					
 					$template->assign_block_vars('user_edit.edituser', array());
 					
@@ -136,6 +139,54 @@ else
 				{
 					$check_founder_no	= ( !$user['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
 					$check_founder_yes	= ( $user['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
+				}
+				
+				$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				if ( $total_categories = $db->sql_numrows($result) )
+				{
+					$category_rows = $db->sql_fetchrowset($result);
+					
+					$sql = 'SELECT *
+								FROM ' . PROFILE . '
+								ORDER BY profile_category, profile_order';
+					if (!$result = $db->sql_query($sql))
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				
+					if ( $total_profile = $db->sql_numrows($result) )
+					{
+						$profile_rows = $db->sql_fetchrowset($result);
+					}
+					
+					for ( $i = 0; $i < $total_categories; $i++ )
+					{
+						$cat_id = $category_rows[$i]['profile_category_id'];
+				
+						$template->assign_block_vars('user_edit.catrow', array( 
+							'CATEGORY_ID'			=> $cat_id,
+							'CATEGORY_NAME'			=> $category_rows[$i]['category_name'],
+						));
+						
+						for($j = 0; $j < $total_profile; $j++)
+						{
+							$profile_id = $profile_rows[$j]['profile_id'];
+							
+							if ( $profile_rows[$j]['profile_category'] == $cat_id )
+							{
+								$value = $user_data[$profile_rows[$j]['profile_field']];
+								$template->assign_block_vars('user_edit.catrow.profilerow',	array(
+									'NAME'	=> $profile_rows[$j]['profile_name'],
+									'FIELD' => '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">',
+								));
+							}
+						}
+					}
 				}
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
@@ -377,6 +428,8 @@ else
 			break;
 			
 			case 'edituser':
+				
+				_debug_poste($_POST);
 			
 				$sql = 'SELECT * FROM ' . USERS . " WHERE user_id = $user_id";
 				$result = $db->sql_query($sql);
@@ -673,6 +726,8 @@ else
 					
 					'L_USER_GROUPS'			=> $lang['user_groups'],
 					'L_USER_TEAMS'			=> $lang['user_teams'],
+					'L_EMAIL_NOTIFICATION'	=> $lang['user_mailnotification'],
+					'L_MODERATOR'			=> $lang['user_groupmod'],
 
 					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
 					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),

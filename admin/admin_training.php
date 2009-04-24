@@ -230,7 +230,7 @@ else
 							'" . str_replace("\'", "''", $HTTP_POST_VARS['training_text']) . "')";
 				if (!$result = $db->sql_query($sql))
 				{
-					message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'acp_training_add');

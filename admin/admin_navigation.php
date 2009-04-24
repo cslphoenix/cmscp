@@ -204,9 +204,18 @@ else
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 				
-				// There is no problem having duplicate forum names so we won't check for it.
+				$target = '';
+				if ( $navi_target == '0' )
+				{
+					$target = './';
+				}
+				else
+				{
+					set_http($navi_url);
+				}
+				
 				$sql = 'INSERT INTO ' . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
-					VALUES ('" . str_replace("\'", "''", $navi_name) . "', '" . $navi_type . "', '" . str_replace("\'", "''", $navi_url) . "', $navi_lang, $navi_show, $navi_target, $navi_intern, $next_order)";
+					VALUES ('" . str_replace("\'", "''", $navi_name) . "', '" . $navi_type . "', '" . str_replace("\'", "''", $navi_url) . "', $navi_lang, $navi_show, '" . $target . $navi_url . "', $navi_intern, $next_order)";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);

@@ -204,8 +204,6 @@
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
-
-
 <tr>
 	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
 </tr>
