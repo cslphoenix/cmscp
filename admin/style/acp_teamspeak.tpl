@@ -35,6 +35,11 @@
 	<td class="{display.ts_data.CLASS}" align="center" nowrap="nowrap"><a href="{display.ts_data.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END ts_data -->
+<!-- BEGIN no_entry -->
+<tr>
+	<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+</tr>
+<!-- END no_entry -->
 </table>
 
 <!-- BEGIN server -->
@@ -289,7 +294,7 @@
 	<td class="row1">{L_TEAMSPEAK_MOUSEO}:</td>
 	<td class="row3">
 		<input type="radio" name="teamspeak_mouseover" value="1" {S_CHECKED_MOUSEO_YES} /> {L_YES}
-		<input type="radio" name="teamspeak_mouseover" value="0" {S_CHECKED_MOUSEO_NO} /> {L_NO}
+		<input type="radio" name="teamspeak_mouseover" value="0" {S_CHECKED_MOUSEO_NO} />&nbsp;{L_NO}
 	</td>
 </tr>
 <tr>

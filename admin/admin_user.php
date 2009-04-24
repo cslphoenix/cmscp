@@ -100,10 +100,7 @@ else
 				if ( $mode == 'edit' )
 				{
 					$user		= get_data('user', $user_id, 0);
-					$user_data	= get_data('profile_data', $user_id, 0);
 					$new_mode	= 'edituser';
-					
-					_debug_post($user_data);
 					
 					$template->assign_block_vars('user_edit.edituser', array());
 					
@@ -141,54 +138,6 @@ else
 					$check_founder_yes	= ( $user['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
 				}
 				
-				$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				if ( $total_categories = $db->sql_numrows($result) )
-				{
-					$category_rows = $db->sql_fetchrowset($result);
-					
-					$sql = 'SELECT *
-								FROM ' . PROFILE . '
-								ORDER BY profile_category, profile_order';
-					if (!$result = $db->sql_query($sql))
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				
-					if ( $total_profile = $db->sql_numrows($result) )
-					{
-						$profile_rows = $db->sql_fetchrowset($result);
-					}
-					
-					for ( $i = 0; $i < $total_categories; $i++ )
-					{
-						$cat_id = $category_rows[$i]['profile_category_id'];
-				
-						$template->assign_block_vars('user_edit.catrow', array( 
-							'CATEGORY_ID'			=> $cat_id,
-							'CATEGORY_NAME'			=> $category_rows[$i]['category_name'],
-						));
-						
-						for($j = 0; $j < $total_profile; $j++)
-						{
-							$profile_id = $profile_rows[$j]['profile_id'];
-							
-							if ( $profile_rows[$j]['profile_category'] == $cat_id )
-							{
-								$value = $user_data[$profile_rows[$j]['profile_field']];
-								$template->assign_block_vars('user_edit.catrow.profilerow',	array(
-									'NAME'	=> $profile_rows[$j]['profile_name'],
-									'FIELD' => '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">',
-								));
-							}
-						}
-					}
-				}
-				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
 				$s_hidden_fields .= '<input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
 				
@@ -199,8 +148,16 @@ else
 					'L_USER_AUTHS'			=> $lang['user_auths'],
 					'L_REQUIRED'			=> $lang['required'],
 					
+					'L_USER_REGISTER'		=> $lang['user_register'],
+					'L_USER_FIELDS'			=> $lang['user_fields'],
+					'L_USER_SETTINGS'		=> $lang['user_settings'],
+					'L_USER_IMAGES'			=> $lang['user_images'],
+					
+					
 					'L_USERNAME'			=> $lang['username'],
 					'L_REGISTER'			=> $lang['user_register'],
+					'L_LAST_LOGIN'			=> $lang['user_lastlogin'],
+					'L_FOUNDER'				=> $lang['user_founder'],
 					'L_EMAIL'				=> $lang['user_email'],
 					'L_EMAIL_CONFIRM'		=> $lang['user_email_confirm'],
 					
@@ -229,6 +186,12 @@ else
 					'S_CHECKED_FOUNDER_NO'	=> $check_founder_no,
 					'S_CHECKED_FOUNDER_YES'	=> $check_founder_yes,
 					
+					'S_USER_REGISTER'		=> append_sid("admin_user.php?mode=register&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_IMAGES'			=> append_sid("admin_user.php?mode=images&amp;" . POST_USERS_URL . "=" . $user_id),
+					
+					
 					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
 					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
 					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
@@ -241,8 +204,6 @@ else
 			break;
 			
 			case 'adduser':
-				
-				_debug_post($_POST);
 				
 				include($root_path . 'includes/functions_validate.php');
 			
@@ -429,8 +390,6 @@ else
 			
 			case 'edituser':
 				
-				_debug_poste($_POST);
-			
 				$sql = 'SELECT * FROM ' . USERS . " WHERE user_id = $user_id";
 				$result = $db->sql_query($sql);
 		
@@ -539,6 +498,105 @@ else
 				$message = $lang['user_update'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
+			break;
+			
+			case 'fields':
+			
+				$user		= get_data('user', $user_id, 0);
+				$user_data	= get_data('profile_data', $user_id, 0);
+			
+				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->assign_block_vars('user_fields', array());
+				
+				$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				if ( $total_categories = $db->sql_numrows($result) )
+				{
+					$category_rows = $db->sql_fetchrowset($result);
+					
+					$sql = 'SELECT *
+								FROM ' . PROFILE . '
+								ORDER BY profile_category, profile_order';
+					if (!$result = $db->sql_query($sql))
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				
+					if ( $total_profile = $db->sql_numrows($result) )
+					{
+						$profile_rows = $db->sql_fetchrowset($result);
+					}
+					
+					for ( $i = 0; $i < $total_categories; $i++ )
+					{
+						$cat_id = $category_rows[$i]['profile_category_id'];
+				
+						$template->assign_block_vars('user_fields.catrow', array( 
+							'CATEGORY_ID'			=> $cat_id,
+							'CATEGORY_NAME'			=> $category_rows[$i]['category_name'],
+						));
+						
+						for($j = 0; $j < $total_profile; $j++)
+						{
+							$profile_id = $profile_rows[$j]['profile_id'];
+							
+							if ( $profile_rows[$j]['profile_category'] == $cat_id )
+							{
+								$value = $user_data[$profile_rows[$j]['profile_field']];
+								
+								$template->assign_block_vars('user_fields.catrow.profilerow',	array(
+									'NAME'	=> $profile_rows[$j]['profile_name'],
+									'FIELD' => '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">',
+								));
+							}
+						}
+					}
+				}
+				
+				$s_hidden_fields = '<input type="hidden" name="mode" value="update_fields" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
+				
+				$template->assign_vars(array(
+					'L_USER_HEAD'			=> $lang['user_head'],
+					'L_USER_NEW_EDIT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_edit'],
+					'L_USER_GROUP'			=> $lang['user_group'],
+					'L_USER_AUTHS'			=> $lang['user_auths'],
+					'L_REQUIRED'			=> $lang['required'],
+					
+					'L_USER_REGISTER'		=> $lang['user_register'],
+					'L_USER_FIELDS'			=> $lang['user_fields'],
+					'L_USER_SETTINGS'		=> $lang['user_settings'],
+					'L_USER_IMAGES'			=> $lang['user_images'],
+					
+					'L_SUBMIT'				=> $lang['Submit'],
+					'L_RESET'				=> $lang['Reset'],
+					'L_YES'					=> $lang['Yes'],
+					'L_NO'					=> $lang['No'],
+					
+					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_IMAGES'			=> append_sid("admin_user.php?mode=images&amp;" . POST_USERS_URL . "=" . $user_id),
+					
+					
+					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
+				));
+			
+				$template->pparse('body');
+			
+			break;
+			
+			case 'update_fields':
+			
+				_debug_post($_POST);
+			
 			break;
 			
 			case 'delete':

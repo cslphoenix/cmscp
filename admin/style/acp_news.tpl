@@ -174,20 +174,20 @@ tinyMCE.init({
 <!-- BEGIN public -->
 <tr>
 	<td class="row1">{L_NEWS_PUBLIC}:</td>
-	<td class="row3"><input type="radio" name="news_public" value="1" {S_CHECKED_PUBLIC_YES} /> {L_YES} <input type="radio" name="news_public" value="0" {S_CHECKED_PUBLIC_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="news_public" value="1" {S_CHECKED_PUBLIC_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_public" value="0" {S_CHECKED_PUBLIC_NO} />&nbsp;{L_NO} </td>
 </tr>
 <!-- END public -->
 <tr>
 	<td class="row1">{L_NEWS_COMMENTS}:</td>
-	<td class="row3"><input type="radio" name="news_comments" value="1" {S_CHECKED_COMMENTS_YES} /> {L_YES} <input type="radio" name="news_comments" value="0" {S_CHECKED_COMMENTS_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="news_comments" value="1" {S_CHECKED_COMMENTS_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_comments" value="0" {S_CHECKED_COMMENTS_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td class="row1">{L_NEWS_INTERN}:</td>
-	<td class="row3"><input type="radio" name="news_intern" value="1" {S_CHECKED_INTERN_YES} /> {L_YES} <input type="radio" name="news_intern" value="0" {S_CHECKED_INTERN_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="news_intern" value="1" {S_CHECKED_INTERN_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_intern" value="0" {S_CHECKED_INTERN_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td class="row1">{L_NEWS_RATING}:</td>
-	<td class="row3"><input type="radio" name="news_rating" value="1" {S_CHECKED_RATING_YES} /> {L_YES} <input type="radio" name="news_rating" value="0" {S_CHECKED_RATING_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="news_rating" value="1" {S_CHECKED_RATING_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_rating" value="0" {S_CHECKED_RATING_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>

@@ -19,16 +19,16 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="2">{L_GAME_TEAM}</td>
+	<td class="rowHead" colspan="2">{L_GAME_NAME}</td>
 	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN game_row -->
 <tr>
 	<td class="{display.game_row.CLASS}" align="center" width="1%">{display.game_row.I_IMAGE}</td>
-	<td class="{display.game_row.CLASS}" align="left">{display.game_row.NAME}</td>
-	<td class="{display.game_row.CLASS}" align="center" width="1%"><a href="{display.game_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.game_row.CLASS}" align="center" width="6%"><a href="{display.game_row.U_MOVE_UP}">{display.game_row.ICON_UP}</a> <a href="{display.game_row.U_MOVE_DOWN}">{display.game_row.ICON_DOWN}</a></td>
-	<td class="{display.game_row.CLASS}" align="center" width="1%"><a href="{display.game_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{display.game_row.CLASS}" align="left" width="99%">{display.game_row.NAME}</td>
+	<td class="{display.game_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.game_row.U_EDIT}">{L_EDIT}</a></td>		
+	<td class="{display.game_row.CLASS}" align="center" nowrap="nowrap">{display.game_row.MOVE_UP}{display.game_row.MOVE_DOWN}</td>
+	<td class="{display.game_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.game_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END game_row -->
 <!-- BEGIN no_games -->

@@ -160,6 +160,7 @@ else
 				$template->assign_vars(array(
 					'L_CONTACT_TITLE'			=> $lang['contact_overview'],
 					'L_CONTACT_EXPLAIN'			=> $lang['contact'],
+					'L_CONTACT_DETAILS'			=> $lang['contact_details'],
 					
 					'L_CONTACT_HEAD_NORMAL'		=> $lang['contact_head_normal'],
 					'L_CONTACT_HEAD_FIGHTUS'	=> $lang['contact_head_fightus'],
@@ -195,7 +196,7 @@ else
 				
 				if ( !$contact_entry )
 				{
-					$template->assign_block_vars('no_entry', array());
+					$template->assign_block_vars('categorie.no_entry', array());
 					$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 				}
 				else
@@ -254,6 +255,7 @@ else
 	$template->assign_vars(array(
 		'L_CONTACT_TITLE'			=> $lang['contact_overview'],
 		'L_CONTACT_EXPLAIN'			=> $lang['contact'],
+		'L_CONTACT_DETAILS'			=> $lang['contact_details'],
 		
 		'L_CONTACT_HEAD_NORMAL'		=> $lang['contact_head_normal'],
 		'L_CONTACT_HEAD_FIGHTUS'	=> $lang['contact_head_fightus'],
@@ -311,7 +313,7 @@ else
 	
 	if ( !$contact_entry )
 	{
-		$template->assign_block_vars('no_entry', array());
+		$template->assign_block_vars('display.no_entry', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else

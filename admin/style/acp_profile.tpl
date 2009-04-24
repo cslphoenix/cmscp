@@ -120,11 +120,11 @@
 </tr>
 <tr>
 	<td class="row1">{L_PROFILE_SGUEST}</td>
-	<td class="row3"><input type="radio" name="profile_sguest" value="1" {S_CHECKED_SGUEST_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_sguest" value="0" {S_CHECKED_SGUEST_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="profile_sguest" value="1" {S_CHECKED_SGUEST_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_sguest" value="0" {S_CHECKED_SGUEST_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td class="row1">{L_PROFILE_SMEMBER}</td>
-	<td class="row3"><input type="radio" name="profile_smember" value="1" {S_CHECKED_SMEMBER_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_smember" value="0" {S_CHECKED_SMEMBER_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="profile_smember" value="1" {S_CHECKED_SMEMBER_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_smember" value="0" {S_CHECKED_SMEMBER_NO} />&nbsp;{L_NO} </td>
 </tr>
 
 <tr>

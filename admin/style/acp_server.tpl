@@ -103,28 +103,28 @@
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_live" value="0" {S_CHECKED_LIVE_NO} /> {L_NO}
+		<input type="radio" name="server_live" value="0" {S_CHECKED_LIVE_NO} />&nbsp;{L_NO}
 		<input type="radio" name="server_live" value="1" {S_CHECKED_LIVE_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_list" value="0" {S_CHECKED_LIST_NO} /> {L_NO}
+		<input type="radio" name="server_list" value="0" {S_CHECKED_LIST_NO} />&nbsp;{L_NO}
 		<input type="radio" name="server_list" value="1" {S_CHECKED_LIST_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_show" value="0" {S_CHECKED_SHOW_NO} /> {L_NO}
+		<input type="radio" name="server_show" value="0" {S_CHECKED_SHOW_NO} />&nbsp;{L_NO}
 		<input type="radio" name="server_show" value="1" {S_CHECKED_SHOW_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_own" value="0" {S_CHECKED_ONW_NO} /> {L_NO}
+		<input type="radio" name="server_own" value="0" {S_CHECKED_ONW_NO} />&nbsp;{L_NO}
 		<input type="radio" name="server_own" value="1" {S_CHECKED_OWN_YES} /> {L_YES}
 	</td>
 </tr>
