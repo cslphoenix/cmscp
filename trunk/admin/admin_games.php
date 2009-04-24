@@ -275,6 +275,7 @@ else
 	$template->assign_vars(array(
 		'L_GAME_TITLE'			=> $lang['game_head'],
 		'L_GAME_EXPLAIN'		=> $lang['game_explain'],
+		'L_GAME_NAME'			=> $lang['game_name'],
 		
 		'L_GAME_ADD'			=> $lang['game_add'],
 		
@@ -308,21 +309,16 @@ else
 		$game_id	= $row['game_id'];
 		$game_size	= (!$row['game_size']) ? '16' : $row['game_size'];
 		
-		$icon_up	= ( $row['game_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
-		$icon_down	= ( $row['game_order'] != $max_order['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
-		
 		$template->assign_block_vars('display.game_row', array(
 			'CLASS' 		=> $class,
 			'NAME'			=> $row['game_name'],
 			'I_IMAGE'		=> '<img src="' . $root_path . $settings['path_game'] . '/' . $row['game_image'] . '" width="' . $game_size . '" height="' . $game_size . '" alt="">',
 			
-			'ICON_UP'		=> $icon_up,
-			'ICON_DOWN'		=> $icon_down,
+			'MOVE_UP'		=> ( $row['game_order'] != '10' )				? '<a href="' . append_sid("admin_games.php?mode=order&amp;move=-15&amp;" . POST_GAMES_URL . "=" . $game_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+			'MOVE_DOWN'		=> ( $row['game_order'] != $max_order['max'] )	? '<a href="' . append_sid("admin_games.php?mode=order&amp;move=15&amp;" . POST_GAMES_URL . "=" . $game_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 			
 			'U_DELETE'		=> append_sid("admin_games.php?mode=delete&amp;" . POST_GAMES_URL . "=" . $game_id),
 			'U_EDIT'		=> append_sid("admin_games.php?mode=edit&amp;" . POST_GAMES_URL . "=" . $game_id),
-			'U_MOVE_UP'		=> append_sid("admin_games.php?mode=order&amp;move=-15&amp;" . POST_GAMES_URL . "=" . $game_id),
-			'U_MOVE_DOWN'	=> append_sid("admin_games.php?mode=order&amp;move=15&amp;" . POST_GAMES_URL . "=" . $game_id),
 		));
 	}
 
@@ -336,4 +332,5 @@ else
 			
 	include('./page_footer_admin.php');
 }
+
 ?>

@@ -44,7 +44,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_DISABLE_PAGE}:<br><span class="small">{L_DISABLE_PAGE_EXPLAIN}</span></td>
-		<td class="row3"><input type="radio" name="page_disable" value="1" {S_DISABLE_PAGE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="page_disable" value="0" {S_DISABLE_PAGE_NO} /> {L_NO}</td>
+		<td class="row3"><input type="radio" name="page_disable" value="1" {S_DISABLE_PAGE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="page_disable" value="0" {S_DISABLE_PAGE_NO} />&nbsp;{L_NO}</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_DISABLE_PAGE_REASON}:</td>
@@ -59,7 +59,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_EMAIL_ON-OFF}<br><span class="gensmall">{L_EMAIL_ON-OFF_EXPLAIN}</span></td>
-		<td class="row2"><input type="radio" name="email_enabled" value="1" {EMAIL_ON} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="email_enabled" value="0" {EMAIL_OFF} /> {L_NO}</td>
+		<td class="row2"><input type="radio" name="email_enabled" value="1" {EMAIL_ON} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="email_enabled" value="0" {EMAIL_OFF} />&nbsp;{L_NO}</td>
 	</tr>
 	</tbody>
 	
@@ -213,7 +213,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_OVERRIDE_STYLE}<br><span class="small">{L_OVERRIDE_STYLE_EXPLAIN}</span></td>
-		<td class="row3"><input type="radio" name="override_user_style" value="1" {OVERRIDE_STYLE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="override_user_style" value="0" {OVERRIDE_STYLE_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="override_user_style" value="1" {OVERRIDE_STYLE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="override_user_style" value="0" {OVERRIDE_STYLE_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_DEFAULT_LANGUAGE}:</td>
@@ -229,11 +229,11 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ENABLE_GZIP}:</td>
-		<td class="row3"><input type="radio" name="gzip_compress" value="1" {GZIP_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="gzip_compress" value="0" {GZIP_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="gzip_compress" value="1" {GZIP_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="gzip_compress" value="0" {GZIP_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ENABLE_PRUNE}:</td>
-		<td class="row3"><input type="radio" name="prune_enable" value="1" {PRUNE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="prune_enable" value="0" {PRUNE_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="prune_enable" value="1" {PRUNE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="prune_enable" value="0" {PRUNE_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	
 	
@@ -265,7 +265,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_HTML}:</td>
-		<td class="row3"><input type="radio" name="allow_html" value="1" {HTML_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_html" value="0" {HTML_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="allow_html" value="1" {HTML_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_html" value="0" {HTML_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOWED_TAGS}<br><span class="small">{L_ALLOWED_TAGS_EXPLAIN}</span></td>
@@ -273,11 +273,11 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_BBCODE}:</td>
-		<td class="row3"><input type="radio" name="allow_bbcode" value="1" {BBCODE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_bbcode" value="0" {BBCODE_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="allow_bbcode" value="1" {BBCODE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_bbcode" value="0" {BBCODE_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_SMILIES}:</td>
-		<td class="row3"><input type="radio" name="allow_smilies" value="1" {SMILE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_smilies" value="0" {SMILE_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="allow_smilies" value="1" {SMILE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_smilies" value="0" {SMILE_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SMILIES_PATH} <br><span class="small">{L_SMILIES_PATH_EXPLAIN}</span></td>
@@ -285,7 +285,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_SIG}:</td>
-		<td class="row3"><input type="radio" name="allow_sig" value="1" {SIG_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_sig" value="0" {SIG_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="allow_sig" value="1" {SIG_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_sig" value="0" {SIG_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_MAX_SIG_LENGTH}<br><span class="small">{L_MAX_SIG_LENGTH_EXPLAIN}</span></td>
@@ -293,7 +293,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_NAME_CHANGE}:</td>
-		<td class="row3"><input type="radio" name="allow_namechange" value="1" {NAMECHANGE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_namechange" value="0" {NAMECHANGE_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="allow_namechange" value="1" {NAMECHANGE_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="allow_namechange" value="0" {NAMECHANGE_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 	  <th class="thHead" colspan="2">{L_EMAIL_SETTINGS}</th>
@@ -308,7 +308,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_USE_SMTP}<br><span class="small">{L_USE_SMTP_EXPLAIN}</span></td>
-		<td class="row3"><input type="radio" name="smtp_delivery" value="1" {SMTP_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="smtp_delivery" value="0" {SMTP_NO} /> {L_NO}:</td>
+		<td class="row3"><input type="radio" name="smtp_delivery" value="1" {SMTP_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="smtp_delivery" value="0" {SMTP_NO} />&nbsp;{L_NO}:</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SMTP_SERVER}:</td>

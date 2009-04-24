@@ -42,7 +42,7 @@
 <!-- END logs_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="noentry" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -121,7 +121,7 @@
 <!-- END error_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td colspan="4" align="center" valign="top">{NO_ENTRY}</td>
+	<td class="row_class1" colspan="4" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>

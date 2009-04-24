@@ -71,6 +71,24 @@
 </tr>
 </table>
 
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_USER_REGISTER}</a></li>
+				<li><a href="{S_USER_FIELDS}">{L_USER_FIELDS}</a></li>
+				<li><a href="{S_USER_SETTINGS}">{L_USER_SETTINGS}</a></li>
+				<li><a href="{S_USER_IMAGES}">{L_USER_IMAGES}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+</tr>
+</table>
+
 <br>
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
@@ -90,7 +108,7 @@
 </tr>
 <tr>
 	<td class="row1">{L_FOUNDER}:</td>
-	<td class="row3"><input type="radio" name="user_founder" value="1" {S_CHECKED_FOUNDER_YES} /> {L_YES} <input type="radio" name="user_founder" value="0" {S_CHECKED_FOUNDER_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="user_founder" value="1" {S_CHECKED_FOUNDER_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="user_founder" value="0" {S_CHECKED_FOUNDER_NO} />&nbsp;{L_NO} </td>
 </tr>
 <!-- END edituser -->
 <tr>
@@ -148,6 +166,65 @@
 </form>
 <!-- END user_edit -->
 
+<!-- BEGIN user_fields -->
+<form action="{S_USER_ACTION}" method="post">
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li id="active"><a href="#" id="current">{L_USER_NEW_EDIT}</a></li>
+				<li><a href="{S_USER_GROUP}">{L_USER_GROUP}</a></li>
+				<li><a href="{S_USER_AUTHS}">{L_USER_AUTHS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+</tr>
+</table>
+
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				
+				<li><a href="{S_USER_EDIT}">{L_USER_REGISTER}</a></li>
+				<li id="active"><a href="#" id="current">{L_USER_FIELDS}</a></li>
+				<li><a href="{S_USER_SETTINGS}">{L_USER_SETTINGS}</a></li>
+				<li><a href="{S_USER_IMAGES}">{L_USER_IMAGES}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+</tr>
+</table>
+
+<table class="edit" cellspacing="1">
+<!-- BEGIN catrow -->
+<tr>
+	<th colspan="2">{user_fields.catrow.CATEGORY_NAME}</th>
+</tr>
+<!-- BEGIN profilerow -->
+<tr> 
+	<td class="row1" >{user_fields.catrow.profilerow.NAME}</td>
+	<td class="row3">{user_fields.catrow.profilerow.FIELD}</td>
+</tr>
+<!-- END profilerow -->
+<!-- END catrow -->
+<tr>
+	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+</tr>
+</table>
+{S_HIDDEN_FIELDS}
+</form>
+<!-- END user_fields -->
+
 <!-- BEGIN user_groups -->
 <form action="{S_USER_ACTION}" method="post">
 <table class="head" cellspacing="0">
@@ -190,7 +267,7 @@
 </tr>
 <tr>
 	<td class="row1">{L_EMAIL_NOTIFICATION}</td>
-	<td class="row3"><input type="radio" name="email_notification" value="1" />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="email_notification" value="0" checked="checked" /> {L_NO}</td>
+	<td class="row3"><input type="radio" name="email_notification" value="1" />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="email_notification" value="0" checked="checked" />&nbsp;{L_NO}</td>
 </tr>
 <tr>
 	<td colspan="3">&nbsp;</td>

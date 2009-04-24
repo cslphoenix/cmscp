@@ -1263,6 +1263,7 @@ else
 	$template->assign_vars(array(
 		'L_MATCH_TITLE'			=> $lang['match_head'],
 		'L_MATCH_EXPLAIN'		=> $lang['match_explain'],
+		'L_MATCH_DETAILS'		=> $lang['match_infos'],
 		'L_MATCH_CREATE'		=> $lang['match_add'],
 
 		'L_MATCH_SETTINGS'		=> $lang['settings'],
@@ -1283,62 +1284,93 @@ else
 				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 				LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
+			WHERE match_date > ' . time() . '
 			ORDER BY m.match_date DESC';
-	$result = $db->sql_query($sql);	
-	$match_entry = $db->sql_fetchrowset($result); 
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$match_new = $db->sql_fetchrowset($result); 
 	$db->sql_freeresult($result);
 	
-	if ( !$match_entry )
+	$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
+			FROM ' . MATCH . ' m
+				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+				LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
+			WHERE match_date < ' . time() . '
+			ORDER BY m.match_date DESC';
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		$template->assign_block_vars('display.no_entry', array());
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$match_old = $db->sql_fetchrowset($result); 
+	$db->sql_freeresult($result);
+	
+	if ( !$match_new )
+	{
+		$template->assign_block_vars('display.no_entry_new', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
 	{
-		for($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_entry)); $i++)
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_new)); $i++ )
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 				
-			$game_size	= $match_entry[$i]['game_size'];
-			$game_image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $match_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
+			$game_size	= $match_new[$i]['game_size'];
+			$game_image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $match_new[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
 			
-			$match_name	= ($match_entry[$i]['match_public']) ? 'vs. ' . $match_entry[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $match_entry[$i]['match_rival'] . '</span>';
+			$match_name	= ($match_new[$i]['match_public']) ? 'vs. ' . $match_new[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $match_new[$i]['match_rival'] . '</span>';
 			
-			if ( $match_entry[$i]['match_date'] > time() )
-			{
-				$template->assign_block_vars('display.match_row_n', array(
-					'CLASS' 		=> $class,
-					'MATCH_GAME'	=> $game_image,
-					'MATCH_NAME'	=> $match_name,
-					'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_entry[$i]['match_date'], $userdata['user_timezone']),
-					'TRAINING'		=> (!$match_entry[$i]['training_id']) ? $lang['add_train'] : $lang['edit_train'],
-					'U_DETAILS'		=> append_sid("admin_match.php?mode=details&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id']),
-					'U_TRAINING'	=> (!$match_entry[$i]['training_id']) ? append_sid("admin_training.php?mode=add&amp;" . POST_TEAMS_URL . "=" . $match_entry[$i]['team_id']."&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id']."&amp;vs=" . $match_entry[$i]['match_rival']) : append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=" . $match_entry[$i]['training_id']),
-					'U_EDIT'		=> append_sid("admin_match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id']),
-					'U_DELETE'		=> append_sid("admin_match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id'])
-				));
-			}
-			else if ( $match_entry[$i]['match_date'] < time() )
-			{
-				$template->assign_block_vars('display.match_row_o', array(
-					'CLASS' 		=> $class,
-					'MATCH_GAME'	=> $game_image,
-					'MATCH_NAME'	=> $match_name,
-					'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_entry[$i]['match_date'], $userdata['user_timezone']),
-					'TRAINING'	=> (!$match_entry[$i]['training_id']) ? $lang['add_train'] : $lang['edit_train'],
-					'U_DETAILS'		=> append_sid("admin_match.php?mode=details&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id']),
-	
-					'U_EDIT'		=> append_sid("admin_match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id']),
-					'U_DELETE'		=> append_sid("admin_match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $match_entry[$i]['match_id'])
-				));
-			}
+			$template->assign_block_vars('display.match_row_new', array(
+				'CLASS' 		=> $class,
+				'MATCH_GAME'	=> $game_image,
+				'MATCH_NAME'	=> $match_name,
+				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_new[$i]['match_date'], $userdata['user_timezone']),
+				'TRAINING'		=> (!$match_new[$i]['training_id']) ? $lang['add_train'] : $lang['edit_train'],
+				'U_DETAILS'		=> append_sid("admin_match.php?mode=details&amp;" . POST_MATCH_URL . "=" . $match_new[$i]['match_id']),
+				'U_TRAINING'	=> (!$match_new[$i]['training_id']) ? append_sid("admin_training.php?mode=add&amp;" . POST_TEAMS_URL . "=" . $match_new[$i]['team_id']."&amp;" . POST_MATCH_URL . "=" . $match_new[$i]['match_id']."&amp;vs=" . $match_new[$i]['match_rival']) : append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=" . $match_new[$i]['training_id']),
+				'U_EDIT'		=> append_sid("admin_match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $match_new[$i]['match_id']),
+				'U_DELETE'		=> append_sid("admin_match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $match_new[$i]['match_id'])
+			));
 		}
 	}
 	
-	$current_page = ( !count($match_entry) ) ? 1 : ceil( count($match_entry) / $settings['site_entry_per_page'] );
+	if ( !$match_old )
+	{
+		$template->assign_block_vars('display.no_entry_old', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	else
+	{
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_old)); $i++ )
+		{
+			$class = ($i % 2) ? 'row_class1' : 'row_class2';
+				
+			$game_size	= $match_old[$i]['game_size'];
+			$game_image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $match_old[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
+			
+			$match_name	= ($match_old[$i]['match_public']) ? 'vs. ' . $match_old[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $match_old[$i]['match_rival'] . '</span>';
+			
+			$template->assign_block_vars('display.match_row_old', array(
+				'CLASS' 		=> $class,
+				'MATCH_GAME'	=> $game_image,
+				'MATCH_NAME'	=> $match_name,
+				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_old[$i]['match_date'], $userdata['user_timezone']),
+				'TRAINING'		=> (!$match_old[$i]['training_id']) ? $lang['add_train'] : $lang['edit_train'],
+				'U_DETAILS'		=> append_sid("admin_match.php?mode=details&amp;" . POST_MATCH_URL . "=" . $match_old[$i]['match_id']),
+				'U_TRAINING'	=> (!$match_old[$i]['training_id']) ? append_sid("admin_training.php?mode=add&amp;" . POST_TEAMS_URL . "=" . $match_old[$i]['team_id']."&amp;" . POST_MATCH_URL . "=" . $match_old[$i]['match_id']."&amp;vs=" . $match_old[$i]['match_rival']) : append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=" . $match_old[$i]['training_id']),
+				'U_EDIT'		=> append_sid("admin_match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $match_old[$i]['match_id']),
+				'U_DELETE'		=> append_sid("admin_match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $match_old[$i]['match_id'])
+			));
+		}
+	}
+	
+	$current_page = ( !count($match_old) ) ? 1 : ceil( count($match_old) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => ( count($match_entry) ) ? generate_pagination("admin_match.php?", count($match_entry), $settings['site_entry_per_page'], $start) : '',
+		'PAGINATION' => ( count($match_old) ) ? generate_pagination("admin_match.php?", count($match_old), $settings['site_entry_per_page'], $start) : '',
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])

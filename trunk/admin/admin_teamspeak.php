@@ -499,7 +499,7 @@ else
 	
 	if ( !$db->sql_numrows($result) )
 	{
-		$template->assign_block_vars('no_entry', array());
+		$template->assign_block_vars('display.no_entry', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	
@@ -615,4 +615,5 @@ else
 			
 	include('./page_footer_admin.php');
 }
+
 ?>

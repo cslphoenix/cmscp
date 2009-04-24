@@ -158,7 +158,7 @@
 <tr>
 	<td class="row1">{L_RANK_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="rank_special" value="0" {CHECKED_SPECIAL_NO} /> {L_NO}
+		<input type="radio" name="rank_special" value="0" {CHECKED_SPECIAL_NO} />&nbsp;{L_NO}
 		<input type="radio" name="rank_special" onClick="this.form.rank_min.value=''" value="1" {CHECKED_SPECIAL_YES} /> {L_YES}
 	</td>
 </tr>

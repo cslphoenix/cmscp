@@ -305,7 +305,7 @@ else
 	
 	if ( !$log_entry )
 	{
-		$template->assign_block_vars('no_entry', array());
+		$template->assign_block_vars('display.no_entry', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else

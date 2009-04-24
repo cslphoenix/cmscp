@@ -125,31 +125,31 @@
 				</tr>
 				<tr>
 					<td class="row1" width="160">{L_TEAM_NAVI}:</td>
-					<td class="row3"><input type="radio" name="team_navi" value="1" {CHECKED_NAVI_YES} /> {L_YES} <input type="radio" name="team_navi" value="0" {CHECKED_NAVI_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_navi" value="1" {CHECKED_NAVI_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_navi" value="0" {CHECKED_NAVI_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				<tr>
 					<td class="row1">{L_TEAM_SAWARDS}:</td>
-					<td class="row3"><input type="radio" name="team_show_awards" value="1" {CHECKED_SAWARDS_YES} /> {L_YES} <input type="radio" name="team_show_awards" value="0" {CHECKED_SAWARDS_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_show_awards" value="1" {CHECKED_SAWARDS_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_show_awards" value="0" {CHECKED_SAWARDS_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				<tr>
 					<td class="row1">{L_TEAM_SFIGHT}:</td>
-					<td class="row3"><input type="radio" name="team_show_wars" value="1" {CHECKED_SWARS_YES} /> {L_YES} <input type="radio" name="team_show_wars" value="0" {CHECKED_SWARS_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_show_wars" value="1" {CHECKED_SWARS_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_show_wars" value="0" {CHECKED_SWARS_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				<tr>
 					<td class="row1">{L_TEAM_JOIN}:</td>
-					<td class="row3"><input type="radio" name="team_join" value="1" {CHECKED_JOIN_YES} /> {L_YES} <input type="radio" name="team_join" value="0" {CHECKED_JOIN_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_join" value="1" {CHECKED_JOIN_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_join" value="0" {CHECKED_JOIN_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				<tr>
 					<td class="row1">{L_TEAM_FIGHT}:</td>
-					<td class="row3"><input type="radio" name="team_fight" value="1" {CHECKED_FIGHT_YES} /> {L_YES} <input type="radio" name="team_fight" value="0" {CHECKED_FIGHT_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_fight" value="1" {CHECKED_FIGHT_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_fight" value="0" {CHECKED_FIGHT_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				<tr>
 					<td class="row1">{L_TEAM_VIEW}:</td>
-					<td class="row3"><input type="radio" name="team_view" value="1" {CHECKED_VIEW_YES} /> {L_YES} <input type="radio" name="team_view" value="0" {CHECKED_VIEW_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_view" value="1" {CHECKED_VIEW_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_view" value="0" {CHECKED_VIEW_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				<tr>
 					<td class="row1">{L_TEAM_SHOW}:</td>
-					<td class="row3"><input type="radio" name="team_show" value="1" {CHECKED_SHOW_YES} /> {L_YES} <input type="radio" name="team_show" value="0" {CHECKED_SHOW_NO} /> {L_NO} </td> 
+					<td class="row3"><input type="radio" name="team_show" value="1" {CHECKED_SHOW_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="team_show" value="0" {CHECKED_SHOW_NO} />&nbsp;{L_NO}</td> 
 				</tr>
 				</table>
 			</td>

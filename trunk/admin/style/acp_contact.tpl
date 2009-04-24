@@ -28,7 +28,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="5">{L_CONTACT_NAME}</td>
+	<td class="rowHead" colspan="5">{L_CONTACT_DETAILS}</td>
 	<td class="rowHead" colspan="3">{L_CONTACT_SETTINGS}</td>
 </tr>
 <!-- BEGIN contact_row -->
@@ -69,7 +69,7 @@
 <!-- END contact_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="6">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -117,7 +117,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="5">{L_CONTACT_NAME}</td>
+	<td class="rowHead" colspan="5">{L_CONTACT_DETAILS}</td>
 	<td class="rowHead" colspan="3">{L_CONTACT_SETTINGS}</td>
 </tr>
 <!-- BEGIN contact_row -->
@@ -155,7 +155,7 @@
 <!-- END contact_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="5">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="6">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>

@@ -632,4 +632,5 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 			
 	include('./page_footer_admin.php');
 }
+
 ?>

@@ -19,49 +19,49 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="3">{L_MATCH_NAME}</td>
+	<td class="rowHead" colspan="3">{L_MATCH_DETAILS}</td>
 	<td class="rowHead">{L_TRAINING}</td>
 	<td class="rowHead" colspan="3">{L_MATCH_SETTINGS}</td>
 </tr>
 <tr>
 		<td class="rowHead" colspan="7">{L_UPCOMING}</td>
 	</tr>
-<!-- BEGIN match_row_n -->
+<!-- BEGIN match_row_new -->
 <tr>
-	<td class="{display.match_row_n.CLASS}" align="center" width="1%">{display.match_row_n.MATCH_GAME}</td>
-	<td class="{display.match_row_n.CLASS}" align="left" width="100%">{display.match_row_n.MATCH_NAME}</td>
-	<td class="{display.match_row_n.CLASS}" align="center" nowrap="nowrap">{display.match_row_n.MATCH_DATE}</td>
-	<td class="{display.match_row_n.CLASS}" align="center"><a href="{display.match_row_n.U_TRAINING}">{display.match_row_n.TRAINING}</a></td>
-	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_EDIT}">{L_MATCH_SETTING}</a></td>
-	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
-	<td class="{display.match_row_n.CLASS}" align="center" width="1%"><a href="{display.match_row_n.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{display.match_row_new.CLASS}" align="center" width="1%">{display.match_row_new.MATCH_GAME}</td>
+	<td class="{display.match_row_new.CLASS}" align="left" width="100%">{display.match_row_new.MATCH_NAME}</td>
+	<td class="{display.match_row_new.CLASS}" align="center" nowrap="nowrap">{display.match_row_new.MATCH_DATE}</td>
+	<td class="{display.match_row_new.CLASS}" align="center"><a href="{display.match_row_new.U_TRAINING}">{display.match_row_new.TRAINING}</a></td>
+	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_EDIT}">{L_MATCH_SETTING}</a></td>
+	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
+	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_DELETE}">{L_DELETE}</a></td>
 </tr>
-<!-- END match_row_n -->
-<!-- BEGIN no_entry -->
-	<tr>
-		<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
-	</tr>
-	<!-- END no_entry -->
-	<tr>
-		<td class="rowHead" colspan="7">{L_EXPIRED}</td>
-	</tr>
-<!-- BEGIN match_row_o -->
+<!-- END match_row_new -->
+<!-- BEGIN no_entry_new -->
 <tr>
-	<td class="{display.match_row_o.CLASS}" align="center" width="1%">{display.match_row_o.MATCH_GAME}</td>
-	<td class="{display.match_row_o.CLASS}" align="left" width="100%">{display.match_row_o.MATCH_NAME}</td>
-	<td class="{display.match_row_o.CLASS}" align="center" nowrap="nowrap">{display.match_row_n.MATCH_DATE}</td>
-	<td class="{display.match_row_o.CLASS}" align="center"> - </td>
-	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_EDIT}">{L_MATCH_SETTING}</a></td>
-	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
-	<td class="{display.match_row_o.CLASS}" align="center" width="1%"><a href="{display.match_row_o.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
-<!-- END match_row_o -->
-<!-- BEGIN no_entry -->
-	<tr>
-		<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
-	</tr>
-	<!-- END no_entry -->
-	</table>
+<!-- END no_entry_new -->
+<tr>
+	<td class="rowHead" colspan="7">{L_EXPIRED}</td>
+</tr>
+<!-- BEGIN match_row_old -->
+<tr>
+	<td class="{display.match_row_old.CLASS}" align="center" width="1%">{display.match_row_old.MATCH_GAME}</td>
+	<td class="{display.match_row_old.CLASS}" align="left" width="100%">{display.match_row_old.MATCH_NAME}</td>
+	<td class="{display.match_row_old.CLASS}" align="center" nowrap="nowrap">{display.match_row_new.MATCH_DATE}</td>
+	<td class="{display.match_row_old.CLASS}" align="center"> - </td>
+	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_EDIT}">{L_MATCH_SETTING}</a></td>
+	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
+	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_DELETE}">{L_DELETE}</a></td>
+</tr>
+<!-- END match_row_old -->
+<!-- BEGIN no_entry_old -->
+<tr>
+	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+</tr>
+<!-- END no_entry_old -->
+</table>
 
 <table class="foot" cellspacing="4">
 <tr>
@@ -141,11 +141,11 @@
 </tr>
 <tr>
 	<td class="row1">{L_MATCH_PUBLIC}:</td>
-	<td class="row3"><input type="radio" name="match_public" value="1" {S_CHECKED_PUB_YES} /> {L_YES} <input type="radio" name="match_public" value="0" {S_CHECKED_PUB_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="match_public" value="1" {S_CHECKED_PUB_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="match_public" value="0" {S_CHECKED_PUB_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td class="row1">{L_MATCH_COMMENTS}:</td>
-	<td class="row3"><input type="radio" name="match_comments" value="1" {S_CHECKED_COM_YES} /> {L_YES} <input type="radio" name="match_comments" value="0" {S_CHECKED_COM_NO} /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="match_comments" value="1" {S_CHECKED_COM_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="match_comments" value="0" {S_CHECKED_COM_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td class="row1">{L_MATCH_RIVAL}: *</td>
@@ -183,7 +183,7 @@
 <!-- BEGIN new_match -->
 <tr>
 	<td class="row1">{L_TRAINING}:</td>
-	<td class="row3"><input type="radio" name="train" value="1" onChange="document.getElementById('trainbox').style.display = '';" /> {L_YES} <input type="radio" name="train" value="0" onChange="document.getElementById('trainbox').style.display = 'none';" checked="checked" /> {L_NO} </td>
+	<td class="row3"><input type="radio" name="train" value="1" onChange="document.getElementById('trainbox').style.display = '';" />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="train" value="0" onChange="document.getElementById('trainbox').style.display = 'none';" checked="checked" />&nbsp;{L_NO} </td>
 </tr>
 <tbody id="trainbox" style="display: none;">
 <tr>

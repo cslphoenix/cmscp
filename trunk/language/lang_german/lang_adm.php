@@ -154,6 +154,7 @@ $lang['contact_head_joinus']		= 'JoinUs-Einträge';
 $lang['contact_normal']				= 'Kontakt';
 $lang['contact_fightus']			= 'FightUs';
 $lang['contact_joinus']				= 'JoinUs';
+$lang['contact_details']			= 'Details';
 
 $lang['contact_type_open']			= 'Offen';
 $lang['contact_type_edit']			= 'Bearbeitung';
@@ -215,6 +216,7 @@ $lang['Forum_ADM']			= 'Admin';
 //
 $lang['game_head']		= 'Spiel Administration';
 $lang['game_explain']	= 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.';
+$lang['game_name']		= 'Spielnamen';
 
 $lang['game_add']			= 'Neues Spiel erstellen';
 $lang['game_new_add']		= 'Spiel hinzufügen';
@@ -297,6 +299,7 @@ $lang['log_change']			= 'Änderungen';
 $lang['match_head']				= 'Match Administration';
 $lang['match_explain']			= 'Hier können Wars verwaltet werden.';
 $lang['match_details_explain']	= 'Hier können die Details für den War eingetragen und verändert werden.';
+$lang['match_infos']			= 'Matchinfos';
 
 $lang['match_add']			= 'Neues Match erstellen';
 $lang['match_new_add']		= 'Match hinzufügen';
@@ -592,6 +595,8 @@ $lang['user_new_add']		= 'Benutzer hinzufügen';
 $lang['user_edit']			= 'Benutzer bearbeiten';
 
 $lang['user_register']			= 'Angemeldet seit';
+$lang['user_lastlogin']			= 'Letzter Besuch';
+$lang['user_founder']			= 'Gründer';
 $lang['user_email']				= 'eMail-Adresse';
 $lang['user_email_confirm']		= 'eMail-Adresse bestätigen';
 $lang['user_password']			= 'Passwort';
@@ -604,6 +609,12 @@ $lang['user_auths_explain']		= 'Hier kann jeder Benutzer individuell eingestellt
 $lang['user_change_auths']		= 'Seitenberechtigung';
 $lang['user_change_groups']		= 'Benutzergruppen und Teams aktualisiert.';
 $lang['user_mailnotification']	= 'eMail Benachrichtigung verschicken?';
+
+$lang['user_register']				= 'Erforderliche Daten';
+$lang['user_fields']				= 'Profilfelder';
+$lang['user_settings']				= 'Einstellungen';
+$lang['user_images']				= 'Bilder';
+
 $lang['user_groupmod']			= 'Moderatorstatus';
 $lang['user_look_up']			= 'Benutzer auswählen';
 

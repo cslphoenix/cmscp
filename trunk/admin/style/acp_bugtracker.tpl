@@ -119,10 +119,6 @@ function hdr_toggle(object, open_close, open_icon, close_icon)
 					<td>&nbsp;</td>
 				</tr>
 				</table>
-			</td></td>
-			<td>
-				
-			
 			</td>
 		</tr>
 		</table>
@@ -131,14 +127,14 @@ function hdr_toggle(object, open_close, open_icon, close_icon)
 <!-- END bugtracker_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
 
 <table class="foot" cellspacing="4">
 <tr>
-	<td width="50%" align="left">{S_SORT} {PAGE_NUMBER}</td>
+	<td width="50%" align="left">{S_SORT}&nbsp;{PAGE_NUMBER}</td>
 	<td width="50%" align="right">{PAGINATION}</td>
 </tr>
 </table>

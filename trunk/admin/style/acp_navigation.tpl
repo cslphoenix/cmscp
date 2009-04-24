@@ -196,21 +196,21 @@
 	<td class="row1">{L_NAVI_LANGUAGE}:</td>
 	<td class="row2">
 		<input type="radio" name="navi_lang" value="1" {CHECKED_LANG_YES} /> {L_YES}
-		<input type="radio" name="navi_lang" value="0" {CHECKED_LANG_NO} /> {L_NO}
+		<input type="radio" name="navi_lang" value="0" {CHECKED_LANG_NO} />&nbsp;{L_NO}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_NAVI_SHOW}:</td>
 	<td class="row2">
 		<input type="radio" name="navi_show" value="1" {CHECKED_SHOW_YES} /> {L_YES}
-		<input type="radio" name="navi_show" value="0" {CHECKED_SHOW_NO} /> {L_NO}
+		<input type="radio" name="navi_show" value="0" {CHECKED_SHOW_NO} />&nbsp;{L_NO}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_NAVI_INTERN}:</td>
 	<td class="row2">
 		<input type="radio" name="navi_intern" value="1" {CHECKED_INTERN_YES} /> {L_YES}
-		<input type="radio" name="navi_intern" value="0" {CHECKED_INTERN_NO} /> {L_NO}
+		<input type="radio" name="navi_intern" value="0" {CHECKED_INTERN_NO} />&nbsp;{L_NO}
 	</td>
 </tr>
 <tr>
