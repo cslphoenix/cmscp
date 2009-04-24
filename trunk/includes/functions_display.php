@@ -821,7 +821,7 @@ function display_subnavi_news()
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 						
-			$news_title = (strlen($news_last[$i]['news_title']) < 25) ? $news_last[$i]['news_title'] : substr($news_last[$i]['news_title'], 0, 22) . ' ...';
+			$news_title = (strlen($news_last[$i]['news_title']) < 25) ? $news_last[$i]['news_title'] : substr($news_last[$i]['news_title'], 0, 22) . '...';
 			
 			if ( $config['time_today'] < $news_last[$i]['news_time_public'])
 			{ 

@@ -369,7 +369,7 @@ else
 								'" . time() . "')";
 				if (!$result = $db->sql_query($sql))
 				{
-					message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$match_id = $db->sql_nextid();
@@ -377,7 +377,7 @@ else
 				$sql = "INSERT INTO " . MATCH_DETAILS . " (match_id, details_create) VALUES ($match_id, " . time() . ")";
 				if (!$result = $db->sql_query($sql))
 				{
-					message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if (!empty($HTTP_POST_VARS['train']))
@@ -396,7 +396,7 @@ else
 								'" . str_replace("\'", "''", $HTTP_POST_VARS['training_comment']) . "')";
 					if (!$result = $db->sql_query($sql))
 					{
-						message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				

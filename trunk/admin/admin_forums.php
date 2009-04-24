@@ -275,6 +275,7 @@ else
 		{
 			case 'addforum':
 			case 'editforum':
+			
 				//
 				// Show form to create/modify a forum
 				//
@@ -386,7 +387,7 @@ else
 							WHERE cat_id = ' . intval($HTTP_POST_VARS[POST_CAT_URL]);
 				if ( !$result = $db->sql_query($sql) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't get order number from forums table", "", __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$row = $db->sql_fetchrow($result);
 	
@@ -397,7 +398,7 @@ else
 							FROM ' . FORUMS;
 				if ( !$result = $db->sql_query($sql) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't get order number from forums table", "", __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$row = $db->sql_fetchrow($result);
 	
@@ -444,7 +445,7 @@ else
 								WHERE cat_id = ' . intval($HTTP_POST_VARS[POST_CAT_URL]);
 					if ( !$result = $db->sql_query($sql) )
 					{
-						message_die(GENERAL_ERROR, "Couldn't get order number from forums table", "", __LINE__, __FILE__, $sql);
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$row = $db->sql_fetchrow($result);
 		

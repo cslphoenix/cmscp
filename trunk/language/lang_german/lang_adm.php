@@ -96,6 +96,7 @@ $lang['auth_navi']			= 'Navigation';
 $lang['auth_news']			= 'News';
 $lang['auth_news_public']	= 'News veröffentlichen';
 $lang['auth_newscat']		= 'News Kategorien';
+$lang['auth_newsletter']	= 'Newsletter';
 $lang['auth_ranks']			= 'Ränge';
 $lang['auth_server']		= 'Server';
 $lang['auth_teams']			= 'Teams';
@@ -118,6 +119,7 @@ $lang['auths'] = array(
 	'auth_news'			=> $lang['auth_news'],
 	'auth_news_public'	=> $lang['auth_news_public'],
 	'auth_newscat'		=> $lang['auth_newscat'],
+	'auth_newsletter'	=> $lang['auth_newsletter'],
 	'auth_ranks'		=> $lang['auth_ranks'],
 	'auth_server'		=> $lang['auth_server'],
 	'auth_teams'		=> $lang['auth_teams'],
@@ -601,8 +603,36 @@ $lang['user_auths']				= 'Seitenberechtigung';
 $lang['user_auths_explain']		= 'Hier kann jeder Benutzer individuell eingestellt werden, Spezial heißt, er hat immer diese Rechte, egal wie die Gruppe oder Gruppen eingestellt sind von den Rechten!';
 $lang['user_change_auths']		= 'Seitenberechtigung';
 $lang['user_change_groups']		= 'Benutzergruppen und Teams aktualisiert.';
-$lang['user_look_up']		= 'Benutzer auswählen';
+$lang['user_mailnotification']	= 'eMail Benachrichtigung verschicken?';
+$lang['user_groupmod']			= 'Moderatorstatus';
+$lang['user_look_up']			= 'Benutzer auswählen';
 
+
+//
+//	Profilefelder
+//
+$lang['profile_head']				= 'Profilefelder Administration';
+$lang['profile_explain']			= 'Text';
+
+$lang['profile_add']			= 'Neues Profilefeld erstellen';
+$lang['profile_new_add']		= 'Profilefeld hinzufügen';
+$lang['profile_edit']			= 'Profilefeld bearbeiten';
+$lang['profile_update']			= 'Profilefeld geändert.';
+$lang['profile_edit_categpry']	= 'Kategorie bearbeiten';
+$lang['profile_cat_edit']		= 'Profilekategorie Bearbeiten';
+
+
+$lang['profile_name']			= 'Feldbeschreibung';
+$lang['profile_field']			= 'Feldname';
+$lang['profile_categpry']		= 'Kategorie';
+$lang['profile_type']			= 'Feldtype';
+$lang['profile_sguest']			= 'Anzeigen für Gäste';
+$lang['profile_smember']		= 'Anzeigen nur für Member';
+$lang['profile_sreg']			= 'Anzeigen beim registieren';
+$lang['profile_language']		= 'Sprachdatei';
+
+$lang['profile_text']			= 'Textzeile';
+$lang['profile_area']			= 'Textfeld';
 
 //
 //	Teamspeak
@@ -713,6 +743,9 @@ $lang['create_user']				= 'Neuen Benutzer hinzuggefügt.';
 $lang['create_authlist']			= 'Neues Berechtigungsfeld hinzuggefügt.';
 $lang['create_']					= 'Neues  hinzuggefügt.';
 
+$lang['create_profile']				= 'Neues Profilefeld hinzuggefügt.';
+$lang['create_profile_cat']			= 'Neues Profilekategorie hinzuggefügt.';
+
 $lang['update_team']				= 'Teamdaten erfolgreich geändert';
 $lang['update_teamspeak']			= 'Teamspeakdaten erfolgreich geändert';
 $lang['update_match']				= 'Matchdaten erfolgreich geändert';
@@ -729,6 +762,9 @@ $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
 $lang['update_authlist']			= 'Berechtigungsfelddaten erfolgreich geändert';
 $lang['update_']					= 'daten erfolgreich geändert';
 
+$lang['update_profile']				= 'Profilefeld erfolgreich geändert';
+$lang['update_profile_cat']			= 'Profilekategorie erfolgreich geändert';
+
 $lang['delete_team']				= 'Das Team wurde gelöscht';
 $lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht';
 $lang['delete_rank']				= 'Der Rang wurde gelöscht';
@@ -743,11 +779,14 @@ $lang['delete_authlist']			= 'Das Berechtigungsfeld wurde gelöscht';
 $lang['delete_log']					= 'Der oder die Logeinträge wurde gelöscht';
 $lang['delete_log_error']			= 'Der oder die Fehlermeldungen wurde gelöscht';
 
-$lang['confirm_delete_team']			= 'Bist du sicher, das dieses Team gelöscht werden soll?';
-$lang['confirm_delete_teamspeak']		= 'Bist du sicher, das dieser Teamspeak gelöscht werden soll?';
-$lang['confirm_delete_rank']			= 'Bist du sicher, das dieser Rang gelöscht werden soll?';
-$lang['confirm_delete_game']			= 'Bist du sicher, das dieses Spiel gelöscht werden soll?';
-$lang['confirm_delete_training']		= 'Bist du sicher, das dieses Training gelöscht werden soll?';
+$lang['delete_profile']				= 'Das Profilefeld wurde gelöscht';
+$lang['delete_profile_cat']			= 'Die Profilekategorie wurde gelöscht';
+
+$lang['confirm_delete_team']			= 'Bist du sicher, dass dieses Team gelöscht werden soll?';
+$lang['confirm_delete_teamspeak']		= 'Bist du sicher, dass dieser Teamspeak gelöscht werden soll?';
+$lang['confirm_delete_rank']			= 'Bist du sicher, dass dieser Rang gelöscht werden soll?';
+$lang['confirm_delete_game']			= 'Bist du sicher, dass dieses Spiel gelöscht werden soll?';
+$lang['confirm_delete_training']		= 'Bist du sicher, dass dieses Training gelöscht werden soll?';
 $lang['confirm_delete_news']			= 'Bist du sicher, das die News gelöscht werden soll?';
 $lang['confirm_delete_newscat']			= 'Bist du sicher, das die Newskategorie gelöscht werden soll?';
 $lang['confirm_delete_newsletter']		= 'Bist du sicher, das die eMailadresse gelöscht werden soll?';
@@ -757,6 +796,9 @@ $lang['confirm_delete_group']			= 'Bist du sicher, das die Gruppe gelöscht werde
 $lang['confirm_delete_authlist']		= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
 $lang['confirm_delete_log']				= 'Bist du sicher, das dieser oder diese Logeinträge gelöscht werden soll?';
 $lang['confirm_delete_log_error']		= 'Bist du sicher, das dieser oder diese Fehlermeldungen gelöscht werden soll?';
+
+$lang['confirm_delete_profile']			= 'Bist du sicher, dass dieses Profilefeld gelöscht werden soll?';
+$lang['confirm_delete_profile_cat']		= 'Bist du sicher, dass diese Profilekategorie gelöscht werden soll?';
 
 $lang['click_admin_index']			= 'Klicke %shier%s, um zum Adminstart zurückzukehren';
 $lang['click_return_team']			= 'Klicke %shier%s, um zur Team Administration zurückzukehren';
@@ -782,6 +824,8 @@ $lang['click_return_user_groups']	= 'Klicke %shier%s, um zur Benutzer (Benutzerg
 $lang['click_return_authlist']		= 'Klicke %shier%s, um zur Berechtigungsfelder Administration zurückzukehren';
 $lang['click_return_log']			= 'Klicke %shier%s, um zur Log Administration zurückzukehren';
 $lang['click_return_log_error']		= 'Klicke %shier%s, um zur Log (Fehlermeldungen) Administration zurückzukehren';
+
+$lang['click_return_profile']		= 'Klicke %shier%s, um zur Profilefelder Administration zurückzukehren';
 
 $lang['msg_group_add_member']		= 'Benutzer zur Gruppe hinzugefügt';
 $lang['msg_group_del_member']		= 'Benutzer gelöscht von der Gruppe';
@@ -977,5 +1021,10 @@ $lang['message']				= 'Nachricht';
 
 
 $lang['alldelete']				= 'Alle Einträge löschen';
+
+$lang['create_forum']		= 'Neues Forum erstellen';
+$lang['create_profile']		= 'Neues Profilefeld erstellen';
+$lang['create_category']	= 'Neue Kategorie erstellen';
+
 
 ?>

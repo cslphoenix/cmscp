@@ -240,7 +240,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['contact_nick']) . "', $contact_type, '" . str_replace("\'", "''", $HTTP_POST_VARS['contact_mail']) . "', '" . str_replace("\'", "''", $HTTP_POST_VARS['contact_hp']) . "', '$contact_rival_name', '$contact_rival_tag', '$contact_maps', '$contact_message', '$contact_team', '$contact_age', '$contact_date', '$contact_categorie', '$contact_wartype', 0, '" . time() . "')";
 			if (!$result = $db->sql_query($sql))
 			{
-				message_die(GENERAL_ERROR, 'Could not insert row in match table', '', __LINE__, __FILE__, $sql);
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
 			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');

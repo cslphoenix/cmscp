@@ -21,7 +21,7 @@ if ( $userdata['session_logged_in'] )
 	//
 	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
-		$sql = 'SELECT n.* FROM ' . NEWS . " n ORDER BY n.news_time_public";
+		$sql = 'SELECT n.* FROM ' . NEWS . " n ORDER BY n.news_time_public DESC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
@@ -94,9 +94,10 @@ if ( $userdata['session_logged_in'] )
 			{
 				$count		= $news_data_unread['total_comments'];
 				$language	= ( $count >= 1 ) ? $lang['comment'] : $lang['comments'];
+				$news_title	= (strlen($news_data[$i]['news_title']) < 25) ? $news_data[$i]['news_title'] : substr($news_data[$i]['news_title'], 0, 22) . '...';
 								
 				$template->assign_block_vars('lobby_news_new_row', array(
-						'NEWS_NAME'		=> $news_data[$i]['news_title'],
+						'NEWS_NAME'		=> $news_title,
 						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">' .  sprintf($language, $count) . '</a>' : '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">Ungelesen</a>',
 				));
 			}
