@@ -1,5 +1,5 @@
 <!-- BEGIN show -->
-<table class="out" width="100%" cellspacing="3">
+<table class="out" width="100%" cellspacing="0">
 <tr>
 	<td class="info_head" colspan="3">News-&Uuml;bersicht</td>
 </tr>

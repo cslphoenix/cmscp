@@ -7,11 +7,19 @@
 	background:	#F0EFEF;
 	border:	#000 1px solid;
 	font-size:10px;
-	vertical-align:middle;
+	vertical-align:top;
+}
+
+.button3, .button3:link, .button3:visited, .button3:active {
+	background-image:url(../images/button_go.png);
+	vertical-align:top;
+	height: 18px;
+	border:	0px;
+	width: 21px;
 }
 
 .button:hover,
-.button2:hover{
+.button2:hover {
 	color: #F00;
 	border: #F00 1px solid;
 	background:	#FAFAFA;
@@ -32,6 +40,7 @@
 	border:	#666 1px solid;
 	padding: 1px;
 	font-size:12px;
+	
 }
 
 .postselect, .postselect:link, .postselect:visited, .postselect:active {
@@ -41,6 +50,7 @@
 	border:	#666 1px solid;
 	padding: 1px;
 	font-size:10px;
+	
 }
 
 .post:hover,

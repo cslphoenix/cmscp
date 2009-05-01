@@ -105,7 +105,7 @@
 	<td class="info_head" style="text-align:center;">{L_PM}</td>
 	<td class="info_head" style="text-align:center;">{L_POSTS}</td>
 	<td class="info_head" style="text-align:center;">{L_EMAIL}</td>
-	<td class="info_head" style="text-align:center;">{L_JOINED}</td>
+	<td class="info_head" style="text-align:center;" {COLSPAN}>{L_JOINED}</td>
 	<!-- BEGIN switch_h_admin_option -->
 	<td class="info_head" style="text-align:center;">{L_SELECT}</td>
 	<!-- END switch_h_admin_option -->
@@ -116,7 +116,7 @@
 	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.PM_IMG} </td>
 	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.POSTS}</td>
 	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.EMAIL_IMG}</td>
-	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.JOINED}</td>
+	<td class="{details.mod_row.ROW_CLASS}" align="center" {COLSPAN}>{details.mod_row.JOINED}</td>
 	<!-- BEGIN switch_admin_option -->
 	<td class="{details.mod_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.mod_row.USER_ID}" /></td>
 	<!-- END switch_admin_option -->
