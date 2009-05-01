@@ -22,20 +22,16 @@
 
 ***/
 
+$lang['common_comment']				= 'Kommentar';
+$lang['common_comments']			= 'Kommentare';
+$lang['common_comment_add']			= 'Kommentar hinzufügen';
+$lang['common_comment_edit']		= 'Kommentar bearbeiten';
+$lang['common_comment_delete']		= 'Kommentar löschen';
+
+
 $lang['click_return_index'] = 'Klick %shier%s um zum Index zurückzukehren';
 
 $lang['page_newsletter']	= 'Newsletter';
-
-$lang['newsletter_added']		= 'Du bist nun im Newslettersystem';
-$lang['newsletter_accept']		= 'Bestätigit und Aktiviert';
-$lang['newsletter_delete']		= 'Du bist nun nicht mehr im Newslettersystem';
-$lang['newsletter_deaccept']	= 'Bestätigit und Löschung';
-
-$lang['newsletter_fail']				= 'Fehlschlag beim bestätigen der Mailadresse.';
-$lang['newsletter_subscribe']			= 'Erfolgreiches eintragen im Newsletter. Du wirst eine eMail erhalten mit einem Bestätigungslink.';
-$lang['newsletter_subscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse. Deine eMail Adresse wurde aktiviert und eingetragen im System.';
-$lang['newsletter_unsubscribe']			= 'Erfolgreiches austragen im Newsletter. Du wirst eine eMail erhalten mit einem Bestätigungslink.';
-$lang['newsletter_unsubscribe_confirm']	= 'Erfolgreiches Bestätigen der Mailadresse. Deine eMail Adresse wurde aus dem System Entfernt.';
 
 $lang['news_info_url']		= 'Link: ';
 $lang['news_info_urls']		= 'Links: ';
@@ -252,6 +248,8 @@ $lang['add_comment']			= 'Kommentar hinzugefügt.';
 $lang['click_return_match']		= '%sHier klicken%s, um zum Match zurückzukehren.';
 $lang['click_return_training']	= '%sHier klicken%s, um zum Training zurückzukehren.';
 $lang['click_return_news']		= '%sHier klicken%s, um zu den News zurückzukehren.';
+
+$lang['click_return_newsletter']	= '%sHier klicken%s, um zu der Newsletter Seite zurückzukehren.';
 
 $lang['hlsw']		= 'HLSW';
 $lang['connect']	= 'spielen';
@@ -956,6 +954,12 @@ $lang['Sort_Ascending'] = 'Aufsteigend';
 $lang['Sort_Descending'] = 'Absteigend';
 $lang['Order'] = 'Ordnung';
 
+
+//
+//	Gruppen neu
+//
+$lang['group_request']		= 'Eine Anfrage zum Beitritt in diese Gruppe wurde erstellt.';
+$lang['group_request_msg']	= 'Hallo %s!<br><br>Ein Benutzer möchte einer Gruppe auf %s beitreten, bei der du der Moderator bist.<br>Um dieser Bitte zu ent- oder widersprechen, klicke auf den folgenden Link:<br> %shier klicken%s<br><br>%s';
 
 //
 // Group control panel

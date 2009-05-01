@@ -89,8 +89,11 @@ $lang['click_return_bugtracker']		= '%sHier klicken%s, um zur Übersicht zurückzu
 
 $lang['bt_create_by']					= 'Erstellt von %s am %s.';
 
+$lang['bt_head_add']		= 'BugTracker :: Neuen Eintrag hinzufügen';
+$lang['bt_head_edit']		= 'BugTracker :: Eintrag bearbeiten';
 $lang['bt_title']		= 'Titel';
 $lang['bt_type']		= 'Art des Fehlers';
+$lang['bt_version']		= 'Script Version';
 $lang['bt_desc']		= 'kurze Beschreibung';
 $lang['bt_message']		= 'Nachricht';
 $lang['bt_php']			= 'PHP Version';
@@ -98,6 +101,7 @@ $lang['bt_sql']			= 'SQL Version';
 
 $lang['msg_select_title']		= 'Bitte ein Titel eingeben!';
 $lang['msg_select_type']		= 'Bitte eine Art des Fehlers auswählen!';
+$lang['msg_select_version']		= 'Bitte eine Script Version auswählen!';
 $lang['msg_select_desc']		= 'Bitte eine kurze Beschreibung abgeben!';
 $lang['msg_select_message']		= 'Nachricht vergessen?';
 
@@ -106,5 +110,10 @@ $lang['bt_explain']			= 'Hier sind alle Bugeinträge aufgelistet';
 $lang['bt_edit']			= 'Bugeintrag bearbeiten';
 $lang['bt_name']			= 'Bugeinträge';
 
+$lang['select_bt_type']		= '&raquo; Fehler auswählen';
+$lang['select_bt_version']	= '&raquo; Script Version auswählen';
+
+$lang['bt_details']			= 'BugTracker Details';
+$lang['bt_details_to']		= 'BugTracker Details zu: %s';
 
 ?>
