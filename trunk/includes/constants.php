@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 // User Levels <- Do not change the values of USER or ADMIN
 define('DELETED',	-1);
-define('ANONYMOUS',	-1);
+define('ANONYMOUS',	1);
 
 //	Userlevel
 define('GUEST',		0);
@@ -25,27 +25,31 @@ define('LOG_USERS',		2);
 
 //	Log Sektion
 //	- Unterteilung im Admin, Moderations oder Benutzerbreich
-define('LOG_SEK_NEWS',			0);
-define('LOG_SEK_TEAM',			1);
-define('LOG_SEK_RANK',			2);
-define('LOG_SEK_USER',			3);
+define('LOG_SEK_AUTHLIST',		0);
+define('LOG_SEK_COMMENT',		1);
+define('LOG_SEK_EVENT',			2);
+define('LOG_SEK_FORUM',			3);
 define('LOG_SEK_GAME',			4);
-define('LOG_SEK_MATCH',			5);
-define('LOG_SEK_TRAINING',		6);
-define('LOG_SEK_LOGIN',			7);
-define('LOG_SEK_NAVI',			8);
-define('LOG_SEK_FORUM',			9);
-define('LOG_SEK_COMMENT',		21);
-define('LOG_SEK_AUTHLIST',		22);
-define('LOG_SEK_TEAMSPEAK',		10);
-define('LOG_SEK_GROUPS',		11);
-define('LOG_SEK_NEWSLETTER',	12);
-define('LOG_SEK_LOG',			13);
-define('LOG_SEK_GAMESERVER',	14);
-define('LOG_SEK_PROFILE',		15);
+define('LOG_SEK_GAMESERVER',	5);
+define('LOG_SEK_GROUPS',		6);
+define('LOG_SEK_LOG',			7);
+define('LOG_SEK_LOGIN',			8);
+define('LOG_SEK_MATCH',			9);
+define('LOG_SEK_NAVI',			10);
+define('LOG_SEK_NETWORK',		11);
+define('LOG_SEK_NEWS',			12);
+define('LOG_SEK_NEWSLETTER',	13);
+define('LOG_SEK_PROFILE',		14);
+define('LOG_SEK_RANK',			15);
+define('LOG_SEK_TEAM',			16);
+define('LOG_SEK_TEAMSPEAK',		17);
+define('LOG_SEK_TRAINING',		18);
+define('LOG_SEK_USER',			19);
 
-define('LOG_SEK_CHANGELOG',	98);
-define('LOG_SEK_BUGTRACKER',99);
+define('LOG_SEK_CASH',			20);
+
+define('LOG_SEK_CHANGELOG',		98);
+define('LOG_SEK_BUGTRACKER',	99);
 
 //	Navi types
 define('NAVI_MAIN',		1);
@@ -58,6 +62,11 @@ define('NAVI_USER',		5);
 define('RANK_PAGE',		1);
 define('RANK_FORUM',	2);
 define('RANK_TEAM',		3);
+
+//	Network types
+define('NETWORK_LINK',		1);
+define('NETWORK_PARTNER',	2);
+define('NETWORK_SPONSOR',	3);
 
 //	Rank types
 define('CONTACT_NORMAL',	0);
@@ -84,28 +93,28 @@ define('FORUM_LOCKED', 1);
 //	Auth settings
 define('AUTH_LIST_ALL',	0);
 define('AUTH_ALL',		0);
-define('AUTH_REG',		1);		//	Benutzer
-define('AUTH_TRI',		2);		//	Trial
-define('AUTH_MEM',		3);		//	Member
-define('AUTH_MOD',		4);		//	Moderatoren
-define('AUTH_ACL',		5);		//	Privat
-define('AUTH_ADM',		6);		//	Administratoren
+define('AUTH_REG',		1);//	Benutzer
+define('AUTH_TRI',		2);//	Trial
+define('AUTH_MEM',		3);//	Member
+define('AUTH_MOD',		4);//	Moderatoren
+define('AUTH_ACL',		5);//	Privat
+define('AUTH_ADM',		6);//	Administratoren
 
-define('AUTH_VIEW',			1);		//	sehen
-define('AUTH_READ',			2);		//	lesen
-define('AUTH_POST',			3);		//	schreiben
-define('AUTH_REPLY',		4);		//	antworten
-define('AUTH_EDIT',			5);		//	bearbeiten
-define('AUTH_DELETE',		6);		//	löschen
-define('AUTH_ANNOUNCE',		7);		//	Ankündigungen
-define('AUTH_STICKY',		8);		//	Wichtig
-define('AUTH_POLLCREATE',	9);		//	Umfrage erstellen
-define('AUTH_POLL',			10);	//	an Umfrage teilnehmen
+define('AUTH_VIEW',			1);//	sehen
+define('AUTH_READ',			2);//	lesen
+define('AUTH_POST',			3);//	schreiben
+define('AUTH_REPLY',		4);//	antworten
+define('AUTH_EDIT',			5);//	bearbeiten
+define('AUTH_DELETE',		6);//	löschen
+define('AUTH_ANNOUNCE',		7);//	Ankündigungen
+define('AUTH_STICKY',		8);//	Wichtig
+define('AUTH_POLLCREATE',	9);//	Umfrage erstellen
+define('AUTH_POLL',			10);//	an Umfrage teilnehmen
 
-define('AUTH_DISALLOWED',	0);		//	nicht erlaubt
-define('AUTH_ALLOWED',		1);		//	erlaubt
-define('AUTH_SPECIAL',		2);		//	Special für Benutzer
-define('AUTH_DEFAULT',		3);		//	Vorgabe Einstellung
+define('AUTH_DISALLOWED',	0);//	nicht erlaubt
+define('AUTH_ALLOWED',		1);//	erlaubt
+define('AUTH_SPECIAL',		2);//	Special für Benutzer
+define('AUTH_DEFAULT',		3);//	Vorgabe Einstellung
 
 
 //	Newsletter Status
@@ -159,7 +168,6 @@ define('PAGE_REGISTER',		-3);
 define('PAGE_PROFILE',		-4);
 define('PAGE_POSTING',		-5);
 define('PAGE_GROUPS',		-6);
-//define('PAGE_TOPIC_OFFSET',	5000);
 define('PAGE_MATCH',		-11);
 define('PAGE_TRAINING',		-12);
 define('PAGE_CONTACT',		-13);
@@ -168,36 +176,46 @@ define('PAGE_TEAMSPEAK',	-15);
 define('PAGE_CALENDAR',		-16);
 define('PAGE_TEAM',			-17);
 define('PAGE_NEWSLETTER',	-18);
+define('PAGE_UCP',			-19);
+define('PAGE_RSS',			-20);
+define('PAGE_EVENT',		-21);
 
-define('PAGE_CHANGELOG',	-98);
-define('PAGE_BUGTRACKER',	-99);
+define('PAGE_CASH',			-22);
+
+define('PAGE_BUGTRACKER',	-98);
+define('PAGE_CHANGELOG',	-99);
+//define('PAGE_TOPIC_OFFSET',	5000);
+
 
 //	URL PARAMETERS
-define('POST_TEAMS_URL',		't');
-define('POST_RANKS_URL',		'r');
-define('POST_USERS_URL',		'u');
-define('POST_LOG_URL',			'l');
-define('POST_GAMES_URL',		'g');
-define('POST_GROUPS_URL',		'g');
-define('POST_MATCH_URL',		'm');
-define('POST_GROUPS_URL',		'g');
-define('POST_CONTACT_URL',		'c');
-define('POST_NAVIGATION_URL',	'n');
-define('POST_NEWS_URL',			'n');
-define('POST_TEAMSPEAK_URL',	't');
-define('POST_PROFILE_URL',		'p');
-define('POST_TRAINING_URL',		'tr');
-define('POST_NEWSCAT_URL',		'nc');
 define('POST_AUTHLIST_URL',		'al');
-define('POST_BUGTRACKER_URL',	'bt');
-define('POST_NEWSLETTER_URL',	'nl');
-define('POST_GAMESERVER_URL',	'gs');
-
-//	fürs Forum
-define('POST_POST_URL',			'p');
-define('POST_TOPIC_URL',		't');
-define('POST_CAT_URL',			'c');
+define('POST_CATEGORY_URL',		'c');
+define('POST_CONTACT_URL',		'c');
 define('POST_FORUM_URL',		'f');
+define('POST_GAMES_URL',		'g');
+define('POST_GAMESERVER_URL',	'gs');
+define('POST_GROUPS_URL',		'g');
+define('POST_LOG_URL',			'l');
+define('POST_MATCH_URL',		'm');
+define('POST_NAVIGATION_URL',	'n');
+define('POST_NETWORK_URL',		'n');
+define('POST_NEWS_URL',			'n');
+define('POST_NEWSCAT_URL',		'nc');
+define('POST_NEWSLETTER_URL',	'nl');
+define('POST_POST_URL',			'p');
+define('POST_PROFILE_URL',		'p');
+define('POST_RANKS_URL',		'r');
+define('POST_TEAMS_URL',		't');
+define('POST_TEAMSPEAK_URL',	't');
+define('POST_TOPIC_URL',		't');
+define('POST_TRAINING_URL',		'tr');
+define('POST_USERS_URL',		'u');
+define('POST_EVENT_URL',		'e');
+define('POST_CASH_URL',			'c');
+define('POST_CASHUSER_URL',		'cu');
+
+define('POST_BUGTRACKER_URL',	'bt');
+define('POST_CHANGELOG_URL',	'cl');
 
 //	Forum Status
 define('FORUM_UNLOCKED',	0);
@@ -217,14 +235,13 @@ define('CONFIG',					$db_prefix . 'config');
 define('SETTINGS',					$db_prefix . 'settings');
 
 //	sonstiges ;)
-
 define('AUTHLIST',					$db_prefix . 'authlist');
-
 define('BANLIST',					$db_prefix . 'banlist');
 define('CONTACT',					$db_prefix . 'contact');
 define('DISALLOW',					$db_prefix . 'disallow');
-define('EVENTS',					$db_prefix . 'events');
-define('NAVIGATION',				$db_prefix . 'navigation');
+define('EVENT',						$db_prefix . 'event');
+define('NAVIGATION',				$db_prefix . 'navigation');	
+define('NETWORK',					$db_prefix . 'network');
 define('RANKS',						$db_prefix . 'ranks');
 
 //	Session
@@ -270,6 +287,8 @@ define('POSTS',						$db_prefix . 'forum_posts');
 define('TOPICS',					$db_prefix . 'forum_topics');
 define('TOPICS_READ',				$db_prefix . 'forum_topics_read');
 
+define('PRIVMSGS',					$db_prefix . 'privmsgs');
+
 //	Counter
 define('COUNTER_COUNTER',			$db_prefix . 'counter_counter');
 define('COUNTER_ONLINE',			$db_prefix . 'counter_online');
@@ -278,8 +297,11 @@ define('COUNTER_ONLINE',			$db_prefix . 'counter_online');
 define('SERVER',					$db_prefix . 'server');
 define('TEAMSPEAK',					$db_prefix . 'teamspeak');
 define('NEWSLETTER',				$db_prefix . 'newsletter');
-define('BUGTRACKER',				$db_prefix . 'bugtracker');
 define('CHANGELOG',					$db_prefix . 'changelog');
+
+define('BUGTRACKER',				$db_prefix . 'bugtracker');
+define('BUGTRACKER_COMMENTS',		$db_prefix . 'bugtracker_comments');
+define('BUGTRACKER_COMMENTS_READ',	$db_prefix . 'bugtracker_comments_read');
 
 
 //	Wars/Match
@@ -295,5 +317,9 @@ define('TRAINING',					$db_prefix . 'training');
 define('TRAINING_COMMENTS',			$db_prefix . 'training_comments');
 define('TRAINING_COMMENTS_READ',	$db_prefix . 'training_comments_read');
 define('TRAINING_USERS',			$db_prefix . 'training_users');
+
+
+define('CASH',						$db_prefix . 'cash');
+define('CASH_USERS',				$db_prefix . 'cash_users');
 
 ?>

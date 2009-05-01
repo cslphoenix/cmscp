@@ -68,7 +68,7 @@ function group_set_auth($user_id, $group_id)
 					AND group_type <> ' . GROUP_HIDDEN;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$group = $db->sql_fetchrow($result);
 	
@@ -77,7 +77,7 @@ function group_set_auth($user_id, $group_id)
 				WHERE user_id = ' . $user_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$user = $db->sql_fetchrow($result);
 	
@@ -131,7 +131,7 @@ function group_reset_auth($user_id, $group_id)
 	$sql = 'SELECT user_founder FROM ' . USERS . ' WHERE user_id = ' . $user_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$user = $db->sql_fetchrow($result);
 	
@@ -185,7 +185,7 @@ function get_userdata($user, $force_str = false)
 {
 	global $db;
 
-	if (!is_numeric($user) || $force_str)
+	if ( !is_numeric($user) || $force_str )
 	{
 		$user = phpbb_clean_username($user);
 	}
@@ -194,26 +194,27 @@ function get_userdata($user, $force_str = false)
 		$user = intval($user);
 	}
 
-	$sql = "SELECT *
-				FROM " . USERS . " 
-				WHERE ";
-	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "username = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
+	$sql = 'SELECT * FROM ' . USERS . ' WHERE ';
+	$sql .= ( ( is_integer($user) ) ? 'user_id = ' . $user : 'username = "' .  str_replace("\'", "''", $user) . "'" ) . ' AND user_id <> ' . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Tried obtaining data for a non-existent user', '', __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
 }
 
-function _flood_control($data)
+function get_profiledata($user_id)
 {
-	global $userdata;
-	
-	if ( $data != $userdata['session_ip'] )
+	global $db;
+
+	$sql = 'SELECT * FROM ' . PROFILE_DATA . ' WHERE user_id = ' . $user_id;
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		return true;
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
+
+	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
 }
 
 function _cache_clear()
@@ -1153,6 +1154,7 @@ function init_userprefs($userdata)
 	$config['default_lang'] = $default_lang;
 
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_main.php');
+	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_newsletter.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_ucp.php');
@@ -1730,7 +1732,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		else
 		{
 			$template->set_filenames(array(
-				'message_body' => './../admin/style/message_body.tpl')
+				'message_body' => './../admin/style/info_message.tpl')
 			);
 		}
 

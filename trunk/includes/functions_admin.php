@@ -19,6 +19,16 @@ function get_data($mode, $id, $type)
 			$idfield	= 'auth_id';
 		break;
 		
+		case 'event':
+			$table		= EVENT;
+			$idfield	= 'event_id';
+		break;
+		
+		case 'network':
+			$table		= NETWORK;
+			$idfield	= 'network_id';
+		break;
+		
 		case 'teams':
 			$table		= TEAMS;
 			$idfield	= 'team_id';
@@ -192,6 +202,13 @@ function renumber_order($mode, $type = '')
 			$idfield	= 'rank_id';
 			$orderfield = 'rank_order';
 			$typefield	= 'rank_type';
+			break;
+			
+		case 'network':
+			$table		= NETWORK;
+			$idfield	= 'network_id';
+			$orderfield = 'network_order';
+			$typefield	= 'network_type';
 			break;
 		
 		case 'navi':

@@ -22,48 +22,16 @@
 
 ***/
 
-function check_mail_unsubscribe($mail)
-{
-	global $db;
-	
-	if ( preg_match('/^[a-z0-9&\'\.\-_\+]+@[a-z0-9\-]+\.([a-z0-9\-]+\.)*?[a-z]+$/is', $mail) )
-	{
-		$sql = 'SELECT user_mail
-					FROM ' . NEWSLETTER . '
-					WHERE user_mail = "' . str_replace("\'", "''", $mail) . '"';
-		if (!($result = $db->sql_query($sql)))
-		{
-			message_die(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
-		}
-		
-		if ( $row = $db->sql_fetchrow($result) )
-		{
-			$key = md5(uniqid(rand(), TRUE));
-			
-			$sql = 'UPDATE ' . NEWSLETTER . ' SET active_key = "' . $key . '" WHERE user_mail = "' . $row['user_mail'] . '"';
-			if ( !$db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			return $key;
-		}
-		$db->sql_freeresult($result);
-		
-		return false;
-	}
-	return false;
-}
-
 function check_mail_subscribe($email)
 {
-	global $db;
+	global $db, $lang;
 	
 	if ( preg_match('/^[a-z0-9&\'\.\-_\+]+@[a-z0-9\-]+\.([a-z0-9\-]+\.)*?[a-z]+$/is', $email) )
 	{
 		if ( domain_exists($email) )
 		{
 			$sql = 'SELECT ban_email
-					FROM ' . BANLIST;
+						FROM ' . BANLIST;
 			if ($result = $db->sql_query($sql))
 			{
 				if ($row = $db->sql_fetchrow($result))
@@ -74,7 +42,7 @@ function check_mail_subscribe($email)
 						if (preg_match('/^' . $match_email . '$/is', $mail))
 						{
 							$db->sql_freeresult($result);
-							message_die(GENERAL_ERROR, $lang['Email_banned'], '', __LINE__, __FILE__);
+							message_die(GENERAL_ERROR, $lang['nl_mail_banned'], '');
 						}
 					}
 					while($row = $db->sql_fetchrow($result));
@@ -82,24 +50,56 @@ function check_mail_subscribe($email)
 			}
 			$db->sql_freeresult($result);
 			
-			$sql = 'SELECT user_mail
+			$sql = 'SELECT newsletter_mail
 						FROM ' . NEWSLETTER . '
-						WHERE user_mail = "' . str_replace("\'", "''", $email) . '"';
+						WHERE newsletter_mail = "' . str_replace("\'", "''", $email) . '"';
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			if ($row = $db->sql_fetchrow($result))
+			if ( $row = $db->sql_fetchrow($result) )
 			{
-				message_die(GENERAL_ERROR, 'Vorhanden', '', __LINE__, __FILE__);
+				message_die(GENERAL_ERROR, $lang['nl_mail_taken'], '');
 			}
 			$db->sql_freeresult($result);
 			
 			return true;
 		}
 	}
-	message_die(GENERAL_ERROR, 'Ungültig', '', __LINE__, __FILE__);
+	message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+}
+
+function check_mail_unsubscribe($mail)
+{
+	global $db;
+	
+	if ( preg_match('/^[a-z0-9&\'\.\-_\+]+@[a-z0-9\-]+\.([a-z0-9\-]+\.)*?[a-z]+$/is', $mail) )
+	{
+		$sql = 'SELECT newsletter_mail
+					FROM ' . NEWSLETTER . '
+					WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '"';
+		if (!($result = $db->sql_query($sql)))
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		if ( $row = $db->sql_fetchrow($result) )
+		{
+			$key_code = md5(uniqid(rand(), TRUE));
+			
+			$sql = 'UPDATE ' . NEWSLETTER . ' SET active_key = "' . $key_code . '" WHERE newsletter_mail = "' . $row['newsletter_mail'] . '"';
+			if ( !$db->sql_query($sql) )
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			return $key_code;
+		}
+		$db->sql_freeresult($result);
+		
+		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+	}
+	message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 }
 
 function domain_exists($email, $record = 'MX')
@@ -112,7 +112,7 @@ function domain_exists($email, $record = 'MX')
 	}
 	else
 	{
-		return false;
+		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 	}
 }
 
@@ -135,7 +135,7 @@ if (!function_exists('checkdnsrr') )
 				}                
 			}
 		}
-		return false;
+		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
     }
 }
 

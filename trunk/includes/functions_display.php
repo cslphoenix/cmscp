@@ -56,6 +56,7 @@ function display_teams()
 		));
 		
 	}
+	
 	return;
 }
 
@@ -72,7 +73,10 @@ function display_newusers()
 		
 		$sql = 'SELECT user_id, username, user_color FROM ' . USERS . ' WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, ' . $settings['subnavi_newusers_limit'];
 //		$users = _cached($sql, 'display_subnavi_newusers', 0, 1800);
-		$result = $db->sql_query($sql);
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 		$users = $db->sql_fetchrowset($result);
 		
 		for ($i = 0; $i < count($users); $i++)
@@ -137,9 +141,9 @@ function display_minical()
 	
 	$month = $monate[$monat];
 	
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
-		if (defined('CACHE'))
+		if ( defined('CACHE') )
 		{
 			$sCacheName = 'calendar_' . $monat . '_member';
 	
@@ -153,22 +157,34 @@ function display_minical()
 					}
 					
 					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
-					$result = $db->sql_query($sql);
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-					$result = $db->sql_query($sql);
+					$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
 					$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-					$result = $db->sql_query($sql);
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_w = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
 					$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-					$result = $db->sql_query($sql);
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_t = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
@@ -195,22 +211,34 @@ function display_minical()
 				}
 				
 				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-				$result = $db->sql_query($sql);
+				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
 				$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
 				$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_t = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
@@ -238,7 +266,7 @@ function display_minical()
 	}
 	else
 	{
-		if (defined('CACHE'))
+		if ( defined('CACHE') )
 		{
 			$sCacheName = 'calendar_' . $monat . '_guest';
 	
@@ -252,17 +280,26 @@ function display_minical()
 					}
 					
 					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
-					$result = $db->sql_query($sql);
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-					$result = $db->sql_query($sql);
+					$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
 					$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-					$result = $db->sql_query($sql);
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
 					$day_rows_w = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
@@ -288,17 +325,26 @@ function display_minical()
 				}
 				
 				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-				$result = $db->sql_query($sql);
+				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
 				$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
@@ -654,7 +700,10 @@ function display_navi()
 	{
 		$sql = 'SELECT * FROM ' . NAVIGATION . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
 	}
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	
 	$template->assign_block_vars('navi_main', array());
 	$template->assign_block_vars('navi_clan', array());
