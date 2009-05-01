@@ -16,28 +16,29 @@ function _bbcode($text)
 	return;
 
 }
+
 // Prüft die Linklänge und passt sie gegebenenfalls an 
-    // wird für preg_replace_callback definiert 
-    function linkLenght($treffer) 
-    { 
-        // $treffer[1] ist die URL 
-        $url = trim($treffer[1]); 
-        if(substr($url,0,7)!= 'http://') 
-                $url = "http://" . $url; 
-        // $treffer[2] ist der Ausgabename 
-        // wurde kein Name angegeben, wird die URL als Name gewählt 
-        if(strlen(trim($treffer[2]))!=0) 
-            $linkname = $treffer[2]; 
-        else 
-            $linkname = $treffer[1]; 
-        // legt eine maximale Länge von 50 Zeichen fest 
-        // Ausnahme bei [img]-Tags 
-        if(strlen($linkname)>40 AND !substr_count(strtolower($linkname), '[img]') AND !substr_count(strtolower($linkname), '[/img]')) 
-            $linkname = substr($linkname, 0, 32)."...".substr($linkname, -5); 
-        // Rückgabelink 
-        $ergebnis = "<a href=\"" . $url."\" target=\"_blank\">" . $linkname."</a>"; 
-        return $ergebnis; 
-    }
+// wird für preg_replace_callback definiert 
+function linkLenght($treffer) 
+{ 
+	// $treffer[1] ist die URL 
+	$url = trim($treffer[1]); 
+	if(substr($url,0,7)!= 'http://') 
+			$url = "http://" . $url; 
+	// $treffer[2] ist der Ausgabename 
+	// wurde kein Name angegeben, wird die URL als Name gewählt 
+	if(strlen(trim($treffer[2]))!=0) 
+		$linkname = $treffer[2]; 
+	else 
+		$linkname = $treffer[1]; 
+	// legt eine maximale Länge von 50 Zeichen fest 
+	// Ausnahme bei [img]-Tags 
+	if(strlen($linkname)>40 AND !substr_count(strtolower($linkname), '[img]') AND !substr_count(strtolower($linkname), '[/img]')) 
+		$linkname = substr($linkname, 0, 32)."...".substr($linkname, -5); 
+	// Rückgabelink 
+	$ergebnis = "<a href=\"" . $url."\" target=\"_blank\">" . $linkname."</a>"; 
+	return $ergebnis; 
+}
 
 //
 //	Funktion zum Eintragen von Kommentaren
@@ -65,7 +66,7 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 	$message = htmlentities($message, ENT_QUOTES);
 	
 	//	Benutzer festlegen ob Gäste oder registerter Benutzer
-	if ($userdata['user_id'] == ANONYMOUS)
+	if ( $userdata['user_id'] == ANONYMOUS )
 	{
 		$poster_id		= ANONYMOUS;
 		$poster_nick	= $posternick;
@@ -109,12 +110,16 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 			$table_com	= TRAINING_COMMENTS;
 			$id_name	= 'training_id';
 		break;
+		case 'bugtracker':
+			$table_name = BUGTRACKER;
+			$table_com	= BUGTRACKER_COMMENTS;
+			$id_name	= 'bugtracker_id';
+		break;
 		default:
-			message_die(GENERAL_ERROR, 'No Table given', '', __LINE__, __FILE__);
+			message_die(GENERAL_ERROR, 'No Table given');
 		break;
 	}
 	
-	//	Einfügen
 	if ($mode == 'add')
 	{
 		$sql = 'INSERT INTO ' . $table_com . " ($id_name, poster_id, $sql_fields poster_ip, poster_text, time_create)
@@ -130,9 +135,6 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
-		
-		
-		//	geändert von UCP_MATCH_COMMENT auf Allgemeine Message der Logfunktion
 		_log(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_COMMENT, 'comment_' . $table);
 	}
 	
