@@ -1,14 +1,34 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
 
-//	Start session management
 $userdata = session_pagestart($user_ip, PAGE_PROFILE);
 init_userprefs($userdata);
 
-//	session id check
 if (!empty($HTTP_POST_VARS['sid']) || !empty($HTTP_GET_VARS['sid']))
 {
 	$sid = (!empty($HTTP_POST_VARS['sid'])) ? $HTTP_POST_VARS['sid'] : $HTTP_GET_VARS['sid'];
@@ -35,19 +55,72 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 	{
 		$page_title = $lang['Viewing_profile'];
 		
+		$template->set_filenames(array('body' => 'body_profile.tpl'));
+		$template->assign_block_vars('details', array());
+		
 		if ( empty($HTTP_GET_VARS[POST_USERS_URL]) || $HTTP_GET_VARS[POST_USERS_URL] == ANONYMOUS )
 		{
 			message_die(GENERAL_MESSAGE, $lang['No_user_id_specified']);
 		}
 		
-		$profiledata = get_userdata($HTTP_GET_VARS[POST_USERS_URL]);
+		$user_data = get_userdata($HTTP_GET_VARS[POST_USERS_URL]);
+		$user_info = get_profiledata($user_data['user_id']);
 		
-		if (!$profiledata)
+		if (!$user_data)
 		{
 			message_die(GENERAL_MESSAGE, $lang['No_user_id_specified']);
 		}
 		
-		$template->set_filenames(array('body' => 'profile_view_body.tpl'));
+		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		if ( $total_categories = $db->sql_numrows($result) )
+		{
+			$category_rows = $db->sql_fetchrowset($result);
+			
+			$sql = 'SELECT *
+						FROM ' . PROFILE . '
+						ORDER BY profile_category, profile_order';
+			if (!$result = $db->sql_query($sql))
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+		
+			if ( $total_profile = $db->sql_numrows($result) )
+			{
+				$profile_rows = $db->sql_fetchrowset($result);
+			}
+			
+			for ( $i = 0; $i < $total_categories; $i++ )
+			{
+				$cat_id = $category_rows[$i]['profile_category_id'];
+		
+				$template->assign_block_vars('details.info_cat', array( 
+					'CATEGORY_ID'			=> $cat_id,
+					'CATEGORY_NAME'			=> $category_rows[$i]['category_name'],
+				));
+				
+				for ($j = 0; $j < $total_profile; $j++ )
+				{
+					$profile_id = $profile_rows[$j]['profile_id'];
+					
+					if ( $profile_rows[$j]['profile_category'] == $cat_id )
+					{
+						$value = $user_info[$profile_rows[$j]['profile_field']];
+						
+						$template->assign_block_vars('details.info_cat.info_data',	array(
+							'NAME'	=> $profile_rows[$j]['profile_name'],
+							'FIELD' => $value,
+						));
+					}
+				}
+			}
+		}
+		
+		
 	}
 	else if ( $mode == 'edit' || $mode == 'register' )
 	{

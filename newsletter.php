@@ -30,13 +30,6 @@ include($root_path . 'includes/functions_newsletter.php');
 $userdata = session_pagestart($user_ip, PAGE_NEWSLETTER);
 init_userprefs($userdata);
 
-$script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['script_path']));
-$script_name = ( $script_name != '' ) ? $script_name . '/newsletter.php' : 'newsletter.php';
-$server_name = trim($config['server_name']);
-$server_protocol = ( $config['cookie_secure'] ) ? 'https://' : 'http://';
-$server_port = ( $config['server_port'] <> 80 ) ? ':' . trim($config['server_port']) . '/' : '/';
-$server_url = $server_protocol . $server_name . $server_port . $script_name;
-
 if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 {
 	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
@@ -44,12 +37,14 @@ if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 }
 else
 {
-	$mode = '';
-}
-
-if ( isset($HTTP_POST_VARS['unsubscribe']) || isset($HTTP_GET_VARS['unsubscribe']) )
-{
-	$mode = 'unsubscribe';
+	if ( isset($HTTP_POST_VARS['unsubscribe']) || isset($HTTP_GET_VARS['unsubscribe']) )
+	{
+		$mode = 'unsubscribe';
+	}
+	else
+	{
+		$mode = '';
+	}
 }
 
 if ( isset($HTTP_POST_VARS['mail']) || isset($HTTP_GET_VARS['mail']) )
@@ -58,25 +53,16 @@ if ( isset($HTTP_POST_VARS['mail']) || isset($HTTP_GET_VARS['mail']) )
 	$mail = htmlspecialchars($mail);
 }
 
-if ( isset($HTTP_POST_VARS['active_key']) || isset($HTTP_GET_VARS['active_key']) )
+if ( isset($HTTP_POST_VARS['key_code']) || isset($HTTP_GET_VARS['key_code']) )
 {
-	$active_key = ( isset($HTTP_POST_VARS['active_key']) ) ? $HTTP_POST_VARS['active_key'] : $HTTP_GET_VARS['active_key'];
-	$active_key = htmlspecialchars($active_key);
-}
-
-if ( isset($HTTP_POST_VARS['deactive_key']) || isset($HTTP_GET_VARS['deactive_key']) )
-{
-	$deactive_key = ( isset($HTTP_POST_VARS['deactive_key']) ) ? $HTTP_POST_VARS['deactive_key'] : $HTTP_GET_VARS['deactive_key'];
-	$deactive_key = htmlspecialchars($deactive_key);
+	$key_code = ( isset($HTTP_POST_VARS['key_code']) ) ? $HTTP_POST_VARS['key_code'] : $HTTP_GET_VARS['key_code'];
+	$key_code = htmlspecialchars($key_code);
 }
 
 $page_title = $lang['page_newsletter'];
 include($root_path . 'includes/page_header.php');
 
 $template->set_filenames(array('body' => 'body_newsletter.tpl'));
-
-_debug_post($_POST);
-_debug_post($_GET);
 
 if ( $mode == 'subscribe' || !$mode )
 {
@@ -95,105 +81,97 @@ if ( $mode == 'subscribe' || !$mode )
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				include($root_path . 'includes/emailer.php');
-				$emailer = new emailer($config['smtp_delivery']);
-	
-				$emailer->from($config['page_email']);
-				$emailer->cc('');
-				$emailer->bcc('');
+				include($root_path . 'includes/functions_mail.php');
+		
+				$mail_data['user_id']			= ANONYMOUS;
+				$mail_data['username']			= $lang['guest'];
+				$mail_data['user_email']		= $mail;
+				$mail_data['user_lang']			= $config['default_lang'];
+				$mail_data['user_send_type']	= '0';
+				$mail_data['user_notify_pm']	= '0';
 				
-				$emailer->use_template('newsletter_added', $config['default_lang']);
-				$emailer->email_address($mail);
-				$emailer->set_subject($lang['newsletter_added']);
-	
-				$emailer->assign_vars(array(
-					'SITENAME' => $config['sitename'], 
-					'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
-	
-					'U_NEWSLETTER' => $server_url . "?mode=active&mail=$mail&active_key=$active_key",
-				));
-				$emailer->send();
-				$emailer->reset();
+				_send_notice($mail_data, 'newsletter_subscribe_confirm', 'newsletter', "?mode=active&mail=$mail&key_code=$active_key");
 				
 				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
-				$message = $lang['newsletter_subscribe'] . '<br><br>' . sprintf($lang['click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+				$message = $lang['newsletter_subscribe'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid("newsletter.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 			else
 			{
-				message_die(GENERAL_ERROR, 'Fehler1', '', __LINE__, __FILE__);
+				message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 			}
 		}
 		else
 		{
-			message_die(GENERAL_ERROR, 'Fehler2', '', __LINE__, __FILE__);
+			message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 		}
 	}
 }
-else if ( $mode == 'active' && $mail && $active_key )
+else if ( $mode == 'active' && $mail && $key_code )
 {
 	$sql = 'SELECT newsletter_mail, active_key
 				FROM ' . NEWSLETTER . '
-				WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '" AND active_key = "' . $active_key . '"';
+				WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '" AND active_key = "' . $key_code . '"';
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 			
 	if ($row = $db->sql_fetchrow($result))
 	{
-		$active_key = md5(uniqid(rand(), TRUE));
-		
-		$sql = 'UPDATE ' . NEWSLETTER . ' SET newsletter_status = 1, active_key = "' . $active_key . '" WHERE newsletter_mail = "' . $row['newsletter_mail'] . '"';
+		$sql = 'UPDATE ' . NEWSLETTER . ' SET newsletter_status = 1 WHERE newsletter_mail = "' . $row['newsletter_mail'] . '"';
 		if ( !$db->sql_query($sql) )
 		{
 			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
+
+		include($root_path . 'includes/functions_mail.php');
+		
+		$mail_data['user_id']			= ANONYMOUS;
+		$mail_data['username']			= $lang['guest'];
+		$mail_data['user_email']		= $mail;
+		$mail_data['user_lang']			= $config['default_lang'];
+		$mail_data['user_send_type']	= '0';
+		$mail_data['user_notify_pm']	= '0';
+		
+		_send_notice($mail_data, 'newsletter_subscribe', 'newsletter');
+		
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
-		$message = $lang['newsletter_subscribe_confirm'] . '<br><br>' . sprintf($lang['click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+		$message = $lang['newsletter_subscribe_confirm'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid("newsletter.php") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	$db->sql_freeresult($result);
 	
 	_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add_confirm');
 		
-	$message = $lang['newsletter_fail'] . '<br><br>' . sprintf($lang['click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+	$message = $lang['newsletter_fail'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid("newsletter.php") . '">', '</a>');
 	message_die(GENERAL_ERROR, $message);
 }
 else if ( $mode == 'unsubscribe' )
 {
 	if ( $deactive_key = check_mail_unsubscribe($mail) )
 	{
-		include($root_path . 'includes/emailer.php');
-		$emailer = new emailer($config['smtp_delivery']);
-	
-		$emailer->from($config['page_email']);
-		$emailer->cc('');
-		$emailer->bcc('');
+		include($root_path . 'includes/functions_mail.php');
 		
-		$emailer->use_template('newsletter_delete', $config['default_lang']);
-		$emailer->email_address($mail);
-		$emailer->set_subject($lang['newsletter_delete']);
-	
-		$emailer->assign_vars(array(
-			'SITENAME' => $config['sitename'], 
-			'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
-	
-			'U_NEWSLETTER' => $server_url . "?mode=delete&mail=$mail&deactive_key=$deactive_key",
-		));
-		$emailer->send();
-		$emailer->reset();
+		$mail_data['user_id']			= ANONYMOUS;
+		$mail_data['username']			= $lang['guest'];
+		$mail_data['user_email']		= $mail;
+		$mail_data['user_lang']			= $config['default_lang'];
+		$mail_data['user_send_type']	= '0';
+		$mail_data['user_notify_pm']	= '0';
 		
+		_send_notice($mail_data, 'newsletter_unsubscribe_confirm', 'newsletter', "?mode=delete&mail=$mail&key_code=$deactive_key");
+				
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete');
 		
-		$message = $lang['newsletter_unsubscribe'] . '<br><br>' . sprintf($lang['click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+		$message = $lang['newsletter_unsubscribe'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid("newsletter.php") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	else
 	{
-		message_die(GENERAL_ERROR, 'Falsche', '', __LINE__, __FILE__);
+		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 	}
 }
 else if ( $mode == 'delete' && $mail && $deactive_key )
@@ -203,7 +181,7 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 				WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '" AND active_key = "' . $deactive_key . '"';
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 			
 	if ($row = $db->sql_fetchrow($result))
@@ -216,31 +194,24 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
-		include($root_path . 'includes/emailer.php');
-		$emailer = new emailer($config['smtp_delivery']);
-	
-		$emailer->from($config['page_email']);
-		$emailer->cc('');
-		$emailer->bcc('');
+		include($root_path . 'includes/functions_mail.php');
 		
-		$emailer->use_template('newsletter_deaccept', $config['default_lang']);
-		$emailer->email_address($mail);
-		$emailer->set_subject($lang['newsletter_deaccept']);
-	
-		$emailer->assign_vars(array(
-			'SITENAME' => $config['sitename'], 
-			'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
-		));
-		$emailer->send();
-		$emailer->reset();
+		$mail_data['user_id']			= ANONYMOUS;
+		$mail_data['username']			= $lang['guest'];
+		$mail_data['user_email']		= $mail;
+		$mail_data['user_lang']			= $config['default_lang'];
+		$mail_data['user_send_type']	= '0';
+		$mail_data['user_notify_pm']	= '0';
+		
+		_send_notice($mail_data, 'newsletter_unsubscribe', 'newsletter');
 		
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete_confirm');
 		
-		$message = $lang['newsletter_subscribe_confirm'] . '<br><br>' . sprintf($lang['click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+		$message = $lang['newsletter_subscribe_confirm'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid("newsletter.php") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 		
-	$message = $lang['newsletter_fail'] . '<br><br>' . sprintf($lang['click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
+	$message = $lang['newsletter_fail'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid("newsletter.php") . '">', '</a>');
 	message_die(GENERAL_ERROR, $message);
 }
 else

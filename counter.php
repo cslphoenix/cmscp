@@ -1,5 +1,27 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -81,7 +103,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	
 	$Monatsnamen = array(
 		'1'		=> 'Januar',
-		'2'		=> 'Feber',
+		'2'		=> 'Februar',
 		'3'		=> 'M&auml;rz',
 		'4'		=> 'April',
 		'5'		=> 'Mai',

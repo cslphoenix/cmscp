@@ -1,5 +1,27 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -62,7 +84,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+					$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
@@ -104,7 +126,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -161,7 +183,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+					$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					$result = $db->sql_query($sql);
 					$day_rows_e = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
@@ -197,7 +219,7 @@ $template->set_filenames(array('body' => 'calendar_body.tpl'));
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_start, event_end, event_title FROM ' . EVENTS . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE event_type = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				$result = $db->sql_query($sql);
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);

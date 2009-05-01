@@ -30,7 +30,7 @@ $userdata = session_pagestart($user_ip, PAGE_BUGTRACKER);
 init_userprefs($userdata);
 
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start = ($start < 0) ? 0 : $start;
+$start = ( $start < 0 ) ? 0 : $start;
 
 if ( isset($HTTP_POST_VARS[POST_BUGTRACKER_URL]) || isset($HTTP_GET_VARS[POST_BUGTRACKER_URL]) )
 {
@@ -107,13 +107,13 @@ foreach ( $lang['bt_status'] as $key => $value )
 	}
 }
 
-$page_title = $lang['bugtracker'];
-include($root_path . 'includes/page_header.php');
-
 $template->set_filenames(array('body' => 'body_bugtracker.tpl'));
 
 if ( $mode == 'list' )
 {
+	$page_title = $lang['bugtracker'];
+	include($root_path . 'includes/page_header.php');
+	
 	$template->assign_block_vars('list', array());
 	
 	$sql = 'SELECT	u.user_id as user_id1, u.username as username1, u.user_color as user_color1,
@@ -185,7 +185,7 @@ if ( $mode == 'list' )
 				'BT_TYPE'		=> $bt_type,
 				'BT_STATUS'		=> $bt_status,
 				
-				'U_DETAILS'		=> append_sid("bugtracker.php?mode=view&amp;" . POST_BUGTRACKER_URL . "=" . $bugtracker_data[$i]['bugtracker_id']),
+				'U_DETAILS'		=> append_sid("bugtracker.php?mode=details&amp;" . POST_BUGTRACKER_URL . "=" . $bugtracker_data[$i]['bugtracker_id']),
 				
 			));
 		}
@@ -207,14 +207,22 @@ if ( $mode == 'list' )
 		'S_BUGTRACKER_ACTION'	=> append_sid("bugtracker.php"),
 	));
 }
-else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userdata['session_logged_in'] )
+else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 {
 	include($root_path . 'includes/functions_post.php');
 	include($root_path . 'includes/functions_bugtracker.php');
 	
+	if ( !$userdata['session_logged_in'] )
+	{
+		redirect(append_sid("login.php?redirect=bugtracker.php?mode=$mode"));
+	}
+	
+	$page_title = $lang['bugtracker'];
+	include($root_path . 'includes/page_header.php');
+	
 	$template->assign_block_vars('entry', array());
 	
-	$bt_type = '';
+	$bt_type = $bt_version = '';
 	$s_hidden_field = '<input type="hidden" name="mode" value="add" />';
 	
 	if ( $mode == 'edit' )
@@ -237,7 +245,8 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 			
 		));
 		
-		$bt_type = $bugtracker_data['bugtracker_type'];
+		$bt_type	= $bugtracker_data['bugtracker_type'];
+		$bt_version	= $bugtracker_data['bugtracker_version'];
 		
 		$s_hidden_field = '<input type="hidden" name="mode" value="edit" />';
 		$s_hidden_field .= '<input type="hidden" name="' . POST_BUGTRACKER_URL . '" value="' . $bugtracker_id . '" />';
@@ -251,6 +260,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 		$bt_title	= ( isset($HTTP_POST_VARS['bt_title']) )	? trim($HTTP_POST_VARS['bt_title']) : '';
 		$bt_desc	= ( isset($HTTP_POST_VARS['bt_desc']) )		? trim($HTTP_POST_VARS['bt_desc']) : '';
 		$bt_type	= ( isset($HTTP_POST_VARS['bt_type']) )		? trim($HTTP_POST_VARS['bt_type']) : '';
+		$bt_version	= ( isset($HTTP_POST_VARS['bt_version']) )	? trim($HTTP_POST_VARS['bt_version']) : '';
 		$bt_php		= ( isset($HTTP_POST_VARS['bt_php']) )		? trim($HTTP_POST_VARS['bt_php']) : '';
 		$bt_sql		= ( isset($HTTP_POST_VARS['bt_sql']) )		? trim($HTTP_POST_VARS['bt_sql']) : '';
 		$bt_message	= ( isset($HTTP_POST_VARS['bt_message']) )	? trim($HTTP_POST_VARS['bt_message']) : '';
@@ -279,6 +289,12 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 		{
 			$error = true;
 			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_type'];
+		}
+		
+		if ( empty($bt_version) )
+		{
+			$error = true;
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_version'];
 		}
 		
 		if ( empty($bt_message) )
@@ -313,10 +329,12 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 	}
 	
 	$template->assign_vars(array(
+		'L_HEAD_ADD_EDIT'		=> ( $mode == 'add' ) ? $lang['bt_head_add'] : $lang['bt_head_edit'],
 		'L_REQUIRED'			=> $lang['required'],
 		'L_TITLE'				=> $lang['bt_title'],
 		'L_DESC'				=> $lang['bt_desc'],
 		'L_TYPE'				=> $lang['bt_type'],
+		'L_VERSION'				=> $lang['bt_version'],
 		'L_PHP'					=> $lang['bt_php'],
 		'L_SQL'					=> $lang['bt_sql'],
 		'L_MESSAGE'				=> $lang['bt_message'],
@@ -324,236 +342,246 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) && $userda
 		'L_SUBMIT'				=> $lang['Submit'],
 		
 		'S_TYPE'				=> bt_type($bt_type),
+		'S_VERSION'				=> bt_version($bt_version),
 		'S_HIDDEN_FIELD'		=> $s_hidden_field,
 		'S_BUGTRACKER_ACTION'	=> append_sid("bugtracker.php"),
 	));
+}
+else if ( $mode == 'details' && $bugtracker_id )
+{
+	$page_title = $lang['bt_details'];
+	include($root_path . 'includes/page_header.php');
 	
-	/*
-	//	Kommentarfunktion
-	//	Nur wenn die Generelle Funktion aktiviert ist und für das Match selber
-	if ($settings['comments_matches'] && $row_details['match_comments'])
+	$template->assign_block_vars('details', array());
+	
+	$sql = 'SELECT	u.user_id as user_id1, u.username as username1, u.user_color as user_color1,
+					u2.user_id as user_id2, u2.username as username2, u2.user_color as user_color2,
+					bt.*
+				FROM ' . BUGTRACKER . ' bt
+					LEFT JOIN ' . USERS . ' u ON u.user_id = bt.bugtracker_creator
+					LEFT JOIN ' . USERS . ' u2 ON u2.user_id = bt.bugtracker_worker
+				WHERE bt.bugtracker_id = ' . $bugtracker_id;
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		$template->assign_block_vars('match_comments', array());
-		
-		$sql = 'SELECT mc.*, u.username, u.user_email
-					FROM ' . MATCH_COMMENTS . ' mc
-						LEFT JOIN ' . USERS . ' u ON mc.poster_id = u.user_id
-					WHERE match_id = ' . $match_id . ' ORDER BY time_create DESC';
-		$comment_entry = _cached($sql, 'match_details_' . $match_id . '_comments');
-		
-		if (!$comment_entry)
-		{
-			$template->assign_block_vars('match_comments.no_entry', array());
-			$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
-			$last_entry = array('poster_ip' => '', 'time_create' => '');
-		}
-		else
-		{
-			if ( $userdata['session_logged_in'] )
-			{
-				//	SQL Abfrage verkleinert, voher für jeden Beitrag eine Zeit, die aber immer gleich war
-				$sql = 'SELECT read_time
-							FROM ' . MATCH_COMMENTS_READ . '
-							WHERE user_id = ' . $userdata['user_id'] . ' AND match_id = ' . $match_id;
-				$result = $db->sql_query($sql);
-				$unread = $db->sql_fetchrow($result);
-				
-				if ( $db->sql_numrows($result) )
-				{
-					$unreads = false;
-					
-					$sql = 'UPDATE ' . MATCH_COMMENTS_READ . '
-								SET read_time = ' . time() . '
-							WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];
-					$result = $db->sql_query($sql);
-				}
-				else
-				{
-					$unreads = true;
-					
-					$sql = 'INSERT INTO ' . MATCH_COMMENTS_READ . ' (match_id, user_id, read_time)
-						VALUES (' . $match_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-					$result = $db->sql_query($sql);
-				}
-			}
-			
-			for($i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++)
-			{
-				$class = ($i % 2) ? 'row1' : 'row2';
-				
-				if ( $userdata['session_logged_in'] )
-				{
-					if ( $unreads || $unread['read_time'] < $comment_entry[$i]['time_create'])
-					{
-						$icon = 'images/forum/icon_minipost_new.gif';
-					}
-					else
-					{
-						$icon = 'images/forum/icon_minipost.gif';
-					}
-				}
-				else
-				{
-					$icon = 'images/forum/icon_minipost.gif';
-				}
-				
-				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$details = $db->sql_fetchrow($result);
 	
-				$template->assign_block_vars('match_comments.comments', array(
-					'CLASS' 		=> $class,
-					'ID' 			=> $comment_entry[$i]['match_comments_id'],
-					'L_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_nick'] : $comment_entry[$i]['username'],
-	//				'U_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_email'] : $comment_entry[$i]['user_email'],	Profil-Link und Mail schreiben an Gast
-					'MESSAGE'		=> $comment,
-					'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
-					
-					'ICON'			=> $icon,
+	if ( !$details )
+	{
+		message_die(GENERAL_ERROR, 'Falsche ID ?');
+	}
 	
-					'U_EDIT'		=> append_sid("match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $comment_entry[$i]['match_id']),
-					'U_DELETE'		=> append_sid("match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $comment_entry[$i]['match_id'])
-				));
-			}
-		
-			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
-			
-			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id, count($comment_entry), $settings['site_comment_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
-			
-				'L_GOTO_PAGE' => $lang['Goto_page'])
-			);
-			
-			//	Letzter Kommentareintrag
-			//	sort (Sortiert ein Array)
-			//	array_pop (Liefert das letzte Element eines Arrays)
-			sort($comment_entry);
-			$last_entry = array_pop($comment_entry);
-		
-		}
-		
-		//	Wer darf Kommentare schreiben?!?
-//		if ($settings['comments_matches_guest'] && !$userdata['session_logged_in'] && $last_entry['poster_ip'] != $userdata['session_ip'])
-		if ($settings['comments_matches_guest'] && !$userdata['session_logged_in'])
-		{
-			$template->assign_block_vars('match_comments.match_comments_guest', array());
-		}
-		
-		//	Eingeloggte Benutzer können immer kommentieren
-		if ($userdata['session_logged_in'])
-		{
-			$template->assign_block_vars('match_comments.match_comments_member', array());
-		}
-		
-		$error = '';
-		$error_msg = '';
-		
-		//	Erlaubt nach Absenden kein Doppelbeitrag erst nach 20 Sekunden
-		if ( isset($HTTP_POST_VARS['submit']) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || $last_entry['time_create']+20 < time() ) )
-		{
-			//	Laden der Funktion zum eintragen von Kommentaren
-			include($root_path . 'includes/functions_post.php');
-			
-			//	Bei Fehlern wird der Text erneut in die Felder eingetragen
-			$poster_nick	= (!$userdata['session_logged_in']) ? trim(stripslashes($HTTP_POST_VARS['poster_nick'])) : '';
-			$poster_mail	= (!$userdata['session_logged_in']) ? trim(stripslashes($HTTP_POST_VARS['poster_mail'])) : '';
-			$poster_hp		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['poster_hp']) : '';
-			$comment		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['comment']) : '';
-			
-			$template->assign_vars(array(
-				'POSTER_NICK'	=> $poster_nick,
-				'POSTER_MAIL'	=> $poster_mail,
-				'POSTER_HP'		=> $poster_hp,
-				'COMMENT'		=> $comment,
-			));
-			
-			if (!$userdata['session_logged_in'])
-			{
-				$captcha = $HTTP_POST_VARS['captcha'];
-				
-				if ($captcha != $HTTP_SESSION_VARS['captcha'])
-				{
-					$error = true;
-					$error_msg = 'captcha';
-				}
-					
-				if ( empty($HTTP_POST_VARS['poster_nick']) )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'user_nick';
-				}
-				
-				if ( empty($HTTP_POST_VARS['poster_mail']) )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'poster_mail';
-				}
-				
-				unset($_SESSION['captcha']);
-			}
-				
-			if ( empty($HTTP_POST_VARS['comment']) )
-			{
-				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
-			}
+	$template->assign_block_vars('details.bt_comment', array());
 	
-			if ( $error )
-			{
-				$template->set_filenames(array('reg_header' => 'error_body.tpl'));
-				$template->assign_vars(array('ERROR_MESSAGE' => $error_msg));
-				$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
-			}
+	$sql = 'SELECT btc.*, u.username, u.user_color, u.user_email
+				FROM ' . BUGTRACKER_COMMENTS . ' btc
+					LEFT JOIN ' . USERS . ' u ON btc.poster_id = u.user_id
+				WHERE bugtracker_id = ' . $bugtracker_id . '
+			ORDER BY time_create DESC';
 	
-			if ( !$error )
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$comment_entry = $db->sql_fetchrowset($result);
+//	$comment_entry = _cached($sql, 'bugtracker_details_' . $bugtracker_id . '_comments');
+	
+	if ( !$comment_entry )
+	{
+		$template->assign_block_vars('details.bt_comment.no_entry', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+		
+		$last_entry = array('poster_ip' => '', 'time_create' => '');
+	}
+	else
+	{
+		if ( $userdata['session_logged_in'] )
+		{
+			$sql = 'SELECT read_time
+						FROM ' . BUGTRACKER_COMMENTS_READ . '
+						WHERE user_id = ' . $userdata['user_id'] . '
+							AND bugtracker_id = ' . $bugtracker_id;
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				//	Test: hier werden/sollen Kommentare als gelesen markiert werden
-				$sql = 'SELECT * FROM ' . MATCH_COMMENTS_READ . ' WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];
-				if ( !($result = $db->sql_query($sql)) )
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$unread = $db->sql_fetchrow($result);
+			
+			if ( $db->sql_numrows($result) )
+			{
+				$unreads = false;
+				
+				$sql = 'UPDATE ' . BUGTRACKER_COMMENTS_READ . '
+							SET read_time = ' . time() . '
+						WHERE bugtracker_id = ' . $bugtracker_id . ' AND user_id = ' . $userdata['user_id'];
+				if (!$db->sql_query($sql))
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
+			}
+			else
+			{
+				$unreads = true;
 				
-				if ( $db->sql_numrows($result) )
+				$sql = 'INSERT INTO ' . BUGTRACKER_COMMENTS_READ . ' (bugtracker_id, user_id, read_time)
+					VALUES (' . $bugtracker_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
+				if (!$db->sql_query($sql))
 				{
-					$sql = 'UPDATE ' . MATCH_COMMENTS_READ . '
-								SET read_time = ' . time() . '
-							WHERE match_id = ' . $match_id . ' AND user_id = ' . $userdata['user_id'];					
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-				else
-				{				
-					$sql = 'INSERT INTO ' . MATCH_COMMENTS_READ . ' (match_id, user_id, read_time)
-						VALUES (' . $match_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				}
-				
-				//	Keine Fehler?
-				//	Cache löschung und eintragung des Kommentars
-				$oCache -> deleteCache('match_details_' . $match_id . '_comments');
-				
-				_comment_message('add', 'match', $match_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
-				
-				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_match'],  '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_id) . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
 			}
 		}
-	}
-	*/
+		
+		for ( $i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++ )
+		{
+			$class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
+			
+			if ( $userdata['session_logged_in'] )
+			{
+				$icon = ( $unreads || $unread['read_time'] < $comment_entry[$i]['time_create'] ) ? $images['icon_minipost_new'] : $images['icon_minipost'];
+			}
+			else
+			{
+				$icon = $images['icon_minipost'];
+			}
+
+			$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
+			$userurl = '<a href="' . append_sid("profile.php?mode=details&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['username'] . '</a>';
+
+			$template->assign_block_vars('details.bt_comment.row', array(
+				'CLASS' 		=> $class,
+				'ID' 			=> $comment_entry[$i]['bugtracker_comments_id'],
+				'USER_URL'		=> $userurl,
+				'MESSAGE'		=> $comment,
+				'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
+				'ICON'			=> $icon,
+
+				'U_EDIT'		=> append_sid("match.php?mode=edit&amp;" . POST_MATCH_URL . "=" . $comment_entry[$i]['bugtracker_id']),
+				'U_DELETE'		=> append_sid("match.php?mode=delete&amp;" . POST_MATCH_URL . "=" . $comment_entry[$i]['bugtracker_id'])
+			));
+		}
 	
+		$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
+		
+		$template->assign_vars(array(
+			'L_GOTO_PAGE'	=> $lang['Goto_page'],
+			'PAGINATION'	=> generate_pagination("bugtracker.php?mode=details&amp;" . POST_BUGTRACKER_URL . "=" . $bugtracker_id, count($comment_entry), $settings['site_comment_per_page'], $start),
+			'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
+		));
+		
+		sort($comment_entry);
+		$last_entry = array_pop($comment_entry);
+	}
+		
+	if ( $userdata['session_logged_in' ] )
+	{
+		$template->assign_block_vars('details.bt_comment.add', array());
+	}
+		
+	$error = '';
+	$error_msg = '';
+	
+	if ( isset($HTTP_POST_VARS['submit']) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || $last_entry['time_create']+20 < time() ) )
+	{
+		include($root_path . 'includes/functions_post.php');
+		
+		$comment		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['comment']) : '';
+		
+		$template->assign_vars(array(
+			'COMMENT'		=> $comment,
+		));
+		
+		if ( empty($HTTP_POST_VARS['comment']) )
+		{
+			$error = true;
+			$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
+		}
+
+		if ( $error )
+		{
+			$template->set_filenames(array('reg_header' => 'error_body.tpl'));
+			$template->assign_vars(array('ERROR_MESSAGE' => $error_msg));
+			$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+		}
+
+		if ( !$error )
+		{
+			$sql = 'SELECT *
+						FROM ' . BUGTRACKER_COMMENTS_READ . '
+						WHERE bugtracker_id = ' . $bugtracker_id . '
+							AND user_id = ' . $userdata['user_id'];
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			if ( $db->sql_numrows($result) )
+			{
+				$sql = 'UPDATE ' . BUGTRACKER_COMMENTS_READ . '
+							SET read_time = ' . time() . '
+						WHERE bugtracker_id = ' . $bugtracker_id . ' AND user_id = ' . $userdata['user_id'];					
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+			}
+			else
+			{				
+				$sql = 'INSERT INTO ' . BUGTRACKER_COMMENTS_READ . ' (bugtracker_id, user_id, read_time)
+					VALUES (' . $bugtracker_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+			}
+
+			$oCache -> deleteCache('bugtracker_details_' . $bugtracker_id . '_comments');
+			_comment_message('add', 'bugtracker', $bugtracker_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
+			
+			$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid("bugtracker.php?mode=details&amp;" . POST_BUGTRACKER_URL . "=" . $bugtracker_id) . '">', '</a>');
+			message_die(GENERAL_MESSAGE, $message);
+		}
+	}
+	
+	$template->assign_vars(array(
+								 
+		'L_COMMENT'				=> $lang['common_comment'],
+		'L_COMMENTS'			=> $lang['common_comments'],
+		'L_COMMENT_ADD'			=> $lang['common_comment_add'],
+		
+		'L_INFO'				=> sprintf($lang['bt_details_to'], $details['bugtracker_title']),
+		
+//		'L_SUBMIT'				=> $lang['Submit'],
+//		
+//		'MATCH_RIVAL'			=> $details['bugtracker_rival'],
+//		'U_MATCH_RIVAL_URL'		=> $details['bugtracker_rival_url'],
+//		'MATCH_RIVAL_URL'		=> $details['bugtracker_rival_url'],
+//		'MATCH_RIVAL_TAG'		=> $details['bugtracker_rival_tag'],
+//		
+//	
+//		'MATCH_CATEGORIE'		=> $bugtracker_categorie,
+//		'MATCH_TYPE'			=> $bugtracker_type,
+//		'MATCH_LEAGUE_INFO'		=> $bugtracker_league,
+//		'SERVER'				=> ($details['server']) ? '<a href="hlsw://' . $details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
+//		'SERVER_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $details['server_pw'] : '',
+//		'HLTV'					=> ($details['server']) ? '<a href="hlsw://' . $details['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
+//		'HLTV_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) ? $details['server_hltv_pw'] : '',
+//		
+//		
+//		
+//		'DETAILS_COMMENT'		=> $details['details_comment'],
+//		
+//		'MATCH_MAIN'			=> '<a href="' . append_sid("match.php") . '">&raquo; Übersicht</a>',
+//	
+//		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
+//		'S_MATCH_ACTION'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $bugtracker_id)
+	));
 }
 else
 {
 	redirect(append_sid('bugtracker.php', true));
 }
-
-
-
 
 $template->pparse('body');
 
