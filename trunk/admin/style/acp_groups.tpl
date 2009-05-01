@@ -261,6 +261,12 @@
 			<td class="row1" width="25%">{L_GROUP_NAME}: *</td>
 			<td class="row2" width="75%"><input class="post" type="text" name="group_name" value="{GROUP_NAME}" ></td>
 		</tr>
+		<!-- BEGIN add_group -->
+		<tr>
+			<td class="row1" width="25%">{L_GROUP_MOD}: *</td>
+			<td class="row2" width="75%">{S_GROUP_MOD}</td>
+		</tr>
+		<!-- END add_group -->
 		<tr>
 			<td class="row1">{L_GROUP_ACCESS}:</td>
 			<td class="row2">{S_GROUP_ACCESS}</td>

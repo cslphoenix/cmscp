@@ -29,6 +29,7 @@ if ( !empty($setmodules) )
 	{
 		$module['users']['set'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -47,7 +48,7 @@ else
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_user.php", true));
 	}
@@ -62,7 +63,7 @@ else
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ($start < 0) ? 0 : $start;
+	$start = ( $start < 0 ) ? 0 : $start;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
@@ -87,7 +88,7 @@ else
 	
 	$show_index = '';
 		
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -164,10 +165,10 @@ else
 					'L_PASSWORD'			=> $lang['user_password'],
 					'L_PASSWORD_CONFIRM'	=> $lang['user_password_confirm'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'PASS_1'				=> sprintf($lang['user_pass_random'], random_password(7, 10, false, false)),
 					'PASS_2'				=> sprintf($lang['user_pass_random'], random_password(7, 10, false, true, false)),
@@ -548,9 +549,19 @@ else
 							{
 								$value = $user_data[$profile_rows[$j]['profile_field']];
 								
+								if ( $profile_rows[$j]['profile_type'] )
+								{
+									$field = '<textarea class="textarea" name="' . $profile_rows[$j]['profile_field'] . '" rows="5" cols="50" >' . $value . '</textarea>';
+									
+								}
+								else
+								{
+									$field = '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">';
+								}
+								
 								$template->assign_block_vars('user_fields.catrow.profilerow',	array(
 									'NAME'	=> $profile_rows[$j]['profile_name'],
-									'FIELD' => '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">',
+									'FIELD' => $field,
 								));
 							}
 						}
@@ -572,10 +583,10 @@ else
 					'L_USER_SETTINGS'		=> $lang['user_settings'],
 					'L_USER_IMAGES'			=> $lang['user_images'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
 					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
@@ -594,6 +605,79 @@ else
 			break;
 			
 			case 'update_fields':
+			
+				_debug_post($_POST);
+			
+			break;
+			
+			case 'settings':
+			
+				$user = get_data('user', $user_id, 0);
+				
+				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->assign_block_vars('user_settings', array());
+				
+				$user_timezone			= $user['user_timezone'];
+				$user_style				= $user['user_style'];
+				$user_lang				= $user['user_lang'];
+				$user_dateformat		= $user['user_dateformat'];
+				$user_viewemail			= $user['user_viewemail'];
+				$user_birthday			= $user['user_birthday'];
+				$user_sig				= $user['user_sig'];
+				
+				$user_notify			= $user['user_notify'];
+				$user_notify_pm			= $user['user_notify_pm'];
+				$user_popup_pm			= $user['user_popup_pm'];
+				
+				
+				
+				
+				
+				
+				
+				$user_allow_avatar		= $user['user_allow_avatar'];
+				$user_allow_pm			= $user['user_allow_pm'];
+				$user_allow_viewonline	= $user['user_allow_viewonline'];
+				
+				$user_rank				= $user['user_rank'];
+				
+				$s_hidden_fields = '<input type="hidden" name="mode" value="update_settings" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
+				
+				$template->assign_vars(array(
+					'L_USER_HEAD'			=> $lang['user_head'],
+					'L_USER_NEW_EDIT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_edit'],
+					'L_USER_GROUP'			=> $lang['user_group'],
+					'L_USER_AUTHS'			=> $lang['user_auths'],
+					'L_REQUIRED'			=> $lang['required'],
+					
+					'L_USER_REGISTER'		=> $lang['user_register'],
+					'L_USER_FIELDS'			=> $lang['user_fields'],
+					'L_USER_SETTINGS'		=> $lang['user_settings'],
+					'L_USER_IMAGES'			=> $lang['user_images'],
+					
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
+					
+					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_IMAGES'			=> append_sid("admin_user.php?mode=images&amp;" . POST_USERS_URL . "=" . $user_id),
+					
+					
+					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
+				));
+			
+				$template->pparse('body');
+			
+			break;
+			
+			case 'update_settings':
 			
 				_debug_post($_POST);
 			
@@ -621,21 +705,21 @@ else
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
-				else if ( $user_id && !$confirm)
+				else if ( $user_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_user'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_user.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -717,6 +801,8 @@ else
 						$s_mod_group		= ( $row['group_mod'] == '1' ) ? 'disabled checked' : 'disabled';
 					}
 					
+					$s_mod_group .= ( !$member ) ? ' disabled' : '';
+					
 					$template->assign_block_vars('user_groups.groups_row', array(
 						'S_MARK_NAME'			=> "groups_mark[$group_id]",
 						'S_MARK_ID'				=> $group_id,
@@ -777,10 +863,10 @@ else
 					'L_USER_GROUP'			=> $lang['user_group'],
 					'L_USER_AUTHS'			=> $lang['user_auths'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'L_USER_GROUPS'			=> $lang['user_groups'],
 					'L_USER_TEAMS'			=> $lang['user_teams'],
@@ -1026,7 +1112,7 @@ else
 								AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$auths_data = array();
@@ -1046,7 +1132,7 @@ else
 								AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$authd_data = array();
@@ -1066,7 +1152,7 @@ else
 						ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
 				}
 				
 				$auths_group = array();
@@ -1085,7 +1171,7 @@ else
 						ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
 				}
 				
 				$authd_group = array();
@@ -1194,10 +1280,10 @@ else
 					'L_USER_AUTHS'			=> $lang['user_auths'],
 					'L_USER_AUTHS_EXPLAIN'	=> $lang['user_auths_explain'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'L_USER_GROUPS'			=> $lang['user_groups'],
 					'L_USER_TEAMS'			=> $lang['user_teams'],
@@ -1221,7 +1307,7 @@ else
 								AND gu.user_id = ' . $user_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$row = $db->sql_fetchrow($result);
 
@@ -1266,10 +1352,10 @@ else
 					'L_USER_GROUP'			=> $lang['user_group'],
 					'L_USER_AUTHS'			=> $lang['user_auths'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'L_USER_GROUPS'			=> $lang['user_groups'],
 					'L_USER_TEAMS'			=> $lang['user_teams'],
@@ -1296,7 +1382,7 @@ else
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

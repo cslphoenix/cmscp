@@ -29,6 +29,7 @@ if ( !empty($setmodules) )
 	{
 		$module['main']['profile'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -46,7 +47,7 @@ else
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_profile.php", true));
 	}
@@ -60,9 +61,9 @@ else
 		$profile_id = 0;
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_CAT_URL]) || isset($HTTP_GET_VARS[POST_CAT_URL]) )
+	if ( isset($HTTP_POST_VARS[POST_CATEGORY_URL]) || isset($HTTP_GET_VARS[POST_CATEGORY_URL]) )
 	{
-		$cat_id = ( isset($HTTP_POST_VARS[POST_CAT_URL]) ) ? intval($HTTP_POST_VARS[POST_CAT_URL]) : intval($HTTP_GET_VARS[POST_CAT_URL]);
+		$cat_id = ( isset($HTTP_POST_VARS[POST_CATEGORY_URL]) ) ? intval($HTTP_POST_VARS[POST_CATEGORY_URL]) : intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
 	}
 	else
 	{
@@ -122,7 +123,7 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -136,10 +137,6 @@ else
 					
 					$profile_name	= $profile['profile_name'];
 					$cat_id			= $profile['profile_category'];
-					
-					
-					
-					
 				}
 				else if ( $mode == 'add_profile' )
 				{
@@ -152,15 +149,13 @@ else
 						'profile_show_register'	=> '0',
 					);
 					
-					
-
 					$new_mode = 'createprofile';
 				}
 				$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
 				$template->assign_block_vars('profile_edit', array());
 
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $profile_id . '" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $profile_id . '" />';
 
 				$template->assign_vars(array(
 					'L_PROFILE_HEAD'		=> $lang['profile_head'],
@@ -168,7 +163,7 @@ else
 					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_PROFILE_NAME'		=> $lang['profile_name'],
-					'L_PROFILE_FILED'		=> $lang['profile_field'],
+					'L_PROFILE_FIELD'		=> $lang['profile_field'],
 					'L_PROFILE_CATEGORY'	=> $lang['profile_categpry'],
 					'L_PROFILE_TYPE'		=> $lang['profile_type'],
 					'L_PROFILE_LANGUAGE'	=> $lang['profile_language'],
@@ -179,16 +174,18 @@ else
 					'L_TYPE_TEXT'			=> $lang['profile_text'],
 					'L_TYPE_AREA'			=> $lang['profile_area'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'PROFILE_NAME'			=> $profile_name,
 					'PROFILE_FIELD'			=> str_replace('profile_', '', $profile['profile_field']),
 					
 					'S_PROFILE_CATEGORY'	=> _select_category($cat_id),
 					
+					'S_CHECKED_LANG_YES'	=> ( $profile['profile_language'] ) ? ' checked="checked"' : '',
+					'S_CHECKED_LANG_NO'		=> ( !$profile['profile_language'] ) ? ' checked="checked"' : '',
 					'S_CHECKED_TYPE_TEXT'	=> ( $profile['profile_type'] == '0' ) ? ' checked="checked"' : '',
 					'S_CHECKED_TYPE_AREA'	=> ( $profile['profile_type'] == '1' ) ? ' checked="checked"' : '',
 					'S_CHECKED_SGUEST_YES'	=> ( $profile['profile_show_guest'] ) ? ' checked="checked"' : '',
@@ -208,33 +205,21 @@ else
 				$template->pparse('body');
 				
 			break;
-/*
-CREATE TABLE IF NOT EXISTS `cms_profile` (
-  `profile_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `profile_category` smallint(2) unsigned NOT NULL,
-  `profile_name` varchar(100) COLLATE utf8_bin NOT NULL,
-  `profile_language` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `profile_type` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `profile_show_guest` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `profile_show_member` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `profile_show_register` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `profile_order` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`profile_id`)
-)
-*/
 			
 			case 'createprofile':
 			
 				$profile_name		= ( isset($HTTP_POST_VARS['profile_name']) )		? str_replace("\'", "''", $HTTP_POST_VARS['profile_name']) : '';
 				$profile_field		= ( isset($HTTP_POST_VARS['profile_field']) )		? str_replace("\'", "''", $HTTP_POST_VARS['profile_field']) : '';
 				$profile_category	= ( isset($HTTP_POST_VARS['profile_category']) )	? intval($HTTP_POST_VARS['profile_category']) : 0;
+				$profile_language	= ( isset($HTTP_POST_VARS['profile_language']) )	? intval($HTTP_POST_VARS['profile_language']) : 0;
 				$profile_type		= ( isset($HTTP_POST_VARS['profile_type']) )		? intval($HTTP_POST_VARS['profile_type']) : 0;
 				$profile_sguest		= ( isset($HTTP_POST_VARS['profile_sguest']) )		? intval($HTTP_POST_VARS['profile_sguest']) : 0;
 				$profile_smember	= ( isset($HTTP_POST_VARS['profile_smember']) )		? intval($HTTP_POST_VARS['profile_smember']) : 0;
+				$profile_sregister	= ( isset($HTTP_POST_VARS['profile_sreg']) )		? intval($HTTP_POST_VARS['profile_sreg']) : 0;
 				
 				if ( $profile_name == '' || $profile_field == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 	
 				$sql = 'SELECT MAX(profile_order) AS max_order FROM ' . PROFILE . ' WHERE profile_category = ' . $profile_category;
@@ -247,8 +232,8 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 				$max_order = $row['max_order'];
 				$next_order = $max_order + 10;
 				
-				$sql = 'INSERT INTO ' . PROFILE . " (profile_name, profile_field, profile_category, profile_type, profile_show_guest, profile_show_member, profile_order)
-					VALUES ('" . str_replace("\'", "''", $profile_name) . "', 'profile_" . str_replace("\'", "''", $profile_field) . "', '" . $profile_category . "', '" . $profile_type . "', '" . $profile_sguest . "', '" . $profile_smember . "', $next_order)";
+				$sql = 'INSERT INTO ' . PROFILE . " (profile_name, profile_field, profile_category, profile_type, profile_language, profile_show_guest, profile_show_member, profile_show_register, profile_order)
+					VALUES ('" . str_replace("\'", "''", $profile_name) . "', 'profile_" . str_replace("\'", "''", $profile_field) . "', '" . $profile_category . "', '" . $profile_type . "', '" . $profile_language . "', '" . $profile_sguest . "', '" . $profile_smember . "', '" . $profile_sregister . "', $next_order)";
 				if (!$result = $db->sql_query($sql))
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -294,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 				
 				if ( $profile_name == '' || $profile_field == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				$sql_order = '';
@@ -340,6 +325,7 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 							profile_type		= $profile_type,
 							profile_show_guest	= $profile_sguest,
 							profile_show_member	= $profile_smember
+							$sql_order
 						WHERE profile_id = " . $profile_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -370,22 +356,22 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $profile_id && !$confirm)
+				else if ( $profile_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $profile_id . '" />';
+					$hidden_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $profile_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_profile'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_profile.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -447,11 +433,11 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 				$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
 				$template->assign_block_vars('category_edit', array());
 				
-				$cat_id = intval($HTTP_GET_VARS[POST_CAT_URL]);
+				$cat_id = intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
 				$row = get_data('profile_category', $cat_id, 0);
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="update_cat" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $cat_id . '" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
 	
 				$template->assign_vars(array(
 					'L_PROFILE_HEAD'			=> $lang['profile_head'],
@@ -482,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 				$sql = "UPDATE " . PROFILE_CATEGORY . "
 							SET
 								category_name = '" . str_replace("\'", "''", $HTTP_POST_VARS['category_name']) . "'
-							WHERE profile_category_id = " . intval($HTTP_POST_VARS[POST_CAT_URL]);
+							WHERE profile_category_id = " . intval($HTTP_POST_VARS[POST_CATEGORY_URL]);
 				if ( !$result = $db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -494,11 +480,14 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 				break;
 				
 			default:
-				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
+			
+				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				
+				break;
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -587,11 +576,11 @@ CREATE TABLE IF NOT EXISTS `cms_profile` (
 				'L_MOVE_UP'				=> $icon_up,
 				'L_MOVE_DOWN'			=> $icon_down,
 				
-				'U_CAT_EDIT'			=> append_sid("admin_profile.php?mode=editcat&amp;" . POST_CAT_URL . "=$cat_id"),
-//				'U_CAT_DELETE'			=> append_sid("admin_profile.php?mode=deletecat&amp;" . POST_CAT_URL . "=$cat_id"),
-				'U_CAT_MOVE_UP'			=> append_sid("admin_profile.php?mode=cat_order&amp;move=-15&amp;" . POST_CAT_URL . "=$cat_id"),
-				'U_CAT_MOVE_DOWN'		=> append_sid("admin_profile.php?mode=cat_order&amp;move=15&amp;" . POST_CAT_URL . "=$cat_id"),
-				'U_VIEWCAT'				=> append_sid($root_path."profile.php?" . POST_CAT_URL . "=$cat_id"))
+				'U_CAT_EDIT'			=> append_sid("admin_profile.php?mode=editcat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+//				'U_CAT_DELETE'			=> append_sid("admin_profile.php?mode=deletecat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_CAT_MOVE_UP'			=> append_sid("admin_profile.php?mode=cat_order&amp;move=-15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_CAT_MOVE_DOWN'		=> append_sid("admin_profile.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_VIEWCAT'				=> append_sid($root_path."profile.php?" . POST_CATEGORY_URL . "=$cat_id"))
 			);
 	
 			for($j = 0; $j < $total_profile; $j++)

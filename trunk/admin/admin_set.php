@@ -25,10 +25,11 @@
 if( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userdata['user_level'] == ADMIN)
+	
+	if ( $userdata['user_level'] == ADMIN )
 	{
 		$module['main']['set']		= $filename;
-		$module['main']['set_ftp']	= $filename . "?mode=ftp";
+//		$module['main']['set_ftp']	= $filename . "?mode=ftp";
 	}
 	
 	return;
@@ -41,7 +42,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_selects.php');
 
-	if ($userdata['user_level'] != ADMIN)
+	if ( $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -105,19 +106,28 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
 			case 'ftp':
 				
-				$template->set_filenames(array('body' => './../admin/style/set_ftp_body.tpl'));
+				$template->set_filenames(array('body' => './../admin/style/acp_set.tpl'));
+				$template->assign_block_vars('ftp', array());
 				
 				$server = $_SERVER['HTTP_HOST'];
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="set_ftp" />';
 				
 				$template->assign_vars(array(
+											 
+					'L_SET_HEAD'		=> $lang['set_head'],
+					'L_SET_EXPLAIN'		=> $lang['set_explain'],
+					'L_SET_FTP'			=> $lang['set_ftp'],
+					'L_SET_FTP_EXPLAIN'	=> $lang['set_ftp_explain'],
+					
+					'L_SUBMIT'	=> $lang['common_submit'],
+					'L_RESET'	=> $lang['common_reset'],
 
 					
 					'SERVER'			=> $_SERVER['HTTP_HOST'],
@@ -127,6 +137,7 @@ else
 					'S_PATH_PERMS'		=> _select_perms(),
 					
 					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
+					'S_SET_ACTION'		=> append_sid("admin_set.php"),
 				));
 				
 				
@@ -156,7 +167,7 @@ else
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -252,10 +263,8 @@ else
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	
-	
-	
-	
-	$template->set_filenames(array('body' => './../admin/style/set_body.tpl'));
+	$template->set_filenames(array('body' => './../admin/style/acp_set.tpl'));
+	$template->assign_block_vars('display', array());
 	
 //	$style_select = style_select($new['default_style'], 'default_style', "../templates");
 //	$lang_select = language_select($new['default_lang'], 'default_lang', "language");
@@ -325,8 +334,9 @@ else
 	
 	$template->assign_vars(array(
 		
-		'L_SET_TITLE'				=> $lang['title_set'],
-		'L_SET_EXPLAIN'				=> $lang['explain_set'],
+		'L_SET_HEAD'				=> $lang['set_head'],
+		'L_SET_EXPLAIN'				=> $lang['set_explain'],
+		'L_SET_FTP'					=> $lang['set_ftp'],
 		
 		'L_GENERAL_SETTINGS'			=> $lang['settings_general'],
 		'L_GENERAL_SETTINGS_EXPLAIN'	=> $lang['settings_general_explain'],
@@ -625,7 +635,8 @@ else
 		"L_YES" => $lang['Yes'],
 		"L_NO" => $lang['No'],
 		
-		"S_CONFIG_ACTION" => append_sid("admin_set.php")
+		'S_SET_FTP'			=> append_sid("admin_set.php?mode=ftp"),
+		'S_SET_ACTION'	=> append_sid("admin_set.php"),
 	));
 
 	$template->pparse('body');

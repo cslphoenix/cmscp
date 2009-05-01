@@ -212,7 +212,7 @@
 </tr>
 <!-- BEGIN profilerow -->
 <tr> 
-	<td class="row1" >{user_fields.catrow.profilerow.NAME}</td>
+	<td class="row1" width="160">{user_fields.catrow.profilerow.NAME}</td>
 	<td class="row3">{user_fields.catrow.profilerow.FIELD}</td>
 </tr>
 <!-- END profilerow -->
@@ -225,7 +225,68 @@
 </form>
 <!-- END user_fields -->
 
+<!-- BEGIN user_settings -->
+<form action="{S_USER_ACTION}" method="post">
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li id="active"><a href="#" id="current">{L_USER_NEW_EDIT}</a></li>
+				<li><a href="{S_USER_GROUP}">{L_USER_GROUP}</a></li>
+				<li><a href="{S_USER_AUTHS}">{L_USER_AUTHS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+</tr>
+</table>
+
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				
+				<li><a href="{S_USER_EDIT}">{L_USER_REGISTER}</a></li>
+				<li><a href="{S_USER_FIELDS}">{L_USER_FIELDS}</a></li>
+				<li id="active"><a href="#" id="current">{L_USER_SETTINGS}</a></li>
+				<li><a href="{S_USER_IMAGES}">{L_USER_IMAGES}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+</tr>
+</table>
+
+<table class="edit" cellspacing="1">
+<tr>
+	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+</tr>
+</table>
+{S_HIDDEN_FIELDS}
+</form>
+<!-- END user_settings -->
+
 <!-- BEGIN user_groups -->
+<script>
+function disable_checkbox(name)
+{
+	checkbox_name = name;
+	document.getElementById(checkbox_name).disabled = 'disabled';
+}
+
+function activate_checkbox(name)
+{
+	checkbox_name = name;
+	document.getElementById(checkbox_name).disabled = '';
+}
+</script>
 <form action="{S_USER_ACTION}" method="post">
 <table class="head" cellspacing="0">
 <tr>
@@ -255,9 +316,9 @@
 <tr>
 	<td class="row1">{user_groups.groups_row.U_GROUP_NAME}</td>
 	<td class="row3">
-		<input type="radio" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_ASSIGNED_GROUP}  />&nbsp;{L_YES}&nbsp;&nbsp;
-		<input type="radio" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_NEG_MARK_ID}" {user_groups.groups_row.S_UNASSIGNED_GROUP}  />&nbsp;{L_NO}&nbsp;&nbsp;
-		<input type="checkbox" name="mod_{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_MOD_GROUP} />&nbsp;{L_MODERATOR}&nbsp;&nbsp;
+		<input type="radio" onClick="activate_checkbox('checkbox_{user_groups.groups_row.S_MARK_ID}');" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_ASSIGNED_GROUP}  />&nbsp;{L_YES}&nbsp;&nbsp;
+		<input type="radio" onClick="disable_checkbox('checkbox_{user_groups.groups_row.S_MARK_ID}');" name="{user_groups.groups_row.S_MARK_NAME}" value="{user_groups.groups_row.S_NEG_MARK_ID}" {user_groups.groups_row.S_UNASSIGNED_GROUP}  />&nbsp;{L_NO}&nbsp;&nbsp;
+		<input type="checkbox" id="checkbox_{user_groups.groups_row.S_MARK_ID}" name="mod_{user_groups.groups_row.S_MARK_ID}" {user_groups.groups_row.S_MOD_GROUP} />&nbsp;{L_MODERATOR}&nbsp;&nbsp;
 		{user_groups.groups_row.U_USER_PENDING}
 	</td>
 </tr>

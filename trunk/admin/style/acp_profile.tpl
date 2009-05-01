@@ -119,12 +119,20 @@
 	<td class="row3"><input type="radio" name="profile_type" value="1" {S_CHECKED_TYPE_AREA} />&nbsp;{L_TYPE_AREA}&nbsp;&nbsp;<input type="radio" name="profile_type" value="0" {S_CHECKED_TYPE_TEXT} /> {L_TYPE_TEXT} </td>
 </tr>
 <tr>
+	<td class="row1">{L_PROFILE_LANGUAGE}</td>
+	<td class="row3"><input type="radio" name="profile_language" value="1" {S_CHECKED_LANG_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_language" value="0" {S_CHECKED_LANG_NO} />&nbsp;{L_NO} </td>
+</tr>
+<tr>
 	<td class="row1">{L_PROFILE_SGUEST}</td>
 	<td class="row3"><input type="radio" name="profile_sguest" value="1" {S_CHECKED_SGUEST_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_sguest" value="0" {S_CHECKED_SGUEST_NO} />&nbsp;{L_NO} </td>
 </tr>
 <tr>
 	<td class="row1">{L_PROFILE_SMEMBER}</td>
 	<td class="row3"><input type="radio" name="profile_smember" value="1" {S_CHECKED_SMEMBER_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_smember" value="0" {S_CHECKED_SMEMBER_NO} />&nbsp;{L_NO} </td>
+</tr>
+<tr>
+	<td class="row1">{L_PROFILE_SREG}</td>
+	<td class="row3"><input type="radio" name="profile_sregister" value="1" {S_CHECKED_SREG_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="profile_sregister" value="0" {S_CHECKED_SREG_NO} />&nbsp;{L_NO} </td>
 </tr>
 
 <tr>

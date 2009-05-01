@@ -29,6 +29,7 @@ if ( !empty($setmodules) )
 	{
 		$module['main']['authlist'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -46,7 +47,7 @@ else
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_match.php", true));
 	}
@@ -61,7 +62,7 @@ else
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ($start < 0) ? 0 : $start;
+	$start = ( $start < 0 ) ? 0 : $start;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
@@ -75,59 +76,57 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
-			case 'add':
-			case 'edit':
-				
-				if ( $mode == 'edit' )
-				{
-					$authlist	= get_data('authlist', $auth_id, 0);
-					$new_mode	= 'editauth';
-				}
-				else if ( $mode == 'add' )
-				{
-					$authlist = array (
-						'auth_name'	=> trim($HTTP_POST_VARS['auth_name']),
-					);
-
-					$new_mode = 'addauth';
-				}
+			case 'authlist_add':
+			case 'authlist_edit':
 				
 				$template->set_filenames(array('body' => './../admin/style/acp_authlist.tpl'));
 				$template->assign_block_vars('authlist_edit', array());
+				
+				if ( $mode == 'authlist_edit' )
+				{
+					$authlist	= get_data('authlist', $auth_id, 0);
+					$new_mode	= 'authlist_update';
+				}
+				else
+				{
+					$authlist['auth_name'] = trim($HTTP_POST_VARS['auth_name']);
+					$new_mode = 'authlist_create';
+				}
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
 				$s_hidden_fields .= '<input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $auth_id . '" />';
 
 				$template->assign_vars(array(
 					'L_AUTHLIST_HEAD'		=> $lang['authlist_head'],
-					'L_AUTHLIST_NEW_EDIT'	=> ($mode == 'add') ? $lang['authlist_add'] : $lang['authlist_edit'],
+					'L_AUTHLIST_NEW_EDIT'	=> ($mode == 'authlist_add') ? $lang['authlist_add'] : $lang['authlist_edit'],
 					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_AUTHLIST_NAME'		=> $lang['authlist_name'],
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
+					
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
 					
 					'AUTH_NAME'				=> str_replace('auth_', '', $authlist['auth_name']),
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_AUTHLIST_ACTION'		=> append_sid("admin_authlist.php")
+					'S_AUTHLIST_ACTION'		=> append_sid("admin_authlist.php"),
 				));
 			
 				$template->pparse('body');
 				
 			break;
 			
-			case 'addauth':
+			case 'authlist_create':
 				
 				$auth_name = (isset($HTTP_POST_VARS['auth_name'])) ? trim($HTTP_POST_VARS['auth_name']) : '';
 				
 				if ( $auth_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				$sql = 'INSERT INTO ' . AUTHLIST . " (auth_name) VALUES ('auth_" . $auth_name . "')";
@@ -145,14 +144,14 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('authlist');
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_add');
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_add', $auth_name);
 	
 				$message = $lang['create_authlist'] . '<br><br>' . sprintf($lang['click_return_authlist'], '<a href="' . append_sid("admin_authlist.php") . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
 			
-			case 'editauth':
+			case 'authlist_update':
 			
 				$authlist = get_data('authlist', $auth_id, 0);
 				
@@ -160,7 +159,7 @@ else
 				
 				if ( $auth_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				$sql = 'UPDATE ' . AUTHLIST . '
@@ -187,7 +186,7 @@ else
 	
 				break;
 			
-			case 'delete':
+			case 'authlist_delete':
 			
 				$confirm = isset($HTTP_POST_VARS['confirm']);
 				
@@ -216,22 +215,22 @@ else
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $auth_id && !$confirm)
+				else if ( $auth_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
+					$hidden_fields = '<input type="hidden" name="mode" value="authlist_delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $auth_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_authlist'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_authlist.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -244,11 +243,14 @@ else
 				break;
 				
 			default:
-				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
+			
+				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				
+				break;
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -268,7 +270,7 @@ else
 		'L_DELETE'				=> $lang['delete'],
 		'L_SETTINGS'			=> $lang['settings'],
 		
-		'S_AUTHLIST_ACTION'		=> append_sid("admin_authlist.php")
+		'S_AUTHLIST_ACTION'		=> append_sid("admin_authlist.php"),
 	));
 	
 	$sql = 'SELECT * FROM ' . AUTHLIST . ' ORDER BY auth_id';

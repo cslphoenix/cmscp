@@ -62,8 +62,10 @@ function inarray($needle, $haystack)
 		'U_TEAM'			=> append_sid("admin_teams.php"),
 		'U_USER'			=> append_sid("admin_user.php"),
 		
-		"L_WELCOME" => $lang['Welcome_phpBB'],
-		"L_ADMIN_INTRO" => $lang['Admin_intro'],
+		'L_WELCOME'			=> $lang['welcome_cms'],
+		'L_ADMIN_INTRO'		=> $lang['welcome_cms_explain'],
+		
+		
 		"L_FORUM_STATS" => $lang['Forum_stats'],
 		"L_WHO_IS_ONLINE" => $lang['Who_is_Online'],
 		"L_USERNAME" => $lang['Username'],
