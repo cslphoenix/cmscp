@@ -3,13 +3,16 @@
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
 	
-<title>{SITENAME} :: {PAGE_TITLE}</title>
-<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
+	<title>{SITENAME} :: {PAGE_TITLE}</title>
+	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
+	
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php" />
 
 
 	
-<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>
-<!--<link rel="stylesheet" type="text/css" href="includes/teamspeak/stylesheet.css">-->
+	<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>
+	<!--<link rel="stylesheet" type="text/css" href="includes/teamspeak/stylesheet.css">-->
 
 	<!--[if lte IE 6]>
 	<link rel="stylesheet" media="all" type="text/css" href="templates/subSilver/theme/dropdown_ie.css" />
@@ -142,41 +145,42 @@
 	<td>
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}</td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}<br>CMS Version: {CMS_VERSION}</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
-				<table width="90%" border="0" cellspacing="0" cellpadding="0">
+				<!-- BEGIN switch_user_logged_out -->
+				<form method="post" action="{S_LOGIN_ACTION}">
+				<table width="90%" border="0" cellspacing="2" cellpadding="0">
 				<tr>
-					<td align="right">
-						<!-- BEGIN switch_user_logged_out -->
-						<form method="post" action="{S_LOGIN_ACTION}">
-							<input class="post" type="text" name="username" size="10" />
-							<input class="post" type="password" name="password" size="10" maxlength="32" />
-							<!--<input class="post" type="hidden" name="redirect" size="10" maxlength="32" value="{redirect}"/>-->
-							
-							<!--
-							<- BEGIN switch_allow_autologin ->
-							<input class="text" type="checkbox" name="autologin" />
-							<- END switch_allow_autologin ->
-							-->
-							<input type="submit" class="button2" name="login" value="{L_LOGIN}" />
-						</form>
-						<!-- END switch_user_logged_out -->
-						&nbsp;
+					<td width="100%">&nbsp;
+						<!--<input class="post" type="hidden" name="redirect" size="10" maxlength="32" value="{redirect}"/>-->
+						<!--
+						<- BEGIN switch_allow_autologin ->
+						<input class="text" type="checkbox" name="autologin" />
+						<- END switch_allow_autologin ->
+						-->
 					</td>
+					<td align="left"><input class="post" type="text" name="username" size="10" /></td>
+					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32" /></td>
+					<td align="left"><input type="submit" class="button3" name="login" value="" /></td>
 				</tr>
 				<tr>
+					<td>&nbsp;</td>
+					<td align="left"><img src="templates/subSilver/images/design/arrow_right.png"> <a href="#">register</a></td>
+					<td align="left"><img src="templates/subSilver/images/design/arrow_right.png"> <a href="#">password</a></td>
+					<td>&nbsp;</td>
+				</tr>
+				</table>
+				</form>
+				<!-- END switch_user_logged_out -->
+				<!-- BEGIN switch_user_logged_in -->
+				<table width="90%" border="0" cellspacing="2" cellpadding="0">
+				<tr>
 					<td align="right">
-						CMS Version: {CMS_VERSION}
-						<br>
-						<!-- BEGIN switch_user_logged_in -->
 						<a href="index.php?mode=cache">Cache Leeren</a>
-						<!-- END switch_user_logged_in -->
 					</td>
 				</tr>
 				</table>
-
-				
-			
+				<!-- END switch_user_logged_in -->
 			</td>
 		</tr>
 		</table>
