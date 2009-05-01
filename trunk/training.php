@@ -1,5 +1,27 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -9,7 +31,7 @@ $userdata = session_pagestart($user_ip, PAGE_TRAINING);
 init_userprefs($userdata);
 
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start = ($start < 0) ? 0 : $start;
+$start = ( $start < 0 ) ? 0 : $start;
 
 if ( isset($HTTP_POST_VARS[POST_TRAINING_URL]) || isset($HTTP_GET_VARS[POST_TRAINING_URL]) )
 {
@@ -173,76 +195,6 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			'EDIT_TRAINING' => '<a href="' . append_sid("admin/admin_training.php?mode=edit&" . POST_TRAINING_URL . "=" . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',
 		));
 	}
-
-	
-	/*switch ($row_details['training_categorie'])
-	{
-		case '1':
-			$match_categorie = $lang['select_categorie1'];
-		break;
-		case '2':
-			$match_categorie = $lang['select_categorie2'];
-		break;
-		case '3':
-			$match_categorie = $lang['select_categorie3'];
-		break;
-		case '4':
-			$match_categorie = $lang['select_categorie4'];
-		break;
-		case '5':
-			$match_categorie = $lang['select_categorie5'];
-		break;
-	}
-	
-	switch ($row_details['training_type'])
-	{
-		case '1':
-			$match_type = $lang['select_type1'];
-		break;
-		case '2':
-			$match_type = $lang['select_type2'];
-		break;
-		case '3':
-			$match_type = $lang['select_type3'];
-		break;
-		case '4':
-			$match_type = $lang['select_type4'];
-		break;
-		case '5':
-			$match_type = $lang['select_type5'];
-		break;
-		case '6':
-			$match_type = $lang['select_type6'];
-		break;
-	}
-	
-	switch ($row_details['training_league'])
-	{
-		case '1':
-			$match_league = '<a href="' . $lang['select_league1i'] . '">' . $lang['select_league1'] . '</a>';
-		break;
-		case '2':
-			$match_league = '<a href="' . $lang['select_league2i'] . '">' . $lang['select_league2'] . '</a>';
-		break;
-		case '3':
-			$match_league = '<a href="' . $lang['select_league3i'] . '">' . $lang['select_league3'] . '</a>';
-		break;
-		case '4':
-			$match_league = '<a href="' . $lang['select_league4i'] . '">' . $lang['select_league4'] . '</a>';
-		break;
-		case '5':
-			$match_league = '<a href="' . $lang['select_league5i'] . '">' . $lang['select_league5'] . '</a>';
-		break;
-		case '6':
-			$match_league = '<a href="' . $lang['select_league6i'] . '">' . $lang['select_league6'] . '</a>';
-		break;
-		case '7':
-			$match_league = '<a href="' . $lang['select_league7i'] . '">' . $lang['select_league7'] . '</a>';
-		break;
-		case '8':
-			$match_league = $lang['select_league8'];
-		break;
-	}*/
 	
 	$sql = 'SELECT tru.*, u.username
 				FROM ' . TRAINING_USERS . ' tru, ' . USERS . ' u

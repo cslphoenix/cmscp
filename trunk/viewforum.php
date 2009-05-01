@@ -18,7 +18,7 @@ else
 }
 
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start = ($start < 0) ? 0 : $start;
+$start = ( $start < 0 ) ? 0 : $start;
 
 if ( !empty($forum_id) )
 {

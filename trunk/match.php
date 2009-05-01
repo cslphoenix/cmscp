@@ -1,17 +1,26 @@
 <?php
 
-/*
- *
- *	match.php
- *
- *	bis auf die Überprüfung der Mailadresse
- *	und Validierung der Homepage alles fertig
- *
- *	Logfunktion bis auf Dateninhalt was geändert wurde
- *
- *	17.03.2009 kommentiert
- *
-*/
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
 
 define('IN_CMS', true);
 $root_path = './';
@@ -22,7 +31,7 @@ $userdata = session_pagestart($user_ip, PAGE_MATCH);
 init_userprefs($userdata);
 
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start = ($start < 0) ? 0 : $start;
+$start = ( $start < 0 ) ? 0 : $start;
 
 if ( isset($HTTP_POST_VARS[POST_MATCH_URL]) || isset($HTTP_GET_VARS[POST_MATCH_URL]) )
 {
