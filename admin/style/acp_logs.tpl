@@ -20,13 +20,13 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_LOG_USERNAME}</td>
-	<td class="rowHead">{L_LOG_IP}</td>
-	<td class="rowHead">{L_LOG_TIME}</td>
-	<td class="rowHead">{L_LOG_SEKTION}</td>
-	<td class="rowHead">{L_LOG_MESSAGE}</td>
-	<td class="rowHead">{L_LOG_CHANGE}</td>
-	<td class="rowHead">{L_DELETE}</td>
+	<td class="rowHead" align="center">{L_LOG_USERNAME}</td>
+	<td class="rowHead" align="center">{L_LOG_IP}</td>
+	<td class="rowHead" align="center">{L_LOG_TIME}</td>
+	<td class="rowHead" align="center">{L_LOG_SEKTION}</td>
+	<td class="rowHead" align="center">{L_LOG_MESSAGE}</td>
+	<td class="rowHead" align="center">{L_LOG_CHANGE}</td>
+	<td class="rowHead" align="center">{L_DELETE}</td>
 </tr>
 <!-- BEGIN logs_row -->
 <tr>

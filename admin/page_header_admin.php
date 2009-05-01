@@ -75,7 +75,7 @@ $template->assign_vars(array(
 	
 	'L_USER'		=> ' [ ' . $userdata['username'] . ' ] ',
 	
-	'L_WELCOME'		=> $lang['welcome'],
+	'L_INDEX_HEAD'	=> sprintf($lang['index_head'], $config['sitename']),
 
 	'U_INDEX' => append_sid('../index.php'),
 	"U_LOGOUT" => append_sid("./../login.php?logout=true"),

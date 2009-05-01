@@ -7,6 +7,8 @@
 	<title>CMS CP :: {PAGE_TITLE}</title>
 	<link rel="stylesheet" href="style/style.css" type="text/css">
 	<link rel="stylesheet" href="style/lightbox.css" type="text/css" media="screen" />
+	
+	<link rel="icon" href="./../favicon.ico" type="image/x-icon">
 
 	<!--	
 	/***
@@ -127,7 +129,7 @@
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td width="35%" align="left" style="font-size:medium;">{L_WELCOME}</td>
+				<th width="35%" align="left">{L_INDEX_HEAD}</th>
 				<td width="30%" align="center"><a href="{U_ADMIN_INDEX}">&raquo; {L_ADMIN_INDEX}</a><span class="small"> :: </span><a href="{U_PAGE_INDEX}">&raquo; {L_PAGE_INDEX}</a></td>
 				<td width="35%" align="right"><a href="{U_ADMIN_LOGOUT}" target="_parent">&raquo; {L_SESSION}</a><span class="small"> :: </span><a href="{U_LOGOUT}" target="_parent">&raquo; {L_LOGOUT}</a>{L_USER}</td>
 			</tr>

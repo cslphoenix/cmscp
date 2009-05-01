@@ -29,6 +29,7 @@ if ( !empty($setmodules) )
 	{
 		$module['bugtracker']['bugtracker'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -46,7 +47,7 @@ else
 		message_die(GENERAL_ERROR, $lang['bugtracker_fail']);
 	}
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_match.php", true));
 	}
@@ -61,7 +62,7 @@ else
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ($start < 0) ? 0 : $start;
+	$start = ( $start < 0 ) ? 0 : $start;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
@@ -97,7 +98,7 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -120,8 +121,8 @@ else
 					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_bugtracker_NAME'		=> $lang['bugtracker_name'],
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
 					
 					'bugtracker_NAME'				=> str_replace('bugtracker_', '', $bugtracker['bugtracker_name']),
 					
@@ -139,7 +140,7 @@ else
 				
 				if ( $bugtracker_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				$sql = 'INSERT INTO ' . bugtracker . " (bugtracker_name) VALUES ('bugtracker_" . $bugtracker_name . "')";
@@ -169,7 +170,7 @@ else
 				
 				if ( $bugtracker_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				$sql = 'UPDATE ' . bugtracker . '
@@ -219,22 +220,22 @@ else
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $bugtracker_id && !$confirm)
+				else if ( $bugtracker_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_BUGTRACKER_URL . '" value="' . $bugtracker_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_bugtracker'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_bugtracker.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -247,11 +248,14 @@ else
 				break;
 				
 			default:
-				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
+			
+				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				
+				break;
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

@@ -139,6 +139,7 @@ td.row3:hover {
 	background:	#F0EFEF;
 	border:	#000 1px solid;
 	font-size:10px;
+	vertical-align:top;
 }
 
 .button:hover,

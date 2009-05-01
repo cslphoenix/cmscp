@@ -25,10 +25,12 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userauth['auth_teams'] || $userdata['user_level'] == ADMIN)
+	
+	if ( $userauth['auth_teams'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['teams']['teams_over'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -47,7 +49,7 @@ else
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_teams.php", true));
 	}
@@ -80,7 +82,7 @@ else
 	
 	$show_index = '';
 		
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -192,10 +194,10 @@ else
 					'L_LOGO_SETTINGS'		=> $lang['team_logo_setting'],
 					'L_MENU_SETTINGS'		=> $lang['team_menu_setting'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'TEAM_NAME'				=> $team['team_name'],
 					'TEAM_DESCRIPTION'		=> $team['team_description'],
@@ -483,21 +485,21 @@ else
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
-				else if ( $team_id && !$confirm)
+				else if ( $team_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_team'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_teams.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -958,7 +960,7 @@ else
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

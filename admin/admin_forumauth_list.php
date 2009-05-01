@@ -98,9 +98,9 @@ else
 		$forum_sql = '';
 	}
 
-	if(isset($HTTP_GET_VARS[POST_CAT_URL]) || isset($HTTP_POST_VARS[POST_CAT_URL]))
+	if(isset($HTTP_GET_VARS[POST_CATEGORY_URL]) || isset($HTTP_POST_VARS[POST_CATEGORY_URL]))
 	{
-		$cat_id = (isset($HTTP_POST_VARS[POST_CAT_URL])) ? intval($HTTP_POST_VARS[POST_CAT_URL]) : intval($HTTP_GET_VARS[POST_CAT_URL]);
+		$cat_id = (isset($HTTP_POST_VARS[POST_CATEGORY_URL])) ? intval($HTTP_POST_VARS[POST_CATEGORY_URL]) : intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
 		$cat_sql = "AND c.cat_id = $cat_id";
 	}
 	else
@@ -266,7 +266,7 @@ else
 	
 			$template->assign_block_vars('cat_row', array(
 				'CAT_NAME' => $category_rows[$i]['cat_title'],
-				'CAT_URL' => append_sid('admin_forumauth_list.php?'.POST_CAT_URL.'='.$category_rows[$i]['cat_id']))
+				'CAT_URL' => append_sid('admin_forumauth_list.php?'.POST_CATEGORY_URL.'='.$category_rows[$i]['cat_id']))
 			);
 	
 			for ($j=0; $j<count($forum_rows); $j++)
@@ -442,7 +442,7 @@ else
 		
 		$template->assign_block_vars('cat_row', array(
 			'CAT_NAME'	=> $cat_name,
-			'CAT_URL'	=> append_sid("admin_forumauth_list.php?" . POST_CAT_URL . "=$cat_id")
+			'CAT_URL'	=> append_sid("admin_forumauth_list.php?" . POST_CATEGORY_URL . "=$cat_id")
 		));
 	
 		for ( $j=0; $j < count($forum_rows); $j++ )
@@ -499,7 +499,7 @@ else
 		//
 		// Finally pass any remaining items to the template
 		//
-		$s_hidden_fields = '<input type="hidden" name="' . POST_CAT_URL . '" value="' . $cat_id . '">';
+		$s_hidden_fields = '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '">';
 	
 		$template->assign_vars(array(
 			'CAT_NAME' => $cat_name,

@@ -59,13 +59,13 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_contact.php", true));
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ($start < 0) ? 0 : $start;
+	$start = ( $start < 0 ) ? 0 : $start;
 	
 	if ( isset($HTTP_POST_VARS[POST_CONTACT_URL]) || isset($HTTP_GET_VARS[POST_CONTACT_URL]) )
 	{
@@ -103,7 +103,7 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -242,7 +242,7 @@ else
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

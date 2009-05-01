@@ -10,14 +10,11 @@ global $do_gzip_compress;
 //
 // Show the overall footer.
 //
-$template->set_filenames(array(
-	'page_footer' => './../admin/style/page_footer.tpl')
-);
+$template->set_filenames(array('page_footer' => './../admin/style/page_footer.tpl'));
 
 $template->assign_vars(array(
-	'PHPBB_VERSION' => ($userdata['user_level'] == ADMIN && $userdata['user_id'] != ANONYMOUS) ? '2' . $config['version'] : '', 
-	'TRANSLATION_INFO' => (isset($lang['TRANSLATION_INFO'])) ? $lang['TRANSLATION_INFO'] : ((isset($lang['TRANSLATION'])) ? $lang['TRANSLATION'] : ''))
-);
+	'CMS_VERSION' => $config['version'], 
+));
 
 if ( defined('DEBUG_SQL_ADMIN') )
 {

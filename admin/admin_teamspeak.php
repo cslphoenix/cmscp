@@ -25,10 +25,12 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userauth['auth_teamspeak'] || $userdata['user_level'] == ADMIN)
+	
+	if ( $userauth['auth_teamspeak'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['server']['teamspeak'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -47,13 +49,13 @@ else
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_teamspeak.php", true));
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ($start < 0) ? 0 : $start;
+	$start = ( $start < 0 ) ? 0 : $start;
 	
 	if ( isset($HTTP_POST_VARS[POST_TEAMSPEAK_URL]) || isset($HTTP_GET_VARS[POST_TEAMSPEAK_URL]) )
 	{
@@ -90,7 +92,7 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -157,10 +159,10 @@ else
 					'L_TEAMSPEAK_SHOW'		=> $lang['teamspeak_show'],
 					'L_TEAMSPEAK_NOSHOW'	=> $lang['teamspeak_noshow'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'TEAMSPEAK_NAME'		=> $teamspeak['teamspeak_name'],
 					'TEAMSPEAK_IP'			=> $teamspeak['teamspeak_ip'],
@@ -206,7 +208,7 @@ else
 				
 				if ( $teamspeak_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				if ( $teamspeak_show )
@@ -275,7 +277,7 @@ else
 				
 				if ( $teamspeak_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back'], '');
+					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				if ( $teamspeak_show )
@@ -419,21 +421,21 @@ else
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $teamspeak_id && !$confirm)
+				else if ( $teamspeak_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_teamspeak'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_teamspeak.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -446,11 +448,14 @@ else
 				break;
 			
 			default:
-				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
+			
+				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				
+				break;
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

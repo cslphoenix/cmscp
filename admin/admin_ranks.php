@@ -25,10 +25,12 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	if ($userauth['auth_ranks'] || $userdata['user_level'] == ADMIN)
+	
+	if ( $userauth['auth_ranks'] || $userdata['user_level'] == ADMIN)
 	{
 		$module['main']['ranks_over'] = $filename;
 	}
+	
 	return;
 }
 else
@@ -46,7 +48,7 @@ else
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ($cancel)
+	if ( $cancel )
 	{
 		redirect('admin/' . append_sid("admin_match.php", true));
 	}
@@ -79,7 +81,7 @@ else
 	
 	$show_index = '';
 	
-	if( !empty($mode) ) 
+	if ( !empty($mode) )
 	{
 		switch($mode)
 		{
@@ -143,10 +145,10 @@ else
 					'L_TYPE_FORUM'			=> $lang['rank_forum'],
 					'L_TYPE_TEAM'			=> $lang['rank_team'],
 					
-					'L_SUBMIT'				=> $lang['Submit'],
-					'L_RESET'				=> $lang['Reset'],
-					'L_YES'					=> $lang['Yes'],
-					'L_NO'					=> $lang['No'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
 					
 					'RANK_TITLE'			=> $rank['rank_title'],
 					'RANK_IMAGE'			=> ( $mode != 'add' ) ? ( $rank['rank_image'] ) ? $root_path . $settings['path_ranks'] . '/' . $rank['rank_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
@@ -244,22 +246,22 @@ else
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $rank_id && !$confirm)
+				else if ( $rank_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/confirm_body.tpl'));
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
 		
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['confirm'],
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_rank'],
 		
-						'L_YES'				=> $lang['Yes'],
-						'L_NO'				=> $lang['No'],
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
 		
 						'S_CONFIRM_ACTION'	=> append_sid("admin_ranks.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
 				else
@@ -317,11 +319,14 @@ else
 				break;
 	
 			default:
-				message_die(GENERAL_ERROR, $lang['no_select_module'], '');
+			
+				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				
+				break;
 				break;
 		}
 	
-		if ($show_index != TRUE)
+		if ( $show_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;
