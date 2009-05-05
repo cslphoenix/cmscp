@@ -136,7 +136,7 @@
 									<br>
 									{ADMIN_LINK}
 									<br>
-									powered by<a class="copyright" href="http://www.coding.phoenix-area51.de/" target="_blank">CMSCP</a>&copy; 2009 CMSCP Team
+									powered by<a class="copyright" href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a>&copy; 2009 Phoenix - Version: {VERSION}
 									<br>
 									{DEBUG} {CACHE}
 								</div>
