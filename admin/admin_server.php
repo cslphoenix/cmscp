@@ -26,7 +26,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_server'] || $userdata['user_level'] == ADMIN)
+	if ( $userauth['auth_server'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['server']['gameserver'] = $filename;
 	}
@@ -45,14 +45,14 @@ else
 	include($root_path . 'includes/teamspeak_query.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_match.php", true));
+		redirect('admin/' . append_sid('admin_match.php', true));
 	}
 	
 	if ( isset($HTTP_POST_VARS[POST_GAMESERVER_URL]) || isset($HTTP_GET_VARS[POST_GAMESERVER_URL]) )
@@ -137,28 +137,9 @@ else
 	
 	$show_index = '';
 	
-	/*
-	CREATE TABLE IF NOT EXISTS `cms_server` (
-	  `server_id` mediumint(8) unsigned NOT NULL,
-	  `server_type` tinyint(1) unsigned NOT NULL,
-	  `server_name` varchar(50) NOT NULL,
-	  `server_ip` varchar(50) NOT NULL,
-	  `server_port` mediumint(5) unsigned NOT NULL,
-	  `server_qport` mediumint(5) unsigned NOT NULL DEFAULT '0',
-	  `server_live` tinyint(1) unsigned NOT NULL,
-	  `server_pw` varchar(25) NOT NULL,
-	  `server_list` tinyint(1) unsigned NOT NULL,
-	  `server_show` tinyint(1) unsigned NOT NULL,
-	  `server_own` tinyint(1) unsigned NOT NULL,
-	  `time_create` int(11) unsigned NOT NULL DEFAULT '0',
-	  `time_update` int(11) unsigned NOT NULL DEFAULT '0',
-	  PRIMARY KEY (`server_id`)
-	)
-	*/
-	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'add':
 			case 'edit':
@@ -241,7 +222,7 @@ else
 					'S_LIVE'				=> _select_game($server['server_game']),
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_TEAM_ACTION'			=> append_sid("admin_server.php")
+					'S_TEAM_ACTION'			=> append_sid('admin_server.php'),
 				));
 			
 				// Template ausgabe
@@ -273,7 +254,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
 	
-				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_server.php") . '">', '</a>') . '<br><br>' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
+				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -304,8 +285,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
 				
-				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_server'], '<a href="' . append_sid("admin_server.php") . '">', '</a>');
+				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -335,8 +315,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
 					
-					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_server'], '<a href="' . append_sid("admin_server.php") . '">', '</a>');
+					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -353,7 +332,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_server.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_server.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -412,7 +391,7 @@ else
 		'L_MOVE_UP'			=> $lang['Move_up'], 
 		'L_MOVE_DOWN'		=> $lang['Move_down'], 
 		
-		'S_SERVER_ACTION'		=> append_sid("admin_server.php")
+		'S_SERVER_ACTION'		=> append_sid('admin_server.php'),
 	));
 	
 	
@@ -437,10 +416,10 @@ else
 			'CLASS' 		=> $class,
 			'SERVER_NAME'	=> $row['server_name'],
 
-			'U_DELETE'		=> append_sid("admin_server.php?mode=delete&amp;" . POST_GAMESERVER_URL . "=" . $row['server_id']),
-			'U_EDIT'		=> append_sid("admin_server.php?mode=edit&amp;" . POST_GAMESERVER_URL . "=" . $row['server_id']),
-			'U_MOVE_UP'		=> append_sid("admin_server.php?mode=order_page&amp;move=-15&amp;" . POST_GAMESERVER_URL . "=" . $row['server_id']),
-			'U_MOVE_DOWN'	=> append_sid("admin_server.php?mode=order_page&amp;move=15&amp;" . POST_GAMESERVER_URL . "=" . $row['server_id']),
+			'U_DELETE'		=> append_sid('admin_server.php?mode=delete&amp;' . POST_GAMESERVER_URL . '=' . $row['server_id']),
+			'U_EDIT'		=> append_sid('admin_server.php?mode=edit&amp;' . POST_GAMESERVER_URL . '=' . $row['server_id']),
+			'U_MOVE_UP'		=> append_sid('admin_server.php?mode=order_page&amp;move=-15&amp;' . POST_GAMESERVER_URL . '=' . $row['server_id']),
+			'U_MOVE_DOWN'	=> append_sid('admin_server.php?mode=order_page&amp;move=15&amp;' . POST_GAMESERVER_URL . '=' . $row['server_id']),
 		));
 	}
 	

@@ -26,7 +26,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_groups'] || $userdata['user_level'] == ADMIN)
+	if ( $userauth['auth_groups'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['groups']['set'] = $filename;
 	}
@@ -44,14 +44,14 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userauth['auth_groups'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_groups'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_groups.php", true));
+		redirect('admin/' . append_sid('admin_groups.php', true));
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -84,7 +84,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'group_add':
 			case 'group_edit':
@@ -246,9 +246,9 @@ else
 					'S_GROUP_RANK'			=> _select_rank($group['group_rank'], 2),
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_OVERVIEW'			=> append_sid("admin_groups.php?mode=list"),
-					'S_MEMBER_ACTION'		=> append_sid("admin_groups.php?mode=member&amp;" . POST_GROUPS_URL . "=" . $group_id),
-					'S_GROUP_ACTION'		=> append_sid("admin_groups.php"),
+					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
+					'S_MEMBER_ACTION'		=> append_sid('admin_groups.php?mode=member&amp;' . POST_GROUPS_URL . '=' . $group_id),
+					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 				));
 			
 				$template->pparse('body');
@@ -318,7 +318,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add', $group_name);
 	
-				$message = $lang['create_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
+				$message = $lang['create_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -408,7 +408,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_edit');
 				
-				$message = $lang['update_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
+				$message = $lang['update_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -584,9 +584,9 @@ else
 					'S_ACTION_ADDUSERS'		=> $s_addusers_select,
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
-					'S_OVERVIEW'			=> append_sid("admin_groups.php?mode=list"),
-					'S_GROUP_EDIT'			=> append_sid("admin_groups.php?mode=edit&amp;" . POST_GROUPS_URL . "=" . $group_id),
-					'S_GROUP_ACTION'		=> append_sid("admin_groups.php"),
+					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
+					'S_GROUP_EDIT'			=> append_sid('admin_groups.php?mode=edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
+					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2
 				));
@@ -749,8 +749,8 @@ else
 					}
 
 					$message = $lang['group_set_mod']
-						. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 
 				}
@@ -807,12 +807,12 @@ else
 					'L_OVERVIEW_EXPLAIN'	=> $lang['group_overview_explain'],
 					'L_GOTO_PAGE'			=> $lang['Goto_page'],
 					
-					'PAGINATION'			=> generate_pagination("admin_groups.php?mode=list", count($groups_data), 5, $start),
+					'PAGINATION'			=> generate_pagination('admin_groups.php?mode=list', count($groups_data), 5, $start),
 					'PAGE_NUMBER'			=> sprintf($lang['Page_of'], ( floor( $start / 5 ) + 1 ), $current_page ), 
 		
 
-					'S_OVERVIEW'			=> append_sid("admin_groups.php?mode=list"),
-					'S_GROUP_ACTION'		=> append_sid("admin_groups.php"),
+					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
+					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 				));
 				
 				$template->pparse('body');
@@ -943,8 +943,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add_member');
 			
 					$message = $lang['msg_group_add_member']
-						. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				
@@ -967,8 +967,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_delete_member');
 			
 				$message = $lang['msg_group_del_member']
-					. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid("admin_groups.php?mode=member&" . POST_GROUPS_URL . "=$group_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -1007,7 +1007,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_delete', $group['group_name']);
 					
-					$message = $lang['delete_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid("admin_groups.php") . '">', '</a>');
+					$message = $lang['delete_group'] . '<br><br>' . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -1025,7 +1025,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_groups.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_groups.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -1069,8 +1069,8 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_MEMBER'				=> $lang['member'],
 		
-		'S_OVERVIEW'			=> append_sid("admin_groups.php?mode=list"),
-		'S_GROUP_ACTION'		=> append_sid("admin_groups.php"),
+		'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
+		'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 	));
 	
 	$sql = 'SELECT MAX(group_order) AS max FROM ' . GROUPS . ' WHERE group_single_user = 0';
@@ -1121,14 +1121,14 @@ else
 				'NAME'			=> $row['group_name'],
 				'MEMBER_COUNT'	=> $row['total_members'],
 			
-				'MOVE_UP'			=> ( $row['group_order'] != '10' )				? '<a href="' . append_sid("admin_groups.php?mode=order&amp;move=-15&amp;" . POST_GROUPS_URL . "=" . $group_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'			=> ( $row['group_order'] != $max_order['max'] )	? '<a href="' . append_sid("admin_groups.php?mode=order&amp;move=15&amp;" . POST_GROUPS_URL . "=" . $group_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'			=> ( $row['group_order'] != '10' )				? '<a href="' . append_sid('admin_groups.php?mode=order&amp;move=-15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $row['group_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_groups.php?mode=order&amp;move=15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
 				'L_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? $lang['delete'] : '',
 				
-				'U_MEMBER'		=> append_sid("admin_groups.php?mode=member&amp;" . POST_GROUPS_URL . "=" . $group_id),
-				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid("admin_groups.php?mode=delete&amp;" . POST_GROUPS_URL . "=" . $group_id) : '',
-				'U_EDIT'		=> append_sid("admin_groups.php?mode=edit&amp;" . POST_GROUPS_URL . "=" . $group_id),
+				'U_MEMBER'		=> append_sid('admin_groups.php?mode=member&amp;' . POST_GROUPS_URL . '=' . $group_id),
+				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid('admin_groups.php?mode=delete&amp;' . POST_GROUPS_URL . '=' . $group_id) : '',
+				'U_EDIT'		=> append_sid('admin_groups.php?mode=edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
 			));
 		}
 	}

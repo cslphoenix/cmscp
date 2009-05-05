@@ -2,7 +2,7 @@
 
 if ( !defined('IN_CMS') )
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 define('HEADER_INC', true);
@@ -67,7 +67,8 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 //
 $template->assign_vars(array(
 	'SITENAME' => $config['sitename'],
-	'PAGE_TITLE' => 'Pagetitel',
+	
+	'L_HEAD'	=> sprintf($lang['index_head'], $config['sitename']),
 
 	
 	'L_SESSION'		=> $lang['session'],
@@ -75,14 +76,14 @@ $template->assign_vars(array(
 	
 	'L_USER'		=> ' [ ' . $userdata['username'] . ' ] ',
 	
-	'L_INDEX_HEAD'	=> sprintf($lang['index_head'], $config['sitename']),
+	
 
 	'U_INDEX' => append_sid('../index.php'),
-	"U_LOGOUT" => append_sid("./../login.php?logout=true"),
-	"U_ADMIN_LOGOUT" => append_sid("./../login.php?logout=true&admin_session_logout=true"),
+	"U_LOGOUT" => append_sid('./../login.php?logout=true'),
+	"U_ADMIN_LOGOUT" => append_sid('./../login.php?logout=true&admin_session_logout=true'),
 	
-	"U_PAGE_INDEX" => append_sid("../index.php"),
-		"U_ADMIN_INDEX" => append_sid("index.php?pane=right"),
+	"U_PAGE_INDEX" => append_sid('../index.php'),
+		"U_ADMIN_INDEX" => append_sid('index.php?pane=right'),
 
 		"L_ADMIN_INDEX" => $lang['index'], 
 		"L_PAGE_INDEX" => $lang['page'],
@@ -140,8 +141,8 @@ $template->set_filenames(array(
 );
 
 $template->assign_vars(array(
-	"U_FORUM_INDEX" => append_sid("../index.php"),
-	"U_ADMIN_INDEX" => append_sid("index.php"),
+	"U_FORUM_INDEX" => append_sid('../index.php'),
+	"U_ADMIN_INDEX" => append_sid('index.php'),
 
 	"L_FORUM_INDEX" => $lang['Main_index'],
 	"L_ADMIN_INDEX" => $lang['Admin_Index'], 

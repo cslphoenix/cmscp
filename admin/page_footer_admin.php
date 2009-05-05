@@ -2,7 +2,7 @@
 
 if ( !defined('IN_CMS') )
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 global $do_gzip_compress;

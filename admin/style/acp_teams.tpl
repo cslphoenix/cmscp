@@ -44,7 +44,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="team_name" type="text" value=""></td>
-	<td><input class="button" type="submit" name="add" value="{L_TEAM_CREATE}" /></td>
+	<td><input class="button" type="submit" name="team_add" value="{L_TEAM_CREATE}" /></td>
 </tr>
 </table>
 </form>

@@ -73,7 +73,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right">{S_TEAMS}</td>
-	<td><input class="button" type="submit" name="add" value="{L_MATCH_CREATE}" /></td>
+	<td><input class="button" type="submit" name="match_add" value="{L_MATCH_CREATE}" /></td>
 </tr>
 </table>
 </form>

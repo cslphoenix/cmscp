@@ -1,7 +1,16 @@
-	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">Navigation</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
 	<!-- BEGIN catrownav -->
 	<tr>
-		<th>{catrownav.ADMIN_CATEGORY}</th>
+		<td class="navi">{catrownav.ADMIN_CATEGORY}</td>
 	</tr>
 	<!-- BEGIN modulerow -->
 	<tr>

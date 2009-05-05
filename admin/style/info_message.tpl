@@ -1,18 +1,16 @@
 <table class="head" cellspacing="0">
 <tr>
 	<th>
-	<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
-		</ul>
-	</div>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
+			</ul>
+		</div>
 	</th>
 </tr>
 </table>
 
-<br>
-
-<table class="edit" cellspacing="1">
+<table class="edit" cellspacing="5">
 <tr>
 	<td align="center" class="{CLASS}">
 		<table class="{CLASS}" cellspacing="1">

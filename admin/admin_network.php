@@ -50,7 +50,7 @@ else
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_network.php", true));
+		redirect('admin/' . append_sid('admin_network.php', true));
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -91,7 +91,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'network_add':
 			case 'network_edit':
@@ -154,7 +154,7 @@ else
 					'S_CHECKED_VIEW_NO'			=> ( !$network['network_view'] ) ? ' checked="checked"' : '',
 					
 					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
-					'S_NETWORK_ACTION'	=> append_sid("admin_network.php"),
+					'S_NETWORK_ACTION'	=> append_sid('admin_network.php'),
 				));
 			
 				$template->pparse('body');
@@ -183,7 +183,7 @@ else
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_url'];
 				}
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 				}
@@ -211,7 +211,7 @@ else
 				
 				$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
 	
-				$message = sprintf($lang['create_network'], $info) . '<br><br>' . sprintf($lang['click_return_network'], '<a href="' . append_sid("admin_network.php") . '">', '</a>');
+				$message = sprintf($lang['create_network'], $info) . '<br><br>' . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -241,7 +241,7 @@ else
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_url'];
 				}
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 				}
@@ -280,62 +280,11 @@ else
 				
 				$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
 				
-				$message = sprintf($lang['update_network'], $info) . '<br><br>' . sprintf($lang['click_return_network'], '<a href="' . append_sid("admin_network.php") . '">', '</a>');
+				$message = sprintf($lang['update_network'], $info) . '<br><br>' . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
-			
-			case 'network_delete':
-			
-				$confirm = isset($HTTP_POST_VARS['confirm']);
 				
-				$network		= get_data('network', $network_id, 0);
-				$network_type	= $network['network_type'];
-				
-				$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
-				
-				if ( $network_id && $confirm )
-				{	
-					$network = get_data('network', $network_id, 0);
-				
-					$sql = 'DELETE FROM ' . NETWORK . ' WHERE network_id = ' . $network_id;
-					if (!$result = $db->sql_query($sql))
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_delete', $network['network_name']);
-					
-					$message = sprintf($lang['delete_network'], $info) . '<br><br>' . sprintf($lang['click_return_network'], '<a href="' . append_sid("admin_network.php") . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
-				}
-				else if ( $network_id && !$confirm )
-				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
-		
-					$hidden_fields = '<input type="hidden" name="mode" value="network_delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $network_id . '" />';
-		
-					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['common_confirm'],
-						'MESSAGE_TEXT'		=> sprintf($lang['confirm_delete_network'], $info),
-		
-						'L_YES'				=> $lang['common_yes'],
-						'L_NO'				=> $lang['common_no'],
-		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_network.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
-					));
-				}
-				else
-				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_network']);
-				}
-				
-				$template->pparse('body');
-				
-				break;
-			
 			case 'order_link':
 				
 				$move = intval($HTTP_GET_VARS['move']);
@@ -380,7 +329,58 @@ else
 				$show_index = TRUE;
 	
 				break;
-	
+			
+			case 'network_delete':
+			
+				$confirm = isset($HTTP_POST_VARS['confirm']);
+				
+				$network		= get_data('network', $network_id, 0);
+				$network_type	= $network['network_type'];
+				
+				$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
+				
+				if ( $network_id && $confirm )
+				{	
+					$network = get_data('network', $network_id, 0);
+				
+					$sql = 'DELETE FROM ' . NETWORK . ' WHERE network_id = ' . $network_id;
+					if (!$result = $db->sql_query($sql))
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+				
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_delete', $network['network_name']);
+					
+					$message = sprintf($lang['delete_network'], $info) . '<br><br>' . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
+					message_die(GENERAL_MESSAGE, $message);
+				}
+				else if ( $network_id && !$confirm )
+				{
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+		
+					$hidden_fields = '<input type="hidden" name="mode" value="network_delete" />';
+					$hidden_fields .= '<input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $network_id . '" />';
+		
+					$template->assign_vars(array(
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
+						'MESSAGE_TEXT'		=> sprintf($lang['confirm_delete_network'], $info),
+		
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
+		
+						'S_CONFIRM_ACTION'	=> append_sid('admin_network.php'),
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					));
+				}
+				else
+				{
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_network']);
+				}
+				
+				$template->pparse('body');
+				
+				break;
+			
 			default:
 			
 				message_die(GENERAL_ERROR, $lang['no_select_module']);
@@ -414,7 +414,7 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
 		
-		'S_NETWORK_ACTION'		=> append_sid("admin_network.php"),
+		'S_NETWORK_ACTION'		=> append_sid('admin_network.php'),
 	));
 	
 	$sql = 'SELECT MAX(network_order) AS max FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_LINK;
@@ -479,12 +479,13 @@ else
 				'CLASS' 		=> $class,
 				
 				'NETWORK_NAME'	=> $data_link[$i]['network_name'],
+				'SHOW'			=> ( $data_link[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
 				
-				'MOVE_UP'		=> ( $data_link[$i]['network_order'] != '10' )				? '<a href="' . append_sid("admin_network.php?mode=order_link&amp;move=-15&amp;" . POST_NETWORK_URL . "=" . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $data_link[$i]['network_order'] != $max_link['max'] )	? '<a href="' . append_sid("admin_network.php?mode=order_link&amp;move=15&amp;" . POST_NETWORK_URL . "=" . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'		=> ( $data_link[$i]['network_order'] != '10' )				? '<a href="' . append_sid('admin_network.php?mode=order_link&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $data_link[$i]['network_order'] != $max_link['max'] )	? '<a href="' . append_sid('admin_network.php?mode=order_link&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_EDIT'		=> append_sid("admin_network.php?mode=network_edit&amp;" . POST_NETWORK_URL . "=" . $network_id),
-				'U_DELETE'		=> append_sid("admin_network.php?mode=network_delete&amp;" . POST_NETWORK_URL . "=" . $network_id)
+				'U_EDIT'		=> append_sid('admin_network.php?mode=network_edit&amp;' . POST_NETWORK_URL . '=' . $network_id),
+				'U_DELETE'		=> append_sid('admin_network.php?mode=network_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
 			));
 		}
 	}
@@ -506,12 +507,13 @@ else
 				'CLASS' 		=> $class,
 				
 				'NETWORK_NAME'	=> $data_partner[$i]['network_name'],
+				'SHOW'			=> ( $data_partner[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
 				
-				'MOVE_UP'		=> ( $data_partner[$i]['network_order'] != '10' )					? '<a href="' . append_sid("admin_network.php?mode=order_partner&amp;move=-15&amp;" . POST_NETWORK_URL . "=" . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $data_partner[$i]['network_order'] != $max_partner['max'] )	? '<a href="' . append_sid("admin_network.php?mode=order_partner&amp;move=15&amp;" . POST_NETWORK_URL . "=" . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'		=> ( $data_partner[$i]['network_order'] != '10' )					? '<a href="' . append_sid('admin_network.php?mode=order_partner&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $data_partner[$i]['network_order'] != $max_partner['max'] )	? '<a href="' . append_sid('admin_network.php?mode=order_partner&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_EDIT'		=> append_sid("admin_network.php?mode=network_edit&amp;" . POST_NETWORK_URL . "=" . $network_id),
-				'U_DELETE'		=> append_sid("admin_network.php?mode=network_delete&amp;" . POST_NETWORK_URL . "=" . $network_id)
+				'U_EDIT'		=> append_sid('admin_network.php?mode=network_edit&amp;' . POST_NETWORK_URL . '=' . $network_id),
+				'U_DELETE'		=> append_sid('admin_network.php?mode=network_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
 			));
 		}
 	}
@@ -533,12 +535,13 @@ else
 				'CLASS' 		=> $class,
 				
 				'NETWORK_NAME'	=> $data_sponsor[$i]['network_name'],
+				'SHOW'			=> ( $data_sponsor[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
 				
-				'MOVE_UP'		=> ( $data_sponsor[$i]['network_order'] != '10' )					? '<a href="' . append_sid("admin_network.php?mode=order_sponsor&amp;move=-15&amp;" . POST_NETWORK_URL . "=" . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $data_sponsor[$i]['network_order'] != $max_sponsor['max'] )	? '<a href="' . append_sid("admin_network.php?mode=order_sponsor&amp;move=15&amp;" . POST_NETWORK_URL . "=" . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'		=> ( $data_sponsor[$i]['network_order'] != '10' )					? '<a href="' . append_sid('admin_network.php?mode=order_sponsor&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $data_sponsor[$i]['network_order'] != $max_sponsor['max'] )	? '<a href="' . append_sid('admin_network.php?mode=order_sponsor&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_EDIT'		=> append_sid("admin_network.php?mode=network_edit&amp;" . POST_NETWORK_URL . "=" . $network_id),
-				'U_DELETE'		=> append_sid("admin_network.php?mode=network_delete&amp;" . POST_NETWORK_URL . "=" . $network_id)
+				'U_EDIT'		=> append_sid('admin_network.php?mode=network_edit&amp;' . POST_NETWORK_URL . '=' . $network_id),
+				'U_DELETE'		=> append_sid('admin_network.php?mode=network_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
 			));
 		}
 	}

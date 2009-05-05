@@ -112,7 +112,6 @@
 	<td class="row1">{L_TRAINING_MATCH}:</td>
 	<td class="row2">{S_MATCH}</td>
 </tr>
-
 <tr>
 	<td class="row1">{L_TRAINING_DATE}:</td>
 	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
@@ -129,8 +128,6 @@
 	<td class="row1">{L_TRAINING_TEXT}:</td>
 	<td class="row3"><textarea class="post" rows="5" cols="50" name="training_text">{TRAINING_TEXT}</textarea></td>
 </tr>
-
-
 <tr>
 	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
 </tr>

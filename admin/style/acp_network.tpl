@@ -19,12 +19,13 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" width="100%">{L_NETWORK_LINK}</td>
+	<td class="rowHead" width="100%" colspan="2">{L_NETWORK_LINK}</td>
 	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN link_row -->
 <tr>
 	<td class="{display.link_row.CLASS}" align="left" width="100%">{display.link_row.NETWORK_NAME}</td>
+	<td class="{display.link_row.CLASS}"><img src="{display.link_row.SHOW}" alt=""></td>
 	<td class="{display.link_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.link_row.U_EDIT}">{L_EDIT}</a></td>
 	<td class="{display.link_row.CLASS}" align="center" nowrap="nowrap">{display.link_row.MOVE_UP} {display.link_row.MOVE_DOWN}</td>
 	<td class="{display.link_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.link_row.U_DELETE}">{L_DELETE}</a></td>
@@ -48,12 +49,13 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" width="100%">{L_NETWORK_PARTNER}</td>
+	<td class="rowHead" width="100%" colspan="2">{L_NETWORK_PARTNER}</td>
 	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN partner_row -->
 <tr>
 	<td class="{display.partner_row.CLASS}" align="left" width="100%">{display.partner_row.NETWORK_NAME}</td>
+	<td class="{display.partner_row.CLASS}"><img src="{display.partner_row.SHOW}" alt=""></td>
 	<td class="{display.partner_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.partner_row.U_EDIT}">{L_EDIT}</a></td>
 	<td class="{display.partner_row.CLASS}" align="center" nowrap="nowrap">{display.partner_row.MOVE_UP} {display.partner_row.MOVE_DOWN}</td>
 	<td class="{display.partner_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.partner_row.U_DELETE}">{L_DELETE}</a></td>
@@ -77,12 +79,13 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" width="100%">{L_NETWORK_SPONSOR}</td>
+	<td class="rowHead" width="100%" colspan="2">{L_NETWORK_SPONSOR}</td>
 	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN sponsor_row -->
 <tr>
 	<td class="{display.sponsor_row.CLASS}" align="left" width="100%">{display.sponsor_row.NETWORK_NAME}</td>
+	<td class="{display.sponsor_row.CLASS}"><img src="{display.sponsor_row.SHOW}" alt=""></td>
 	<td class="{display.sponsor_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.sponsor_row.U_EDIT}">{L_EDIT}</a></td>
 	<td class="{display.sponsor_row.CLASS}" align="center" nowrap="nowrap">{display.sponsor_row.MOVE_UP} {display.sponsor_row.MOVE_DOWN}</td>
 	<td class="{display.sponsor_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.sponsor_row.U_DELETE}">{L_DELETE}</a></td>
