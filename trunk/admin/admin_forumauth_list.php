@@ -40,7 +40,7 @@ else
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	
-	if (!$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -202,8 +202,8 @@ else
 			$cat_sql = '';
 		}
 	
-		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_forumauth_list.php") . '">'));
-		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid("admin_forumauth_list.php") . '">', "</a>");
+		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('admin_forumauth_list.php') . '">'));
+		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid('admin_forumauth_list.php') . '">', "</a>");
 		message_die(GENERAL_MESSAGE, $message);
 	
 	} // End of submit
@@ -393,7 +393,7 @@ else
 		}
 	
 		$adv_mode = ( empty($adv) ) ? '1' : '0';
-		$switch_mode = append_sid("admin_forumauth_list.php?" . POST_FORUM_URL . "=" . $forum_id . "&adv=". $adv_mode);
+		$switch_mode = append_sid('admin_forumauth_list.php?' . POST_FORUM_URL . '=' . $forum_id . "&adv=". $adv_mode);
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
@@ -410,7 +410,7 @@ else
 	
 			'U_SWITCH_MODE' => $u_switch_mode,
 	
-			'S_FORUMAUTH_ACTION' => append_sid("admin_forumauth_list.php"),
+			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
 			'S_COLUMN_SPAN' => $s_column_span,
 			'S_HIDDEN_FIELDS' => $s_hidden_fields)
 		);
@@ -442,7 +442,7 @@ else
 		
 		$template->assign_block_vars('cat_row', array(
 			'CAT_NAME'	=> $cat_name,
-			'CAT_URL'	=> append_sid("admin_forumauth_list.php?" . POST_CATEGORY_URL . "=$cat_id")
+			'CAT_URL'	=> append_sid('admin_forumauth_list.php?' . POST_CATEGORY_URL . '=' .$cat_id)
 		));
 	
 		for ( $j=0; $j < count($forum_rows); $j++ )
@@ -453,7 +453,7 @@ else
 				$forum_name	= $forum_rows[$j]['forum_name'];
 				
 				$template->assign_block_vars('cat_row.forum_row', array(
-					'FORUM_NAME' => '<a href="' . append_sid("admin_forumauth_list.php?" . POST_FORUM_URL . "=$forum_id") . '">' . $forum_name . '</a>'
+					'FORUM_NAME' => '<a href="' . append_sid('admin_forumauth_list.php?' . POST_FORUM_URL . '=' . $forum_id) . '">' . $forum_name . '</a>'
 				));
 				
 				for ( $k=0; $k < count($forum_auth_fields); $k++ )
@@ -511,7 +511,7 @@ else
 			'L_SUBMIT' => $lang['Submit'],
 			'L_RESET' => $lang['Reset'],
 	
-			'S_FORUMAUTH_ACTION' => append_sid("admin_forumauth_list.php"),
+			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
 			'S_COLUMN_SPAN' => count($forum_auth_fields)+1,
 			'S_HIDDEN_FIELDS' => $s_hidden_fields)
 		);

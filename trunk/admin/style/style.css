@@ -18,6 +18,12 @@ body {
 	padding: 5px 5px;
 }
 
+.navi {
+	font-weight : bold;
+	height:20px;
+		
+}
+
 table.head {
 	width:100%;
 	border:none;
@@ -158,11 +164,8 @@ td.row3:hover {
 	font-weight:bold;
 }
 
-.post,
-.post:link,
-.post:visited,
-.post:active,
-.select {
+.post, .post:link, .post:visited, .post:active,
+.select, .selectsmall {
 	font-family: Verdana, Geneva, sans-serif;
 	color:	#000;
 	background:	#F0EFEF;
@@ -170,13 +173,16 @@ td.row3:hover {
 	padding: 1px;
 }
 
+.selectsmall {
+	font-size:10px;
+}
+
 .post:hover,
-.select:hover{
-	font-family: Verdana, Geneva, sans-serif;
+.select:hover,
+.selectsmall:hover {
 	color: #39F;
 	background:	#FAFAFA;
 	border: #39F 1px solid;
-	padding: 1px;
 }
 
 .postselect,
@@ -398,20 +404,22 @@ a.copyright:hover	{ color: #fff; text-decoration: underline;}
 
 #navlist a:link#current, #navlist a:visited#current
 {
-	background: #fff;
-	border-bottom: 1px solid #fff;
+	background: #fdfdfd;
+	border-bottom: 1px solid #fdfdfd;
 	color: #000;
 }
 
 #navlist a:hover
 {
 	color: #39F;
+	background:#fdfdfd;
+	border-bottom: 1px solid #fdfdfd;
 }
 
 body.section-1 #navlist li#nav-1 a, body.section-2 #navlist li#nav-2 a, body.section-3 #navlist li#nav-3 a, body.section-4 #navlist li#nav-4 a
 {
-	background: #fff;
-	border-bottom: 1px solid #fff;
+	background: #fdfdfd;
+	border-bottom: 1px solid #fdfdfd;
 	color: #000;
 }
 
@@ -431,7 +439,7 @@ body.section-1 #navlist ul#subnav-1, body.section-2 #navlist ul#subnav-2, body.s
 
 body.section-1 #navlist ul#subnav-1 a, body.section-2 #navlist ul#subnav-2 a, body.section-3 #navlist ul#subnav-3 a, body.section-4 #navlist ul#subnav-4 a
 {
-	background: #fff;
+	background: #fdfdfd;
 	border: none;
 	border-left: 1px solid #ccc;
 	color: #999;
@@ -450,7 +458,7 @@ body.section-1 #navlist ul#subnav-1 a, body.section-2 #navlist ul#subnav-2 a, bo
 
 #contents
 {
-	background: #fff;
+	background: #fdfdfd;
 	border: 1px solid #ccc;
 	border-top: none;
 	clear: both;

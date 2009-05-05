@@ -42,14 +42,14 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_profile.php", true));
+		redirect('admin/' . append_sid('admin_profile.php', true));
 	}
 	
 	if ( isset($HTTP_POST_VARS[POST_PROFILE_URL]) || isset($HTTP_GET_VARS[POST_PROFILE_URL]) )
@@ -125,7 +125,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'add_profile':
 			case 'edit_profile':
@@ -199,7 +199,7 @@ else
 					
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_NAVI_ACTION'			=> append_sid("admin_profile.php")
+					'S_NAVI_ACTION'			=> append_sid('admin_profile.php'),
 				));
 			
 				$template->pparse('body');
@@ -258,7 +258,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_add', $profile_name);
 	
-				$message = $lang['create_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+				$message = $lang['create_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -334,7 +334,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_edit');
 				
-				$message = $lang['update_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+				$message = $lang['update_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -352,7 +352,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_delete', $profile['profile_name']);
 					
-					$message = $lang['delete_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+					$message = $lang['delete_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -370,7 +370,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_profile.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_profile.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -423,7 +423,7 @@ else
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 	
-				$message = $lang['create_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+				$message = $lang['create_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -451,7 +451,7 @@ else
 					'S_HIDDEN_FIELDS' => $s_hidden_fields, 
 					
 					'S_SUBMIT_VALUE' => $lang['profile_cat_edit'], 
-					'S_PROFILE_ACTION' => append_sid("admin_profile.php"))
+					'S_PROFILE_ACTION' => append_sid('admin_profile.php'))
 				);
 				
 				$template->pparse('body');
@@ -474,7 +474,7 @@ else
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 	
-				$message = $lang['update_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid("admin_profile.php") . '">', '</a>');
+				$message = $lang['update_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -514,7 +514,7 @@ else
 		'L_MOVE_UP'			=> $lang['Move_up'], 
 		'L_MOVE_DOWN'		=> $lang['Move_down'], 
 		
-		'S_TEAM_ACTION'		=> append_sid("admin_profile.php")
+		'S_TEAM_ACTION'		=> append_sid('admin_profile.php'),
 	));
 	
 	$sql = 'SELECT MAX(category_order) AS max FROM ' . PROFILE_CATEGORY;
@@ -576,10 +576,10 @@ else
 				'L_MOVE_UP'				=> $icon_up,
 				'L_MOVE_DOWN'			=> $icon_down,
 				
-				'U_CAT_EDIT'			=> append_sid("admin_profile.php?mode=editcat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-//				'U_CAT_DELETE'			=> append_sid("admin_profile.php?mode=deletecat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-				'U_CAT_MOVE_UP'			=> append_sid("admin_profile.php?mode=cat_order&amp;move=-15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-				'U_CAT_MOVE_DOWN'		=> append_sid("admin_profile.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_CAT_EDIT'			=> append_sid('admin_profile.php?mode=editcat&amp;" . POST_CATEGORY_URL . "=$cat_id'),
+//				'U_CAT_DELETE'			=> append_sid('admin_profile.php?mode=deletecat&amp;" . POST_CATEGORY_URL . "=$cat_id'),
+				'U_CAT_MOVE_UP'			=> append_sid('admin_profile.php?mode=cat_order&amp;move=-15&amp;" . POST_CATEGORY_URL . "=$cat_id'),
+				'U_CAT_MOVE_DOWN'		=> append_sid('admin_profile.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id'),
 				'U_VIEWCAT'				=> append_sid($root_path."profile.php?" . POST_CATEGORY_URL . "=$cat_id"))
 			);
 	
@@ -603,14 +603,14 @@ else
 						'L_MOVE_UP'		=> $icon_up,
 						'L_MOVE_DOWN'		=> $icon_down,
 						
-						'U_PROFILE_PERMISSIONS' => append_sid("admin_profileauth.php?" . POST_PROFILE_URL . "=$profile_id&amp;adv=1"),
+						'U_PROFILE_PERMISSIONS' => append_sid('admin_profileauth.php?" . POST_PROFILE_URL . "=$profile_id&amp;adv=1'),
 	
-						'U_VIEWFORUM' => append_sid($root_path."viewprofile.php?" . POST_PROFILE_URL . "=$profile_id"),
-						'U_PROFILE_EDIT' => append_sid("admin_profile.php?mode=edit_profile&amp;" . POST_PROFILE_URL . "=$profile_id"),
-						'U_PROFILE_DELETE' => append_sid("admin_profile.php?mode=deleteprofile&amp;" . POST_PROFILE_URL . "=$profile_id"),
-						'U_PROFILE_MOVE_UP' => append_sid("admin_profile.php?mode=profile_order&amp;move=-15&amp;" . POST_PROFILE_URL . "=$profile_id"),
-						'U_PROFILE_MOVE_DOWN' => append_sid("admin_profile.php?mode=profile_order&amp;move=15&amp;" . POST_PROFILE_URL . "=$profile_id"),
-						'U_PROFILE_RESYNC' => append_sid("admin_profile.php?mode=profile_sync&amp;" . POST_PROFILE_URL . "=$profile_id"))
+						'U_VIEWFORUM' => append_sid($root_path."viewprofile.php?" . POST_PROFILE_URL . "=$profile_id'),
+						'U_PROFILE_EDIT' => append_sid('admin_profile.php?mode=edit_profile&amp;" . POST_PROFILE_URL . "=$profile_id'),
+						'U_PROFILE_DELETE' => append_sid('admin_profile.php?mode=deleteprofile&amp;" . POST_PROFILE_URL . "=$profile_id'),
+						'U_PROFILE_MOVE_UP' => append_sid('admin_profile.php?mode=profile_order&amp;move=-15&amp;" . POST_PROFILE_URL . "=$profile_id'),
+						'U_PROFILE_MOVE_DOWN' => append_sid('admin_profile.php?mode=profile_order&amp;move=15&amp;" . POST_PROFILE_URL . "=$profile_id'),
+						'U_PROFILE_RESYNC' => append_sid('admin_profile.php?mode=profile_sync&amp;" . POST_PROFILE_URL . "=$profile_id"))
 					);
 				}
 			}

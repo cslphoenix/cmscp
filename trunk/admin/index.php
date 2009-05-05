@@ -58,9 +58,9 @@ function inarray($needle, $haystack)
 		'ICON_TEAM'			=> '<img src="./../admin/style/images/icon_team.png" alt="Team" title="" />',
 		'ICON_USER'			=> '<img src="./../admin/style/images/icon_user.png" alt="User" title="" />',
 		
-		'U_NEWS'			=> append_sid("admin_news.php"),
-		'U_TEAM'			=> append_sid("admin_teams.php"),
-		'U_USER'			=> append_sid("admin_user.php"),
+		'U_NEWS'			=> append_sid('admin_news.php'),
+		'U_TEAM'			=> append_sid('admin_teams.php'),
+		'U_USER'			=> append_sid('admin_user.php'),
 		
 		'L_WELCOME'			=> $lang['welcome_cms'],
 		'L_ADMIN_INTRO'		=> $lang['welcome_cms_explain'],

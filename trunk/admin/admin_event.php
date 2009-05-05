@@ -44,14 +44,14 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if ( !$userauth['auth_event'] && $userdata['user_level'] != ADMIN)
+	if ( !$userauth['auth_event'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_match.php", true));
+		redirect('admin/' . append_sid('admin_event.php', true));
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -87,7 +87,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'event_add':
 			case 'event_edit':
@@ -158,7 +158,7 @@ else
 					
 					'S_EVENT_LEVEL'		=> $s_select_level,
 					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
-					'S_EVENT_ACTION'	=> append_sid("admin_event.php"),
+					'S_EVENT_ACTION'	=> append_sid('admin_event.php'),
 				));
 			
 				$template->pparse('body');
@@ -193,7 +193,7 @@ else
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_date'];
 				}
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 				}
@@ -217,7 +217,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'acp_event_add', $event_title);
 	
-				$message = $lang['create_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid("admin_event.php") . '">', '</a>');
+				$message = $lang['create_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -250,7 +250,7 @@ else
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_date'];
 				}
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 				}
@@ -280,7 +280,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'acp_event_edit');
 				
-				$message = $lang['update_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid("admin_event.php") . '">', '</a>');
+				$message = $lang['update_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -301,7 +301,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'acp_event_delete', $event['event_title']);
 					
-					$message = $lang['delete_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid("admin_event.php") . '">', '</a>');
+					$message = $lang['delete_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				else if ( $event_id && !$confirm )
@@ -318,7 +318,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_event.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_event.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -360,7 +360,7 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
 		
-		'S_EVENT_ACTION'		=> append_sid("admin_event.php"),
+		'S_EVENT_ACTION'		=> append_sid('admin_event.php'),
 	));
 	
 	$sql = 'SELECT * FROM ' . EVENT . ' ORDER BY event_date';
@@ -399,8 +399,8 @@ else
 				'EVENT_TITLE'	=> $event_data[$i]['event_title'],
 				'EVENT_DATE'	=> $event_date,
 				
-				'U_EDIT'		=> append_sid("admin_event.php?mode=event_edit&amp;" . POST_EVENT_URL . "=" . $event_id),
-				'U_DELETE'		=> append_sid("admin_event.php?mode=event_delete&amp;" . POST_EVENT_URL . "=" . $event_id)
+				'U_EDIT'		=> append_sid('admin_event.php?mode=event_edit&amp;' . POST_EVENT_URL . '=' . $event_id),
+				'U_DELETE'		=> append_sid('admin_event.php?mode=event_delete&amp;' . POST_EVENT_URL . '=' . $event_id)
 			));
 		}
 	}

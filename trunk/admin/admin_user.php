@@ -50,7 +50,7 @@ else
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_user.php", true));
+		redirect('admin/' . append_sid('admin_user.php', true));
 	}
 	
 	if ( isset($HTTP_POST_VARS[POST_USERS_URL]) || isset($HTTP_GET_VARS[POST_USERS_URL]) )
@@ -90,7 +90,7 @@ else
 		
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'add':
 			case 'edit':
@@ -187,16 +187,16 @@ else
 					'S_CHECKED_FOUNDER_NO'	=> $check_founder_no,
 					'S_CHECKED_FOUNDER_YES'	=> $check_founder_yes,
 					
-					'S_USER_REGISTER'		=> append_sid("admin_user.php?mode=register&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_IMAGES'			=> append_sid("admin_user.php?mode=images&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_REGISTER'		=> append_sid('admin_user.php?mode=register&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_FIELDS'			=> append_sid('admin_user.php?mode=fields&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_SETTINGS'		=> append_sid('admin_user.php?mode=settings&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_IMAGES'			=> append_sid('admin_user.php?mode=images&amp;' . POST_USERS_URL . '=' . $user_id),
 					
 					
-					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_USER_EDIT'			=> append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_ACTION'			=> append_sid('admin_user.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
 			
@@ -379,7 +379,7 @@ else
 				//	$oCache -> sCachePath = './../cache/';
 				//	$oCache -> deleteCache('display_subnavi_user');
 		
-					$message = $lang['create_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
+					$message = $lang['create_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -496,7 +496,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_user');
 				
-				$message = $lang['user_update'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
+				$message = $lang['user_update'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
@@ -588,15 +588,15 @@ else
 					'L_YES'					=> $lang['common_yes'],
 					'L_NO'					=> $lang['common_no'],
 					
-					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_IMAGES'			=> append_sid("admin_user.php?mode=images&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_FIELDS'			=> append_sid('admin_user.php?mode=fields&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_SETTINGS'		=> append_sid('admin_user.php?mode=settings&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_IMAGES'			=> append_sid('admin_user.php?mode=images&amp;' . POST_USERS_URL . '=' . $user_id),
 					
 					
-					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_USER_EDIT'			=> append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_ACTION'			=> append_sid('admin_user.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
 			
@@ -661,15 +661,15 @@ else
 					'L_YES'					=> $lang['common_yes'],
 					'L_NO'					=> $lang['common_no'],
 					
-					'S_USER_FIELDS'			=> append_sid("admin_user.php?mode=fields&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_SETTINGS'		=> append_sid("admin_user.php?mode=settings&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_IMAGES'			=> append_sid("admin_user.php?mode=images&amp;" . POST_USERS_URL . "=" . $user_id),
+					'S_USER_FIELDS'			=> append_sid('admin_user.php?mode=fields&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_SETTINGS'		=> append_sid('admin_user.php?mode=settings&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_IMAGES'			=> append_sid('admin_user.php?mode=images&amp;' . POST_USERS_URL . '=' . $user_id),
 					
 					
-					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_USER_EDIT'			=> append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_ACTION'			=> append_sid('admin_user.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
 			
@@ -701,7 +701,7 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('display_subnavi_user');
 					
-					$message = $lang['delete_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>');
+					$message = $lang['delete_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
@@ -718,7 +718,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_user.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_user.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -873,10 +873,10 @@ else
 					'L_EMAIL_NOTIFICATION'	=> $lang['user_mailnotification'],
 					'L_MODERATOR'			=> $lang['user_groupmod'],
 
-					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_USER_EDIT'			=> append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_ACTION'			=> append_sid('admin_user.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 				));
 			
@@ -1065,7 +1065,7 @@ else
 					{
 						$group_name = $group_name . "\n" . $row['group_name'];
 					}
-					include($phpbb_root_path . 'includes/emailer.'.$phpEx);
+					include($root_path . 'includes/emailer.'.$phpEx);
 					$emailer = new emailer($board_config['smtp_delivery']);
 					
 					$emailer->from($board_config['board_email']);
@@ -1088,8 +1088,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_groups');
 			
 				$message = $lang['user_change_groups']
-					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_user_groups'], '<a href="' . append_sid("admin_user.php?mode=groups&" . POST_USERS_URL . "=$user_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_user_groups'], '<a href="' . append_sid('admin_user.php?mode=groups&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 			break;
@@ -1288,10 +1288,10 @@ else
 					'L_USER_GROUPS'			=> $lang['user_groups'],
 					'L_USER_TEAMS'			=> $lang['user_teams'],
 
-					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_USER_EDIT'			=> append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_ACTION'			=> append_sid('admin_user.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 				));
 			
@@ -1332,8 +1332,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_auths_edit');
 				
 				$message = $lang['user_change_auths']
-					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid("admin_user.php") . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_user_auths'], '<a href="' . append_sid("admin_user.php?mode=auths&" . POST_USERS_URL . "=$user_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_user_auths'], '<a href="' . append_sid('admin_user.php?mode=auths&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -1360,10 +1360,10 @@ else
 					'L_USER_GROUPS'			=> $lang['user_groups'],
 					'L_USER_TEAMS'			=> $lang['user_teams'],
 
-					'S_USER_EDIT'			=> append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_GROUP'			=> append_sid("admin_user.php?mode=groups&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_AUTHS'			=> append_sid("admin_user.php?mode=auths&amp;" . POST_USERS_URL . "=" . $user_id),
-					'S_USER_ACTION'			=> append_sid("admin_user.php"),
+					'S_USER_EDIT'			=> append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
+					'S_USER_ACTION'			=> append_sid('admin_user.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 				));
 			
@@ -1445,13 +1445,13 @@ else
 		
 		if ( $userdata['user_level'] > $user_list[$i]['user_level'] )
 		{
-			$link_edit		= '<a href="' . append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_list[$i]['user_id']) . '" >' . $lang['edit'] . '</a>';
-			$link_delete	= '<a href="' . append_sid("admin_user.php?mode=delete&amp;" . POST_USERS_URL . "=" . $user_list[$i]['user_id']) . '" >' . $lang['delete'] . '</a>';
+			$link_edit		= '<a href="' . append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['edit'] . '</a>';
+			$link_delete	= '<a href="' . append_sid('admin_user.php?mode=delete&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['delete'] . '</a>';
 		}
 		else if ( $userdata['user_level'] == ADMIN )
 		{
-			$link_edit		= '<a href="' . append_sid("admin_user.php?mode=edit&amp;" . POST_USERS_URL . "=" . $user_list[$i]['user_id']) . '" >' . $lang['edit'] . '</a>';
-			$link_delete	= '<a href="' . append_sid("admin_user.php?mode=delete&amp;" . POST_USERS_URL . "=" . $user_list[$i]['user_id']) . '" >' . $lang['delete'] . '</a>';
+			$link_edit		= '<a href="' . append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['edit'] . '</a>';
+			$link_delete	= '<a href="' . append_sid('admin_user.php?mode=delete&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['delete'] . '</a>';
 		}
 		else
 		{
@@ -1473,7 +1473,7 @@ else
 	$current_page = ( !count($user_list) ) ? 1 : ceil( count($user_list) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination("admin_user.php?", count($user_list), $settings['site_entry_per_page'], $start),
+		'PAGINATION' => generate_pagination('admin_user.php?', count($user_list), $settings['site_entry_per_page'], $start),
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])

@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
-	<title>CMS CP :: {PAGE_TITLE}</title>
+	<title>{L_HEAD}</title>
 	<link rel="stylesheet" href="style/style.css" type="text/css">
 	<link rel="stylesheet" href="style/lightbox.css" type="text/css" media="screen" />
 	
@@ -129,7 +129,7 @@
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<th width="35%" align="left">{L_INDEX_HEAD}</th>
+				<th width="35%" align="left">{L_HEAD}</th>
 				<td width="30%" align="center"><a href="{U_ADMIN_INDEX}">&raquo; {L_ADMIN_INDEX}</a><span class="small"> :: </span><a href="{U_PAGE_INDEX}">&raquo; {L_PAGE_INDEX}</a></td>
 				<td width="35%" align="right"><a href="{U_ADMIN_LOGOUT}" target="_parent">&raquo; {L_SESSION}</a><span class="small"> :: </span><a href="{U_LOGOUT}" target="_parent">&raquo; {L_LOGOUT}</a>{L_USER}</td>
 			</tr>

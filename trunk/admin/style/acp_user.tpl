@@ -399,8 +399,8 @@ count = 18;
 <!-- BEGIN user_auth_data -->
 <tr>
 	<td class="row1" width="49%" align="right">{user_auths.user_auth_data.CELL_TITLE}</td>
-	<td class="row3" {user_auths.user_auth_data.STATUS} id="auth_farbe_{user_auths.user_auth_data.TEMP_ID}" width="1%" nowrap="nowrap">{user_auths.user_auth_data.S_AUTH_LEVELS_SELECT}</td>
-	<td class="row3" width="50%" nowrap="nowrap">{user_auths.user_auth_data.S_AUTH_LEVELS_DEFAULT}</td>
+	<td class="row3" {user_auths.user_auth_data.STATUS} id="auth_farbe_{user_auths.user_auth_data.TEMP_ID}" width="1%" nowrap="nowrap">{user_auths.user_auth_data.S_AUTH_LEVELS_SELECT} {user_auths.user_auth_data.S_AUTH_LEVELS_DEFAULT}</td>
+	<td class="row3" width="50%" nowrap="nowrap"></td>
 </tr>
 <!-- END user_auth_data -->
 <tr>

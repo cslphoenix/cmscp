@@ -26,7 +26,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_training'] || $userdata['user_level'] == ADMIN)
+	if ( $userauth['auth_training'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['teams']['training'] = $filename;
 	}
@@ -44,14 +44,14 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userauth['auth_training'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_training'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_training.php", true));
+		redirect('admin/' . append_sid('admin_training.php', true));
 	}
 	
 	//	ID Abfrage
@@ -89,7 +89,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'add':
 			case 'edit':
@@ -172,7 +172,7 @@ else
 				
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_TEAM_ACTION'			=> append_sid("admin_training.php")
+					'S_TEAM_ACTION'			=> append_sid('admin_training.php'),
 				));
 			
 				// Template ausgabe
@@ -212,7 +212,7 @@ else
 				
 				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['back'];
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg, '');
 				}
@@ -239,7 +239,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 	
-				$message = $lang['training_create'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
+				$message = $lang['training_create'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -276,7 +276,7 @@ else
 				
 				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['back'];
 				
-				if ($error)
+				if ( $error )
 				{
 					message_die(GENERAL_ERROR, $error_msg, '');
 				}
@@ -301,7 +301,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 				
-				$message = $lang['training_update'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
+				$message = $lang['training_update'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -334,7 +334,7 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('subnavi_trains');
 					
-					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid("admin_training.php") . '">', '</a>');
+					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -351,7 +351,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_training.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_training.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -391,7 +391,7 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
 		'S_TEAMS'				=> _select_team('', 0, 'postselect'),
-		'S_TEAM_ACTION'			=> append_sid("admin_training.php")
+		'S_TEAM_ACTION'			=> append_sid('admin_training.php'),
 	));
 	
 	$sql = 'SELECT tr.*, g.game_image, g.game_size
@@ -420,8 +420,8 @@ else
 				'I_IMAGE'		=> display_gameicon($training_entry_n[$i]['game_size'], $training_entry_n[$i]['game_image']),
 				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry_n[$i]['training_start'], $userdata['user_timezone']),
 				
-				'U_EDIT'		=> append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=" . $training_entry_n[$i]['training_id']),
-				'U_DELETE'		=> append_sid("admin_training.php?mode=delete&amp;" . POST_TRAINING_URL . "=" . $training_entry_n[$i]['training_id'])
+				'U_EDIT'		=> append_sid('admin_training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $training_entry_n[$i]['training_id']),
+				'U_DELETE'		=> append_sid('admin_training.php?mode=delete&amp;' . POST_TRAINING_URL . '=' . $training_entry_n[$i]['training_id'])
 			));
 		}
 	}
@@ -452,8 +452,8 @@ else
 				'I_IMAGE'		=> display_gameicon($training_entry_o[$i]['game_size'], $training_entry_o[$i]['game_image']),
 				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry_o[$i]['training_start'], $userdata['user_timezone']),
 				
-				'U_EDIT'		=> append_sid("admin_training.php?mode=edit&amp;" . POST_TRAINING_URL . "=" . $training_entry_o[$i]['training_id']),
-				'U_DELETE'		=> append_sid("admin_training.php?mode=delete&amp;" . POST_TRAINING_URL . "=" . $training_entry_o[$i]['training_id'])
+				'U_EDIT'		=> append_sid('admin_training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $training_entry_o[$i]['training_id']),
+				'U_DELETE'		=> append_sid('admin_training.php?mode=delete&amp;' . POST_TRAINING_URL . '=' . $training_entry_o[$i]['training_id'])
 				
 			));
 		}
@@ -463,7 +463,7 @@ else
 	$current_page = ( !count($training_entry_o) ) ? 1 : ceil( count($training_entry_o) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination("admin_training.php?", count($training_entry_o), $settings['site_entry_per_page'], $start),
+		'PAGINATION' => generate_pagination('admin_training.php?', count($training_entry_o), $settings['site_entry_per_page'], $start),
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])

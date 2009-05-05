@@ -61,7 +61,7 @@ else
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_contact.php", true));
+		redirect('admin/' . append_sid('admin_contact.php', true));
 	}
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -86,17 +86,17 @@ else
 		$mode = '';
 	}
 	
-	if ( $mode == 'contact' && !$userauth['auth_contact'] && $userdata['user_level'] != ADMIN)
+	if ( $mode == 'contact' && !$userauth['auth_contact'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ( $mode == 'joinus' && (!$userauth['auth_joinus'] && $userdata['user_level'] != ADMIN))
+	if ( $mode == 'joinus' && (!$userauth['auth_joinus'] && $userdata['user_level'] != ADMIN ))
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ( $mode == 'fightus' && !$userauth['auth_fightus'] && $userdata['user_level'] != ADMIN)
+	if ( $mode == 'fightus' && !$userauth['auth_fightus'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -105,7 +105,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'contact':
 			case 'fightus':
@@ -178,10 +178,10 @@ else
 					'TAB_AKTIV2'				=> $tab_aktiv2,
 					'TAB_AKTIV3'				=> $tab_aktiv3,
 					
-					'S_CONTACT_ACTION'		=> append_sid("admin_contact.php"),
-					'S_CONTACT_NORMAL'		=> append_sid("admin_contact.php?mode=contact"),
-					'S_CONTACT_JOINUS'		=> append_sid("admin_contact.php?mode=joinus"),
-					'S_CONTACT_FIGHTUS'		=> append_sid("admin_contact.php?mode=fightus"),
+					'S_CONTACT_ACTION'		=> append_sid('admin_contact.php'),
+					'S_CONTACT_NORMAL'		=> append_sid('admin_contact.php?mode=contact'),
+					'S_CONTACT_JOINUS'		=> append_sid('admin_contact.php?mode=joinus'),
+					'S_CONTACT_FIGHTUS'		=> append_sid('admin_contact.php?mode=fightus'),
 				));
 									
 				$sql = 'SELECT c.*, t.team_name, g.game_image, g.game_size
@@ -226,7 +226,7 @@ else
 				$current_page = ( !count($contact_entry) ) ? 1 : ceil( count($contact_entry) / $settings['site_entry_per_page'] );
 			
 				$template->assign_vars(array(
-					'PAGINATION' => ( count($contact_entry) ) ? generate_pagination("admin_contact.php?", count($contact_entry), $settings['site_entry_per_page'], $start) : '',
+					'PAGINATION' => ( count($contact_entry) ) ? generate_pagination('admin_contact.php?', count($contact_entry), $settings['site_entry_per_page'], $start) : '',
 					'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 			
 					'L_GOTO_PAGE' => $lang['Goto_page'])
@@ -269,10 +269,10 @@ else
 		
 		'L_TRAINING'			=> $lang['training'],
 		
-		'S_CONTACT_ACTION'		=> append_sid("admin_contact.php"),
-		'S_CONTACT_NORMAL'		=> append_sid("admin_contact.php?mode=contact"),
-		'S_CONTACT_JOINUS'		=> append_sid("admin_contact.php?mode=joinus"),
-		'S_CONTACT_FIGHTUS'		=> append_sid("admin_contact.php?mode=fightus"),
+		'S_CONTACT_ACTION'		=> append_sid('admin_contact.php'),
+		'S_CONTACT_NORMAL'		=> append_sid('admin_contact.php?mode=contact'),
+		'S_CONTACT_JOINUS'		=> append_sid('admin_contact.php?mode=joinus'),
+		'S_CONTACT_FIGHTUS'		=> append_sid('admin_contact.php?mode=fightus'),
 	));
 	
 	$where = '';
@@ -344,7 +344,7 @@ else
 	$current_page = ( !count($contact_entry) ) ? 1 : ceil( count($contact_entry) / $settings['site_entry_per_page'] );
 
 	$template->assign_vars(array(
-		'PAGINATION' => ( count($contact_entry) ) ? generate_pagination("admin_contact.php?", count($contact_entry), $settings['site_entry_per_page'], $start) : '',
+		'PAGINATION' => ( count($contact_entry) ) ? generate_pagination('admin_contact.php?', count($contact_entry), $settings['site_entry_per_page'], $start) : '',
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])

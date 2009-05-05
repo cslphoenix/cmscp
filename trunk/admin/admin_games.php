@@ -36,7 +36,7 @@ if ( !empty($setmodules) )
 else
 {
 	define('IN_CMS', 1);
-
+	
 	$root_path = './../';
 	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
@@ -50,7 +50,7 @@ else
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_match.php", true));
+		redirect('admin/' . append_sid('admin_games.php', true));
 	}
 	
 	if ( isset($HTTP_POST_VARS[POST_GAMES_URL]) || isset($HTTP_GET_VARS[POST_GAMES_URL]) )
@@ -69,14 +69,21 @@ else
 	}
 	else
 	{
-		$mode = '';
+		if ( isset($HTTP_POST_VARS['game_add']) || isset($HTTP_GET_VARS['game_add']) )
+		{
+			$mode = 'game_add';
+		}
+		else
+		{
+			$mode = '';
+		}
 	}
 	
 	$show_index = '';
-	
+		
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'game_add':
 			case 'game_edit':
@@ -97,7 +104,7 @@ else
 						'game_size'		=> '16',
 						'game_order'	=> ''
 					);
-
+	
 					$new_mode = 'game_create';
 				}
 				
@@ -120,7 +127,7 @@ else
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
 				$s_hidden_fields .= '<input type="hidden" name="' . POST_GAMES_URL . '" value="' . $game_id . '" />';
-
+	
 				$template->assign_vars(array(
 					'L_GAME_HEAD'			=> $lang['game_head'],
 					'L_GAME_NEW_EDIT'		=> ($mode == 'game_add') ? $lang['game_add'] : $lang['game_edit'],
@@ -140,7 +147,7 @@ else
 					
 					'S_FILENAME_LIST'		=> $game_list,
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_GAME_ACTION'			=> append_sid("admin_games.php"),
+					'S_GAME_ACTION'			=> append_sid('admin_games.php'),
 				));
 			
 				$template->pparse('body');
@@ -174,16 +181,16 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_add', $game_name);
 	
-				$message = $lang['create_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
+				$message = $lang['create_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
-
+	
 				break;
 			
 			case 'game_update':
 			
-				$game_name		= (isset($HTTP_POST_VARS['game_name']))	? trim($HTTP_POST_VARS['game_name']) : '';
-				$game_image		= (isset($HTTP_POST_VARS['game_image']))	? trim($HTTP_POST_VARS['game_image']) : '';
-				$game_size		= (isset($HTTP_POST_VARS['game_size']))		? intval($HTTP_POST_VARS['game_size']) : '16';
+				$game_name	= (isset($HTTP_POST_VARS['game_name']))		? trim($HTTP_POST_VARS['game_name']) : '';
+				$game_image	= (isset($HTTP_POST_VARS['game_image']))	? trim($HTTP_POST_VARS['game_image']) : '';
+				$game_size	= (isset($HTTP_POST_VARS['game_size']))		? intval($HTTP_POST_VARS['game_size']) : '16';
 				
 				if ( $game_name == '' )
 				{
@@ -202,12 +209,12 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_edit');
 				
-				$message = $lang['update_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
+				$message = $lang['update_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
 			
-			case 'order':
+			case 'game_order':
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
@@ -219,7 +226,7 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_GAME_ORDER');
 				
 				$show_index = TRUE;
-	
+				
 				break;
 				
 			case 'game_delete':
@@ -238,7 +245,7 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_delete', $game['game_name']);
 					
-					$message = $lang['delete_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid("admin_games.php") . '">', '</a>');
+					$message = $lang['delete_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
@@ -256,7 +263,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_games.php"),
+						'S_CONFIRM_ACTION'	=> append_sid('admin_games.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
 					));
 				}
@@ -270,10 +277,9 @@ else
 				break;
 			
 			default:
-			
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
 				
-				break;
+				message_die(GENERAL_ERROR, $lang['no_mode']);
+				
 				break;
 		}
 	
@@ -283,7 +289,7 @@ else
 			exit;
 		}
 	}
-	
+			
 	$template->set_filenames(array('body' => './../admin/style/acp_games.tpl'));
 	$template->assign_block_vars('display', array());
 			
@@ -301,7 +307,7 @@ else
 		'L_MOVE_UP'			=> $lang['Move_up'], 
 		'L_MOVE_DOWN'		=> $lang['Move_down'], 
 		
-		'S_GAME_ACTION'		=> append_sid("admin_games.php"),
+		'S_GAME_ACTION'		=> append_sid('admin_games.php'),
 	));
 	
 	$sql = 'SELECT MAX(game_order) AS max FROM ' . GAMES;
@@ -332,11 +338,11 @@ else
 			'NAME'			=> $row['game_name'],
 			'I_IMAGE'		=> '<img src="' . $root_path . $settings['path_game'] . '/' . $row['game_image'] . '" width="' . $game_size . '" height="' . $game_size . '" alt="">',
 			
-			'MOVE_UP'		=> ( $row['game_order'] != '10' )				? '<a href="' . append_sid("admin_games.php?mode=order&amp;move=-15&amp;" . POST_GAMES_URL . "=" . $game_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-			'MOVE_DOWN'		=> ( $row['game_order'] != $max_order['max'] )	? '<a href="' . append_sid("admin_games.php?mode=order&amp;move=15&amp;" . POST_GAMES_URL . "=" . $game_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+			'MOVE_UP'		=> ( $row['game_order'] != '10' )				? '<a href="' . append_sid('admin_games.php?mode=game_order&amp;move=-15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+			'MOVE_DOWN'		=> ( $row['game_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_games.php?mode=game_order&amp;move=15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 			
-			'U_DELETE'		=> append_sid("admin_games.php?mode=delete&amp;" . POST_GAMES_URL . "=" . $game_id),
-			'U_EDIT'		=> append_sid("admin_games.php?mode=edit&amp;" . POST_GAMES_URL . "=" . $game_id),
+			'U_DELETE'		=> append_sid('admin_games.php?mode=game_delete&amp;' . POST_GAMES_URL . '=' . $game_id),
+			'U_EDIT'		=> append_sid('admin_games.php?mode=game_edit&amp;' . POST_GAMES_URL . '=' . $game_id),
 		));
 	}
 
@@ -347,8 +353,7 @@ else
 	}
 	
 	$template->pparse('body');
-			
+
 	include('./page_footer_admin.php');
 }
-
 ?>

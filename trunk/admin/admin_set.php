@@ -108,7 +108,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			case 'ftp':
 				
@@ -137,7 +137,7 @@ else
 					'S_PATH_PERMS'		=> _select_perms(),
 					
 					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
-					'S_SET_ACTION'		=> append_sid("admin_set.php"),
+					'S_SET_ACTION'		=> append_sid('admin_set.php'),
 				));
 				
 				
@@ -258,8 +258,7 @@ else
 		$oCache -> deleteCache('config');
 		$oCache -> deleteCache('settings');
 	
-		$message = $lang['Config_updated'] . '<br><br>' . sprintf($lang['click_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>')
-			. '<br><br>' . sprintf($lang['click_return_set'], '<a href="' . append_sid("admin_set.php") . '">', '</a>');
+		$message = $lang['Config_updated'] . '<br><br>' . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_set.php') . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	
@@ -635,8 +634,8 @@ else
 		"L_YES" => $lang['Yes'],
 		"L_NO" => $lang['No'],
 		
-		'S_SET_FTP'			=> append_sid("admin_set.php?mode=ftp"),
-		'S_SET_ACTION'	=> append_sid("admin_set.php"),
+		'S_SET_FTP'			=> append_sid('admin_set.php?mode=ftp'),
+		'S_SET_ACTION'	=> append_sid('admin_set.php'),
 	));
 
 	$template->pparse('body');

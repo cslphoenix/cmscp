@@ -26,7 +26,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_teams'] || $userdata['user_level'] == ADMIN)
+	if ( $userauth['auth_teams'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['teams']['teams_over'] = $filename;
 	}
@@ -44,14 +44,14 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userauth['auth_teams'] && $userdata['user_level'] != ADMIN)
+	if (!$userauth['auth_teams'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid("admin_teams.php", true));
+		redirect('admin/' . append_sid('admin_teams.php', true));
 	}
 	
 	if ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) || isset($HTTP_GET_VARS[POST_TEAMS_URL]) )
@@ -70,9 +70,9 @@ else
 	}
 	else
 	{
-		if (isset($HTTP_POST_VARS['add']))
+		if ( isset($HTTP_POST_VARS['team_add']) || isset($HTTP_GET_VARS['team_add']) )
 		{
-			$mode = 'add';
+			$mode = 'team_add';
 		}
 		else
 		{
@@ -84,15 +84,15 @@ else
 		
 	if ( !empty($mode) )
 	{
-		switch($mode)
+		switch ($mode)
 		{
-			case 'add':
-			case 'edit':
+			case 'team_add':
+			case 'team_edit':
 			
 				$template->set_filenames(array('body' => './../admin/style/acp_teams.tpl'));
 				$template->assign_block_vars('team_edit', array());
 				
-				if ( $mode == 'edit' )
+				if ( $mode == 'team_edit' )
 				{
 					$sql = 'SELECT t.*, g.* FROM ' . TEAMS . ' t, ' . GAMES . ' g WHERE t.team_game = g.game_id AND t.team_id = ' . $team_id;
 					$result = $db->sql_query($sql);
@@ -102,10 +102,10 @@ else
 						message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
 					}
 			
-					$new_mode = 'editteam';
+					$new_mode = 'team_update';
 					$template->assign_block_vars('team_edit.member', array());
 				}
-				else if ( $mode == 'add' )
+				else
 				{
 					$team = array (
 						'team_name'			=> trim($HTTP_POST_VARS['team_name']),
@@ -121,7 +121,7 @@ else
 						'game_size'			=> '',
 					);
 					
-					$new_mode = 'addteam';
+					$new_mode = 'team_create';
 				}
 				
 				$path_team_logo		= $root_path . $settings['path_team_logo'];
@@ -229,8 +229,8 @@ else
 					
 					'S_TEAM_GAME'			=> _select_game($team['team_game']),
 					
-					'S_TEAM_MEMBER'			=> append_sid("admin_teams.php?mode=member&amp;" . POST_TEAMS_URL . "=" . $team_id),
-					'S_TEAM_ACTION'			=> append_sid("admin_teams.php"),
+					'S_TEAM_MEMBER'			=> append_sid('admin_teams.php?mode=member&amp;' . POST_TEAMS_URL . '=' . $team_id),
+					'S_TEAM_ACTION'			=> append_sid('admin_teams.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
 			
@@ -238,7 +238,7 @@ else
 				
 			break;
 			
-			case 'addteam':
+			case 'team_create':
 
 				if ( trim($HTTP_POST_VARS['team_name']) == '' )
 				{
@@ -314,12 +314,12 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_teams');
 	
-				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
+				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 			break;
 			
-			case 'editteam':
+			case 'team_update':
 			
 				$sql = 'SELECT * FROM ' . TEAMS . " WHERE team_id = $team_id";
 				$result = $db->sql_query($sql);
@@ -334,9 +334,6 @@ else
 				
 				$new = array_diff($team_ordert, $team_data);
 
-				unset($new[mode]);
-				unset($new[send]);
-				
 				$log_data = '';
 				foreach ($new as $index => $wert)
 				{
@@ -424,91 +421,9 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_teams');
 				
-				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
+				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
-			break;
-			
-			case 'delete':
-			
-				$confirm = isset($HTTP_POST_VARS['confirm']);
-				
-				if ( $team_id && $confirm )
-				{
-					$sql = 'SELECT * FROM ' . TEAMS . " WHERE team_id = $team_id";
-					if (!($result = $db->sql_query($sql)))
-					{
-						message_die(GENERAL_ERROR, 'Error getting team information', '', __LINE__, __FILE__, $sql);
-					}
-			
-					if (!($team_info = $db->sql_fetchrow($result)))
-					{
-						message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
-					}
-					
-					$logo_file	= $team_info['team_logo'];
-					$logo_type	= $team_info['team_logo_type'];
-					$logos_file	= $team_info['team_logos'];
-					$logos_type	= $team_info['team_logos_type'];
-					
-					$logo_file = basename($logo_file);
-					$logos_file = basename($logos_file);
-					
-					if ( $logo_type == LOGO_UPLOAD && $logo_file != '' )
-					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logo'] . '/' . $logo_file)) )
-						{
-							@unlink($root_path . $settings['path_team_logo'] . '/' . $logo_file);
-						}
-					}
-					
-					if ( $logos_type == LOGO_UPLOAD && $logos_file != '' )
-					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logos'] . '/' . $logos_file)) )
-						{
-							@unlink($root_path . $settings['path_team_logos'] . '/' . $logos_file);
-						}
-					}
-				
-					$sql = 'DELETE FROM ' . TEAMS . " WHERE team_id = $team_id";
-					$result = $db->sql_query($sql, BEGIN_TRANSACTION);
-					
-					$sql = 'DELETE FROM ' . TEAMS_USERS . " WHERE team_id = $team_id";
-					$result = $db->sql_query($sql, END_TRANSACTION);
-
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_DELETE', $team_info['team_name']);
-					
-					$oCache -> sCachePath = './../cache/';
-					$oCache -> deleteCache('display_subnavi_teams');
-					
-					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
-		
-				}
-				else if ( $team_id && !$confirm )
-				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
-		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
-		
-					$template->assign_vars(array(
-						'MESSAGE_TITLE'		=> $lang['common_confirm'],
-						'MESSAGE_TEXT'		=> $lang['confirm_delete_team'],
-		
-						'L_YES'				=> $lang['common_yes'],
-						'L_NO'				=> $lang['common_no'],
-		
-						'S_CONFIRM_ACTION'	=> append_sid("admin_teams.php"),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
-					));
-				}
-				else
-				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_team']);
-				}
-			
-				$template->pparse('body');
-				
 			break;
 			
 			case 'order':
@@ -695,8 +610,8 @@ else
 					'S_ACTION_ADDUSERS'		=> $s_addusers_select,
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
-					'S_TEAM_EDIT'			=> append_sid("admin_teams.php?mode=edit&amp;" . POST_TEAMS_URL . "=" . $team_id),
-					'S_TEAM_ACTION'			=> append_sid("admin_teams.php"),
+					'S_TEAM_EDIT'			=> append_sid('admin_teams.php?mode=edit&amp;' . POST_TEAMS_URL . '=' . $team_id),
+					'S_TEAM_ACTION'			=> append_sid('admin_teams.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2)
 				);
@@ -726,8 +641,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_change_rank');
 				
 				$message = $lang['team_change_member']
-					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 				break;
@@ -792,8 +707,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_change_level');
 					
 					$message = $lang['team_change_member']
-						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
+						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');				
 					message_die(GENERAL_MESSAGE, $message);
 
 				}
@@ -924,8 +839,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_add_member');
 			
 					$message = $lang['team_add_member']
-						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
+						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				
@@ -949,14 +864,98 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_delete_member');
 			
 				$message = $lang['team_del_member']
-					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid("admin_teams.php") . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid("admin_teams.php?mode=member&t=$team_id") . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
+					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
 			
+			case 'team_delete':
+			
+				$confirm = isset($HTTP_POST_VARS['confirm']);
+				
+				if ( $team_id && $confirm )
+				{
+					$sql = 'SELECT * FROM ' . TEAMS . " WHERE team_id = $team_id";
+					if (!($result = $db->sql_query($sql)))
+					{
+						message_die(GENERAL_ERROR, 'Error getting team information', '', __LINE__, __FILE__, $sql);
+					}
+			
+					if (!($team_info = $db->sql_fetchrow($result)))
+					{
+						message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
+					}
+					
+					$logo_file	= $team_info['team_logo'];
+					$logo_type	= $team_info['team_logo_type'];
+					$logos_file	= $team_info['team_logos'];
+					$logos_type	= $team_info['team_logos_type'];
+					
+					$logo_file = basename($logo_file);
+					$logos_file = basename($logos_file);
+					
+					if ( $logo_type == LOGO_UPLOAD && $logo_file != '' )
+					{
+						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logo'] . '/' . $logo_file)) )
+						{
+							@unlink($root_path . $settings['path_team_logo'] . '/' . $logo_file);
+						}
+					}
+					
+					if ( $logos_type == LOGO_UPLOAD && $logos_file != '' )
+					{
+						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logos'] . '/' . $logos_file)) )
+						{
+							@unlink($root_path . $settings['path_team_logos'] . '/' . $logos_file);
+						}
+					}
+				
+					$sql = 'DELETE FROM ' . TEAMS . " WHERE team_id = $team_id";
+					$result = $db->sql_query($sql, BEGIN_TRANSACTION);
+					
+					$sql = 'DELETE FROM ' . TEAMS_USERS . " WHERE team_id = $team_id";
+					$result = $db->sql_query($sql, END_TRANSACTION);
+
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_DELETE', $team_info['team_name']);
+					
+					$oCache -> sCachePath = './../cache/';
+					$oCache -> deleteCache('display_subnavi_teams');
+					
+					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>');
+					message_die(GENERAL_MESSAGE, $message);
+		
+				}
+				else if ( $team_id && !$confirm )
+				{
+					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+		
+					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+		
+					$template->assign_vars(array(
+						'MESSAGE_TITLE'		=> $lang['common_confirm'],
+						'MESSAGE_TEXT'		=> $lang['confirm_delete_team'],
+		
+						'L_YES'				=> $lang['common_yes'],
+						'L_NO'				=> $lang['common_no'],
+		
+						'S_CONFIRM_ACTION'	=> append_sid('admin_teams.php'),
+						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					));
+				}
+				else
+				{
+					message_die(GENERAL_MESSAGE, $lang['msg_must_select_team']);
+				}
+			
+				$template->pparse('body');
+				
+			break;
+			
 			default:
+				
 				message_die(GENERAL_ERROR, $lang['no_mode']);
+				
 				break;
 		}
 	
@@ -967,7 +966,6 @@ else
 		}
 	}
 	
-	//	Template
 	$template->set_filenames(array('body' => './../admin/style/acp_teams.tpl'));
 	$template->assign_block_vars('display', array());
 
@@ -985,7 +983,7 @@ else
 		
 		'L_DELETE'				=> $lang['delete'],
 		
-		'S_TEAM_ACTION'		=> append_sid("admin_teams.php")
+		'S_TEAM_ACTION'		=> append_sid('admin_teams.php'),
 	));
 	
 	$sql = 'SELECT MAX(team_order) AS max FROM ' . TEAMS;
@@ -1036,12 +1034,12 @@ else
 				'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['path_game'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
 				'TEAM_MEMBER_COUNT'	=> $row['total_members'],
 				
-				'MOVE_UP'			=> ( $row['team_order'] != '10' )				? '<a href="' . append_sid("admin_teams.php?mode=order&amp;move=-15&amp;" . POST_TEAMS_URL . "=" . $team_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'			=> ( $row['team_order'] != $max_order['max'] )	? '<a href="' . append_sid("admin_teams.php?mode=order&amp;move=15&amp;" . POST_TEAMS_URL . "=" . $team_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'			=> ( $row['team_order'] != '10' )				? '<a href="' . append_sid('admin_teams.php?mode=team_order&amp;move=-15&amp;' . POST_TEAMS_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $row['team_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_teams.php?mode=team_order&amp;move=15&amp;' . POST_TEAMS_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_MEMBER'			=> append_sid("admin_teams.php?mode=member&amp;" . POST_TEAMS_URL . "=" . $team_id),
-				'U_EDIT'			=> append_sid("admin_teams.php?mode=edit&amp;" . POST_TEAMS_URL . "=" . $team_id),
-				'U_DELETE'			=> append_sid("admin_teams.php?mode=delete&amp;" . POST_TEAMS_URL . "=" . $team_id),
+				'U_MEMBER'			=> append_sid('admin_teams.php?mode=member&amp;' . POST_TEAMS_URL . '=' . $team_id),
+				'U_EDIT'			=> append_sid('admin_teams.php?mode=team_edit&amp;' . POST_TEAMS_URL . '=' . $team_id),
+				'U_DELETE'			=> append_sid('admin_teams.php?mode=team_delete&amp;' . POST_TEAMS_URL . '=' . $team_id),
 			));
 		}
 	}

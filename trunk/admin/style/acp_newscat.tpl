@@ -41,7 +41,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="news_category_title" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_NEWSCAT_ADD}" /></td>
+	<td><input class="button" type="submit" name="newscat_add" value="{L_NEWSCAT_ADD}" /></td>
 </tr>
 </table>
 </form>

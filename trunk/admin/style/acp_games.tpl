@@ -41,7 +41,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="game_name" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_GAME_ADD}" /></td>
+	<td><input class="button" type="submit" name="game_add" value="{L_GAME_ADD}" /></td>
 </tr>
 </table>
 </form>
