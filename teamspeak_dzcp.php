@@ -51,17 +51,17 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 			$out = str_replace("OK", "", $out);
 			$out = trim($out);
 			
-			$name=substr($out,indexof($out,"server_name="),strlen($out));
+			$name=substr($out,indexof($out,"server_name='),strlen($out));
 			$name=substr($name,0,indexOf($name,"server_platform=")-strlen("server_platform="));
-			$os=substr($out,indexOf($out,"server_platform="),strlen($out));
+			$os=substr($out,indexOf($out,"server_platform='),strlen($out));
 			$os=substr($os,0,indexOf($os,"server_welcomemessage=")-strlen("server_welcomemessage="));
-			$uptime=substr($out,indexOf($out,"server_uptime="),strlen($out));
+			$uptime=substr($out,indexOf($out,"server_uptime='),strlen($out));
 			$uptime=substr($uptime,0,indexOf($uptime,"server_currrentusers=")-strlen("server_currrentusers="));
-			$cAmount=substr($out,indexOf($out,"server_currentchannels="),strlen($out));
+			$cAmount=substr($out,indexOf($out,"server_currentchannels='),strlen($out));
 			$cAmount=substr($cAmount,0,indexOf($cAmount,"server_bwinlastsec=")-strlen("server_bwinlastsec="));
-			$user=substr($out,indexOf($out,"server_currentusers="),strlen($out));
+			$user=substr($out,indexOf($out,"server_currentusers='),strlen($out));
 			$user=substr($user,0,indexOf($user,"server_currentchannels=")-strlen("server_currentchannels="));
-			$max=substr($out,indexOf($out,"server_maxusers="),strlen($out));
+			$max=substr($out,indexOf($out,"server_maxusers='),strlen($out));
 			$max=substr($max,0,indexOf($max,"server_allow_codec_celp51=")-strlen("server_allow_codec_celp51="));
 			
 			fclose($fp);

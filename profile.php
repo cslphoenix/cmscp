@@ -146,4 +146,4 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 	include($root_path . 'includes/page_tail.php');
 }
 
-redirect(append_sid("index.php", true));
+redirect(append_sid('index.php', true));

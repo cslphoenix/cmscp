@@ -124,7 +124,7 @@ if( ( $total_categories = count($category_rows) ) )
 		'L_FORUM_LOCKED' => $lang['Forum_is_locked'],
 		'L_MARK_FORUMS_READ' => $lang['Mark_all_forums'], 
 
-		'U_MARK_READ' => append_sid("index.$phpEx?mark=forums"))
+		'U_MARK_READ' => append_sid('index.$phpEx?mark=forums'))
 	);
 
 	//
@@ -156,7 +156,7 @@ if( ( $total_categories = count($category_rows) ) )
 			$template->assign_block_vars('catrow', array(
 				'CAT_ID' => $cat_id,
 				'CAT_DESC' => $category_rows[$i]['cat_title'],
-				'U_VIEWCAT' => append_sid("forum.php?" . POST_CATEGORY_URL . "=$cat_id"))
+				'U_VIEWCAT' => append_sid('forum.php?' . POST_CATEGORY_URL . '=' . $cat_id))
 			);
 
 			if ( $viewcat == $cat_id || $viewcat == -1 )
@@ -226,9 +226,9 @@ if( ( $total_categories = count($category_rows) ) )
 
 								$last_post = $last_post_time . '<br>';
 
-								$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
+								$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
 								
-								$last_post .= '<a href="' . append_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
+								$last_post .= '<a href="' . append_sid('viewtopic.php?'  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
 							}
 							else
 							{
@@ -249,7 +249,7 @@ if( ( $total_categories = count($category_rows) ) )
 								'LAST_POST' => $last_post,
 								'L_FORUM_FOLDER_ALT' => $folder_alt, 
 
-								'U_VIEWFORUM' => append_sid("viewforum.php?" . POST_FORUM_URL . "=$forum_id"))
+								'U_VIEWFORUM' => append_sid('viewforum.php?' . POST_FORUM_URL . '=' . $forum_id))
 							);
 						}
 					}

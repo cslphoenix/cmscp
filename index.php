@@ -62,7 +62,7 @@ $template->assign_vars(array(
 	
 	'L_MARK_FORUMS_READ' => $lang['Mark_all_forums'], 
 
-	'U_MARK_READ' => append_sid("index.php?mark=forums"))
+	'U_MARK_READ' => append_sid('index.php?mark=forums'))
 );
 
 if ( $mode == 'cache')

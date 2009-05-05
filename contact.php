@@ -265,7 +265,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
-			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
+			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid('contact.php?mode=$mode") . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -288,7 +288,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 		'S_CATEGORIE'		=> _select_categorie($contact_categorie),
 		
 		'S_HIDDEN_FIELD'	=> $s_hidden_field,
-		'S_CONTACT_ACTION'	=> append_sid("contact.php?mode=$mode"),
+		'S_CONTACT_ACTION'	=> append_sid('contact.php?mode=$mode'),
 		
 	));
 

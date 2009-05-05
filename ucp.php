@@ -116,7 +116,7 @@ if ( $userdata['session_logged_in'] )
 								
 				$template->assign_block_vars('lobby_news_new_row', array(
 						'NEWS_NAME'		=> $news_title,
-						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">' .  sprintf($language, $count) . '</a>' : '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']) . '">Ungelesen</a>',
+						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' .  sprintf($language, $count) . '</a>' : '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">Ungelesen</a>',
 				));
 			}
 		}
@@ -194,7 +194,7 @@ if ( $userdata['session_logged_in'] )
 				
 				$template->assign_block_vars('lobby_match_new_row', array(
 						'MATCH_NAME'		=> $match_data[$i]['match_rival'],
-						'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+						'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=matchdetails&amp;' . POST_MATCH_URL . '=' . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 				));
 			}
 			else if ( $match_data[$i]['match_date'] < time() )
@@ -246,7 +246,7 @@ if ( $userdata['session_logged_in'] )
 					$template->assign_block_vars('lobby_match_old', array());
 					$template->assign_block_vars('lobby_match_old.lobby_match_old_row', array(
 							'MATCH_NAME'		=> $match_data[$i]['match_rival'],
-							'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+							'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=matchdetails&amp;' . POST_MATCH_URL . '=' . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 						
 					));
 				}
@@ -322,7 +322,7 @@ if ( $userdata['session_logged_in'] )
 					
 					$template->assign_block_vars('lobby_training.lobby_training_new_row', array(
 							'TRAINING_NAME'		=> $training_data[$i]['training_vs'],
-							'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_TRAINING_URL . "=" . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+							'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=matchdetails&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 					));
 				}
 				else if ( $training_data[$i]['training_start'] < time() )
@@ -369,7 +369,7 @@ if ( $userdata['session_logged_in'] )
 						$template->assign_block_vars('lobby_training.lobby_training_old', array());
 						$template->assign_block_vars('lobby_training.lobby_training_old.lobby_training_old_row', array(
 								'TRAINING_NAME'		=> $training_data[$i]['training_vs'],
-								'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid("match.php?mode=matchdetails&amp;" . POST_TRAINING_URL . "=" . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+								'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=matchdetails&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 							
 						));
 					}
@@ -391,7 +391,7 @@ else
 {
 	if ( !$userdata['session_logged_in'] )
 	{
-		redirect(append_sid("login.php?redirect=ucp.php"));
+		redirect(append_sid('login.php?redirect=ucp.php'));
 	}
 }
 
