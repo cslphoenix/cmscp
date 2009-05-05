@@ -15,6 +15,7 @@ way to fit your requirements.
 	height:32px;
 	width:986px;
 	font-weight:bold;
+	
 }
 
 .menu ul li a, .menu ul li a:visited {
@@ -81,7 +82,8 @@ way to fit your requirements.
 	display:block;
 	background:#353535;
 	color:#fff;
-	height:16px;
+	height:auto;
+	padding:2px 0px;
 	font-weight:normal;
 }
 

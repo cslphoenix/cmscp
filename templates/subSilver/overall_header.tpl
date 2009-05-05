@@ -145,7 +145,7 @@
 	<td>
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}<br>CMS Version: {CMS_VERSION}</td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}<br>CMS Version: {VERSION}</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
 				<!-- BEGIN switch_user_logged_out -->
 				<form method="post" action="{S_LOGIN_ACTION}">
