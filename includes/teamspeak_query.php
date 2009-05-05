@@ -610,16 +610,16 @@ function defaultInfo($ip,$tPort,$port)
 		$out   	= str_replace("OK", "", $out);
 		$out 	= trim($out);
 		
-		$name=substr($out,indexOf($out,"server_name="),strlen($out));
+		$name=substr($out,indexOf($out,"server_name='),strlen($out));
 		$name=substr($name,0,indexOf($name,"server_platform=")-strlen("server_platform="));
 		
-		$os=substr($out,indexOf($out,"server_platform="),strlen($out));
+		$os=substr($out,indexOf($out,"server_platform='),strlen($out));
 		$os=substr($os,0,indexOf($os,"server_welcomemessage=")-strlen("server_welcomemessage="));
 		
-		$tsType=substr($out,indexOf($out,"server_clan_server="),strlen($out));
+		$tsType=substr($out,indexOf($out,"server_clan_server='),strlen($out));
 		$tsType=substr($tsType,0,indexOf($tsType,"server_udpport=")-strlen("server_udpport="));			
 		
-		$welcomeMsg=substr($out,indexOf($out,"server_welcomemessage="),strlen($out));
+		$welcomeMsg=substr($out,indexOf($out,"server_welcomemessage='),strlen($out));
 		$welcomeMsg=substr($welcomeMsg,0,indexOf($welcomeMsg,"server_webpost_linkurl=")-strlen("server_webpost_linkurl="));
 				
 		

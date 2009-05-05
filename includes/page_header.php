@@ -2,7 +2,7 @@
 
 if ( !defined('IN_CMS') )
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 define('HEADER_INC', TRUE);
@@ -138,7 +138,7 @@ if ( $groups_data )
 		$groups_name	= $groups_data[$i]['group_name'];
 		$groups_style	= $groups_data[$i]['group_color'];
 		
-		$groups_list[] = '<a href="' . append_sid("groups.php?mode=view&amp;" . POST_GROUPS_URL . "=" . $groups_id) . '" style="color:' . $groups_style . '"><b>' . $groups_name . '</b></a>';
+		$groups_list[] = '<a href="' . append_sid('groups.php?mode=view&amp;' . POST_GROUPS_URL . '=' . $groups_id) . '" style="color:' . $groups_style . '"><b>' . $groups_name . '</b></a>';
 	}
 	
 	$groups_list = implode(', ', $groups_list);
@@ -192,12 +192,12 @@ while( $row = $db->sql_fetchrow($result) )
 
 			if ( $row['user_allow_viewonline'] )
 			{
-				$user_online_link = '<a href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
+				$user_online_link = '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
 				$logged_visible_online++;
 			}
 			else
 			{
-				$user_online_link = '<a href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
+				$user_online_link = '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
 				$logged_hidden_online++;
 			}
 
@@ -356,7 +356,7 @@ display_subnavi_match();
 display_subnavi_news();
 display_navi();
 
-if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 {
 	if ( $settings['subnavi_training'] )	{ display_navitrain(); }
 }

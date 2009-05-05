@@ -207,7 +207,7 @@ class stat_run_class
 			$sql_duration += $sql_dur;
 
 			// dump informations
-			if ( defined('DEBUG_SQL') && ($userdata['user_level'] == ADMIN) )
+			if ( defined('DEBUG_SQL') && ($userdata['user_level'] == ADMIN ) )
 //			if ( defined('DEBUG_SQL') )
 			{
 				$sql_real_dur = 0;

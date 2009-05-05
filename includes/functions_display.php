@@ -45,7 +45,7 @@ function display_teams()
 				$template->assign_block_vars('teams.teams_row', array(
 					'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 					'TEAM_NAME'		=> $teams[$i]['team_name'],
-					'TO_TEAM'		=> append_sid("teams.php?mode=view&amp;" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
+					'TO_TEAM'		=> append_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
 				));
 			}
 		}
@@ -82,7 +82,7 @@ function display_newusers()
 		for ($i = 0; $i < count($users); $i++)
 		{
 			$template->assign_block_vars('new_users.user_row', array(
-				'USERNAME'		=> '<a class="small" href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $users[$i]['user_id']) . '" style="color:' . $users[$i]['user_color'] . '"><b>' . $users[$i]['username'] . '</b></a>',
+				'USERNAME'		=> '<a class="small" href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $users[$i]['user_id']) . '" style="color:' . $users[$i]['user_color'] . '"><b>' . $users[$i]['username'] . '</b></a>',
 			));
 		}
 		
@@ -403,7 +403,7 @@ function display_minical()
 			$i = '0'.$i;
 		}
 		
-		if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+		if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 		{
 			if ($i == $tag || is_array($monat_birthday[$i]) || is_array($monat_events[$i]) || is_array($monat_matchs[$i]) || is_array($monat_trainings[$i]))
 			{
@@ -490,7 +490,7 @@ function display_minical()
 				}
 				
 				$class = ( $day_event_num > 1 ) ? 'more' : $day_class;
-				$day .= '<td align="center" width="14%" class="' . $class . '"><a class="' . $class . '" href="' . append_sid("calendar.php#" . $i ) . '">' . $i . '' . $day_event . '</span></a></td>';
+				$day .= '<td align="center" width="14%" class="' . $class . '"><a class="' . $class . '" href="' . append_sid('calendar.php#' . $i ) . '">' . $i . '' . $day_event . '</span></a></td>';
 				
 			}
 			else
@@ -570,7 +570,7 @@ function display_minical()
 				}
 				
 				$class = ( $day_event_num > 1 ) ? 'more' : $day_class;
-				$day .= '<td align="center" width="14%" class="' . $class . '"><a class="' . $class . '" href="' . append_sid("calendar.php#" . $i ) . '">' . $i . '' . $day_event . '</span></a></td>';
+				$day .= '<td align="center" width="14%" class="' . $class . '"><a class="' . $class . '" href="' . append_sid('calendar.php#' . $i ) . '">' . $i . '' . $day_event . '</span></a></td>';
 				
 			}
 			else
@@ -619,7 +619,7 @@ function display_navimatch()
 	$time = time() - 86400;
 	$monat = date("m", time());	//	Heutiger Monat
 	
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$cache = 'calendar_' . $monat . '_match_member';
 		$sql = 'SELECT * FROM ' . MATCH . ' WHERE match_date > ' . $time . " AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '" . $monat."' ORDER BY match_date";
@@ -641,7 +641,7 @@ function display_navimatch()
 			
 			$template->assign_block_vars('match.match_row', array(
 				'L_NAME'	=> $details,
-				'U_NAME'	=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $month_rows_w[$k]['match_id']),
+				'U_NAME'	=> append_sid('match.php?mode=matchdetails&amp;' . POST_MATCH_URL . '=' . $month_rows_w[$k]['match_id']),
 				'DATE'	=> $date,
 			));
 		}
@@ -655,7 +655,7 @@ function display_navitrain()
 {
 	global $db, $oCache, $root_path, $settings, $template, $userdata, $lang;
 	
-	if ( $settings['subnavi_training'] && ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN) )
+	if ( $settings['subnavi_training'] && ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN ) )
 	{
 		$template->assign_block_vars('training', array());
 	}
@@ -677,7 +677,7 @@ function display_navitrain()
 			
 			$template->assign_block_vars('training.training_row', array(
 				'L_NAME'	=> $details,
-				'U_NAME'	=> append_sid("training.php?mode=trainingdetails&amp;" . POST_TRAINING_URL . "=" . $month_rows_t[$k]['training_id']),
+				'U_NAME'	=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $month_rows_t[$k]['training_id']),
 				'DATE'		=> $date,
 				
 			));
@@ -759,7 +759,7 @@ function display_subnavi_match()
 {
 	global $db, $root_path, $oCache, $settings, $template, $userdata, $lang;
 	
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH . ' m
@@ -811,7 +811,7 @@ function display_subnavi_match()
 				'MATCH_GAME'	=> display_gameicon($match_last[$i]['game_size'], $match_last[$i]['game_image']),
 				'MATCH_NAME'	=> $match_name,
 				'MATCH_RESULT'	=> $clan . ':' . $rival,
-				'U_DETAILS'		=> append_sid("match.php?mode=matchdetails&amp;" . POST_MATCH_URL . "=" . $match_last[$i]['match_id']),
+				'U_DETAILS'		=> append_sid('match.php?mode=matchdetails&amp;' . POST_MATCH_URL . '=' . $match_last[$i]['match_id']),
 			));
 		}
 	}
@@ -831,7 +831,7 @@ function display_subnavi_news()
 {
 	global $db, $config, $root_path, $oCache, $settings, $template, $userdata, $lang;
 	
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN)
+	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
 		$sql = 'SELECT n.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS . ' n
@@ -885,7 +885,7 @@ function display_subnavi_news()
 				'CLASS' 		=> $class,
 				'NEWS_TITLE'	=> $news_title,
 				'NEWS_GAME'		=> ( $news_last[$i]['match_id'] ) ? display_gameicon($news_last[$i]['game_size'], $news_last[$i]['game_image']) : '',
-				'U_DETAILS'		=> append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_last[$i]['news_id']),
+				'U_DETAILS'		=> append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_last[$i]['news_id']),
 			));
 		}
 	}
