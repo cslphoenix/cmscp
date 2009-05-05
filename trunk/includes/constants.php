@@ -2,7 +2,7 @@
 
 if ( !defined('IN_CMS') )
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 // User Levels <- Do not change the values of USER or ADMIN
@@ -212,7 +212,7 @@ define('POST_TRAINING_URL',		'tr');
 define('POST_USERS_URL',		'u');
 define('POST_EVENT_URL',		'e');
 define('POST_CASH_URL',			'c');
-define('POST_CASHUSER_URL',		'cu');
+define('POST_CASH_USER_URL',	'cu');
 
 define('POST_BUGTRACKER_URL',	'bt');
 define('POST_CHANGELOG_URL',	'cl');
@@ -320,6 +320,7 @@ define('TRAINING_USERS',			$db_prefix . 'training_users');
 
 
 define('CASH',						$db_prefix . 'cash');
+define('CASH_BANK',					$db_prefix . 'cash_bank');
 define('CASH_USERS',				$db_prefix . 'cash_users');
 
 ?>

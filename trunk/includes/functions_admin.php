@@ -12,11 +12,21 @@ function get_data($mode, $id, $type)
 {
 	global $db;
 
-	switch($mode)
+	switch ($mode)
 	{
 		case 'authlist':
 			$table		= AUTHLIST;
 			$idfield	= 'auth_id';
+		break;
+		
+		case 'cash':
+			$table		= CASH;
+			$idfield	= 'cash_id';
+		break;
+		
+		case 'cash_user':
+			$table		= CASH_USERS;
+			$idfield	= 'cash_user_id';
 		break;
 		
 		case 'event':
@@ -157,7 +167,7 @@ function renumber_order($mode, $type = '')
 {
 	global $db;
 
-	switch($mode)
+	switch ($mode)
 	{
 		case 'teams':
 			$table		= TEAMS;

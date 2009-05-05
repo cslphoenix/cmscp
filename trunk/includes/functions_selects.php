@@ -22,6 +22,82 @@
 
 ***/
 
+function select_box($type, $class, $field_id, $field_name, $default = '')
+{
+	global $db, $lang, $config, $settings;
+	
+	switch ($type)
+	{
+		case 'user';
+		
+			$table	= USERS;
+			$where	= ' WHERE user_id <> ' . ANONYMOUS;
+			$order	= ' ORDER BY user_id DESC';
+			
+			break;
+			
+		default:
+			
+			message_die(GENERAL_ERROR, 'Error', '');
+			
+			break;
+	}
+	
+	$sql = 'SELECT ' . $field_id . ', ' . $field_name . ' FROM ' . $table . $where . $order;
+	if (!($result = $db->sql_query($sql)))
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$data = $db->sql_fetchrowset($result);
+	
+	$select = '<select class="' . $class . '" name="' . $field_id . '">';
+	$select .= '<option value="0">&raquo; ' . $lang['msg_select_' . $type] . '</option>';
+	
+	foreach ( $data as $info => $value)
+	{
+		$selected = ( $value[$field_id] == $default ) ? 'selected="selected"' : '';
+		$select .= '<option value="' . $value[$field_id] . '" ' . $selected . '>&raquo; ' . $value[$field_name] . '&nbsp;</option>';
+	}
+	$select .= '</select>';
+
+	return $select;
+	
+}
+
+function _select_user($class, $default = '')
+{
+	global $db, $lang;
+	
+	$sql = 'SELECT user_id, username
+				FROM ' . USERS . '
+				WHERE user_id <> ' . ANONYMOUS . '
+			ORDER BY user_level DESC';
+//	$data_users = _cached($sql, 'data_users', 0);
+	if (!($result = $db->sql_query($sql)))
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$data_users = $db->sql_fetchrowset($result);
+
+	$users = array();
+	for ( $i = 0; $i < count($data_users); $i++ )
+	{
+		$users[] = $data_users[$i];
+	}
+	
+	$select = '<select class="' . $class . '" name="user_id">';
+	$select .= '<option value="">&raquo; ' . $lang['msg_select_user'] . '</option>';
+	
+	foreach($users as $user => $user_info)
+	{
+		$selected = ( $user_info['user_id'] == $default ) ? 'selected="selected"' : '';
+		$select .= '<option value="' . $user_info['user_id'] . '" ' . $selected . '>&raquo; ' . $user_info['username'] . '&nbsp;</option>';
+	}
+	$select .= '</select>';
+
+	return $select;
+}
+
 function _select_box($default, $type)
 {
 	global $db, $lang;
@@ -190,19 +266,19 @@ function _select_date($default, $var, $value)
 {
 	$lang;
 	
-	switch($default)
+	switch ($default)
 	{
 		case 'day':
 		
 			$select = '<select class="select" name="' . $var . '">';
-			for ($i=1; $i < 32; $i++)
+			for ( $i = 1; $i < 32; $i++ )
 			{
 				if ($i < 10)
 				{
 					$i = '0'.$i;
 				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+				$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
 			}
 			$select .= '</select>';
 			
@@ -211,14 +287,77 @@ function _select_date($default, $var, $value)
 		case 'month':
 		
 			$select = '<select class="select" name="' . $var . '">';
-			for ($i=1; $i < 13; $i++)
+			for ( $i = 1; $i < 13; $i++ )
 			{
-				if ($i < 10)
+				if ( $i < 10 )
 				{
 					$i = '0'.$i;
 				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+				$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+			}
+			$select .= '</select>';
+			
+		break;
+		
+		case 'monthn':
+		
+			$monate = array(
+				'01'	=> 'Januar',
+				'02'	=> 'Februar',
+				'03'	=> 'M&auml;rz',
+				'04'	=> 'April',
+				'05'	=> 'Mai',
+				'06'	=> 'Juni',
+				'07'	=> 'Juli',
+				'08'	=> 'August',
+				'09'	=> 'September',
+				'10'	=> 'Oktober',
+				'11'	=> 'November',
+				'12'	=> 'Dezember'
+			);
+		
+			$select = '<select class="select" name="' . $var . '">';
+			for ( $i = 1; $i < 13; $i++ )
+			{
+				if ( $i < 10 )
+				{
+					$i = '0'.$i;
+				}
+				$selected = ( $i == $value ) ? 'selected="selected"' : '';
+				$select .= '<option value="' . $i . '" ' . $selected . '>' . $monate[$i] . '&nbsp;</option>';
+			}
+			$select .= '</select>';
+			
+		break;
+		
+		case 'monthm':
+		
+			$monate = array(
+				'01'	=> 'Januar',
+				'02'	=> 'Februar',
+				'03'	=> 'M&auml;rz',
+				'04'	=> 'April',
+				'05'	=> 'Mai',
+				'06'	=> 'Juni',
+				'07'	=> 'Juli',
+				'08'	=> 'August',
+				'09'	=> 'September',
+				'10'	=> 'Oktober',
+				'11'	=> 'November',
+				'12'	=> 'Dezember'
+			);
+			
+			if ( !is_array($value) )
+			{
+				$value = explode(',', $value);
+			}
+		
+			$select = '<select class="select" name="' . $var . '[]" multiple="multiple rows="12" size="12">';
+			foreach ($monate as $const => $name)
+			{
+				$selected = (in_array($const, $value)) ? ' selected="selected"' : '';
+				$select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
 			}
 			$select .= '</select>';
 			
@@ -230,7 +369,7 @@ function _select_date($default, $var, $value)
 			for ($i=$value; $i < $value+2; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+				$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
 			}
 			$select .= '</select>';
 		
