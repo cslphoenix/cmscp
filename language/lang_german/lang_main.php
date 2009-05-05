@@ -153,7 +153,7 @@ $lang['training']			= 'Trainings';
 $lang['training_upcoming']	= 'Anstehende Trainings';
 $lang['training_expired']	= 'Abgelaufen Trainings';
 $lang['training_vs']		= 'Training gegen: ';
-$lang['training_denied']	= 'Keine Berechtigung für diese Seite.';
+
 
 $lang['edit_match']			= 'War bearbeiten';
 $lang['edit_match_details']	= 'Wardetails bearbeiten';
@@ -1346,4 +1346,44 @@ $lang['dbg_empty'] = 'Empty';
 
 
 $lang['required']		= 'Mit * markierte Felder sind erforderlich';
+
+
+$lang['access_denied']	= 'Keine Berechtigung für diese Seite.';
+
+//
+//	Clankasse (Cash)
+//
+$lang['cash_amount']			= 'Betrag';
+$lang['cash_name']				= 'Beitragsname';
+$lang['cash_interval']			= 'Zahlungsintervall';
+$lang['cash_interval_m']		= 'Monatlich';
+$lang['cash_interval_o']		= 'Einmalig';
+$lang['cash_interval_month']	= 'Monatlich';
+$lang['cash_interval_2weeks']	= 'alle 2 Wochen';
+$lang['cash_interval_week']		= 'Wöchentlich';
+$lang['cash_no_entry']			= 'kein Eintrag';
+$lang['interval_m']				= 'Monatlich ab: %s';
+$lang['interval_o']				= 'Einmalig für Monat: %s';
+
+//
+//	Header Title
+//
+$lang['head_cash']		= 'Clankasse';
+
+$lang['month'] = array(
+	'01'	=> 'Januar',
+	'02'	=> 'Februar',
+	'03'	=> 'M&auml;rz',
+	'04'	=> 'April',
+	'05'	=> 'Mai',
+	'06'	=> 'Juni',
+	'07'	=> 'Juli',
+	'08'	=> 'August',
+	'09'	=> 'September',
+	'10'	=> 'Oktober',
+	'11'	=> 'November',
+	'12'	=> 'Dezember'
+);
+
+
 ?>

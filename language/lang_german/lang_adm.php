@@ -855,7 +855,7 @@ $lang['delete_training']			= 'Der Rang wurde gelöscht';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht';
 
 $lang['delete_cash']				= 'Der Eintrag wurde gelöscht';
-$lang['delete_training']			= 'Der Benutzereintrag wurde gelöscht';
+$lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht';
 
 $lang['confirm_delete_authlist']		= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
 $lang['confirm_delete_event']			= 'Bist du sicher, dass dieses Event gelöscht werden soll?';
@@ -910,6 +910,8 @@ $lang['click_return_user_groups']	= 'Klicke %shier%s, um zur Benutzer (Benutzerg
 
 $lang['click_return_cash']			= 'Klicke %shier%s, um zur Clankassen Administration zurückzukehren';
 
+$lang['order_game']					= 'Spiele neusortiert.';
+
 $lang['msg_group_add_member']		= 'Benutzer zur Gruppe hinzugefügt';
 $lang['msg_group_del_member']		= 'Benutzer gelöscht von der Gruppe';
 
@@ -930,6 +932,13 @@ $lang['msg_select_name']		= 'Bitte Name eintragen';
 $lang['msg_select_description']	= 'Bitte Beschreibung eintragen';
 $lang['msg_select_url']			= 'Bitte Link eintragen';
 $lang['msg_select_amount']		= 'Bitte einen Betrag eintragen';
+$lang['msg_select_user']		= 'Bitte einen Benutzer auswählen';
+
+$lang['msg_select_bankdata_name']		= 'Inhaber des Kontos';
+$lang['msg_select_bankdata_bank']		= 'Bankname';
+$lang['msg_select_bankdata_blz']		= 'Bankleitzahl';
+$lang['msg_select_bankdata_number']		= 'Kontonummer';
+$lang['msg_select_bankdata_reason']		= 'Verwendungszweck';
 
 
 $lang['game_select']	= 'Spiel auswählen';
@@ -1146,5 +1155,41 @@ $lang['cash_amount']	= 'Betrag';
 $lang['cash_type_a']	= 'Gameserver';
 $lang['cash_type_b']	= 'Voiceserver';
 $lang['cash_type_c']	= 'sonstiges';
+
+$lang['cash_user_add']		= 'Neuen Benutzereintrag erstellen';
+$lang['cash_user_new_add']	= 'Benutzer hinzufügen';
+$lang['cash_user_edit']		= 'Benutzer bearbeiten';
+
+$lang['cash_username']			= 'Benutzer';
+$lang['cash_user_month']		= 'Monat';
+$lang['cash_user_interval_m']	= 'Monatlich';
+$lang['cash_user_interval_o']	= 'Einmalig';
+
+$lang['cash_interval']			= 'Zahlungsintervall';
+$lang['cash_interval_month']	= 'Monatlich';
+$lang['cash_interval_2weeks']	= 'alle 2 Wochen';
+$lang['cash_interval_week']		= 'Wöchentlich';
+
+$lang['cash_bankdata']		= 'Bankdaten';
+$lang['cash_bd_bank']		= 'Kreditinstitut';
+$lang['cash_bd_number']		= 'Kontonummer';
+$lang['cash_bd_blz']		= 'Bankleitzahl';
+$lang['cash_bd_name']		= 'Inhaber';
+$lang['cash_bd_reason']		= 'Verwendungszwec';
+
+$lang['month'] = array(
+	'01'	=> 'Januar',
+	'02'	=> 'Februar',
+	'03'	=> 'M&auml;rz',
+	'04'	=> 'April',
+	'05'	=> 'Mai',
+	'06'	=> 'Juni',
+	'07'	=> 'Juli',
+	'08'	=> 'August',
+	'09'	=> 'September',
+	'10'	=> 'Oktober',
+	'11'	=> 'November',
+	'12'	=> 'Dezember'
+);
 
 ?>
