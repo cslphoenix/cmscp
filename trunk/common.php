@@ -2,7 +2,7 @@
 
 if ( !defined('IN_CMS') )
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 $starttime = microtime();
@@ -39,13 +39,13 @@ if (@phpversion() >= '5.0.0' && (!@ini_get('register_long_arrays') || @ini_get('
 // Protect against GLOBALS tricks
 if (isset($HTTP_POST_VARS['GLOBALS']) || isset($HTTP_POST_FILES['GLOBALS']) || isset($HTTP_GET_VARS['GLOBALS']) || isset($HTTP_COOKIE_VARS['GLOBALS']))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 // Protect against HTTP_SESSION_VARS tricks
 if (isset($HTTP_SESSION_VARS) && !is_array($HTTP_SESSION_VARS))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')

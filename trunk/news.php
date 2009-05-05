@@ -126,14 +126,14 @@ if ($mode == '')
 				'NEWS_TITLE'		=> $news_data[$i]['news_title'],
 				'NEWS_TEXT'			=> html_entity_decode($news_data[$i]['news_text'], ENT_QUOTES),
 				'NEWS_COMMENTS'		=> $news_data[$i]['news_comment'],
-				'NEWS_AUTHOR'		=> '<a href="' . append_sid("profile.php?mode=view&amp;" . POST_USERS_URL . "=" . $news_data[$i]['user_id']) . '" style="color:' . $news_data[$i]['user_color'] . '"><b>' . $news_data[$i]['username'] . '</b></a>',
+				'NEWS_AUTHOR'		=> '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $news_data[$i]['user_id']) . '" style="color:' . $news_data[$i]['user_color'] . '"><b>' . $news_data[$i]['username'] . '</b></a>',
 				'NEWS_PUBLIC_TIME'	=> $news_date,
 				
 				
 				'NEWSCAT_TITLE'		=> ( $news_data[$i]['news_category_title'] ) ? $news_data[$i]['news_category_title'] : '',
 				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news_data[$i]['news_category_image'] : '',
 				
-				'U_NEWS'			=> append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_data[$i]['news_id']),
+				'U_NEWS'			=> append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']),
 				
 			));
 			
@@ -175,7 +175,7 @@ if ($mode == '')
 			$current_page = ( !count($news_data) ) ? 1 : ceil( count($news_data) / $settings['news_limit'] );
 				
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("news.php", count($news_data), $settings['news_limit'], $start),
+				'PAGINATION' => generate_pagination('news.php', count($news_data), $settings['news_limit'], $start),
 				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['news_limit'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'],
@@ -328,15 +328,15 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 					
 					'ICON'			=> $icon,
 	
-					'U_EDIT'		=> append_sid("news.php?mode=edit&amp;" . POST_NEWS_URL . "=" . $comment_entry[$i]['news_id']),
-					'U_DELETE'		=> append_sid("news.php?mode=delete&amp;" . POST_NEWS_URL . "=" . $comment_entry[$i]['news_id'])
+					'U_EDIT'		=> append_sid('news.php?mode=edit&amp;' . POST_NEWS_URL . '=' . $comment_entry[$i]['news_id']),
+					'U_DELETE'		=> append_sid('news.php?mode=delete&amp;' . POST_NEWS_URL . '=' . $comment_entry[$i]['news_id'])
 				));
 			}
 		
 			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_id, count($comment_entry), $settings['site_comment_per_page'], $start),
+				'PAGINATION' => generate_pagination('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_id, count($comment_entry), $settings['site_comment_per_page'], $start),
 				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'])
@@ -459,7 +459,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				_comment_message('add', 'news', $news_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
-				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_news'],  '<a href="' . append_sid("news.php?mode=view&amp;" . POST_NEWS_URL . "=" . $news_id) . '">', '</a>');
+				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_news'],  '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}

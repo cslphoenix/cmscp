@@ -12,7 +12,7 @@ $arr_woche_kurz = array("So","Mo","Di","Mi","Do","Fr","Sa");
 
 $monate = array(
 	'1'		=> 'Januar',
-	'2'		=> 'Feber',
+	'2'		=> 'Februar',
 	'3'		=> 'M&auml;rz',
 	'4'		=> 'April',
 	'5'		=> 'Mai',

@@ -375,7 +375,7 @@ $template->assign_vars(array(
 	'L_TS_VIEWER'			=> $lang['teamspeak_viewer'],
 	'L_TS_PLIST'			=> $lang['teamspeak_plist'],
 	
-	'S_TEAMSPEAK_ACTION'	=> append_sid("teamspeak.php"),
+	'S_TEAMSPEAK_ACTION'	=> append_sid('teamspeak.php'),
 ));
 
 include($root_path . 'includes/page_header.php');

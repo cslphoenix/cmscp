@@ -50,7 +50,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			$disable_mode = explode(',', $config['page_disable_mode']);
 			if ($config['page_disable'] && $row['user_level'] != ADMIN && in_array($row['user_level'], $disable_mode))
 			{
-				redirect(append_sid("news.php", true));
+				redirect(append_sid('news.php', true));
 			}
 			else
 			{
@@ -63,7 +63,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				
 				// Check to see if user is allowed to login again... if his tries are exceeded
 				if ($row['user_last_login_try'] && $config['login_reset_time'] && $config['max_login_attempts'] && 
-					$row['user_last_login_try'] >= (time() - ($config['login_reset_time'] * 60)) && $row['user_login_tries'] >= $config['max_login_attempts'] && $userdata['user_level'] != ADMIN)
+					$row['user_last_login_try'] >= (time() - ($config['login_reset_time'] * 60)) && $row['user_login_tries'] >= $config['max_login_attempts'] && $userdata['user_level'] != ADMIN )
 				{
 					message_die(GENERAL_MESSAGE, sprintf($lang['Login_attempts_exceeded'], $config['max_login_attempts'], $config['login_reset_time']));
 				}
@@ -72,7 +72,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				{
 					if ( isset($HTTP_POST_VARS['admin']) && $userdata['username'] != $username )
 					{
-						$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
+						$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid('news.php') . '">', '</a>');
 						message_die(GENERAL_MESSAGE, $message);
 					}
 					$autologin = ( isset($HTTP_POST_VARS['autologin']) ) ? TRUE : 0;
@@ -85,7 +85,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					
 					if (isset($HTTP_POST_VARS['admin']))
 					{
-//						$login = ($userdata['user_level'] == ADMIN) ? ACP_LOGIN : MCP_LOGIN;
+//						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //						add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
 						_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'UCP_ACP_LOGIN');
 					}
@@ -114,7 +114,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					
 					if (isset($HTTP_POST_VARS['admin']))
 					{
-//						$login = ($userdata['user_level'] == ADMIN) ? ACP_LOGIN : MCP_LOGIN;
+//						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //						add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
 						_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, UCP_ACP_LOGIN_FALSE, '');
 					}
@@ -130,7 +130,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				
 				$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
-				$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
+				$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid('news.php') . '">', '</a>');
 
 				message_die(GENERAL_MESSAGE, $message);
 			}
@@ -147,14 +147,14 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				
 			if (isset($HTTP_POST_VARS['admin']))
 			{
-//				$login = ($userdata['user_level'] == ADMIN) ? ACP_LOGIN : MCP_LOGIN;
+//				$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //				add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_False'], '');
 				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_login_false');
 			}
 
 			$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
-			$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("news.php") . '">', '</a>');
+			$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid('news.php') . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -177,7 +177,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_acp_logout');
 		
-		redirect(append_sid("news.php", true));
+		redirect(append_sid('news.php', true));
 	}
 	else if( ( isset($HTTP_GET_VARS['logout']) || isset($HTTP_POST_VARS['logout']) ) && $userdata['session_logged_in'] )
 	{
@@ -200,7 +200,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		}
 		else
 		{
-			redirect(append_sid("news.php", true));
+			redirect(append_sid('news.php', true));
 		}
 	}
 	else
@@ -277,7 +277,7 @@ else
 			'L_ENTER_PASSWORD' => (isset($HTTP_GET_VARS['admin'])) ? $lang['Admin_reauthenticate'] : $lang['Enter_password'],
 			'L_SEND_PASSWORD' => $lang['Forgotten_password'],
 
-			'U_SEND_PASSWORD' => append_sid("profile.php?mode=sendpassword"),
+			'U_SEND_PASSWORD' => append_sid('profile.php?mode=sendpassword'),
 
 			'S_HIDDEN_FIELDS' => $s_hidden_fields)
 		);
@@ -288,7 +288,7 @@ else
 	}
 	else
 	{
-		redirect(append_sid("news.php", true));
+		redirect(append_sid('news.php', true));
 	}
 
 }

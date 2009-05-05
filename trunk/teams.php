@@ -127,10 +127,10 @@ if ( !$mode )
 				$template->assign_block_vars('select.game_row.team_row', array(
 					'CLASS' 		=> $class,
 					'TEAM_NAME'		=> $teams[$j]['team_name'],
-					'TEAM_MATCH'	=> '<a href="' . append_sid("match.php?mode=teammatches&amp;" . POST_TEAMS_URL . "=" . $team_id) . '">' . $lang['all_matches'] . '</a>',
-					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . append_sid("contact.php?mode=joinus&amp;" . POST_TEAMS_URL . "=" . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
-					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . append_sid("contact.php?mode=fightus&amp;" . POST_TEAMS_URL . "=" . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
-					'TO_TEAM'		=> append_sid("teams.php?mode=view&amp;" . POST_TEAMS_URL . "=" . $teams[$j]['team_id']),
+					'TEAM_MATCH'	=> '<a href="' . append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['all_matches'] . '</a>',
+					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . append_sid('contact.php?mode=joinus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
+					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
+					'TO_TEAM'		=> append_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$j]['team_id']),
 				));
 			}
 		}
@@ -231,7 +231,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 				'EMAIL_IMG' => $email_img,
 				'EMAIL' => $email,
 				
-				'U_VIEWPROFILE' => append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id")
+				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id)
 			));
 			
 			if ( $userdata['user_level'] == ADMIN )
@@ -293,7 +293,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 				'YIM_IMG' => $yim_img,
 				'YIM' => $yim,
 				
-				'U_VIEWPROFILE' => append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id")
+				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id)
 			));
 			
 			if ( $is_moderator || $userdata['user_level'] == ADMIN )
@@ -351,7 +351,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 	$s_hidden_fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
 	
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination("teams.php?" . POST_GROUPS_URL . "=$team_id", count($team_members), $settings['site_entry_per_page'], $start),
+		'PAGINATION' => generate_pagination('teams.php?' . POST_GROUPS_URL . "=$team_id", count($team_members), $settings['site_entry_per_page'], $start),
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE' => $lang['Goto_page'],
 								 
@@ -402,7 +402,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
 		'S_SELECT_OPTION'	=> $select_options,
-		'S_GROUPS_ACTION' => append_sid("teams.php?" . POST_TEAMS_URL . "=$team_id")
+		'S_TEAM_ACTION' => append_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
 	));
 	
 }
