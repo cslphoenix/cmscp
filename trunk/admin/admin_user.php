@@ -414,7 +414,7 @@ else
 				}
 				$log_data = trim($log_data, ', ');
 				
-//				_debug_post($_POST);
+//				_debug($_POST);
 				
 				if (!empty($HTTP_POST_VARS['game_image']))
 				{
@@ -606,7 +606,7 @@ else
 			
 			case 'update_fields':
 			
-				_debug_post($_POST);
+				_debug($_POST);
 			
 			break;
 			
@@ -679,7 +679,7 @@ else
 			
 			case 'update_settings':
 			
-				_debug_post($_POST);
+				_debug($_POST);
 			
 			break;
 			
@@ -1373,7 +1373,7 @@ else
 			
 			case 'editsettings':
 			
-				_debug_poste($_POST);
+				_debuge($_POST);
 			
 			break;
 			

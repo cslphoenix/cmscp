@@ -88,6 +88,8 @@
 
 <script type="text/javascript" src="./../includes/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
+// <![CDATA[
+			
 tinyMCE.init({
 	language : "de",
 	theme : "advanced",
@@ -109,6 +111,8 @@ tinyMCE.init({
 	convert_fonts_to_spans : false,
 	
 });
+
+// ]]>
 </script>
 
 <form action="{S_NEWS_ACTION}" method="post" name="form">

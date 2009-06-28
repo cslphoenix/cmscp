@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
 	
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
-	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php" />
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php">
 
 
 	
@@ -35,7 +35,7 @@
 		if ( document.getElementById(id).value.length == 0 )
 		{
 			document.getElementById(id).style.border='solid #FF0000 2px';
-			document.getElementById('msg').innerHTML = 'Fehler: wichtige Eingaben fehlen!<br><br>';
+			document.getElementById('msg').innerHTML = '<br>Fehler: wichtige Eingaben fehlen!<br><br>';
 			return false;
 		}
 		else
@@ -479,4 +479,4 @@
 				
 				</table>
 			</td>
-			<td width="70%" valign="top">
+			<td width="70%" valign="top" align="center">

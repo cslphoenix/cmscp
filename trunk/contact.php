@@ -120,7 +120,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 	$error = FALSE;
 	$error_msg = '';
 	
-	$team_id = ( isset($HTTP_GET_VARS[POST_TEAMS_URL]) ) ? intval($HTTP_GET_VARS[POST_TEAMS_URL]) : '0';
+	$team_id = ( isset($HTTP_GET_VARS[POST_TEAM_URL]) ) ? intval($HTTP_GET_VARS[POST_TEAM_URL]) : '0';
 	$contact_categorie = 0;
 	$contact_wartype = 0;
 	
@@ -265,7 +265,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
-			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid('contact.php?mode=$mode") . '">', '</a>');
+			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}

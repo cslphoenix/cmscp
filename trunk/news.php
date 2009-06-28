@@ -51,7 +51,7 @@ else
 	$mode = '';
 }
 
-if ($mode == '')
+if ( $mode == '' )
 {
 	$page_title = $lang['news'];
 	include($root_path . 'includes/page_header.php');

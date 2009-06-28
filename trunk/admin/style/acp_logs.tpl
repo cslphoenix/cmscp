@@ -57,8 +57,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td colspan="2" align="right">
-		<input type="hidden" name="mode" value="delete" />
-		<input type="submit" name="send" value="{L_DELETE}" class="button" />
+		<input type="submit" name="delete_all" value="Alle {L_DELETE}" class="button" /> <input type="submit" name="delete" value="{L_DELETE}" class="button" />
 	</td>
 </tr>
 <tr>

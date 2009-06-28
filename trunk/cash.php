@@ -26,7 +26,6 @@ define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
 
-//	Start session management
 $userdata = session_pagestart($user_ip, PAGE_CASH);
 init_userprefs($userdata);
 
@@ -64,6 +63,33 @@ if ( $mode == '' )
 	$template->set_filenames(array('body' => 'body_cash.tpl'));
 	$template->assign_block_vars('display', array());
 	
+	//
+	//	Bankdaten
+	//
+	$sql = 'SELECT * FROM ' . CASH_BANK;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$cash_bankdata = $db->sql_fetchrow($result);
+	
+	$template->assign_vars(array(
+		'L_BD_NAME'		=> $lang['cash_bd_name'],
+		'L_BD_BANK'		=> $lang['cash_bd_bank'],
+		'L_BD_BLZ'		=> $lang['cash_bd_blz'],
+		'L_BD_NUMBER'	=> $lang['cash_bd_number'],
+		'L_BD_REASON'	=> $lang['cash_bd_reason'],
+		
+		'BD_NAME'		=> $cash_bankdata['bankdata_name'],
+		'BD_BANK'		=> $cash_bankdata['bankdata_bank'],
+		'BD_BLZ'		=> $cash_bankdata['bankdata_blz'],
+		'BD_NUMBER'		=> $cash_bankdata['bankdata_number'],
+		'BD_REASON'		=> $cash_bankdata['bankdata_reason'],
+	));
+	
+	//
+	//	Gesammtübersicht aller Kosten
+	//	
 	$sql = 'SELECT * FROM ' . CASH;
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -104,7 +130,6 @@ if ( $mode == '' )
 			
 			$template->assign_block_vars('display.cash_row', array(
 				'CLASS' 		=> $class,
-				
 				'CASH_NAME'		=> $cash_data[$i]['cash_name'],
 				'CASH_AMOUNT'	=> $cash_data[$i]['cash_amount'],
 				'CASH_DATE'		=> $cash_interval,
@@ -114,6 +139,9 @@ if ( $mode == '' )
 		}
 	}
 	
+	//
+	//	Benutzereinträge
+	//
 	$sql = 'SELECT cu.*, u.username, u.user_color
 				FROM ' . CASH_USERS . ' cu
 					LEFT JOIN ' . USERS . ' u ON cu.user_id = u.user_id
@@ -213,7 +241,6 @@ if ( $mode == '' )
 					'CASH_USER_INTERVAL'	=> ( $data['user_interval'] ) ? $lang['cash_interval_o'] : $lang['cash_interval_m'],
 					'CASH_USER_MONTH'		=> $user_month_info,
 				));
-				
 			}
 		}
 	}

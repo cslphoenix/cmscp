@@ -188,7 +188,7 @@ if( ( $total_categories = count($category_rows) ) )
 									}
 									$forum_topics = $db->sql_fetchrowset($result);
 								*/
-									//_debug_post($forum_topics);
+									//_debug($forum_topics);
 									
 									$sql = 'SELECT tr.topic_id
 												FROM ' . TOPICS_READ . ' tr
@@ -199,12 +199,12 @@ if( ( $total_categories = count($category_rows) ) )
 										message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
 									}
 									$forum_topics_unread = $db->sql_fetchrowset($result);
-									//_debug_post($forum_topics_unread);
+									//_debug($forum_topics_unread);
 									
 									if ( is_array($forum_topics_unread) )
 									{
 										$forum_topics_diff = array_diff_assoc($forum_topics, $forum_topics_unread);
-									//	_debug_post($forum_topics_diff);
+									//	_debug($forum_topics_diff);
 										$unread_topics = ( !$forum_topics_diff ) ? false : true;
 									}
 									else

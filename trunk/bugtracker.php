@@ -575,7 +575,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 //		'MATCH_MAIN'			=> '<a href="' . append_sid('match.php') . '">&raquo; Übersicht</a>',
 //	
 //		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-//		'S_MATCH_ACTION'		=> append_sid('match.php?mode=matchdetails&amp;' . POST_MATCH_URL . '=' . $bugtracker_id)
+//		'S_MATCH_ACTION'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $bugtracker_id)
 	));
 }
 else

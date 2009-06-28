@@ -6,9 +6,9 @@
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_TEAMSPEAK_TITLE}</a></li>
-				<li id="active"><a href="{S_TEAMSPEAK_EDIT}">{L_TEAMSPEAK_NEW_EDIT}</a></li>
+				<li><a href="{S_TEAMSPEAK_EDIT}">{L_TEAMSPEAK_NEW_EDIT}</a></li>
 				<!-- BEGIN user -->
-				<li id="active"><a href="{S_TEAMSPEAK_MEMBER}">{L_TEAMSPEAK_USER}</a></li>
+				<li><a href="{S_TEAMSPEAK_MEMBER}">{L_TEAMSPEAK_USER}</a></li>
 				<!-- END user -->
 			</ul>
 		</div>

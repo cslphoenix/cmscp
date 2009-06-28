@@ -54,118 +54,17 @@ else
 		redirect('admin/' . append_sid('admin_match.php', true));
 	}
 	
-	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ( $start < 0 ) ? 0 : $start;
-	
-	if ( isset($HTTP_POST_VARS[POST_MATCH_URL]) || isset($HTTP_GET_VARS[POST_MATCH_URL]) )
-	{
-		$match_id = ( isset($HTTP_POST_VARS[POST_MATCH_URL]) ) ? intval($HTTP_POST_VARS[POST_MATCH_URL]) : intval($HTTP_GET_VARS[POST_MATCH_URL]);
-	}
-	else
-	{
-		$match_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['match_add']) || isset($HTTP_GET_VARS['match_add']) )
-		{
-			$mode = 'match_add';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
-	
-	function _select_type($default)
-	{
-		global $lang;
-		
-		$type = array (
-			$lang['select_type']	=> '0',
-			$lang['select_type1']	=> '1',
-			$lang['select_type2']	=> '2',
-			$lang['select_type3']	=> '3',
-			$lang['select_type4']	=> '4',
-			$lang['select_type5']	=> '5',
-			$lang['select_type6']	=> '6'
-		);
-		
-		$select_type = '';
-		$select_type .= '<select name="match_type" class="post">';
-		foreach ($type as $typ => $valve)
-		{
-			$selected = ( $valve == $default ) ? ' selected="selected"' : '';
-			$select_type .= '<option value="' . $valve . '" ' . $selected . '>&raquo; ' . $typ . '&nbsp;</option>';
-		}
-		$select_type .= '</select>';
-		
-		return $select_type;	
-	}
-	
-	function _select_league($default)
-	{
-		global $lang;
-		
-		$league = array (
-			'0' => array('league_id' => '0', 'league_name' => $lang['select_league'], 'league_link' => ''),
-			'1' => array('league_id' => '1', 'league_name' => $lang['select_league1'], 'league_link' => 'http://www.esl.eu/'),
-			'2' => array('league_id' => '2', 'league_name' => $lang['select_league2'], 'league_link' => 'http://www.stammkneipe.de/'),
-			'3' => array('league_id' => '3', 'league_name' => $lang['select_league3'], 'league_link' => 'http://www.0815liga.de/'),
-			'4' => array('league_id' => '4', 'league_name' => $lang['select_league4'], 'league_link' => 'http://www.lgz.de/'),
-			'5' => array('league_id' => '5', 'league_name' => $lang['select_league5'], 'league_link' => 'http://www.tactical-esports.de/'),
-			'6' => array('league_id' => '6', 'league_name' => $lang['select_league6'], 'league_link' => 'http://www.xgc-online.de/'),
-			'7' => array('league_id' => '7', 'league_name' => $lang['select_league7'], 'league_link' => 'http://www.ncsl.de/'),
-			'8' => array('league_id' => '8', 'league_name' => $lang['select_league8'], 'league_link' => ''),
-		);
-		
-		$select_league = '';
-		$select_league .= '<select class="select" name="match_league">';
-		foreach ($league as $liga)
-		{
-			$selected = ( $default == $liga['league_id'] ) ? ' selected="selected"' : '';
-			$select_league .= '<option onClick="this.form.match_league_url.value=[\'' . $liga['league_link'] . '\']" value="' . $liga['league_id'] . '" ' . $selected . '>&raquo; ' . $liga['league_name'] . '&nbsp;</option>';
-		}
-		$select_league .= '</select>';
-		
-		return $select_league;	
-	}
-	
-	function _select_categorie($default)
-	{
-		global $lang;
-		
-		$league = array (
-			$lang['select_categorie']	=> '0',
-			$lang['select_categorie1']	=> '1',
-			$lang['select_categorie2']	=> '2',
-			$lang['select_categorie3']	=> '3',
-			$lang['select_categorie4']	=> '4'
-		);
-		
-		$select_categorie = '';
-		$select_categorie .= '<select name="match_categorie" class="post">';
-		foreach ($league as $liga => $valve)
-		{
-			$selected = ( $valve == $default ) ? ' selected="selected"' : '';
-			$select_categorie .= '<option value="' . $valve . '" ' . $selected . '>&raquo; ' . $liga . '&nbsp;</option>';
-		}
-		$select_categorie .= '</select>';
-		
-		return $select_categorie;	
-	}
+	$start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
+	$mode		= request_vars('mode', 1);
+	$team_id	= request_vars(POST_TEAM_URL);
+	$match_id	= request_vars(POST_MATCH_URL);
 	
 	$show_index = '';
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'match_add':
 			case 'match_edit':
@@ -175,27 +74,22 @@ else
 				
 				if ( $mode == 'match_edit' )
 				{
-					$sql = 'SELECT t.team_id, t.team_name, m.*
-								FROM ' . MATCH . ' m, ' . TEAMS . ' t
-								WHERE t.team_id = m.team_id AND m.match_id = ' . $match_id;
-					if (!($result = $db->sql_query($sql)))
-					{
-						message_die(GENERAL_ERROR, 'Error getting match information', '', __LINE__, __FILE__, $sql);
-					}
-			
-					if (!($match = $db->sql_fetchrow($result)))
-					{
-						message_die(GENERAL_MESSAGE, $lang['match_not_exist']);
-					}
+					$match		= get_data('match', $match_id, 0);
+					$new_mode	= 'match_update';
 					
 					$template->assign_block_vars('match_edit.edit_match', array());
-			
-					$new_mode = 'editmatch';
+					
+					if ( $match['match_date'] > time() )
+					{
+						$template->assign_block_vars('match_edit.reset_match', array());
+					}
 				}
 				else
 				{
+					$team_id = (isset($HTTP_POST_VARS['team_id'])) ? intval($HTTP_POST_VARS['team_id']) : '';
+					
 					$match = array (
-						'team_id'				=> trim($HTTP_POST_VARS['team_id']),
+						'team_id'				=> $team_id,
 						'match_type'			=> '',
 						'match_league'			=> '',
 						'match_league_url'		=> '',
@@ -212,12 +106,11 @@ else
 						'server_hltv'			=> '',
 						'server_hltv_pw'		=> '',
 						'match_create'			=> '',
-						'match_update'			=> ''
+						'match_update'			=> '',
 					);
+					$new_mode = 'match_create';
 					
-					$template->assign_block_vars('new_match', array());
-					
-					$new_mode = 'addmatch';
+					$template->assign_block_vars('match_edit.new_match', array());
 				}
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
@@ -225,7 +118,7 @@ else
 				
 				$template->assign_vars(array(
 					'L_MATCH_TITLE'			=> $lang['match_head'],
-					'L_MATCH_NEW_EDIT'		=> ($mode == 'add') ? $lang['match_new_add'] : $lang['match_edit'],
+					'L_MATCH_NEW_EDIT'		=> ( $mode == 'match_add' ) ? $lang['match_new_add'] : $lang['match_edit'],
 					'L_MATCH_DETAILS'		=> $lang['match_details'],
 					'L_REQUIRED'			=> $lang['required'],
 					
@@ -271,16 +164,16 @@ else
 					'SERVER_HLTV'			=> $match['server_hltv'],
 					'SERVER_HLTV_PW'		=> $match['server_hltv_pw'],
 					
-					'S_TEAMS'				=> _select_team($match['team_id'], 0, 'post'),
-					'S_TYPE'				=> _select_type($match['match_type']),
-					'S_LEAGUE'				=> _select_league($match['match_league']),
+					'S_TEAMS'				=> select_box('team', 'select', 'team_id', 'team_name', $match['team_id'], 0),
+					'S_TYPE'				=> select_lang_box('select_type_box', 'match_type', $match['match_type'], 'select'),
+					'S_LEAGUE'				=> select_lang_box('select_league_box', 'match_league', $match['match_league'], 'select'),
+					'S_CATEGORIE'			=> select_lang_box('select_categorie_box', 'match_categorie', $match['match_categorie'], 'select'),
+					
 					'S_DAY'					=> _select_date('day', 'day',		date('d', $match['match_date'])),
 					'S_MONTH'				=> _select_date('month', 'month',	date('m', $match['match_date'])),
 					'S_YEAR'				=> _select_date('year', 'year',		date('Y', $match['match_date'])),
 					'S_HOUR'				=> _select_date('hour', 'hour',		date('H', $match['match_date'])),
 					'S_MIN'					=> _select_date('min', 'min',		date('i', $match['match_date'])),
-					
-					'S_CATEGORIE'			=> _select_categorie($match['match_categorie']),
 					
 					'S_CHECKED_PUB_NO'		=> ( !$match['match_public'] )		? ' checked="checked"' : '',
 					'S_CHECKED_PUB_YES'		=> ( $match['match_public'] )		? ' checked="checked"' : '',
@@ -295,6 +188,7 @@ else
 					
 					'S_TDURATION'			=> _select_date('duration', 'dmin',	date('i', time())),
 					
+					
 					'S_MATCH_DETAILS'		=> append_sid('admin_match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id),
 					'S_MATCH_ACTION'		=> append_sid('admin_match.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
@@ -304,30 +198,39 @@ else
 				
 			break;
 			
-			case 'addmatch':
+			case 'match_create':
+			
+				$group_name			= ( isset($HTTP_POST_VARS['group_name']) )			? trim($HTTP_POST_VARS['group_name']) : '';
+				$group_mod			= ( isset($HTTP_POST_VARS['group_mod']) )			? intval($HTTP_POST_VARS['group_mod']) : '';
+				$group_access		= ( isset($HTTP_POST_VARS['group_access']) )		? intval($HTTP_POST_VARS['group_access']) : '';
+				$group_type			= ( isset($HTTP_POST_VARS['group_type']) )			? intval($HTTP_POST_VARS['group_type']) : '';
+				$match_league		= ( isset($HTTP_POST_VARS['match_league']) )		? intval($HTTP_POST_VARS['match_league']) : '';
+				$match_categorie	= ( isset($HTTP_POST_VARS['match_categorie']))		? intval($HTTP_POST_VARS['match_categorie']) : '';
+				$match_type			= ( isset($HTTP_POST_VARS['match_type']) )			? intval($HTTP_POST_VARS['match_type']) : '0';
+				$team_id			= ( isset($HTTP_POST_VARS['team_id']) )				? intval($HTTP_POST_VARS['team_id']) : '0';
 			
 				$error = ''; 
 				$error_msg = '';
 			
-				if ( intval($HTTP_POST_VARS['team_id']) == '0' )
+				if ( $team_id == '0' )
 				{
 					$error = true;
 					$error_msg = $lang['msg_select_team'];
 				}
 				
-				if ( intval($HTTP_POST_VARS['match_type']) == '0' )
+				if ( $match_type == '0' )
 				{
 					$error = true;
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_type'];
 				}
 				
-				if ( intval($HTTP_POST_VARS['match_categorie']) == '0' )
+				if ( $match_categorie == '0' )
 				{
 					$error = true;
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_cat'];
 				}
 				
-				if ( intval($HTTP_POST_VARS['match_league']) == '0' )
+				if ( $match_league == '0' )
 				{
 					$error = true;
 					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_league'];
@@ -347,13 +250,13 @@ else
 				$match_date = mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
 				
 				$sql = "INSERT INTO " . MATCH . " (team_id, match_type, match_league, match_league_url, match_league_match, match_date, match_categorie, match_public, match_comments, match_rival, match_rival_tag, match_rival_url, server, server_pw, server_hltv, server_hltv_pw, match_create)
-					VALUES ('" . intval($HTTP_POST_VARS['team_id']) . "',
-								'" . intval($HTTP_POST_VARS['match_type']) . "',
-								'" . intval($HTTP_POST_VARS['match_league']) . "',
+							VALUES ('" . $team_id . "',
+								'" . $match_type . "',
+								'" . $match_league . "',
 								'" . str_replace("\'", "''", $HTTP_POST_VARS['match_league_url']) . "',
 								'" . str_replace("\'", "''", $HTTP_POST_VARS['match_league_match']) . "',
 								$match_date,
-								'" . intval($HTTP_POST_VARS['match_categorie']) . "',
+								'" . $match_categorie . "',
 								'" . intval($HTTP_POST_VARS['match_public']) . "',
 								'" . intval($HTTP_POST_VARS['match_comments']) . "',
 								'" . str_replace("\'", "''", $HTTP_POST_VARS['match_rival']) . "',
@@ -417,7 +320,7 @@ else
 
 			break;
 			
-			case 'editmatch':
+			case 'match_update':
 			
 				$error = ''; 
 				$error_msg = '';
@@ -714,7 +617,7 @@ else
 				if (!$db->sql_numrows($result_users))
 				{
 					$template->assign_block_vars('match_details.no_members_row', array());
-					$template->assign_vars(array('NO_TEAMS' => $lang['member_empty']));
+					$template->assign_vars(array('NO_MEMBER' => $lang['team_no_member']));
 				}
 				//	Lineup
 
@@ -747,73 +650,28 @@ else
 				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['delete'] . '</option>';
 				$s_action_options .= '</select>';
 				
-				switch ($row['match_categorie'])
+				foreach ( $lang['select_categorie_box'] as $key_s => $value_s )
 				{
-					case '1':
-						$match_categorie = $lang['select_categorie1'];
-					break;
-					case '2':
-						$match_categorie = $lang['select_categorie2'];
-					break;
-					case '3':
-						$match_categorie = $lang['select_categorie3'];
-					break;
-					case '4':
-						$match_categorie = $lang['select_categorie4'];
-					break;
-					case '5':
-						$match_categorie = $lang['select_categorie5'];
-					break;
+					if ( $key_s == $row['match_categorie'] )
+					{
+						$match_categorie = $value_s;
+					}
 				}
 				
-				switch ($row['match_type'])
+				foreach ( $lang['select_type_box'] as $key_s => $value_s )
 				{
-					case '1':
-						$match_type = $lang['select_type1'];
-					break;
-					case '2':
-						$match_type = $lang['select_type2'];
-					break;
-					case '3':
-						$match_type = $lang['select_type3'];
-					break;
-					case '4':
-						$match_type = $lang['select_type4'];
-					break;
-					case '5':
-						$match_type = $lang['select_type5'];
-					break;
-					case '6':
-						$match_type = $lang['select_type6'];
-					break;
+					if ( $key_s == $row['match_type'] )
+					{
+						$match_type = $value_s;
+					}
 				}
 				
-				switch ($row['match_league'])
+				foreach ( $lang['select_league_box'] as $key_s => $value_s )
 				{
-					case '1':
-						$match_league = '<a href="' . $lang['select_league1i'] . '">' . $lang['select_league1'] . '</a>';
-					break;
-					case '2':
-						$match_league = '<a href="' . $lang['select_league2i'] . '">' . $lang['select_league2'] . '</a>';
-					break;
-					case '3':
-						$match_league = '<a href="' . $lang['select_league3i'] . '">' . $lang['select_league3'] . '</a>';
-					break;
-					case '4':
-						$match_league = '<a href="' . $lang['select_league4i'] . '">' . $lang['select_league4'] . '</a>';
-					break;
-					case '5':
-						$match_league = '<a href="' . $lang['select_league5i'] . '">' . $lang['select_league5'] . '</a>';
-					break;
-					case '6':
-						$match_league = '<a href="' . $lang['select_league6i'] . '">' . $lang['select_league6'] . '</a>';
-					break;
-					case '7':
-						$match_league = '<a href="' . $lang['select_league7i'] . '">' . $lang['select_league7'] . '</a>';
-					break;
-					case '8':
-						$match_league = $lang['select_league8'];
-					break;
+					if ( $key_s == $row['match_league'] )
+					{
+						$match_league = '<a href="' . $value_s['league_link'] . '">' . $value_s['league_name'] . '</a>';
+					}
 				}
 				
 				if ( $map_pic_a ) { $template->assign_block_vars('match_details.pictureadel', array()); }
@@ -839,6 +697,8 @@ else
 					'L_MATCH_NEW_EDIT'		=> $lang['match_edit'],
 					'L_MATCH_EXPLAIN'		=> $lang['match_details_explain'],
 					'L_MATCH_INFO'			=> $lang['match_details_info'],
+					
+					'L_DETAILS_MAPS'		=> $lang['match_details_maps'],
 					'L_RIVAL'				=> $lang['match_rival'],
 					'L_RIVAL_TAG'			=> $lang['match_rival_tag'],
 					'L_SERVER'				=> $lang['match_server'],
@@ -849,7 +709,7 @@ else
 					'L_MATCH_LINUP_ADD_EX'	=> $lang['match_lineup_explain'],
 					'L_MATCH_LINEUP_STATUS'	=> $lang['match_lineup_status'],
 							
-					
+					'L_LINEUP_PLAYER'		=> $lang['match_lineup_player'],
 					'L_USERNAME'			=> $lang['username'],
 					'L_MARK_ALL'			=> $lang['mark_all'],
 					'L_MARK_DEALL'			=> $lang['mark_deall'],
@@ -918,7 +778,7 @@ else
 					'S_HIDDEN_FIELDC'		=> $s_hidden_fieldc,
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_MATCH_EDIT'			=> append_sid('admin_match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $match_id),
+					'S_MATCH_EDIT'			=> append_sid('admin_match.php?mode=match_edit&amp;' . POST_MATCH_URL . '=' . $match_id),
 					'S_MATCH_ACTION'		=> append_sid('admin_match.php'),
 				));
 			
@@ -1253,35 +1113,34 @@ else
 		}
 	}
 	
-	//	Template
 	$template->set_filenames(array('body' => './../admin/style/acp_match.tpl'));
 	$template->assign_block_vars('display', array());
 	
 	$template->assign_vars(array(
-		'L_MATCH_TITLE'			=> $lang['match_head'],
-		'L_MATCH_EXPLAIN'		=> $lang['match_explain'],
-		'L_MATCH_DETAILS'		=> $lang['match_infos'],
-		'L_MATCH_CREATE'		=> $lang['match_add'],
-
-		'L_MATCH_SETTINGS'		=> $lang['settings'],
-		'L_MATCH_SETTING'		=> $lang['setting'],
-		'L_DELETE'				=> $lang['delete'],
-		'S_TEAMS'				=> _select_team('', '0', 'postselect'),
-		'L_TRAINING'			=> $lang['training'],
-		'L_MATCH_DETAILS'		=> $lang['match_details'],
+		'L_MATCH_HEAD'		=> $lang['match_head'],
+		'L_MATCH_EXPLAIN'	=> $lang['match_explain'],
+		'L_MATCH_DETAILS'	=> $lang['match_infos'],
+		'L_TRAINING'		=> $lang['training'],
+		'L_MATCH_DETAILS'	=> $lang['match_details'],
+		'L_MATCH_CREATE'	=> $lang['match_add'],
+		'L_UPCOMING'		=> $lang['match_upcoming'],
+		'L_EXPIRED'			=> $lang['match_expired'],
 		
-		'L_UPCOMING'			=> $lang['match_upcoming'],
-		'L_EXPIRED'				=> $lang['match_expired'],
+		'L_SETTINGS'		=> $lang['settings'],
+		'L_SETTING'			=> $lang['setting'],
+		'L_DELETE'			=> $lang['delete'],
 		
-		'S_MATCH_ACTION'		=> append_sid('admin_match.php'),
+		'S_TEAMS'			=> select_box('team', 'selectsmall', 'team_id', 'team_name', 0, 0),
+		'S_MATCH_ADD'		=> append_sid('admin_match.php?mode=match_add'),
+		'S_MATCH_ACTION'	=> append_sid('admin_match.php'),
 	));
 	
 	$sql = 'SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
-			FROM ' . MATCH . ' m
-				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
-				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
-				LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
-			WHERE match_date > ' . time() . '
+				FROM ' . MATCH . ' m
+					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
+					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
+					LEFT JOIN ' . TRAINING . ' tr ON m.match_id = tr.match_id
+				WHERE match_date > ' . time() . '
 			ORDER BY m.match_date DESC';
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -1327,8 +1186,8 @@ else
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_new[$i]['match_date'], $userdata['user_timezone']),
 				'TRAINING'		=> (!$match_new[$i]['training_id']) ? $lang['add_train'] : $lang['edit_train'],
 				'U_DETAILS'		=> append_sid('admin_match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id']),
-				'U_TRAINING'	=> (!$match_new[$i]['training_id']) ? append_sid('admin_training.php?mode=add&amp;' . POST_TEAMS_URL . '=' . $match_new[$i]['team_id'].'&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id'].'&amp;vs=' . $match_new[$i]['match_rival']) : append_sid('admin_training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $match_new[$i]['training_id']),
-				'U_EDIT'		=> append_sid('admin_match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id']),
+				'U_TRAINING'	=> (!$match_new[$i]['training_id']) ? append_sid('admin_training.php?mode=add&amp;' . POST_TEAM_URL . '=' . $match_new[$i]['team_id'].'&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id'].'&amp;vs=' . $match_new[$i]['match_rival']) : append_sid('admin_training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $match_new[$i]['training_id']),
+				'U_EDIT'		=> append_sid('admin_match.php?mode=match_edit&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id']),
 				'U_DELETE'		=> append_sid('admin_match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id'])
 			));
 		}
@@ -1357,8 +1216,8 @@ else
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_old[$i]['match_date'], $userdata['user_timezone']),
 				'TRAINING'		=> (!$match_old[$i]['training_id']) ? $lang['add_train'] : $lang['edit_train'],
 				'U_DETAILS'		=> append_sid('admin_match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id']),
-				'U_TRAINING'	=> (!$match_old[$i]['training_id']) ? append_sid('admin_training.php?mode=add&amp;' . POST_TEAMS_URL . '=' . $match_old[$i]['team_id'].'&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id']."&amp;vs=" . $match_old[$i]['match_rival']) : append_sid('admin_training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $match_old[$i]['training_id']),
-				'U_EDIT'		=> append_sid('admin_match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id']),
+				'U_TRAINING'	=> (!$match_old[$i]['training_id']) ? append_sid('admin_training.php?mode=add&amp;' . POST_TEAM_URL . '=' . $match_old[$i]['team_id'].'&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id']."&amp;vs=" . $match_old[$i]['match_rival']) : append_sid('admin_training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $match_old[$i]['training_id']),
+				'U_EDIT'		=> append_sid('admin_match.php?mode=match_edit&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id']),
 				'U_DELETE'		=> append_sid('admin_match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id'])
 			));
 		}

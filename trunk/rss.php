@@ -29,9 +29,6 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_RSS);
 init_userprefs($userdata);
 
-//
-// BEGIN Create main board information (some code borrowed from functions_post.php)
-//
 // Build URL components
 $script_name = preg_replace('/^\/?(.*?)\/?$/', '\1', trim($config['script_path']));
 $viewpost = ( $script_name != '' ) ? $script_name . '/viewtopic.' . $phpEx : 'viewtopic.'. $phpEx;
@@ -66,7 +63,7 @@ $config['time_today'] = gmmktime(0 - $config['board_timezone'] - $config['board_
 $config['time_yesterday'] = $config['time_today'] - 86400;
 unset($today_ary);
 
-$template->set_filenames(array('body' => 'body_rss.tpl'));
+$template->set_filenames(array('body' => 'body_rss.xml'));
 
 //
 // BEGIN Assign static variables to template
@@ -133,18 +130,8 @@ else
 	}
 }
 
-if (!empty($HTTP_SERVER_VARS['SERVER_SOFTWARE']) && strstr($HTTP_SERVER_VARS['SERVER_SOFTWARE'], 'Apache/2'))
-{
-	header ('Cache-Control: no-cache, pre-check=0, post-check=0, max-age=0');
-}
-else
-{
-	header ('Cache-Control: private, pre-check=0, post-check=0, max-age=0');
-}
-header ('Expires: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
-header ('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-header ('Content-Type: text/xml');
 
 $template->pparse('body');
+header("Content-type: text/xml");
 
 ?>

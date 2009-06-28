@@ -410,7 +410,7 @@ else
 		
 //		$server = server_query($row['server_ip'], $row['server_port'], $row['server_qport'], $row['server_game'], 'info');
 		
-//	_debug_post($server);
+//	_debug($server);
 		
 		$template->assign_block_vars('display.server_row', array(
 			'CLASS' 		=> $class,
