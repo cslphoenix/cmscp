@@ -100,6 +100,11 @@ function get_data($mode, $id, $type)
 			$idfield	= 'teamspeak_id';
 			break;
 			
+		case 'match':
+			$table		= MATCH;
+			$idfield	= 'match_id';
+		break;
+		
 		case 'news_newscat':
 			$table		= NEWS;
 			$idfield	= 'news_id';

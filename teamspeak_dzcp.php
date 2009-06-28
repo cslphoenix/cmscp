@@ -114,7 +114,7 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 			
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
-//			_debug_post($innerArray);
+//			_debug($innerArray);
 			
 //			$userstats .= show($dir."/userstats", array(
 			$template->assign_block_vars('userstats', array(

@@ -54,9 +54,9 @@ else
 		redirect('admin/' . append_sid('admin_teams.php', true));
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) || isset($HTTP_GET_VARS[POST_TEAMS_URL]) )
+	if ( isset($HTTP_POST_VARS[POST_TEAM_URL]) || isset($HTTP_GET_VARS[POST_TEAM_URL]) )
 	{
-		$team_id = ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) ) ? intval($HTTP_POST_VARS[POST_TEAMS_URL]) : intval($HTTP_GET_VARS[POST_TEAMS_URL]);
+		$team_id = ( isset($HTTP_POST_VARS[POST_TEAM_URL]) ) ? intval($HTTP_POST_VARS[POST_TEAM_URL]) : intval($HTTP_GET_VARS[POST_TEAM_URL]);
 	}
 	else
 	{
@@ -143,7 +143,7 @@ else
 				$game_image = ($mode == 'add') ? $game_empty : ($team['game_id'] == '-1') ? $game_empty : $game_path . $team['game_image'];
 
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_TEAM_URL . '" value="' . $team_id . '" />';
 				
 				$logo_up_explain	= $settings['team_logo_max_height'] . ' x ' . $settings['team_logo_max_width'] . ' / ' . round($settings['team_logo_filesize']/1024) . ' KBs';
 				$logos_up_explain	= $settings['team_logos_max_height'] . ' x ' . $settings['team_logos_max_width'] . ' / ' . round($settings['team_logos_filesize']/1024) . ' KBs';
@@ -229,7 +229,7 @@ else
 					
 					'S_TEAM_GAME'			=> _select_game($team['team_game']),
 					
-					'S_TEAM_MEMBER'			=> append_sid('admin_teams.php?mode=member&amp;' . POST_TEAMS_URL . '=' . $team_id),
+					'S_TEAM_MEMBER'			=> append_sid('admin_teams.php?mode=member&amp;' . POST_TEAM_URL . '=' . $team_id),
 					'S_TEAM_ACTION'			=> append_sid('admin_teams.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
 				));
@@ -312,7 +312,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_add');
 				
 				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('display_subnavi_teams');
+				$oCache -> deleteCache('list_teams');
+				$oCache -> deleteCache('list_teams_subnavi');
 	
 				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
@@ -419,21 +420,22 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'acp_team_edit');
 				
 				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('display_subnavi_teams');
+				$oCache -> deleteCache('list_teams');
+				$oCache -> deleteCache('list_teams_subnavi');
 				
 				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
 			
-			case 'order':
+			case 'team_order':
 				
 				$move = intval($HTTP_GET_VARS['move']);
 				
 				$sql = 'UPDATE ' . TEAMS . " SET team_order = team_order + $move WHERE team_id = $team_id";
 				if (!$result = $db->sql_query($sql))
 				{
-					message_die(GENERAL_ERROR, 'Could not change team order', '', __LINE__, __FILE__, $sql);
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				renumber_order('teams');
@@ -441,7 +443,8 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_ORDER');
 				
 				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('display_subnavi_teams');
+				$oCache -> deleteCache('list_teams');
+				$oCache -> deleteCache('list_teams_subnavi');
 				
 				$show_index = TRUE;
 	
@@ -576,10 +579,10 @@ else
 				$s_action_options .= '</select>';
 				
 				$s_hidden_fields = '<input type="hidden" name="rank_id" value="" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+				$s_hidden_fields .= '<input type="hidden" name="' . POST_TEAM_URL . '" value="' . $team_id . '" />';
 				
 				$s_hidden_fields2 = '<input type="hidden" name="mode" value="adduser" />';
-				$s_hidden_fields2 .= '<input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+				$s_hidden_fields2 .= '<input type="hidden" name="' . POST_TEAM_URL . '" value="' . $team_id . '" />';
 
 				$template->assign_vars(array(
 					'L_TEAM_TITLE'			=> $lang['team_head'],
@@ -610,7 +613,7 @@ else
 					'S_ACTION_ADDUSERS'		=> $s_addusers_select,
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
-					'S_TEAM_EDIT'			=> append_sid('admin_teams.php?mode=edit&amp;' . POST_TEAMS_URL . '=' . $team_id),
+					'S_TEAM_EDIT'			=> append_sid('admin_teams.php?mode=edit&amp;' . POST_TEAM_URL . '=' . $team_id),
 					'S_TEAM_ACTION'			=> append_sid('admin_teams.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2)
@@ -642,7 +645,7 @@ else
 				
 				$message = $lang['team_change_member']
 					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAM_URL . '=' .$team_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 				break;
@@ -708,7 +711,7 @@ else
 					
 					$message = $lang['team_change_member']
 						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');				
+						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAM_URL . '=' .$team_id) . '">', '</a>');				
 					message_die(GENERAL_MESSAGE, $message);
 
 				}
@@ -840,7 +843,7 @@ else
 			
 					$message = $lang['team_add_member']
 						. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
-						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');
+						. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAM_URL . '=' .$team_id) . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				
@@ -865,7 +868,7 @@ else
 			
 				$message = $lang['team_del_member']
 					. '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAMS_URL . '=' .$team_id) . '">', '</a>');				
+					. '<br><br>' . sprintf($lang['click_return_team_member'], '<a href="' . append_sid('admin_teams.php?mode=member&' . POST_TEAM_URL . '=' .$team_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -920,7 +923,8 @@ else
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAM, 'ACP_TEAM_DELETE', $team_info['team_name']);
 					
 					$oCache -> sCachePath = './../cache/';
-					$oCache -> deleteCache('display_subnavi_teams');
+					$oCache -> deleteCache('list_teams');
+					$oCache -> deleteCache('list_teams_subnavi');
 					
 					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_teams.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
@@ -930,7 +934,7 @@ else
 				{
 					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAM_URL . '" value="' . $team_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -1034,12 +1038,12 @@ else
 				'TEAM_GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['path_game'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
 				'TEAM_MEMBER_COUNT'	=> $row['total_members'],
 				
-				'MOVE_UP'			=> ( $row['team_order'] != '10' )				? '<a href="' . append_sid('admin_teams.php?mode=team_order&amp;move=-15&amp;' . POST_TEAMS_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'			=> ( $row['team_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_teams.php?mode=team_order&amp;move=15&amp;' . POST_TEAMS_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'			=> ( $row['team_order'] != '10' )				? '<a href="' . append_sid('admin_teams.php?mode=team_order&amp;move=-15&amp;' . POST_TEAM_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $row['team_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_teams.php?mode=team_order&amp;move=15&amp;' . POST_TEAM_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_MEMBER'			=> append_sid('admin_teams.php?mode=member&amp;' . POST_TEAMS_URL . '=' . $team_id),
-				'U_EDIT'			=> append_sid('admin_teams.php?mode=team_edit&amp;' . POST_TEAMS_URL . '=' . $team_id),
-				'U_DELETE'			=> append_sid('admin_teams.php?mode=team_delete&amp;' . POST_TEAMS_URL . '=' . $team_id),
+				'U_MEMBER'			=> append_sid('admin_teams.php?mode=member&amp;' . POST_TEAM_URL . '=' . $team_id),
+				'U_EDIT'			=> append_sid('admin_teams.php?mode=team_edit&amp;' . POST_TEAM_URL . '=' . $team_id),
+				'U_DELETE'			=> append_sid('admin_teams.php?mode=team_delete&amp;' . POST_TEAM_URL . '=' . $team_id),
 			));
 		}
 	}

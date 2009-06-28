@@ -585,7 +585,7 @@ else
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
 					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
-					'S_GROUP_EDIT'			=> append_sid('admin_groups.php?mode=edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
+					'S_GROUP_EDIT'			=> append_sid('admin_groups.php?mode=group_edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
 					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2
@@ -1127,8 +1127,8 @@ else
 				'L_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? $lang['delete'] : '',
 				
 				'U_MEMBER'		=> append_sid('admin_groups.php?mode=member&amp;' . POST_GROUPS_URL . '=' . $group_id),
-				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid('admin_groups.php?mode=delete&amp;' . POST_GROUPS_URL . '=' . $group_id) : '',
-				'U_EDIT'		=> append_sid('admin_groups.php?mode=edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
+				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid('admin_groups.php?mode=group_delete&amp;' . POST_GROUPS_URL . '=' . $group_id) : '',
+				'U_EDIT'		=> append_sid('admin_groups.php?mode=group_edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
 			));
 		}
 	}

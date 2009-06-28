@@ -205,7 +205,7 @@ define('POST_NEWSLETTER_URL',	'nl');
 define('POST_POST_URL',			'p');
 define('POST_PROFILE_URL',		'p');
 define('POST_RANKS_URL',		'r');
-define('POST_TEAMS_URL',		't');
+define('POST_TEAM_URL',		't');
 define('POST_TEAMSPEAK_URL',	't');
 define('POST_TOPIC_URL',		't');
 define('POST_TRAINING_URL',		'tr');

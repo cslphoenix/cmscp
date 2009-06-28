@@ -83,7 +83,7 @@ else
 		
 			if ( $mode == 'edit' )
 			{
-				$news		= get_data('news_newscat', $news_id, 2 );
+				$news		= get_data('news_newscat', $news_id, 2);
 				$new_mode	= 'editnews';
 			}
 			else if ( $mode == 'add' )

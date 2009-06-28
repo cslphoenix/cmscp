@@ -91,6 +91,7 @@ $lang['auth_member']		= 'Member';
 $lang['auth_mod']			= 'Moderator';
 $lang['auth_admin']			= 'Administrator';
 
+$lang['auth_cash']			= 'Clankasse';
 $lang['auth_contact']		= 'Kontakt';	
 $lang['auth_event']			= 'Event';
 $lang['auth_fightus']		= 'Fightus';	
@@ -116,6 +117,7 @@ $lang['auth_user']			= 'Benutzer';
 $lang['auth_user_perm']		= 'Benutzer Befugnisse';	
 
 $lang['auths'] = array(
+	'auth_cash'			=> $lang['auth_cash'],
 	'auth_contact'		=> $lang['auth_contact'],
 	'auth_event'		=> $lang['auth_event'],	
 	'auth_fightus'		=> $lang['auth_fightus'],	
@@ -361,8 +363,8 @@ $lang['match_add']			= 'Neues Match erstellen';
 $lang['match_new_add']		= 'Match hinzufügen';
 $lang['match_edit']			= 'Match bearbeiten';
 $lang['match_update']		= 'Match geändert.';
-$lang['match_upcoming']		= 'Anstehende Match';
-$lang['match_expired']		= 'Abgelaufen Match';
+$lang['match_upcoming']		= 'Anstehende Matches';
+$lang['match_expired']		= 'Abgelaufen Matches';
 
 $lang['match_team']			= 'Wechles Team';
 $lang['match_type']			= 'XonX';
@@ -386,6 +388,7 @@ $lang['match_interest_reset'] = 'Teilnahme zurücksetzen?';
 $lang['match_map_more']			= 'weitere Map';
 $lang['match_map_close']		= 'schließen';
 
+$lang['match_details_maps']		= 'Map Details';
 $lang['match_rival_lineup']		= 'Gegner Lineup';
 $lang['match_details_map']		= 'Map';
 $lang['match_details_mappic']	= 'Mapbild hochladen';
@@ -398,10 +401,11 @@ $lang['match_lineup_del_yes']	= 'Spieler gelöscht';
 $lang['match_lineup_add']		= 'Spieler hinzufügen';
 $lang['match_lineup_explain']	= 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.';
 $lang['match_lineup_status']	= 'Spielerstatus';
-$lang['match_lineup_add']		= 'Spieler hinzugefügt';
-$lang['match_lineup_del']		= 'Spieler gelöscht';
+
 $lang['match_lineup_no_users']	= 'Bitte Spieler auswählen die noch nicht eingetragen sind.';
 $lang['match_lineup_change']	= 'Spielerliste verändert';
+
+$lang['match_lineup_player']	= 'Spieler für das Lineup';
 
 
 $lang['select_team']		= 'Team auswählen';
@@ -833,6 +837,7 @@ $lang['update_training']			= 'Trainingsdaten erfolgreich geändert';
 $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
 
 $lang['update_cash']				= 'Daten erfolgreich geändert';
+$lang['update_cash_bank']			= 'Bankdaten erfolgreich geändert';
 $lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
 
 $lang['delete_authlist']			= 'Das Berechtigungsfeld wurde gelöscht';
@@ -840,6 +845,7 @@ $lang['delete_event']				= 'Das Event wurde gelöscht';
 $lang['delete_game']				= 'Das Spiel wurde gelöscht';
 $lang['delete_group']				= 'Die Gruppe wurde gelöscht';
 $lang['delete_log']					= 'Der oder die Logeinträge wurde gelöscht';
+$lang['delete_log_all']				= 'Alle Logeinträge wurde gelöscht';
 $lang['delete_log_error']			= 'Der oder die Fehlermeldungen wurde gelöscht';
 $lang['delete_navigation']			= 'Der Link wurde gelöscht';
 $lang['delete_network']				= 'Den %s wurde gelöscht';
@@ -855,6 +861,7 @@ $lang['delete_training']			= 'Der Rang wurde gelöscht';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht';
 
 $lang['delete_cash']				= 'Der Eintrag wurde gelöscht';
+$lang['delete_cash_bank']			= 'Bankdaten wurden gelöscht';
 $lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht';
 
 $lang['confirm_delete_authlist']		= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
@@ -862,6 +869,7 @@ $lang['confirm_delete_event']			= 'Bist du sicher, dass dieses Event gelöscht we
 $lang['confirm_delete_game']			= 'Bist du sicher, dass dieses Spiel gelöscht werden soll?';
 $lang['confirm_delete_group']			= 'Bist du sicher, das die Gruppe gelöscht werden soll?';
 $lang['confirm_delete_log']				= 'Bist du sicher, das dieser oder diese Logeinträge gelöscht werden soll?';
+$lang['confirm_delete_all_log']			= 'Bist du sicher, das alle Logeinträge gelöscht werden soll?';
 $lang['confirm_delete_log_error']		= 'Bist du sicher, das dieser oder diese Fehlermeldungen gelöscht werden soll?';
 $lang['confirm_delete_navigation']		= 'Bist du sicher, das der Link gelöscht werden soll?';
 $lang['confirm_delete_network']			= 'Bist du sicher, das der %s gelöscht werden soll?';
@@ -878,6 +886,7 @@ $lang['confirm_delete_training']		= 'Bist du sicher, dass dieses Training gelösc
 
 $lang['confirm_delete_user']			= 'Bist du sicher, das der Benutzer gelöscht werden soll?';
 $lang['confirm_delete_cash']			= 'Bist du sicher, dass dieser Beitrag gelöscht werden soll?';
+$lang['confirm_delete_cash_bank']		= 'Bist du sicher, dass die Bankdaten gelöscht werden soll?';
 $lang['confirm_delete_cash_user']		= 'Bist du sicher, dass dieser Benutzereintrag gelöscht werden soll?';
 
 $lang['click_admin_index']			= 'Klicke %shier%s, um zum Adminstart zurückzukehren';
@@ -934,11 +943,11 @@ $lang['msg_select_url']			= 'Bitte Link eintragen';
 $lang['msg_select_amount']		= 'Bitte einen Betrag eintragen';
 $lang['msg_select_user']		= 'Bitte einen Benutzer auswählen';
 
-$lang['msg_select_bankdata_name']		= 'Inhaber des Kontos';
-$lang['msg_select_bankdata_bank']		= 'Bankname';
-$lang['msg_select_bankdata_blz']		= 'Bankleitzahl';
-$lang['msg_select_bankdata_number']		= 'Kontonummer';
-$lang['msg_select_bankdata_reason']		= 'Verwendungszweck';
+$lang['msg_select_bankdata_name']		= 'Bitte Inhaber des Kontos eintragen';
+$lang['msg_select_bankdata_bank']		= 'Bitte Bankname eintragen';
+$lang['msg_select_bankdata_blz']		= 'Bitte Bankleitzahl eintragen';
+$lang['msg_select_bankdata_number']		= 'Bitte Kontonummer eintragen';
+$lang['msg_select_bankdata_reason']		= 'Bitte Verwendungszweck eintragen';
 
 
 $lang['game_select']	= 'Spiel auswählen';
@@ -1016,7 +1025,7 @@ $lang['Id_all_deleted']				= 'Alle Einträge wurden gelöscht!';
 //
 //	Teams
 //
-$lang['member_empty']		= 'Keine Mitglieder vorhanden.';
+$lang['team_no_member']		= 'Keine Mitglieder vorhanden.';
 $lang['team_empty'] = 'Es sind keine Teams vorhanden.';
 $lang['team_membercount'] = 'Memberanzahl';
 $lang['member'] = 'Mitglieder';
@@ -1175,7 +1184,9 @@ $lang['cash_bd_bank']		= 'Kreditinstitut';
 $lang['cash_bd_number']		= 'Kontonummer';
 $lang['cash_bd_blz']		= 'Bankleitzahl';
 $lang['cash_bd_name']		= 'Inhaber';
-$lang['cash_bd_reason']		= 'Verwendungszwec';
+$lang['cash_bd_reason']		= 'Verwendungszweck';
+
+$lang['cash_bank_clear']	= 'Bankdaten löschen';
 
 $lang['month'] = array(
 	'01'	=> 'Januar',

@@ -152,7 +152,7 @@ class stat_run_class
 
 	function display()
 	{
-		global $db, $template, $lang, $userdata, $board_config;
+		global $db, $template, $lang, $userdata, $config;
 		global $starttime, $trc_loc_start, $trc_loc_end;
 
 		if ( !defined('DEBUG_RUN_STATS') )
@@ -290,7 +290,7 @@ class stat_run_class
 
 		// setup
 		$setup = array();
-		if ( $board_config['gzip_compress'] )
+		if ( $config['gzip_compress'] )
 		{
 			$setup[] = $lang['Stat_gzip_enable'];
 		}

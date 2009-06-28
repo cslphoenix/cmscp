@@ -30,9 +30,9 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_TEAM);
 init_userprefs($userdata);
 
-if ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) || isset($HTTP_GET_VARS[POST_TEAMS_URL]) )
+if ( isset($HTTP_POST_VARS[POST_TEAM_URL]) || isset($HTTP_GET_VARS[POST_TEAM_URL]) )
 {
-	$team_id = ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) ) ? intval($HTTP_POST_VARS[POST_TEAMS_URL]) : intval($HTTP_GET_VARS[POST_TEAMS_URL]);
+	$team_id = ( isset($HTTP_POST_VARS[POST_TEAM_URL]) ) ? intval($HTTP_POST_VARS[POST_TEAM_URL]) : intval($HTTP_GET_VARS[POST_TEAM_URL]);
 }
 else
 {
@@ -71,14 +71,7 @@ if ( !$mode )
 	}
 	$games = $db->sql_fetchrowset($result);
 //	$games = _cached($sql, 'info_games', 0);
-/*
-	$sql = "SELECT g.* FROM cms_game g, cms_teams t WHERE g.game_id = t.team_game ORDER BY game_order";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$games = $db->sql_fetchrowset($result);
-*/	
+
 	$sql = 'SELECT *
 				FROM ' . TEAMS . '
 			ORDER BY team_order';
@@ -88,24 +81,6 @@ if ( !$mode )
 	}
 	$teams = $db->sql_fetchrowset($result);
 //	$teams = _cached($sql, 'info_teams', 0);
-/*	
-	//	Multi-Array in einfaches Array
-	foreach ($games as $game)
-	{
-		$game_ids[] = implode(', ', $game);
-	}
-	
-	//	Löschen der Doppelten Einträge
-	$games = array_unique($game_ids);
-
-	//	Einfaches Array in Multi-Array
-	foreach ($games as $game)
-	{
-		$cleargame[] = explode(', ', $game);
-	}
-	
-//	_debug_post($cleargame);
-*/
 
 	for ( $i = 0; $i < count($games); $i++ )
 	{
@@ -127,16 +102,16 @@ if ( !$mode )
 				$template->assign_block_vars('select.game_row.team_row', array(
 					'CLASS' 		=> $class,
 					'TEAM_NAME'		=> $teams[$j]['team_name'],
-					'TEAM_MATCH'	=> '<a href="' . append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['all_matches'] . '</a>',
-					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . append_sid('contact.php?mode=joinus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
-					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
-					'TO_TEAM'		=> append_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$j]['team_id']),
+					'TEAM_MATCH'	=> '<a href="' . append_sid('match.php?mode=teammatches&amp;' . POST_TEAM_URL . '=' . $team_id) . '">' . $lang['all_matches'] . '</a>',
+					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . append_sid('contact.php?mode=joinus&amp;' . POST_TEAM_URL . '=' . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
+					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . append_sid('contact.php?mode=fightus&amp;' . POST_TEAM_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
+					'TO_TEAM'		=> append_sid('teams.php?mode=view&amp;' . POST_TEAM_URL . '=' . $teams[$j]['team_id']),
 				));
 			}
 		}
 	}
 }
-else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
+else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAM_URL]) )
 {
 //	$page_title = $lang['team'];
 	$template->set_filenames(array('body' => 'body_teams.tpl'));
@@ -153,7 +128,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 	}
 	$team = $db->sql_fetchrow($result);
 	
-//	_debug_post($team);
+//	_debug($team);
 	
 	$sql = 'SELECT u.username, u.user_id, u.user_viewemail, u.user_posts, u.user_regdate, u.user_email, tu.team_mod
 				FROM ' . USERS . ' u, ' . TEAMS_USERS . ' tu
@@ -347,7 +322,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 	$select_options .= '<option value="change_level">&raquo; Gruppenrechte geben/nehmen</option>';
 	$select_options .= '</select>';
 	
-	$s_hidden_fields = '<input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+	$s_hidden_fields = '<input type="hidden" name="' . POST_TEAM_URL . '" value="' . $team_id . '" />';
 	$s_hidden_fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
 	
 	$template->assign_vars(array(
@@ -402,7 +377,7 @@ else if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
 		'S_SELECT_OPTION'	=> $select_options,
-		'S_TEAM_ACTION' => append_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
+		'S_TEAM_ACTION' => append_sid('teams.php?' . POST_TEAM_URL . '=' . $team_id)
 	));
 	
 }

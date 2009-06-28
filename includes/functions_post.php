@@ -120,7 +120,7 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 		break;
 	}
 	
-	if ($mode == 'add')
+	if ( $mode == 'add' )
 	{
 		$sql = 'INSERT INTO ' . $table_com . " ($id_name, poster_id, $sql_fields poster_ip, poster_text, time_create)
 			VALUES ('" . intval($id) . "', '" . intval($poster_id) . "', $sql_data '" . $poster_ip . "', '" . str_replace("\'", "''", $message) . "', '" . time() . "')";
@@ -129,7 +129,7 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
-		$sql = 'UPDATE ' . $table_name . ' SET ' . $table . '_comment = ' . $table . "_comment + 1 WHERE $id_name = $id";
+		$sql = "UPDATE $table_name SET " . $table . "_comment = " . $table . "_comment + 1 WHERE $id_name = $id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

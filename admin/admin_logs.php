@@ -75,7 +75,18 @@ else
 	}
 	else
 	{
-		$mode = '';
+		if ( isset($HTTP_POST_VARS['delete']) || isset($HTTP_GET_VARS['delete']) )
+		{
+			$mode = 'delete';
+		}
+		else if ( isset($HTTP_POST_VARS['delete_all']) || isset($HTTP_GET_VARS['delete_all']) )
+		{
+			$mode = 'delete_all';
+		}
+		else
+		{
+			$mode = '';
+		}
 	}
 	
 	switch ($mode)
@@ -190,6 +201,50 @@ else
 					'L_NO'				=> $lang['common_no'],
 	
 					'S_CONFIRM_ACTION'	=> append_sid('admin_logs.php?mode=error'),
+					'S_HIDDEN_FIELDS'	=> $hidden_fields,
+				));
+			}
+			else
+			{
+				message_die(GENERAL_MESSAGE, $lang['msg_must_select_log']);
+			}
+		
+			$template->pparse('body');
+			
+			break;
+		
+		case 'delete_all':
+		
+			$confirm	= isset($HTTP_POST_VARS['confirm']);
+
+			if ( $confirm )
+			{
+				$sql = 'TRUNCATE TABLE ' . LOGS;
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_all');
+				
+				$message = $lang['delete_log_all'] . '<br><br>' . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
+	
+			}
+			else if ( !$confirm )
+			{
+				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+	
+				$hidden_fields = '<input type="hidden" name="mode" value="delete_all" />';
+	
+				$template->assign_vars(array(
+					'MESSAGE_TITLE'		=> $lang['common_confirm'],
+					'MESSAGE_TEXT'		=> $lang['confirm_delete_all_log'],
+	
+					'L_YES'				=> $lang['common_yes'],
+					'L_NO'				=> $lang['common_no'],
+	
+					'S_CONFIRM_ACTION'	=> append_sid('admin_logs.php'),
 					'S_HIDDEN_FIELDS'	=> $hidden_fields,
 				));
 			}

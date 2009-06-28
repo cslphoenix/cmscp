@@ -157,7 +157,7 @@ function _counter_result()
 			'STATS_COUNTER_MONTH' 		=> sprintf($lang['counter_month'], $stats_month),
 			'STATS_COUNTER_YEAR' 		=> sprintf($lang['counter_year'], $stats_year),
 			'STATS_COUNTER_TOTAL' 		=> sprintf($lang['counter_total'], $stats_year+$config['counter_start']),
-			'STATS_COUNTER_CACHE'		=> (defined('CACHE')) ? display_cache('counter_stats_total', 1) : '',
+//			'STATS_COUNTER_CACHE'		=> ( defined('CACHE') ) ? display_cache('counter_stats_total', 1) : '',
 		));
 	}
 }

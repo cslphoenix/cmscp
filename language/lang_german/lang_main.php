@@ -27,6 +27,11 @@ $lang['common_comments']			= 'Kommentare';
 $lang['common_comment_add']			= 'Kommentar hinzufügen';
 $lang['common_comment_edit']		= 'Kommentar bearbeiten';
 $lang['common_comment_delete']		= 'Kommentar löschen';
+$lang['common_unread']				= 'Ungelesen';
+$lang['common_num_comment']			= '%s neuer Kommentar';
+$lang['common_num_comments']		= '%s neue Kommentare';
+
+$lang['error_number']				= 'Diese ID ist nicht vergeben!';
 
 
 $lang['click_return_index'] = 'Klick %shier%s um zum Index zurückzukehren';
@@ -146,6 +151,7 @@ $lang['match_joinus']		= 'JoinUs?';
 $lang['to_team']			= 'zum Team';
 $lang['match_details']		= 'Details';
 $lang['match']				= 'Begegnungen';
+$lang['match_info']			= 'Matchinformationen';
 $lang['match_upcoming']		= 'Anstehende Wars';
 $lang['match_expired']		= 'Abgelaufen Wars';
 
@@ -166,37 +172,53 @@ $lang['status_no']			= 'kann nicht spielen';
 $lang['status_replace']		= 'Ersatzspieler';
 $lang['change_on']			= '<i>geändert am:</i> ';
 
-$lang['select_categorie']	= 'Matchtyp auswählen';
-$lang['select_categorie1']	= 'Fun War';
-$lang['select_categorie2']	= 'Clan War';
-$lang['select_categorie3']	= 'Liga War';
-$lang['select_categorie4']	= 'Train War';
+
 
 $lang['select_type']		= 'XonX auswählen';
-$lang['select_type1']		= 'Unbekannt';
-$lang['select_type2']		= '2on2';
-$lang['select_type3']		= '3on3';
-$lang['select_type4']		= '4on4';
-$lang['select_type5']		= '5on5';
-$lang['select_type6']		= '6on6';
-
 $lang['select_league']		= 'Liga auswählen';
-$lang['select_league1']		= 'ESL';
-$lang['select_league2']		= 'Stammkneipe';
-$lang['select_league3']		= '0815 Liga';
-$lang['select_league4']		= 'Leaguez';
-$lang['select_league5']		= 'TE';
-$lang['select_league6']		= 'XGC';
-$lang['select_league7']		= 'NCSL';
-$lang['select_league8']		= 'andere';
-$lang['select_league1i']	= 'http://www.esl.eu/';
-$lang['select_league2i']	= 'http://www.stammkneipe.de/';
-$lang['select_league3i']	= 'http://www.0815liga.de/';
-$lang['select_league4i']	= 'http://www.lgz.de/';
-$lang['select_league5i']	= 'http://www.tactical-esports.de/';
-$lang['select_league6i']	= 'http://www.xgc-online.de/';
-$lang['select_league7i']	= 'http://www.ncsl.de/';
+$lang['select_categorie']	= 'Matchtyp auswählen';
 
+$lang['select_type_box']['0']	= 'XonX auswählen';
+$lang['select_type_box']['1']	= 'Unbekannt';
+$lang['select_type_box']['2']	= '2on2';
+$lang['select_type_box']['3']	= '3on3';
+$lang['select_type_box']['4']	= '4on4';
+$lang['select_type_box']['5']	= '5on5';
+$lang['select_type_box']['6']	= '6on6';
+
+$lang['select_categorie_box']['0']	= 'Matchtyp auswählen';
+$lang['select_categorie_box']['1']	= 'Fun War';
+$lang['select_categorie_box']['2']	= 'Clan War';
+$lang['select_categorie_box']['3']	= 'Liga War';
+$lang['select_categorie_box']['4']	= 'Train War';
+
+$lang['select_league_box']['0']['league_id']	= '0';
+$lang['select_league_box']['0']['league_name']	= 'Liga auswählen';
+$lang['select_league_box']['0']['league_link']	= '';
+$lang['select_league_box']['1']['league_id']	= '1';
+$lang['select_league_box']['1']['league_name']	= 'ESL';
+$lang['select_league_box']['1']['league_link']	= 'http://www.esl.eu/';
+$lang['select_league_box']['2']['league_id']	= '2';
+$lang['select_league_box']['2']['league_name']	= 'Stammkneipe';
+$lang['select_league_box']['2']['league_link']	= 'http://www.stammkneipe.de/';
+$lang['select_league_box']['3']['league_id']	= '3';
+$lang['select_league_box']['3']['league_name']	= '0815 Liga';
+$lang['select_league_box']['3']['league_link']	= 'http://www.0815liga.de/';
+$lang['select_league_box']['4']['league_id']	= '4';
+$lang['select_league_box']['4']['league_name']	= 'Leaguez';
+$lang['select_league_box']['4']['league_link']	= 'http://www.lgz.de/';
+$lang['select_league_box']['5']['league_id']	= '5';
+$lang['select_league_box']['5']['league_name']	= 'TE';
+$lang['select_league_box']['5']['league_link']	= 'http://www.tactical-esports.de/';
+$lang['select_league_box']['6']['league_id']	= '6';
+$lang['select_league_box']['6']['league_name']	= 'XGC';
+$lang['select_league_box']['6']['league_link']	= 'http://www.xgc-online.de/';
+$lang['select_league_box']['7']['league_id']	= '7';
+$lang['select_league_box']['7']['league_name']	= 'NCSL';
+$lang['select_league_box']['7']['league_link']	= 'http://www.ncsl.de/';
+$lang['select_league_box']['8']['league_id']	= '8';
+$lang['select_league_box']['8']['league_name']	= 'andere';
+$lang['select_league_box']['8']['league_link']	= '';
 
 //
 //	Allgemein
@@ -1364,6 +1386,13 @@ $lang['cash_interval_week']		= 'Wöchentlich';
 $lang['cash_no_entry']			= 'kein Eintrag';
 $lang['interval_m']				= 'Monatlich ab: %s';
 $lang['interval_o']				= 'Einmalig für Monat: %s';
+
+$lang['cash_bankdata']		= 'Bankdaten';
+$lang['cash_bd_bank']		= 'Kreditinstitut';
+$lang['cash_bd_number']		= 'Kontonummer';
+$lang['cash_bd_blz']		= 'Bankleitzahl';
+$lang['cash_bd_name']		= 'Inhaber';
+$lang['cash_bd_reason']		= 'Verwendungszweck';
 
 //
 //	Header Title

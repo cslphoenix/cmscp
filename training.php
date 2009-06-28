@@ -159,9 +159,9 @@ if ( $mode == '' )
 				'CLASS' 		=> $class,
 				'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 				'TEAM_NAME'		=> $teams[$i]['team_name'],
-				'ALL_MATCHES'	=> append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
-				'TO_TEAM'		=> append_sid('teams.php?mode=show&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
-				'FIGHTUS'		=> append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+				'ALL_MATCHES'	=> append_sid('match.php?mode=teammatches&amp;' . POST_TEAM_URL . '=' . $teams[$i]['team_id']),
+				'TO_TEAM'		=> append_sid('teams.php?mode=show&amp;' . POST_TEAM_URL . '=' . $teams[$i]['team_id']),
+				'FIGHTUS'		=> append_sid('contact.php?mode=fightus&amp;' . POST_TEAM_URL . '=' . $teams[$i]['team_id']),
 			));
 		}		
 	}
@@ -521,14 +521,14 @@ else if ($mode == 'change')
 	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">'));
 	message_die(GENERAL_MESSAGE, $message);
 }
-else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
+else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAM_URL]))
 {
 	$page_title = $lang['training'];
 	include($root_path . 'includes/page_header.php');
 	
 	$template->set_filenames(array('body' => 'training_teams_body.tpl'));
 	
-	$team_id = $HTTP_GET_VARS[POST_TEAMS_URL];
+	$team_id = $HTTP_GET_VARS[POST_TEAM_URL];
 	
 	//
 	//	Team Details
@@ -587,14 +587,11 @@ else
 	redirect(append_sid('training.php', true));
 }
 
-if ( $userdata['user_level'] != TRIAL || $userdata['user_level'] != MEMBER || $userdata['user_level'] != ADMIN )
+if ( $userdata['user_level'] <= TRIAL )
 {
 	message_die(GENERAL_ERROR, $lang['access_denied']);
 }
 
-//
-//	Generate the page
-//
 $template->pparse('body');
 
 include($root_path . 'includes/page_tail.php');

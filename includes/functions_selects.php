@@ -22,19 +22,30 @@
 
 ***/
 
-function select_box($type, $class, $field_id, $field_name, $default = '')
+function select_box($type, $class, $field_id, $field_name, $default = '', $switch = '')
 {
 	global $db, $lang, $config, $settings;
 	
-	switch ($type)
+	switch ( $type )
 	{
-		case 'user';
-		
-			$table	= USERS;
-			$where	= ' WHERE user_id <> ' . ANONYMOUS;
-			$order	= ' ORDER BY user_id DESC';
-			
+		case 'match';
 			break;
+
+		case 'newscategory';
+			break;
+
+		case 'team';
+			$table = TEAMS;
+			$where = ( $switch != '0' ) ? ( $switch == '2' ) ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
+			$order = ' ORDER BY team_order';
+			break;
+
+		case 'user';
+			$table = USERS;
+			$where = ' WHERE user_id <> ' . ANONYMOUS;
+			$order = ' ORDER BY user_id DESC';
+			break;
+			
 			
 		default:
 			
@@ -64,54 +75,29 @@ function select_box($type, $class, $field_id, $field_name, $default = '')
 	
 }
 
-function _select_user($class, $default = '')
+function select_lang_box($var, $name, $default, $class)
 {
-	global $db, $lang;
-	
-	$sql = 'SELECT user_id, username
-				FROM ' . USERS . '
-				WHERE user_id <> ' . ANONYMOUS . '
-			ORDER BY user_level DESC';
-//	$data_users = _cached($sql, 'data_users', 0);
-	if (!($result = $db->sql_query($sql)))
+	global $lang;
+		
+	$select_switch = '<select name="' . $name . '" class="' . $class . '">';
+	foreach ( $lang[$var] as $key_s => $value_s )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		$selected = ( $key_s == $default ) ? ' selected="selected"' : '';
+		
+		if ( $name != 'match_league' )
+		{
+			$select_switch .= '<option value="' . $key_s . '" ' . $selected . '>&raquo; ' . $value_s . '&nbsp;</option>';
+		}
+		else
+		{
+			$select_switch .= '<option onClick="this.form.match_league_url.value=[\'' . $value_s['league_link'] . '\']" value="' . $value_s['league_id'] . '" ' . $selected . '>&raquo; ' . $value_s['league_name'] . '&nbsp;</option>';
+		}
 	}
-	$data_users = $db->sql_fetchrowset($result);
-
-	$users = array();
-	for ( $i = 0; $i < count($data_users); $i++ )
-	{
-		$users[] = $data_users[$i];
-	}
+	$select_switch .= '</select>';
 	
-	$select = '<select class="' . $class . '" name="user_id">';
-	$select .= '<option value="">&raquo; ' . $lang['msg_select_user'] . '</option>';
-	
-	foreach($users as $user => $user_info)
-	{
-		$selected = ( $user_info['user_id'] == $default ) ? 'selected="selected"' : '';
-		$select .= '<option value="' . $user_info['user_id'] . '" ' . $selected . '>&raquo; ' . $user_info['username'] . '&nbsp;</option>';
-	}
-	$select .= '</select>';
-
-	return $select;
+	return $select_switch;
 }
 
-function _select_box($default, $type)
-{
-	global $db, $lang;
-	
-	$func_select = '<select class="select" name="rank_id">';
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['rank_order'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
 
 function _select_newscat($default)
 {
@@ -193,37 +179,6 @@ function _select_game($default)
 	return $func_select;
 }
 
-//
-//	Team Select
-//
-//	default:	id
-//	class:		css class
-//	type:		alle/fight/join
-//
-function _select_team($default, $type, $class)
-{
-	global $db, $lang;
-	
-	$typ = ($type != '0') ? ($type == '2') ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
-
-	$sql = 'SELECT team_id, team_name FROM ' . TEAMS . $typ . ' ORDER BY team_order';
-	if (!($result = $db->sql_query($sql)))
-	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
-	}
-	
-	$func_select = '<select id="team_id" class="' . $class . '" name="team_id">';
-	$func_select .= '<option value="">&raquo; ' . $lang['select_team'] . '</option>';
-	
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['team_id'] == $default ) ? 'selected="selected"' : '';
-		$func_select .= '<option value="' . $row['team_id'] . '" ' . $selected . ' >&raquo; ' . $row['team_name'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
 
 //
 //	Match Select

@@ -5,7 +5,8 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_MATCH_TITLE}</a></li>
+				<li id="active"><a href="#" id="current">{L_MATCH_HEAD}</a></li>
+				<li><a href="{S_MATCH_ADD}">{L_MATCH_CREATE}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -21,7 +22,7 @@
 <tr>
 	<td class="rowHead" colspan="3">{L_MATCH_DETAILS}</td>
 	<td class="rowHead">{L_TRAINING}</td>
-	<td class="rowHead" colspan="3">{L_MATCH_SETTINGS}</td>
+	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
 </tr>
 <tr>
 		<td class="rowHead" colspan="7">{L_UPCOMING}</td>
@@ -32,7 +33,7 @@
 	<td class="{display.match_row_new.CLASS}" align="left" width="100%">{display.match_row_new.MATCH_NAME}</td>
 	<td class="{display.match_row_new.CLASS}" align="center" nowrap="nowrap">{display.match_row_new.MATCH_DATE}</td>
 	<td class="{display.match_row_new.CLASS}" align="center"><a href="{display.match_row_new.U_TRAINING}">{display.match_row_new.TRAINING}</a></td>
-	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_EDIT}">{L_MATCH_SETTING}</a></td>
+	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_EDIT}">{L_SETTING}</a></td>
 	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
 	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_DELETE}">{L_DELETE}</a></td>
 </tr>
@@ -51,7 +52,7 @@
 	<td class="{display.match_row_old.CLASS}" align="left" width="100%">{display.match_row_old.MATCH_NAME}</td>
 	<td class="{display.match_row_old.CLASS}" align="center" nowrap="nowrap">{display.match_row_new.MATCH_DATE}</td>
 	<td class="{display.match_row_old.CLASS}" align="center"> - </td>
-	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_EDIT}">{L_MATCH_SETTING}</a></td>
+	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_EDIT}">{L_SETTING}</a></td>
 	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
 	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_DELETE}">{L_DELETE}</a></td>
 </tr>
@@ -73,7 +74,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right">{S_TEAMS}</td>
-	<td><input class="button" type="submit" name="match_add" value="{L_MATCH_CREATE}" /></td>
+	<td><input type="hidden" name="mode" value="match_add"><input class="button" type="submit" name="match_add" value="{L_MATCH_CREATE}" /></td>
 </tr>
 </table>
 </form>
@@ -105,9 +106,6 @@
 
 <table class="edit" cellspacing="1">
 <tr>
-	<th colspan="2">{L_MATCH_INFOS}</th>
-</tr>
-<tr>
 	<td class="row1" width="160">{L_MATCH_TEAM}: *</td>
 	<td class="row3">{S_TEAMS}</td>
 </tr>
@@ -134,9 +132,9 @@
 <tr>
 	<td class="row1">{L_MATCH_DATE}:</td>
 	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}
-		<!-- BEGIN edit_match -->
+		<!-- BEGIN reset_match -->
 		<input type="checkbox" name="listdel" /> {L_RESET_LIST}
-		<!-- END edit_match -->
+		<!-- END reset_match -->
 	</td>
 </tr>
 <tr>
@@ -236,39 +234,51 @@
 <table class="normal" cellspacing="0">
 <tr>
 	<td valign="top">
-		<table class="row" cellspacing="1">
+		<table class="edit" cellspacing="1">
 		<tr>
-			<td class="rowHead" align="center" colspan="2">{L_MATCH_INFO}</td>
+			<th colspan="2">
+				<div id="navcontainer">
+					<ul id="navlist">
+						<li id="active"><a href="#" id="current">{L_MATCH_INFO}</a></li>
+					</ul>
+				</div>
+			</th>
 		</tr>
 		<tr>
-			<td class="row_class1">{L_RIVAL}</td>
-			<td class="row_class2">{MATCH_RIVAL} - <a href="{U_MATCH_RIVAL_URL}">{MATCH_RIVAL_URL}</a></td>
+			<td class="row3">{L_RIVAL}</td>
+			<td class="row3">{MATCH_RIVAL} - <a href="{U_MATCH_RIVAL_URL}">{MATCH_RIVAL_URL}</a></td>
 		</tr>
 		<tr>
-			<td class="row_class1">{L_RIVAL_TAG}</td>
-			<td class="row_class2">{MATCH_RIVAL_TAG}</td>
+			<td class="row3">{L_RIVAL_TAG}</td>
+			<td class="row3">{MATCH_RIVAL_TAG}</td>
 		</tr>
 		<tr>
-			<td class="row_class1">{L_MATCH_DETAILS}</td>
-			<td class="row_class2">{MATCH_CATEGORIE}: {MATCH_TYPE} - {MATCH_LEAGUE_INFO}</td>
+			<td class="row3">{L_MATCH_DETAILS}</td>
+			<td class="row3">{MATCH_CATEGORIE}: {MATCH_TYPE} - {MATCH_LEAGUE_INFO}</td>
 		</tr>
 		<tr>
-			<td class="row_class1">{L_SERVER}</td>
-			<td class="row_class2">{SERVER} {SERVER_PW}</td>
+			<td class="row3">{L_SERVER}</td>
+			<td class="row3">{SERVER} {SERVER_PW}</td>
 		</tr>
 		<!-- BEGIN hltv -->
 		<tr>
-			<td class="row_class1">{L_HLTV}</td>
-			<td class="row_class2">{HLTV} {HLTV_PW}</td>
+			<td class="row3">{L_HLTV}</td>
+			<td class="row3">{HLTV} {HLTV_PW}</td>
 		</tr>
 		<!-- END hltv -->
 		</table>
 	</td>
 	<td>&nbsp;</td>
 	<td valign="top">
-		<table class="row" cellspacing="1">
+		<table class="edit" cellspacing="1">
 		<tr>
-			<td class="rowHead" colspan="3">{L_USERNAME}</td>
+			<th colspan="3">
+				<div id="navcontainer">
+					<ul id="navlist">
+						<li id="active"><a href="#" id="current">{L_LINEUP_PLAYER}</a></li>
+					</ul>
+				</div>
+			</th>
 		</tr>
 		<!-- BEGIN members_row -->
 		<tr>
@@ -279,7 +289,7 @@
 		<!-- END members_row -->
 		<!-- BEGIN no_members_row -->
 		<tr>
-			<td class="row_class1" align="center" colspan="7">{NO_TEAMS}</td>
+			<td class="noentry" align="center" colspan="3">{NO_MEMBER}</td>
 		</tr>
 		<!-- END no_members_row -->
 		</table>
@@ -305,19 +315,24 @@
 <form action="{S_TEAM_ACTION}" method="post" id="post" name="post" enctype="multipart/form-data">
 <table class="edit" cellspacing="1">
 <tr>
-	<td class="row1">{L_RIVAL_LINEUP}:</td>
-	<td class="row3" colspan="5"><input class="post" type="text" size="50" name="details_lineup_rival" value="{DETAILS_LINEUP_RIVAL}" ></td>
+	<th colspan="6">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_DETAILS_MAPS}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 <tr>
 	<td class="row1" width="160">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapa" value="{DETAILS_MAPA}" > <input class="post" type="text" name="details_mapa_clan" value="{DETAILS_MAPA_CLAN}" size="2" > : <input class="post" type="text" name="details_mapa_rival" value="{DETAILS_MAPA_RIVAL}" size="2" >
-	<td rowspan="3" width="1%">{DETAILS_PIC_A}</td>
+	<td rowspan="3">{DETAILS_PIC_A}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN pictureadel -->
 		<input type="checkbox" name="pictureadel" />
 		<!-- END pictureadel -->
 	</td>
-	<td rowspan="3" width="1%">{DETAILS_PIC_B}</td>
+	<td rowspan="3">{DETAILS_PIC_B}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN picturebdel -->
 		<input type="checkbox" name="picturebdel" />
@@ -336,13 +351,13 @@
 <tr>
 	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapb" value="{DETAILS_MAPB}" > <input class="post" type="text" name="details_mapb_clan" value="{DETAILS_MAPB_CLAN}" size="2" > : <input class="post" type="text" name="details_mapb_rival" value="{DETAILS_MAPB_RIVAL}" size="2" >
-	<td rowspan="3" width="1%">{DETAILS_PIC_C}</td>
+	<td rowspan="3">{DETAILS_PIC_C}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN picturecdel -->
 		<input type="checkbox" name="picturecdel" />
 		<!-- END picturecdel -->
 	</td>
-	<td rowspan="3" width="1%">{DETAILS_PIC_D}</td>
+	<td rowspan="3">{DETAILS_PIC_D}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN pictureddel -->
 		<input type="checkbox" name="pictureddel" />
@@ -359,19 +374,18 @@
 </tr>
 <tr>
 	<td colspan="6" class="row3"><a onClick="document.getElementById('mapc').style.display = '';" href="#" >{L_MAP_MORE}</a> :: <a onClick="document.getElementById('mapc').style.display = 'none'; document.getElementById('mapd').style.display = 'none';" href="#" >{L_MAP_CLOSE}</a></td>
-	</tr>
-
+</tr>
 <tbody id="mapc" style="display:{MAPC};">
 <tr>
 	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapc" value="{DETAILS_MAPC}" > <input class="post" type="text" name="details_mapc_clan" value="{DETAILS_MAPC_CLAN}" size="2" > : <input class="post" type="text" name="details_mapc_rival" value="{DETAILS_MAPC_RIVAL}" size="2" >
-	<td rowspan="3" width="1%">{DETAILS_PIC_E}</td>
+	<td rowspan="3">{DETAILS_PIC_E}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN pictureedel -->
 		<input type="checkbox" name="pictureedel" value="pic_e" />
 		<!-- END pictureedel -->
 	</td>
-	<td rowspan="3" width="1%">{DETAILS_PIC_F}</td>
+	<td rowspan="3">{DETAILS_PIC_F}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN picturefdel -->
 		<input type="checkbox" name="picturefdel" value="pic_f" />
@@ -395,13 +409,13 @@
 <tr>
 	<td class="row1">{L_MAP} {L_POINTS}:{L_POINTS}<br><span class="small">{L_POINTS_EXPLAIN}</span></td>
 	<td class="row3"><input class="post" type="text" name="details_mapd" value="{DETAILS_MAPD}" > <input class="post" type="text" name="details_mapd_clan" value="{DETAILS_MAPD_CLAN}" size="2" > : <input class="post" type="text" name="details_mapd_rival" value="{DETAILS_MAPD_RIVAL}" size="2" >
-	<td rowspan="3" width="1%">{DETAILS_PIC_G}</td>
+	<td rowspan="3">{DETAILS_PIC_G}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN picturegdel -->
 		<input type="checkbox" name="picturegdel" />
 		<!-- END picturegdel -->
 	</td>
-	<td rowspan="3" width="1%">{DETAILS_PIC_H}</td>
+	<td rowspan="3">{DETAILS_PIC_H}</td>
 	<td rowspan="3" width="1%">
 		<!-- BEGIN picturehdel -->
 		<input type="checkbox" name="picturehdel" />
@@ -421,13 +435,13 @@
 	<td class="row1">{L_MATCH_COMMENT}:</td>
 	<td class="row3" colspan="5"><textarea class="post" rows="5" cols="50" name="details_comment">{DETAILS_COMMENT}</textarea></td>
 </tr>
-</table>
-
-
-<table class="foot" cellspacing="2">
-	<tr>
-		<td align="right"><input type="submit" name="update" value="{L_SUBMIT}" class="button" /></td>
-	</tr>
+<tr>
+	<td class="row1">{L_RIVAL_LINEUP}</td>
+	<td class="row3" colspan="5"><input class="post" type="text" size="50" name="details_lineup_rival" value="{DETAILS_LINEUP_RIVAL}" ></td>
+</tr>
+<tr>
+	<td align="right" colspan="6"><input type="submit" name="update" value="{L_SUBMIT}" class="button" /></td>
+</tr>
 </table>
 {S_HIDDEN_FIELDS}{S_HIDDEN_FIELDB}
 </form>
@@ -435,12 +449,17 @@
 <form action="{S_TEAM_ACTION}" method="post" name="post">
 <table class="head" cellspacing="0">
 <tr>
-	<th>{L_MATCH_TITLE} - {L_MATCH_LINEUP}</th>
-</tr>
-<tr>
-	<td>&nbsp;</td>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_MATCH_LINEUP}</a></li>
+			</ul>
+		</div>
+	</th>
 </tr>
 </table>
+
+<br>
 
 <table class="edit" cellspacing="1">
 <tr>
@@ -449,17 +468,7 @@
 </tr>
 <tr>
 	<td class="row1" valign="top">{L_MATCH_LINUP_ADD}:<br><span class="small">{L_MATCH_LINUP_ADD_EX}</span></td>
-	<td class="row3">{S_ADDUSERS}</td>
-</tr>
-<tr>
-	<td class="row3">
-		<table class="foot" cellspacing="2">
-		<tr>
-			<td align="right"><input type="submit" value="{L_SUBMIT}" class="button" /></td>
-		</tr>
-		</table>
-	</td>
-	<td class="row3">&nbsp;</td>
+	<td class="row3">{S_ADDUSERS}&nbsp;<input type="submit" value="{L_SUBMIT}" class="button" /></td>
 </tr>
 </table>
 

@@ -1,7 +1,81 @@
 <?php
 
+/***
+
+							___.          
+	  ____   _____   ______ \_ |__ ___.__.
+	_/ ___\ /     \ /  ___/  | __ <   |  |
+	\  \___|  Y Y  \\___ \   | \_\ \___  |
+	 \___  >__|_|  /____  >  |___  / ____|
+		 \/      \/     \/       \/\/     
+	__________.__                         .__        
+	\______   \  |__   ____   ____   ____ |__|__  ___
+	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+				   \/            \/     \/         \/
+
+	* Content-Management-System by Phoenix
+
+	* @autor:	Sebastian Frickel © 2009
+	* @code:	Sebastian Frickel © 2009
+
+***/
+
+function request_vars($var_name, $var_type = false)
+{
+	global $HTTP_POST_VARS, $HTTP_GET_VARS;
+	
+	if ( $var_type == '1' )
+	{
+		if ( isset($HTTP_POST_VARS[$var_name]) || isset($HTTP_GET_VARS[$var_name]) )
+		{
+			$var = ( isset($HTTP_POST_VARS[$var_name]) ) ? htmlspecialchars($HTTP_POST_VARS[$var_name]) : htmlspecialchars($HTTP_GET_VARS[$var_name]);
+		}
+		else
+		{
+			$var = '';
+		}
+	}
+	else
+	{	
+		if ( isset($HTTP_POST_VARS[$var_name]) || isset($HTTP_GET_VARS[$var_name]) )
+		{
+			$var = ( isset($HTTP_POST_VARS[$var_name]) ) ? intval($HTTP_POST_VARS[$var_name]) : intval($HTTP_GET_VARS[$var_name]);
+		}
+		else
+		{
+			$var  = '';
+		}
+	}
+	
+	return $var;
+}
+
+function _cut_string($string, $length)
+{
+	/***
+
+	@param string $string	enthält den Titel
+	@param int $length		enthält die maximale Länge
+	
+	@return string
+	
+	***/
+	
+	$string = ( strlen($string) < $length ) ? $string : substr($string, 0, ($length-3)) . '...';
+	
+	return $string;
+}
+
 function get_authlist()
 {
+	/***
+
+	@return string
+	
+	***/
+	
 	global $db;
 	
 	$sql = 'SELECT auth_name FROM ' . AUTHLIST . ' ORDER BY auth_name';
@@ -279,14 +353,25 @@ function _cut($text)
 	return $text;
 }
 
-function _cached($sql, $name, $row='', $time='')
+function _cached($sql, $name, $row = '', $time = '')
 {
+	/***
+
+	@param string $sql		enthält die SQL Abfrage
+	@param string $name		enthält den Namen der Cachdatei
+	@param int $row			sql_fetchrow/sql_fetchrowset
+	@param int $time		Lebensdauer der Cachdatei
+	
+	@return string
+	
+	***/
+	
 	global $db, $oCache;
 	
-	if (defined('CACHE'))
+	if ( defined('CACHE') )
 	{
 		$sCacheName = $name;
-		if (($fetch = $oCache -> readCache($sCacheName)) === false)
+		if ( ($fetch = $oCache -> readCache($sCacheName)) === false)
 		{
 			if ( !($result = $db->sql_query($sql)) )
 			{
@@ -300,7 +385,10 @@ function _cached($sql, $name, $row='', $time='')
 	}
 	else
 	{
-		$result = $db->sql_query($sql);
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 		$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
 	}
@@ -339,17 +427,17 @@ function error_handler($errno, $errstr, $errfile, $errline)
 	
 	$errno = $errno & error_reporting();
 	
-	if ($errno == 0)
+	if ( $errno == 0 )
 	{
 		return;
 	}
 	
-	if (!defined('E_STRICT'))
+	if ( !defined('E_STRICT') )
 	{
 		define('E_STRICT', 2048);
 	}
     
-	if (!defined('E_RECOVERABLE_ERROR'))
+	if ( !defined('E_RECOVERABLE_ERROR') )
 	{
 		define('E_RECOVERABLE_ERROR', 4096);
 	}
@@ -439,54 +527,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 	echo $msg;
 }
 
-/*
-function error_fatal($mask = NULL){
-    if(!is_null($mask)){
-        $GLOBALS['error_fatal'] = $mask;
-    }elseif(!isset($GLOBALS['die_on'])){
-        $GLOBALS['error_fatal'] = 0;
-    }
-    return $GLOBALS['error_fatal'];
-}
-
-function myErrorHandler($errno, $errstr, $errfile, $errline)
-{
-	global $root_path;
-	
-	$errfile = str_replace(array(phpbb_realpath($root_path), '\\'), array('', '/'), $errfile);
-	
-    switch ($errno)
-	{
-		case E_USER_ERROR:
-			echo "<b>My ERROR</b> [$errno] $errstr<br>\n";
-			echo "  Fatal error on line $errline in file $errfile";
-			echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br>\n";
-			echo "Aborting...<br>\n";
-			exit(1);
-			break;
-		
-		case E_USER_WARNING:
-			echo "<b>My WARNING</b> [$errno] $errstr<br>\n";
-			break;
-		case E_USER_NOTICE:
-			echo "<b>My NOTICE</b> [$errno] $errstr<br>\n";
-			break;
-			
-			case E_NOTICE:
-			
-		echo "<b>NOTICE</b> $errfile $errstr<br>\n";
-        break;
-
-    }
-
-    // Don't execute PHP internal error handler 
-    return true;
-}
-
-$old_error_handler = set_error_handler("myErrorHandler");
-*/
-
-function _debug_poste($data)
+function _debuge($data)
 {
 	print '<br>';
 	print '<pre>';
@@ -496,8 +537,9 @@ function _debug_poste($data)
 	exit;
 }
 
-function _debug_post($data)
+function _debug($data)
 {
+	print '<div align="left">';
 	print '<br>';
 	print '<-- start -->';
 	print '<br>';
@@ -506,10 +548,9 @@ function _debug_post($data)
 	print_r($data);
 	print '</pre>';
 	print '<br>';
-//	var_dump($data);
-//	print '<br>';
 	print '<-- end -->';
 	print '<br>';
+	print '</div>';
 }
 
 function check_image_type(&$type)

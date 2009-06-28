@@ -38,6 +38,11 @@
 </tr>
 </table>
 
+<table class="foot" cellspacing="2">
+<tr>
+	<td align="right"><input class="button" type="submit" name="bankdata_clear" value="{L_CASH_BANK_CLEAR}" /></td>
+</tr>
+</table>
 <br>
 
 <!-- END show_bd -->
