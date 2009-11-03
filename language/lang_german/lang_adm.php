@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 
 //
@@ -79,6 +80,8 @@ $lang['teams_over']			= 'Übersicht';
 $lang['training']			= 'Training';
 $lang['users']				= 'Benutzer';
 
+$lang['gallery']			= 'Galerie';
+
 
 
 //
@@ -96,7 +99,8 @@ $lang['auth_contact']		= 'Kontakt';
 $lang['auth_event']			= 'Event';
 $lang['auth_fightus']		= 'Fightus';	
 $lang['auth_forum']			= 'Forum';
-$lang['auth_forum_auth']	= 'Forumberechtigung';		
+$lang['auth_forum_auth']	= 'Forumberechtigung';
+$lang['auth_gallery']		= 'Gallery';
 $lang['auth_games']			= 'Spiele';
 $lang['auth_groups']		= 'Gruppen';	
 $lang['auth_groups_perm']	= 'Gruppen Befugnisse';		
@@ -123,6 +127,7 @@ $lang['auths'] = array(
 	'auth_fightus'		=> $lang['auth_fightus'],	
 	'auth_forum'		=> $lang['auth_forum'],	
 	'auth_forum_auth'	=> $lang['auth_forum_auth'],
+	'auth_gallery'		=> $lang['auth_gallery'],
 	'auth_games'		=> $lang['auth_games'],	
 	'auth_groups'		=> $lang['auth_groups'],	
 	'auth_groups_perm'	=> $lang['auth_groups_perm'],
@@ -141,6 +146,20 @@ $lang['auths'] = array(
 	'auth_training'		=> $lang['auth_training'],	
 	'auth_user'			=> $lang['auth_user'],
 	'auth_user_perm'	=> $lang['auth_user_perm'],
+);
+
+$lang['auth_gallery_view']		= 'Betrachten';
+$lang['auth_gallery_edit']		= 'Bearbeiten';
+$lang['auth_gallery_delete']	= 'Löschen';
+$lang['auth_gallery_rate']		= 'Bewertung';
+$lang['auth_gallery_upload']	= 'Hochladen';
+
+$lang['auth_gallery'] = array(
+	'auth_view'		=> $lang['auth_gallery_view'],
+	'auth_edit'		=> $lang['auth_gallery_edit'],
+	'auth_delete'	=> $lang['auth_gallery_delete'],
+	'auth_rate'		=> $lang['auth_gallery_rate'],
+	'auth_upload'	=> $lang['auth_gallery_upload'],
 );
 
 
@@ -221,6 +240,28 @@ $lang['Forum_ADM']			= 'Admin';
 //	Forumberechtigung Liste
 //
 
+
+//
+//	Galerie
+//
+$lang['gallery_head']		= 'Galerie Administration';
+$lang['gallery_explain']	= 'Hier kannst Du Galerien verwalten.';
+$lang['gallery_name']		= 'Galeriename';
+
+$lang['gallery_add']		= 'Neue Galerie erstellen';
+$lang['gallery_new_add']	= '%s hinzufügen';
+$lang['gallery_edit']		= '%s bearbeiten';
+
+$lang['gallery_auth']		= 'Galerieberechtigung';
+$lang['gallery_desc']		= 'Galeriebeschreibung';
+$lang['gallery_comment']	= 'Bildkommentare';
+$lang['gallery_rate']		= 'Bildbewertungen';
+
+$lang['gallery_link']		= 'Link';
+$lang['gallery_partner']	= 'Partner';
+$lang['gallery_sponsor']	= 'Sponsor';
+
+
 //
 //	Forum
 //
@@ -300,7 +341,7 @@ $lang['group_add_member']		= 'Mitglieder hinzufügen';
 $lang['group_edit_member']		= 'Mitglieder bearbeiten';
 $lang['group_view_member']		= 'Mitglieder Übersicht';
 $lang['group_view_member']		= 'Mitglieder Übersicht';
-$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufügen.<br>Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
+$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufügen. Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
 
 $lang['group_name']			= 'Gruppenname';
 $lang['group_mod']			= 'Moderator';
@@ -335,6 +376,14 @@ $lang['Group_DEFAULT']		= 'Vorgabe';
 $lang['Group_DISALLOWED']	= 'Nein';
 $lang['Group_ALLOWED']		= 'Ja';
 $lang['Group_SPECIAL']		= 'Spezial';
+
+$lang['Gallery_USER']		= 'Benutzer';
+$lang['Gallery_TRIAL']		= 'Trialmember';
+$lang['Gallery_MEMBER']		= 'Member';
+$lang['Gallery_COLEADER']	= 'Squadleader';
+$lang['Gallery_LEADER']		= 'Leader';
+$lang['Gallery_UPLOAD']		= 'Uploader';
+
 
 //
 //	Log
@@ -454,6 +503,7 @@ $lang['match_details']		= 'Details';
 //	Navigation
 //
 $lang['navi_head']		= 'Navigation Administration';
+$lang['navi_set']		= 'Subnavieinstellungen';
 $lang['navi_explain']	= 'Hier kannst du die Navigation Verwalten';
 
 $lang['navi_add']		= 'Neuen Link erstellen';
@@ -476,6 +526,20 @@ $lang['navi_user']		= 'Benutzer Navi';
 
 $lang['navi_new']		= 'Neue Seite';
 $lang['navi_self']		= 'Selbe Seite';
+
+$lang['subnavi_news_length']	= 'Anzahl der Zeichen vom Nachrichtentitel';	
+$lang['subnavi_news_limit']		= 'Anzahl an Nachrichtentiteln';
+$lang['subnavi_match_length']	= 'Anzahl der Zeichen vom Name der Gegner';	
+$lang['subnavi_match_limit']	= 'Anzahl der Begegnungen';	
+
+$lang['subnavi_user_cache']		= 'Cachedauer in Sekunden';
+$lang['subnavi_user_length']	= 'Anzahl der Zeichen vom Benutzername';	
+$lang['subnavi_user_limit']		= 'Anzahl an Benutzern';
+$lang['subnavi_user_show']		= 'Letzten Neuen Benutzer anzeigen';
+
+$lang['subnavi_teams_show']		= 'Teams anzeigen';
+$lang['subnavi_teams_length']	= 'Teamnamenlänge';
+
 
 //
 //	News
@@ -566,6 +630,7 @@ $lang['rank_special']		= 'Spezial Rang';
 $lang['rank_min']			= 'Beiträge';
 $lang['rank_image']			= 'Rangbild';
 $lang['rank_type']			= 'Rangtype';
+$lang['rank_standard']		= 'Standardrang';
 
 
 //
@@ -792,9 +857,9 @@ $lang['moderators']			= 'Moderatoren';
 $lang['members']			= 'Mitglieder';
 $lang['pending_members']	= 'wartende Mitglieder';
 
-//
-//	Erstellen / Erneuern / Löschen / Bestätigen zum Löschen / Klicks
-//	
+/*
+ *	Erstellen / Erneuern / Löschen / Bestätigen zum Löschen / Klicks
+ */	
 $lang['create_authlist']			= 'Neues Berechtigungsfeld hinzuggefügt.';
 $lang['create_event']				= 'Neues Event hinzuggefügt.';
 $lang['create_forum']				= 'Neues Forum hinzugefügt.';
@@ -816,6 +881,7 @@ $lang['create_user']				= 'Neuen Benutzer hinzuggefügt.';
 
 $lang['create_cash']				= 'Neuen Betrag hinzuggefügt.';
 $lang['create_cash_user']			= 'Neuen Benutzer zu Liste hinzuggefügt.';
+$lang['create_gallery']				= 'Neue Galerie hinzuggefügt.';
 
 $lang['update_authlist']			= 'Berechtigungsfelddaten erfolgreich geändert';
 $lang['update_event']				= 'Eventdaten erfolgreich geändert';
@@ -824,6 +890,7 @@ $lang['update_game']				= 'Spieldaten erfolgreich geändert';
 $lang['update_group']				= 'Gruppendaten erfolgreich geändert';
 $lang['update_match']				= 'Matchdaten erfolgreich geändert';
 $lang['update_navigation']			= 'Link erfolgreich geändert';
+$lang['update_navigation_set']		= 'Subnavigation erfolgreich geändert';
 $lang['update_network']				= '%sdaten erfolgreich geändert';
 $lang['update_news']				= 'Newsdaten erfolgreich geändert';
 $lang['update_newscat']				= 'Newskategoriedaten erfolgreich geändert';
@@ -839,6 +906,7 @@ $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
 $lang['update_cash']				= 'Daten erfolgreich geändert';
 $lang['update_cash_bank']			= 'Bankdaten erfolgreich geändert';
 $lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
+$lang['update_gallery']				= 'Galerie erfolgreich geändert';
 
 $lang['delete_authlist']			= 'Das Berechtigungsfeld wurde gelöscht';
 $lang['delete_event']				= 'Das Event wurde gelöscht';
@@ -859,10 +927,12 @@ $lang['delete_team']				= 'Das Team wurde gelöscht';
 $lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht';
 $lang['delete_training']			= 'Der Rang wurde gelöscht';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht';
+$lang['delete_match']				= 'Die Begegnung wurde gelöscht';
 
 $lang['delete_cash']				= 'Der Eintrag wurde gelöscht';
 $lang['delete_cash_bank']			= 'Bankdaten wurden gelöscht';
 $lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht';
+$lang['delete_cash_user']			= 'Die Galerie wurde gelöscht';
 
 $lang['confirm_delete_authlist']		= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
 $lang['confirm_delete_event']			= 'Bist du sicher, dass dieses Event gelöscht werden soll?';
@@ -883,41 +953,45 @@ $lang['confirm_delete_rank']			= 'Bist du sicher, dass dieser Rang gelöscht werd
 $lang['confirm_delete_team']			= 'Bist du sicher, dass dieses Team gelöscht werden soll?';
 $lang['confirm_delete_teamspeak']		= 'Bist du sicher, dass dieser Teamspeak gelöscht werden soll?';
 $lang['confirm_delete_training']		= 'Bist du sicher, dass dieses Training gelöscht werden soll?';
+$lang['confirm_delete_match']			= 'Bist du sicher, dass dieses Begegnung gelöscht werden soll?';
 
 $lang['confirm_delete_user']			= 'Bist du sicher, das der Benutzer gelöscht werden soll?';
 $lang['confirm_delete_cash']			= 'Bist du sicher, dass dieser Beitrag gelöscht werden soll?';
 $lang['confirm_delete_cash_bank']		= 'Bist du sicher, dass die Bankdaten gelöscht werden soll?';
 $lang['confirm_delete_cash_user']		= 'Bist du sicher, dass dieser Benutzereintrag gelöscht werden soll?';
+$lang['confirm_delete_cash_user']		= 'Bist du sicher, dass diese Galerie gelöscht werden soll?';
 
-$lang['click_admin_index']			= 'Klicke %shier%s, um zum Adminstart zurückzukehren';
-$lang['click_return_authlist']		= 'Klicke %shier%s, um zur Berechtigungsfelder Administration zurückzukehren';
-$lang['click_return_details']		= 'Klicke %shier%s, um zur Detail Administration zurückzukehren';
-$lang['click_return_event']			= 'Klicke %shier%s, um zur Event Administration zurückzukehren';
-$lang['click_return_forum']			= 'Klicke %shier%s, um zur Forum Administration zurückzukehren';
-$lang['click_return_game']			= 'Klicke %shier%s, um zur Spiel Administration zurückzukehren';
-$lang['click_return_group']			= 'Klicke %shier%s, um zur Gruppen Administration zurückzukehren';
-$lang['click_return_group_member']	= 'Klicke %shier%s, um zur Gruppenmitglieder Administration zurückzukehren';
-$lang['click_return_log']			= 'Klicke %shier%s, um zur Log Administration zurückzukehren';
-$lang['click_return_log_error']		= 'Klicke %shier%s, um zur Log (Fehlermeldungen) Administration zurückzukehren';
-$lang['click_return_match']			= 'Klicke %shier%s, um zur Match Administration zurückzukehren';
-$lang['click_return_match_details']	= 'Klicke %shier%s, um zur Matchdeatils Administration zurückzukehren';
-$lang['click_return_navigation']	= 'Klicke %shier%s, um zur Navigations Administration zurückzukehren';
-$lang['click_return_network']		= 'Klicke %shier%s, um zur Network Administration zurückzukehren';
-$lang['click_return_news']			= 'Klicke %shier%s, um zur News Administration zurückzukehren';
-$lang['click_return_newscat']		= 'Klicke %shier%s, um zur Newskategorie Administration zurückzukehren';
-$lang['click_return_newsletter']	= 'Klicke %shier%s, um zur Newsletter Administration zurückzukehren';
-$lang['click_return_profile']		= 'Klicke %shier%s, um zur Profilefelder Administration zurückzukehren';
-$lang['click_return_rank']			= 'Klicke %shier%s, um zur Rang Administration zurückzukehren';
-$lang['click_return_set']			= 'Klicke %shier%s, um zur Einstelluns Administration zurückzukehren';
-$lang['click_return_team']			= 'Klicke %shier%s, um zur Team Administration zurückzukehren';
-$lang['click_return_team_member']	= 'Klicke %shier%s, um zur Teammember Administration zurückzukehren';
-$lang['click_return_teamspeak']		= 'Klicke %shier%s, um zur Teamspeak Administration zurückzukehren';
-$lang['click_return_training']		= 'Klicke %shier%s, um zur Trainings Administration zurückzukehren';
-$lang['click_return_user']			= 'Klicke %shier%s, um zur Benutzer Administration zurückzukehren';
-$lang['click_return_user_auths']	= 'Klicke %shier%s, um zur Benutzer (Seitenberechtigung) Administration zurückzukehren';
-$lang['click_return_user_groups']	= 'Klicke %shier%s, um zur Benutzer (Benutzergruppen & Teams) Administration zurückzukehren';
+$lang['click_admin_index']				= '<br><br>Klicke %shier%s, um zum Adminstart zurückzukehren';
+$lang['click_return_authlist']			= '<br><br>Klicke %shier%s, um zur Berechtigungsfelder Administration zurückzukehren';
+$lang['click_return_details']			= '<br><br>Klicke %shier%s, um zur Detail Administration zurückzukehren';
+$lang['click_return_event']				= '<br><br>Klicke %shier%s, um zur Event Administration zurückzukehren';
+$lang['click_return_forum']				= '<br><br>Klicke %shier%s, um zur Forum Administration zurückzukehren';
+$lang['click_return_game']				= '<br><br>Klicke %shier%s, um zur Spiel Administration zurückzukehren';
+$lang['click_return_group']				= '<br><br>Klicke %shier%s, um zur Gruppen Administration zurückzukehren';
+$lang['click_return_group_member']		= '<br><br>Klicke %shier%s, um zur Gruppenmitglieder Administration zurückzukehren';
+$lang['click_return_log']				= '<br><br>Klicke %shier%s, um zur Log Administration zurückzukehren';
+$lang['click_return_log_error']			= '<br><br>Klicke %shier%s, um zur Log (Fehlermeldungen) Administration zurückzukehren';
+$lang['click_return_match']				= '<br><br>Klicke %shier%s, um zur Match Administration zurückzukehren';
+$lang['click_return_match_details']		= '<br><br>Klicke %shier%s, um zur Matchdeatils Administration zurückzukehren';
+$lang['click_return_navigation']		= '<br><br>Klicke %shier%s, um zur Navigations Administration zurückzukehren';
+$lang['click_return_navigation_set']	= '<br><br>Klicke %shier%s, um zur Subnavigations Administration zurückzukehren';
+$lang['click_return_network']			= '<br><br>Klicke %shier%s, um zur Network Administration zurückzukehren';
+$lang['click_return_news']				= '<br><br>Klicke %shier%s, um zur News Administration zurückzukehren';
+$lang['click_return_newscat']			= '<br><br>Klicke %shier%s, um zur Newskategorie Administration zurückzukehren';
+$lang['click_return_newsletter']		= '<br><br>Klicke %shier%s, um zur Newsletter Administration zurückzukehren';
+$lang['click_return_profile']			= '<br><br>Klicke %shier%s, um zur Profilefelder Administration zurückzukehren';
+$lang['click_return_rank']				= '<br><br>Klicke %shier%s, um zur Rang Administration zurückzukehren';
+$lang['click_return_set']				= '<br><br>Klicke %shier%s, um zur Einstelluns Administration zurückzukehren';
+$lang['click_return_team']				= '<br><br>Klicke %shier%s, um zur Team Administration zurückzukehren';
+$lang['click_return_team_member']		= '<br><br>Klicke %shier%s, um zur Teammember Administration zurückzukehren';
+$lang['click_return_teamspeak']			= '<br><br>Klicke %shier%s, um zur Teamspeak Administration zurückzukehren';
+$lang['click_return_training']			= '<br><br>Klicke %shier%s, um zur Trainings Administration zurückzukehren';
+$lang['click_return_user']				= '<br><br>Klicke %shier%s, um zur Benutzer Administration zurückzukehren';
+$lang['click_return_user_auths']		= '<br><br>Klicke %shier%s, um zur Benutzer (Seitenberechtigung) Administration zurückzukehren';
+$lang['click_return_user_groups']		= '<br><br>Klicke %shier%s, um zur Benutzer (Benutzergruppen & Teams) Administration zurückzukehren';
 
-$lang['click_return_cash']			= 'Klicke %shier%s, um zur Clankassen Administration zurückzukehren';
+$lang['click_return_cash']				= '<br><br>Klicke %shier%s, um zur Clankassen Administration zurückzukehren';
+$lang['click_return_gallery']			= '<br><br>Klicke %shier%s, um zur Galerie Administration zurückzukehren';
 
 $lang['order_game']					= 'Spiele neusortiert.';
 
@@ -1009,6 +1083,8 @@ $lang['msg_must_select_teamspeak']		= 'Wähle ein Teamspeak aus';
 $lang['msg_must_select_training']		= 'Wähle ein Training aus';
 $lang['msg_must_select_user']			= 'Wähle ein Benutzer aus';
 
+$lang['msg_select_standard']			= 'Rang kann nicht gelöscht werden, da es sich um einen Standardrang handelt!';
+
 
 
 //
@@ -1016,7 +1092,7 @@ $lang['msg_must_select_user']			= 'Wähle ein Benutzer aus';
 //
 $lang['DB_errors']					= 'DB-Fehler';
 $lang['No_errors_found']			= 'Keine Fehler gefunden bzw. es sind bisher keine Einträge in der Datenbank hinterlegt!';
-$lang['Click_return_error_log']		= 'Klicke %shier%s, um zur Übersicht zurückzukehren';
+$lang['Click_return_error_log']		= '<br><br>Klicke %shier%s, um zur Übersicht zurückzukehren';
 $lang['Could_not_delete_id']		= 'Eintrag konnte nicht gelöscht werden!';
 $lang['Could_not_delete_all_id']	= 'Einträge konnte nicht gelöscht werden!';
 $lang['Id_deleted']					= 'Eintrag wurde gelöscht!';
