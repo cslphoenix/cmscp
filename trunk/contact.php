@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 define('IN_CMS', true);
 $root_path = './';
@@ -38,7 +39,7 @@ else
 {
 	$mode = '';
 }
-
+/*
 function _select_categorie($default)
 {
 	global $lang;
@@ -62,19 +63,19 @@ function _select_categorie($default)
 	
 	return $select_categorie;	
 }
-
+*/
 function _select_type($default)
 {
 	global $lang;
 	
 	$type = array (
-		$lang['select_type']	=> '0',
-		$lang['select_type1']	=> '1',
-		$lang['select_type2']	=> '2',
-		$lang['select_type3']	=> '3',
-		$lang['select_type4']	=> '4',
-		$lang['select_type5']	=> '5',
-		$lang['select_type6']	=> '6'
+		$lang['select_type_box']['0']	=> '0',
+		$lang['select_type_box']['1']	=> '1',
+		$lang['select_type_box']['2']	=> '2',
+		$lang['select_type_box']['3']	=> '3',
+		$lang['select_type_box']['4']	=> '4',
+		$lang['select_type_box']['5']	=> '5',
+		$lang['select_type_box']['6']	=> '6'
 	);
 	
 	$select_type = '';
@@ -88,6 +89,7 @@ function _select_type($default)
 	
 	return $select_type;	
 }
+
 
 if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 {
@@ -120,7 +122,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 	$error = FALSE;
 	$error_msg = '';
 	
-	$team_id = ( isset($HTTP_GET_VARS[POST_TEAM_URL]) ) ? intval($HTTP_GET_VARS[POST_TEAM_URL]) : '0';
+	$team_id = ( isset($HTTP_GET_VARS[POST_TEAMS_URL]) ) ? intval($HTTP_GET_VARS[POST_TEAMS_URL]) : '0';
 	$contact_categorie = 0;
 	$contact_wartype = 0;
 	
@@ -265,7 +267,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
-			$message = $lang['contact_save'] . '<br><br>' . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
+			$message = $lang['contact_save'] . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -277,16 +279,16 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 		'L_CONTACT_INFO'	=> $info,
 		'L_REQUIRED'		=> $lang['items_required'],
 		
-		'S_DAY'				=> _select_date('day', 'day',		date('d', time())),
-		'S_MONTH'			=> _select_date('month', 'month',	date('m', time())),
-		'S_YEAR'			=> _select_date('year', 'year',		date('Y', time())),
-		'S_HOUR'			=> _select_date('hour', 'hour',		date('H', time())),
-		'S_MIN'				=> _select_date('min', 'min',		date('i', time())),
+		'S_DAY'				=> select_date('day', 'day',		date('d', time())),
+		'S_MONTH'			=> select_date('month', 'month',	date('m', time())),
+		'S_YEAR'			=> select_date('year', 'year',		date('Y', time())),
+		'S_HOUR'			=> select_date('hour', 'hour',		date('H', time())),
+		'S_MIN'				=> select_date('min', 'min',		date('i', time())),
 		
 		'S_TYPE'			=> _select_type($contact_wartype),
-		'S_TEAM'			=> _select_team($team_id, $typ, 'post'),
+//		'S_TEAM'			=> _select_team($team_id, $typ, 'post'),
+		'S_TEAM'			=> select_box('team', 'select', 'team_id', 'team_name', $team_id),
 		'S_CATEGORIE'		=> _select_categorie($contact_categorie),
-		
 		'S_HIDDEN_FIELD'	=> $s_hidden_field,
 		'S_CONTACT_ACTION'	=> append_sid('contact.php?mode=$mode'),
 		

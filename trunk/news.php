@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 define('IN_CMS', true);
 $root_path = './';
@@ -459,7 +460,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				_comment_message('add', 'news', $news_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
-				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_news'],  '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_id) . '">', '</a>');
+				$message = $lang['add_comment'] . sprintf($lang['click_return_news'],  '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}

@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 define('IN_CMS', true);
 $root_path = './';
@@ -188,7 +189,7 @@ if( ( $total_categories = count($category_rows) ) )
 									}
 									$forum_topics = $db->sql_fetchrowset($result);
 								*/
-									//_debug($forum_topics);
+									//debug($forum_topics);
 									
 									$sql = 'SELECT tr.topic_id
 												FROM ' . TOPICS_READ . ' tr
@@ -199,12 +200,12 @@ if( ( $total_categories = count($category_rows) ) )
 										message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
 									}
 									$forum_topics_unread = $db->sql_fetchrowset($result);
-									//_debug($forum_topics_unread);
+									//debug($forum_topics_unread);
 									
 									if ( is_array($forum_topics_unread) )
 									{
 										$forum_topics_diff = array_diff_assoc($forum_topics, $forum_topics_unread);
-									//	_debug($forum_topics_diff);
+									//	debug($forum_topics_diff);
 										$unread_topics = ( !$forum_topics_diff ) ? false : true;
 									}
 									else

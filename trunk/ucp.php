@@ -143,7 +143,7 @@ if ( $userdata['session_logged_in'] )
 					$language	= ( $count == '1' ) ? $lang['common_num_comment'] : $lang['common_num_comments'];
 					
 					$template->assign_block_vars('lobby.news_new_row', array(
-						'NEWS_NAME'		=> _cut_string($news_data[$i]['news_title'], $settings['cut_news_lobby']),
+						'NEWS_NAME'		=> cut_string($news_data[$i]['news_title'], $settings['cut_news_lobby']),
 						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' . sprintf($language, $count) . '</a>' : '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' . $lang['common_unread'] . '</a>',
 					));
 				}

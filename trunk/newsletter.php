@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 define('IN_CMS', true);
 $root_path = './';
@@ -32,8 +33,7 @@ init_userprefs($userdata);
 
 if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-	$mode = htmlspecialchars($mode);
+	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 }
 else
 {
@@ -94,7 +94,7 @@ if ( $mode == 'subscribe' || !$mode )
 				
 				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
-				$message = $lang['newsletter_subscribe'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+				$message = $lang['newsletter_subscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 			else
@@ -139,14 +139,14 @@ else if ( $mode == 'active' && $mail && $key_code )
 		
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
-		$message = $lang['newsletter_subscribe_confirm'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	$db->sql_freeresult($result);
 	
 	_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add_confirm');
 		
-	$message = $lang['newsletter_fail'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
 	message_die(GENERAL_ERROR, $message);
 }
 else if ( $mode == 'unsubscribe' )
@@ -166,7 +166,7 @@ else if ( $mode == 'unsubscribe' )
 				
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete');
 		
-		$message = $lang['newsletter_unsubscribe'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+		$message = $lang['newsletter_unsubscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	else
@@ -207,11 +207,11 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 		
 		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete_confirm');
 		
-		$message = $lang['newsletter_subscribe_confirm'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 		
-	$message = $lang['newsletter_fail'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
 	message_die(GENERAL_ERROR, $message);
 }
 else
