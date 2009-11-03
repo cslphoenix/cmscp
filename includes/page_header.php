@@ -44,8 +44,9 @@ if ( $config['gzip_compress'] )
 // MOD - TODAY AT - BEGIN
 // PARSE DATEFORMAT TO GET TIME FORMAT 
 //
-$time_reg = '([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)';
-eregi($time_reg, $config['default_dateformat'], $regs);
+$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
+//eregi($time_reg, $config['default_dateformat'], $regs);
+preg_match($time_reg, $config['default_dateformat'], $regs);
 $config['default_timeformat'] = $regs[1];
 unset($time_reg);
 unset($regs);
@@ -114,8 +115,8 @@ if ( $settings['site_counter'] == '1' )
 {
 	include($root_path . 'includes/functions_counter.php');
 	
-	_counter_update();
-	_counter_result();
+	counter_update();
+	counter_result();
 }
 
 $sql = 'SELECT group_id, group_name, group_color, group_order
@@ -352,19 +353,21 @@ while( list($nav_item, $nav_array) = @each($nav_links) )
 	}
 }
 
-display_subnavi_match();
-display_subnavi_news();
 display_navi();
+display_navi_news();
+display_navi_match();
+
+if ( $settings['subnavi_newusers_show'] )	{ display_navi_newusers(); }
+if ( $settings['subnavi_teams_show'] )		{ display_navi_teams(); }
+if ( $settings['subnavi_minical_show'] )	{ display_navi_minical(); }
 
 if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 {
 	if ( $settings['subnavi_training'] )	{ display_navitrain(); }
 }
 
-if ( $settings['subnavi_minical'] )		{ display_minical(); }
-if ( $settings['subnavi_newusers'] )	{ display_newusers(); }
-if ( $settings['subnavi_teams'] )		{ display_teams(); }
-if ( $settings['subnavi_matches'] )		{ display_navimatch(); }
+
+if ( $settings['subnavi_matches'] )			{ display_navimatch(); }
 
 if ( $settings['subnavi_statsonline'] )
 {
@@ -434,7 +437,7 @@ $template->assign_vars(array(
 	'VERSION'		=> $config['version'],
 	'CMS_VERSION'	=> $changelog['changelog_number'],
 							 
-	'NEW_USERS'		=> sprintf($lang['newest_users'], $settings['subnavi_newusers_limit']),
+	
 	'SITENAME' => $config['sitename'],
 	
 	'ADMIN_LINK'	=> $admin_link,
