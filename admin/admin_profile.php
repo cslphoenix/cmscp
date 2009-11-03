@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -42,7 +43,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -72,8 +73,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -125,7 +125,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'add_profile':
 			case 'edit_profile':
@@ -151,7 +151,7 @@ else
 					
 					$new_mode = 'createprofile';
 				}
-				$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
 				$template->assign_block_vars('profile_edit', array());
 
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
@@ -258,7 +258,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_add', $profile_name);
 	
-				$message = $lang['create_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
+				$message = $lang['create_profile'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -334,7 +334,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_edit');
 				
-				$message = $lang['update_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
+				$message = $lang['update_profile'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -352,13 +352,13 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_delete', $profile['profile_name']);
 					
-					$message = $lang['delete_profile'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
+					$message = $lang['delete_profile'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $profile_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $profile_id . '" />';
@@ -423,14 +423,14 @@ else
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 	
-				$message = $lang['create_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
+				$message = $lang['create_profile_cat'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
 				
 			case 'editcat':
 
-				$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
 				$template->assign_block_vars('category_edit', array());
 				
 				$cat_id = intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
@@ -474,7 +474,7 @@ else
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 	
-				$message = $lang['update_profile_cat'] . '<br><br>' . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
+				$message = $lang['update_profile_cat'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -494,7 +494,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_profile.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
@@ -511,8 +511,8 @@ else
 		'L_SETTINGS'		=> $lang['settings'],
 		'L_DELETE'			=> $lang['delete'],
 		
-		'L_MOVE_UP'			=> $lang['Move_up'], 
-		'L_MOVE_DOWN'		=> $lang['Move_down'], 
+		'L_MOVE_UP'			=> $lang['move_up'], 
+		'L_MOVE_DOWN'		=> $lang['move_down'], 
 		
 		'S_TEAM_ACTION'		=> append_sid('admin_profile.php'),
 	));
@@ -563,8 +563,8 @@ else
 			$max_profile = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
-			$icon_up	= ( $category_rows[$i]['category_order'] != '10' ) ? $lang['Move_up'] : '';
-			$icon_down	= ( $category_rows[$i]['category_order'] != $max_order['max'] ) ? $lang['Move_down'] : '';
+			$icon_up	= ( $category_rows[$i]['category_order'] != '10' ) ? $lang['move_up'] : '';
+			$icon_down	= ( $category_rows[$i]['category_order'] != $max_order['max'] ) ? $lang['move_down'] : '';
 	
 			$template->assign_block_vars('display.catrow', array( 
 				'S_ADD_PROFILE_SUBMIT'	=> "add_profile[$cat_id]",
@@ -590,8 +590,8 @@ else
 
 				if ( $profile_rows[$j]['profile_category'] == $cat_id )
 				{
-					$icon_up	= ( $profile_rows[$j]['profile_order'] != '10' ) ? $lang['Move_up'] : '';
-					$icon_down	= ( $profile_rows[$j]['profile_order'] != $max_profile['max'.$cat_id] ) ? $lang['Move_down'] : '';
+					$icon_up	= ( $profile_rows[$j]['profile_order'] != '10' ) ? $lang['move_up'] : '';
+					$icon_down	= ( $profile_rows[$j]['profile_order'] != $max_profile['max'.$cat_id] ) ? $lang['move_down'] : '';
 					
 			
 					$template->assign_block_vars('display.catrow.profilerow',	array(

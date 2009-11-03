@@ -1161,7 +1161,7 @@ else
 	}
 	else
 	{
-		$template->set_filenames(array('body' => './../admin/style/acp_auth_select.tpl'));
+		$template->set_filenames(array('body' => 'style/acp_auth_select.tpl'));
 		
 		if ( $mode == 'user' )
 		{

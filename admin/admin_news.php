@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -44,7 +45,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userauth['auth_news'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_news'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -68,15 +69,14 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
 		$mode = '';
 	}
 	
-	switch ($mode)
+	switch ( $mode )
 	{
 		case 'add':
 		case 'edit':
@@ -108,7 +108,7 @@ else
 				$new_mode = 'addnews';
 			}
 
-			$template->set_filenames(array('body' => './../admin/style/acp_news.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_news.tpl'));
 			$template->assign_block_vars('news_edit', array());
 			
 			if ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN )
@@ -175,11 +175,11 @@ else
 				'S_CHECKED_INTERN_YES'		=> ( $news['news_intern'] ) ? ' checked="checked"' : '',
 				'S_CHECKED_INTERN_NO'		=> ( !$news['news_intern'] ) ? ' checked="checked"' : '',
 				
-				'S_DAY'						=> _select_date('day', 'day',		date('d', $news['news_time_public'])),
-				'S_MONTH'					=> _select_date('month', 'month',	date('m', $news['news_time_public'])),
-				'S_YEAR'					=> _select_date('year', 'year',		date('Y', $news['news_time_public'])),
-				'S_HOUR'					=> _select_date('hour', 'hour',		date('H', $news['news_time_public'])),
-				'S_MIN'						=> _select_date('min', 'min',		date('i', $news['news_time_public'])),
+				'S_DAY'						=> select_date('day', 'day',		date('d', $news['news_time_public'])),
+				'S_MONTH'					=> select_date('month', 'month',	date('m', $news['news_time_public'])),
+				'S_YEAR'					=> select_date('year', 'year',		date('Y', $news['news_time_public'])),
+				'S_HOUR'					=> select_date('hour', 'hour',		date('H', $news['news_time_public'])),
+				'S_MIN'						=> select_date('min', 'min',		date('i', $news['news_time_public'])),
 				
 				'NEWSCAT_PATH'				=> $root_path . $settings['path_news_category'],
 				
@@ -248,7 +248,7 @@ else
 			
 			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_news_add', $news_title);
 
-			$message = $lang['create_news'] . '<br><br>' . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
+			$message = $lang['create_news'] . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 
 			break;
@@ -317,7 +317,7 @@ else
 			
 			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_news_edit');
 			
-			$message = $lang['update_news'] . '<br><br>' . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
+			$message = $lang['update_news'] . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
 			message_die(GENERAL_MESSAGE, $message);
 
 			break;
@@ -367,13 +367,13 @@ else
 			
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_news_delete', $news['news_title']);
 				
-				$message = $lang['delete_news'] . '<br><br>' . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
+				$message = $lang['delete_news'] . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			
 			}
 			else if ( $news_id && !$confirm )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
 				$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 				$hidden_fields .= '<input type="hidden" name="' . POST_NEWS_URL . '" value="' . $news_id . '" />';
@@ -400,7 +400,7 @@ else
 		
 		default:
 	
-			$template->set_filenames(array('body' => './../admin/style/acp_news.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_news.tpl'));
 			$template->assign_block_vars('display', array());
 					
 			$template->assign_vars(array(
@@ -411,8 +411,8 @@ else
 				'L_EDIT'			=> $lang['edit'],
 				'L_SETTINGS'		=> $lang['settings'],
 				'L_DELETE'			=> $lang['delete'],
-				'L_MOVE_UP'			=> $lang['Move_up'], 
-				'L_MOVE_DOWN'		=> $lang['Move_down'],
+				'L_MOVE_UP'			=> $lang['move_up'], 
+				'L_MOVE_DOWN'		=> $lang['move_down'],
 				'S_TEAM_ACTION'		=> append_sid('admin_news.php'),
 			));
 			

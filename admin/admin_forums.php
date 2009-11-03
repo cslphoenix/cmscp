@@ -49,7 +49,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 //	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userauth['auth_forum'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_forum'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -59,7 +59,7 @@ else
 		redirect('admin/' . append_sid('admin_forums.php', true));
 	}
 
-		//
+	//
 	// Start program - define vars
 	//
 	//                View      Read      Post      Reply     Edit     Delete    Sticky   Announce    Poll   Pollcreate
@@ -81,7 +81,8 @@ else
 		$lang['Trial'],			$lang['Trial'] . ' [' . $lang['Hidden'] . ']',
 		$lang['Member'],		$lang['Member'] . ' [' . $lang['Hidden'] . ']',
 		$lang['Moderators'],	$lang['Moderators'] . ' [' . $lang['Hidden'] . ']',
-		$lang['Private'],		$lang['Private'] . ' [' . $lang['Hidden'] . ']');
+		$lang['Private'],		$lang['Private'] . ' [' . $lang['Hidden'] . ']'
+	);
 	
 	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_poll', 'auth_pollcreate');
 	
@@ -104,10 +105,9 @@ else
 	//
 	// Mode setting
 	//
-	if( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
+	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -133,7 +133,7 @@ else
 	{
 		global $simple_auth_ary, $forum_auth_fields, $lang;
 	
-		for ($i = 0; $i < count($simple_auth_ary); $i++)
+		for ( $i = 0; $i < count($simple_auth_ary); $i++ )
 		{
 			$matched = 1;
 			$forum_auth_ary = $simple_auth_ary[$i];
@@ -157,7 +157,7 @@ else
 	{
 		global $db;
 	
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'category':
 				$table = CATEGORIES;
@@ -207,7 +207,7 @@ else
 	{
 		global $db;
 	
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'category':
 				$table = CATEGORIES;
@@ -272,7 +272,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'addforum':
 			case 'editforum':
@@ -338,7 +338,7 @@ else
 					}
 				}
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_forums.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
 				$template->assign_block_vars('forum_edit', array());
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode .'" /><input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '" />';
@@ -425,7 +425,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_FORUM, 'acp_forum_add');
 	
-				$message = $lang['create_forum'] . '<br><br>' . sprintf($lang['click_return_forum'], '<a href="' . append_sid('admin_forums.php') . '">', '</a>');
+				$message = $lang['create_forum'] . sprintf($lang['click_return_forum'], '<a href="' . append_sid('admin_forums.php') . '">', '</a>');
 	
 				message_die(GENERAL_MESSAGE, $message);
 	
@@ -482,7 +482,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_FORUM, 'acp_forum_add');
 	
-				$message = $lang['update_forum'] . '<br><br>' . sprintf($lang['click_return_forum'], '<a href="' . append_sid('admin_forums.php') . '">', '</a>');
+				$message = $lang['update_forum'] . sprintf($lang['click_return_forum'], '<a href="' . append_sid('admin_forums.php') . '">', '</a>');
 	
 				message_die(GENERAL_MESSAGE, $message);
 	
@@ -534,7 +534,7 @@ else
 				$row = get_info('category', $cat_id);
 				$cat_title = $row['cat_title'];
 	
-				$template->set_filenames(array('body' => './../admin/style/acp_forums.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
 				$template->assign_block_vars('category_edit', array());
 	
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
@@ -937,7 +937,7 @@ else
 	//
 	// Start page proper
 	//
-	$template->set_filenames(array('body' => './../admin/style/acp_forums.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
 	$template->assign_block_vars('display', array());
 	
 	$template->assign_vars(array(
@@ -947,8 +947,8 @@ else
 		'L_CREATE_CATEGORY'	=> $lang['Create_category'], 
 		'L_EDIT'			=> $lang['Edit'], 
 		'L_DELETE'			=> $lang['Delete'], 
-		'L_MOVE_UP'			=> $lang['Move_up'], 
-		'L_MOVE_DOWN'		=> $lang['Move_down'], 
+		'L_MOVE_UP'			=> $lang['move_up'], 
+		'L_MOVE_DOWN'		=> $lang['move_down'], 
 		'L_RESYNC'			=> $lang['Resync'],
 		'S_FORUM_ACTION'	=> append_sid('admin_forums.php'),
 	));
@@ -997,8 +997,8 @@ else
 			$max_forum = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
-			$icon_up	= ( $category_rows[$i]['cat_order'] != '10' ) ? $lang['Move_up'] : '';
-			$icon_down	= ( $category_rows[$i]['cat_order'] != $max_cat['max'] ) ? $lang['Move_down'] : '';
+			$icon_up	= ( $category_rows[$i]['cat_order'] != '10' ) ? $lang['move_up'] : '';
+			$icon_down	= ( $category_rows[$i]['cat_order'] != $max_cat['max'] ) ? $lang['move_down'] : '';
 	
 			$template->assign_block_vars('display.catrow', array( 
 				'S_ADD_FORUM_SUBMIT'	=> "addforum[$cat_id]",
@@ -1010,10 +1010,10 @@ else
 				'L_MOVE_UP'				=> $icon_up,
 				'L_MOVE_DOWN'			=> $icon_down,
 				
-				'U_CAT_EDIT'			=> append_sid('admin_forums.php?mode=editcat&amp;" . POST_CATEGORY_URL . "=$cat_id'),
-				'U_CAT_DELETE'			=> append_sid('admin_forums.php?mode=deletecat&amp;" . POST_CATEGORY_URL . "=$cat_id'),
-				'U_CAT_MOVE_UP'			=> append_sid('admin_forums.php?mode=cat_order&amp;move=-15&amp;" . POST_CATEGORY_URL . "=$cat_id'),
-				'U_CAT_MOVE_DOWN'		=> append_sid('admin_forums.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id'),
+				'U_CAT_EDIT'			=> append_sid("admin_forums.php?mode=editcat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_CAT_DELETE'			=> append_sid("admin_forums.php?mode=deletecat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_CAT_MOVE_UP'			=> append_sid("admin_forums.php?mode=cat_order&amp;move=-15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
+				'U_CAT_MOVE_DOWN'		=> append_sid("admin_forums.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
 				'U_VIEWCAT'				=> append_sid($root_path."forum.php?" . POST_CATEGORY_URL . "=$cat_id"))
 			);
 	
@@ -1024,8 +1024,8 @@ else
 
 				if ( $forum_rows[$j]['cat_id'] == $cat_id )
 				{
-					$icon_up	= ( $forum_rows[$j]['forum_order'] != '10' ) ? $lang['Move_up'] : '';
-					$icon_down	= ( $forum_rows[$j]['forum_order'] != $max_forum['max'.$cat_id] ) ? $lang['Move_down'] : '';
+					$icon_up	= ( $forum_rows[$j]['forum_order'] != '10' ) ? $lang['move_up'] : '';
+					$icon_down	= ( $forum_rows[$j]['forum_order'] != $max_forum['max'.$cat_id] ) ? $lang['move_down'] : '';
 					$simple_auth = $simple_auth_types[simple_auth($forum_rows[$j])];
 			
 					$template->assign_block_vars('display.catrow.forumrow',	array(

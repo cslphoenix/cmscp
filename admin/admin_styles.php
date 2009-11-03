@@ -28,10 +28,10 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['Styles']['Add_new']	= "$filename?mode=addnew";
-		$module['Styles']['Create_new']	= "$filename?mode=create";
-		$module['Styles']['Manage']		= $filename;
-		$module['Styles']['Export']		= "$filename?mode=export";
+		$module['template']['Add_new']	= "$filename?mode=addnew";
+		$module['template']['Create_new']	= "$filename?mode=create";
+		$module['template']['Manage']		= $filename;
+		$module['template']['Export']		= "$filename?mode=export";
 	}
 	
 	return;
@@ -59,8 +59,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{

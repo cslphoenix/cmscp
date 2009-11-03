@@ -40,13 +40,14 @@
 
 <table class="foot" cellspacing="2">
 <tr>
-	<td align="right"><input class="button" type="submit" name="bankdata_clear" value="{L_CASH_BANK_CLEAR}" /></td>
+	<td align="right"><input type="hidden" name="mode" value="bankdata_clear"><input class="button" type="submit" value="{L_CASH_BANK_CLEAR}" /></td>
 </tr>
 </table>
 <br>
 
 <!-- END show_bd -->
-
+</form>
+<form action="{S_CASH_ACTION}" method="post">
 <table class="row" cellspacing="1">
 <tr>
 	<td class="rowHead" colspan="2" width="100%">{L_CASH_NAME}</td>
@@ -64,7 +65,7 @@
 <!-- END cash_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 <tr>
@@ -76,12 +77,13 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="cash_name" type="text" value=""></td>
-	<td><input class="button" type="submit" name="cash_add" value="{L_CASH_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="cash_add"><input class="button" type="submit" value="{L_CASH_ADD}" /></td>
 </tr>
 </table>
 
 <br>
-
+</form>
+<form action="{S_CASH_ACTION}" method="post">
 <table class="row" cellspacing="1">
 <tr>
 	<td class="rowHead" colspan="2" width="100%">{L_CASH_USERNAME}</td>
@@ -99,7 +101,7 @@
 <!-- END cash_users_row -->
 <!-- BEGIN no_entry_users -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_users -->
 <tr>
@@ -112,7 +114,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right">{S_CASH_USER_ADD}</td>
-	<td><input class="button" type="submit" name="cash_user" value="{L_CASH_USER_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="cash_user_add"><input class="button" type="submit" value="{L_CASH_USER_ADD}" /></td>
 </tr>
 </table>
 </form>
@@ -159,9 +161,9 @@
 <tr>
 	<td class="row1">{L_CASH_INTERVAL}:</td>
 	<td class="row3">
-		<input type="radio" name="cash_interval" value="0" {S_CHECKED_INTAVAL_0} />&nbsp;{L_INTAVAL_0}
-		<input type="radio" name="cash_interval" value="1" {S_CHECKED_INTAVAL_1} />&nbsp;{L_INTAVAL_1}
-		<input type="radio" name="cash_interval" value="2" {S_CHECKED_INTAVAL_2} />&nbsp;{L_INTAVAL_2}
+		<input type="radio" name="cash_interval" value="0" {S_CHECKED_INT_0} />&nbsp;{L_INTAVAL_0}
+		<input type="radio" name="cash_interval" value="1" {S_CHECKED_INT_1} />&nbsp;{L_INTAVAL_1}
+		<input type="radio" name="cash_interval" value="2" {S_CHECKED_INT_2} />&nbsp;{L_INTAVAL_2}
 	</td>
 </tr>
 <tr>

@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -57,42 +58,19 @@ else
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
-	if ( isset($HTTP_POST_VARS[POST_EVENT_URL]) || isset($HTTP_GET_VARS[POST_EVENT_URL]) )
-	{
-		$event_id = ( isset($HTTP_POST_VARS[POST_EVENT_URL]) ) ? intval($HTTP_POST_VARS[POST_EVENT_URL]) : intval($HTTP_GET_VARS[POST_EVENT_URL]);
-	}
-	else
-	{
-		$event_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['event_add']) || isset($HTTP_GET_VARS['event_add']) )
-		{
-			$mode = 'event_add';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
+	$mode		= request('mode', true);
+	$event_id	= request(POST_EVENT_URL);
 	
 	$show_index = '';
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'event_add':
 			case 'event_edit':
 			
-				$template->set_filenames(array('body' => './../admin/style/acp_event.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_event.tpl'));
 				$template->assign_block_vars('event_edit', array());
 				
 				if ( $mode == 'event_edit' )
@@ -115,7 +93,7 @@ else
 				}
 				
 				$s_select_level = '<select class="select" name="event_level">';
-				foreach ($lang['switch_level'] as $const => $name)
+				foreach ( $lang['switch_level'] as $const => $name )
 				{
 					$selected = ( $const == $event['event_level'] ) ? ' selected="selected"' : '';
 					
@@ -127,9 +105,9 @@ else
 				$s_hidden_fields .= '<input type="hidden" name="' . POST_EVENT_URL . '" value="' . $event_id . '" />';
 
 				$template->assign_vars(array(
-					'L_EVENT_HEAD'		=> $lang['event_head'],
-					'L_EVENT_NEW_EDIT'	=> ( $mode == 'event_add' ) ? $lang['event_add'] : $lang['event_edit'],
-					'L_REQUIRED'		=> $lang['required'],
+					'L_EVENT_HEAD'			=> $lang['event_head'],
+					'L_EVENT_NEW_EDIT'		=> ( $mode == 'event_add' ) ? $lang['event_add'] : $lang['event_edit'],
+					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_EVENT_TITLE'			=> $lang['event_title'],
 					'L_EVENT_DESCRIPTION'	=> $lang['event_description'],
@@ -143,22 +121,22 @@ else
 					'L_YES'		=> $lang['common_yes'],
 					'L_NO'		=> $lang['common_no'],
 					
-					'EVENT_TITLE'		=> $event['event_title'],
-					'EVENT_DESCRIPTION'	=> $event['event_description'],
+					'EVENT_TITLE'			=> $event['event_title'],
+					'EVENT_DESCRIPTION'		=> $event['event_description'],
 					
-					'S_DAY'				=> _select_date('day', 'day',		date('d', $event['event_date'])),
-					'S_MONTH'			=> _select_date('month', 'month',	date('m', $event['event_date'])),
-					'S_YEAR'			=> _select_date('year', 'year',		date('Y', $event['event_date'])),
-					'S_HOUR'			=> _select_date('hour', 'hour',		date('H', $event['event_date'])),
-					'S_MIN'				=> _select_date('min', 'min',		date('i', $event['event_date'])),
-					'S_DURATION'		=> _select_date('duration', 'dmin',	($event['event_duration'] - $event['event_date']) / 60),
+					'S_DAY'					=> select_date('day', 'day',		date('d', $event['event_date'])),
+					'S_MONTH'				=> select_date('month', 'month',	date('m', $event['event_date'])),
+					'S_YEAR'				=> select_date('year', 'year',		date('Y', $event['event_date'])),
+					'S_HOUR'				=> select_date('hour', 'hour',		date('H', $event['event_date'])),
+					'S_MIN'					=> select_date('min', 'min',		date('i', $event['event_date'])),
+					'S_DURATION'			=> select_date('duration', 'dmin',	($event['event_duration'] - $event['event_date']) / 60),
 					
 					'S_CHECKED_COMMENT_YES'	=> ( $event['event_comments'] )		? ' checked="checked"' : '',
 					'S_CHECKED_COMMENT_NO'	=> ( !$event['event_comments'] )	? ' checked="checked"' : '',
 					
-					'S_EVENT_LEVEL'		=> $s_select_level,
-					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
-					'S_EVENT_ACTION'	=> append_sid('admin_event.php'),
+					'S_EVENT_LEVEL'			=> $s_select_level,
+					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_EVENT_ACTION'		=> append_sid('admin_event.php'),
 				));
 			
 				$template->pparse('body');
@@ -210,14 +188,15 @@ else
 				
 				$monat = $HTTP_POST_VARS['month'];
 				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
-				$oCache -> deleteCache('calendar_' . $monat . '_match_member');
-				$oCache -> deleteCache('calendar_' . $monat . '_guest');
-				$oCache -> deleteCache('calendar_' . $monat . '_member');
+				$oCache -> deleteCache('calendar_mini_' . $monat . '_member');
+				$oCache -> deleteCache('calendar_mini_' . $monat . '_guest');
+				$oCache -> deleteCache('subnavi_match_' . $monat . '_member');
+				$oCache -> deleteCache('subnavi_match_' . $monat . '_guest');
+				$oCache -> deleteCache('subnavi_training_' . $monat);
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'acp_event_add', $event_title);
 	
-				$message = $lang['create_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
+				$message = $lang['create_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -273,14 +252,15 @@ else
 				
 				$monat = $HTTP_POST_VARS['month'];
 				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
-				$oCache -> deleteCache('calendar_' . $monat . '_match_member');
-				$oCache -> deleteCache('calendar_' . $monat . '_guest');
-				$oCache -> deleteCache('calendar_' . $monat . '_member');
+				$oCache -> deleteCache('calendar_mini_' . $monat . '_member');
+				$oCache -> deleteCache('calendar_mini_' . $monat . '_guest');
+				$oCache -> deleteCache('subnavi_match_' . $monat . '_member');
+				$oCache -> deleteCache('subnavi_match_' . $monat . '_guest');
+				$oCache -> deleteCache('subnavi_training_' . $monat);
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'acp_event_edit');
 				
-				$message = $lang['update_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
+				$message = $lang['update_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -301,12 +281,12 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'acp_event_delete', $event['event_title']);
 					
-					$message = $lang['delete_event'] . '<br><br>' . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
+					$message = $lang['delete_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				else if ( $event_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="event_delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_EVENT_URL . '" value="' . $event_id . '" />';
@@ -345,7 +325,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_event.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_event.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(

@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -44,7 +45,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_newsletter.php');
 	
-	if (!$userauth['auth_newsletter'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_newsletter'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -68,8 +69,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -80,7 +80,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'add':
 			case 'edit':
@@ -99,7 +99,7 @@ else
 					$new_mode = 'addnewsletter';
 				}
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_newsletter.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_newsletter.tpl'));
 				$template->assign_block_vars('newsletter_edit', array());
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
@@ -147,7 +147,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newsletter_edit', $newsletter_mail);
 	
-				$message = $lang['create_newsletter'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
+				$message = $lang['create_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -170,7 +170,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
 				
-				$message = $lang['update_newsletter'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
+				$message = $lang['update_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -191,13 +191,13 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
 					
-					$message = $lang['delete_newsletter'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
+					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $newsletter_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
@@ -234,13 +234,13 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
 					
-					$message = $lang['delete_newsletter'] . '<br><br>' . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
+					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="alldelete" />';
 					
@@ -277,7 +277,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_newsletter.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_newsletter.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(

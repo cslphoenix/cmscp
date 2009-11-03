@@ -20,9 +20,9 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead" colspan="3">{L_MATCH_DETAILS}</td>
-	<td class="rowHead">{L_TRAINING}</td>
-	<td class="rowHead" colspan="3">{L_SETTINGS}</td>
+	<td class="rowHead" colspan="2">{L_MATCH_DETAILS}</td>
+	<td class="rowHead" align="center">{L_TRAINING}</td>
+	<td class="rowHead" align="right" colspan="3">{L_SETTINGS}</td>
 </tr>
 <tr>
 		<td class="rowHead" colspan="7">{L_UPCOMING}</td>
@@ -30,8 +30,7 @@
 <!-- BEGIN match_row_new -->
 <tr>
 	<td class="{display.match_row_new.CLASS}" align="center" width="1%">{display.match_row_new.MATCH_GAME}</td>
-	<td class="{display.match_row_new.CLASS}" align="left" width="100%">{display.match_row_new.MATCH_NAME}</td>
-	<td class="{display.match_row_new.CLASS}" align="center" nowrap="nowrap">{display.match_row_new.MATCH_DATE}</td>
+	<td class="{display.match_row_new.CLASS}" align="left" width="100%"><span style="float: right;">{display.match_row_new.MATCH_DATE}</span>{display.match_row_new.MATCH_NAME}</td>
 	<td class="{display.match_row_new.CLASS}" align="center"><a href="{display.match_row_new.U_TRAINING}">{display.match_row_new.TRAINING}</a></td>
 	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_EDIT}">{L_SETTING}</a></td>
 	<td class="{display.match_row_new.CLASS}" align="center" width="1%"><a href="{display.match_row_new.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
@@ -40,7 +39,7 @@
 <!-- END match_row_new -->
 <!-- BEGIN no_entry_new -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_new -->
 <tr>
@@ -49,8 +48,7 @@
 <!-- BEGIN match_row_old -->
 <tr>
 	<td class="{display.match_row_old.CLASS}" align="center" width="1%">{display.match_row_old.MATCH_GAME}</td>
-	<td class="{display.match_row_old.CLASS}" align="left" width="100%">{display.match_row_old.MATCH_NAME}</td>
-	<td class="{display.match_row_old.CLASS}" align="center" nowrap="nowrap">{display.match_row_new.MATCH_DATE}</td>
+	<td class="{display.match_row_old.CLASS}" align="left" width="100%"><span style="float: right;">{display.match_row_old.MATCH_DATE}</span>{display.match_row_old.MATCH_NAME}</td>
 	<td class="{display.match_row_old.CLASS}" align="center"> - </td>
 	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_EDIT}">{L_SETTING}</a></td>
 	<td class="{display.match_row_old.CLASS}" align="center" width="1%"><a href="{display.match_row_old.U_DETAILS}">{L_MATCH_DETAILS}</a></td>
@@ -59,7 +57,7 @@
 <!-- END match_row_old -->
 <!-- BEGIN no_entry_old -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_old -->
 </table>
@@ -74,7 +72,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right">{S_TEAMS}</td>
-	<td><input type="hidden" name="mode" value="match_add"><input class="button" type="submit" name="match_add" value="{L_MATCH_CREATE}" /></td>
+	<td><input type="hidden" name="mode" value="match_add"><input class="button" type="submit" value="{L_MATCH_CREATE}" /></td>
 </tr>
 </table>
 </form>
@@ -194,7 +192,7 @@
 </tr>
 <tr>
 	<td class="row1">{L_TRAINING_TEXT}:</td>
-	<td class="row3"><textarea class="post" rows="5" cols="50" name="training_text"></textarea></td>
+	<td class="row3"><textarea class="post" rows="5" cols="50" name="training_comment"></textarea></td>
 </tr>
 </tbody>
 <!-- END new_match -->

@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -45,7 +46,7 @@ else
 	include($root_path . 'includes/teamspeak_query.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -66,8 +67,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -139,7 +139,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'add':
 			case 'edit':
@@ -176,7 +176,7 @@ else
 					$new_mode = 'addserver';
 				}
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_server.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_server.tpl'));
 				$template->assign_block_vars('server_edit', array());
 				
 				//	Unsichtbare Felder für andere Infos
@@ -254,7 +254,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
 	
-				$message = $lang['team_create'] . '<br><br>' . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
+				$message = $lang['team_create'] . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -285,7 +285,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
 				
-				$message = $lang['team_update'] . '<br><br>' . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
+				$message = $lang['team_update'] . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -315,13 +315,13 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
 					
-					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
+					$message = $lang['team_delete'] . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $server_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_GAMESERVER_URL . '" value="' . $server_id . '" />';
 		
@@ -375,7 +375,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_server.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_server.tpl'));
 	$template->assign_block_vars('display', array());
 	
 	$template->assign_vars(array(
@@ -388,8 +388,8 @@ else
 		'L_EDIT'			=> $lang['edit'],
 		'L_DELETE'			=> $lang['delete'],
 		
-		'L_MOVE_UP'			=> $lang['Move_up'], 
-		'L_MOVE_DOWN'		=> $lang['Move_down'], 
+		'L_MOVE_UP'			=> $lang['move_up'], 
+		'L_MOVE_DOWN'		=> $lang['move_down'], 
 		
 		'S_SERVER_ACTION'		=> append_sid('admin_server.php'),
 	));
@@ -405,12 +405,12 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$class = ($color % 2) ? 'row_class1' : 'row_class2';
+		$class = ( $color % 2 ) ? 'row_class1' : 'row_class2';
 		$color++;
 		
 //		$server = server_query($row['server_ip'], $row['server_port'], $row['server_qport'], $row['server_game'], 'info');
 		
-//	_debug($server);
+//	debug($server);
 		
 		$template->assign_block_vars('display.server_row', array(
 			'CLASS' 		=> $class,

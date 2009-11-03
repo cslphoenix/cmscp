@@ -57,9 +57,6 @@
 		<td class="row3">{BOARD_DISABLE_MODE}</td>
 	</tr>
 	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
 		<td class="row1">{L_EMAIL_ON-OFF}<br><span class="gensmall">{L_EMAIL_ON-OFF_EXPLAIN}</span></td>
 		<td class="row2"><input type="radio" name="email_enabled" value="1" {EMAIL_ON} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="email_enabled" value="0" {EMAIL_OFF} />&nbsp;{L_NO}</td>
 	</tr>

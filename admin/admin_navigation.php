@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -43,7 +44,7 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -64,14 +65,13 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
-		if (isset($HTTP_POST_VARS['add']))
+		if (isset($HTTP_POST_VARS['navigation_add']))
 		{
-			$mode = 'add';
+			$mode = 'navigation_add';
 		}
 		else
 		{
@@ -83,17 +83,20 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
-			case 'add':
-			case 'edit':
+			case 'navigation_add':
+			case 'navigation_edit':
+			
+				$template->set_filenames(array('body' => 'style/acp_navigation.tpl'));
+				$template->assign_block_vars('navigation_edit', array());
 				
-				if ( $mode == 'edit' )
+				if ( $mode == 'navigation_edit' )
 				{
 					$navi		= get_data('navi', $navi_id, 0);
-					$new_mode	= 'editnavi';
+					$new_mode	= 'navigation_update';
 				}
-				else if ( $mode == 'add' )
+				else if ( $mode == 'navigation_add' )
 				{
 					$navi = array (
 						'navi_name'		=> trim($HTTP_POST_VARS['navi_name']),
@@ -105,10 +108,8 @@ else
 						'navi_intern'	=> '0',
 					);
 
-					$new_mode = 'addnavi';
-				}
-				$template->set_filenames(array('body' => './../admin/style/acp_navigation.tpl'));
-				$template->assign_block_vars('navigation_edit', array());
+					$new_mode = 'navigation_create';
+				}				
 
 				$navi_url = str_replace('./', '', $navi['navi_url']);
 				
@@ -119,7 +120,7 @@ else
 				$filename_list .= '<select name="navi_url" class="post" onchange="select.value = this.value;">';
 				$filename_list .= '<option value="">----------</option>';
 				
-				foreach ($files as $file)
+				foreach ( $files as $file )
 				{
 					if ( strstr($file, '.php') )
 					{
@@ -134,6 +135,7 @@ else
 
 				$template->assign_vars(array(
 					'L_NAVI_HEAD'			=> $lang['navi_head'],
+					'L_NAVI_SET'			=> $lang['navi_set'],
 					'L_NAVI_NEW_EDIT'		=> ($mode == 'add') ? $lang['navi_add'] : $lang['navi_edit'],
 					'L_REQUIRED'			=> $lang['required'],
 					
@@ -178,13 +180,14 @@ else
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_NAVI_ACTION'			=> append_sid('admin_navigation.php'),
+					'S_NAVI_SET_ACTION'		=> append_sid('admin_navigation.php?mode=navigation_set'),
 				));
 			
 				$template->pparse('body');
 				
 			break;
 			
-			case 'addnavi':
+			case 'navigation_create':
 				
 				$navi_name		= ( isset($HTTP_POST_VARS['navi_name']) )	? trim($HTTP_POST_VARS['navi_name']) : '';
 				$navi_type		= ( isset($HTTP_POST_VARS['navi_type']))	? intval($HTTP_POST_VARS['navi_type']) : 0;
@@ -225,12 +228,12 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_add', $navi_name);
 	
-				$message = $lang['create_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
+				$message = $lang['create_navigation'] . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
 			
-			case 'editnavi':
+			case 'navigation_update':
 			
 				$navi_name		= ( isset($HTTP_POST_VARS['navi_name']) )	? trim($HTTP_POST_VARS['navi_name']) : '';
 				$navi_type		= ( isset($HTTP_POST_VARS['navi_type']))	? intval($HTTP_POST_VARS['navi_type']) : 0;
@@ -271,7 +274,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_edit');
 				
-				$message = $lang['update_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
+				$message = $lang['update_navigation'] . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -285,17 +288,20 @@ else
 					$navi = get_data('navi', $navi_id, 0);
 
 					$sql = 'DELETE FROM ' . NAVIGATION . " WHERE navi_id = $navi_id";
-					$result = $db->sql_query($sql);
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+					}
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_delete', $navi['navi_name']);
 					
-					$message = $lang['delete_navigation'] . '<br><br>' . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
+					$message = $lang['delete_navigation'] . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $navi_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 					$hidden_fields .= '<input type="hidden" name="' . POST_NAVIGATION_URL . '" value="' . $navi_id . '" />';
@@ -325,7 +331,10 @@ else
 				$move = intval($HTTP_GET_VARS['move']);
 				
 				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+				}
 		
 				renumber_order('navi', NAVI_MAIN);
 				
@@ -340,7 +349,10 @@ else
 				$move = intval($HTTP_GET_VARS['move']);
 				
 				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+				}
 		
 				renumber_order('navi', NAVI_CLAN);
 				
@@ -355,7 +367,10 @@ else
 				$move = intval($HTTP_GET_VARS['move']);
 				
 				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+				}
 		
 				renumber_order('navi', NAVI_COM);
 					
@@ -370,7 +385,10 @@ else
 				$move = intval($HTTP_GET_VARS['move']);
 				
 				$sql = 'UPDATE ' . NAVIGATION . " SET navi_order = navi_order + $move WHERE navi_id = $navi_id";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+				}
 		
 				renumber_order('navi', NAVI_MISC);
 					
@@ -394,12 +412,110 @@ else
 				$show_index = TRUE;
 	
 				break;
+				
+			case 'navigation_set':
+			
+				$template->set_filenames(array('body' => 'style/acp_navigation.tpl'));
+				$template->assign_block_vars('navigation_set', array());
+				
+				$s_hidden_fields = '<input type="hidden" name="mode" value="navigation_set_update" />';
+				
+				$template->assign_vars(array(
+					'L_NAVI_HEAD'			=> $lang['navi_head'],
+					'L_NAVI_SET'			=> $lang['navi_set'],
+					
+					'L_REQUIRED'			=> $lang['required'],
+					
+					'L_LAST_NEWS'			=> $lang['subnavi_news'],
+					'L_LAST_NEWS_LIMIT'		=> $lang['subnavi_news_limit'],
+					'L_LAST_NEWS_LENGTH'	=> $lang['subnavi_news_length'],
+					'L_LAST_MATCH'			=> $lang['subnavi_match'],
+					'L_LAST_MATCH_LIMIT'	=> $lang['subnavi_match_limit'],
+					'L_LAST_MATCH_LENGTH'	=> $lang['subnavi_match_length'],
+					'L_LAST_TOPICS'			=> $lang['subnavi_topics'],
+					'L_LAST_DOWNLOADS'		=> $lang['subnavi_downloads'],
+					
+					'L_LAST_USER'			=> $lang['subnavi_user'],
+					'L_LAST_USER_CACHE'		=> $lang['subnavi_user_cache'],
+					'L_LAST_USER_SHOW'		=> $lang['subnavi_user_show'],
+					'L_LAST_USER_LIMIT'		=> $lang['subnavi_user_limit'],
+					'L_LAST_USER_LENGTH'	=> $lang['subnavi_user_length'],
+					
+					'L_TEAMS'				=> $lang['subnavi_teams'],
+					'L_TEAMS_SHOW'			=> $lang['subnavi_teams_show'],
+					'L_TEAMS_LENGTH'		=> $lang['subnavi_teams_length'],
+					
+					'L_SUBMIT'				=> $lang['common_submit'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_NO'					=> $lang['common_no'],
+					
+					'LAST_NEWS_LENGTH'		=> $settings['subnavi_news_length'],
+					'LAST_NEWS_LIMIT'		=> $settings['subnavi_news_limit'],
+					'LAST_MATCH_LENGTH'		=> $settings['subnavi_match_length'],
+					'LAST_MATCH_LIMIT'		=> $settings['subnavi_match_limit'],
+					
+					'LAST_USER_CACHE'		=> $settings['subnavi_newusers_cache'],					
+					'LAST_USER_LENGTH'		=> $settings['subnavi_newusers_length'],
+					'LAST_USER_LIMIT'		=> $settings['subnavi_newusers_limit'],
+					
+					'TEAMS_LENGTH'			=> $settings['subnavi_teams_length'],
+					
+					'LAST_USER_ON'			=> ( $settings['subnavi_newusers_show'] ) ? ' checked="checked"' : '',
+					'LAST_USER_OFF'			=> ( !$settings['subnavi_newusers_show'] ) ? ' checked="checked"' : '',
+					
+					'TEAMS_ON'				=> ( $settings['subnavi_teams_show'] ) ? ' checked="checked"' : '',
+					'TEAMS_OFF'				=> ( !$settings['subnavi_teams_show'] ) ? ' checked="checked"' : '',
+					
+					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_NAVI_ACTION'			=> append_sid('admin_navigation.php'),
+				));
+			
+				$template->pparse('body');
+				
+				break;
+				
+			case 'navigation_set_update':
+			
+				$sql = 'SELECT * FROM ' . SETTINGS;
+				if (!$result = $db->sql_query($sql))
+				{
+					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				else
+				{
+					while( $row_settings = $db->sql_fetchrow($result) )
+					{
+						$settings_name = $row_settings['settings_name'];
+						$settings_value = $row_settings['settings_value'];
+						
+						$default_settings[$settings_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $settings_value) : $settings_value;
+						
+						$new_settings[$settings_name] = ( isset($HTTP_POST_VARS[$settings_name]) ) ? $HTTP_POST_VARS[$settings_name] : $default_settings[$settings_name];
+			
+						$sql = 'UPDATE ' . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
+						if (!$db->sql_query($sql))
+						{
+							message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
+						}
+					}
+				}
+				
+				$oCache -> sCachePath = './../cache/';
+				$oCache -> deleteCache('config');
+				$oCache -> deleteCache('settings');
+								
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_navi_set');
+				
+				$message = $lang['update_navigation_set'] . sprintf($lang['click_return_navigation_set'], '<a href="' . append_sid('admin_navigation.php?mode=navigation_set') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
+	
+				break;
 	
 			default:
 			
 				message_die(GENERAL_ERROR, $lang['no_select_module']);
 				
-				break;
 				break;
 		}
 	
@@ -410,11 +526,12 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_navigation.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_navigation.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
 		'L_NAVI_TITLE'		=> $lang['navi_head'],
+		'L_NAVI_SET'		=> $lang['navi_set'],
 		'L_NAVI_EXPLAIN'	=> $lang['navi_explain'],
 		
 		'L_NAVI_MAIN'		=> $lang['navi_main'],
@@ -432,45 +549,64 @@ else
 		'L_SETTINGS'		=> $lang['settings'],
 		'L_DELETE'			=> $lang['delete'],
 		
-		'L_MOVE_UP'			=> $lang['Move_up'], 
-		'L_MOVE_DOWN'		=> $lang['Move_down'], 
+		'L_MOVE_UP'			=> $lang['move_up'], 
+		'L_MOVE_DOWN'		=> $lang['move_down'], 
 		
 		'S_TEAM_ACTION'		=> append_sid('admin_navigation.php'),
+		'S_NAVI_SET_ACTION'	=> append_sid('admin_navigation.php?mode=navigation_set'),
 	));
 	
 	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_MAIN;
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	$max_main = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
 	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_CLAN;
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	$max_clan = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
 	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_COM;
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	$max_com = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
 	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_MISC;
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	$max_misc = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
 	$sql = 'SELECT MAX(navi_order) AS max FROM ' . NAVIGATION . ' WHERE navi_type = ' . NAVI_USER;
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	$max_user = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 	
 	$sql = 'SELECT * FROM ' . NAVIGATION . ' ORDER BY navi_type ASC, navi_order ASC';
-	$result = $db->sql_query($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
 	
 	$color = '';
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$class = ($color % 2) ? 'row_class1' : 'row_class2';
+		$class = ( $color % 2 ) ? 'row_class1' : 'row_class2';
 		$color++;
 		
 		$navi_id	= $row['navi_id'];
@@ -489,7 +625,7 @@ else
 				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_main['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=order_main&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 
 				'U_DELETE'		=> append_sid('admin_navigation.php?mode=delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_EDIT'		=> append_sid('admin_navigation.php?mode=edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_EDIT'		=> append_sid('admin_navigation.php?mode=navigation_edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 			));
 		}
 		else if ($row['navi_type'] == NAVI_CLAN)
@@ -505,7 +641,7 @@ else
 				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_clan['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=order_clan&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 
 				'U_DELETE'		=> append_sid('admin_navigation.php?mode=delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_EDIT'		=> append_sid('admin_navigation.php?mode=edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_EDIT'		=> append_sid('admin_navigation.php?mode=navigation_edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 			));
 		}
 		else if ($row['navi_type'] == NAVI_COM)
@@ -521,7 +657,7 @@ else
 				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_com['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=order_com&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 
 				'U_DELETE'		=> append_sid('admin_navigation.php?mode=delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_EDIT'		=> append_sid('admin_navigation.php?mode=edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_EDIT'		=> append_sid('admin_navigation.php?mode=navigation_edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 			));
 		}
 		else if ($row['navi_type'] == NAVI_MISC)
@@ -537,7 +673,7 @@ else
 				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_misc['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=order_misc&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
 				'U_DELETE'		=> append_sid('admin_navigation.php?mode=delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_EDIT'		=> append_sid('admin_navigation.php?mode=edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_EDIT'		=> append_sid('admin_navigation.php?mode=navigation_edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 			));
 		}
 		else if ($row['navi_type'] == NAVI_USER)
@@ -553,7 +689,7 @@ else
 				'MOVE_DOWN'		=> ( $row['navi_order'] != $max_user['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=order_user&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 
 				'U_DELETE'		=> append_sid('admin_navigation.php?mode=delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_EDIT'		=> append_sid('admin_navigation.php?mode=edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_EDIT'		=> append_sid('admin_navigation.php?mode=navigation_edit&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 			));
 		}
 		

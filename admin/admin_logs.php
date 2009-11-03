@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -70,8 +71,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -89,11 +89,11 @@ else
 		}
 	}
 	
-	switch ($mode)
+	switch ( $mode )
 	{
 		case 'error':
 			
-			$template->set_filenames(array('body' => './../admin/style/acp_logs.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_logs.tpl'));
 			$template->assign_block_vars('error', array());
 		
 			$sql = 'SELECT * FROM ' . ERROR . ' ORDER BY error_id DESC';
@@ -182,13 +182,13 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_error');
 				
-				$message = $lang['delete_log_error'] . '<br><br>' . sprintf($lang['click_return_log_error'], '<a href="' . append_sid('admin_logs.php?mode=error') . '">', '</a>');
+				$message = $lang['delete_log_error'] . sprintf($lang['click_return_log_error'], '<a href="' . append_sid('admin_logs.php?mode=error') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			}
 			else if ( !$confirm && $log_id )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
 				$hidden_fields = '<input type="hidden" name="mode" value="deleteerror" />';
 				$hidden_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
@@ -227,13 +227,13 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_all');
 				
-				$message = $lang['delete_log_all'] . '<br><br>' . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
+				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			}
 			else if ( !$confirm )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
 				$hidden_fields = '<input type="hidden" name="mode" value="delete_all" />';
 	
@@ -273,13 +273,13 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete');
 				
-				$message = $lang['delete_log'] . '<br><br>' . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
+				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			}
 			else if ( !$confirm && $log_id )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
 				$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
 				$hidden_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
@@ -306,7 +306,7 @@ else
 			
 		default:
 
-			$template->set_filenames(array('body' => './../admin/style/acp_logs.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_logs.tpl'));
 			$template->assign_block_vars('display', array());
 					
 			$template->assign_vars(array(

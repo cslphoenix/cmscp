@@ -44,187 +44,15 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="group_name" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_GROUP_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="group_add"><input class="button" type="submit" value="{L_GROUP_ADD}" /></td>
 </tr>
 </table>
 </form>
 <!-- END display -->
 
 <!-- BEGIN groups_edit -->
-<script type="text/javascript">
-// <![CDATA[
-
-     var perline = 9;
-     var divSet = false;
-     var curId;
-     var colorLevels = Array('0', '3', '6', '9', 'C', 'F');
-     var colorArray = Array();
-     var ie = false;
-     var nocolor = 'none';
-	 if (document.all) { ie = true; nocolor = ''; }
-	 function getObj(id) {
-		if (ie) { return document.all[id]; } 
-		else {	return document.getElementById(id);	}
-	 }
-
-     function addColor(r, g, b) {
-     	var red = colorLevels[r];
-     	var green = colorLevels[g];
-     	var blue = colorLevels[b];
-     	addColorValue(red, green, blue);
-     }
-
-     function addColorValue(r, g, b) {
-     	colorArray[colorArray.length] = '#' + r + r + g + g + b + b;
-     }
-     
-     function setColor(color) {
-     	var link = getObj(curId);
-     	var field = getObj(curId + 'field');
-     	var picker = getObj('colorpicker');
-     	field.value = color;
-     	if (color == '') {
-	     	link.style.background = nocolor;
-	     	link.style.color = nocolor;
-	     	color = nocolor;
-     	} else {
-	     	link.style.background = color;
-	     	link.style.color = color;
-	    }
-     	picker.style.display = 'none';
-	    eval(getObj(curId + 'field').title);
-     }
-        
-     function setDiv() {     
-     	if (!document.createElement) { return; }
-        var elemDiv = document.createElement('div');
-        if (typeof(elemDiv.innerHTML) != 'string') { return; }
-        genColors();
-        elemDiv.id = 'colorpicker';
-	    elemDiv.style.position = 'absolute';
-        elemDiv.style.display = 'none';
-        elemDiv.style.border = '#000000 1px solid';
-        elemDiv.style.background = '#FFFFFF';
-        elemDiv.innerHTML = '<span style="font-family:Verdana; font-size:11px;">' 
-          	+ '(<a href="javascript:setColor(\'\');">No color</a>)<br>' 
-        	+ getColorTable() 
-        	+ '</span>';
-
-        document.body.appendChild(elemDiv);
-        divSet = true;
-     }
-     
-     function pickColor(id) {
-     	if (!divSet) { setDiv(); }
-     	var picker = getObj('colorpicker');     	
-		if (id == curId && picker.style.display == 'block') {
-			picker.style.display = 'none';
-			return;
-		}
-     	curId = id;
-     	var thelink = getObj(id);
-     	picker.style.top = getAbsoluteOffsetTop(thelink) + 20;
-     	picker.style.left = getAbsoluteOffsetLeft(thelink);     
-	picker.style.display = 'block';
-     }
-     
-     function genColors() {
-        addColorValue('0','0','0');
-        addColorValue('3','3','3');
-        addColorValue('6','6','6');
-        addColorValue('8','8','8');
-        addColorValue('9','9','9');                
-        addColorValue('A','A','A');
-        addColorValue('C','C','C');
-        addColorValue('E','E','E');
-        addColorValue('F','F','F');                                
-			
-        for (a = 1; a < colorLevels.length; a++)
-			addColor(0,0,a);
-        for (a = 1; a < colorLevels.length - 1; a++)
-			addColor(a,a,5);
-
-        for (a = 1; a < colorLevels.length; a++)
-			addColor(0,a,0);
-        for (a = 1; a < colorLevels.length - 1; a++)
-			addColor(a,5,a);
-			
-        for (a = 1; a < colorLevels.length; a++)
-			addColor(a,0,0);
-        for (a = 1; a < colorLevels.length - 1; a++)
-			addColor(5,a,a);
-			
-			
-        for (a = 1; a < colorLevels.length; a++)
-			addColor(a,a,0);
-        for (a = 1; a < colorLevels.length - 1; a++)
-			addColor(5,5,a);
-			
-        for (a = 1; a < colorLevels.length; a++)
-			addColor(0,a,a);
-        for (a = 1; a < colorLevels.length - 1; a++)
-			addColor(a,5,5);
-
-        for (a = 1; a < colorLevels.length; a++)
-			addColor(a,0,a);			
-        for (a = 1; a < colorLevels.length - 1; a++)
-			addColor(5,a,5);
-			
-       	return colorArray;
-     }
-     function getColorTable() {
-         var colors = colorArray;
-      	 var tableCode = '';
-         tableCode += '<table border="0" cellspacing="1" cellpadding="1">';
-         for (i = 0; i < colors.length; i++) {
-              if (i % perline == 0) { tableCode += '<tr>'; }
-              tableCode += '<td bgcolor="#000000"><a style="outline: 1px solid #000000; color: ' 
-              	  + colors[i] + '; background: ' + colors[i] + ';font-size: 10px;" title="' 
-              	  + colors[i] + '" href="javascript:setColor(\'' + colors[i] + '\');">   </a></td>';
-              if (i % perline == perline - 1) { tableCode += '</tr>'; }
-         }
-         if (i % perline != 0) { tableCode += '</tr>'; }
-         tableCode += '</table>';
-      	 return tableCode;
-     }
-     function relateColor(id, color) {
-     	var link = getObj(id);
-     	if (color == '') {
-	     	link.style.background = nocolor;
-	     	link.style.color = nocolor;
-	     	color = nocolor;
-     	} else {
-	     	link.style.background = color;
-	     	link.style.color = color;
-	    }
-	    eval(getObj(id + 'field').title);
-     }
-     function getAbsoluteOffsetTop(obj) {
-     	var top = obj.offsetTop;
-     	var parent = obj.offsetParent;
-     	while (parent != document.body) {
-     		top += parent.offsetTop;
-     		parent = parent.offsetParent;
-     	}
-     	return top;
-     }
-     
-     function getAbsoluteOffsetLeft(obj) {
-     	var left = obj.offsetLeft;
-     	var parent = obj.offsetParent;
-     	while (parent != document.body) {
-     		left += parent.offsetLeft;
-     		parent = parent.offsetParent;
-     	}
-     	return left;
-     }
-
-
-// ]]>
-</script>
-
-<form action="{S_GROUP_ACTION}" method="post">
-	
+<script type="text/javascript" src="./../admin/style/jscolor.js"></script>
+<form action="{S_GROUP_ACTION}" method="post">	
 <table class="head" cellspacing="0">
 <tr>
 	<th>
@@ -233,7 +61,9 @@
 				<li><a href="{S_GROUP_ACTION}">{L_GROUP_HEAD}</a></li>
 				<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
 				<li id="active"><a href="#" id="current">{L_GROUP_NEW_EDIT}</a></li>
+				<!-- BEGIN edit_group -->
 				<li><a href="{S_MEMBER_ACTION}">{L_GROUP_MEMBER}</a></li>
+				<!-- END edit_group -->
 			</ul>
 		</div>
 	</th>
@@ -282,9 +112,8 @@
 		<tr>
 			<td class="row1">{L_GROUP_COLOR}:</td>
 			<td class="row2">
-				<input size="7" id="pickfield" class="post" type="text" name="group_color" value="{GROUP_COLOR}" onChange="relateColor('pick', this.value);">
-				<a href="javascript:pickColor('pick');" id="pick" style="border: 1px solid #000000; font-size:10px; text-decoration: none;">&nbsp;&nbsp;&nbsp;</a>
-				<script language="javascript">relateColor('pick', getObj('pickfield').value);</script>
+				<input size="7" class="color" type="text" name="group_color" value="{GROUP_COLOR}">
+				
 			</td>
 		</tr>
 		<tr>
@@ -310,33 +139,17 @@
 				</div>
 			</th>
 		</tr>
-		<!--
+		
 		<tr>
-			<td class="row1" width="25%">{L_GROUP_NAME}: *</td>
-			<td class="row2" width="75%"><input class="post" type="text" name="group_name" value="{GROUP_NAME}" ></td>
-		</tr>
-		<tr>
-			<td class="row1">{L_GROUP_ACCESS}:</td>
-			<td class="row2">{S_GROUP_ACCESS}</td>
-		</tr>
-		<tr>
-			<td class="row1">{L_GROUP_TYPE}:</td>
-			<td class="row2">{S_GROUP_TYPE}</td>
-		</tr>
-		<tr>
-			<td class="row1" valign="top">{L_GROUP_DESCRIPTION}:</td>
-			<td class="row3"><textarea class="textarea" name="group_description" rows="5" cols="40">{GROUP_DESCRIPTION}</textarea></td>
-		</tr>
-		<tr>
-			<td class="row1">{L_GROUP_TYPE}:</td>
-			<td class="row2">
-				<input size="7" id="pickfield" class="post" type="text" name="group_color" value="{GROUP_COLOR}" onChange="relateColor('pick', this.value);">
-				<a href="javascript:pickColor('pick');" id="pick" style="border: 1px solid #000000; font-size:10px; text-decoration: none;">&nbsp;&nbsp;&nbsp;</a>
-				<script language="javascript">relateColor('pick', getObj('pickfield').value);</script>
-		</td>
+					<td class="row1" width="160">{L_TEAM_LOGO_UP}:<br><span class="small">{L_LOGO_UP_EXPLAIN}</span></td>
+					<td class="row3"><input class="post" type="file" name="team_logo"></td>
+				</tr>
+				<tr>
+					<td colspan="2">{TEAM_LOGO}<br><input type="checkbox" name="logodel" /></td>
+				</tr>
 		
 		</tr>
-		-->
+		
 		</table>
 	</td>
 	<td valign="top">
@@ -407,7 +220,7 @@
 <!-- END mods_row -->
 <!-- BEGIN switch_no_moderators -->
 <tr>
-	<td colspan="7" class="row_class1" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
+	<td colspan="7" class="row_noentry" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
 </tr>
 <!-- END switch_no_moderators -->
 <tr>
@@ -422,7 +235,7 @@
 <!-- END nomods_row -->
 <!-- BEGIN switch_no_members -->
 <tr>
-	<td colspan="7" class="row_class1" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
+	<td colspan="7" class="row_noentry" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
 </tr>
 <!-- END switch_no_members -->
 <!-- BEGIN pending -->
@@ -471,26 +284,20 @@
 	</th>
 </tr>
 <tr>
-	<td>&nbsp;</td>
+	<td class="row2"><span class="small">{L_GROUP_ADD_MEMBER_EX}</span></td>
 </tr>
 </table>
 
 <table class="edit" cellspacing="1">
 <tr>
-	<td class="row1" width="25%" valign="top"><b>{L_GROUP_ADD}:</b><br><span class="small">{L_GROUP_ADD_MEMBER_EX}</span></td>
-	<td class="row3" width="75%" valign="top">
-		<textarea class="textarea" name="members" cols="40" rows="5"></textarea>
-		<br>
-		<br>
-		{S_ACTION_ADDUSERS}
-		<br>
-		<br>
-		<input type="checkbox" name="mod" /> Moderatorstatus
-	</td>
+	<td class="row2" valign="top"><textarea class="textarea" name="members" style="width:100%" rows="5"></textarea></td>
+	<td class="row2" align="left" valign="top">{S_ACTION_ADDUSERS}</td>
 </tr>
 <tr>
-	<td class="row3">&nbsp;</td>
-	<td class="row3"><input type="submit" name="send" value="{L_SUBMIT}" class="button" /></td>
+	<td colspan="2" class="row2"><input type="checkbox" name="mod" /> Moderatorstatus</td>
+</tr>
+<tr>
+	<td colspan="2" class="row2"><input type="submit" name="send2" value="{L_SUBMIT}" class="button" /></td>
 </tr>
 </table>
 {S_HIDDEN_FIELDS2}
