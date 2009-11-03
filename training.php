@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 define('IN_CMS', true);
 $root_path = './';
@@ -159,9 +160,9 @@ if ( $mode == '' )
 				'CLASS' 		=> $class,
 				'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 				'TEAM_NAME'		=> $teams[$i]['team_name'],
-				'ALL_MATCHES'	=> append_sid('match.php?mode=teammatches&amp;' . POST_TEAM_URL . '=' . $teams[$i]['team_id']),
-				'TO_TEAM'		=> append_sid('teams.php?mode=show&amp;' . POST_TEAM_URL . '=' . $teams[$i]['team_id']),
-				'FIGHTUS'		=> append_sid('contact.php?mode=fightus&amp;' . POST_TEAM_URL . '=' . $teams[$i]['team_id']),
+				'ALL_MATCHES'	=> append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+				'TO_TEAM'		=> append_sid('teams.php?mode=show&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+				'FIGHTUS'		=> append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
 			));
 		}		
 	}
@@ -447,7 +448,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				
 				_comment_message('add', 'training', $training_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
-				$message = $lang['add_comment'] . '<br><br>' . sprintf($lang['click_return_training'],  '<a href="' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">', '</a>');
+				$message = $lang['add_comment'] . sprintf($lang['click_return_training'],  '<a href="' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			}
 		}
@@ -521,14 +522,14 @@ else if ($mode == 'change')
 	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">'));
 	message_die(GENERAL_MESSAGE, $message);
 }
-else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAM_URL]))
+else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 {
 	$page_title = $lang['training'];
 	include($root_path . 'includes/page_header.php');
 	
 	$template->set_filenames(array('body' => 'training_teams_body.tpl'));
 	
-	$team_id = $HTTP_GET_VARS[POST_TEAM_URL];
+	$team_id = $HTTP_GET_VARS[POST_TEAMS_URL];
 	
 	//
 	//	Team Details

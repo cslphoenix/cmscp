@@ -31,12 +31,12 @@ $userdata = session_pagestart($user_ip, PAGE_GROUPS);
 init_userprefs($userdata);
 
 //	Link
-//$script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['script_path']));
-//$script_name = ( $script_name != '' ) ? $script_name . '/groups.php' : 'groups.php';
-//$server_name = trim($config['server_name']);
-//$server_protocol = ( $config['cookie_secure'] ) ? 'https://' : 'http://';
-//$server_port = ( $config['server_port'] <> 80 ) ? ':' . trim($config['server_port']) . '/' : '/';
-//$server_url = $server_protocol . $server_name . $server_port . $script_name;
+$script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['script_path']));
+$script_name = ( $script_name != '' ) ? $script_name . '/groups.php' : 'groups.php';
+$server_name = trim($config['server_name']);
+$server_protocol = ( $config['cookie_secure'] ) ? 'https://' : 'http://';
+$server_port = ( $config['server_port'] <> 80 ) ? ':' . trim($config['server_port']) . '/' : '/';
+$server_url = $server_protocol . $server_name . $server_port . $script_name;
 
 if ( isset($HTTP_GET_VARS[POST_GROUPS_URL]) || isset($HTTP_POST_VARS[POST_GROUPS_URL]) )
 {
@@ -49,19 +49,18 @@ else
 
 if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-	$mode = htmlspecialchars($mode);
+	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 }
 else
 {
 	$mode = '';
 }
 
-$confirm = ( isset($HTTP_POST_VARS['confirm']) ) ? TRUE : 0;
-$cancel = ( isset($HTTP_POST_VARS['cancel']) ) ? TRUE : 0;
-$sid = ( isset($HTTP_POST_VARS['sid']) ) ? $HTTP_POST_VARS['sid'] : '';
-$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start = ( $start < 0 ) ? 0 : $start;
+$confirm	= ( isset($HTTP_POST_VARS['confirm']) ) ? TRUE : 0;
+$cancel		= ( isset($HTTP_POST_VARS['cancel']) ) ? TRUE : 0;
+$sid		= ( isset($HTTP_POST_VARS['sid']) ) ? $HTTP_POST_VARS['sid'] : '';
+$start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
+$start		= ( $start < 0 ) ? 0 : $start;
 
 $is_moderator = FALSE;
 

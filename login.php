@@ -235,20 +235,21 @@ else
 
 		$forward_page = '';
 
-		if( isset($HTTP_POST_VARS['redirect']) || isset($HTTP_GET_VARS['redirect']) )
+		if ( isset($HTTP_POST_VARS['redirect']) || isset($HTTP_GET_VARS['redirect']) )
 		{
 			$forward_to = $HTTP_SERVER_VARS['QUERY_STRING'];
 
 			if( preg_match("/^redirect=([a-z0-9\.#\/\?&=\+\-_]+)/si", $forward_to, $forward_matches) )
 			{
-				$forward_to = ( !empty($forward_matches[3]) ) ? $forward_matches[3] : $forward_matches[1];
-				$forward_match = explode('&', $forward_to);
+				$forward_to		= ( !empty($forward_matches[3]) ) ? $forward_matches[3] : $forward_matches[1];
+				$forward_match	= explode('&', $forward_to);
 
-				if(count($forward_match) > 1)
+				if ( count($forward_match) > 1 )
 				{
-					for($i = 1; $i < count($forward_match); $i++)
+					for ($i = 1; $i < count($forward_match); $i++)
 					{
-						if( !ereg("sid=", $forward_match[$i]) )
+					//	if ( !ereg("sid=", $forward_match[$i]) )
+						if ( !preg_match("/sid=/", $forward_match[$i]) )
 						{
 							if( $forward_page != '' )
 							{
