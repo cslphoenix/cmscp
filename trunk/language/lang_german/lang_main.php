@@ -1,26 +1,41 @@
 <?php
 
-/***
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
+include('lang_head.php');
 
-	* Content-Management-System by Phoenix
 
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
+$lang['sprintf_subnavi_match']			= 'vs. %s';
+$lang['sprintf_subnavi_match_i']		= '<span style="font-style:italic;">vs. %s</span>';
+$lang['sprintf_subnavi_match_result']	= '%s:%s';
 
-***/
+$lang['team_view']					= 'Team Übersicht';
+$lang['team_moderator']				= 'Teammoderator';
+$lang['team_member']				= 'Teammitglieder';
+
+
+$lang['msg_select_team']			= 'Team auswählen';
 
 $lang['common_comment']				= 'Kommentar';
 $lang['common_comments']			= 'Kommentare';
@@ -122,7 +137,7 @@ $lang['counter_yesterday']		= ' Gestern: %s';
 $lang['counter_month']			= ' Monat: %s';
 $lang['counter_year']			= ' Jahr: %s';
 $lang['counter_total']			= ' Gesamt: %s';
-$lang['select_team']			= 'Team auswählen';
+
 
 //
 //	Header
@@ -1303,6 +1318,18 @@ $lang['datetime']['September'] = 'September';
 $lang['datetime']['October'] = 'Oktober';
 $lang['datetime']['November'] = 'November';
 $lang['datetime']['December'] = 'Dezember';
+$lang['datetime']['month_01'] = 'Januar';
+$lang['datetime']['month_02'] = 'Februar';
+$lang['datetime']['month_03'] = 'März';
+$lang['datetime']['month_04'] = 'April';
+$lang['datetime']['month_05'] = 'Mai';
+$lang['datetime']['month_06'] = 'Juni';
+$lang['datetime']['month_07'] = 'Juli';
+$lang['datetime']['month_08'] = 'August';
+$lang['datetime']['month_09'] = 'September';
+$lang['datetime']['month_10'] = 'Oktober';
+$lang['datetime']['month_11'] = 'November';
+$lang['datetime']['month_12'] = 'Dezember';
 $lang['datetime']['Jan'] = 'Jan';
 $lang['datetime']['Feb'] = 'Feb';
 $lang['datetime']['Mar'] = 'März';
