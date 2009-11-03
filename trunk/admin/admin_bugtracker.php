@@ -1,30 +1,32 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
+	
 	if ( $userdata['user_level'] == ADMIN )
 	{
 		$module['bugtracker']['bugtracker'] = $filename;
@@ -44,7 +46,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['bugtracker_fail']);
+		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -52,22 +54,14 @@ else
 		redirect('admin/' . append_sid('admin_match.php', true));
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_BUGTRACKER_URL]) || isset($HTTP_GET_VARS[POST_BUGTRACKER_URL]) )
-	{
-		$bugtracker_id = ( isset($HTTP_POST_VARS[POST_BUGTRACKER_URL]) ) ? intval($HTTP_POST_VARS[POST_BUGTRACKER_URL]) : intval($HTTP_GET_VARS[POST_BUGTRACKER_URL]);
-	}
-	else
-	{
-		$bugtracker_id = 0;
-	}
-	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
+	$bugtracker_id = request(POST_BUGTRACKER_URL);
+		
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -96,11 +90,11 @@ else
 		$sort_order = 'DESC';
 	}
 	
-	switch ($mode)
+	switch ( $mode )
 	{
 		default:
 		
-			$template->set_filenames(array('body' => './../admin/style/acp_bugtracker.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_bugtracker.tpl'));
 			$template->assign_block_vars('display', array());
 			
 			$s_sort = '<select class="postselect" name="sort" onchange="document.getElementById(\'bt_sort\').submit()">';

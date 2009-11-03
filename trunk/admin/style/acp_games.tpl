@@ -33,7 +33,7 @@
 <!-- END game_row -->
 <!-- BEGIN no_games -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_GAMES}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_GAMES}</td>
 </tr>
 <!-- END no_games -->
 </table>
@@ -41,7 +41,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="game_name" type="text" value=""></td>
-	<td><input class="button" type="submit" name="game_add" value="{L_GAME_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="game_add"><input class="button" type="submit" value="{L_GAME_ADD}" /></td>
 </tr>
 </table>
 </form>

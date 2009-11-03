@@ -20,7 +20,7 @@
 <table class="row" cellspacing="1">
 <tr>
 	<td class="rowHead">{L_AUTHLIST_NAME}</td>
-	<td class="rowHead" colspan="2">{L_SETTINGS}</td>
+	<td class="rowHead" colspan="2" align="center">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN auth_row -->
 <tr>
@@ -34,7 +34,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="auth_name" type="text" value=""></td>
-	<td><input class="button" type="submit" name="authlist_add" value="{L_AUTHLIST_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="authlist_add"><input class="button" type="submit" value="{L_AUTHLIST_ADD}" /></td>
 </tr>
 </table>
 </form>
@@ -65,6 +65,9 @@
 <tr>
 	<td class="row1" width="20%">{L_AUTHLIST_NAME}: *</td>
 	<td class="row3" width="80%"><input class="post" type="text" name="auth_name" value="{AUTH_NAME}" ></td>
+</tr>
+<tr>
+	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
 	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>

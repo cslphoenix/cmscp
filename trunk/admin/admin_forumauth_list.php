@@ -40,7 +40,7 @@ else
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	
-	if (!$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}

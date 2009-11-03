@@ -123,7 +123,16 @@ td.row_class3 {
 td.row1, td.row2, td.row3 {
 	padding: 5px 5px;
 	vertical-align: top;
-	border-right:1px #FFF solid;
+	border-left:1px #FFF solid;
+	border-right:1px #FFF solid;	
+}
+
+td.row_noentry	{
+	height:21px;
+	font-weight:bold;
+	background-color: #CEE1EB;
+	padding: 0px 5px;
+	vertical-align:middle;
 }
 
 td.row1:hover {
@@ -132,7 +141,7 @@ td.row1:hover {
 }
 
 td.row3:hover {
-	
+	border-left:1px #39F solid;
 	color:#000;
 }
 

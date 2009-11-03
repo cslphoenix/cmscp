@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -67,8 +68,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -90,12 +90,12 @@ else
 		
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'add':
 			case 'edit':
 			
-				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 				$template->assign_block_vars('user_edit', array());
 				
 				if ( $mode == 'edit' )
@@ -379,7 +379,7 @@ else
 				//	$oCache -> sCachePath = './../cache/';
 				//	$oCache -> deleteCache('display_subnavi_user');
 		
-					$message = $lang['create_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
+					$message = $lang['create_user'] . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -414,7 +414,7 @@ else
 				}
 				$log_data = trim($log_data, ', ');
 				
-//				_debug($_POST);
+//				debug($_POST);
 				
 				if (!empty($HTTP_POST_VARS['game_image']))
 				{
@@ -496,7 +496,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_user');
 				
-				$message = $lang['user_update'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
+				$message = $lang['user_update'] . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 			break;
@@ -506,7 +506,7 @@ else
 				$user		= get_data('user', $user_id, 0);
 				$user_data	= get_data('profile_data', $user_id, 0);
 			
-				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 				$template->assign_block_vars('user_fields', array());
 				
 				$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
@@ -606,7 +606,7 @@ else
 			
 			case 'update_fields':
 			
-				_debug($_POST);
+				debug($_POST);
 			
 			break;
 			
@@ -614,7 +614,7 @@ else
 			
 				$user = get_data('user', $user_id, 0);
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 				$template->assign_block_vars('user_settings', array());
 				
 				$user_timezone			= $user['user_timezone'];
@@ -679,7 +679,7 @@ else
 			
 			case 'update_settings':
 			
-				_debug($_POST);
+				debug($_POST);
 			
 			break;
 			
@@ -701,13 +701,13 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('display_subnavi_user');
 					
-					$message = $lang['delete_user'] . '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
+					$message = $lang['delete_user'] . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 		
 				}
 				else if ( $user_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
 		
@@ -733,7 +733,7 @@ else
 			
 			case 'groups':
 			
-				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 				$template->assign_block_vars('user_groups', array());
 				
 				$user = get_data('user', $user_id, 0);
@@ -1088,15 +1088,15 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_groups');
 			
 				$message = $lang['user_change_groups']
-					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_user_groups'], '<a href="' . append_sid('admin_user.php?mode=groups&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
+					. sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
+					. sprintf($lang['click_return_user_groups'], '<a href="' . append_sid('admin_user.php?mode=groups&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 				
 			break;
 			
 			case 'auths':
 			
-				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 				$template->assign_block_vars('user_auths', array());
 				
 				$user = get_data('user', $user_id, 0);
@@ -1332,15 +1332,15 @@ else
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_auths_edit');
 				
 				$message = $lang['user_change_auths']
-					. '<br><br>' . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
-					. '<br><br>' . sprintf($lang['click_return_user_auths'], '<a href="' . append_sid('admin_user.php?mode=auths&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
+					. sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
+					. sprintf($lang['click_return_user_auths'], '<a href="' . append_sid('admin_user.php?mode=auths&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
 				message_die(GENERAL_MESSAGE, $message);
 			
 			break;
 			
 			case 'settings':
 			
-				$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 				$template->assign_block_vars('user_auths', array());
 				
 				$s_hidden_fields = '<input type="hidden" name="mode" value="editsettings" />';
@@ -1373,7 +1373,7 @@ else
 			
 			case 'editsettings':
 			
-				_debuge($_POST);
+				debuge($_POST);
 			
 			break;
 			
@@ -1389,7 +1389,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_user.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 	$template->assign_block_vars('display', array());
 	
 	$template->assign_vars(array(

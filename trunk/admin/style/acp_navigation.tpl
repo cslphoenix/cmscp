@@ -6,6 +6,7 @@
 	<div id="navcontainer">
 		<ul id="navlist">
 			<li id="active"><a href="#" id="current">{L_NAVI_TITLE}</a></li>
+			<li><a href="{S_NAVI_SET_ACTION}">{L_NAVI_SET}</a></li>
 		</ul>
 	</div>
 	</th>
@@ -146,11 +147,132 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="navi_name" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_NAVI_ADD}" /></td>
+	<td><input class="button" type="submit" name="navigation_add" value="{L_NAVI_ADD}" /></td>
 </tr>
 </table>
 </form>
 <!-- END display -->
+
+<!-- BEGIN navigation_set -->
+<form action="{S_NAVI_ACTION}" method="post">
+<table class="head" cellspacing="0">
+<tr>
+	<th>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li><a href="{S_NAVI_ACTION}">{L_NAVI_HEAD}</a></li>
+				<li id="active"><a href="#" id="current">{L_NAVI_SET}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+</tr>
+</table>
+
+<table class="edit" cellspacing="1">
+<!-- letzte Nachrichten -->
+<tr>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current" onClick="toggle('last_news'); return false;">{L_LAST_NEWS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tbody id="last_news" style="display:;">
+<tr>
+	<td class="row1" width="50%">{L_LAST_NEWS_LIMIT}:<br><span class="small">{L_LAST_NEWS_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_news_limit" value="{LAST_NEWS_LIMIT}" /></td>
+</tr>
+<tr>
+	<td class="row1" width="50%">{L_LAST_NEWS_LENGTH}:<br><span class="small">{L_LAST_NEWS_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_news_length" value="{LAST_NEWS_LENGTH}" /></td>
+</tr>
+</tbody>
+
+<!-- letzte Begegnungen -->
+<tr>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current" onClick="toggle('last_match'); return false;">{L_LAST_MATCH}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tbody id="last_match" style="display:;">
+<tr>
+	<td class="row1" width="50%">{L_LAST_MATCH_LIMIT}:<br><span class="small">{L_LAST_MATCH_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_match_limit" value="{LAST_MATCH_LIMIT}" /></td>
+</tr>
+<tr>
+	<td class="row1" width="50%">{L_LAST_MATCH_LENGTH}:<br><span class="small">{L_LAST_MATCH_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_match_length" value="{LAST_MATCH_LENGTH}" /></td>
+</tr>
+</tbody>
+
+<!-- letzte Benutzer -->
+<tr>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current" onClick="toggle('last_newusers'); return false;">{L_LAST_USER}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tbody id="last_newusers" style="display:;">
+<tr>
+	<td class="row1">{L_LAST_USER_SHOW}:<br><span class="gensmall">{L_LAST_USER_SHOW_EXPLAIN}</span></td>
+	<td class="row3"><input type="radio" name="subnavi_newusers_show" value="1" {LAST_USER_ON} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="subnavi_newusers_show" value="0" {LAST_USER_OFF} />&nbsp;{L_NO}</td>
+</tr>
+<tr>
+	<td class="row1" width="50%">{L_LAST_USER_LIMIT}:<br><span class="small">{L_LAST_USER_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_newusers_limit" value="{LAST_USER_LIMIT}" /></td>
+</tr>
+<tr>
+	<td class="row1" width="50%">{L_LAST_USER_LENGTH}:<br><span class="small">{L_LAST_USER_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_newusers_length" value="{LAST_USER_LENGTH}" /></td>
+</tr>
+<tr>
+	<td class="row1" width="50%">{L_LAST_USER_CACHE}:<br><span class="small">{L_LAST_USER_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="4" name="subnavi_newusers_cache" value="{LAST_USER_CACHE}" /></td>
+</tr>
+</tbody>
+
+<!-- Teams -->
+<tr>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current" onClick="toggle('teams'); return false;">{L_TEAMS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tbody id="teams" style="display:;">
+<tr>
+	<td class="row1">{L_TEAMS_SHOW}:<br><span class="gensmall">{L_LAST_USER_SHOW_EXPLAIN}</span></td>
+	<td class="row3"><input type="radio" name="subnavi_teams_show" value="1" {TEAMS_ON} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="subnavi_teams_show" value="0" {TEAMS_OFF} />&nbsp;{L_NO}</td>
+</tr>
+<tr>
+	<td class="row1" width="50%">{L_TEAMS_LENGTH}:<br><span class="small">{L_LAST_USER_EXPLAIN}</span></td>
+	<td class="row3" width="50%"><input class="post" type="text" size="2" name="subnavi_teams_length" value="{TEAMS_LENGTH}" /></td>
+</tr>
+</tbody>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+</tr>
+</table>
+{S_HIDDEN_FIELDS}
+</form>
+<!-- END navigation_set -->
 
 <!-- BEGIN navigation_edit -->
 <form action="{S_NAVI_ACTION}" method="post">
@@ -161,6 +283,7 @@
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li><a href="{S_NAVI_ACTION}">{L_NAVI_HEAD}</a></li>
+				<li><a href="{S_NAVI_SET_ACTION}">{L_NAVI_SET}</a></li>
 				<li id="active"><a href="#" id="current">{L_NAVI_NEW_EDIT}</a></li>
 			</ul>
 		</div>

@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -57,55 +58,18 @@ else
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
-	if ( isset($HTTP_POST_VARS[POST_CASH_URL]) || isset($HTTP_GET_VARS[POST_CASH_URL]) )
-	{
-		$cash_id = ( isset($HTTP_POST_VARS[POST_CASH_URL]) ) ? intval($HTTP_POST_VARS[POST_CASH_URL]) : intval($HTTP_GET_VARS[POST_CASH_URL]);
-	}
-	else
-	{
-		$cash_id = 0;
-	}
+	$mode			= request('mode', true);
+	$cash_id		= request(POST_CASH_URL);
+	$cash_user_id	= request(POST_CASH_USER_URL);
 	
-	if ( isset($HTTP_POST_VARS[POST_CASH_USER_URL]) || isset($HTTP_GET_VARS[POST_CASH_USER_URL]) )
-	{
-		$cash_user_id = ( isset($HTTP_POST_VARS[POST_CASH_USER_URL]) ) ? intval($HTTP_POST_VARS[POST_CASH_USER_URL]) : intval($HTTP_GET_VARS[POST_CASH_USER_URL]);
-	}
-	else
-	{
-		$cash_user_id = 0;
-	}
+	debug($_POST);
 	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['cash_add']) || isset($HTTP_GET_VARS['cash_add']) )
-		{
-			$mode = 'cash_add';
-		}
-		else if ( isset($HTTP_POST_VARS['cash_user']) || isset($HTTP_GET_VARS['cash_user']) )
-		{
-			$mode = 'cash_user_add';
-		}
-		else if ( isset($HTTP_POST_VARS['bankdata_clear']) || isset($HTTP_GET_VARS['bankdata_clear']) )
-		{
-			$mode = 'bankdata_clear';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
-	
-	switch ($mode)
+	switch ( $mode )
 	{
 		case 'cash_add':
 		case 'cash_edit':
 		
-			$template->set_filenames(array('body' => './../admin/style/acp_cash.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('cash_edit', array());
 			
 			if ( $mode == 'cash_edit' )
@@ -115,8 +79,8 @@ else
 			}
 			else
 			{
-				$cash = array (
-					'cash_name'		=> trim($HTTP_POST_VARS['cash_name']),
+				$cash = array(
+					'cash_name'		=> request('cash_name', true),
 					'cash_type'		=> '0',
 					'cash_amount'	=> '',
 					'cash_interval'	=> '0',
@@ -125,8 +89,7 @@ else
 				$new_mode = 'cash_create';
 			}
 			
-			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-			$s_hidden_fields .= '<input type="hidden" name="' . POST_CASH_URL . '" value="' . $cash_id . '" />';
+			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CASH_URL . '" value="' . $cash_id . '" />';
 
 			$template->assign_vars(array(
 				'L_CASH_HEAD'		=> $lang['cash_head'],
@@ -137,30 +100,27 @@ else
 				'L_CASH_TYPE'		=> $lang['cash_type'],
 				'L_CASH_AMOUNT'		=> $lang['cash_amount'],
 				'L_CASH_INTERVAL'	=> $lang['cash_interval'],
+				'L_CASH_TYPE_A'		=> $lang['cash_type_a'],
+				'L_CASH_TYPE_B'		=> $lang['cash_type_b'],
+				'L_CASH_TYPE_C'		=> $lang['cash_type_c'],
+				'L_INTAVAL_0'		=> $lang['cash_interval_month'],
+				'L_INTAVAL_1'		=> $lang['cash_interval_2weeks'],
+				'L_INTAVAL_2'		=> $lang['cash_interval_week'],
 				
-				'L_CASH_TYPE_A'	=> $lang['cash_type_a'],
-				'L_CASH_TYPE_B'	=> $lang['cash_type_b'],
-				'L_CASH_TYPE_C'	=> $lang['cash_type_c'],
+				'L_NO'				=> $lang['common_no'],
+				'L_YES'				=> $lang['common_yes'],
+				'L_RESET'			=> $lang['common_reset'],
+				'L_SUBMIT'			=> $lang['common_submit'],
 				
-				'L_INTAVAL_0'	=> $lang['cash_interval_month'],
-				'L_INTAVAL_1'	=> $lang['cash_interval_2weeks'],
-				'L_INTAVAL_2'	=> $lang['cash_interval_week'],
-				
-				'L_SUBMIT'	=> $lang['common_submit'],
-				'L_RESET'	=> $lang['common_reset'],
-				'L_YES'		=> $lang['common_yes'],
-				'L_NO'		=> $lang['common_no'],
-				
-				'CASH_NAME'		=> $cash['cash_name'],
-				'CASH_AMOUNT'	=> $cash['cash_amount'],
+				'CASH_NAME'			=> $cash['cash_name'],
+				'CASH_AMOUNT'		=> $cash['cash_amount'],
 				
 				'S_CHECKED_TYPE_A'	=> ( $cash['cash_type'] == '0' ) ? ' checked="checked"' : '',
 				'S_CHECKED_TYPE_B'	=> ( $cash['cash_type'] == '1' ) ? ' checked="checked"' : '',
 				'S_CHECKED_TYPE_C'	=> ( $cash['cash_type'] == '2' ) ? ' checked="checked"' : '',
-				
-				'S_CHECKED_INTAVAL_0'	=> ( $cash['cash_interval'] == '0' ) ? ' checked="checked"' : '',
-				'S_CHECKED_INTAVAL_1'	=> ( $cash['cash_interval'] == '1' ) ? ' checked="checked"' : '',
-				'S_CHECKED_INTAVAL_2'	=> ( $cash['cash_interval'] == '2' ) ? ' checked="checked"' : '',
+				'S_CHECKED_INT_1'	=> ( $cash['cash_interval'] == '0' ) ? ' checked="checked"' : '',
+				'S_CHECKED_INT_1'	=> ( $cash['cash_interval'] == '1' ) ? ' checked="checked"' : '',
+				'S_CHECKED_INT_2'	=> ( $cash['cash_interval'] == '2' ) ? ' checked="checked"' : '',
 				
 				'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
 				'S_CASH_ACTION'		=> append_sid('admin_cash.php'),
@@ -172,11 +132,11 @@ else
 		
 		case 'cash_create':
 		
-			$cash_name		= ( isset($HTTP_POST_VARS['cash_name']) )		? trim($HTTP_POST_VARS['cash_name']) : '';
-			$cash_amount	= ( isset($HTTP_POST_VARS['cash_amount']) )		? trim($HTTP_POST_VARS['cash_amount']) : '';
-			$cash_type		= ( isset($HTTP_POST_VARS['cash_type']) )		? intval($HTTP_POST_VARS['cash_type']) : '';
-			$cash_interval	= ( isset($HTTP_POST_VARS['cash_interval']) )	? intval($HTTP_POST_VARS['cash_interval']) : '';
-			
+			$cash_name		= request('cash_name', true);
+			$cash_type		= request('cash_type');
+			$cash_amount	= request('cash_amount', true);
+			$cash_interval	= request('cash_interval');
+		
 			$error = ''; 
 			$error_msg = '';
 			
@@ -196,27 +156,28 @@ else
 			{
 				message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 			}
-
-			$sql = 'INSERT INTO ' . CASH . " (cash_name, cash_type, cash_amount, cash_interval)
-				VALUES ('" . str_replace("\'", "''", $cash_name) . "', $cash_type, '" . str_replace("\'", "''", $cash_amount) . "', $cash_interval)";
-			if ( !$result = $db->sql_query($sql) )
+			else
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				$sql = 'INSERT INTO ' . CASH . " (cash_name, cash_type, cash_amount, cash_interval) VALUES ('" . str_replace("\'", "''", $cash_name) . "', $cash_type, '" . str_replace("\'", "''", $cash_amount) . "', $cash_interval)";
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_add', $cash_name);
+	
+				$message = $lang['create_cash'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
 			}
-			
-			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_add', $cash_name);
-
-			$message = $lang['create_cash'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
 
 			break;
 		
 		case 'cash_update':
 		
-			$cash_name		= ( isset($HTTP_POST_VARS['cash_name']) )		? trim($HTTP_POST_VARS['cash_name']) : '';
-			$cash_amount	= ( isset($HTTP_POST_VARS['cash_amount']) )		? trim($HTTP_POST_VARS['cash_amount']) : '';
-			$cash_type		= ( isset($HTTP_POST_VARS['cash_type']) )		? intval($HTTP_POST_VARS['cash_type']) : '';
-			$cash_interval	= ( isset($HTTP_POST_VARS['cash_interval']) )	? intval($HTTP_POST_VARS['cash_interval']) : '';
+			$cash_name		= request('cash_name', true);
+			$cash_type		= request('cash_type');
+			$cash_amount	= request('cash_amount', true);
+			$cash_interval	= request('cash_interval');
 			
 			$error = ''; 
 			$error_msg = '';
@@ -237,29 +198,31 @@ else
 			{
 				message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 			}
-			
-			$sql = "UPDATE " . CASH . " SET
-						cash_name		= '" . str_replace("\'", "''", $cash_name) . "',
-						cash_type		= $cash_type,
-						cash_amount		= '" . str_replace("\'", "''", $cash_amount) . "',
-						cash_interval	= $cash_interval
-					WHERE cash_id = " . $cash_id;
-			if (!$db->sql_query($sql))
+			else
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				$sql = "UPDATE " . CASH . " SET
+							cash_name		= '" . str_replace("\'", "''", $cash_name) . "',
+							cash_type		= $cash_type,
+							cash_amount		= '" . str_replace("\'", "''", $cash_amount) . "',
+							cash_interval	= $cash_interval
+						WHERE cash_id = " . $cash_id;
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_edit');
+				
+				$message = $lang['update_cash'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
 			}
-			
-			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_edit');
-			
-			$message = $lang['update_cash'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
 
 			break;
 			
 		case 'cash_user_add':
 		case 'cash_user_edit':
 
-			$template->set_filenames(array('body' => './../admin/style/acp_cash.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('cash_user_edit', array());
 			
 			if ( $mode == 'cash_user_edit' )
@@ -269,7 +232,7 @@ else
 			}
 			else
 			{
-				$cash_user = array (
+				$cash_user = array(
 					'user_id'		=> intval($HTTP_POST_VARS['user_id']),
 					'user_amount'	=> '',
 					'user_month'	=> date("m", time()),
@@ -279,8 +242,7 @@ else
 				$new_mode = 'cash_user_create';
 			}
 			
-			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-			$s_hidden_fields .= '<input type="hidden" name="' . POST_CASH_USER_URL . '" value="' . $cash_user_id . '" />';
+			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CASH_USER_URL . '" value="' . $cash_user_id . '" />';
 
 			$template->assign_vars(array(
 				'L_CASH_HEAD'			=> $lang['cash_head'],
@@ -291,26 +253,22 @@ else
 				'L_CASH_USER_AMOUNT'	=> $lang['cash_amount'],
 				'L_CASH_USER_MONTH'		=> $lang['cash_user_month'],
 				'L_CASH_USER_INTERVAL'	=> $lang['cash_interval'],
+				'L_INTAVAL_M'			=> $lang['cash_user_interval_m'],
+				'L_INTAVAL_O'			=> $lang['cash_user_interval_o'],
 				
-				'L_INTAVAL_M'	=> $lang['cash_user_interval_m'],
-				'L_INTAVAL_O'	=> $lang['cash_user_interval_o'],
+				'L_NO'					=> $lang['common_no'],
+				'L_YES'					=> $lang['common_yes'],
+				'L_RESET'				=> $lang['common_reset'],
+				'L_SUBMIT'				=> $lang['common_submit'],
 				
-				'L_SUBMIT'	=> $lang['common_submit'],
-				'L_RESET'	=> $lang['common_reset'],
-				'L_YES'		=> $lang['common_yes'],
-				'L_NO'		=> $lang['common_no'],
-				
-				
-				'CASH_AMOUNT'	=> $cash_user['user_amount'],
-				
-				'S_MONTH'		=> _select_date('monthm', 'user_month', $cash_user['user_month']),
-				
+				'CASH_AMOUNT'			=> $cash_user['user_amount'],
+				'S_MONTH'				=> select_date('monthm', 'user_month', $cash_user['user_month']),
 				'S_CHECKED_INTAVAL_M'	=> ( $cash_user['user_interval'] == '0' ) ? ' checked="checked"' : '',
 				'S_CHECKED_INTAVAL_O'	=> ( $cash_user['user_interval'] == '1' ) ? ' checked="checked"' : '',
 				
-				'S_CASH_USER'		=> select_box('user', 'select', 'user_id', 'username', $cash_user['user_id']),
-				'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
-				'S_CASH_ACTION'		=> append_sid('admin_cash.php'),
+				'S_CASH_USER'			=> select_box('user', 'select', 'user_id', 'username', $cash_user['user_id']),
+				'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+				'S_CASH_ACTION'			=> append_sid('admin_cash.php'),
 			));
 		
 			$template->pparse('body');
@@ -319,76 +277,60 @@ else
 			
 		case 'cash_user_create':
 		
-			$user_id		= ( isset($HTTP_POST_VARS['user_id']) )			? trim($HTTP_POST_VARS['user_id']) : '';
-			$user_amount	= ( isset($HTTP_POST_VARS['user_amount']) )		? trim($HTTP_POST_VARS['user_amount']) : '';
-			$user_month		= ( isset($HTTP_POST_VARS['user_month']) )		? implode(', ', $HTTP_POST_VARS['user_month']) : '';
-			$user_interval	= ( isset($HTTP_POST_VARS['user_interval']) )	? intval($HTTP_POST_VARS['user_interval']) : '0';
-			
-			$error = ''; 
-			$error_msg = '';
-			
+			$user_id		= request('user_id');
+			$user_amount	= request('user_amount', true);
+			$user_month		= ( isset($HTTP_POST_VARS['user_month']) ) ? implode(', ', $HTTP_POST_VARS['user_month']) : '';
+			$user_interval	= request('user_interval');
+		
 			if ( !$user_amount )
 			{
-				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_amount'];
+				message_die(GENERAL_ERROR, $lang['msg_select_amount'] . $lang['back'], '');
 			}
-			
-			if ( $error )
+			else
 			{
-				message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
+				$sql = 'INSERT INTO ' . CASH_USERS . " (user_id, user_amount, user_month, user_interval) VALUES ($user_id, '" . str_replace("\'", "''", $user_amount) . "', '$user_month', $user_interval)";
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_user_add', $user_id);
+	
+				$message = $lang['create_cash_user'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
 			}
-			
-
-			$sql = 'INSERT INTO ' . CASH_USERS . " (user_id, user_amount, user_month, user_interval)
-				VALUES ($user_id, '" . str_replace("\'", "''", $user_amount) . "', '$user_month', $user_interval)";
-			if ( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_user_add');
-
-			$message = $lang['create_cash_user'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
 
 			break;
 		
 		case 'cash_user_update':
 		
-			$user_id		= ( isset($HTTP_POST_VARS['user_id']) )			? trim($HTTP_POST_VARS['user_id']) : '';
-			$user_amount	= ( isset($HTTP_POST_VARS['user_amount']) )		? trim($HTTP_POST_VARS['user_amount']) : '';
-			$user_month		= ( isset($HTTP_POST_VARS['user_month']) )		? implode(', ', $HTTP_POST_VARS['user_month']) : '';
-			$user_interval	= ( isset($HTTP_POST_VARS['user_interval']) )	? intval($HTTP_POST_VARS['user_interval']) : '0';
-			
-			$error = ''; 
-			$error_msg = '';
+			$user_id		= request('user_id');
+			$user_amount	= request('user_amount', true);
+			$user_month		= ( isset($HTTP_POST_VARS['user_month']) ) ? implode(', ', $HTTP_POST_VARS['user_month']) : '';
+			$user_interval	= request('user_interval');
 			
 			if ( !$user_amount )
 			{
-				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_amount'];
+				message_die(GENERAL_ERROR, $lang['msg_select_amount'] . $lang['back'], '');
 			}
-			
-			if ( $error )
+			else
 			{
-				message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
+				$sql = "UPDATE " . CASH_USERS . " SET
+							user_id			= $user_id,
+							user_amount		= '" . str_replace("\'", "''", $user_amount) . "',
+							user_month		= '$user_month',
+							user_interval	= $user_interval
+						WHERE cash_user_id = " . $cash_user_id;
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_user_edit', $user_id);
+				
+				$message = $lang['update_cash_user'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
 			}
-			
-			$sql = "UPDATE " . CASH_USERS . " SET
-						user_id			= $user_id,
-						user_amount		= '" . str_replace("\'", "''", $user_amount) . "',
-						user_month		= '$user_month',
-						user_interval	= $user_interval
-					WHERE cash_user_id = " . $cash_user_id;
-			if (!$db->sql_query($sql))
-			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_user_edit');
-			
-			$message = $lang['update_cash_user'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
 
 			break;
 		
@@ -408,16 +350,15 @@ else
 			
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_user_delete');
 				
-				$message = $lang['delete_cash_user'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				$message = $lang['delete_cash_user'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			
 			}
 			else if ( $cash_user_id && !$confirm )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="cash_user_delete" />';
-				$hidden_fields .= '<input type="hidden" name="' . POST_CASH_USER_URL . '" value="' . $cash_user_id . '" />';
+				$hidden_fields = '<input type="hidden" name="mode" value="cash_user_delete" /><input type="hidden" name="' . POST_CASH_USER_URL . '" value="' . $cash_user_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -441,7 +382,7 @@ else
 			
 		case 'bankdata_edit':
 
-			$template->set_filenames(array('body' => './../admin/style/acp_cash.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('cash_bankdata', array());
 			
 			$sql = 'SELECT * FROM ' . CASH_BANK;
@@ -451,13 +392,12 @@ else
 			}
 			$cash_bankdata = $db->sql_fetchrow($result);
 			
-			$s_hidden_fields = '<input type="hidden" name="mode" value="bankdata_update" />';
-			$s_hidden_fields .= '<input type="hidden" name="' . POST_CASH_USER_URL . '" value="' . $cash_user_id . '" />';
+			$s_hidden_fields = '<input type="hidden" name="mode" value="bankdata_update" /><input type="hidden" name="' . POST_CASH_USER_URL . '" value="' . $cash_user_id . '" />';
 
 			$template->assign_vars(array(
-				'L_CASH_HEAD'			=> $lang['cash_head'],
-				'L_CASH_BD'				=> $lang['cash_bankdata'],
-				'L_REQUIRED'			=> $lang['required'],
+				'L_CASH_HEAD'		=> $lang['cash_head'],
+				'L_CASH_BD'			=> $lang['cash_bankdata'],
+				'L_REQUIRED'		=> $lang['required'],
 			
 				'L_BD_NAME'			=> $lang['cash_bd_name'],
 				'L_BD_BANK'			=> $lang['cash_bd_bank'],
@@ -471,10 +411,9 @@ else
 				'BD_NUMBER'			=> $cash_bankdata['bankdata_number'],
 				'BD_REASON'			=> $cash_bankdata['bankdata_reason'],
 				
+				'L_RESET'			=> $lang['common_reset'],
+				'L_SUBMIT'			=> $lang['common_submit'],
 				
-				'L_SUBMIT'	=> $lang['common_submit'],
-				'L_RESET'	=> $lang['common_reset'],
-
 				'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
 				'S_CASH_ACTION'		=> append_sid('admin_cash.php'),
 			));
@@ -484,12 +423,12 @@ else
 			break;
 			
 		case 'bankdata_update':
-		
-			$bankdata_name		= ( isset($HTTP_POST_VARS['bd_name']) )	? trim($HTTP_POST_VARS['bd_name']) : '';
-			$bankdata_bank		= ( isset($HTTP_POST_VARS['bd_bank']) )	? trim($HTTP_POST_VARS['bd_bank']) : '';
-			$bankdata_blz		= ( isset($HTTP_POST_VARS['bd_blz']) )	? trim($HTTP_POST_VARS['bd_blz']) : '';
-			$bankdata_number	= ( isset($HTTP_POST_VARS['bd_number']) )	? trim($HTTP_POST_VARS['bd_number']) : '';
-			$bankdata_reason	= ( isset($HTTP_POST_VARS['bd_reason']) )	? trim($HTTP_POST_VARS['bd_reason']) : '';
+			
+			$bankdata_name		= request('bd_name', true);
+			$bankdata_bank		= request('bd_bank', true);
+			$bankdata_blz		= request('bd_blz', true);
+			$bankdata_number	= request('bd_number', true);
+			$bankdata_reason	= request('bd_reason', true);
 			
 			$error = ''; 
 			$error_msg = '';
@@ -528,37 +467,38 @@ else
 			{
 				message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
 			}
-			
-			$sql = 'SELECT * FROM ' . CASH_BANK;
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			if ( $db->sql_numrows($result) )
-			{			
-				$sql = "UPDATE " . CASH_BANK . " SET
-							bankdata_name	= '" . str_replace("\'", "''", $bankdata_name) . "',
-							bankdata_bank	= '" . str_replace("\'", "''", $bankdata_bank) . "',
-							bankdata_blz	= '" . str_replace("\'", "''", $bankdata_blz) . "',
-							bankdata_number	= '" . str_replace("\'", "''", $bankdata_number) . "',
-							bankdata_reason = '" . str_replace("\'", "''", $bankdata_reason) . "'";
-			}
 			else
-			{			
-				$sql = 'INSERT INTO ' . CASH_BANK . " (bankdata_name, bankdata_bank, bankdata_blz, bankdata_number, bankdata_reason)
-					VALUES ('" . str_replace("\'", "''", $bankdata_name) . "', '" . str_replace("\'", "''", $bankdata_bank) . "', '" . str_replace("\'", "''", $bankdata_blz) . "', '" . str_replace("\'", "''", $bankdata_number) . "', '" . str_replace("\'", "''", $bankdata_reason) . "')";
+			{						
+				$sql = 'SELECT * FROM ' . CASH_BANK;
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				if ( $db->sql_numrows($result) )
+				{			
+					$sql = "UPDATE " . CASH_BANK . " SET
+								bankdata_name	= '" . str_replace("\'", "''", $bankdata_name) . "',
+								bankdata_bank	= '" . str_replace("\'", "''", $bankdata_bank) . "',
+								bankdata_blz	= '" . str_replace("\'", "''", $bankdata_blz) . "',
+								bankdata_number	= '" . str_replace("\'", "''", $bankdata_number) . "',
+								bankdata_reason = '" . str_replace("\'", "''", $bankdata_reason) . "'";
+				}
+				else
+				{			
+					$sql = 'INSERT INTO ' . CASH_BANK . " (bankdata_name, bankdata_bank, bankdata_blz, bankdata_number, bankdata_reason) VALUES ('" . str_replace("\'", "''", $bankdata_name) . "', '" . str_replace("\'", "''", $bankdata_bank) . "', '" . str_replace("\'", "''", $bankdata_blz) . "', '" . str_replace("\'", "''", $bankdata_number) . "', '" . str_replace("\'", "''", $bankdata_reason) . "')";
+				}
+				
+				if (!$db->sql_query($sql))
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_bankdata');
+				
+				$message = $lang['update_cash_bank'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				message_die(GENERAL_MESSAGE, $message);
 			}
-			
-			if (!$db->sql_query($sql))
-			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_bankdata');
-			
-			$message = $lang['update_cash_bank'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
 
 			break;
 			
@@ -576,26 +516,25 @@ else
 			
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_bank_delete');
 				
-				$message = $lang['delete_cash_bank'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				$message = $lang['delete_cash_bank'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			
 			}
 			else if ( !$confirm )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="bankdata_clear" />';
-				$hidden_fields .= '<input type="hidden" name="' . POST_CASH_URL . '" value="' . $cash_id . '" />';
+				$hidden_fields = '<input type="hidden" name="mode" value="bankdata_clear" /><input type="hidden" name="' . POST_CASH_URL . '" value="' . $cash_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
 					'MESSAGE_TEXT'		=> $lang['confirm_delete_cash_bank'],
 	
-					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
-	
-					'S_CONFIRM_ACTION'	=> append_sid('admin_cash.php'),
+					'L_YES'				=> $lang['common_yes'],
+					
 					'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					'S_CONFIRM_ACTION'	=> append_sid('admin_cash.php'),					
 				));
 			}
 			else
@@ -623,26 +562,25 @@ else
 			
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'acp_cash_delete', $cash['cash_name']);
 				
-				$message = $lang['delete_cash'] . '<br><br>' . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+				$message = $lang['delete_cash'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 			
 			}
 			else if ( $cash_id && !$confirm )
 			{
-				$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="cash_delete" />';
-				$hidden_fields .= '<input type="hidden" name="' . POST_CASH_URL . '" value="' . $cash_id . '" />';
+				$hidden_fields = '<input type="hidden" name="mode" value="cash_delete" /><input type="hidden" name="' . POST_CASH_URL . '" value="' . $cash_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
 					'MESSAGE_TEXT'		=> $lang['confirm_delete_cash'],
 	
-					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
-	
-					'S_CONFIRM_ACTION'	=> append_sid('admin_cash.php'),
-					'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					'L_YES'				=> $lang['common_yes'],
+					
+					'S_HIDDEN_FIELDS'	=> $hidden_fields,	
+					'S_CONFIRM_ACTION'	=> append_sid('admin_cash.php'),					
 				));
 			}
 			else
@@ -656,7 +594,7 @@ else
 		
 		default:
 			
-			$template->set_filenames(array('body' => './../admin/style/acp_cash.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('display', array());
 					
 			$sql = 'SELECT * FROM ' . CASH;
@@ -687,6 +625,7 @@ else
 			}
 			
 			$total_amount = '';
+			$total_amount_users = '';
 			
 			if ( !$cash_data )
 			{
@@ -697,9 +636,8 @@ else
 			{
 				for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($cash_data)); $i++ )
 				{
-					$class = ($i % 2) ? 'row_class1' : 'row_class2';
-					
-					$cash_id	= $cash_data[$i]['cash_id'];
+					$class		= ( $i % 2 ) ? 'row_class1' : 'row_class2';
+					$cash_id	= $cash_data[$i]['cash_id'];					
 					
 					switch ( $cash_data[$i]['cash_interval'] )
 					{
@@ -719,7 +657,6 @@ else
 					
 					$template->assign_block_vars('display.cash_row', array(
 						'CLASS' 		=> $class,
-						
 						'CASH_NAME'		=> $cash_data[$i]['cash_name'],
 						'CASH_AMOUNT'	=> $cash_data[$i]['cash_amount'],
 						'CASH_DATE'		=> $cash_interval,
@@ -750,8 +687,6 @@ else
 			}
 			else
 			{
-				$total_users_amount = '';
-				
 				for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($cash_users_data)); $i++ )
 				{
 					$class = ($i % 2) ? 'row_class1' : 'row_class2';
@@ -763,11 +698,11 @@ else
 					
 					if ( $month_cur == $month_user || in_array($month_cur, $month_user) )
 					{
-						$total_users_amount += $cash_users_data[$i]['user_amount'];
+						$total_amount_users += $cash_users_data[$i]['user_amount'];
 					}
 					else if ( !$cash_users_data[$i]['user_interval'] && in_array($month_cur, $month_user) )
 					{
-						$total_users_amount += $cash_users_data[$i]['user_amount'];
+						$total_amount_users += $cash_users_data[$i]['user_amount'];
 					}
 					
 					$user_interval	= ( $cash_users_data[$i]['user_interval'] ) ? $lang['cash_user_interval_o'] : $lang['cash_user_interval_m'];
@@ -780,8 +715,8 @@ else
 						'CASH_USER_AMOUNT'		=> $cash_users_data[$i]['user_amount'],
 						'CASH_USER_INTERVAL'	=> $user_interval,
 						
-						'U_EDIT'		=> append_sid('admin_cash.php?mode=cash_user_edit&amp;' . POST_CASH_USER_URL . '=' . $cash_user_id),
-						'U_DELETE'		=> append_sid('admin_cash.php?mode=cash_user_delete&amp;' . POST_CASH_USER_URL . '=' . $cash_user_id)
+						'U_EDIT'				=> append_sid('admin_cash.php?mode=cash_user_edit&amp;' . POST_CASH_USER_URL . '=' . $cash_user_id),
+						'U_DELETE'				=> append_sid('admin_cash.php?mode=cash_user_delete&amp;' . POST_CASH_USER_URL . '=' . $cash_user_id)
 					));
 				}
 			}
@@ -809,7 +744,7 @@ else
 				'L_DELETE'			=> $lang['delete'],
 				
 				'TOTAL_CASH'		=> $total_amount,
-				'USER_CASH'			=> $total_users_amount,
+				'USER_CASH'			=> $total_amount_users,
 				
 				'S_CASH_USER_ADD'	=> select_box('user', 'selectsmall', 'user_id', 'username'),
 				
@@ -821,6 +756,8 @@ else
 			
 			break;
 	}
+	
 	include('./page_footer_admin.php');
 }
+
 ?>

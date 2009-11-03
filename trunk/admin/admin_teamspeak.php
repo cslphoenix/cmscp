@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -44,7 +45,7 @@ else
 	include($root_path . 'includes/class_cyts.php');
 	include($root_path . 'includes/functions_admin.php');
 	
-	if (!$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -68,8 +69,7 @@ else
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
@@ -94,7 +94,7 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'add':
 			case 'edit':
@@ -125,7 +125,7 @@ else
 					$new_mode = 'addteamspeak';
 				}
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_teamspeak.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_teamspeak.tpl'));
 				$template->assign_block_vars('teamspeak_edit', array());
 				
 				if ( ( $ts_host || $ts_db || $ts_user || $ts_pass || $ts_prefix ) && $userdata['user_level'] == ADMIN )
@@ -255,7 +255,7 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_add');
 	
-				$message = $lang['create_teamspeak'] . '<br><br>' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
+				$message = $lang['create_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -324,14 +324,14 @@ else
 				
 				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_edit');
 				
-				$message = $lang['update_teamspeak'] . '<br><br>' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
+				$message = $lang['update_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
 				
 			case 'member':
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_teamspeak.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_teamspeak.tpl'));
 				$template->assign_block_vars('teamspeak_member', array());
 				
 				if ( $ts_host || $ts_db || $ts_user || $ts_pass || $ts_prefix )
@@ -417,13 +417,13 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_delete', $teamspeak['teamspeak_name']);
 					
-					$message = $lang['delete_teamspeak'] . '<br><br>' . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
+					$message = $lang['delete_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $teamspeak_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak_id . '" />';
 		
@@ -462,7 +462,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_teamspeak.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_teamspeak.tpl'));
 	$template->assign_block_vars('display', array());
 	
 	if ( ( $ts_host || $ts_db || $ts_user || $ts_pass || $ts_prefix ) && $userdata['user_level'] == ADMIN )
@@ -487,7 +487,7 @@ else
 	
 	while ( $teamspeak_data = $db->sql_fetchrow($result) )
 	{
-		$class = ($color % 2) ? 'row_class1' : 'row_class2';
+		$class = ( $color % 2 ) ? 'row_class1' : 'row_class2';
 		$color++;
 		
 		$template->assign_block_vars('display.ts_data', array(

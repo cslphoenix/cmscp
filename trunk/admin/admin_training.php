@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -44,7 +45,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if (!$userauth['auth_training'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_training'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -54,7 +55,6 @@ else
 		redirect('admin/' . append_sid('admin_training.php', true));
 	}
 	
-	//	ID Abfrage
 	if ( isset($HTTP_POST_VARS[POST_TRAINING_URL]) || isset($HTTP_GET_VARS[POST_TRAINING_URL]) )
 	{
 		$training_id = ( isset($HTTP_POST_VARS[POST_TRAINING_URL]) ) ? intval($HTTP_POST_VARS[POST_TRAINING_URL]) : intval($HTTP_GET_VARS[POST_TRAINING_URL]);
@@ -67,17 +67,15 @@ else
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
-	//	mode Abfrage
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
+		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
 	}
 	else
 	{
-		if (isset($HTTP_POST_VARS['add']))
+		if (isset($HTTP_POST_VARS['training_add']))
 		{
-			$mode = 'add';
+			$mode = 'training_add';
 		}
 		else
 		{
@@ -89,33 +87,22 @@ else
 	
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
-			case 'add':
-			case 'edit':
+			case 'training_add':
+			case 'training_edit':
 			
-				if ( $mode == 'edit' )
+				if ( $mode == 'training_edit' )
 				{
-					//	Infos der Spiele
-					$sql = 'SELECT * FROM ' . TRAINING . " WHERE training_id = $training_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message_die(GENERAL_ERROR, 'Error getting training information', '', __LINE__, __FILE__, $sql);
-					}
-			
-					if ( !($training = $db->sql_fetchrow($result)) )
-					{
-						message_die(GENERAL_MESSAGE, $lang['training_not_exist']);
-					}
-			
-					$new_mode = 'edittraining';
+					$training	= get_data('training', $training_id, 0);
+					$new_mode	= 'training_update';
 				}
-				else if ( $mode == 'add' )
+				else
 				{
-					$training_vs	= (isset($HTTP_POST_VARS['training_vs'])) ? trim($HTTP_POST_VARS['training_vs']) : trim($HTTP_GET_VARS['vs']);
-					$team_id		= (isset($HTTP_POST_VARS['team_id'])) ? intval($HTTP_POST_VARS['team_id']) : '';
-					$match_id		= (isset($HTTP_POST_VARS[POST_MATCH_URL])) ? intval($HTTP_POST_VARS[POST_MATCH_URL]) : '';
-					//	Start Werte setzen
+					$training_vs	= ( isset($HTTP_POST_VARS['training_vs']) )		? trim($HTTP_POST_VARS['training_vs']) : trim($HTTP_GET_VARS['vs']);
+					$team_id		= ( isset($HTTP_POST_VARS['team_id']) )			? intval($HTTP_POST_VARS['team_id']) : '';
+					$match_id		= ( isset($HTTP_POST_VARS[POST_MATCH_URL]) )	? intval($HTTP_POST_VARS[POST_MATCH_URL]) : '';
+					
 					$training = array (
 						'training_vs'		=> $training_vs,
 						'team_id'			=> $team_id,
@@ -126,18 +113,15 @@ else
 						'training_duration'	=> '',
 					);
 
-					$new_mode = 'addtraining';
+					$new_mode = 'training_create';
 				}
 				
-				//	Template definieren
-				$template->set_filenames(array('body' => './../admin/style/acp_training.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_training.tpl'));
 				$template->assign_block_vars('training_edit', array());
 				
-				//	Unsichtbare Felder für andere Infos
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
 				$s_hidden_fields .= '<input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $training_id . '" />';
 				
-				//	Variablen zur Ausgabe
 				$template->assign_vars(array(
 					'L_TRAINING_HEAD'		=> $lang['training_head'],
 					'L_TRAINING_NEW_EDIT'	=> ($mode == 'add') ? $lang['training_add'] : $lang['training_edit'],
@@ -159,15 +143,15 @@ else
 					'TRAINING_MAPS'			=> $training['training_maps'],
 					'TRAINING_TEXT'			=> $training['training_text'],
 					
-					'S_DAY'					=> _select_date('day',		'day',		date('d', $training['training_start'])),
-					'S_MONTH'				=> _select_date('month',	'month',	date('m', $training['training_start'])),
-					'S_YEAR'				=> _select_date('year',		'year',		date('Y', $training['training_start'])),
-					'S_HOUR'				=> _select_date('hour',		'hour',		date('H', $training['training_start'])),
-					'S_MIN'					=> _select_date('min',		'min',		date('i', $training['training_start'])),
+					'S_DAY'					=> select_date('day',		'day',		date('d', $training['training_start'])),
+					'S_MONTH'				=> select_date('month',	'month',	date('m', $training['training_start'])),
+					'S_YEAR'				=> select_date('year',		'year',		date('Y', $training['training_start'])),
+					'S_HOUR'				=> select_date('hour',		'hour',		date('H', $training['training_start'])),
+					'S_MIN'					=> select_date('min',		'min',		date('i', $training['training_start'])),
 					
-					'S_DURATION'			=> _select_date('duration', 'dmin',	($training['training_duration'] - $training['training_start']) / 60),
+					'S_DURATION'			=> select_date('duration', 'dmin',	($training['training_duration'] - $training['training_start']) / 60),
 					
-					'S_TEAMS'				=> _select_team($training['team_id'], 0, 'post'),
+					'S_TEAMS'				=> select_box('team', 'select', 'team_id', 'team_name', $team_id),
 					'S_MATCH'				=> _select_match($training['match_id'], '', 'post'),
 				
 					
@@ -239,7 +223,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 	
-				$message = $lang['training_create'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
+				$message = $lang['training_create'] . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 
 				break;
@@ -301,7 +285,7 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('subnavi_trains');
 				
-				$message = $lang['training_update'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
+				$message = $lang['training_update'] . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
 				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -334,13 +318,13 @@ else
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('subnavi_trains');
 					
-					$message = $lang['team_delete'] . '<br><br>' . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
+					$message = $lang['team_delete'] . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $training_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $training_id . '" />';
 		
@@ -377,7 +361,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => './../admin/style/acp_training.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_training.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
@@ -390,7 +374,7 @@ else
 		'L_SETTING'				=> $lang['setting'],
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['delete'],
-		'S_TEAMS'				=> _select_team('', 0, 'postselect'),
+		'S_TEAMS'				=> select_box('team', 'selectsmall', 'team_id', 'team_name', 0),
 		'S_TEAM_ACTION'			=> append_sid('admin_training.php'),
 	));
 	
@@ -398,8 +382,10 @@ else
 			FROM ' . TRAINING . ' tr, ' . TEAMS . ' t, ' . GAMES . ' g
 			WHERE tr.team_id = t.team_id AND t.team_game = g.game_id AND tr.training_start > ' . time() . '
 			ORDER BY training_start';
-	$result = $db->sql_query($sql);
-	
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}	
 	$training_entry_n = $db->sql_fetchrowset($result);
 	
 	if (!$training_entry_n)

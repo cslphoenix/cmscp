@@ -40,7 +40,7 @@ else
 	$root_path = './../';
 	require('./pagestart.php');
 	
-	if (!$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
 	{
 		message_die(GENERAL_ERROR, $lang['auth_fail']);
 	}
@@ -194,7 +194,7 @@ else
 		// Output the selection table if no forum id was
 		// specified
 		//
-		$template->set_filenames(array('body' => './../admin/style/acp_auth.tpl'));
+		$template->set_filenames(array('body' => 'style/acp_auth.tpl'));
 		$template->assign_block_vars('display', array());
 //		$template->set_filenames(array(
 //			'body' => './../admin/style/auth_select_body.tpl')
@@ -224,7 +224,7 @@ else
 		// Output the authorisation details if an id was
 		// specified
 		//
-		$template->set_filenames(array('body' => './../admin/style/acp_auth.tpl'));
+		$template->set_filenames(array('body' => 'style/acp_auth.tpl'));
 		$template->assign_block_vars('auth_forum', array());
 //		$template->set_filenames(array(
 //			'body' => './../admin/style/auth_forum_body.tpl')
@@ -308,7 +308,7 @@ else
 				$s_column_span++;
 			}
 		}
-	
+		
 		$adv_mode = ( empty($adv) ) ? '1' : '0';
 		$switch_mode = append_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id . "&adv=". $adv_mode);
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];

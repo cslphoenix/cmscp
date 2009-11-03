@@ -40,7 +40,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="event_title" type="text" value=""></td>
-	<td><input class="button" type="submit" name="event_add" value="{L_EVENT_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="event_add"><input class="button" type="submit" value="{L_EVENT_ADD}" /></td>
 </tr>
 </table>
 </form>

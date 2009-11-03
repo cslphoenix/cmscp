@@ -1,26 +1,27 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
 if ( !empty($setmodules) )
 {
@@ -53,42 +54,19 @@ else
 		redirect('admin/' . append_sid('admin_games.php', true));
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_GAMES_URL]) || isset($HTTP_GET_VARS[POST_GAMES_URL]) )
-	{
-		$game_id = ( isset($HTTP_POST_VARS[POST_GAMES_URL]) ) ? intval($HTTP_POST_VARS[POST_GAMES_URL]) : intval($HTTP_GET_VARS[POST_GAMES_URL]);
-	}
-	else
-	{
-		$game_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-		$mode = htmlspecialchars($mode);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['game_add']) || isset($HTTP_GET_VARS['game_add']) )
-		{
-			$mode = 'game_add';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
+	$mode		= request('mode', true);
+	$game_id	= request(POST_GAMES_URL);
 	
 	$show_index = '';
 		
 	if ( !empty($mode) )
 	{
-		switch ($mode)
+		switch ( $mode )
 		{
 			case 'game_add':
 			case 'game_edit':
 				
-				$template->set_filenames(array('body' => './../admin/style/acp_games.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_games.tpl'));
 				$template->assign_block_vars('games_edit', array());
 				
 				if ( $mode == 'game_edit' )
@@ -99,7 +77,7 @@ else
 				else
 				{
 					$game = array (
-						'game_name'		=> trim($HTTP_POST_VARS['game_name']),
+						'game_name'		=> request('game_name', true),
 						'game_image'	=> '',
 						'game_size'		=> '16',
 						'game_order'	=> ''
@@ -117,7 +95,7 @@ else
 				
 				foreach ($files as $file)
 				{
-					if ($file != '.' && $file != '..' && $file != 'index.htm')
+					if ( $file != '.' && $file != '..' && $file != 'index.htm' && $file != '.svn' )
 					{
 						$selected = ( $file == $game['game_image'] ) ? ' selected="selected"' : '';
 						$game_list .= '<option value="' . $file . '" ' . $selected . '>' . $file . '&nbsp;</option>';
@@ -125,23 +103,22 @@ else
 				}
 				$game_list .= '</select>';
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_GAMES_URL . '" value="' . $game_id . '" />';
+				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_GAMES_URL . '" value="' . $game_id . '" />';
 	
 				$template->assign_vars(array(
 					'L_GAME_HEAD'			=> $lang['game_head'],
-					'L_GAME_NEW_EDIT'		=> ($mode == 'game_add') ? $lang['game_add'] : $lang['game_edit'],
+					'L_GAME_NEW_EDIT'		=> ( $mode == 'game_add' ) ? $lang['game_add'] : $lang['game_edit'],
 					'L_REQUIRED'			=> $lang['required'],
 					
 					'L_GAME_NAME'			=> $lang['game_title'],
 					'L_GAME_IMAGE'			=> $lang['game_image'],
 					'L_GAME_SIZE'			=> $lang['game_size'],
 					
-					'L_SUBMIT'				=> $lang['common_submit'],
 					'L_RESET'				=> $lang['common_reset'],
+					'L_SUBMIT'				=> $lang['common_submit'],
 					
 					'GAME_TITLE'			=> $game['game_name'],
-					'GAME_IMAGE'			=> ($mode == 'game_add') ? $root_path . $images['icon_acp_spacer'] : $root_path . $settings['path_game'] . '/' . $game['game_image'],
+					'GAME_IMAGE'			=> ( $mode == 'game_add' ) ? $root_path . $images['icon_acp_spacer'] : $root_path . $settings['path_game'] . '/' . $game['game_image'],
 					'GAME_SIZE'				=> $game['game_size'],
 					'GAMES_PATH'			=> $root_path . $settings['path_game'],
 					
@@ -156,61 +133,67 @@ else
 			
 			case 'game_create':
 				
-				$game_name	= (isset($HTTP_POST_VARS['game_name']))		? trim($HTTP_POST_VARS['game_name']) : '';
-				$game_image	= (isset($HTTP_POST_VARS['game_image']))	? trim($HTTP_POST_VARS['game_image']) : '';
-				$game_size	= (isset($HTTP_POST_VARS['game_size']))		? intval($HTTP_POST_VARS['game_size']) : '16';
+				$game_name	= request('game_name', true);
+				$game_image	= request('game_image', true);
+				$game_size	= ( isset($HTTP_POST_VARS['game_size']) ) ? intval($HTTP_POST_VARS['game_size']) : '16';
 				
 				if ( $game_name == '' )
 				{
 					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
-	
-				$sql = 'SELECT MAX(game_order) AS max_order FROM ' . GAMES;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-	
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
-				
-				$sql = 'INSERT INTO ' . GAMES . " (game_name, game_image, game_size, game_order)
-					VALUES ('" . str_replace("\'", "''", $game_name) . "', '" . str_replace("\'", "''", $game_image) . "', $game_size, $next_order)";
-				if ( !$result = $db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				else
+				{	
+					$sql = 'SELECT MAX(game_order) AS max_order FROM ' . GAMES;
+					if ( !$result = $db->sql_query($sql) )
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$row = $db->sql_fetchrow($result);
+		
+					$max_order = $row['max_order'];
+					$next_order = $max_order + 10;
+					
+					$sql = 'INSERT INTO ' . GAMES . " (game_name, game_image, game_size, game_order) VALUES ('" . str_replace("\'", "''", $game_name) . "', '" . str_replace("\'", "''", $game_image) . "', $game_size, $next_order)";
+					if ( !$result = $db->sql_query($sql) )
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_add', $game_name);
+		
+					$message = $lang['create_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
+					message_die(GENERAL_MESSAGE, $message);
 				}
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_add', $game_name);
-	
-				$message = $lang['create_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
 			
 			case 'game_update':
 			
-				$game_name	= (isset($HTTP_POST_VARS['game_name']))		? trim($HTTP_POST_VARS['game_name']) : '';
-				$game_image	= (isset($HTTP_POST_VARS['game_image']))	? trim($HTTP_POST_VARS['game_image']) : '';
-				$game_size	= (isset($HTTP_POST_VARS['game_size']))		? intval($HTTP_POST_VARS['game_size']) : '16';
+				$game_name	= request('game_name', true);
+				$game_image	= request('game_image', true);
+				$game_size	= ( isset($HTTP_POST_VARS['game_size']) ) ? intval($HTTP_POST_VARS['game_size']) : '16';
 				
 				if ( $game_name == '' )
 				{
 					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
-				
-				$sql = "UPDATE " . GAMES . " SET
-							game_name		= '" . str_replace("\'", "''", $game_name) . "',
-							game_image		= '" . str_replace("\'", "''", $game_image) . "',
-							game_size		= $game_size							
-						WHERE game_id = " . intval($HTTP_POST_VARS[POST_GAMES_URL]);
-				if ( !$result = $db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				else
+				{				
+					$sql = "UPDATE " . GAMES . " SET
+								game_name		= '" . str_replace("\'", "''", $game_name) . "',
+								game_image		= '" . str_replace("\'", "''", $game_image) . "',
+								game_size		= $game_size							
+							WHERE game_id = " . $game_id;
+					if ( !$result = $db->sql_query($sql) )
+					{
+						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_edit', $game_name);
+					
+					$message = $lang['update_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
+					message_die(GENERAL_MESSAGE, $message);
 				}
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_edit');
-				
-				$message = $lang['update_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
 	
 				break;
 			
@@ -219,11 +202,14 @@ else
 				$move = intval($HTTP_GET_VARS['move']);
 				
 				$sql = 'UPDATE ' . GAMES . " SET game_order = game_order + $move WHERE game_id = $game_id";
-				$result = $db->sql_query($sql);
+				if ( !$result = $db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 		
 				renumber_order('games', -1);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'ACP_GAME_ORDER');
+				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_order');
 				
 				$show_index = TRUE;
 				
@@ -245,26 +231,24 @@ else
 				
 					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_delete', $game['game_name']);
 					
-					$message = $lang['delete_game'] . '<br><br>' . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
+					$message = $lang['delete_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
-				
 				}
 				else if ( $game_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => './../admin/style/info_confirm.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="game_delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_GAMES_URL . '" value="' . $game_id . '" />';
+					$hidden_fields = '<input type="hidden" name="mode" value="game_delete" /><input type="hidden" name="' . POST_GAMES_URL . '" value="' . $game_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_game'],
 		
-						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
+						'L_YES'				=> $lang['common_yes'],						
 		
-						'S_CONFIRM_ACTION'	=> append_sid('admin_games.php'),
 						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'S_CONFIRM_ACTION'	=> append_sid('admin_games.php'),
 					));
 				}
 				else
@@ -290,7 +274,7 @@ else
 		}
 	}
 			
-	$template->set_filenames(array('body' => './../admin/style/acp_games.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_games.tpl'));
 	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
@@ -301,11 +285,11 @@ else
 		'L_GAME_ADD'		=> $lang['game_add'],
 		
 		'L_EDIT'			=> $lang['edit'],
-		'L_SETTINGS'		=> $lang['settings'],
 		'L_DELETE'			=> $lang['delete'],
+		'L_SETTINGS'		=> $lang['settings'],		
 		
-		'L_MOVE_UP'			=> $lang['Move_up'], 
-		'L_MOVE_DOWN'		=> $lang['Move_down'], 
+		'L_MOVE_UP'			=> $lang['move_up'], 
+		'L_MOVE_DOWN'		=> $lang['move_down'], 
 		
 		'S_GAME_ACTION'		=> append_sid('admin_games.php'),
 	));
@@ -327,7 +311,7 @@ else
 	$color = '';
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$class = ($color % 2) ? 'row_class1' : 'row_class2';
+		$class = ( $color % 2 ) ? 'row_class1' : 'row_class2';
 		$color++;
 		
 		$game_id	= $row['game_id'];
@@ -356,4 +340,5 @@ else
 
 	include('./page_footer_admin.php');
 }
+
 ?>

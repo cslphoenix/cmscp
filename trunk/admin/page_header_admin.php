@@ -40,11 +40,13 @@ if ( $config['gzip_compress'] )
 	}
 }
 
-$time_reg = '([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)';
-eregi($time_reg, $config['default_dateformat'], $regs);
+$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
+preg_match($time_reg, $config['default_dateformat'], $regs);
 $config['default_timeformat'] = $regs[1];
 unset($time_reg);
 unset($regs);
+
+
 
 //
 // GET THE TIME TODAY AND YESTERDAY
