@@ -47,6 +47,7 @@ define('LOG_SEK_TRAINING',		18);
 define('LOG_SEK_USER',			19);
 
 define('LOG_SEK_CASH',			20);
+define('LOG_SEK_GALLERY',		21);
 
 define('LOG_SEK_CHANGELOG',		98);
 define('LOG_SEK_BUGTRACKER',	99);
@@ -116,6 +117,13 @@ define('AUTH_ALLOWED',		1);//	erlaubt
 define('AUTH_SPECIAL',		2);//	Special für Benutzer
 define('AUTH_DEFAULT',		3);//	Vorgabe Einstellung
 
+define('AUTH_USER',			0);//	Benutzer
+define('AUTH_TRIAL',		1);//	Trialmember
+define('AUTH_MEMBER',		2);//	Member
+define('AUTH_COLEADER',		3);//	Squadleader
+define('AUTH_LEADER',		4);//	Leader
+define('AUTH_UPLOAD',		5);//	Leader
+
 
 //	Newsletter Status
 define('NL_ADD',		0);
@@ -174,7 +182,7 @@ define('PAGE_CONTACT',		-13);
 define('PAGE_FORUM',		-14);
 define('PAGE_TEAMSPEAK',	-15);
 define('PAGE_CALENDAR',		-16);
-define('PAGE_TEAM',			-17);
+define('PAGE_TEAMS',		-17);
 define('PAGE_NEWSLETTER',	-18);
 define('PAGE_UCP',			-19);
 define('PAGE_RSS',			-20);
@@ -195,6 +203,7 @@ define('POST_FORUM_URL',		'f');
 define('POST_GAMES_URL',		'g');
 define('POST_GAMESERVER_URL',	'gs');
 define('POST_GROUPS_URL',		'g');
+define('POST_GALLERY_URL',		'g');
 define('POST_LOG_URL',			'l');
 define('POST_MATCH_URL',		'm');
 define('POST_NAVIGATION_URL',	'n');
@@ -205,7 +214,7 @@ define('POST_NEWSLETTER_URL',	'nl');
 define('POST_POST_URL',			'p');
 define('POST_PROFILE_URL',		'p');
 define('POST_RANKS_URL',		'r');
-define('POST_TEAM_URL',		't');
+define('POST_TEAMS_URL',			't');
 define('POST_TEAMSPEAK_URL',	't');
 define('POST_TOPIC_URL',		't');
 define('POST_TRAINING_URL',		'tr');
@@ -254,6 +263,10 @@ define('THEMES_NAME',				$db_prefix . 'themes_name');
 
 //	Benutzer
 define('USERS',						$db_prefix . 'users');
+
+//	Galerie
+define('GALLERY',					$db_prefix . 'gallery');
+define('GALLERY_CATEGORY',			$db_prefix . 'gallery_category');
 
 //	Gruppen
 define('GROUPS',					$db_prefix . 'groups');

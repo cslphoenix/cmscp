@@ -1,30 +1,31 @@
 <?php
 
-/***
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
-
-function _counter_update()
+function counter_update()
 {
-	global $db, $settings, $template, $userdata, $lang;
+	global $db, $lang, $settings, $template, $userdata;
 	
 	// Prüfen, ob bereits ein Counter für den  
     // heutigen Tag erstellt wurde 
@@ -36,7 +37,7 @@ function _counter_update()
 	
     // ist der Tag nocht nicht vorhanden,  
     // wird ein neuer Tagescounter erstellt 
-    if (!$db->sql_numrows($result))
+    if ( !$db->sql_numrows($result) )
 	{
 		$sql = 'INSERT INTO ' . COUNTER_COUNTER . ' SET counter_date = CURDATE()'; 
 		if ( !$result = $db->sql_query($sql) )
@@ -61,7 +62,7 @@ function _counter_update()
 	}
 		
 	// Falls nicht, wird sie gespeichert 
-    if (!$db->sql_numrows($result))
+    if ( !$db->sql_numrows($result) )
 	{
 		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date, online_start) VALUES ("' . $userdata['session_ip'] . '", NOW(), NOW())'; 
 		if ( !$result = $db->sql_query($sql) )
@@ -87,10 +88,10 @@ function _counter_update()
 	}
 }
 
-function _counter_result()
+function counter_result()
 {
-	global $db, $config, $settings, $template, $userdata, $lang;
-	
+	global $config, $db, $lang, $settings, $template, $userdata;
+
 	// User die 'heute' auf der Seite waren 
     $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()';
 	if ( !($result = $db->sql_query($sql)) )

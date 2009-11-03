@@ -12,7 +12,7 @@ function get_data($mode, $id, $type)
 {
 	global $db;
 
-	switch ($mode)
+	switch ( $mode )
 	{
 		case 'authlist':
 			$table		= AUTHLIST;
@@ -103,7 +103,7 @@ function get_data($mode, $id, $type)
 		case 'match':
 			$table		= MATCH;
 			$idfield	= 'match_id';
-		break;
+			break;
 		
 		case 'news_newscat':
 			$table		= NEWS;
@@ -127,9 +127,14 @@ function get_data($mode, $id, $type)
 			$table		= PROFILE_DATA;
 			$idfield	= 'user_id';
 			break;
+			
+		case 'training':
+			$table		= TRAINING;
+			$idfield	= 'training_id';
+			break;
 
 		default:
-			message_die(GENERAL_ERROR, "Wrong mode for data", "", __LINE__, __FILE__);
+			message_die(GENERAL_ERROR, 'Error Data Mode', '', __LINE__, __FILE__);
 			break;
 	}
 	
@@ -172,7 +177,7 @@ function renumber_order($mode, $type = '')
 {
 	global $db;
 
-	switch ($mode)
+	switch ( $mode )
 	{
 		case 'teams':
 			$table		= TEAMS;

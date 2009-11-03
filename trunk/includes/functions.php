@@ -1,58 +1,55 @@
 <?php
 
-/***
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
-
-function request_vars($var_name, $var_type = false)
+/*
+ * Idee von phpBB3
+ */
+function request($name, $type = false)
 {
 	global $HTTP_POST_VARS, $HTTP_GET_VARS;
 	
-	if ( $var_type == '1' )
+	if ( isset($HTTP_POST_VARS[$name]) || isset($HTTP_GET_VARS[$name]) )
 	{
-		if ( isset($HTTP_POST_VARS[$var_name]) || isset($HTTP_GET_VARS[$var_name]) )
+		if ( $type == '1' )
 		{
-			$var = ( isset($HTTP_POST_VARS[$var_name]) ) ? htmlspecialchars($HTTP_POST_VARS[$var_name]) : htmlspecialchars($HTTP_GET_VARS[$var_name]);
+			$var = ( isset($HTTP_POST_VARS[$name]) ) ? htmlspecialchars(trim($HTTP_POST_VARS[$name])) : htmlspecialchars(trim($HTTP_GET_VARS[$name]));
 		}
 		else
 		{
-			$var = '';
+			$var = ( isset($HTTP_POST_VARS[$name]) ) ? intval($HTTP_POST_VARS[$name]) : intval($HTTP_GET_VARS[$name]);
 		}
 	}
 	else
-	{	
-		if ( isset($HTTP_POST_VARS[$var_name]) || isset($HTTP_GET_VARS[$var_name]) )
-		{
-			$var = ( isset($HTTP_POST_VARS[$var_name]) ) ? intval($HTTP_POST_VARS[$var_name]) : intval($HTTP_GET_VARS[$var_name]);
-		}
-		else
-		{
-			$var  = '';
-		}
+	{
+		$var = '';
 	}
 	
 	return $var;
 }
 
-function _cut_string($string, $length)
+function cut_string($string, $length)
 {
 	/***
 
@@ -63,7 +60,8 @@ function _cut_string($string, $length)
 	
 	***/
 	
-	$string = ( strlen($string) < $length ) ? $string : substr($string, 0, ($length-3)) . '...';
+//	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3)) . '...';
+	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3)) . '...';
 	
 	return $string;
 }
@@ -134,7 +132,7 @@ function random_password($minlength = 7, $maxlength = 14, $uselower = true, $use
 
 function group_set_auth($user_id, $group_id)
 {
-	global $db;
+	global $db, $oCache;
 	
 	$sql = 'SELECT group_access, group_color
 				FROM ' . GROUPS . '
@@ -182,6 +180,9 @@ function group_set_auth($user_id, $group_id)
 	{
 		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
+	
+	##	Löschung des Cacheintrages
+	$oCache -> deleteCache('display_subnavi_newusers'); # neuste Benutzer
 }
 
 function group_reset_auth($user_id, $group_id)
@@ -527,7 +528,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 	echo $msg;
 }
 
-function _debuge($data)
+function debuge($data)
 {
 	print '<br>';
 	print '<pre>';
@@ -537,7 +538,7 @@ function _debuge($data)
 	exit;
 }
 
-function _debug($data)
+function debug($data)
 {
 	print '<div align="left">';
 	print '<br>';

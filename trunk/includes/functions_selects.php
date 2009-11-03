@@ -1,26 +1,39 @@
 <?php
 
-/***
+/*
+ *
+ *
+ *							___.          
+ *	  ____   _____   ______ \_ |__ ___.__.
+ *	_/ ___\ /     \ /  ___/  | __ <   |  |
+ *	\  \___|  Y Y  \\___ \   | \_\ \___  |
+ *	 \___  >__|_|  /____  >  |___  / ____|
+ *		 \/      \/     \/       \/\/     
+ *	__________.__                         .__        
+ *	\______   \  |__   ____   ____   ____ |__|__  ___
+ *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
+ *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
+ *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
+ *				   \/            \/     \/         \/ 
+ *
+ *	- Content-Management-System by Phoenix
+ *
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
+ *
+ */
 
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-
-***/
+/*
+ *	@param string $type			enthält den Titel
+ *
+ *	$type = art
+ *	$class = cssstyle
+ *	$field_id = user_id/group_id
+ *	$field_name = username/group_name
+ *	$default = startauswahl
+ *	$switch = team_join/team_fight
+ *
+ */
 
 function select_box($type, $class, $field_id, $field_name, $default = '', $switch = '')
 {
@@ -46,7 +59,6 @@ function select_box($type, $class, $field_id, $field_name, $default = '', $switc
 			$order = ' ORDER BY user_id DESC';
 			break;
 			
-			
 		default:
 			
 			message_die(GENERAL_ERROR, 'Error', '');
@@ -62,9 +74,9 @@ function select_box($type, $class, $field_id, $field_name, $default = '', $switc
 	$data = $db->sql_fetchrowset($result);
 	
 	$select = '<select class="' . $class . '" name="' . $field_id . '">';
-	$select .= '<option value="0">&raquo; ' . $lang['msg_select_' . $type] . '</option>';
+	$select .= '<option value="0">&raquo; ' . $lang['msg_select_' . $type ] . '</option>';
 	
-	foreach ( $data as $info => $value)
+	foreach ( $data as $info => $value )
 	{
 		$selected = ( $value[$field_id] == $default ) ? 'selected="selected"' : '';
 		$select .= '<option value="' . $value[$field_id] . '" ' . $selected . '>&raquo; ' . $value[$field_name] . '&nbsp;</option>';
@@ -217,7 +229,7 @@ function _select_match($default, $type, $class)
 //	default:	day/month/year/hour/min
 //	value:		select Wert
 //
-function _select_date($default, $var, $value)
+function select_date($default, $var, $value)
 {
 	$lang;
 	
