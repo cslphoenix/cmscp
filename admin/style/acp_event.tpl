@@ -32,7 +32,7 @@
 <!-- END event_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -40,9 +40,10 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="event_title" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="event_add"><input class="button" type="submit" value="{L_EVENT_ADD}" /></td>
+	<td><input class="button" type="submit" value="{L_EVENT_ADD}" /></td>
 </tr>
 </table>
+{S_HIDDEN_FIELDS}
 </form>
 <!-- END display -->
 

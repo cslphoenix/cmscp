@@ -37,13 +37,14 @@ if ( !empty($setmodules) )
 else
 {
 	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
-	include($root_path . 'includes/functions_selects.php');
+	
+	$root_path	= './../';
+	$cancel		= ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/functions.php');
+	include($root_path . 'includes/acp/selects.php');
 	
 	if ( !$userauth['auth_news'] && $userdata['user_level'] != ADMIN )
 	{
@@ -58,38 +59,26 @@ else
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
-	if ( isset($HTTP_POST_VARS[POST_NEWS_URL]) || isset($HTTP_GET_VARS[POST_NEWS_URL]) )
-	{
-		$news_id = ( isset($HTTP_POST_VARS[POST_NEWS_URL]) ) ? intval($HTTP_POST_VARS[POST_NEWS_URL]) : intval($HTTP_GET_VARS[POST_NEWS_URL]);
-	}
-	else
-	{
-		$news_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		$mode = '';
-	}
+	$mode		= request('mode', 1);
+	$news_id	= request(POST_NEWS_URL);
 	
 	switch ( $mode )
 	{
-		case 'add':
-		case 'edit':
+		case '_add':
+		case '_edit':
 		
-			if ( $mode == 'edit' )
+			$template->set_filenames(array('body' => 'style/acp_news.tpl'));
+			$template->assign_block_vars('news_edit', array());
+		
+			if ( $mode == '_edit' )
 			{
 				$news		= get_data('news_newscat', $news_id, 2);
-				$new_mode	= 'editnews';
+				$new_mode	= '_update';
 			}
-			else if ( $mode == 'add' )
+			else
 			{
 				$news = array (
-					'news_title'		=> ( isset($HTTP_POST_VARS['news_title']) ) ? trim($HTTP_POST_VARS['news_title']) : '',
+					'news_title'		=> request('news_title', true),
 					'news_category'		=> '0',
 					'news_text'			=> '',
 					'news_url'			=> '',
@@ -105,19 +94,14 @@ else
 					'news_rating'		=> '0',
 				);
 
-				$new_mode = 'addnews';
+				$new_mode = '_create';
 			}
 
-			$template->set_filenames(array('body' => 'style/acp_news.tpl'));
-			$template->assign_block_vars('news_edit', array());
 			
 			if ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN )
 			{
 				$template->assign_block_vars('news_edit.public', array());				
 			}
-			
-			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-			$s_hidden_fields .= '<input type="hidden" name="' . POST_NEWS_URL . '" value="' . $news_id . '" />';
 			
 			if ( $news['news_link'] && is_array(unserialize($news['news_link'])) )
 			{
@@ -140,9 +124,11 @@ else
 				));
 			}
 			
+			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_NEWS_URL . '" value="' . $news_id . '" />';
+			
 			$template->assign_vars(array(
 				'L_NEWS_HEAD'				=> $lang['news_head'],
-				'L_NEWS_NEW_EDIT'			=> ($mode == 'add') ? $lang['news_add'] : $lang['news_edit'],
+				'L_NEWS_NEW_EDIT'			=> ($mode == '_add') ? $lang['news_add'] : $lang['news_edit'],
 				'L_REQUIRED'				=> $lang['required'],
 				
 				'L_NEWS_NAME'				=> $lang['news_title'],
@@ -156,15 +142,15 @@ else
 				'L_NEWS_INTERN'				=> $lang['news_intern'],
 				'L_NEWS_COMMENTS'			=> $lang['news_comments'],
 				'L_NEWS_RATING'				=> $lang['news_rating'],
-								
-				'L_SUBMIT'					=> $lang['Submit'],
-				'L_RESET'					=> $lang['Reset'],
-				'L_YES'						=> $lang['Yes'],
+				
 				'L_NO'						=> $lang['No'],
+				'L_YES'						=> $lang['Yes'],
+				'L_RESET'					=> $lang['Reset'],				
+				'L_SUBMIT'					=> $lang['Submit'],
 				
 				'NEWS_TITLE'				=> $news['news_title'],
 				'NEWS_TEXT'					=> html_entity_decode($news['news_text'], ENT_QUOTES),
-				'NEWSCAT_IMAGE'				=> ( $mode != 'add' ) ? ( $news['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news['news_category_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
+				'NEWSCAT_IMAGE'				=> ( $mode != '_add' ) ? ( $news['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news['news_category_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
 
 				'S_CHECKED_RATING_YES'		=> ( $news['news_rating'] ) ? ' checked="checked"' : '',
 				'S_CHECKED_RATING_NO'		=> ( !$news['news_rating'] ) ? ' checked="checked"' : '',
@@ -183,7 +169,7 @@ else
 				
 				'NEWSCAT_PATH'				=> $root_path . $settings['path_news_category'],
 				
-				'S_NEWSCAT_LIST'			=> _select_newscat($news['news_category']),
+				'S_NEWSCAT_LIST'			=> select_newscategory($news['news_category']),
 				'S_NEWS_MATCH_LIST'			=> _select_match($news['match_id'], '1', 'post'),
 				
 				'S_HIDDEN_FIELDS'			=> $s_hidden_fields,
@@ -194,19 +180,19 @@ else
 			
 		break;
 		
-		case 'addnews':
+		case '_create':
 		
-			$news_title			= ( isset($HTTP_POST_VARS['news_title']) )	? trim($HTTP_POST_VARS['news_title']) : '';
-			$news_category		= ( isset($HTTP_POST_VARS['news_category_image']) )	? trim($HTTP_POST_VARS['news_category_image']) : '';
+			$match_id			= request('match_id');
+			$news_title			= request('news_title', true);
+			$news_category		= request('news_category_image', true);
 			$news_text			= ( isset($HTTP_POST_VARS['news_text']) )	? htmlentities($HTTP_POST_VARS['news_text'], ENT_QUOTES) : '';
-			$news_url			= ( isset($HTTP_POST_VARS['news_url']) )	? serialize(array_filter($HTTP_POST_VARS['news_url'])) : '';
-			$news_link			= ( isset($HTTP_POST_VARS['news_name']) )	? serialize(array_filter($HTTP_POST_VARS['news_name'])) : '';
-			$match_id			= ( isset($HTTP_POST_VARS['match_id']) )	? intval($HTTP_POST_VARS['match_id']) : '';
-			$user_id			= $userdata['user_id'];
-			$news_time_public	= mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
+			$news_url			= ( isset($HTTP_POST_VARS['news_url']) )	? serialize($HTTP_POST_VARS['news_url']) : '';
+			$news_link			= ( isset($HTTP_POST_VARS['news_name']) )	? serialize($HTTP_POST_VARS['news_name']) : '';
 			$news_public		= ( isset($HTTP_POST_VARS['news_public']) )	? intval($HTTP_POST_VARS['news_public']) : 0;
 			$news_intern		= ( $HTTP_POST_VARS['news_intern'] == 1 )	? 1 : 0;
 			$news_rating		= ( $HTTP_POST_VARS['news_rating'] == 1 )	? 1 : 0;
+			$user_id			= $userdata['user_id'];
+			$news_time_public	= mktime($HTTP_POST_VARS['hour'], $HTTP_POST_VARS['min'], 00, $HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']);
 			
 			if ( !empty($news_category) )
 			{
@@ -253,7 +239,7 @@ else
 
 			break;
 		
-		case 'editnews':
+		case '_update':
 		
 			$news = get_data('news_newscat', $news_id, 2);
 			
@@ -408,16 +394,19 @@ else
 				'L_NEWS_EXPLAIN'	=> $lang['news_explain'],
 				'L_NEWS_NAME'		=> $lang['news_name'],
 				'L_NEWS_ADD'		=> $lang['news_add'],
-				'L_EDIT'			=> $lang['edit'],
+				'L_EDIT'			=> $lang['common_edit'],
 				'L_SETTINGS'		=> $lang['settings'],
-				'L_DELETE'			=> $lang['delete'],
+				'L_DELETE'			=> $lang['common_delete'],
 				'L_MOVE_UP'			=> $lang['move_up'], 
 				'L_MOVE_DOWN'		=> $lang['move_down'],
 				'S_TEAM_ACTION'		=> append_sid('admin_news.php'),
 			));
 			
 			$sql = 'SELECT * FROM ' . NEWS . ' ORDER BY news_id DESC';
-			$result = $db->sql_query($sql);
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
 			$news_data = $db->sql_fetchrowset($result);
 			
 			if ( !$news_data )
@@ -442,13 +431,13 @@ else
 					
 					if ( $news_data[$i]['user_id'] == $userdata['user_id'] || $userdata['user_level'] == ADMIN )
 					{
-						$edit	= '<a href="' . append_sid('admin_news.php?mode=edit&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $lang['edit'] . '</a>';
-						$delete	= '<a href="' . append_sid('admin_news.php?mode=delete&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $lang['delete'] . '</a>';
+						$edit	= '<a href="' . append_sid('admin_news.php?mode=_edit&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $lang['common_edit'] . '</a>';
+						$delete	= '<a href="' . append_sid('admin_news.php?mode=_delete&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $lang['common_delete'] . '</a>';
 					}
 					else
 					{
 						$edit	= $lang['edit'];
-						$delete	= $lang['delete'];
+						$delete	= $lang['common_delete'];
 					}
 					
 					$template->assign_block_vars('display.news_row', array(

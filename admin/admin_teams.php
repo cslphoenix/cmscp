@@ -153,12 +153,12 @@ else
 					$template->assign_block_vars('team_edit.logo_upload', array() );
 				}
 				
-				if ( $settings['team_logo_upload'] && file_exists(@phpbb_realpath($path_team_logo)) )
+				if ( $settings['team_logo_upload'] && file_exists(@cms_realpath($path_team_logo)) )
 				{
 					$template->assign_block_vars('team_edit.logo_upload.team_logo_upload', array() );
 				}
 				
-				if ( $settings['team_logos_upload'] && file_exists(@phpbb_realpath($team_logos_path)) )
+				if ( $settings['team_logos_upload'] && file_exists(@cms_realpath($team_logos_path)) )
 				{
 					$template->assign_block_vars('team_edit.logo_upload.team_logos_upload', array() );
 				}
@@ -575,7 +575,7 @@ else
 					$s_action_options .= '<option onClick="this.form.rank_id.value=' . $rank['rank_id'] . '" value="change">&raquo; ' . sprintf($lang['status_set'], $rank['rank_title']) . '&nbsp;</option>';
 				}
 				
-				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['delete'] . '</option>';
+				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['common_delete'] . '</option>';
 				$s_action_options .= '</select>';
 				
 				$s_hidden_fields = '<input type="hidden" name="rank_id" value="" />';
@@ -900,7 +900,7 @@ else
 					
 					if ( $logo_type == LOGO_UPLOAD && $logo_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logo'] . '/' . $logo_file)) )
+						if ( @file_exists(@cms_realpath($root_path . $settings['path_team_logo'] . '/' . $logo_file)) )
 						{
 							@unlink($root_path . $settings['path_team_logo'] . '/' . $logo_file);
 						}
@@ -908,7 +908,7 @@ else
 					
 					if ( $logos_type == LOGO_UPLOAD && $logos_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_team_logos'] . '/' . $logos_file)) )
+						if ( @file_exists(@cms_realpath($root_path . $settings['path_team_logos'] . '/' . $logos_file)) )
 						{
 							@unlink($root_path . $settings['path_team_logos'] . '/' . $logos_file);
 						}
@@ -985,7 +985,7 @@ else
 		'L_TEAM_SETTING'		=> $lang['setting'],
 		'L_MEMBER'				=> $lang['member'],
 		
-		'L_DELETE'				=> $lang['delete'],
+		'L_DELETE'				=> $lang['common_delete'],
 		
 		'S_TEAM_ACTION'		=> append_sid('admin_teams.php'),
 	));

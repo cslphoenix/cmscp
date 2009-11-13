@@ -32,7 +32,7 @@ if ( !$userdata['session_admin'] )
 	redirect(append_sid("login.php?redirect=admin/$url&admin=1", true));
 }
 
-if ( empty($no_page_header) )
+if ( empty($no_header) )
 {
 	include('./page_header_admin.php');
 }

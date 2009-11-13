@@ -507,9 +507,9 @@ else
 		'L_CREATE_PROFILE'	=> $lang['create_profile'], 
 		'L_CREATE_CATEGORY'	=> $lang['create_category'], 
 		
-		'L_EDIT'			=> $lang['edit'],
+		'L_EDIT'			=> $lang['common_edit'],
 		'L_SETTINGS'		=> $lang['settings'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_DELETE'			=> $lang['common_delete'],
 		
 		'L_MOVE_UP'			=> $lang['move_up'], 
 		'L_MOVE_DOWN'		=> $lang['move_down'], 

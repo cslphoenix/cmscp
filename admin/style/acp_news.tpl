@@ -41,7 +41,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="news_title" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_NEWS_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="_add"><input class="button" type="submit" value="{L_NEWS_ADD}" /></td>
 </tr>
 </table>
 </form>
@@ -136,8 +136,8 @@ tinyMCE.init({
 
 <table class="edit" cellspacing="1">
 <tr>
-	<td class="row1" width="20%">{L_NEWS_NAME}: *</td>
-	<td class="row2" width="80%"><input class="post" type="text" name="news_title" value="{NEWS_TITLE}" ></td>
+	<td class="row1" width="23%">{L_NEWS_NAME}: *</td>
+	<td class="row2" width="77%"><input class="post" type="text" name="news_title" value="{NEWS_TITLE}" ></td>
 </tr>
 <tr>
 	<td class="row1">{L_NEWSCAT}:</td>

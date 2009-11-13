@@ -110,8 +110,8 @@ else
 				'L_BT_EXPLAIN'	=> $lang['bt_explain'],
 				'L_BT_NAME'		=> $lang['bt_name'],
 				
-				'L_EDIT'		=> $lang['edit'],
-				'L_DELETE'		=> $lang['delete'],
+				'L_EDIT'		=> $lang['common_edit'],
+				'L_DELETE'		=> $lang['common_delete'],
 				'L_SETTINGS'	=> $lang['settings'],
 				
 				'L_DESCRIPTION'	=> $lang['description'],

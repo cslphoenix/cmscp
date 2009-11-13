@@ -122,7 +122,7 @@ else
 					$error_sql_code		= $log_entry[$i]['error_sql_code'];
 					$error_sql_text		= $log_entry[$i]['error_sql_text'];
 					$error_sql_store	= $log_entry[$i]['error_sql_store'];
-					$error_file			= str_replace(array(phpbb_realpath($root_path), '\\'), array('', '/'), $log_entry[$i]['error_file']);
+					$error_file			= str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $log_entry[$i]['error_file']);
 					$error_file_line	= $log_entry[$i]['error_file_line'];
 					$error_time			= create_date($config['default_dateformat'], $log_entry[$i]['error_time'], $config['board_timezone']);
 					
@@ -323,7 +323,7 @@ else
 				
 				'L_MARK_ALL'		=> $lang['mark_all'],
 				'L_MARK_DEALL'		=> $lang['mark_deall'],
-				'L_DELETE'			=> $lang['delete'],
+				'L_DELETE'			=> $lang['common_delete'],
 		
 				'S_LOG_ERROR'		=> append_sid('admin_logs.php?mode=error'),
 				'S_LOG_ACTION'		=> append_sid('admin_logs.php'),

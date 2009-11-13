@@ -1,4 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><head>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
@@ -320,31 +321,34 @@
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); padding:15px 3px 3px; width:244px;" valign="top">
 				<table class="out" width="100%" cellspacing="0">
 				<tr>
-					<td class="info_head" colspan="4">Last News</td>
+					<td class="info_head" colspan="4">{L_SUBNAVI_NEWS}</td>
 				</tr>
-				<!-- BEGIN news_subnavi_row -->
+				<!-- BEGIN subnavi_news_row -->
 				<tr>
-					<td class="{news_subnavi_row.CLASS}" align="left" width="1%">{news_subnavi_row.NEWS_GAME}</td>
-					<td class="{news_subnavi_row.CLASS}" align="left" width="99%">{news_subnavi_row.NEWS_TITLE}</td>
-					<td class="{news_subnavi_row.CLASS}" align="center" width="1%"><a href="{news_subnavi_row.U_DETAILS}">{L_DETAILS}</a></td>
+					<td class="{subnavi_news_row.CLASS}" align="left" width="1%">{subnavi_news_row.NEWS_GAME}</td>
+					<td class="{subnavi_news_row.CLASS}" align="left" width="99%"><a href="{subnavi_news_row.U_DETAILS}">{subnavi_news_row.NEWS_TITLE}</a></td>
 				</tr>
-				<!-- END news_subnavi_row -->
+				<!-- END subnavi_news_row -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); padding:15px 3px 3px; width:243px;" valign="top">
 				<table class="out" width="100%" cellspacing="0">
 				<tr>
-					<td class="info_head" colspan="4" style="text-align:center;">{L_LAST_MATCH}</td>
+					<td class="info_head" colspan="4" style="text-align:center;">{L_SUBNAVI_MATCH}</td>
 				</tr>
-				<!-- BEGIN display_subnavi_match -->
+				<!-- BEGIN subnavi_match_row -->
 				<tr>
-					<td class="{display_subnavi_match.CLASS}" align="center" width="1%">{display_subnavi_match.MATCH_GAME}</td>
-					<td class="{display_subnavi_match.CLASS}" align="left" width="100%">{display_subnavi_match.MATCH_NAME}</td>
-					<td class="{display_subnavi_match.CLASS}" align="center" nowrap="nowrap"><span class="{display_subnavi_match.CLASS_RESULT}">{display_subnavi_match.MATCH_RESULT}</span></td>
-					<td class="{display_subnavi_match.CLASS}" align="center" width="1%"><a href="{display_subnavi_match.U_DETAILS}">{L_DETAILS}</a></td>
+					<td class="{subnavi_match_row.CLASS}" align="center" width="1%">{subnavi_match_row.MATCH_GAME}</td>
+					<td class="{subnavi_match_row.CLASS}" align="left" width="100%"><a href="{subnavi_match_row.U_DETAILS}">{subnavi_match_row.MATCH_NAME}</a></td>
+					<td class="{subnavi_match_row.CLASS}" align="center" nowrap="nowrap"><span class="{subnavi_match_row.CLASS_RESULT}">{subnavi_match_row.MATCH_RESULT}</span></td>
 				</tr>
-				<!-- END display_subnavi_match -->
+				<!-- END subnavi_match_row -->
+				<!-- BEGIN no_entry_navi_match -->
+				<tr>
+					<td colspan="3" class="{subnavi_match_row.CLASS}" align="center">{NO_ENTRY}</td>
+				</tr>
+				<!-- END no_entry_navi_match -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -394,20 +398,20 @@
 		<tr>
 			<td width="15%" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN new_users -->
+				<!-- BEGIN subnavi_newusers -->
 				<tr>
-					<td class="info_head"><span style="float: right;">{NEW_USERS_CACHE}</span>{NEW_USERS}</td>
+					<td class="info_head"><span style="float: right;">{NEW_USERS_CACHE}</span>{L_NEW_USERS}</td>
 				</tr>
 				<!-- BEGIN user_row -->
 				<tr>
-					<td>{new_users.user_row.USERNAME}</td>
+					<td><a class="small" href="{subnavi_newusers.user_row.U_USERNAME}" {subnavi_newusers.user_row.C_USERNAME}>{subnavi_newusers.user_row.L_USERNAME}</a></td>
 				</tr>
 				<!-- END user_row -->
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END new_users -->
-				<!-- BEGIN teams -->
+				<!-- END subnavi_newusers -->
+				<!-- BEGIN subnavi_teams -->
 				<tr>
 					<td class="info_head">{L_TEAMS}</td>
 				</tr>
@@ -416,22 +420,81 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN teams_row -->
 						<tr>
-							<td width="90%" align="left" style="vertical-align:top;"><a href="{teams.teams_row.TO_TEAM}">&raquo; {teams.teams_row.TEAM_NAME}</a></td>
-							<td width="10%">{teams.teams_row.TEAM_GAME}</td>
+							<td width="90%" align="left" style="vertical-align:top;"><a href="{subnavi_teams.teams_row.U_TEAM}">&raquo;&nbsp;{subnavi_teams.teams_row.L_TEAM}</a></td>
+							<td width="10%">{subnavi_teams.teams_row.I_TEAM}</td>
 						</tr>
 						<!-- END teams_row -->
-						<!-- BEGIN no_entry_head_teams -->
+						<!-- BEGIN no_entry_navi_teams -->
 						<tr>
-							<td width="10%">{NO_ENTRY}</td>
+							<td>{NO_ENTRY}</td>
 						</tr>
-						<!-- END no_entry_head_teams -->
+						<!-- END no_entry_navi_teams -->
 						</table>
 					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END teams -->
+				<!-- END subnavi_teams -->
+				
+				<!-- BEGIN subnavi_links -->
+				<tr>
+					<td class="info_head">{L_NETWORK_LINKS}</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN links_row -->
+						<tr>
+							<td width="100%" align="left"><a href="{subnavi_links.links_row.U_URL}">&raquo;&nbsp;{subnavi_links.links_row.L_URL}</a></td>
+						</tr>
+						<!-- END links_row -->
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END subnavi_links -->
+				<!-- BEGIN subnavi_partner -->
+				<tr>
+					<td class="info_head">{L_NETWORK_PARTNER}</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN partner_row -->
+						<tr>
+							<td width="100%" align="left"><a href="{subnavi_partner.partner_row.U_URL}">&raquo;&nbsp;{subnavi_partner.partner_row.L_URL}</a></td>
+						</tr>
+						<!-- END partner_row -->
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END subnavi_partner -->
+				<!-- BEGIN subnavi_sponsor -->
+				<tr>
+					<td class="info_head">{L_NETWORK_SPONSOR}</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<!-- BEGIN sponsor_row -->
+						<tr>
+							<td width="100%" align="left"><a href="{subnavi_sponsor.sponsor_row.U_URL}">&raquo;&nbsp;{subnavi_sponsor.sponsor_row.L_URL}</a></td>
+						</tr>
+						<!-- END sponsor_row -->
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END subnavi_sponsor -->
+				
 				<!-- BEGIN statsonline -->
 				<tr>
 					<td class="info_head">Stats Online</td>

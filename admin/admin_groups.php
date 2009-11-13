@@ -519,7 +519,7 @@ else
 				$s_action_options .= '<option value="remove">&raquo; Antrag verweigern</option>';
 				$s_action_options .= '<option value="change_level">&raquo; Gruppenrechte geben/nehmen</option>';
 				
-				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['delete'] . '</option>';
+				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['common_delete'] . '</option>';
 				$s_action_options .= '</select>';
 				
 				$s_hidden_fields = '<input type="hidden" name="rank_id" value="" />';
@@ -1046,7 +1046,7 @@ else
 		'L_GROUP_NAME'			=> $lang['group_name'],
 		'L_GROUP_MEMBERCOUNT'	=> $lang['group_membercount'],
 		
-		'L_EDIT'				=> $lang['edit'],
+		'L_EDIT'				=> $lang['common_edit'],
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_MEMBER'				=> $lang['member'],
 		
@@ -1105,7 +1105,7 @@ else
 				'MOVE_UP'			=> ( $row['group_order'] != '10' )				? '<a href="' . append_sid('admin_groups.php?mode=order&amp;move=-15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
 				'MOVE_DOWN'			=> ( $row['group_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_groups.php?mode=order&amp;move=15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'L_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? $lang['delete'] : '',
+				'L_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? $lang['common_delete'] : '',
 				
 				'U_MEMBER'		=> append_sid('admin_groups.php?mode=member&amp;' . POST_GROUPS_URL . '=' . $group_id),
 				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid('admin_groups.php?mode=group_delete&amp;' . POST_GROUPS_URL . '=' . $group_id) : '',

@@ -287,8 +287,8 @@ else
 		'L_NL_ADD'			=> $lang['newsletter_add'],
 		
 		'L_SETTINGS'		=> $lang['settings'],
-		'L_EDIT'			=> $lang['edit'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_EDIT'			=> $lang['common_edit'],
+		'L_DELETE'			=> $lang['common_delete'],
 		'L_ALLDELETE'		=> $lang['alldelete'],
 		
 		'S_NL_ACTION'		=> append_sid('admin_newsletter.php'),

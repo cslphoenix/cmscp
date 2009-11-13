@@ -32,13 +32,40 @@ function request($name, $type = false)
 	
 	if ( isset($HTTP_POST_VARS[$name]) || isset($HTTP_GET_VARS[$name]) )
 	{
-		if ( $type == '1' )
+		switch ( $type )
 		{
-			$var = ( isset($HTTP_POST_VARS[$name]) ) ? htmlspecialchars(trim($HTTP_POST_VARS[$name])) : htmlspecialchars(trim($HTTP_GET_VARS[$name]));
-		}
-		else
-		{
-			$var = ( isset($HTTP_POST_VARS[$name]) ) ? intval($HTTP_POST_VARS[$name]) : intval($HTTP_GET_VARS[$name]);
+			case 'text':
+			
+				$var = ( isset($HTTP_POST_VARS[$name]) ) ? htmlspecialchars(trim($HTTP_POST_VARS[$name])) : htmlspecialchars(trim($HTTP_GET_VARS[$name]));
+				
+				break;
+				
+			case 'textfeld':
+			
+				$var = ( isset($HTTP_POST_VARS[$name]) ) ? htmlentities(trim($HTTP_POST_VARS[$name]), ENT_QUOTES) : htmlentities(trim($HTTP_GET_VARS[$name]), ENT_QUOTES);
+				
+				break;
+				
+			case 'textfeld_clean':
+			
+				$var = ( isset($HTTP_POST_VARS[$name]) ) ? strip_tags(trim($HTTP_POST_VARS[$name]), '<br>') : strip_tags(trim($HTTP_GET_VARS[$name]), '<br>');
+				
+				break;
+				
+				
+				
+			case 'num':
+			
+				$var = ( isset($HTTP_POST_VARS[$name]) ) ? intval($HTTP_POST_VARS[$name]) : intval($HTTP_GET_VARS[$name]);
+				$var = ( isset($var) ) ? $var : 0;
+				
+				break;
+				
+			default:
+			
+				$var = ( isset($HTTP_POST_VARS[$name]) ) ? trim($HTTP_POST_VARS[$name]) : trim($HTTP_GET_VARS[$name]);
+				
+				break;
 		}
 	}
 	else
@@ -424,7 +451,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 {
 	global $root_path;
 	
-	$errfile = str_replace(array(phpbb_realpath($root_path), '\\'), array('', '/'), $errfile);
+	$errfile = str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $errfile);
 	
 	$errno = $errno & error_reporting();
 	
@@ -590,7 +617,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 	$width = $height = 0;
 	$type = '';
 
-	if ( ( file_exists(@phpbb_realpath($logo_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $logo_realname) )
+	if ( ( file_exists(@cms_realpath($logo_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $logo_realname) )
 	{
 		$sfilesize	= ($format == 'n') ? $settings['team_logo_filesize'] : $settings['team_logos_filesize'];
 		$lfilesize	= ($format == 'n') ? $lang['logo_filesize'] : $lang['logos_filesize'];
@@ -729,7 +756,7 @@ function team_logo_delete($format, $logo_type, $logo_file)
 	$logo_file = basename($logo_file);
 	if ( $logo_type == LOGO_UPLOAD && $logo_file != '' )
 	{
-		if ( @file_exists(@phpbb_realpath('./../' . $spath . '/' . $logo_file)) )
+		if ( @file_exists(@cms_realpath('./../' . $spath . '/' . $logo_file)) )
 		{
 			@unlink('./../' . $spath . '/' . $logo_file);
 		}
@@ -753,7 +780,7 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 
 	$type = '';
 	
-	if ( ( file_exists(@phpbb_realpath($logo_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $logo_realname) )
+	if ( ( file_exists(@cms_realpath($logo_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $logo_realname) )
 	{
 		preg_match('#image\/[x\-]*([a-z]+)#', $logo_filetype, $logo_filetype);
 		$logo_filetype = $logo_filetype[1];
@@ -896,12 +923,12 @@ function picture_delete($num, $logo_file, $logo_preview_file)
 	$logo_preview_file = basename($logo_preview_file);
 	if ($logo_file != '' )
 	{
-		if ( @file_exists(@phpbb_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_file)) )
+		if ( @file_exists(@cms_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_file)) )
 		{
 			@unlink('./../' . $settings['path_match_picture'] . '/' . $logo_file);
 		}
 		
-		if ( @file_exists(@phpbb_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file)) )
+		if ( @file_exists(@cms_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file)) )
 		{
 			@unlink('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file);
 		}
@@ -1145,7 +1172,7 @@ function init_userprefs($userdata)
 		$default_lang = phpbb_ltrim(basename(phpbb_rtrim($config['default_lang'])), "'");
 	}
 
-	if ( !file_exists(@phpbb_realpath($root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
+	if ( !file_exists(@cms_realpath($root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
 	{
 		if ( $userdata['user_id'] != ANONYMOUS )
 		{
@@ -1160,7 +1187,7 @@ function init_userprefs($userdata)
 			$default_lang = 'english';
 		}
 
-		if ( !file_exists(@phpbb_realpath($root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
+		if ( !file_exists(@cms_realpath($root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not locate valid language pack');
 		}
@@ -1208,7 +1235,7 @@ function init_userprefs($userdata)
 	
 	if ( defined('IN_ADMIN') )
 	{
-		if ( !file_exists(@phpbb_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php')) )
+		if ( !file_exists(@cms_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php')) )
 		{
 			$config['default_lang'] = 'english';
 		}
@@ -1329,7 +1356,7 @@ function setup_style($style)
 			message_die(CRITICAL_ERROR, "Could not open $template_name template config file", '', __LINE__, __FILE__);
 		}
 
-		$img_lang = ( file_exists(@phpbb_realpath($root_path . $current_template_path . '/images/lang_' . $config['default_lang'])) ) ? $config['default_lang'] : 'english';
+		$img_lang = ( file_exists(@cms_realpath($root_path . $current_template_path . '/images/lang_' . $config['default_lang'])) ) ? $config['default_lang'] : 'english';
 
 		while( list($key, $value) = @each($images) )
 		{
@@ -1809,7 +1836,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 // to do checks with some functions.  Older versions of PHP don't
 // seem to need this, so we'll just return the original value.
 // dougk_ff7 <October 5, 2002>
-function phpbb_realpath($path)
+function cms_realpath($path)
 {
 	global $root_path, $phpEx;
 

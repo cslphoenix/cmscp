@@ -33,7 +33,7 @@
 <!-- END link_row -->
 <!-- BEGIN no_entry_link -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_link -->
 </table>
@@ -41,7 +41,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="network_name[1]" type="text" value=""></td>
-	<td><input class="button" type="submit" name="network_add[1]" value="{L_NETWORK_ADD_LINK}" /></td>
+	<td><input class="button" type="submit" name="_add[1]" value="{L_NETWORK_ADD_LINK}" /></td>
 </tr>
 </table>
 
@@ -63,7 +63,7 @@
 <!-- END partner_row -->
 <!-- BEGIN no_entry_partner -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_partner -->
 </table>
@@ -71,7 +71,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="network_name[2]" type="text" value=""></td>
-	<td><input class="button" type="submit" name="network_add[2]" value="{L_NETWORK_ADD_PARTNER}" /></td>
+	<td><input class="button" type="submit" name="_add[2]" value="{L_NETWORK_ADD_PARTNER}" /></td>
 </tr>
 </table>
 
@@ -93,7 +93,7 @@
 <!-- END sponsor_row -->
 <!-- BEGIN no_entry_sponsor -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_sponsor -->
 </table>
@@ -101,7 +101,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="network_name[3]" type="text" value=""></td>
-	<td><input class="button" type="submit" name="network_add[3]" value="{L_NETWORK_ADD_SPONSOR}" /></td>
+	<td><input class="button" type="submit" name="_add[3]" value="{L_NETWORK_ADD_SPONSOR}" /></td>
 </tr>
 </table>
 </form>

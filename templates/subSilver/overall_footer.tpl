@@ -2,7 +2,7 @@
 			</td>
 			<td width="15%" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN minical -->
+				<!-- BEGIN subnavi_minical -->
 				<tr>
 					<td class="info_head"><span style="float:right">{CAL_CACHE}</span><span style="float:right;">{MONTH}&nbsp;</span>Kalender</td>
 				</tr>
@@ -21,7 +21,7 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END minical -->
+				<!-- END subnavi_minical -->
 				<!-- BEGIN match -->
 				<tr>
 					<td class="info_head"><span style="float:right;">{MONTH}</span>Wars</td>
@@ -116,7 +116,7 @@
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_37.png); height:100px; background-repeat:repeat-x;">
 				<table width="100%" height="100" border="0" cellspacing="0" cellpadding="0">
 				<tr style="height:46px;">
-					<td style="padding:15px 10px 5px 10px;" width="100%">&copy; by CMS-CP.de</td>
+					<td style="padding:15px 10px 5px 10px;" width="100%">&copy; by CMS-Phoenix.de</td>
 					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">Impressum</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
 					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="contact.php">Kontatkt</a></td>

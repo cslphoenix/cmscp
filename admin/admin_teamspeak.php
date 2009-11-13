@@ -360,12 +360,12 @@ else
 					if ( $teamspeak_user[$i]['b_client_privilege_serveradmin'] == '-1' )
 					{
 						$edit	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=useredit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['edit'] . '</a>' : $lang['edit'];
-						$delete	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['delete'] . '</a>' : $lang['delete'];
+						$delete	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['common_delete'] . '</a>' : $lang['common_delete'];
 					}
 					else
 					{
 						$edit	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=useredit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['edit'] . '</a>' : $lang['edit'];
-						$delete	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['delete'] . '</a>' : $lang['delete'];
+						$delete	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['common_delete'] . '</a>' : $lang['common_delete'];
 					}
 					
 					$template->assign_block_vars('teamspeak_member.member_row', array(
@@ -522,9 +522,9 @@ else
 		
 		'L_TEAMSPEAK_USER'		=> $lang['teamspeak_user'],
 		
-		'L_EDIT'				=> $lang['edit'],
+		'L_EDIT'				=> $lang['common_edit'],
 		'L_SETTINGS'			=> $lang['settings'],
-		'L_DELETE'				=> $lang['delete'],
+		'L_DELETE'				=> $lang['common_delete'],
 		
 		'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 		'S_TEAMSPEAK_EDIT'		=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),

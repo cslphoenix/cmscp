@@ -1441,5 +1441,9 @@ $lang['month'] = array(
 	'12'	=> 'Dezember'
 );
 
+$lang['network_link']		= 'Links';
+$lang['network_partner']	= 'Partner';
+$lang['network_sponsor']	= 'Sponsoren';
+
 
 ?>

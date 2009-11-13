@@ -54,14 +54,7 @@ else
 		redirect('admin/' . append_sid('admin_navigation.php', true));
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_NAVIGATION_URL]) || isset($HTTP_GET_VARS[POST_NAVIGATION_URL]) )
-	{
-		$navi_id = ( isset($HTTP_POST_VARS[POST_NAVIGATION_URL]) ) ? intval($HTTP_POST_VARS[POST_NAVIGATION_URL]) : intval($HTTP_GET_VARS[POST_NAVIGATION_URL]);
-	}
-	else
-	{
-		$navi_id = 0;
-	}
+	$navi_id	= request(POST_NAVIGATION_URL);
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
@@ -461,11 +454,11 @@ else
 					
 					'TEAMS_LENGTH'			=> $settings['subnavi_teams_length'],
 					
-					'LAST_USER_ON'			=> ( $settings['subnavi_newusers_show'] ) ? ' checked="checked"' : '',
-					'LAST_USER_OFF'			=> ( !$settings['subnavi_newusers_show'] ) ? ' checked="checked"' : '',
+					'LAST_USER_ON'			=> ( $settings['subnavi_newusers'] ) ? ' checked="checked"' : '',
+					'LAST_USER_OFF'			=> ( !$settings['subnavi_newusers'] ) ? ' checked="checked"' : '',
 					
-					'TEAMS_ON'				=> ( $settings['subnavi_teams_show'] ) ? ' checked="checked"' : '',
-					'TEAMS_OFF'				=> ( !$settings['subnavi_teams_show'] ) ? ' checked="checked"' : '',
+					'TEAMS_ON'				=> ( $settings['subnavi_teams'] ) ? ' checked="checked"' : '',
+					'TEAMS_OFF'				=> ( !$settings['subnavi_teams'] ) ? ' checked="checked"' : '',
 					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_NAVI_ACTION'			=> append_sid('admin_navigation.php'),
@@ -545,9 +538,9 @@ else
 		
 		'L_NAVI_ADD'		=> $lang['navi_add'],
 		
-		'L_EDIT'			=> $lang['edit'],
+		'L_EDIT'			=> $lang['common_edit'],
 		'L_SETTINGS'		=> $lang['settings'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_DELETE'			=> $lang['common_delete'],
 		
 		'L_MOVE_UP'			=> $lang['move_up'], 
 		'L_MOVE_DOWN'		=> $lang['move_down'], 

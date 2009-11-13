@@ -170,7 +170,7 @@ else
 					'L_CONTACT_SETTING'			=> $lang['setting'],
 					'L_CONTACT_MEMBER'			=> $lang['contact'],
 					
-					'L_DELETE'				=> $lang['delete'],
+					'L_DELETE'				=> $lang['common_delete'],
 					
 					'L_TRAINING'			=> $lang['training'],
 					
@@ -265,7 +265,7 @@ else
 		'L_CONTACT_SETTING'			=> $lang['setting'],
 		'L_CONTACT_MEMBER'			=> $lang['contact'],
 		
-		'L_DELETE'				=> $lang['delete'],
+		'L_DELETE'				=> $lang['common_delete'],
 		
 		'L_TRAINING'			=> $lang['training'],
 		

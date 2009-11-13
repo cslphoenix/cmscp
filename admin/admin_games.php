@@ -38,11 +38,12 @@ else
 {
 	define('IN_CMS', 1);
 	
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
+	$root_path	= './../';
+	$cancel		= ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/functions.php');
 	
 	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
@@ -56,7 +57,6 @@ else
 	
 	$mode		= request('mode', true);
 	$game_id	= request(POST_GAMES_URL);
-	
 	$show_index = '';
 		
 	if ( !empty($mode) )
@@ -86,8 +86,8 @@ else
 					$new_mode = 'game_create';
 				}
 				
-				$folder = $root_path . $settings['path_game'];
-				$files = scandir($folder);
+				$folder	= $root_path . $settings['path_game'];
+				$files	= scandir($folder);
 				
 				$game_list = '';
 				$game_list .= '<select name="game_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
@@ -150,8 +150,8 @@ else
 					}
 					$row = $db->sql_fetchrow($result);
 		
-					$max_order = $row['max_order'];
-					$next_order = $max_order + 10;
+					$max_order	= $row['max_order'];
+					$next_order	= $max_order + 10;
 					
 					$sql = 'INSERT INTO ' . GAMES . " (game_name, game_image, game_size, game_order) VALUES ('" . str_replace("\'", "''", $game_name) . "', '" . str_replace("\'", "''", $game_image) . "', $game_size, $next_order)";
 					if ( !$result = $db->sql_query($sql) )
@@ -228,8 +228,10 @@ else
 					{
 						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
+					
+					debug(serialize($game));
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_delete', $game['game_name']);
+					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_delete', serialize($game));
 					
 					$message = $lang['delete_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
 					message_die(GENERAL_MESSAGE, $message);
@@ -284,8 +286,8 @@ else
 		
 		'L_GAME_ADD'		=> $lang['game_add'],
 		
-		'L_EDIT'			=> $lang['edit'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_EDIT'			=> $lang['common_edit'],
+		'L_DELETE'			=> $lang['common_delete'],
 		'L_SETTINGS'		=> $lang['settings'],		
 		
 		'L_MOVE_UP'			=> $lang['move_up'], 

@@ -34,9 +34,10 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="auth_name" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="authlist_add"><input class="button" type="submit" value="{L_AUTHLIST_ADD}" /></td>
+	<td><input class="button" type="submit" value="{L_AUTHLIST_ADD}" /></td>
 </tr>
 </table>
+{S_HIDDEN_FIELDS}
 </form>
 
 <!-- END display -->
