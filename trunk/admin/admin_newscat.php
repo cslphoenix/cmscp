@@ -304,8 +304,8 @@ else
 		'L_NEWSCAT_NAME'	=> $lang['team_name'],
 		'L_NEWSCAT_ADD'		=> $lang['newscat_add'],
 		'L_SETTINGS'		=> $lang['settings'],
-		'L_EDIT'			=> $lang['edit'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_EDIT'			=> $lang['common_edit'],
+		'L_DELETE'			=> $lang['common_delete'],
 		
 		'NEWSCAT_PATH'		=> $root_path . $settings['path_news_category'],
 		

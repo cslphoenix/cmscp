@@ -37,11 +37,12 @@ if ( !empty($setmodules) )
 else
 {
 	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
+	
+	$root_path	= './../';
+	$cancel		= ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
@@ -57,10 +58,10 @@ else
 	
 	$start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
+	
 	$mode		= request('mode', 1);
 	$team_id	= request(POST_TEAMS_URL);
 	$match_id	= request(POST_MATCH_URL);
-	
 	$show_index = '';
 	
 	if ( !empty($mode) )
@@ -446,7 +447,7 @@ else
 					
 					if ( $picture_type == LOGO_UPLOAD && $picture_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['path_match_picture'] . '/' . $picture_file)) )
+						if ( @file_exists(@cms_realpath($root_path . $settings['path_match_picture'] . '/' . $picture_file)) )
 						{
 							@unlink($root_path . $settings['path_match_picture'] . '/' . $picture_file);
 						}
@@ -454,7 +455,7 @@ else
 					
 					if ( $pictures_type == LOGO_UPLOAD && $pictures_file != '' )
 					{
-						if ( @file_exists(@phpbb_realpath($root_path . $settings['match_pictures_path'] . '/' . $pictures_file)) )
+						if ( @file_exists(@cms_realpath($root_path . $settings['match_pictures_path'] . '/' . $pictures_file)) )
 						{
 							@unlink($root_path . $settings['match_pictures_path'] . '/' . $pictures_file);
 						}
@@ -652,7 +653,7 @@ else
 				$s_action_options .= '<option value="option">&raquo; ' . $lang['option_select'] . '</option>';
 				$s_action_options .= '<option value="player">&raquo; ' . sprintf($lang['status_set'], $lang['match_player']) . '&nbsp;</option>';
 				$s_action_options .= '<option value="replace">&raquo; ' . sprintf($lang['status_set'], $lang['match_replace']) . '&nbsp;</option>';
-				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['delete'] . '</option>';
+				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['common_delete'] . '</option>';
 				$s_action_options .= '</select>';
 				
 				foreach ( $lang['select_categorie_box'] as $key_s => $value_s )
@@ -1133,7 +1134,7 @@ else
 		
 		'L_SETTINGS'		=> $lang['settings'],
 		'L_SETTING'			=> $lang['setting'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_DELETE'			=> $lang['common_delete'],
 		
 		'S_TEAMS'			=> select_box('team', 'selectsmall', 'team_id', 'team_name', 0, 0),
 		'S_MATCH_ADD'		=> append_sid('admin_match.php?mode=match_add'),

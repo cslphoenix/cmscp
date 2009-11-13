@@ -249,18 +249,20 @@ $lang['gallery_explain']	= 'Hier kannst Du Galerien verwalten.';
 $lang['gallery_name']		= 'Galeriename';
 
 $lang['gallery_add']		= 'Neue Galerie erstellen';
-$lang['gallery_new_add']	= '%s hinzufügen';
-$lang['gallery_edit']		= '%s bearbeiten';
+$lang['gallery_new_add']	= 'Galerie hinzufügen';
+$lang['gallery_edit']		= 'Galerie bearbeiten';
 
 $lang['gallery_auth']		= 'Galerieberechtigung';
 $lang['gallery_desc']		= 'Galeriebeschreibung';
 $lang['gallery_comment']	= 'Bildkommentare';
 $lang['gallery_rate']		= 'Bildbewertungen';
+$lang['gallery_upload']		= 'Upload';
 
 $lang['gallery_link']		= 'Link';
 $lang['gallery_partner']	= 'Partner';
 $lang['gallery_sponsor']	= 'Sponsor';
 
+$lang['gallery_sprintf_size-pic']	= '%s / %s Bilder';
 
 //
 //	Forum
@@ -282,9 +284,9 @@ $lang['network_type']		= 'Network Art';
 $lang['network_url']		= 'Network Link';
 $lang['network_image']		= 'Network Bild';
 
-$lang['network_link']		= 'Link';
+$lang['network_link']		= 'Links';
 $lang['network_partner']	= 'Partner';
-$lang['network_sponsor']	= 'Sponsor';
+$lang['network_sponsor']	= 'Sponsoren';
 
 
 //
@@ -582,6 +584,8 @@ $lang['newscat_name']		= 'Newskategorie Name';
 $lang['newscat_title']		= 'Name';
 $lang['newscat_image']		= 'Bild';
 
+$lang['newscat_select']		= 'Newskategorie auswählen&nbsp;';
+
 
 //
 //	Newsletter
@@ -832,7 +836,7 @@ $lang['teamspeak_server_currentchannels']			= 'momentane Channelanzahl';
 //
 
 $lang['required']		= 'Mit * markierte Felder sind erforderlich';
-$lang['delete']			= 'Löschen';
+$lang['common_delete']			= 'Löschen';
 $lang['option_select']	= 'Option wählen';
 
 $lang['setting']		= 'Einstellung';
@@ -840,7 +844,6 @@ $lang['settings']		= 'Einstellungen';
 $lang['username']		= 'Benutzername';
 $lang['register']		= 'Anmeldedatum';
 $lang['joined']			= 'Beigetreten';
-$lang['edit']			= 'Bearbeiten';
 $lang['rank']			= 'Rang im Team';
 $lang['common_confirm']	= 'Bestätigen';
 
@@ -878,7 +881,6 @@ $lang['create_team']				= 'Neues Team hinzuggefügt.';
 $lang['create_teamspeak']			= 'Neuen Teamspeak Server hinzuggefügt.';
 $lang['create_training']			= 'Neues Training hinzuggefügt.';
 $lang['create_user']				= 'Neuen Benutzer hinzuggefügt.';
-
 $lang['create_cash']				= 'Neuen Betrag hinzuggefügt.';
 $lang['create_cash_user']			= 'Neuen Benutzer zu Liste hinzuggefügt.';
 $lang['create_gallery']				= 'Neue Galerie hinzuggefügt.';
@@ -902,7 +904,6 @@ $lang['update_team']				= 'Teamdaten erfolgreich geändert';
 $lang['update_teamspeak']			= 'Teamspeakdaten erfolgreich geändert';
 $lang['update_training']			= 'Trainingsdaten erfolgreich geändert';
 $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
-
 $lang['update_cash']				= 'Daten erfolgreich geändert';
 $lang['update_cash_bank']			= 'Bankdaten erfolgreich geändert';
 $lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
@@ -928,11 +929,10 @@ $lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht';
 $lang['delete_training']			= 'Der Rang wurde gelöscht';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht';
 $lang['delete_match']				= 'Die Begegnung wurde gelöscht';
-
 $lang['delete_cash']				= 'Der Eintrag wurde gelöscht';
 $lang['delete_cash_bank']			= 'Bankdaten wurden gelöscht';
 $lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht';
-$lang['delete_cash_user']			= 'Die Galerie wurde gelöscht';
+$lang['delete_gallery']				= 'Die Galerie wurde gelöscht';
 
 $lang['confirm_delete_authlist']		= 'Bist du sicher, das dieses Berechtigunsfeld gelöscht werden soll?';
 $lang['confirm_delete_event']			= 'Bist du sicher, dass dieses Event gelöscht werden soll?';
@@ -954,12 +954,11 @@ $lang['confirm_delete_team']			= 'Bist du sicher, dass dieses Team gelöscht werd
 $lang['confirm_delete_teamspeak']		= 'Bist du sicher, dass dieser Teamspeak gelöscht werden soll?';
 $lang['confirm_delete_training']		= 'Bist du sicher, dass dieses Training gelöscht werden soll?';
 $lang['confirm_delete_match']			= 'Bist du sicher, dass dieses Begegnung gelöscht werden soll?';
-
 $lang['confirm_delete_user']			= 'Bist du sicher, das der Benutzer gelöscht werden soll?';
 $lang['confirm_delete_cash']			= 'Bist du sicher, dass dieser Beitrag gelöscht werden soll?';
 $lang['confirm_delete_cash_bank']		= 'Bist du sicher, dass die Bankdaten gelöscht werden soll?';
 $lang['confirm_delete_cash_user']		= 'Bist du sicher, dass dieser Benutzereintrag gelöscht werden soll?';
-$lang['confirm_delete_cash_user']		= 'Bist du sicher, dass diese Galerie gelöscht werden soll?';
+$lang['confirm_delete_gallery']			= 'Bist du sicher, dass diese Galerie gelöscht werden soll?';
 
 $lang['click_admin_index']				= '<br><br>Klicke %shier%s, um zum Adminstart zurückzukehren';
 $lang['click_return_authlist']			= '<br><br>Klicke %shier%s, um zur Berechtigungsfelder Administration zurückzukehren';
@@ -989,7 +988,6 @@ $lang['click_return_training']			= '<br><br>Klicke %shier%s, um zur Trainings Ad
 $lang['click_return_user']				= '<br><br>Klicke %shier%s, um zur Benutzer Administration zurückzukehren';
 $lang['click_return_user_auths']		= '<br><br>Klicke %shier%s, um zur Benutzer (Seitenberechtigung) Administration zurückzukehren';
 $lang['click_return_user_groups']		= '<br><br>Klicke %shier%s, um zur Benutzer (Benutzergruppen & Teams) Administration zurückzukehren';
-
 $lang['click_return_cash']				= '<br><br>Klicke %shier%s, um zur Clankassen Administration zurückzukehren';
 $lang['click_return_gallery']			= '<br><br>Klicke %shier%s, um zur Galerie Administration zurückzukehren';
 
@@ -1222,6 +1220,11 @@ $lang['common_no']			= 'Nein';
 $lang['common_comments']	= 'Kommentare erlauben?';
 $lang['common_view']		= 'Anzeigen';
 
+
+$lang['common_edit']			= 'Bearbeiten';
+$lang['common_delete']			= 'Löschen';
+$lang['common_upload']			= 'Upload';
+
 //
 //	Clankasse (Cash)
 //
@@ -1278,5 +1281,13 @@ $lang['month'] = array(
 	'11'	=> 'November',
 	'12'	=> 'Dezember'
 );
+
+$lang['empty_site'] = "<html>
+<head>
+	<title></title>
+	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
+</head>
+<body bgcolor=\"#FFFFFF\" text=\"#000000\"></body>
+</html>";
 
 ?>

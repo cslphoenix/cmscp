@@ -71,7 +71,7 @@
 <tr>
 	<td width="99%" align="right"><input class="post" name="training_vs" type="text" value="" /></td>
 	<td width="1%" align="right">{S_TEAMS}</td>
-	<td><input class="button" type="submit" name="training_add" value="{L_TRAINING_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="training_add"><input class="button" type="submit" value="{L_TRAINING_ADD}" /></td>
 </tr>
 </table>
 </form>

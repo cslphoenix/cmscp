@@ -291,7 +291,7 @@ function display_navi_newusers()
 {
 	global $db, $lang, $root_path, $settings, $template, $userdata;
 	
-	if ( $settings['subnavi_newusers_show'] )
+	if ( $settings['subnavi_newusers'] )
 	{
 		$template->assign_block_vars('subnavi_newusers', array());
 		
@@ -332,7 +332,7 @@ function display_navi_teams()
 {
 	global $db, $lang, $root_path, $settings, $template, $userdata;
 	
-	if ( $settings['subnavi_teams_show'] )
+	if ( $settings['subnavi_teams'] )
 	{
 		$template->assign_block_vars('subnavi_teams', array());
 		
@@ -380,7 +380,7 @@ function display_navi_minical()
 {
 	global $db, $lang, $oCache, $root_path, $settings, $template, $userdata;
 	
-	if ( $settings['subnavi_minical_show'] )
+	if ( $settings['subnavi_minical'] )
 	{
 		$template->assign_block_vars('subnavi_minical', array());
 	}
@@ -410,7 +410,7 @@ function display_navi_minical()
 	
 	$month = $monate[$monat];
 	
-	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] >= TRIAL )
 	{
 		if ( defined('CACHE') )
 		{
@@ -422,7 +422,7 @@ function display_navi_minical()
 				{
 					if ( $i < 10 ) { $i = '0' . $i; }
 					
-					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+					$sql = 'SELECT username, user_birthday, user_color FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -430,7 +430,7 @@ function display_navi_minical()
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+					$sql = 'SELECT event_date, event_duration, event_title, event_level FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -481,7 +481,7 @@ function display_navi_minical()
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				$sql = 'SELECT event_date, event_duration, event_title, event_level FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -547,7 +547,7 @@ function display_navi_minical()
 					$day_rows_b = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
 					
-					$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+					$sql = 'SELECT event_date, event_duration, event_title, event_level FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -589,7 +589,7 @@ function display_navi_minical()
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE event_level = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				$sql = 'SELECT event_date, event_duration, event_title, event_level FROM ' . EVENT . " WHERE event_level = 0 AND DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -631,7 +631,7 @@ function display_navi_minical()
 	// "woche beginnt mit" - array verschiebung
 	$edmk = $arr_woche_kurz[$erster];
 	$wbmk = $arr_woche_kurz;
-	for ( $i=0; $i<$ws; $i++ )
+	for ( $i = 0; $i < $ws; $i++ )
 	{
 		$wechsel = array_shift($wbmk);
 		$wbmk[] = $wechsel;
@@ -639,7 +639,7 @@ function display_navi_minical()
 	$wbmk_wechsel = array_flip($wbmk);
 	
 	$days = '';
-	for ( $i=0; $i<7; $i++ )
+	for ( $i = 0; $i < 7; $i++ )
 	{
 		$days .= '<td align="center" width="14%"><b>' . $wbmk[$i] . '</b></td>';
 	}
@@ -647,25 +647,21 @@ function display_navi_minical()
 	// berechnung der monatstabelle
 	// zuerst die unbenutzten tage
 	$day = '';
-	for ( $i=0; $i<$wbmk_wechsel[$edmk]; $i++)
+	for ( $i = 0; $i < $wbmk_wechsel[$edmk]; $i++ )
 	{
 		$day .= '<td align="center" width="14%">&nbsp;</td>';
 	}
 	// ab hier benutzte tage
 	$wcs = $wbmk_wechsel[$edmk];
-	for ( $i=1; $i<$tage_im_monat+1; $i++ )
+	for ( $i = 1; $i < $tage_im_monat+1; $i++ )
 	{
-		if ($i < 10)
+		if ( $i < 10 ) { $i = '0' . $i; }
+
+		if ( $userdata['user_level'] >= TRIAL )
 		{
-			$i = '0'.$i;
-		}
-		
-		if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
-		{
-			if ($i == $tag || is_array($monat_birthday[$i]) || is_array($monat_events[$i]) || is_array($monat_matchs[$i]) || is_array($monat_trainings[$i]))
+			if ( $i == $tag || is_array($monat_birthday[$i]) || is_array($monat_events[$i]) || is_array($monat_matchs[$i]) || is_array($monat_trainings[$i]) )
 			{
-				$day_event = '';
-				$day_class = '';
+				$day_event = $day_class = '';
 				$day_event_num = '0';
 				
 				if ( $i == $tag )
@@ -678,7 +674,8 @@ function display_navi_minical()
 				if ( is_array($monat_birthday[$i]) )
 				{
 					$list = array();
-					for ( $k=0; $k < count($monat_birthday[$i]); $k++ )
+					
+					for ( $k = 0; $k < count($monat_birthday[$i]); $k++ )
 					{
 						$alter	= 0;
 						$gebdt	= explode("-", $monat_birthday[$i][$k]['user_birthday']);
@@ -704,16 +701,20 @@ function display_navi_minical()
 				if ( is_array($monat_events[$i]) )
 				{
 					$list = array();
-					for ( $k=0; $k < count($monat_events[$i]); $k++ )
+					
+					for ( $k = 0; $k < count($monat_events[$i]); $k++ )
 					{
-						$list[] = $monat_events[$i][$k]['event_title'];
+						if ( $monat_events[$i][$k]['event_level'] <= $userdata['user_level'] )
+						{
+							$list[] = $monat_events[$i][$k]['event_title'];
+						}
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_event'] : $lang['cal_events'];
 					$list			= implode('<br>', $list);
-					$day_event		.= (empty($day_event)) ? '<span><em class="events">' . $language . ':</em> ' . $list : '<br><em class="events">' . $language . '</em><br>' . $list;
 					$day_class		= 'events';
 					$day_event_num	= $day_event_num + 1;
+					$day_event		.= (empty($day_event)) ? '<span><em class="events">' . $language . ':</em> ' . $list : '<br><em class="events">' . $language . '</em><br>' . $list;
 				}
 				
 				if ( is_array($monat_matchs[$i]) )
@@ -799,9 +800,13 @@ function display_navi_minical()
 				if ( is_array($monat_events[$i]) )
 				{
 					$list = array();
-					for ( $k=0; $k < count($monat_events[$i]); $k++ )
+					
+					for ( $k = 0; $k < count($monat_events[$i]); $k++ )
 					{
-						$list[] = $monat_events[$i][$k]['event_title'];
+						if ( $monat_events[$i][$k]['event_level'] <= $userdata['user_level'] )
+						{
+							$list[] = $monat_events[$i][$k]['event_title'];
+						}
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_event'] : $lang['cal_events'];
@@ -861,8 +866,52 @@ function display_navi_minical()
 	));
 }
 
-
-
+//
+//	Network: Link/Partner/Sponsor
+//
+function display_navi_network($type)
+{
+	global $db, $lang, $root_path, $settings, $template, $userdata;
+	
+	
+	
+	if ( $settings['subnavi_' . $type] )
+	{
+		$template->assign_block_vars('subnavi_' . $type, array());
+		
+		$typ = ( $type != 'links' ) ? ( $type == 'partner' ) ? NETWORK_PARTNER : NETWORK_SPONSOR : NETWORK_LINK;
+		
+		$sql = 'SELECT network_name, network_url
+					FROM ' . NETWORK . '
+					WHERE network_type = ' . $typ . ' AND network_view = 1
+				ORDER BY network_order';
+//		if ( !($result = $db->sql_query($sql)) )
+//		{
+//			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+//		}
+//		$network_data = $db->sql_fetchrowset($result);
+		$network_data = _cached($sql, 'display_subnavi_network_' . $type);
+		
+		if ( $network_data )
+		{
+			for ( $i = 0; $i < count($network_data); $i++ )
+			{
+				$template->assign_block_vars('subnavi_' . $type . '.' . $type . '_row', array(
+					'L_URL'	=> $network_data[$i]['network_name'],
+					'U_URL'	=> $network_data[$i]['network_url'],
+				));
+			}
+		}
+		
+		$template->assign_vars(array(
+			'L_NETWORK_LINKS'		=> $lang['network_link'],
+			'L_NETWORK_PARTNER'		=> $lang['network_partner'],
+			'L_NETWORK_SPONSOR'		=> $lang['network_sponsor'],
+		));
+	}
+	
+	return;
+}
 
 //
 //	Teambilder

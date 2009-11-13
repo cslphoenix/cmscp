@@ -231,7 +231,7 @@ class Template {
 		// Check if it's an absolute or relative path.
 		if (substr($filename, 0, 1) != '/')
 		{
-       		$filename = ($rp_filename = phpbb_realpath($this->root . '/' . $filename)) ? $rp_filename : $filename;
+       		$filename = ($rp_filename = cms_realpath($this->root . '/' . $filename)) ? $rp_filename : $filename;
 		}
 
 		if (!file_exists($filename))

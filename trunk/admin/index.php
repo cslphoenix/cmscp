@@ -220,6 +220,31 @@ function inarray($needle, $haystack)
 			$dbsize = sprintf("%.2f Bytes", $dbsize);
 		}
 	}
+	
+	$bytes = array_sum(array_map('filesize', glob('*')));
+	echo $bytes;
+	
+	$path = "./../admin/";
+	$handle=opendir ($path);
+	$sum = 0;
+	
+	while (false !== ($file = readdir ($handle)))
+	{
+	if ($file !== "." && $file !== "..")
+	{
+	if (true == is_dir($path.$file))
+	{
+	$path = $path.$file."/";
+	$handle=opendir ($path);
+	}
+	else
+	{
+	$sum += filesize($path.$file);
+	}
+	}
+	}
+	echo "Sum".$sum."<p>";
+
 
 	$template->assign_vars(array(
 		"AVATAR_DIR_SIZE" => $avatar_dir_size,

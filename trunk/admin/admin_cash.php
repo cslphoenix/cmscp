@@ -739,9 +739,9 @@ else
 				'L_CASH_USER_ADD'	=> $lang['cash_user_add'],
 				
 				'L_CASH_INTERVAL'	=> $lang['cash_interval'],
-				'L_EDIT'			=> $lang['edit'],
+				'L_EDIT'			=> $lang['common_edit'],
 				'L_SETTINGS'		=> $lang['settings'],
-				'L_DELETE'			=> $lang['delete'],
+				'L_DELETE'			=> $lang['common_delete'],
 				
 				'TOTAL_CASH'		=> $total_amount,
 				'USER_CASH'			=> $total_amount_users,

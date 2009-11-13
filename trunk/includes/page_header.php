@@ -357,9 +357,13 @@ display_navi();
 display_navi_news();
 display_navi_match();
 
-if ( $settings['subnavi_newusers_show'] )	{ display_navi_newusers(); }
-if ( $settings['subnavi_teams_show'] )		{ display_navi_teams(); }
-if ( $settings['subnavi_minical_show'] )	{ display_navi_minical(); }
+if ( $settings['subnavi_newusers'] )	{ display_navi_newusers(); }
+if ( $settings['subnavi_teams'] )		{ display_navi_teams(); }
+if ( $settings['subnavi_minical'] )		{ display_navi_minical(); }
+
+if ( $settings['subnavi_links'] )		{ display_navi_network('links'); }
+if ( $settings['subnavi_partner'] )		{ display_navi_network('partner'); }
+if ( $settings['subnavi_sponsor'] )		{ display_navi_network('sponsor'); }
 
 if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 {

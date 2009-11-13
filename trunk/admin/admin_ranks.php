@@ -400,9 +400,9 @@ else
 		'L_RANK_MIN'			=> $lang['rank_min'],
 		'L_RANK_ADD'			=> $lang['rank_add'],
 		
-		'L_EDIT'				=> $lang['edit'],
+		'L_EDIT'				=> $lang['common_edit'],
 		'L_SETTINGS'			=> $lang['settings'],
-		'L_DELETE'				=> $lang['delete'],
+		'L_DELETE'				=> $lang['common_delete'],
 		
 		'S_RANKS_ACTION'		=> append_sid('admin_ranks.php'),
 	));

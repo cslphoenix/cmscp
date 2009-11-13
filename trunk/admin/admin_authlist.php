@@ -37,12 +37,19 @@ if ( !empty($setmodules) )
 else
 {
 	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
+	
+	$root_path	= './../';
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/functions.php');
+	
+	$mode		= request('mode');
+	$auth_id	= request(POST_AUTHLIST_URL);
+	$confirm	= request('confirm', 'text');
+	$cancel		= ( request('cancel') ) ? true : false;
+	$no_header	= $cancel;
+	$start		= ( request('start') ) ? request('start', 'num') : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
@@ -54,36 +61,30 @@ else
 		redirect('admin/' . append_sid('admin_authlist.php', true));
 	}
 	
-	$start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
-	
-	$mode		= request('mode', true);
-	$auth_id	= request(POST_AUTHLIST_URL);
-	
 	switch ( $mode )
 	{
-		case 'authlist_add':
-		case 'authlist_edit':
+		case '_add':
+		case '_edit':
 			
 			$template->set_filenames(array('body' => 'style/acp_authlist.tpl'));
 			$template->assign_block_vars('authlist_edit', array());
 			
-			if ( $mode == 'authlist_edit' )
+			if ( $mode == '_edit' )
 			{
 				$authlist = get_data('authlist', $auth_id, 0);
-				$new_mode = 'authlist_update';
+				$new_mode = '_update';
 			}
 			else
 			{
-				$authlist = array('auth_name' => request('auth_name', true));
-				$new_mode = 'authlist_create';
+				$authlist = array('auth_name' => request('auth_name', 'text'));
+				$new_mode = '_create';
 			}
 			
 			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $auth_id . '" />';
 
 			$template->assign_vars(array(
 				'L_AUTHLIST_HEAD'		=> $lang['authlist_head'],
-				'L_AUTHLIST_NEW_EDIT'	=> ( $mode == 'authlist_add' ) ? $lang['authlist_add'] : $lang['authlist_edit'],
+				'L_AUTHLIST_NEW_EDIT'	=> ( $mode == '_add' ) ? $lang['authlist_add'] : $lang['authlist_edit'],
 				'L_REQUIRED'			=> $lang['required'],
 				
 				'L_AUTHLIST_NAME'		=> $lang['authlist_name'],
@@ -101,77 +102,71 @@ else
 			
 			break;
 		
-		case 'authlist_create':
+		case '_create':
 		
-			$auth_name = request('auth_name', true);
+			$auth_name = request('auth_name', 'text');
 			
 			if ( $auth_name == '' )
 			{
 				message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 			}
-			else
+				
+			$sql = 'INSERT INTO ' . AUTHLIST . " (auth_name) VALUES ('auth_" . $auth_name . "')";
+			if ( !$db->sql_query($sql) )
 			{
-				$sql = 'INSERT INTO ' . AUTHLIST . " (auth_name) VALUES ('auth_" . $auth_name . "')";
-				if ( !$db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$sql = 'ALTER TABLE ' . GROUPS . " ADD `auth_" . $auth_name . "` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
-				if ( !$db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('authlist');
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_add', $auth_name);
-	
-				$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
+			
+			$sql = 'ALTER TABLE ' . GROUPS . " ADD `auth_" . $auth_name . "` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+			if ( !$db->sql_query($sql) )
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			$oCache -> sCachePath = './../cache/';
+			$oCache -> deleteCache('authlist');
+			
+			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_add', $auth_name);
+
+			$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+			message_die(GENERAL_MESSAGE, $message);
 
 			break;
 		
-		case 'authlist_update':
+		case '_update':
 		
 			$authinfos = get_data('authlist', $auth_id, 0);
-			$auth_name = request('auth_name', true);
+			$auth_name = request('auth_name', 'text');
 			
 			if ( $auth_name == '' )
 			{
 				message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 			}
-			else
+				
+			$sql = 'UPDATE ' . AUTHLIST . ' SET auth_name = "auth_' . $auth_name . '" WHERE auth_id = ' . $auth_id;
+			if ( !$db->sql_query($sql) )
 			{
-				$sql = 'UPDATE ' . AUTHLIST . ' SET auth_name = "auth_' . $auth_name . '" WHERE auth_id = ' . $auth_id;
-				if ( !$db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$sql = 'ALTER TABLE ' . GROUPS . " CHANGE `" . $authinfos['auth_name'] . "` `auth_" . $auth_name . "` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
-				if ( !$db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('authlist');
-							
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_edit', $auth_name);
-				
-				$message = $lang['update_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
+			
+			$sql = 'ALTER TABLE ' . GROUPS . " CHANGE `" . $authinfos['auth_name'] . "` `auth_" . $auth_name . "` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+			if ( !$db->sql_query($sql) )
+			{
+				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			$oCache -> sCachePath = './../cache/';
+			$oCache -> deleteCache('authlist');
+						
+			_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'acp_authlist_edit', $auth_name);
+			
+			$message = $lang['update_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+			message_die(GENERAL_MESSAGE, $message);
 			
 			break;
 		
-		case 'authlist_delete':
+		case '_delete':
 		
-			$confirm = isset($HTTP_POST_VARS['confirm']);
-			
 			if ( $auth_id && $confirm )
 			{	
 				$authinfos = get_data('authlist', $auth_id, 0);
@@ -200,7 +195,7 @@ else
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="authlist_delete" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $auth_id . '" />';
+				$hidden_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $auth_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -226,6 +221,8 @@ else
 		
 			$template->set_filenames(array('body' => 'style/acp_authlist.tpl'));
 			$template->assign_block_vars('display', array());
+			
+			$s_hidden_fields = '<input type="hidden" name="mode" value="_add" />';
 					
 			$template->assign_vars(array(
 				'L_AUTHLIST_HEAD'		=> $lang['authlist_head'],
@@ -233,10 +230,11 @@ else
 				'L_AUTHLIST_NAME'		=> $lang['authlist_name'],
 				'L_AUTHLIST_ADD'		=> $lang['authlist_add'],
 				
-				'L_EDIT'				=> $lang['edit'],
-				'L_DELETE'				=> $lang['delete'],
+				'L_EDIT'				=> $lang['common_edit'],
+				'L_DELETE'				=> $lang['common_delete'],
 				'L_SETTINGS'			=> $lang['settings'],
 				
+				'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 				'S_AUTHLIST_ACTION'		=> append_sid('admin_authlist.php'),
 			));
 			
@@ -255,8 +253,8 @@ else
 					'CLASS' 		=> $class,
 					'AUTHNAME'		=> $authlist_data[$i]['auth_name'],
 					
-					'U_EDIT'		=> append_sid('admin_authlist.php?mode=authlist_edit&amp;' . POST_AUTHLIST_URL . '=' . $authlist_data[$i]['auth_id']),
-					'U_DELETE'		=> append_sid('admin_authlist.php?mode=authlist_delete&amp;' . POST_AUTHLIST_URL . '=' . $authlist_data[$i]['auth_id']),
+					'U_EDIT'		=> append_sid('admin_authlist.php?mode=_edit&amp;' . POST_AUTHLIST_URL . '=' . $authlist_data[$i]['auth_id']),
+					'U_DELETE'		=> append_sid('admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST_URL . '=' . $authlist_data[$i]['auth_id']),
 				));
 			}
 			
@@ -264,7 +262,6 @@ else
 			
 			break;
 	}
-	
 	include('./page_footer_admin.php');
 }
 

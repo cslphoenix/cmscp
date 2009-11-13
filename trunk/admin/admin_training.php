@@ -26,12 +26,12 @@
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	
+
 	if ( $userauth['auth_training'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['teams']['training'] = $filename;
 	}
-	
+
 	return;
 }
 else
@@ -55,33 +55,11 @@ else
 		redirect('admin/' . append_sid('admin_training.php', true));
 	}
 	
-	if ( isset($HTTP_POST_VARS[POST_TRAINING_URL]) || isset($HTTP_GET_VARS[POST_TRAINING_URL]) )
-	{
-		$training_id = ( isset($HTTP_POST_VARS[POST_TRAINING_URL]) ) ? intval($HTTP_POST_VARS[POST_TRAINING_URL]) : intval($HTTP_GET_VARS[POST_TRAINING_URL]);
-	}
-	else
-	{
-		$training_id = 0;
-	}
-	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		if (isset($HTTP_POST_VARS['training_add']))
-		{
-			$mode = 'training_add';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
+	$mode			= request('mode', true);
+	$training_id	= request(POST_TRAINING_URL);
 	
 	$show_index = '';
 	
@@ -119,16 +97,15 @@ else
 				$template->set_filenames(array('body' => 'style/acp_training.tpl'));
 				$template->assign_block_vars('training_edit', array());
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $training_id . '" />';
+				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $training_id . '" />';
 				
 				$template->assign_vars(array(
 					'L_TRAINING_HEAD'		=> $lang['training_head'],
 					'L_TRAINING_NEW_EDIT'	=> ($mode == 'add') ? $lang['training_add'] : $lang['training_edit'],
 					'L_REQUIRED'			=> $lang['required'],
 					
-					'L_SUBMIT'				=> $lang['common_submit'],
 					'L_RESET'				=> $lang['common_reset'],
+					'L_SUBMIT'				=> $lang['common_submit'],
 					
 					'L_TRAINING_VS'			=> $lang['training_vs'],
 					'L_TRAINING_TEAM'		=> $lang['training_team'],
@@ -138,33 +115,34 @@ else
 					'L_TRAINING_MAPS'		=> $lang['training_maps'],
 					'L_TRAINING_TEXT'		=> $lang['training_text'],
 	
-					
 					'TRAINING_VS'			=> $training['training_vs'],
 					'TRAINING_MAPS'			=> $training['training_maps'],
 					'TRAINING_TEXT'			=> $training['training_text'],
 					
 					'S_DAY'					=> select_date('day',		'day',		date('d', $training['training_start'])),
-					'S_MONTH'				=> select_date('month',	'month',	date('m', $training['training_start'])),
+					'S_MONTH'				=> select_date('month',		'month',	date('m', $training['training_start'])),
 					'S_YEAR'				=> select_date('year',		'year',		date('Y', $training['training_start'])),
 					'S_HOUR'				=> select_date('hour',		'hour',		date('H', $training['training_start'])),
 					'S_MIN'					=> select_date('min',		'min',		date('i', $training['training_start'])),
-					
-					'S_DURATION'			=> select_date('duration', 'dmin',	($training['training_duration'] - $training['training_start']) / 60),
+					'S_DURATION'			=> select_date('duration',	'dmin',	($training['training_duration'] - $training['training_start']) / 60),
 					
 					'S_TEAMS'				=> select_box('team', 'select', 'team_id', 'team_name', $team_id),
-					'S_MATCH'				=> _select_match($training['match_id'], '', 'post'),
+					'S_MATCH'				=> select_box('match', 'select', 'match_id', 'match_name', $training['match_id']),
 				
-					
 					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 					'S_TEAM_ACTION'			=> append_sid('admin_training.php'),
 				));
 			
-				// Template ausgabe
 				$template->pparse('body');
 				
 			break;
 			
-			case 'addtraining':
+			case 'training_create':
+			
+				$event_title		= request('event_title', true);
+				$event_description	= request('event_description', true);
+				$event_level		= request('event_level');
+				$event_comments		= request('event_comments');
 			
 				$error = ''; 
 				$error_msg = '';
@@ -228,7 +206,7 @@ else
 
 				break;
 			
-			case 'edittraining':
+			case 'training_update':
 			
 				$error = ''; 
 				$error_msg = '';
@@ -373,7 +351,7 @@ else
 		'L_TRAINING_ADD'		=> $lang['training_add'],
 		'L_SETTING'				=> $lang['setting'],
 		'L_SETTINGS'			=> $lang['settings'],
-		'L_DELETE'				=> $lang['delete'],
+		'L_DELETE'				=> $lang['common_delete'],
 		'S_TEAMS'				=> select_box('team', 'selectsmall', 'team_id', 'team_name', 0),
 		'S_TEAM_ACTION'			=> append_sid('admin_training.php'),
 	));

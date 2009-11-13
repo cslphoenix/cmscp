@@ -102,11 +102,11 @@ class emailer
 		{
 			$tpl_file = $root_path . 'language/lang_' . $template_lang . '/email/' . $template_file . '.tpl';
 
-			if (!@file_exists(@phpbb_realpath($tpl_file)))
+			if (!@file_exists(@cms_realpath($tpl_file)))
 			{
 				$tpl_file = $root_path . 'language/lang_' . $config['default_lang'] . '/email/' . $template_file . '.tpl';
 
-				if (!@file_exists(@phpbb_realpath($tpl_file)))
+				if (!@file_exists(@cms_realpath($tpl_file)))
 				{
 					message_die(GENERAL_ERROR, 'Could not find email template file :: ' . $template_file, '', __LINE__, __FILE__);
 				}
@@ -360,7 +360,7 @@ class emailer
 	//
 	function encode_file($sourcefile)
 	{
-		if (is_readable(phpbb_realpath($sourcefile)))
+		if (is_readable(cms_realpath($sourcefile)))
 		{
 			$fd = fopen($sourcefile, "r");
 			$contents = fread($fd, filesize($sourcefile));

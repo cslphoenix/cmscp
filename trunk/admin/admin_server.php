@@ -385,8 +385,8 @@ else
 		'L_SERVER_ADD'		=> $lang['gs_add'],
 		
 		'L_SETTINGS'		=> $lang['settings'],
-		'L_EDIT'			=> $lang['edit'],
-		'L_DELETE'			=> $lang['delete'],
+		'L_EDIT'			=> $lang['common_edit'],
+		'L_DELETE'			=> $lang['common_delete'],
 		
 		'L_MOVE_UP'			=> $lang['move_up'], 
 		'L_MOVE_DOWN'		=> $lang['move_down'], 

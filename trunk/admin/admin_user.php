@@ -1446,17 +1446,17 @@ else
 		if ( $userdata['user_level'] > $user_list[$i]['user_level'] )
 		{
 			$link_edit		= '<a href="' . append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['edit'] . '</a>';
-			$link_delete	= '<a href="' . append_sid('admin_user.php?mode=delete&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['delete'] . '</a>';
+			$link_delete	= '<a href="' . append_sid('admin_user.php?mode=delete&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['common_delete'] . '</a>';
 		}
 		else if ( $userdata['user_level'] == ADMIN )
 		{
 			$link_edit		= '<a href="' . append_sid('admin_user.php?mode=edit&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['edit'] . '</a>';
-			$link_delete	= '<a href="' . append_sid('admin_user.php?mode=delete&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['delete'] . '</a>';
+			$link_delete	= '<a href="' . append_sid('admin_user.php?mode=delete&amp;' . POST_USERS_URL . '=' . $user_list[$i]['user_id']) . '" >' . $lang['common_delete'] . '</a>';
 		}
 		else
 		{
 			$link_edit		= $lang['edit'];
-			$link_delete	= $lang['delete'];
+			$link_delete	= $lang['common_delete'];
 		}
 		
 		$template->assign_block_vars('display.user_list', array(
