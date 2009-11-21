@@ -23,22 +23,29 @@
  *
  */
 
-function deltree($dir) {
-
-  $fh = opendir($dir);
-  while($entry = readdir($fh)) {
-    if($entry == ".." || $entry == ".")
-      continue;
-    if(is_dir($dir . $entry))
-      deltree($dir . $entry . "/");
-    else
-      unlink($dir . $entry);
-  }
-  closedir($fh);
-  rmdir($dir);
-
+function dir_remove($path)
+{
+	$dir = opendir($path);
+	
+	while ( $entry = readdir($dir) )
+	{
+		if ( $entry == '..' || $entry == '.' )
+		{
+			continue;
+		}
+		
+		if ( is_dir($path . $entry) )
+		{
+			dir_remove($path . $entry . "/");
+		}
+		else
+		{
+			unlink($path . $entry);
+		}
+	}
+	closedir($dir);
+	rmdir($path);
 }
-
 
 function set_http(&$website)
 {
@@ -222,11 +229,14 @@ function get_data($mode, $id, $type)
 	return $return;
 }
 
-function get_data_array($table, $string)
+function get_data_array($table, $where, $order)
 {
 	global $db;
 	
-	$sql = "SELECT * FROM $table ORDER BY $string DESC";
+	$where_to = ( $where ) ? 'WHERE ' . $where : '';
+	$order_to = ( $order ) ? 'ORDER BY ' . $order . ' DESC' : '';
+	
+	$sql = "SELECT * FROM $table $where_to $order_to";
 	if ( !$result = $db->sql_query($sql) )
 	{
 		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -367,7 +377,7 @@ function size_dir($path)
 		// Borrowed the code from the PHP.net annoted manual, origanally written by:
 		// Jesse (jesse@jess.on.ca)
 		//
-		if($size >= 1048576)
+		if ( $size >= 1048576 )
 		{
 			$size = round($size / 1048576 * 100) / 100 . " MB";
 		}
