@@ -1,9 +1,0 @@
-#ErrorDocument 401 http://localhost/cms_cp/error.php?code=401
-#ErrorDocument 403 http://localhost/cms_cp/error.php?code=403
-#ErrorDocument 404 http://localhost/cms_cp/error.php?code=404
-#ErrorDocument 500 http://localhost/cms_cp/error.php?code=500
-
-<Files "common.php">
-Order Allow,Deny
-Deny from All
-</Files>
