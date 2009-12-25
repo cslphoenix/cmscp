@@ -29,25 +29,39 @@ if ( !empty($setmodules) )
 	
 	if ( $userauth['auth_groups'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['groups']['set'] = $filename;
+		$module['_headmenu_groups']['_submenu_settings'] = $filename;
 	}
 	
 	return;
 }
 else
 {
-	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
-	include($root_path . 'includes/functions_selects.php');
+	define('IN_CMS', true);
+	
+	$root_path	= './../';
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/acp_upload.php');
+	include($root_path . 'includes/acp/acp_selects.php');
+	include($root_path . 'includes/acp/acp_functions.php');
+	
+	$start		= ( request('start') ) ? request('start') : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
+	$group_id	= request(POST_GROUPS_URL);
+	$move		= request('move', 'num');
+	$confirm	= request('confirm');
+	$mode		= request('mode');
+	$show_index	= '';
+	
+	$group_auth_fields	= get_authlist();
+	$group_auth_levels	= array('allowed', 'disallowed');
+	$group_auth_const	= array(AUTH_ALLOWED, AUTH_DISALLOWED);
 	
 	if ( !$userauth['auth_groups'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -55,73 +69,45 @@ else
 		redirect('admin/' . append_sid('admin_groups.php', true));
 	}
 	
-	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ( $start < 0 ) ? 0 : $start;
-	
-	$mode		= request('mode', true);
-	$group_id	= request(POST_GROUPS_URL);
-	
-	$show_index = '';
-	
-	$group_auth_fields	= get_authlist();
-	$group_auth_levels	= array('DISALLOWED', 'ALLOWED');
-	$group_auth_const	= array(AUTH_DISALLOWED, AUTH_ALLOWED);
-	
 	if ( !empty($mode) )
 	{
 		switch ( $mode )
 		{
-			case 'group_add':
-			case 'group_edit':
+			case '_create':
+			case '_update':
 			
 				$template->set_filenames(array('body' => 'style/acp_groups.tpl'));
 				$template->assign_block_vars('groups_edit', array());
 				
-				if ( $mode == 'group_edit' )
+				if ( $mode == '_update' )
 				{
-					$group		= get_data('groups', $group_id, 0);
-					$new_mode	= 'group_update';
+					$group		= get_data(GROUPS, $group_id, 1);
+					$new_mode	= '_update_save';
 
 					$template->assign_block_vars('groups_edit.edit_group', array());
 				}
 				else
 				{
 					$group = array (
-						'group_name'		=> trim($HTTP_POST_VARS['group_name']),
+						'group_name'		=> request('group_name', 'text'),
 						'group_type'		=> '1',
 						'group_access'		=> '1',
-						'group_description'	=> '',
+						'group_desc'		=> '',
 						'group_color'		=> '',
-						'group_logo'		=> '',
-						'group_logo_type'	=> '',
+						'group_image'		=> '',
 						'group_rank'		=> '0',
 						'group_legend'		=> '0',
-						'group_mod'		=> '0',
+						'group_mod'			=> '0',
 					);
+					$new_mode = '_create_save';
 					
 					for ( $i = 0; $i < count($group_auth_fields); $i++ )
 					{
 						$group[$group_auth_fields[$i]] = '0';
 					}
-
-					$new_mode = 'group_create';
+					
 					$template->assign_block_vars('groups_edit.add_group', array());
 				}
-				
-				$sql = 'SELECT user_id, username FROM ' . USERS . ' WHERE user_id <> ' . ANONYMOUS;
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$s_group_mod = '<select class="select" name="group_mod">';
-				$s_group_mod .= '<option value="0">' . $lang['select_group_mod'] . '</option>';
-				
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$s_group_mod .= '<option value="' . $row['user_id'] . '">' . $row['username'] . '&nbsp;</option>';
-				}
-				$s_group_mod .= '</select>';
 				
 				$s_group_access = '<select name="group_access" class="post">';
 
@@ -148,22 +134,24 @@ else
 				{
 					if ( $userdata['user_level'] > $group['group_access'] || $userdata['user_level'] == ADMIN )
 					{
-						$selected_yes	= ( $group[$group_auth_fields[$j]] == $group_auth_const[1] ) ? ' checked="checked"' : '';
-						$selected_no	= ( $group[$group_auth_fields[$j]] == $group_auth_const[0] ) ? ' checked="checked"' : '';
+						$selected_yes	= ( $group[$group_auth_fields[$j]] == $group_auth_const[0] ) ? 'checked="checked"' : '';
+						$selected_no	= ( $group[$group_auth_fields[$j]] == $group_auth_const[1] ) ? 'checked="checked"' : '';
 					}
 					else if ( $userdata['user_level'] <= $group['group_access'] )
 					{
-						$selected_yes	= ( $group[$group_auth_fields[$j]] == $group_auth_const[1] ) ? ' checked="checked" disabled' : ' disabled';
-						$selected_no	= ( $group[$group_auth_fields[$j]] == $group_auth_const[0] ) ? ' checked="checked" disabled' : ' disabled';
+						$selected_yes	= ( $group[$group_auth_fields[$j]] == $group_auth_const[0] ) ? 'checked="checked" disabled' : 'disabled';
+						$selected_no	= ( $group[$group_auth_fields[$j]] == $group_auth_const[1] ) ? 'checked="checked" disabled' : 'disabled';
 					}
 					
-					$custom_auth[$j] = '<input type="radio" name="' . $group_auth_fields[$j] . '"value="1" ' . $selected_yes . '> ' . $lang['Forum_' . $group_auth_levels[1]];
-					$custom_auth[$j] .= '&nbsp;&nbsp;<input type="radio" name="' . $group_auth_fields[$j] . '"value="0" ' . $selected_no . '> ' . $lang['Forum_' . $group_auth_levels[0]];
+					$custom_auth[$j] = '';
+					$custom_auth[$j] .= '<label><input type="radio" name="' . $group_auth_fields[$j] . '" id="' . $group_auth_fields[$j] . '" value="1" ' . $selected_yes . '>&nbsp;' . $lang['group_' . $group_auth_levels[0]] . '</label>&nbsp;';
+					$custom_auth[$j] .= '&nbsp;<label><input type="radio" name="' . $group_auth_fields[$j] . '" value="0" ' . $selected_no . '>&nbsp;' . $lang['group_' . $group_auth_levels[1]] . '</label>';
 
 					$cell_title = $lang['auths'][$group_auth_fields[$j]];
-			
+					
 					$template->assign_block_vars('groups_edit.group_auth_data', array(
 						'CELL_TITLE'			=> $cell_title,
+						'S_AUTH_NAME'			=> $group_auth_fields[$j],
 						'S_AUTH_LEVELS_SELECT'	=> $custom_auth[$j],
 					));
 				}
@@ -171,179 +159,194 @@ else
 				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
 
 				$template->assign_vars(array(
-					'L_GROUP_HEAD'			=> $lang['group_head'],
-					'L_GROUP_NEW_EDIT'		=> ( $mode == 'group_add' ) ? $lang['group_add'] : $lang['group_edit'],
-					'L_REQUIRED'			=> $lang['required'],
+					'L_GROUP_HEAD'			=> sprintf($lang['sprintf_head'], $lang['groups']),
+					'L_GROUP_NEW_EDIT'		=> ( $mode == '_create' ) ? sprintf($lang['sprintf_add'], $lang['group']) : sprintf($lang['sprintf_edit'], $lang['group']),
+					'L_GROUP_OVERVIEW'		=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
 					'L_GROUP_MEMBER'		=> $lang['group_view_member'],
-					'L_OVERVIEW'			=> $lang['group_overview'],
 					
-					'L_GROUP_NAME'			=> $lang['group_name'],
+					'L_GROUP_NAME'			=> sprintf($lang['sprintf_name'], $lang['groups']),
+					'L_GROUP_DESC'			=> sprintf($lang['sprintf_desc'], $lang['groups']),
+					
 					'L_GROUP_MOD'			=> $lang['group_mod'],
 					'L_GROUP_ACCESS'		=> $lang['group_access'],
 					'L_GROUP_TYPE'			=> $lang['group_type'],
-					'L_GROUP_DESCRIPTION'	=> $lang['group_description'],
 					'L_GROUP_LEGEND'		=> $lang['group_legend'],
 					'L_GROUP_COLOR'			=> $lang['group_color'],
 					'L_GROUP_RANK'			=> $lang['group_rank'],
 					
 					'L_GROUP_AUTH'			=> $lang['group_auth'],
 					'L_GROUP_DATA'			=> $lang['group_data'],
-					'L_GROUP_LOGO'			=> $lang['group_logo'],
+					'L_GROUP_IMAGE'			=> $lang['group_image'],
 					
-					'L_SUBMIT'				=> $lang['common_submit'],
-					'L_RESET'				=> $lang['common_reset'],
-					'L_YES'					=> $lang['common_yes'],
+					'L_GROUP_IMAGE_UPLOAD'	=> $lang['group_image_upload'],
+					'L_GROUP_IMAGE_CURRENT'	=> $lang['group_image_current'],
+					'L_IMAGE_DELETE'		=> $lang['common_image_delete'],
+					
 					'L_NO'					=> $lang['common_no'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_SUBMIT'				=> $lang['common_submit'],
+					
+					
 					'L_SHOW'				=> $lang['show'],
 					'L_NOSHOW'				=> $lang['noshow'],
 					
 					'GROUP_NAME'			=> $group['group_name'],
-					'GROUP_DESCRIPTION'		=> $group['group_description'],
+					'GROUP_DESC'			=> $group['group_desc'],
 					'GROUP_COLOR'			=> $group['group_color'],
+					'GROUP_IMAGE'			=> $root_path . $settings['path_groups'] . '/' . $group['group_image'],
 					
 					
-					'S_CHECKED_LEGEND_YES'	=> ( $group['group_legend'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_LEGEND_NO'	=> ( !$group['group_legend'] ) ? ' checked="checked"' : '',
+					'S_LEGEND_YES'	=> ( $group['group_legend'] ) ? ' checked="checked"' : '',
+					'S_LEGEND_NO'	=> ( !$group['group_legend'] ) ? ' checked="checked"' : '',
 					
-					'S_GROUP_ACCESS'		=> $s_group_access,
-					'S_GROUP_MOD'			=> ( $mode == 'group_add' ) ? select_box('user', 'select', 'user_id', 'username', $group['group_mod']) : '',
 					'S_GROUP_TYPE'			=> $s_group_type,
-					'S_GROUP_RANK'			=> _select_rank($group['group_rank'], 2),
+					'S_GROUP_ACCESS'		=> $s_group_access,
 					
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
-					'S_MEMBER_ACTION'		=> append_sid('admin_groups.php?mode=member&amp;' . POST_GROUPS_URL . '=' . $group_id),
+					'S_GROUP_RANK'			=> select_box('ranks', 'select', $group['group_rank'], 2),
+					'S_GROUP_MOD'			=> ( $mode == '_create' ) ? select_box('user', 'select', $group['group_mod']) : '',
+					
+					'S_FIELDS'		=> $s_hidden_fields,
+					'S_GROUP_OVERVIEW'		=> append_sid('admin_groups.php?mode=_overview'),
+					'S_MEMBER_ACTION'		=> append_sid('admin_groups.php?mode=_member&amp;' . POST_GROUPS_URL . '=' . $group_id),
 					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 				));
 			
 				$template->pparse('body');
 				
-			break;
+				break;
 			
-			case 'group_create':
+			case '_create_save':
 			
-				$group_name			= request('group_name', true);
-				$group_mod			= request('group_mod');
-				$group_access		= request('group_access');
-				$group_type			= request('group_type');
-				$group_description	= request('group_description', true);
-				$group_color		= request('group_color', true);
-				$group_legend		= request('group_legend');
-				$group_rank			= request('rank_id');
+				$group_name		= request('group_name', 'text');
+				$group_mod		= request('user_id', 'num');
+				$group_access	= request('group_access', 'num');
+				$group_type		= request('group_type', 'num');
+				$group_desc		= request('group_desc', 'text');
+				$group_color	= request('group_color', 'text');
+				$group_legend	= request('group_legend', 'num');
+				$group_rank		= request('rank_id', 'num');
+				$group_image	= request_files('group_image');
+				$sql_field		= '';
+				$sql_value		= '';
 				
-				$error = ''; 
 				$error_msg = '';
+				$error_msg .= ( !$group_name ) ? $lang['msg_select_name'] : '';
+				$error_msg .= ( !$group_mod ) ? ( $error_msg ? '<br>' : '' ) . $lang['msg_must_select_user'] : '';
 				
-				if ( !$group_name )
+				if ( $error_msg )
 				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['empty_name'];
+					message(GENERAL_ERROR, $error_msg . $lang['back']);
+				}
+
+				for ( $i = 0; $i < count($group_auth_fields); $i++ )
+				{
+					$value = request($group_auth_fields[$i]);
+					$field = $group_auth_fields[$i];
+					
+					$sql_field .= ( ( $sql_field != '' ) ? ', ' : '' ) . $field;
+					$sql_value .= ( ( $sql_value != '' ) ? ', ' : '' ) . $value;
 				}
 				
-				if ( !$group_mod )
+				if ( $group_image['temp'] )
 				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_must_select_user'];
-				}
-				
-				if ( $error )
-				{
-					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
+					$sql_pic = image_upload('_create', 'image_group', 'group_image', '', $group['group_image'], '', $root_path . $settings['path_groups'] . '/', $group_image['temp'], $group_image['name'], $group_image['size'], $group_image['type']);
 				}
 				else
 				{
-					$sql_field = '';
-					$sql_value = '';
-					
-					for ( $i = 0; $i < count($group_auth_fields); $i++ )
-					{
-						$value = $HTTP_POST_VARS[$group_auth_fields[$i]];
-						$field = $group_auth_fields[$i]; 
-						
-						$sql_field .= ( ( $sql_field != '' ) ? ', ' : '' ) . $field;
-						$sql_value .= ( ( $sql_value != '' ) ? ', ' : '' ) . $value;
-					}
-					
-					$sql = 'SELECT MAX(group_order) AS max_order FROM ' . GROUPS . ' WHERE group_single_user = 0';
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					$row = $db->sql_fetchrow($result);
-		
-					$max_order = $row['max_order'];
-					$next_order = $max_order + 10;
-					
-					$sql = 'INSERT INTO ' . GROUPS . " (group_name, $sql_field, group_color, group_legend, group_rank, group_order) VALUES ('" . str_replace("\'", "''", $group_name) . "', $sql_value, '$group_color', $group_legend, $group_rank, $next_order)";
-					if ( !$result = $db->sql_query($sql) )
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-
-					$group_id = $db->sql_nextid();
-					
-					$sql = 'INSERT INTO ' . GROUPS_USERS . " (user_id, group_id, group_mod) VALUES ($group_mod, $group_id, 1)";
-					if ( !$result = $db->sql_query($sql) )
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add', $group_name);
-		
-					$message = $lang['create_group'] . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					$sql_pic = '';
 				}
+				
+				$max_order	= get_data_max(GROUPS, 'group_order', 'group_single_user = 0');
+				$next_order	= $max_order['max'] + 10;
+				
+				$sql = "INSERT INTO " . GROUPS . " (group_name, $sql_field, group_color, group_legend, group_desc, group_rank, group_order)
+							VALUES ('$group_name', $sql_value, '$group_color', '$group_legend', '$group_desc', '$group_rank', '$next_order')";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+
+				$group_id = $db->sql_nextid();
+				
+				$sql = "INSERT INTO " . GROUPS_USERS . " (user_id, group_id, group_mod) VALUES ($group_mod, $group_id, 1)";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				group_set_auth($group_mod, $group_id);
+				
+				$message = $lang['create_group']
+					. sprintf($lang['click_return_group_data'], '<a href="' . append_sid('admin_groups.php?mode=_update&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>')
+					. sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'create_group');
+				message(GENERAL_MESSAGE, $message);
 
 				break;
 
-			case 'group_update':
+			case '_update_save':
 			
-				$group_name			= request('group_name', true);
-				$group_access		= ( isset($HTTP_POST_VARS['group_access']) )	? intval($HTTP_POST_VARS['group_access']) : '1';
-				$group_type			= ( isset($HTTP_POST_VARS['group_type']) )		? intval($HTTP_POST_VARS['group_type']) : '4';
-				$group_description	= request('group_description', true);
-				$group_color		= request('group_color', true);
-				$group_legend		= request('group_legend');
-				$group_rank			= request('rank_id');
-				
+				$group_name		= request('group_name', 'text');
+				$group_access	= request('group_access', 'num');
+				$group_type		= request('group_type', 'num');
+				$group_desc		= request('group_desc', 'text');
+				$group_color	= request('group_color', 'text');
+				$group_legend	= request('group_legend', 'num');
+				$group_rank		= request('rank_id', 'num');
+				$group_image	= request_files('group_image');
+				$sql_auth		= '';
+			
 				$group = get_data('groups', $group_id, 0);
 
-				if ( $group_name == '' )
+				if ( !$group_name )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
+					message(GENERAL_ERROR, $lang['msg_select_name'] . $lang['back']);
 				}
 
-				$sql_auth = '';
+				
 				for ( $i = 0; $i < count($group_auth_fields); $i++ )
 				{
-					$value = intval($HTTP_POST_VARS[$group_auth_fields[$i]]);
+					$value = request($group_auth_fields[$i]);
 	
 					$sql_auth .= ( ( $sql_auth != '' ) ? ', ' : '' ) . $group_auth_fields[$i] . ' = ' . $value;
 				}
 				
-				$sql = "UPDATE " . GROUPS . " SET
-							group_name			= '" . str_replace("\'", "''", $group_name) . "',
-							group_access		= $group_access,
-							group_type			= $group_type,
-							group_description	= '" . str_replace("\'", "''", $group_description) . "',
-							group_color			= '#" . str_replace("\'", "''", $group_color) . "',
-							group_legend		= $group_legend,
-							group_rank			= $group_rank,
-							$sql_auth
-						WHERE group_id = " . intval($HTTP_POST_VARS[POST_GROUPS_URL]);
-				if (!$db->sql_query($sql))
+				if ( $group_image['temp'] )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					$sql_pic = image_upload('_update', 'image_group', 'group_image', '', $group['group_image'], '', $root_path . $settings['path_groups'] . '/', $group_image['temp'], $group_image['name'], $group_image['size'], $group_image['type']);
+				}
+				else if ( request('network_image_delete') )
+				{
+					$sql_pic = image_delete($group['group_image'], '', $root_path . $settings['path_groups'] . '/', 'group_image');
+				}
+				else
+				{
+					$sql_pic = '';
+				}
+				
+				$sql = "UPDATE " . GROUPS . " SET
+							group_name		= '$group_name',
+							group_access	= '$group_access',
+							group_type		= '$group_type',
+							group_desc		= '$group_desc',
+							group_color		= '$group_color',
+							group_legend	= '$group_legend',
+							group_rank		= '$group_rank',
+							$sql_pic
+							$sql_auth
+						WHERE group_id = $group_id";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if ( $group['group_color'] != $group_color )
 				{
-					$sql = 'SELECT user_id
-								FROM ' . USERS . '
-							WHERE user_color = "#' . $group['group_color'] . '"';;
-					if ( !$result = $db->sql_query($sql) )
+					$sql = "SELECT user_id FROM " . USERS . " WHERE user_color = '" . $group['group_color'] . "'";
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$users = $db->sql_fetchrowset($result);
 					
@@ -355,41 +358,38 @@ else
 							$user_in .= ( ( $user_in != '' ) ? ', ' : '' ) . $users[$i]['user_id'];
 						}
 						
-						$sql = "UPDATE " . USERS . " SET user_color = '#$group_color' WHERE user_id IN ($user_in)";
-						if (!$db->sql_query($sql))
+						$sql = "UPDATE " . USERS . " SET user_color = '$group_color' WHERE user_id IN ($user_in)";
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 					}
 				}
 				
 				if ( $group['group_access'] != $group_access )
 				{
-					
-					$sql = 'SELECT user_level
-								FROM ' . USERS . '
-							WHERE user_level = "' . $group['group_access'] . '"';;
-					if ( !$result = $db->sql_query($sql) )
+					$sql = "SELECT user_id FROM " . USERS . " WHERE user_level = " . $group['group_access'];
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$users = $db->sql_fetchrowset($result);
 					
-					$user_in = '';
 					for ( $i = 0; $i < count($users); $i++ )
 					{
 						group_set_auth($users[$i]['user_id'], $group_id);
 					}
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_edit');
-				
-				$message = $lang['update_group'] . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				$message = $lang['create_group']
+					. sprintf($lang['click_return_group_data'], '<a href="' . append_sid('admin_groups.php?mode=_update&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>')
+					. sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'update_group');
+				message(GENERAL_MESSAGE, $message);
 	
 				break;
 				
-			case 'member':
+			case '_member':
 			
 				$template->set_filenames(array('body' => 'style/acp_groups.tpl'));
 				$template->assign_block_vars('group_member', array());
@@ -399,11 +399,13 @@ else
 							WHERE gu.group_id = ' . $group_id . ' AND gu.user_id = u.user_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$group_members = $db->sql_fetchrowset($result);
 				
-				$group_mods = $group_nomods = $group_pending = array();
+				$group_mods		= array();
+				$group_nomods	= array();
+				$group_pending	= array();
 				
 				if ( $group_members )
 				{
@@ -428,10 +430,8 @@ else
 				{
 					for ( $i = 0; $i < count($group_mods); $i++ )
 					{
-						$class = ($i % 2) ? 'row_class1' : 'row_class2';
-
 						$template->assign_block_vars('group_member.mods_row', array(
-							'CLASS' 		=> $class,
+							'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
 							'USER_ID'		=> $group_mods[$i]['user_id'],
 							'USERNAME'		=> $group_mods[$i]['username'],
 							'REGISTER'		=> create_date('d.m.Y', $group_mods[$i]['user_regdate'], $userdata['user_timezone']),
@@ -448,10 +448,8 @@ else
 				{
 					for ( $i = 0; $i < count($group_nomods); $i++ )
 					{
-						$class = ($i % 2) ? 'row_class1' : 'row_class2';
-
 						$template->assign_block_vars('group_member.nomods_row', array(
-							'CLASS' 		=> $class,
+							'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
 							'USER_ID'		=> $group_nomods[$i]['user_id'],
 							'USERNAME'		=> $group_nomods[$i]['username'],
 							'REGISTER'		=> create_date('d.m.Y', $group_nomods[$i]['user_regdate'], $userdata['user_timezone']),
@@ -470,27 +468,20 @@ else
 					
 					for ( $i = 0; $i < count($group_pending); $i++ )
 					{
-						$class = ($i % 2) ? 'row_class1' : 'row_class2';
-						
 						$template->assign_block_vars('group_member.pending.pending_row', array(
-							'CLASS' 		=> $class,
+							'CLASS' 		=> ($i % 2) ? 'row_class1' : 'row_class2',
 							'USER_ID'		=> $group_pending[$i]['user_id'],
 							'USERNAME'		=> $group_pending[$i]['username'],
 							'REGISTER'		=> create_date('d.m.Y', $group_pending[$i]['user_regdate'], $userdata['user_timezone']),
 						));
 					}
 				}
-				else
-				{
-					$template->assign_block_vars('group_member.switch_pending', array());
-					$template->assign_vars(array('L_NO_MEMBERS' => $lang['no_members']));
-				}
 
 				$sql_id = '';
 				
 				if ( $group_members )
 				{
-					foreach ($group_members as $member )
+					foreach ( $group_members as $member )
 					{
 						$ids[] = $member['user_id'];
 					}
@@ -498,12 +489,10 @@ else
 					$sql_id .= " AND NOT user_id IN (" . implode(', ', $ids) . ")";
 				}
 					
-				$sql = 'SELECT username, user_id
-							FROM ' . USERS . '
-							WHERE user_id <> ' . ANONYMOUS . $sql_id;
-				if (!($result = $db->sql_query($sql)))
+				$sql = "SELECT username, user_id FROM " . USERS . " WHERE user_id <> " . ANONYMOUS . $sql_id;
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$s_addusers_select = '<select class="select" name="members_select[]" rows="5" multiple>';
@@ -515,9 +504,9 @@ else
 				
 				$s_action_options = '<select class="postselect" name="mode">';
 				$s_action_options .= '<option value="option">&raquo; ' . $lang['option_select'] . '</option>';
-				$s_action_options .= '<option value="approve">&raquo; Antrag zustimmen</option>';
-				$s_action_options .= '<option value="remove">&raquo; Antrag verweigern</option>';
-				$s_action_options .= '<option value="change_level">&raquo; Gruppenrechte geben/nehmen</option>';
+				$s_action_options .= '<option value="_user_approve">&raquo; Antrag zustimmen</option>';
+				$s_action_options .= '<option value="_user_remove">&raquo; Antrag verweigern</option>';
+				$s_action_options .= '<option value="_user_change">&raquo; Gruppenrechte geben/nehmen</option>';
 				
 				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['common_delete'] . '</option>';
 				$s_action_options .= '</select>';
@@ -529,18 +518,24 @@ else
 				$s_hidden_fields2 .= '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
 	
 				$template->assign_vars(array(
-					'L_GROUP_TITLE'			=> $lang['group_head'],
-					'L_GROUP_NEW_EDIT'		=> $lang['group_edit'],
-					'L_GROUP_MEMBER'		=> $lang['group_view_member'],
+					'L_GROUP_HEAD'			=> sprintf($lang['sprintf_head'], $lang['groups']),
+					'L_GROUP_EDIT'			=> sprintf($lang['sprintf_edit'], $lang['group']),
+					'L_GROUP_MEMBER'		=> sprintf($lang['sprintf_overview'], $lang['common_members']),
+					'L_GROUP_OVERVIEW'		=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
+					'L_GROUP_NAME'			=> sprintf($lang['sprintf_name'], $lang['groups']),
+					'L_REQUIRED'			=> $lang['required'],
+					
+					'L_MODERATOR'			=> $lang['common_moderators'],
+					'L_MEMBER'				=> $lang['common_members'],
+					'L_PENDING_MEMBER'		=> $lang['pending_members'],
+					
+					
 					'L_GROUP_ADD_MEMBER'	=> $lang['group_add_member'],
-					'L_OVERVIEW'			=> $lang['group_overview'],
 					
 					'L_GROUP_ADD'			=> $lang['group_add_member'],
 					'L_GROUP_ADD_MEMBER_EX'	=> $lang['group_add_member_ex'],
 					
 					
-					
-					'L_GROUP_NAME'			=> $lang['group_name'],
 					
 					'L_SUBMIT'				=> $lang['Submit'],
 					
@@ -549,21 +544,16 @@ else
 					'L_JOIN'				=> $lang['joined'],
 					'L_RANK'				=> $lang['rank'],
 					
-					
-					'L_MODERATOR'			=> $lang['moderators'],
-					'L_MEMBER'				=> $lang['members'],
-					'L_PENDING_MEMBER'		=> $lang['pending_members'],
-					
 					'L_MARK_ALL'			=> $lang['mark_all'],
 					'L_MARK_DEALL'			=> $lang['mark_deall'],
 					
 					'S_ACTION_ADDUSERS'		=> $s_addusers_select,
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
-					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
-					'S_GROUP_EDIT'			=> append_sid('admin_groups.php?mode=group_edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
+					'S_GROUP_OVERVIEW'		=> append_sid('admin_groups.php?mode=_overview'),
+					'S_GROUP_EDIT'			=> append_sid('admin_groups.php?mode=_update&amp;' . POST_GROUPS_URL . '=' . $group_id),
 					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_hidden_fields,
 					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2
 				));
 				
@@ -571,9 +561,9 @@ else
 			
 				break;
 			
-			case 'approve':
-			case 'deny':
-			case 'remove':
+			case '_user_approve':
+			case '_user_deny':
+			case '_user_remove':
 				
 				$group_info = get_data('groups', $group_id, 0);
 				
@@ -598,9 +588,9 @@ else
 								SET user_pending = 0
 								WHERE user_id IN (' . $sql_in . ')
 									AND group_id = ' . $group_id;
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					for( $k = 0; $k < count($members); $k++)
@@ -613,9 +603,9 @@ else
 				else if ( $mode == 'deny' || $mode == 'remove' )
 				{
 					$sql = 'DELETE FROM ' . GROUPS_USERS . ' WHERE user_id IN (' . $sql_in . ') AND group_id = ' . $group_id;
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					for( $i = 0; $i < count($members); $i++ )
@@ -628,7 +618,7 @@ else
 				{
 					if ( !($result = $db->sql_query($sql_select)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not get user email information', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not get user email information', '', __LINE__, __FILE__, $sql);
 					}
 
 					$bcc_list = array();
@@ -667,16 +657,16 @@ else
 			
 				break;
 				
-			case 'change_level':
+			case '_user_change':
 				
-				$members_select = array();
-				$members_mark = count($HTTP_POST_VARS['members']);
-				
-				for ( $i = 0; $i < $members_mark; $i++ )
+				$members		= request('members');
+				$members_select	= array();
+
+				for ( $i = 0; $i < count($members); $i++ )
 				{
-					if ( intval($HTTP_POST_VARS['members'][$i]) )
+					if ( $members[$i] )
 					{
-						$members_select[] = intval($HTTP_POST_VARS['members'][$i]);
+						$members_select[] = (int) $members[$i];
 					}
 				}
 				
@@ -689,9 +679,9 @@ else
 								WHERE group_id = ' . $group_id . '
 									AND group_mod = 1
 									AND user_id IN (' . $user_ids . ')';
-					if ( !$result = $db->sql_query($sql) )
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$group_mods = array();
@@ -707,9 +697,9 @@ else
 									SET group_mod = 0
 									WHERE group_id = ' . intval($group_id) . '
 										AND user_id IN (' . implode(', ', $group_mods) . ')';
-						if (!$db->sql_query($sql))
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 					}
 					
@@ -719,79 +709,16 @@ else
 								SET group_mod = 1
 								WHERE group_id = ' . intval($group_id) . '
 									AND user_id IN (' . implode(', ', $members_select) . ')' . $sql_in;
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 
 					$message = $lang['group_set_mod']
 						. sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>')
-						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
-
+						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=_member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
+					message(GENERAL_MESSAGE, $message);
 				}
-			
-				break;
-				
-			case 'list':
-			
-				$template->set_filenames(array('body' => 'style/acp_groups.tpl'));
-				$template->assign_block_vars('groups_list', array());
-			
-				$sql = 'SELECT *
-							FROM ' . GROUPS . '
-							WHERE group_single_user = 0
-								AND group_type != ' . GROUP_SYSTEM . '
-						ORDER BY group_order';
-				if ( !$result = $db->sql_query($sql) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$groups_data = $db->sql_fetchrowset($result); 
-				
-				for ( $i = $start; $i < min(5 + $start, count($groups_data)); $i++)
-				{
-					$template->assign_block_vars('groups_list.groups_data', array(
-						'GROUP_NAME'	=> $groups_data[$i]['group_name'],
-					));
-
-					for ($j = 0; $j < count($group_auth_fields); $j++ )
-					{
-						$selected_yes = ( $groups_data[$i][$group_auth_fields[$j]] == $group_auth_const[1] ) ? ' checked="checked"' : '';
-						$selected_no = ( $groups_data[$i][$group_auth_fields[$j]] == $group_auth_const[0] ) ? ' checked="checked"' : '';
-						
-						$custom_auth[$j] = '<input type="radio" name="' . $group_auth_fields[$j] . $groups_data[$i]['group_id']  . '"';
-						$custom_auth[$j] .= ' value="1" ' . $selected_yes . '> ' . $lang['Forum_' . $group_auth_levels[1]];
-						$custom_auth[$j] .= '&nbsp;&nbsp;<input type="radio" name="' . $group_auth_fields[$j] . $groups_data[$i]['group_id']  . '"';
-						$custom_auth[$j] .= ' value="0" ' . $selected_no . '> ' . $lang['Forum_' . $group_auth_levels[0]];
-					
-						$cell_title = '<td class="row1">' . $lang['auths'][$group_auth_fields[$j]] . '</td>';
-				
-						$template->assign_block_vars('groups_list.groups_data.groups_auth', array(
-							'CELL_TITLE'			=> ( $i == '0' || $i == '5' || $i == '10' || $i == '15' ) ? $cell_title : '',
-							'S_AUTH_LEVELS_SELECT'	=> $custom_auth[$j],
-						));
-					}
-				}
-				
-				$current_page = ( !count($groups_data) ) ? 1 : ceil( count($groups_data) / 5 );
-				
-				$template->assign_vars(array(
-					'L_GROUP_TITLE'			=> $lang['group_head'],
-					'L_GROUP_EXPLAIN'		=> $lang['group_explain'],
-					'L_OVERVIEW'			=> $lang['group_overview'],
-					'L_OVERVIEW_EXPLAIN'	=> $lang['group_overview_explain'],
-					'L_GOTO_PAGE'			=> $lang['Goto_page'],
-					
-					'PAGINATION'			=> generate_pagination('admin_groups.php?mode=list', count($groups_data), 5, $start),
-					'PAGE_NUMBER'			=> sprintf($lang['Page_of'], ( floor( $start / 5 ) + 1 ), $current_page ), 
-		
-
-					'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
-					'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
-				));
-				
-				$template->pparse('body');
 			
 				break;
 				
@@ -803,7 +730,7 @@ else
 				
 				if ( !$members && !$members_s )
 				{
-					message_die(GENERAL_ERROR, $lang['team_no_select']);
+					message(GENERAL_ERROR, $lang['team_no_select']);
 				}
 				else
 				{
@@ -833,13 +760,13 @@ else
 									WHERE username IN ("' . $sql_in . '")';
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_MESSAGE, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_MESSAGE, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if (!($row = $db->sql_fetchrow($result)))
 						{
 							$db->sql_freeresult($result);
-							message_die(GENERAL_MESSAGE, $lang['team_no_new'], '');
+							message(GENERAL_MESSAGE, $lang['team_no_new'], '');
 						}
 						
 						do
@@ -861,7 +788,7 @@ else
 									AND group_id = ' . $group_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$add_id_ary = $user_id_ary_im = array();
@@ -876,7 +803,7 @@ else
 					
 					if (!sizeof($add_id_ary) && !sizeof($user_id_arya))
 					{
-						message_die(GENERAL_MESSAGE, $lang['team_no_new']);
+						message(GENERAL_MESSAGE, $lang['team_no_new']);
 					}
 					
 					if (sizeof($add_id_ary))
@@ -894,7 +821,7 @@ else
 				
 						if (!sizeof($sql_ary))
 						{
-							message_die(GENERAL_ERROR, 'Fehler', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'Fehler', '', __LINE__, __FILE__, $sql);
 						}
 						
 						$ary = array();
@@ -910,9 +837,9 @@ else
 			
 						
 						$sql = 'INSERT INTO ' . GROUPS_USERS . ' (' . implode(', ', array_keys($sql_ary[0])) . ') VALUES ' . implode(', ', $ary);
-						if ( !$db->sql_query($sql) )
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						for( $i = 0; $i < count($add_id_ary); $i++ )
@@ -921,15 +848,15 @@ else
 						}
 					}
 
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add_member');
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_add_member');
 			
 					$message = $lang['msg_group_add_member']
 						. sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>')
 						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 				}
 				
-			break;
+				break;
 			
 			case 'deluser':
 			
@@ -937,82 +864,130 @@ else
 				
 				if (!$_POST['members'])
 				{
-					message_die(GENERAL_ERROR, $lang['team_no_select']);
+					message(GENERAL_ERROR, $lang['team_no_select']);
 				}
 				
 				$sql_in = implode(", ", $members);
 				
 				$sql = "DELETE FROM " . GROUPS_USERS . " WHERE user_id IN ($sql_in) AND group_id = $group_id";
-				$result = $db->sql_query($sql);
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_delete_member');
-			
 				$message = $lang['msg_group_del_member']
 					. sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>')
-					. sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');				
-				message_die(GENERAL_MESSAGE, $message);
+					. sprintf($lang['click_return_group_member'], '<a href="' . append_sid('admin_groups.php?mode=member&' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'msg_group_del_member');
+				message(GENERAL_MESSAGE, $message);
 			
-			break;
+				break;
 			
-			case 'order':
+			case '_overview':
+			
+				$template->set_filenames(array('body' => 'style/acp_groups.tpl'));
+				$template->assign_block_vars('groups_list', array());
 				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . GROUPS . " SET group_order = group_order + $move WHERE group_id = $group_id";
-				if (!$db->sql_query($sql))
+				$sql = "SELECT * FROM " . GROUPS . " WHERE group_single_user = 0 ORDER BY group_order";
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-		
-				renumber_order('groups', '0');
+				$groups_data = $db->sql_fetchrowset($result);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_order');
+				for ( $i = $start; $i < min(5 + $start, count($groups_data)); $i++)
+				{
+					$template->assign_block_vars('groups_list.groups_data', array('GROUP_NAME'	=> $groups_data[$i]['group_name']));
+
+					for ( $j = 0; $j < count($group_auth_fields); $j++ )
+					{
+						$selected_yes	= ( $groups_data[$i][$group_auth_fields[$j]] == $group_auth_const[0] ) ? ' checked="checked"' : '';
+						$selected_no	= ( $groups_data[$i][$group_auth_fields[$j]] == $group_auth_const[1] ) ? ' checked="checked"' : '';
+						
+						$custom_auth[$j] = '';
+						$custom_auth[$j] .= '<label><input type="radio" name="' . $group_auth_fields[$j] . $groups_data[$i]['group_id']  . '" value="1" ' . $selected_yes . '> ' . $lang['group_' . $group_auth_levels[0]] . '</label>&nbsp;';
+						$custom_auth[$j] .= '&nbsp;<label><input type="radio" name="' . $group_auth_fields[$j] . $groups_data[$i]['group_id']  . '" value="0" ' . $selected_no . '> ' . $lang['group_' . $group_auth_levels[1]] . '</label>';
+					
+						$cell_title = '<td class="row1"><label>' . $lang['auths'][$group_auth_fields[$j]] . '</label></td>';
+				
+						$template->assign_block_vars('groups_list.groups_data.groups_auth', array(
+							'CELL_TITLE'			=> ( $i == '0' || $i == '5' || $i == '10' || $i == '15' ) ? $cell_title : '',
+							'S_AUTH_LEVELS_SELECT'	=> $custom_auth[$j],
+						));
+					}
+				}
+				
+				$current_page = ( !count($groups_data) ) ? 1 : ceil( count($groups_data) / 5 );
+				
+				$template->assign_vars(array(
+					'L_GROUP_HEAD'				=> sprintf($lang['sprintf_head'], $lang['groups']),
+					'L_GROUP_OVERVIEW'			=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
+					'L_GROUP_OVERVIEW_EXPLAIN'	=> $lang['group_overview_explain'],
+					
+					'L_GOTO_PAGE'				=> $lang['Goto_page'],
+					
+					'PAGINATION'				=> generate_pagination('admin_groups.php?mode=_list', count($groups_data), 5, $start),
+					'PAGE_NUMBER'				=> sprintf($lang['Page_of'], ( floor( $start / 5 ) + 1 ), $current_page ), 
+		
+					'S_GROUP_ACTION'			=> append_sid('admin_groups.php'),
+				));
+				
+				$template->pparse('body');
+			
+				break;
+			
+			case '_order':
+			
+				update(GROUPS, 'group', $move, $group_id);
+				orders('groups', '0');
+				
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_order');
 				
 				$show_index = TRUE;
-	
+
 				break;
 				
-			case 'group_delete':
+			case '_delete':
 			
-				$confirm = isset($HTTP_POST_VARS['confirm']);
-				
 				if ( $group_id && $confirm )
 				{	
-					$group = get_data('groups', $group_id, 0);
+				#	$group = get_data('groups', $group_id, 0);
 				
-					$sql = 'DELETE FROM ' . GROUPS . ' WHERE group_id = ' . $group_id;
-					if (!$db->sql_query($sql))
+					$sql = "DELETE FROM " . GROUPS . " WHERE group_id = $group_id";
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					$sql = "DELETE FROM " . GROUPS_USERS . " WHERE group_id = $group_id";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'acp_group_delete', $group['group_name']);
-					
 					$message = $lang['delete_group'] . sprintf($lang['click_return_group'], '<a href="' . append_sid('admin_groups.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GROUPS, 'delete_group');
+					message(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $group_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="group_delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_group'],
-		
-						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
-		
-						'S_CONFIRM_ACTION'	=> append_sid('admin_groups.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'L_YES'				=> $lang['common_yes'],
+						'S_FIELDS'	=> $s_fields,
+						'S_ACTION'	=> append_sid('admin_groups.php'),
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_groups']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_groups']);
 				}
 				
 				$template->pparse('body');
@@ -1021,7 +996,7 @@ else
 			
 			default:
 				
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['no_select_module']);
 				
 				break;
 		}
@@ -1035,36 +1010,35 @@ else
 	
 	$template->set_filenames(array('body' => 'style/acp_groups.tpl'));
 	$template->assign_block_vars('display', array());
+	
+	$s_fields = '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_GROUP_TITLE'			=> $lang['group_head'],
+		'L_GROUP_HEAD'			=> sprintf($lang['sprintf_head'], $lang['groups']),
+		'L_GROUP_OVERVIEW'		=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
+		'L_GROUP_CREATE'		=> sprintf($lang['sprintf_create'], $lang['group']),
+		'L_GROUP_NAME'			=> sprintf($lang['sprintf_name'], $lang['groups']),
 		'L_GROUP_EXPLAIN'		=> $lang['group_explain'],
-		'L_OVERVIEW'			=> $lang['group_overview'],
-		'L_OVERVIEW_EXPLAIN'	=> $lang['group_overview_explain'],
 		
-		'L_GROUP_ADD'			=> $lang['group_add'],
-		'L_GROUP_NAME'			=> $lang['group_name'],
 		'L_GROUP_MEMBERCOUNT'	=> $lang['group_membercount'],
 		
-		'L_EDIT'				=> $lang['common_edit'],
-		'L_SETTINGS'			=> $lang['settings'],
-		'L_MEMBER'				=> $lang['member'],
+		'L_UPDATE'				=> $lang['common_update'],
+		'L_DELETE'				=> $lang['common_delete'],
+		'L_MEMBER'				=> $lang['common_members'],
+		'L_SETTINGS'			=> $lang['common_settings'],
 		
-		'S_OVERVIEW'			=> append_sid('admin_groups.php?mode=list'),
+		'S_FIELDS'		=> $s_fields,
+		'S_GROUP_OVERVIEW'		=> append_sid('admin_groups.php?mode=_overview'),
+		'S_GROUP_CREATE'		=> append_sid('admin_groups.php?mode=_create'),
 		'S_GROUP_ACTION'		=> append_sid('admin_groups.php'),
 	));
 	
-	$sql = 'SELECT MAX(group_order) AS max FROM ' . GROUPS . ' WHERE group_single_user = 0';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$max_order = $db->sql_fetchrow($result);
+	$max_order = get_data_max(GROUPS, 'group_order', 'group_single_user = 0');
 	
-	$sql = 'SELECT * FROM ' . GROUPS . ' WHERE group_single_user = 0 ORDER BY group_order';
+	$sql = "SELECT * FROM " . GROUPS . " WHERE group_single_user = 0 ORDER BY group_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	if ( $db->sql_numrows($result) )
@@ -1084,7 +1058,7 @@ else
 				GROUP BY gu.group_id';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		while ($row = $db->sql_fetchrow($result))
@@ -1102,14 +1076,14 @@ else
 				'NAME'			=> $row['group_name'],
 				'MEMBER_COUNT'	=> $row['total_members'],
 			
-				'MOVE_UP'			=> ( $row['group_order'] != '10' )				? '<a href="' . append_sid('admin_groups.php?mode=order&amp;move=-15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'			=> ( $row['group_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_groups.php?mode=order&amp;move=15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'			=> ( $row['group_order'] != '10' )				? '<a href="' . append_sid('admin_groups.php?mode=_order&amp;move=-15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $row['group_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_groups.php?mode=_order&amp;move=15&amp;' . POST_GROUPS_URL . '=' . $group_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
 				'L_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? $lang['common_delete'] : '',
 				
-				'U_MEMBER'		=> append_sid('admin_groups.php?mode=member&amp;' . POST_GROUPS_URL . '=' . $group_id),
-				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid('admin_groups.php?mode=group_delete&amp;' . POST_GROUPS_URL . '=' . $group_id) : '',
-				'U_EDIT'		=> append_sid('admin_groups.php?mode=group_edit&amp;' . POST_GROUPS_URL . '=' . $group_id),
+				'U_MEMBER'		=> append_sid('admin_groups.php?mode=_member&amp;' . POST_GROUPS_URL . '=' . $group_id),
+				'U_UPDATE'		=> append_sid('admin_groups.php?mode=_update&amp;' . POST_GROUPS_URL . '=' . $group_id),
+				'U_DELETE'		=> ( $row['group_type'] != GROUP_SYSTEM ) ? append_sid('admin_groups.php?mode=_delete&amp;' . POST_GROUPS_URL . '=' . $group_id) : '',
 			));
 		}
 	}
@@ -1118,9 +1092,9 @@ else
 		$template->assign_block_vars('display.no_groups', array());
 		$template->assign_vars(array('NO_GAMES' => $lang['group_empty']));
 	}
+	
 	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }
-
 ?>

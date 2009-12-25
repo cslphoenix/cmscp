@@ -37,15 +37,17 @@ if( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
 	require('./pagestart.php');
-	include($root_path . 'includes/functions_selects.php');
+//	include($root_path . 'includes/functions_selects.php');
+	include($root_path . 'includes/acp/acp_selects.php');
+	include($root_path . 'includes/acp/acp_functions.php');
 
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
@@ -136,7 +138,7 @@ else
 					'S_PATH_PAGE'		=> _select_path(),
 					'S_PATH_PERMS'		=> _select_perms(),
 					
-					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
+					'S_FIELDS'	=> $s_hidden_fields,
 					'S_SET_ACTION'		=> append_sid('admin_set.php'),
 				));
 				
@@ -154,16 +156,16 @@ else
 				$path	= $HTTP_POST_VARS['path'];
 				$perms	= $HTTP_POST_VARS['perms'];
 			
-				_set_chmod($host, $port, $user, $pass, $path, $file, $perms);
+				set_chmod($host, $port, $user, $pass, $root_path . $path, $file, $perms);
 			
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SET, 'ACP_SET_CHMOD');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SET, 'ACP_SET_CHMOD');
 				
 				$show_index = TRUE;
 			
 				break;
 
 			default:
-				message_die(GENERAL_ERROR, $lang['no_mode']);
+				message(GENERAL_ERROR, $lang['no_mode']);
 				break;
 		}
 	
@@ -179,9 +181,9 @@ else
 	//	_config Data
 	//
 	$sql = 'SELECT * FROM ' . CONFIG;
-	if (!$result = $db->sql_query($sql))
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 	}
 	else
 	{
@@ -214,9 +216,9 @@ else
 				}
 				
 				$sql = 'UPDATE ' . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
 				}
 			}
 		}
@@ -226,9 +228,9 @@ else
 	//	_settings Data
 	//
 	$sql = 'SELECT * FROM ' . SETTINGS;
-	if (!$result = $db->sql_query($sql))
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 	}
 	else
 	{
@@ -244,9 +246,9 @@ else
 			if( isset($HTTP_POST_VARS['submit']) )
 			{
 				$sql = 'UPDATE ' . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
 				}
 			}
 		}
@@ -259,7 +261,7 @@ else
 		$oCache -> deleteCache('settings');
 	
 		$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_set.php') . '">', '</a>');
-		message_die(GENERAL_MESSAGE, $message);
+		message(GENERAL_MESSAGE, $message);
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_set.tpl'));
@@ -412,15 +414,15 @@ else
 		"TEAM_LOGO_MAX_HEIGHT"		=> $new_settings['team_logo_max_height'],
 		"TEAM_LOGO_MAX_WIDTH"		=> $new_settings['team_logo_max_width'],
 		
-		"S_TEAM_LOGO_UPLOAD_YES"	=> ( $new_settings['team_logo_upload'] ) ? 'checked="checked"' : '',
-		"S_TEAM_LOGO_UPLOAD_NO"		=> (!$new_settings['team_logo_upload'] ) ? 'checked="checked"' : '',
+		"S_LOGO_UPLOAD_YES"	=> ( $new_settings['team_logo_upload'] ) ? 'checked="checked"' : '',
+		"S_LOGO_UPLOAD_NO"		=> (!$new_settings['team_logo_upload'] ) ? 'checked="checked"' : '',
 		
 		"TEAM_LOGOS_FILESIZE"		=> $new_settings['team_logos_filesize'],
 		"TEAM_LOGOS_MAX_HEIGHT"		=> $new_settings['team_logos_max_height'],
 		"TEAM_LOGOS_MAX_WIDTH"		=> $new_settings['team_logos_max_width'],	
 		
-		"S_TEAM_LOGOS_UPLOAD_YES"	=> ( $new_settings['team_logos_upload'] ) ? 'checked="checked"' : '',
-		"S_TEAM_LOGOS_UPLOAD_NO"	=> (!$new_settings['team_logos_upload'] ) ? 'checked="checked"' : '',
+		"S_LOGOS_UPLOAD_YES"	=> ( $new_settings['team_logos_upload'] ) ? 'checked="checked"' : '',
+		"S_LOGOS_UPLOAD_NO"	=> (!$new_settings['team_logos_upload'] ) ? 'checked="checked"' : '',
 		
 		'L_AUTOLOGIN_TIME_EXPLAIN'	=> $lang['Autologin_time_explain'],
 		'L_COOKIE_SETTINGS'			=> $lang['Cookie_settings'], 

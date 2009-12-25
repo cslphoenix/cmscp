@@ -29,8 +29,8 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['logs']['log']	= $filename;
-		$module['logs']['log_error']		= $filename . "?mode=error";
+		$module['_headmenu_development']['_submenu_logs']		= $filename;
+		$module['_headmenu_development']['_submenu_logs_error']	= $filename . "?mode=error";
 	//	$module['logs']['logs_admin']	= $filename . "?mode=admin";
 	//	$module['logs']['logs_member']	= $filename . "?mode=member";
 	//	$module['logs']['logs_user']	= $filename . "?mode=user";
@@ -40,53 +40,29 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
+	define('IN_CMS', true);
+	
+	$root_path	= './../';
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
+	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/logs.php');
+	
+	$start		= ( request('start') ) ? request('start') : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
+	$log_id		= request(POST_LOG_URL);
+	$mode		= request('mode');
+	$confirm	= request('confirm');
 	
 	if ($userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 
 	if ( $cancel )
 	{
 		redirect('admin/' . append_sid('admin_logs.php', true));
-	}
-	
-	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ( $start < 0 ) ? 0 : $start;
-	
-	if ( isset($HTTP_POST_VARS[POST_LOG_URL]) || isset($HTTP_GET_VARS[POST_LOG_URL]) )
-	{
-		$LOG_id = ( isset($HTTP_POST_VARS[POST_LOG_URL]) ) ? intval($HTTP_POST_VARS[POST_LOG_URL]) : intval($HTTP_GET_VARS[POST_LOG_URL]);
-	}
-	else
-	{
-		$LOG_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['delete']) || isset($HTTP_GET_VARS['delete']) )
-		{
-			$mode = 'delete';
-		}
-		else if ( isset($HTTP_POST_VARS['delete_all']) || isset($HTTP_GET_VARS['delete_all']) )
-		{
-			$mode = 'delete_all';
-		}
-		else
-		{
-			$mode = '';
-		}
 	}
 	
 	switch ( $mode )
@@ -99,7 +75,7 @@ else
 			$sql = 'SELECT * FROM ' . ERROR . ' ORDER BY error_id DESC';
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
 			}
 			$log_entry = $db->sql_fetchrowset($result); 
 			$db->sql_freeresult($result);
@@ -175,23 +151,23 @@ else
 			if ( $confirm && $log_ids )
 			{
 				$sql = 'DELETE FROM ' . ERROR . " WHERE error_id IN ($log_ids)";
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_error');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_error');
 				
 				$message = $lang['delete_log_error'] . sprintf($lang['click_return_log_error'], '<a href="' . append_sid('admin_logs.php?mode=error') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 			}
 			else if ( !$confirm && $log_id )
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="deleteerror" />';
-				$hidden_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="deleteerror" />';
+				$s_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -200,13 +176,13 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_CONFIRM_ACTION'	=> append_sid('admin_logs.php?mode=error'),
-					'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					'S_ACTION'	=> append_sid('admin_logs.php?mode=error'),
+					'S_FIELDS'	=> $s_fields,
 				));
 			}
 			else
 			{
-				message_die(GENERAL_MESSAGE, $lang['msg_must_select_log']);
+				message(GENERAL_MESSAGE, $lang['msg_must_select_log']);
 			}
 		
 			$template->pparse('body');
@@ -220,22 +196,22 @@ else
 			if ( $confirm )
 			{
 				$sql = 'TRUNCATE TABLE ' . LOGS;
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_all');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_all');
 				
 				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 			}
 			else if ( !$confirm )
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="delete_all" />';
+				$s_fields = '<input type="hidden" name="mode" value="delete_all" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -244,13 +220,13 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_CONFIRM_ACTION'	=> append_sid('admin_logs.php'),
-					'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					'S_ACTION'	=> append_sid('admin_logs.php'),
+					'S_FIELDS'	=> $s_fields,
 				));
 			}
 			else
 			{
-				message_die(GENERAL_MESSAGE, $lang['msg_must_select_log']);
+				message(GENERAL_MESSAGE, $lang['msg_must_select_log']);
 			}
 		
 			$template->pparse('body');
@@ -266,23 +242,23 @@ else
 			if ( $confirm && $log_ids )
 			{
 				$sql = 'DELETE FROM ' . LOGS . " WHERE log_id IN ($log_ids)";
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete');
 				
 				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 			}
 			else if ( !$confirm && $log_id )
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
-				$hidden_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="delete" />';
+				$s_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -291,13 +267,13 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_CONFIRM_ACTION'	=> append_sid('admin_logs.php'),
-					'S_HIDDEN_FIELDS'	=> $hidden_fields,
+					'S_ACTION'	=> append_sid('admin_logs.php'),
+					'S_FIELDS'	=> $s_fields,
 				));
 			}
 			else
 			{
-				message_die(GENERAL_MESSAGE, $lang['msg_must_select_log']);
+				message(GENERAL_MESSAGE, $lang['msg_must_select_log']);
 			}
 		
 			$template->pparse('body');
@@ -335,7 +311,7 @@ else
 					ORDER BY log_id DESC';
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(GENERAL_ERROR, 'Could not obtain group list', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'Could not obtain group list', '', __LINE__, __FILE__, $sql);
 			}
 			$log_entry = $db->sql_fetchrowset($result); 
 			$db->sql_freeresult($result);

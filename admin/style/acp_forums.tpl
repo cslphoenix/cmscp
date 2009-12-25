@@ -1,5 +1,5 @@
 <!-- BEGIN display -->
-<form method="post" action="{S_FORUM_ACTION}">
+<form action="{S_FORUM_ACTION}" method="post">
 <table class="head" cellspacing="0">
 <tr>
 	<th>
@@ -41,11 +41,11 @@
 	</tr>
 	<!-- END forumrow -->
 	<tr>
-		<td colspan="7" class="row_class2"><input class="post" type="text" name="{display.catrow.S_ADD_FORUM_NAME}" /> <input type="submit" class="button2" name="{display.catrow.S_ADD_FORUM_SUBMIT}" value="{L_CREATE_FORUM}" /></td>
+		<td colspan="7" class="row_class2"><input type="text" class="post" name="{display.catrow.S_ADD_FORUM_NAME}" /> <input type="submit" class="button2" name="{display.catrow.S_ADD_FORUM_SUBMIT}" value="{L_CREATE_FORUM}"></td>
 	</tr>
 	<!-- END catrow -->
 	<tr>
-		<td colspan="7" class="row_class2"><input class="post" type="text" name="categoryname" /> <input type="submit" class="button2"  name="addcategory" value="{L_CREATE_CATEGORY}" /></td>
+		<td colspan="7" class="row_class2"><input type="text" class="post" name="categoryname" /> <input type="submit" class="button2"  name="addcategory" value="{L_CREATE_CATEGORY}"></td>
 	</tr>
 </table>
 </form>
@@ -58,7 +58,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_FORUM_ACTION}">{L_FORUM_HEAD}</a></li>
+				<li><a href="{S_FORUM_ACTION}" method="post">{L_FORUM_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_EDIT_CATEGORY}</a></li>
 			</ul>
 		</div>
@@ -77,10 +77,10 @@
 </tr>
 <tr>
 	<td class="row_class1">{L_CATEGORY}</td>
-	<td class="row_class2"><input class="post" type="text" size="25" name="cat_title" value="{CAT_TITLE}" /></td>
+	<td class="row_class2"><input class="post" type="text" size="25" name="cat_title" value="{CAT_TITLE}"></td>
 </tr>
 <tr>
-	<td class="rowHead" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="submit" value="{S_SUBMIT_VALUE}" class="button2" /></td>
+	<td class="rowHead" colspan="2" align="center">{S_FIELDS}<input type="submit" name="submit" value="{S_SUBMIT_VALUE}" class="button2"></td>
 </tr>
 </table>
 </form>
@@ -95,7 +95,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_FORUM_ACTION}">{L_FORUM_HEAD}</a></li>
+				<li><a href="{S_FORUM_ACTION}" method="post">{L_FORUM_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_FORUM_TITLE}</a></li>
 			</ul>
 		</div>
@@ -108,10 +108,10 @@
 
 <br>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1">{L_FORUM_NAME}</td>
-	<td class="row2"><input type="text" size="25" name="forum_name" value="{FORUM_NAME}" class="post" /></td>
+	<td class="row2"><input type="text" size="25" name="forum_name" value="{FORUM_NAME}" class="post"></td>
 </tr>
 <tr>
 	<td class="row1">{L_FORUM_DESCRIPTION}</td>
@@ -130,7 +130,7 @@
 	<td class="row2">{S_STATUS_LIST}</td>
 </tr>
 <tr>
-	<td class="catBottom" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="submit" value="{S_SUBMIT_VALUE}" class="button2" /></td>
+	<td class="catBottom" colspan="2" align="center">{S_FIELDS}<input type="submit" name="submit" value="{S_SUBMIT_VALUE}" class="button2"></td>
 </tr>
 </table>
 </form>

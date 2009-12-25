@@ -30,14 +30,14 @@ if( !empty($setmodules) )
 	
 	if ( $userauth['auth_groups_perm'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['groups']['permissions'] = $filename . "?mode=group";
+		$module['_headmenu_groups']['_submenu_auth'] = $filename . "?mode=group";
 	}
 
 	return;
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 	
 	//
 	// Load default header
@@ -66,12 +66,12 @@ else
 	
 	if ( $mode == 'user' && !$userauth['auth_user'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $mode != 'user' && !$userauth['auth_groups'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	//
@@ -158,7 +158,7 @@ else
 				AND g.group_single_user = " . TRUE;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'Could not select info from user/user_group table', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'Could not select info from user/user_group table', '', __LINE__, __FILE__, $sql);
 			}
 	
 			$row = $db->sql_fetchrow($result);
@@ -184,7 +184,7 @@ else
 					WHERE user_id = $user_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
 				}
 	
 				$sql = "DELETE FROM " . AUTH_ACCESS . "
@@ -192,7 +192,7 @@ else
 						AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql);
 				}
 	
 				//
@@ -204,12 +204,12 @@ else
 					WHERE group_id = $group_id"; 
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
 	
 		//	$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid('admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid('index.php?pane=right") . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 		else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'trial' && $user_level != TRIAL )
 		{
@@ -222,15 +222,15 @@ else
 				// Update users level, reset
 				//
 				$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ' WHERE user_id = ' . $user_id; 
-				if (!$result = $db->sql_query($sql)) 
+				if ( !($result = $db->sql_query($sql)) ) 
 				{
-					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 				
 				$sql = "DELETE FROM " . AUTH_ACCESS . " WHERE group_id = $group_id AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) ) 
 				{
-					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
+					message(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
 				} 
 
 				// 
@@ -242,11 +242,11 @@ else
 							WHERE group_id = ' . $group_id; 
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
 		//	$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid('admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid('index.php?pane=right") . '">', '</a>'); 
-			message_die(GENERAL_MESSAGE, $message); 
+			message(GENERAL_MESSAGE, $message); 
 		}
 		else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'member' && $user_level != MEMBER )
 		{
@@ -259,15 +259,15 @@ else
 				// Update users level, reset
 				//
 				$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ' WHERE user_id = ' . $user_id; 
-				if (!$result = $db->sql_query($sql)) 
+				if ( !($result = $db->sql_query($sql)) ) 
 				{
-					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 				
 				$sql = "DELETE FROM " . AUTH_ACCESS . " WHERE group_id = $group_id AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) ) 
 				{
-					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
+					message(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
 				} 
 
 				// 
@@ -279,11 +279,11 @@ else
 							WHERE group_id = ' . $group_id; 
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
 		//	$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid('admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid('index.php?pane=right") . '">', '</a>'); 
-			message_die(GENERAL_MESSAGE, $message); 
+			message(GENERAL_MESSAGE, $message); 
 		}
 		else if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'mod' && $user_level != MOD )
 		{
@@ -296,15 +296,15 @@ else
 				// Update users level, reset
 				//
 				$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ' WHERE user_id = ' . $user_id; 
-				if (!$result = $db->sql_query($sql)) 
+				if ( !($result = $db->sql_query($sql)) ) 
 				{
-					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 				
 				$sql = "DELETE FROM " . AUTH_ACCESS . " WHERE group_id = $group_id AND auth_mod = 0";
 				if ( !($result = $db->sql_query($sql)) ) 
 				{
-					message_die(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
+					message(GENERAL_ERROR, "Couldn't delete auth access info", "", __LINE__, __FILE__, $sql); 
 				} 
 
 				// 
@@ -316,11 +316,11 @@ else
 							WHERE group_id = ' . $group_id; 
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update auth access", "", __LINE__, __FILE__, $sql);
 				}
 			}
 		//	$message = $lang['Auth_updated'] . '<br><br>' . sprintf($lang['Click_return_userauth'], '<a href="' . append_sid('admin_ug_auth.php?mode=$mode") . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid('index.php?pane=right") . '">', '</a>'); 
-			message_die(GENERAL_MESSAGE, $message); 
+			message(GENERAL_MESSAGE, $message); 
 		}
 		else
 		{
@@ -337,7 +337,7 @@ else
 						WHERE group_id = $group_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql);
 					}
 	
 					//
@@ -348,7 +348,7 @@ else
 						WHERE user_id = $user_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
 					}
 				}
 	
@@ -367,7 +367,7 @@ else
 					 WHERE group_id = $group_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
 				  { 
-					 message_die(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql); 
+					 message(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql); 
 				  } 
 						 
 				  // 
@@ -378,7 +378,7 @@ else
 					 WHERE user_id = $user_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
 				  { 
-					 message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql); 
+					 message(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql); 
 				  } 
 			   } 
 			
@@ -397,7 +397,7 @@ else
 					 WHERE group_id = $group_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
 				  { 
-					 message_die(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql); 
+					 message(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql); 
 				  } 
 						 
 				  // 
@@ -408,7 +408,7 @@ else
 					 WHERE user_id = $user_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
 				  { 
-					 message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql); 
+					 message(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql); 
 				  } 
 			   } 
 			
@@ -427,7 +427,7 @@ else
 					 WHERE group_id = $group_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
 				  { 
-					 message_die(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql); 
+					 message(GENERAL_ERROR, 'Could not update auth access', '', __LINE__, __FILE__, $sql); 
 				  } 
 						 
 				  // 
@@ -438,7 +438,7 @@ else
 					 WHERE user_id = $user_id"; 
 				  if ( !($result = $db->sql_query($sql)) ) 
 				  { 
-					 message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql); 
+					 message(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql); 
 				  } 
 			   } 
 			
@@ -456,7 +456,7 @@ else
 						ORDER BY c.cat_order, f.forum_order ASC";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, "Couldn't obtain forum information", "", __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, "Couldn't obtain forum information", "", __LINE__, __FILE__, $sql);
 					}
 	
 					$forum_access = $forum_auth_level_fields = array();
@@ -507,7 +507,7 @@ else
 					ORDER BY c.cat_order, f.forum_order';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't obtain forum information", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't obtain forum information", "", __LINE__, __FILE__, $sql);
 				}
 	
 				$forum_access = array();
@@ -520,7 +520,7 @@ else
 				$sql = ( $mode == 'user' ) ? "SELECT aa.* FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = " . TRUE : "SELECT * FROM " . AUTH_ACCESS . " WHERE group_id = $group_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
 				}
 	
 				$auth_access = array();
@@ -638,7 +638,7 @@ else
 					}
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, "Couldn't update private forum permissions", "", __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, "Couldn't update private forum permissions", "", __LINE__, __FILE__, $sql);
 						}
 					}
 				}
@@ -650,7 +650,7 @@ else
 							AND forum_id IN ($delete_sql)";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, "Couldn't delete permission entries", "", __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, "Couldn't delete permission entries", "", __LINE__, __FILE__, $sql);
 					}
 				}
 	
@@ -672,7 +672,7 @@ else
 				HAVING SUM(aa.auth_mod) > 0";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
 			}
 	
 			$set_mod = '';
@@ -694,7 +694,7 @@ else
 				HAVING SUM(aa.auth_mod) = 0";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
 			}
 	
 			$unset_mod = "";
@@ -711,7 +711,7 @@ else
 					WHERE user_id IN ($set_mod)";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 			}
 	
@@ -722,7 +722,7 @@ else
 					WHERE user_id IN ($unset_mod)";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Couldn't update user level", "", __LINE__, __FILE__, $sql);
 				}
 			}
 	
@@ -745,7 +745,7 @@ else
 				GROUP BY ug.user_id";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'Could not obtain moderator status', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'Could not obtain moderator status', '', __LINE__, __FILE__, $sql);
 			}
 	
 			while ($row = $db->sql_fetchrow($result))
@@ -764,12 +764,12 @@ else
 					WHERE user_id IN (" . implode(', ', $group_user) . ") AND user_level = " . MEMBER;
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Could not update user level', '', __LINE__, __FILE__, $sql);
 				}
 			}
 			*/
 	
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	else if ( ( $mode == 'user' && ( isset($HTTP_POST_VARS['username']) || $user_id ) ) || ( $mode == 'group' && $group_id ) )
@@ -779,7 +779,7 @@ else
 			$this_userdata = get_userdata($HTTP_POST_VARS['username'], true);
 			if ( !is_array($this_userdata) )
 			{
-				message_die(GENERAL_MESSAGE, $lang['No_such_user']);
+				message(GENERAL_MESSAGE, $lang['No_such_user']);
 			}
 			$user_id = $this_userdata['user_id'];
 		}
@@ -793,7 +793,7 @@ else
 			ORDER BY c.cat_order, f.forum_order ASC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, "Couldn't obtain forum information", "", __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, "Couldn't obtain forum information", "", __LINE__, __FILE__, $sql);
 		}
 	
 		$forum_access = array();
@@ -827,7 +827,7 @@ else
 		$sql .= ( $mode == 'user' ) ? "u.user_id = $user_id AND ug.user_id = u.user_id AND g.group_id = ug.group_id AND g.group_single_user = 0" : "g.group_id = $group_id AND ug.group_id = g.group_id AND u.user_id = ug.user_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, "Couldn't obtain user/group information", "", __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, "Couldn't obtain user/group information", "", __LINE__, __FILE__, $sql);
 		}
 		$ug_info = array();
 		while( $row = $db->sql_fetchrow($result) )
@@ -839,7 +839,7 @@ else
 		$sql = ( $mode == 'user' ) ? "SELECT aa.*, g.group_single_user FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = 1" : "SELECT * FROM " . AUTH_ACCESS . " WHERE group_id = $group_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
 		}
 	
 		$auth_access = array();
@@ -1156,7 +1156,7 @@ else
 	
 			'S_COLUMN_SPAN' => $s_column_span,
 			'S_AUTH_ACTION' => append_sid('admin_ug_auth.php'), 
-			'S_HIDDEN_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_hidden_fields)
 		);
 	}
 	else
@@ -1179,7 +1179,7 @@ else
 						WHERE user_id <> ' . ANONYMOUS;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);
 			}
 			
 			if ( $row = $db->sql_fetchrow($result) )
@@ -1204,7 +1204,7 @@ else
 						WHERE group_single_user <> ' . TRUE;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);
 			}
 	
 			if ( $row = $db->sql_fetchrow($result) )
@@ -1233,7 +1233,7 @@ else
 			'L_' . $l_type . '_SELECT' => ( $mode == 'user' ) ? $lang['Select_a_User'] : $lang['Select_a_Group'],
 			'L_LOOK_UP' => ( $mode == 'user' ) ? $lang['Look_up_User'] : $lang['Look_up_Group'],
 	
-			'S_HIDDEN_FIELDS' => $s_hidden_fields, 
+			'S_FIELDS' => $s_hidden_fields, 
 			'S_' . $l_type . '_ACTION' => append_sid('admin_ug_auth.php'))
 		);
 	

@@ -1,14 +1,8 @@
-<table class="head" cellspacing="0">
-<tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-</table>
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
+</ul>
+</div>
 
 <table class="edit" cellspacing="5">
 <tr>

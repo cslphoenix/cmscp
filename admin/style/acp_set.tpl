@@ -1,5 +1,5 @@
 <!-- BEGIN display -->
-<form action="{S_SET_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
+<form action="{S_SET_ACTION}" method="post" name="form">
 <table class="head" cellspacing="0">
 <tr>
 	<th>
@@ -18,7 +18,7 @@
 
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<th colspan="2"><a href="#" onClick="toggle('site_settings'); return false;">{L_GENERAL_SETTINGS}</a></th>
 	</tr>
@@ -28,16 +28,16 @@
 	<tbody id="site_settings" style="display:none;">
 	<tr>
 		<td class="row1" width="50%">{L_SERVER_NAME}: / {L_SERVER_PORT}:<br><span class="small">{L_SERVER_NAME_EXPLAIN}<br>{L_SERVER_PORT_EXPLAIN}</span></td>
-		<td class="row3" width="50%"><input id="server_name" onBlur="javascript:checkEntry(this)" class="post" type="text" maxlength="255" size="25" name="server_name" value="{SERVER_NAME}" /> : <input id="server_port" onBlur="javascript:checkEntry(this)" class="post" type="text" maxlength="5" size="5" name="server_port" value="{SERVER_PORT}" /></td>
+		<td class="row3" width="50%"><input id="server_name" class="post" type="text" maxlength="255" size="25" name="server_name" value="{SERVER_NAME}" /> : <input id="server_port" class="post" type="text" maxlength="5" size="5" name="server_port" value="{SERVER_PORT}"></td>
 	</tr>
 	
 	<tr>
 		<td class="row1">{L_SCRIPT_PATH}:<br><span class="small">{L_SCRIPT_PATH_EXPLAIN}</span></td>
-		<td class="row3"><input id="script_path" onBlur="javascript:checkEntry(this)" class="post" type="text" maxlength="255" size="25" name="script_path" value="{SCRIPT_PATH}" /></td>
+		<td class="row3"><input id="script_path" class="post" type="text" maxlength="255" size="25" name="script_path" value="{SCRIPT_PATH}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SITE_NAME}:<br><span class="small">{L_SITE_NAME_EXPLAIN}</span></td>
-		<td class="row3"><input id="sitename" onBlur="javascript:checkEntry(this)" class="post" type="text" size="25" maxlength="100" name="sitename" value="{SITENAME}" /></td>
+		<td class="row3"><input id="sitename" class="post" type="text" size="25" maxlength="100" name="sitename" value="{SITENAME}"></td>
 	</tr>
 	
 	<tr>
@@ -99,7 +99,7 @@
 	<tbody id="team_logos" style="display:none;">
 	<tr>
 		<td class="row1">{L_TEAM_LOGO_UPLOAD}:<br><span class="small">{L_TEAM_LOGO_UPLOAD_EXPLAIN}</span></td>
-		<td class="row3"><input type="radio" name="team_logo_upload" value="1" {S_TEAM_LOGO_UPLOAD_YES} /> {L_ENABLED}&nbsp;&nbsp;<input type="radio" name="team_logo_upload" value="0" {S_TEAM_LOGO_UPLOAD_NO} /> {L_DISABLED}</td>
+		<td class="row3"><input type="radio" name="team_logo_upload" value="1" {S_LOGO_UPLOAD_YES} /> {L_ENABLED}&nbsp;&nbsp;<input type="radio" name="team_logo_upload" value="0" {S_LOGO_UPLOAD_NO} /> {L_DISABLED}</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_TEAM_LOGO_MAX_FILESIZE}:<br><span class="small">{L_TEAM_LOGO_MAX_FILESIZE_EXPLAIN}</span></td>
@@ -111,7 +111,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_TEAM_LOGOS_UPLOAD}:<br><span class="small">{L_TEAM_LOGOS_UPLOAD_EXPLAIN}</span></td>
-		<td class="row3"><input type="radio" name="team_logos_upload" value="1" {S_TEAM_LOGOS_UPLOAD_YES} /> {L_ENABLED}&nbsp;&nbsp;<input type="radio" name="team_logos_upload" value="0" {S_TEAM_LOGOS_UPLOAD_NO} /> {L_DISABLED}</td>
+		<td class="row3"><input type="radio" name="team_logos_upload" value="1" {S_LOGOS_UPLOAD_YES} /> {L_ENABLED}&nbsp;&nbsp;<input type="radio" name="team_logos_upload" value="0" {S_LOGOS_UPLOAD_NO} /> {L_DISABLED}</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_TEAM_LOGO_MAX_FILESIZE}:<br><span class="small">{L_TEAM_LOGO_MAX_FILESIZE_EXPLAIN}</span></td>
@@ -135,15 +135,15 @@
 	<tbody id="cookie" style="display:none;">
 	<tr>
 		<td class="row1">{L_COOKIE_DOMAIN}:</td>
-		<td class="row3"><input class="post" type="text" maxlength="255" name="cookie_domain" value="{COOKIE_DOMAIN}" /></td>
+		<td class="row3"><input class="post" type="text" maxlength="255" name="cookie_domain" value="{COOKIE_DOMAIN}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_COOKIE_NAME}:</td>
-		<td class="row3"><input id="cookie_name" onBlur="javascript:checkEntry(this)" class="post" type="text" maxlength="16" name="cookie_name" value="{COOKIE_NAME}" /></td>
+		<td class="row3"><input id="cookie_name" class="post" type="text" maxlength="16" name="cookie_name" value="{COOKIE_NAME}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_COOKIE_PATH}:</td>
-		<td class="row3"><input id="cookie_path" onBlur="javascript:checkEntry(this)" class="post" type="text" maxlength="255" name="cookie_path" value="{COOKIE_PATH}" /></td>
+		<td class="row3"><input id="cookie_path" class="post" type="text" maxlength="255" name="cookie_path" value="{COOKIE_PATH}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_COOKIE_SECURE}:<br><span class="small">{L_COOKIE_SECURE_EXPLAIN}</span></td>
@@ -151,7 +151,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_SESSION_LENGTH}:</td>
-		<td class="row3"><input class="post" type="text" maxlength="5" size="5" name="session_length" value="{SESSION_LENGTH}" /></td>
+		<td class="row3"><input class="post" type="text" maxlength="5" size="5" name="session_length" value="{SESSION_LENGTH}"></td>
 	</tr>
 	<tr>
 		<td colspan="2">&nbsp;</td>
@@ -172,7 +172,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_AUTOLOGIN_TIME} <br><span class="small">{L_AUTOLOGIN_TIME_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="max_autologin_time" value="{AUTOLOGIN_TIME}" /></td>
+		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="max_autologin_time" value="{AUTOLOGIN_TIME}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_BOARD_EMAIL_FORM}<br><span class="small">{L_BOARD_EMAIL_FORM_EXPLAIN}</span></td>
@@ -180,31 +180,31 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_FLOOD_INTERVAL} <br><span class="small">{L_FLOOD_INTERVAL_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="flood_interval" value="{FLOOD_INTERVAL}" /></td>
+		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="flood_interval" value="{FLOOD_INTERVAL}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SEARCH_FLOOD_INTERVAL} <br><span class="small">{L_SEARCH_FLOOD_INTERVAL_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="search_flood_interval" value="{SEARCH_FLOOD_INTERVAL}" /></td>
+		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="search_flood_interval" value="{SEARCH_FLOOD_INTERVAL}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_MAX_LOGIN_ATTEMPTS}<br><span class="small">{L_MAX_LOGIN_ATTEMPTS_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="max_login_attempts" value="{MAX_LOGIN_ATTEMPTS}" /></td>
+		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="max_login_attempts" value="{MAX_LOGIN_ATTEMPTS}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_LOGIN_RESET_TIME}<br><span class="small">{L_LOGIN_RESET_TIME_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="login_reset_time" value="{LOGIN_RESET_TIME}" /></td>
+		<td class="row3"><input class="post" type="text" size="3" maxlength="4" name="login_reset_time" value="{LOGIN_RESET_TIME}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_TOPICS_PER_PAGE}:</td>
-		<td class="row3"><input class="post" type="text" name="topics_per_page" size="3" maxlength="4" value="{TOPICS_PER_PAGE}" /></td>
+		<td class="row3"><input type="text" class="post" name="topics_per_page" size="3" maxlength="4" value="{TOPICS_PER_PAGE}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_POSTS_PER_PAGE}:</td>
-		<td class="row3"><input class="post" type="text" name="posts_per_page" size="3" maxlength="4" value="{POSTS_PER_PAGE}" /></td>
+		<td class="row3"><input type="text" class="post" name="posts_per_page" size="3" maxlength="4" value="{POSTS_PER_PAGE}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_HOT_THRESHOLD}:</td>
-		<td class="row3"><input class="post" type="text" name="hot_threshold" size="3" maxlength="4" value="{HOT_TOPIC}" /></td>
+		<td class="row3"><input type="text" class="post" name="hot_threshold" size="3" maxlength="4" value="{HOT_TOPIC}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_DEFAULT_STYLE}:</td>
@@ -220,7 +220,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_DATE_FORMAT}<br><span class="small">{L_DATE_FORMAT_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" name="default_dateformat" value="{DEFAULT_DATEFORMAT}" /></td>
+		<td class="row3"><input type="text" class="post" name="default_dateformat" value="{DEFAULT_DATEFORMAT}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SYSTEM_TIMEZONE}:</td>
@@ -245,22 +245,22 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_INBOX_LIMIT}:</td>
-		<td class="row3"><input class="post" type="text" maxlength="4" size="4" name="max_inbox_privmsgs" value="{INBOX_LIMIT}" /></td>
+		<td class="row3"><input class="post" type="text" maxlength="4" size="4" name="max_inbox_privmsgs" value="{INBOX_LIMIT}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SENTBOX_LIMIT}:</td>
-		<td class="row3"><input class="post" type="text" maxlength="4" size="4" name="max_sentbox_privmsgs" value="{SENTBOX_LIMIT}" /></td>
+		<td class="row3"><input class="post" type="text" maxlength="4" size="4" name="max_sentbox_privmsgs" value="{SENTBOX_LIMIT}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SAVEBOX_LIMIT}:</td>
-		<td class="row3"><input class="post" type="text" maxlength="4" size="4" name="max_savebox_privmsgs" value="{SAVEBOX_LIMIT}" /></td>
+		<td class="row3"><input class="post" type="text" maxlength="4" size="4" name="max_savebox_privmsgs" value="{SAVEBOX_LIMIT}"></td>
 	</tr>
 	<tr>
 	  <th class="thHead" colspan="2">{L_ABILITIES_SETTINGS}</th>
 	</tr>
 	<tr>
 		<td class="row1">{L_MAX_POLL_OPTIONS}:</td>
-		<td class="row3"><input class="post" type="text" name="max_poll_options" size="4" maxlength="4" value="{MAX_POLL_OPTIONS}" /></td>
+		<td class="row3"><input type="text" class="post" name="max_poll_options" size="4" maxlength="4" value="{MAX_POLL_OPTIONS}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_HTML}:</td>
@@ -268,7 +268,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOWED_TAGS}<br><span class="small">{L_ALLOWED_TAGS_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="30" maxlength="255" name="allow_html_tags" value="{HTML_TAGS}" /></td>
+		<td class="row3"><input class="post" type="text" size="30" maxlength="255" name="allow_html_tags" value="{HTML_TAGS}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_BBCODE}:</td>
@@ -280,7 +280,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_SMILIES_PATH} <br><span class="small">{L_SMILIES_PATH_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="20" maxlength="255" name="smilies_path" value="{SMILIES_PATH}" /></td>
+		<td class="row3"><input class="post" type="text" size="20" maxlength="255" name="smilies_path" value="{SMILIES_PATH}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_SIG}:</td>
@@ -288,7 +288,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_MAX_SIG_LENGTH}<br><span class="small">{L_MAX_SIG_LENGTH_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" size="5" maxlength="4" name="max_sig_chars" value="{SIG_SIZE}" /></td>
+		<td class="row3"><input class="post" type="text" size="5" maxlength="4" name="max_sig_chars" value="{SIG_SIZE}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_ALLOW_NAME_CHANGE}:</td>
@@ -299,7 +299,7 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_ADMIN_EMAIL}:</td>
-		<td class="row3"><input class="post" type="text" size="25" maxlength="100" name="board_email" value="{EMAIL_FROM}" /></td>
+		<td class="row3"><input class="post" type="text" size="25" maxlength="100" name="board_email" value="{EMAIL_FROM}"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_EMAIL_SIG}<br><span class="small">{L_EMAIL_SIG_EXPLAIN}</span></td>
@@ -311,19 +311,19 @@
 	</tr>
 	<tr>
 		<td class="row1">{L_SMTP_SERVER}:</td>
-		<td class="row3"><input class="post" type="text" name="smtp_host" value="{SMTP_HOST}" size="25" maxlength="50" /></td>
+		<td class="row3"><input type="text" class="post" name="smtp_host" value="{SMTP_HOST}" size="25" maxlength="50"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SMTP_USERNAME}<br><span class="small">{L_SMTP_USERNAME_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="text" name="smtp_username" value="{SMTP_USERNAME}" size="25" maxlength="255" /></td>
+		<td class="row3"><input type="text" class="post" name="smtp_username" value="{SMTP_USERNAME}" size="25" maxlength="255"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_SMTP_PASSWORD}<br><span class="small">{L_SMTP_PASSWORD_EXPLAIN}</span></td>
-		<td class="row3"><input class="post" type="password" name="smtp_password" value="{SMTP_PASSWORD}" size="25" maxlength="255" /></td>
+		<td class="row3"><input class="post" type="password" name="smtp_password" value="{SMTP_PASSWORD}" size="25" maxlength="255"></td>
 	</tr>
 -->
 	<tr>
-		<td class="catBottom" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="submit" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" class="button" />
+		<td class="catBottom" colspan="2" align="center">{S_FIELDS}<input type="submit" name="submit" value="{L_SUBMIT}" class="button2">&nbsp;&nbsp;<input type="reset" value="{L_RESET}" class="button" />
 		</td>
 	</tr>
 </table></form>
@@ -338,7 +338,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_SET_ACTION}">{L_SET_HEAD}</a></li>
+				<li><a href="{S_SET_ACTION}" method="post">{L_SET_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_SET_FTP}</a></li>
 			</ul>
 		</div>
@@ -353,13 +353,13 @@
 
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
 	<td class="row1" width="160">{L_SERVER_NAME}server: / port{L_SERVER_PORT}:</td>
-	<td class="row3"><input class="post" type="text" maxlength="255" size="25" name="server" value="{SERVER}" /> : <input class="post" type="text" maxlength="5" size="5" name="port" value="{PORT}" /></td>
+	<td class="row3"><input class="post" type="text" maxlength="255" size="25" name="server" value="{SERVER}" /> : <input class="post" type="text" maxlength="5" size="5" name="port" value="{PORT}"></td>
 </tr>
 
 <tr>
@@ -372,21 +372,21 @@
 </tr>
 <tr>
 	<td class="row1">{L_SITE_NAME}user:</td>
-	<td class="row3"><input class="post" type="text" size="25" maxlength="100" name="user" value="{USER}" /></td>
+	<td class="row3"><input class="post" type="text" size="25" maxlength="100" name="user" value="{USER}"></td>
 </tr>
 <tr>
 	<td class="row1">{L_SITE_NAME}pass:</td>
-	<td class="row3"><input class="post" type="password" size="25" maxlength="100" name="pass" value="{PASS}" /></td>
+	<td class="row3"><input class="post" type="password" size="25" maxlength="100" name="pass" value="{PASS}"></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td class="catBottom" colspan="2" align="center"><input type="submit" name="submit" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" class="button" />
+	<td class="catBottom" colspan="2" align="center"><input type="submit" name="submit" value="{L_SUBMIT}" class="button2">&nbsp;&nbsp;<input type="reset" value="{L_RESET}" class="button" />
 	</td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 
 <br clear="all" />

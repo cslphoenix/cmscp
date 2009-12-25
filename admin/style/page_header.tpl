@@ -27,7 +27,7 @@
 	*	....
 	*	
 	***/
-	
+	/*
 	function checkEntry(element)
 	{
 		id = element.id;
@@ -64,7 +64,7 @@
 		}
 		return retValue;
 	}
-	
+	*/
 	/***
 	*	ToggleScript
 	*

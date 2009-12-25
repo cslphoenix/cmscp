@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('IN_CMS'))
+if ( !defined('IN_CMS') )
 {
 	die('Hacking attempt');
 }
@@ -13,6 +13,7 @@ $userdata = session_pagestart($user_ip, PAGE_ADMIN);
 init_userprefs($userdata);
 
 $oCache -> sCachePath = './../cache/';
+
 $userauth = auth_acp_check($userdata['user_id']);
 
 if ( !$userdata['session_logged_in'] )

@@ -22,10 +22,10 @@
 	<td class="rowHead">{L_AUTH_SELECT}</td>
 </tr>
 <tr>
-	<td class="row2">{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2" /></td>
+	<td class="row2">{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END forum -->
 
@@ -53,10 +53,10 @@
 	<td class="rowHead">{L_GROUP_SELECT}</td>
 </tr>
 <tr>
-	<td class="row2">{S_GROUPS_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2" /></td>
+	<td class="row2">{S_GROUPS_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END group -->
 
@@ -87,11 +87,11 @@
 	<td class="row2">
 		{S_USERS_SELECT}
 		<input type="text" class="post" name="username" maxlength="50" size="20" />
-		<input type="hidden" name="mode" value="edit" />{S_HIDDEN_FIELDS}
-		<input type="submit" name="submituser" value="{L_LOOK_UP}" class="button2" /></td>
+		<input type="hidden" name="mode" value="edit" />{S_FIELDS}
+		<input type="submit" name="submituser" value="{L_LOOK_UP}" class="button2"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END user -->
 

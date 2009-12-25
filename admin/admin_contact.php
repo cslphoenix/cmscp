@@ -50,10 +50,10 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	
@@ -88,17 +88,17 @@ else
 	
 	if ( $mode == 'contact' && !$userauth['auth_contact'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $mode == 'joinus' && (!$userauth['auth_joinus'] && $userdata['user_level'] != ADMIN ))
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $mode == 'fightus' && !$userauth['auth_fightus'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	$show_index = '';
@@ -238,7 +238,7 @@ else
 			
 			default:
 				$show_index = TRUE;
-				message_die(GENERAL_ERROR, $lang['no_mode']);
+				message(GENERAL_ERROR, $lang['no_mode']);
 				break;
 		}
 	

@@ -1,79 +1,73 @@
 <!-- BEGIN display -->
-<form action="{S_AUTHLIST_ACTION}" method="post">
-<table class="head" cellspacing="0">
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_AUTHLIST_HEAD}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">{L_AUTHLIST_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="row" cellspacing="1">
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead">{L_AUTHLIST_NAME}</td>
+	<td class="rowHead">{L_NAME}</td>
 	<td class="rowHead" colspan="2" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN auth_row -->
+<!-- BEGIN row_authlist -->
 <tr>
-	<td class="{display.auth_row.CLASS}" align="left" width="100%">{display.auth_row.AUTHNAME}</td>
-	<td class="{display.auth_row.CLASS}" align="center" width="1%"><a href="{display.auth_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.auth_row.CLASS}" align="center" width="1%"><a href="{display.auth_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{display.row_authlist.CLASS}" width="98%" align="left">{display.row_authlist.NAME}</td>
+	<td class="{display.row_authlist.CLASS}"><a href="{display.row_authlist.U_UPDATE}">{L_UPDATE}</a></td>		
+	<td class="{display.row_authlist.CLASS}"><a href="{display.row_authlist.U_DELETE}">{L_DELETE}</a></td>
 </tr>
-<!-- END auth_row -->
+<!-- END row_authlist -->
 </table>
 
-<table class="foot" cellspacing="2">
+<table class="footer" border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td width="100%" align="right"><input class="post" name="auth_name" type="text" value=""></td>
-	<td><input class="button" type="submit" value="{L_AUTHLIST_ADD}" /></td>
+	<td align="right"><input type="text" class="post" name="authlist_name"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
-
 <!-- END display -->
 
 <!-- BEGIN authlist_edit -->
-<form action="{S_AUTHLIST_ACTION}" method="post">
-<table class="head" cellspacing="0">
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="{S_AUTHLIST_ACTION}">{L_AUTHLIST_HEAD}</a></li>
-				<li id="active"><a href="#" id="current">{L_AUTHLIST_NEW_EDIT}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+	<td class="row2 small">{L_REQUIRED}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="20%">{L_AUTHLIST_NAME}: *</td>
-	<td class="row3" width="80%"><input class="post" type="text" name="auth_name" value="{AUTH_NAME}" ></td>
+	<td class="row1" width="23%"><label for="authlist_name">{L_NAME}: *</label></td>
+	<td class="row3"><input type="text" class="post" name="authlist_name" id="authlist_name" value="{NAME}"></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END authlist_edit -->

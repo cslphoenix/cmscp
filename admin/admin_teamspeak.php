@@ -36,10 +36,10 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	include($root_path . 'includes/class_cyts.php');
@@ -47,7 +47,7 @@ else
 	
 	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -171,18 +171,18 @@ else
 					'TEAMSPEAK_PASS'		=> $teamspeak['teamspeak_pass'],
 					'TEAMSPEAK_JOIN'		=> $teamspeak['teamspeak_join_name'],
 					
-					'S_CHECKED_CSTATS_YES'	=> ( $teamspeak['teamspeak_cstats'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_CSTATS_NO'	=> ( !$teamspeak['teamspeak_cstats'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_USTATS_YES'	=> ( $teamspeak['teamspeak_ustats'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_USTATS_NO'	=> ( !$teamspeak['teamspeak_ustats'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_SSTATS_YES'	=> ( $teamspeak['teamspeak_sstats'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_SSTATS_NO'	=> ( !$teamspeak['teamspeak_sstats'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_MOUSEO_YES'	=> ( $teamspeak['teamspeak_mouseover'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_MOUSEO_NO'	=> ( !$teamspeak['teamspeak_mouseover'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_VIEWER_YES'	=> ( $teamspeak['teamspeak_show'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_VIEWER_NO'	=> ( !$teamspeak['teamspeak_show'] ) ? ' checked="checked"' : '',
+					'S_CSTATS_YES'	=> ( $teamspeak['teamspeak_cstats'] ) ? ' checked="checked"' : '',
+					'S_CSTATS_NO'	=> ( !$teamspeak['teamspeak_cstats'] ) ? ' checked="checked"' : '',
+					'S_USTATS_YES'	=> ( $teamspeak['teamspeak_ustats'] ) ? ' checked="checked"' : '',
+					'S_USTATS_NO'	=> ( !$teamspeak['teamspeak_ustats'] ) ? ' checked="checked"' : '',
+					'S_SSTATS_YES'	=> ( $teamspeak['teamspeak_sstats'] ) ? ' checked="checked"' : '',
+					'S_SSTATS_NO'	=> ( !$teamspeak['teamspeak_sstats'] ) ? ' checked="checked"' : '',
+					'S_MOUSEO_YES'	=> ( $teamspeak['teamspeak_mouseover'] ) ? ' checked="checked"' : '',
+					'S_MOUSEO_NO'	=> ( !$teamspeak['teamspeak_mouseover'] ) ? ' checked="checked"' : '',
+					'S_VIEWER_YES'	=> ( $teamspeak['teamspeak_show'] ) ? ' checked="checked"' : '',
+					'S_VIEWER_NO'	=> ( !$teamspeak['teamspeak_show'] ) ? ' checked="checked"' : '',
 
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_hidden_fields,
 					'S_TEAMSPEAK_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member'),
 					'S_TEAMSPEAK_ACTION'	=> append_sid('admin_teamspeak.php'),
 				));
@@ -208,7 +208,7 @@ else
 				
 				if ( $teamspeak_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
+					message(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				if ( $teamspeak_show )
@@ -216,16 +216,16 @@ else
 					$sql = 'SELECT * FROM ' . TEAMSPEAK . ' WHERE teamspeak_show = 1';
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$teamspeak = $db->sql_fetchrow($result);
 					
 					if ( $teamspeak )
 					{
 						$sql = 'UPDATE ' . TEAMSPEAK . ' SET teamspeak_show = 0 WHERE teamspeak_id = ' . $teamspeak['teamspeak_id'];
-						if (!$result = $db->sql_query($sql))
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 					}
 				}
@@ -245,18 +245,18 @@ else
 								$teamspeak_cstats,
 								$teamspeak_show
 							)";
-				if (!$result = $db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('teamspeak_data');
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_add');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_add');
 	
 				$message = $lang['create_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 
 				break;
 			
@@ -277,7 +277,7 @@ else
 				
 				if ( $teamspeak_name == '' )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
+					message(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
 				}
 				
 				if ( $teamspeak_show )
@@ -285,16 +285,16 @@ else
 					$sql = 'SELECT * FROM ' . TEAMSPEAK . ' WHERE teamspeak_show = 1';
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$teamspeak = $db->sql_fetchrow($result);
 					
 					if ( $teamspeak )
 					{
 						$sql = 'UPDATE ' . TEAMSPEAK . ' SET teamspeak_show = 0 WHERE teamspeak_id = ' . $teamspeak['teamspeak_id'];
-						if (!$result = $db->sql_query($sql))
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 					}
 				}
@@ -314,18 +314,18 @@ else
 								teamspeak_mouseover		= $teamspeak_mouseover,
 								teamspeak_show			= $teamspeak_show
 							WHERE teamspeak_id = " . $teamspeak_id;
-				if (!$result = $db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('teamspeak_data');
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_edit');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_edit');
 				
 				$message = $lang['update_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 				break;
 				
@@ -343,7 +343,7 @@ else
 					$sql = 'SELECT * FROM ' . $ts_prefix . 'clients WHERE i_client_server_id = ' . $ts_server;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$teamspeak_user = $db->sql_fetchrowset($result);
 					
@@ -410,22 +410,22 @@ else
 					$teamspeak = get_data('teamspeak', $teamspeak_id, 0);
 				
 					$sql = 'DELETE FROM ' . TEAMSPEAK . ' WHERE teamspeak_id = ' .$teamspeak_id;
-					if (!$result = $db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_delete', $teamspeak['teamspeak_name']);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TEAMSPEAK, 'acp_teamspeak_delete', $teamspeak['teamspeak_name']);
 					
 					$message = $lang['delete_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $teamspeak_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -434,13 +434,13 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid('admin_teamspeak.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'S_ACTION'	=> append_sid('admin_teamspeak.php'),
+						'S_FIELDS'	=> $s_fields,
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_teamspeak']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_teamspeak']);
 				}
 				
 				$template->pparse('body');
@@ -449,7 +449,7 @@ else
 			
 			default:
 			
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['no_select_module']);
 				
 				break;
 				break;
@@ -473,14 +473,14 @@ else
 	$sql = 'SELECT * FROM ' . TEAMSPEAK . ' WHERE teamspeak_show = 1';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$teamspeak = $db->sql_fetchrow($result);
 	
 	$sql = 'SELECT * FROM ' . TEAMSPEAK;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	$color = '0';
@@ -522,11 +522,11 @@ else
 		
 		'L_TEAMSPEAK_USER'		=> $lang['teamspeak_user'],
 		
-		'L_EDIT'				=> $lang['common_edit'],
+		'L_EDIT'				=> $lang['common_update'],
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['common_delete'],
 		
-		'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+		'S_FIELDS'		=> $s_hidden_fields,
 		'S_TEAMSPEAK_EDIT'		=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_TEAMSPEAK_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_TEAMSPEAK_ACTION'	=> append_sid('admin_teamspeak.php'),

@@ -40,7 +40,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="game_name" type="text" value=""></td>
-	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_SERVER_ADD}" /></td>
+	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_SERVER_ADD}"></td>
 </tr>
 </table>
 </form>
@@ -54,7 +54,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_SERVER_ACTION}">{L_SERVER_HEAD}</a></li>
+				<li><a href="{S_SERVER_ACTION}" method="post">{L_SERVER_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_SERVER_NEW_EDIT}</a></li>
 			</ul>
 		</div>
@@ -67,33 +67,33 @@
 
 <br>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3" width="80%"><input class="post" type="text" name="server_name" value="{SERVER_NAME}" ></td>
+	<td class="row3" width="80%"><input type="text" class="post" name="server_name" value="{SERVER_NAME}"></td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_type" value="1" {S_CHECKED_TYPE_GAME} /> {L_SERVER_GAME}
-		<input type="radio" name="server_type" value="2" {S_CHECKED_TYPE_VOICE} /> {L_SERVER_VOICE}
+		<input type="radio" name="server_type" value="1" {S_TYPE_GAME} /> {L_SERVER_GAME}
+		<input type="radio" name="server_type" value="2" {S_TYPE_VOICE} /> {L_SERVER_VOICE}
 	</td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input class="post" type="text" name="server_ip" value="{SERVER_IP}" ></td>
+	<td class="row3"><input type="text" class="post" name="server_ip" value="{SERVER_IP}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input class="post" type="text" name="server_port" value="{SERVER_PORT}" ></td>
+	<td class="row3"><input type="text" class="post" name="server_port" value="{SERVER_PORT}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input class="post" type="text" name="server_qport" value="{SERVER_QPORT}" ></td>
+	<td class="row3"><input type="text" class="post" name="server_qport" value="{SERVER_QPORT}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input class="post" type="text" name="server_pw" value="{SERVER_PW}" ></td>
+	<td class="row3"><input type="text" class="post" name="server_pw" value="{SERVER_PW}"></td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_LIVE}:</td>
@@ -103,36 +103,36 @@
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_live" value="0" {S_CHECKED_LIVE_NO} />&nbsp;{L_NO}
-		<input type="radio" name="server_live" value="1" {S_CHECKED_LIVE_YES} /> {L_YES}
+		<input type="radio" name="server_live" value="0" {S_LIVE_NO} />&nbsp;{L_NO}
+		<input type="radio" name="server_live" value="1" {S_LIVE_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_list" value="0" {S_CHECKED_LIST_NO} />&nbsp;{L_NO}
-		<input type="radio" name="server_list" value="1" {S_CHECKED_LIST_YES} /> {L_YES}
+		<input type="radio" name="server_list" value="0" {S_LIST_NO} />&nbsp;{L_NO}
+		<input type="radio" name="server_list" value="1" {S_LIST_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_show" value="0" {S_CHECKED_SHOW_NO} />&nbsp;{L_NO}
-		<input type="radio" name="server_show" value="1" {S_CHECKED_SHOW_YES} /> {L_YES}
+		<input type="radio" name="server_show" value="0" {S_SHOW_NO} />&nbsp;{L_NO}
+		<input type="radio" name="server_show" value="1" {S_SHOW_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_SPECIAL}:</td>
 	<td class="row3">
-		<input type="radio" name="server_own" value="0" {S_CHECKED_ONW_NO} />&nbsp;{L_NO}
-		<input type="radio" name="server_own" value="1" {S_CHECKED_OWN_YES} /> {L_YES}
+		<input type="radio" name="server_own" value="0" {S_ONW_NO} />&nbsp;{L_NO}
+		<input type="radio" name="server_own" value="1" {S_OWN_YES} /> {L_YES}
 	</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END server_edit -->
 

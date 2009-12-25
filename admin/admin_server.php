@@ -36,10 +36,10 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	include($root_path . 'includes/server_query.php');
@@ -48,7 +48,7 @@ else
 	
 	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -151,7 +151,7 @@ else
 			
 					if ( !($server = $db->sql_fetchrow($result)) )
 					{
-						message_die(GENERAL_MESSAGE, $lang['server_not_exist']);
+						message(GENERAL_MESSAGE, $lang['server_not_exist']);
 					}
 			
 					$new_mode = 'editserver';
@@ -208,21 +208,21 @@ else
 					'SERVER_QPORT'			=> $server['server_qport'],
 					'SERVER_PW'				=> $server['server_pw'],
 					
-					'S_CHECKED_TYPE_GAME'	=> ($server['server_type'] == '1') ? ' checked="checked"' : '',
-					'S_CHECKED_TYPE_VOICE'	=> ($server['server_type'] == '2') ? ' checked="checked"' : '',					
-					'S_CHECKED_LIVE_YES'	=> ( $server['server_live']) ? ' checked="checked"' : '',
-					'S_CHECKED_LIVE_NO'		=> (!$server['server_live']) ? ' checked="checked"' : '',
-					'S_CHECKED_LIST_YES'	=> ( $server['server_list']) ? ' checked="checked"' : '',
-					'S_CHECKED_LIST_NO'		=> (!$server['server_list']) ? ' checked="checked"' : '',
-					'S_CHECKED_SHOW_YES'	=> ( $server['server_show']) ? ' checked="checked"' : '',
-					'S_CHECKED_SHOW_NO'		=> (!$server['server_show']) ? ' checked="checked"' : '',
-					'S_CHECKED_OWN_YES'		=> ( $server['server_own']) ? ' checked="checked"' : '',
-					'S_CHECKED_OWN_NO'		=> (!$server['server_own']) ? ' checked="checked"' : '',
+					'S_TYPE_GAME'	=> ($server['server_type'] == '1') ? ' checked="checked"' : '',
+					'S_TYPE_VOICE'	=> ($server['server_type'] == '2') ? ' checked="checked"' : '',					
+					'S_LIVE_YES'	=> ( $server['server_live']) ? ' checked="checked"' : '',
+					'S_LIVE_NO'		=> (!$server['server_live']) ? ' checked="checked"' : '',
+					'S_LIST_YES'	=> ( $server['server_list']) ? ' checked="checked"' : '',
+					'S_LIST_NO'		=> (!$server['server_list']) ? ' checked="checked"' : '',
+					'S_SHOW_YES'	=> ( $server['server_show']) ? ' checked="checked"' : '',
+					'S_SHOW_NO'		=> (!$server['server_show']) ? ' checked="checked"' : '',
+					'S_OWN_YES'		=> ( $server['server_own']) ? ' checked="checked"' : '',
+					'S_OWN_NO'		=> (!$server['server_own']) ? ' checked="checked"' : '',
 
 					'S_LIVE'				=> _select_game($server['server_game']),
 					
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_TEAM_ACTION'			=> append_sid('admin_server.php'),
+					'S_FIELDS'		=> $s_hidden_fields,
+					'S_ACTION'			=> append_sid('admin_server.php'),
 				));
 			
 				// Template ausgabe
@@ -234,7 +234,7 @@ else
 				
 				if( $server_title == '' )
 				{
-					message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
+					message(GENERAL_MESSAGE, $lang['team_not_exist']);
 				}
 	
 				$sql = 'SELECT MAX(server_order) AS max_order FROM ' . SERVER . ' WHERE server_type = ' . intval($HTTP_POST_VARS['server_type']);
@@ -247,15 +247,15 @@ else
 				// There is no problem having duplicate forum names so we won't check for it.
 				$sql = 'INSERT INTO ' . SERVER . " (server_title, server_type, server_min, server_special, server_image, server_order)
 					VALUES ('" . str_replace("\'", "''", $server_title) . "', '" . intval($HTTP_POST_VARS['server_type']) . "', $server_min, $server_special, '" . str_replace("\'", "''", $server_image) . "', $next_order)";
-				if (!$result = $db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not insert row in team table', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Could not insert row in team table', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
 	
 				$message = $lang['team_create'] . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 
 				break;
 			
@@ -268,7 +268,7 @@ else
 				
 				if( $server_title == '' )
 				{
-					message_die(GENERAL_MESSAGE, $lang['team_not_exist']);
+					message(GENERAL_MESSAGE, $lang['team_not_exist']);
 				}
 
 				$sql = "UPDATE " . SERVER . " SET
@@ -278,15 +278,15 @@ else
 							server_special	= $server_special,
 							server_image		= '" . str_replace("\'", "''", $server_image) . "'
 						WHERE server_id = " . intval($HTTP_POST_VARS[POST_GAMESERVER_URL]);
-				if (!$result = $db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not update team information', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Could not update team information', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
 				
 				$message = $lang['team_update'] . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 				break;
 			
@@ -299,31 +299,31 @@ else
 					$sql = 'SELECT * FROM ' . SERVER . " WHERE server_id = $server_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting team information', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Error getting team information', '', __LINE__, __FILE__, $sql);
 					}
 			
 					if ( !($team_info = $db->sql_fetchrow($result)) )
 					{
-						message_die(GENERAL_MESSAGE, $lang['server_not_exist']);
+						message(GENERAL_MESSAGE, $lang['server_not_exist']);
 					}
 				
 					$sql = 'DELETE FROM ' . SERVER . " WHERE server_id = $server_id";
-					if (!$result = $db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not delete team', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not delete team', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
 					
 					$message = $lang['team_delete'] . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $server_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_GAMESERVER_URL . '" value="' . $server_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_GAMESERVER_URL . '" value="' . $server_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -332,13 +332,13 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid('admin_server.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'S_ACTION'	=> append_sid('admin_server.php'),
+						'S_FIELDS'	=> $s_fields,
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_server']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_server']);
 				}
 				
 				$template->pparse('body');
@@ -354,7 +354,7 @@ else
 		
 				renumber_server('server');
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, 'ACP_SERVER_ORDER');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, 'ACP_SERVER_ORDER');
 				
 				$show_index = TRUE;
 	
@@ -362,7 +362,7 @@ else
 				
 			default:
 			
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['no_select_module']);
 				
 				break;
 				break;
@@ -384,8 +384,8 @@ else
 		'L_SERVER_EMAIL'	=> $lang['gs_name'],
 		'L_SERVER_ADD'		=> $lang['gs_add'],
 		
-		'L_SETTINGS'		=> $lang['settings'],
-		'L_EDIT'			=> $lang['common_edit'],
+		'L_SETTINGS'		=> $lang['common_settings'],
+		'L_EDIT'			=> $lang['common_update'],
 		'L_DELETE'			=> $lang['common_delete'],
 		
 		'L_MOVE_UP'			=> $lang['move_up'], 
@@ -398,7 +398,7 @@ else
 	$sql = 'SELECT * FROM ' . SERVER . ' ORDER BY server_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$color = '';

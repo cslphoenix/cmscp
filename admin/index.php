@@ -1,66 +1,219 @@
 <?php
-/***************************************************************************
- *                             (admin) index.php
- *                            -------------------
- *   begin                : Saturday, Feb 13, 2001
- *   copyright            : (C) 2001 The phpBB Group
- *   email                : support@phpbb.com
- *
- *   $Id: index.php 5318 2005-12-04 12:55:28Z grahamje $
- *
- *
- ***************************************************************************/
 
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
-define('IN_CMS', 1);
+define('IN_CMS', true);
 
 //
 // Load default header
 //
 
 $root_path = './../';
-require('./pagestart.php');
+include('./pagestart.php');
+include($root_path . 'includes/acp/acp_functions.php');
 
-// ---------------
-// Begin functions
-//
-function inarray($needle, $haystack)
-{ 
-	for($i = 0; $i < sizeof($haystack); $i++ )
-	{ 
-		if( $haystack[$i] == $needle )
-		{ 
-			return true; 
-		} 
-	} 
-	return false; 
-}
-//
-// End functions
-// -------------
+$template->set_filenames(array('body' => 'style/acp_index.tpl'));
+
+#	$data_event = get_data_index(EVENT, 'event_id, event_title, event_date', '', 'event_create DESC');
+#	$data_users = get_data_index(USERS, 'user_id, username, user_regdate', '', 'user_regdate, user_id DESC');
+#	$data_train = get_data_index(TRAINING, 'training_id, training_vs, training_date', '', 'training_date DESC');
+	
+	$data_match = get_data_index(MATCH, 'match_id, match_rival, match_public, match_date', '', 'match_date DESC');
+	$data_train = get_data_index(TRAINING, 'training_id, training_vs, training_date', '', 'training_date DESC');
+	$data_event = get_data_index(EVENT, 'event_id, event_title, event_date', '', 'event_date DESC');
+	
+//	if ( $data_event )
+//	{
+//		for ( $i = 0; $i < count($data_event); $i++ )
+//		{
+//			$event_id		= $data_event[$i]['event_id'];
+//			$event_create	= create_date($userdata['user_dateformat'], $data_event[$i]['event_date'], $userdata['user_timezone']);
+//			
+//			if ( $config['time_today'] < $data_event[$i]['event_date'])
+//			{ 
+//				$event_create = sprintf($lang['today_at'], create_date($config['default_timeformat'], $data_event[$i]['event_date'], $userdata['user_timezone'])); 
+//			}
+//			else if ( $config['time_yesterday'] < $data_event[$i]['event_date'])
+//			{ 
+//				$event_create = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $data_event[$i]['event_date'], $userdata['user_timezone'])); 
+//			}
+//				
+//			$template->assign_block_vars('row_event', array(
+//				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+//				
+//				'EVENT_TITLE'	=> $data_event[$i]['event_title'],
+//				'EVENT_DATE'	=> $event_create,
+//				
+//				'U_UPDATE'		=> append_sid('admin_event.php?mode=_update&amp;' . POST_EVENT_URL . '=' . $event_id),
+//				'U_DELETE'		=> append_sid('admin_event.php?mode=_delete&amp;' . POST_EVENT_URL . '=' . $event_id),
+//			));
+//		}
+//	}
+//	else
+//	{
+//		$template->assign_block_vars('no_entry_event', array());
+//		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+//	}
+	
+//	if ( $data_user )
+//	{
+//		for ( $i = 0; $i < count($data_user); $i++ )
+//		{
+//			$user_id	= $data_user[$i]['user_id'];
+//			$user_reg	= create_date($userdata['user_dateformat'], $data_user[$i]['user_regdate'], $userdata['user_timezone']);
+//			
+//			if ( $config['time_today'] < $data_user[$i]['user_regdate'])
+//			{ 
+//				$event_create = sprintf($lang['today_at'], create_date($config['default_timeformat'], $data_user[$i]['user_regdate'], $userdata['user_timezone'])); 
+//			}
+//			else if ( $config['time_yesterday'] < $data_user[$i]['user_regdate'])
+//			{ 
+//				$event_create = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $data_user[$i]['user_regdate'], $userdata['user_timezone'])); 
+//			}
+//				
+//			$template->assign_block_vars('row_users', array(
+//				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+//				
+//				'USERNAME'		=> $data_user[$i]['username'],
+//				'USER_REG'		=> $user_reg,
+//				
+//				'U_UPDATE'		=> append_sid('admin_user.php?mode=_update&amp;' . POST_USERS_URL . '=' . $user_id),
+//				'U_DELETE'		=> append_sid('admin_user.php?mode=_delete&amp;' . POST_USERS_URL . '=' . $user_id),
+//			));
+//		}
+//	}
+//	else
+//	{
+//		$template->assign_block_vars('no_entry_users', array());
+//		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+//	}
+	
+	if ( $data_match )
+	{
+		for ( $i = 0; $i < count($data_match); $i++ )
+		{
+			$match_id	= $data_match[$i]['match_id'];
+			$match_typ	= ( $data_match[$i]['match_public'] ) ? 'sprintf_match_name' : 'sprintf_match_intern';
+			$match_date	= create_date($userdata['user_dateformat'], $data_match[$i]['match_date'], $userdata['user_timezone']);
+			
+			if ( $userauth['auth_match'] || $userdata['user_level'] == ADMIN )
+			{
+				$link_update = '<a href="' . append_sid('admin_match.php?mode=_update&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['match_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
+				$link_delete = '<a href="' . append_sid('admin_match.php?mode=_delete&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['match_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
+				$link_details = '<a href="' . append_sid('admin_match.php?mode=_details&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['match_details'] . '" title="' . $lang['common_details'] . '" alt="" /></a>';
+			}
+			else
+			{
+				$link_update = '';
+				$link_delete = '';
+				$link_details = '';
+			}
+				
+			$template->assign_block_vars('row_match', array(
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'MATCH_RIVAL'	=> sprintf($lang[$match_typ], $data_match[$i]['match_rival']),
+				'MATCH_DATE'	=> $match_date,
+				'MATCH_UPDATE'	=> $link_update,
+				'MATCH_DELETE'	=> $link_delete,
+				'MATCH_DETAILS'	=> $link_details,
+			));
+		}
+	}
+	else
+	{
+		$template->assign_block_vars('no_entry_match', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	
+	if ( $data_train )
+	{
+		for ( $i = 0; $i < count($data_train); $i++ )
+		{
+			$training_id	= $data_train[$i]['training_id'];
+			$training_date	= create_date($userdata['user_dateformat'], $data_train[$i]['training_date'], $userdata['user_timezone']);
+			
+			if ( $userauth['auth_training'] || $userdata['user_level'] == ADMIN )
+			{
+				$link_update = '<a href="' . append_sid('admin_training.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $training_id) . '"><img src="' . $images['match_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
+				$link_delete = '<a href="' . append_sid('admin_training.php?mode=_delete&amp;' . POST_TRAINING_URL . '=' . $training_id) . '"><img src="' . $images['match_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
+			}
+			else
+			{
+				$link_update = '';
+				$link_delete = '';
+			}
+				
+			$template->assign_block_vars('row_training', array(
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'TRAINING_VS'		=> $data_train[$i]['training_vs'],
+				'TRAINING_DATE'		=> $training_date,
+				'TRAINING_UPDATE'	=> $link_update,
+				'TRAINING_DELETE'	=> $link_delete,
+			));
+		}
+	}
+	else
+	{
+		$template->assign_block_vars('no_entry_training', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	
+	if ( $data_event )
+	{
+		for ( $i = 0; $i < count($data_event); $i++ )
+		{
+			$event_id	= $data_event[$i]['event_id'];
+			$event_date	= create_date($userdata['user_dateformat'], $data_event[$i]['event_date'], $config['board_timezone']);
+			
+			if ( $userauth['auth_event'] || $userdata['user_level'] == ADMIN )
+			{
+				$link_update = '<a href="' . append_sid('admin_event.php?mode=_update&amp;' . POST_EVENT_URL . '=' . $event_id) . '"><img src="' . $images['match_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
+				$link_delete = '<a href="' . append_sid('admin_event.php?mode=_delete&amp;' . POST_EVENT_URL . '=' . $event_id) . '"><img src="' . $images['match_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
+			}
+			else
+			{
+				$link_update = '';
+				$link_delete = '';
+			}
+				
+			$template->assign_block_vars('row_event', array(
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'EVENT_TITLE'	=> $data_event[$i]['event_title'],
+				'EVENT_DATE'		=> $event_date,
+				'EVENT_UPDATE'	=> $link_update,
+				'EVENT_DELETE'	=> $link_delete,
+			));
+		}
+	}
+	else
+	{
+		$template->assign_block_vars('no_entry_match', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
 
 
-	$template->set_filenames(array(
-		'body' => "./../admin/style/index_body.tpl")
-	);
-
-	$template->assign_vars(array(
-		
-		'ICON_NEWS'			=> '<img src="./../admin/style/images/icon_news.png" alt="News" title="" />',
-		'ICON_TEAM'			=> '<img src="./../admin/style/images/icon_team.png" alt="Team" title="" />',
-		'ICON_USER'			=> '<img src="./../admin/style/images/icon_user.png" alt="User" title="" />',
-		
-		'U_NEWS'			=> append_sid('admin_news.php'),
-		'U_TEAM'			=> append_sid('admin_teams.php'),
-		'U_USER'			=> append_sid('admin_user.php'),
+$template->assign_vars(array(
+							 
+#	'L_CAL'					=> $lang['head_calendar'],
+#	'L_USER'				=> $lang['head_user'],
+	
+#	'L_AUTH'				=> $lang['common_auth'],
+#	'L_DELETE'				=> $lang['common_delete'],
+#	'L_UPDATE'				=> $lang['common_update'],
+	
+#	'ICON_CAL'				=> $images['calendar'],
+#	'ICON_CAL_CREATE'		=> $images['calendar_add'],
+#	'ICON_CAL_UPDATE'		=> $images['calendar_edit'],
+#	'ICON_CAL_DELETE'		=> $images['calendar_delete'],
+	
+#	'ICON_USER'				=> $images['user'],
+#	'ICON_USER_GO'			=> $images['user_go'],
+#	'ICON_USER_CREATE'		=> $images['user_add'],
+#	'ICON_USER_UPDATE'		=> $images['user_edit'],
+#	'ICON_USER_DELETE'		=> $images['user_delete'],
+								 
+	
 		
 		'L_WELCOME'			=> $lang['welcome_cms'],
 		'L_ADMIN_INTRO'		=> $lang['welcome_cms_explain'],
@@ -222,30 +375,7 @@ function inarray($needle, $haystack)
 	}
 	
 	$bytes = array_sum(array_map('filesize', glob('*')));
-	echo $bytes;
 	
-	$path = "./../admin/";
-	$handle=opendir ($path);
-	$sum = 0;
-	
-	while (false !== ($file = readdir ($handle)))
-	{
-	if ($file !== "." && $file !== "..")
-	{
-	if (true == is_dir($path.$file))
-	{
-	$path = $path.$file."/";
-	$handle=opendir ($path);
-	}
-	else
-	{
-	$sum += filesize($path.$file);
-	}
-	}
-	}
-	echo "Sum".$sum."<p>";
-
-
 	$template->assign_vars(array(
 		"AVATAR_DIR_SIZE" => $avatar_dir_size,
 //		"DB_SIZE" => $dbsize, 
@@ -322,8 +452,8 @@ function inarray($needle, $haystack)
 	);
 	*/
 	
-	$template->pparse('body');
+$template->pparse('body');
 
-	include('./page_footer_admin.php');
+include('./page_footer_admin.php');
 
 ?>
