@@ -1,0 +1,197 @@
+html {
+	font-size: 100%;
+	/* Always show a scrollbar for short pages - stops the jump when the scrollbar appears. non-IE browsers */
+	height: 100%;
+	margin-bottom: 1px;
+}
+
+
+body {
+	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	color: #fff;
+/*	background-color: #ACA8A1;*/
+	background-color: #000;
+	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
+	font-size: 11px;
+	margin: 0;
+	padding: 0;
+}
+
+table.agree {
+	width:100%;
+	border:none;
+	padding:4px;
+	background-color:#008000;
+}
+
+table.disagree {
+	width:100%;
+	border:none;
+	padding:4px;
+	background-color: #800000;
+	color:#FFF;
+}
+
+th.agree {
+	font-size: 12px;
+	font-weight : bold;
+	height: 25px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+th.disagree {
+	font-size: 12px;
+	font-weight : bold;
+	height: 25px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.table {
+	width:986px;
+	border:none;
+	font-size: 11px;
+	padding:0;
+}
+
+table {
+	border:none;
+	font-size: 11px;
+	padding:0;
+	text-align:left;
+}
+
+table.head {
+	font-weight:bold;
+}
+
+table.row {
+	border: 1px #CCC solid;
+}
+
+table.info {
+	border:none;
+	font-size: 11px;
+	padding:0;
+}
+
+table.out {
+	border:none;
+	font-size: 11px;
+	padding:0;
+	text-align:left;
+}
+
+table.foot {
+	width:100%;
+	border:none;
+	padding:0;
+}
+
+.info_head {
+	font-size:10px;
+	border-bottom:1px #B22222 solid;
+	color:#fff;
+	text-align:left;
+	font-weight:bold;
+	padding:0px 1px;
+}
+
+.info_foot {
+	font-size:10px;
+	border-top:1px #B22222 solid;
+	color:#fff;
+	text-align:left;
+	font-weight:bold;
+	padding:2px 2px;
+}
+
+
+
+th {
+	font-size: 12px;
+	font-weight : bold;
+	height: 25px;
+	text-align:left;
+	vertical-align:middle;
+	padding: 2px;
+}
+
+td.rowHead {
+	height:21px;
+	font-weight:bold;
+	padding: 0px 3px;
+	text-align:left;
+}
+
+
+td.row {
+	padding: 0px 3px;
+	text-align:left;
+}
+
+
+.copyright {
+	font-size: 10px; font-family: Verdana, Arial, Helvetica, sans-serif;
+	padding: 5px;
+	text-align: center;
+	color: #999;
+}
+
+.win { color:#0F0; }
+.lose { color:#F00; }
+.draw { color:#FC0; }
+
+.yes { color:#0F0; }
+.no { color:#FF4500; }
+.replace { color:#FC0; }
+
+
+/*	für Debug */
+.gensmall { font-size : 10px; }
+
+
+
+td.row1	{ background-color: #444; padding:2px;}
+td.row2	{ background-color: #666; padding:2px;}
+td.row3	{ padding:2px;}
+
+td.row4	{ padding:4px;}
+td.noentry	{ padding: 2px; }
+
+td.row1l	{ background-color: #444; padding:2px;}
+td.row2l	{ background-color: #666; padding:2px;}
+td.row3l	{ background-color: #000; padding:2px;}
+
+td.row1r	{ background-color: #545454; padding:2px;}
+td.row2r	{ background-color: #131313; padding:2px;}
+td.row3r	{ background-color: #AA0000; padding:2px;}
+td.row4r	{ padding:2px 2px; }
+
+
+td.row1_form {
+	padding: 3px;
+	font-size:11px;
+	background-color: #444;
+}
+
+td.row1_form:hover {
+	border-right:2px #B22222 solid;
+	
+}
+
+.right {
+	float:right;
+}
+
+
+.big										{ font-size : 12px; }
+.middle										{ font-size : 11px; }
+.small										{ font-size : 10px; }
+
+p {
+  margin: 0px;
+  padding: 0px;
+}

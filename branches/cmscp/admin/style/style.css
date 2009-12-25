@@ -1,0 +1,484 @@
+
+html {
+	font-size: 100%;
+	/* Always show a scrollbar for short pages - stops the jump when the scrollbar appears. non-IE browsers */
+	height: 100%;
+	margin-bottom: 1px;
+}
+
+body {
+	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	color: #536482;
+/*	background-color: #ACA8A1;*/
+	background-color: #6699cc;
+	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
+	font-size: 11px;
+	margin: 0;
+	padding: 5px 5px;
+}
+
+.navi {
+	font-weight : bold;
+	height:20px;
+		
+}
+
+table.head {
+	width:100%;
+	border:none;
+	padding:0;
+}
+
+table.row {
+	border: 1px #CCC solid;
+	width:100%;
+	padding:0;
+}
+
+table.info {
+	border: 1px #CCC solid;
+	width:100%;
+	padding:0;
+}
+
+table.edit {
+	font-size: 12px;
+	width: 100%;
+	padding: 0;
+}
+table.footer {
+	width:100%;
+	border:none;
+	padding:0;
+}
+
+table.normal {
+	width:100%;
+	border:none;
+	padding:4px;
+}
+
+table.small {
+	width:100%;
+	border:none;
+	padding:2px;
+	font-size:12px;
+}
+
+th {
+	font-size: 12px;
+	font-weight : bold;
+	height: 25px;
+	text-align:left;
+	vertical-align:middle;
+	padding: 2px;
+}
+
+table.agree {
+	width:100%;
+	border:none;
+	padding:4px;
+	background-color:#98FB98;
+}
+
+table.disagree {
+	width:100%;
+	border:none;
+	padding:4px;
+	background-color: #B22222;
+	color:#FFF;
+}
+
+th.agree {
+	font-size: 12px;
+	font-weight : bold;
+	height: 25px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+th.disagree {
+	font-size: 12px;
+	font-weight : bold;
+	height: 25px;
+	text-align:center;
+	vertical-align:middle;
+}
+		
+td.rowHead {
+	height:21px;
+	font-weight:bold;
+	background-color: #DFE7EB;
+	padding: 0px 5px;
+	vertical-align:middle;
+}
+
+
+td.row_class1, td.row_class2, td.row_class3	{
+	background-color: #CEE1EB; /* DFE7EB */
+	padding: 1px 2px;
+	vertical-align:middle;
+}
+
+td.row_class2 {
+	background-color: #E6EDF0; /* F0EFEF */
+}
+
+td.row_class3 {
+	background-color: #F0F8FF;
+}
+
+/*B8DEEB*/
+
+td.row1, td.row2, td.row3 {
+	padding: 5px;
+	vertical-align: middle;
+	border-left:1px #FFF solid;
+	border-right:1px #FFF solid;
+}
+
+td.row1 {
+	font-weight: bold;
+	font-size: 11px;
+}
+
+td.top {
+	vertical-align: top;
+}
+
+td.middle {
+	vertical-align: middle;
+}
+
+td.row_noentry	{
+	height:21px;
+	font-weight:bold;
+	background-color: #CEE1EB;
+	padding: 0px 5px;
+	vertical-align:middle;
+}
+
+td.row_noentry2	{
+	height:21px;
+	font-weight:bold;
+	padding: 0px 5px;
+	vertical-align:middle;
+}
+
+tr.wihte:hover {background-color:#efefef;}
+
+
+td.row1:hover {
+	border-right:1px #39F solid;
+	color:#39F;
+}
+
+td.row3:hover {
+	border-left:1px #39F solid;
+	color:#000;
+}
+
+.button, .button:link, .button:visited, .button:active,
+.button2, .button2:link, .button2:visited, .button2:active{
+	font-family: Verdana, Geneva, sans-serif;
+	padding: 1px 4px 1px;
+	color:	#000;
+	height: auto;
+	background:	#F0EFEF;
+	border:	#000 1px solid;
+	font-size:10px;
+	vertical-align:top;
+}
+
+.button:hover,
+.button2:hover{
+	font-size:10px;
+	color: #39F;
+	border: #39F 1px solid;
+	background:	#FAFAFA;
+	
+}
+
+.button2, .button2:link, .button2:visited, .button2:active {
+	font-weight:bold;
+}
+
+.button2:hover {
+	font-weight:bold;
+}
+
+.post, .post:link, .post:visited, .post:active,
+.select, .selectsmall {
+	font-family: Verdana, Geneva, sans-serif;
+	color:	#000;
+	background:	#F0EFEF;
+	border:	#000 1px solid;
+	padding: 1px;
+	font-size:12px;
+}
+
+.selectsmall {
+	font-size:10px;
+}
+
+.post:hover,
+.select:hover,
+.selectsmall:hover {
+	color: #39F;
+	background:	#FAFAFA;
+	border: #39F 1px solid;
+}
+
+.postselect,
+.postselect:link,
+.postselect:visited,
+.postselect:active {
+	font-family: Verdana, Geneva, sans-serif;
+	color:	#000;
+	background:	#F0EFEF;
+	border:	#000 1px solid;
+	padding: 1px;
+	font-size:10px;
+}
+
+.postselect:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #39F;
+	background:	#FAFAFA;
+	border: #39F 1px solid;
+	padding: 1px;
+	font-size:10px;
+}
+
+.textarea,
+.textarea:link,
+.textarea:visited,
+.textarea:active {
+	font-family: Verdana, Geneva, sans-serif;
+	color:	#000;
+	background:	#F0EFEF;
+	border:	#000 1px solid;
+	padding: 1px;
+	font-size:12px;
+}
+
+.textarea:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #39F;
+	background:	#FAFAFA;
+	border: #39F 1px solid;
+	padding: 1px;
+}
+
+td.row1l	{ background-color: #EFEFEF; }
+td.row2l	{ background-color: #DEE3E7; }
+td.row3l	{ background-color: #D1D7DC; }
+
+/*
+row3 F0EFEF
+row1 e9e9e9
+row2 FFF
+*/
+
+.big										{ font-size : 12px; }
+.middle										{ font-size : 11px; }
+.small										{ font-size : 10px; }
+.big,.middle,.small							{ color: #536482; }
+
+a.big,a.middle,a.small						{ color: #03C; text-decoration: none; }
+a.big:hover,a.middle:hover,a.small:hover	{ color: #39F; text-decoration: underline; }
+
+a:link,a:active,a:visited					{ color: #03C; text-decoration: none; }
+a:hover										{ color: #39F; text-decoration: underline; }
+
+/* Forum category titles */
+.cattitle		{ font-weight: bold; font-size: 12px ; letter-spacing: 1px; color : #006699}
+a.cattitle		{ text-decoration: none; color : #006699; }
+a.cattitle:hover{ text-decoration: underline; }
+
+* {
+	/* Reset browsers default margin, padding and font sizes */
+	margin: 0;
+	padding: 0;
+}
+
+
+
+p {
+	line-height: 1.3em;
+	font-size: 1.1em;
+	margin-bottom: 1.5em;
+}
+
+img {
+	border-width: 0;
+}
+
+
+/* Border
+---------------------------------------- */
+.border-left { 
+    background: url("images/border_left.gif") #FFFFFF repeat-y 0 0;
+}
+
+.border-right {
+    background: url("images/border_right.gif") repeat-y 100% 0;
+}
+
+.border-top { 
+    background: url("images/border_top.gif") repeat-x 0 0; 
+}
+
+.border-top-left {
+    background: url("images/border_top_left.gif") no-repeat 0 0;
+}
+
+.border-top-right {
+    background: url("images/border_top_right.gif") no-repeat 100% 0;
+    width: 100%;
+}
+
+.border-bottom { 
+    background: url("images/border_bottom2.gif") repeat-x 0 100%;
+}
+
+.border-bottom span {
+    background: url("images/border_bottom.gif") no-repeat 0 0;
+    display: block;
+    height: 18px; 
+}
+
+.border-bottom span span { 
+    background-position: 100% -18px;
+}
+
+.inside { 
+    padding: 17px 27px 10px 27px;
+}
+
+/* Main blocks
+---------------------------------------- */
+#wrap {
+	padding: 0px 5px;
+	width: 970px;
+	margin: 0 auto;
+	
+}
+
+#page-body {
+	margin: 4px 0;
+	clear: both;
+}
+
+#page-footer {
+	clear: both;
+}
+
+.copyright {
+	font-size: 10px; font-family: Verdana, Arial, Helvetica, sans-serif;
+	padding: 5px;
+	text-align: center;
+	color: #fff;
+}
+
+
+a.copyright			{ color: #000; text-decoration: none;}
+a.copyright:hover	{ color: #fff; text-decoration: underline;}
+
+.small {
+	font-size: 0.9em !important;
+}
+
+.titlespace {
+	margin-bottom: 15px;
+}
+
+.headerspace {
+	margin-top: 20px;
+}
+
+.error {
+	color: #bcbcbc;
+	font-weight: bold;
+	font-size: 1em;
+}
+
+#top {
+	position: absolute;
+	top: -20px;
+}
+
+.clear {
+	display: block;
+	clear: both;
+	font-size: 1px;
+	line-height: 1px;
+	background: transparent;
+}
+
+
+
+#navlist
+{
+	border-bottom: 1px solid #ccc;
+	margin: 0;
+	padding-bottom: 19px;
+	padding-left: 10px;
+}
+
+#navlist ul, #navlist li
+{
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#navlist a:link, #navlist a:visited,
+#navlist a:link#settings, #navlist a:visited#settings
+{
+	background: #E8EBF0;
+	border: 1px solid #ccc;
+	color: #666;
+	float: left;
+	font-size: small;
+	font-weight: normal;
+	line-height: 14px;
+	margin-right: 8px;
+	padding: 2px 10px 2px 10px;
+	text-decoration: none;
+}
+
+#navlist a:link#settings, #navlist a:visited#settings
+{
+	float: right;
+}
+
+#navlist a:link#right, #navlist a:visited#right
+{
+	float: right;
+	background: #fff;
+	border-bottom: 1px solid #fff;
+	color: #000;
+}
+
+#navlist a:link#current, #navlist a:visited#current
+{
+	background: #fff;
+	border-bottom: 1px solid #fff;
+	color: #000;
+}
+
+#navlist a:hover,
+#navlist a:hover#settings
+{
+	color: #39F;
+	background:#fdfdfd;
+	border-bottom: 1px solid #fdfdfd;
+}
+
+#navlist ul a:hover
+{
+	color: #f00 !important;
+}
