@@ -1,49 +1,46 @@
 <!-- BEGIN display -->
-<form action="{S_EVENT_ACTION}" method="post">
-<table class="head" cellspacing="0">
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_EVENT_HEAD}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">{L_EVENT_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="row" cellspacing="1">
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" colspan="2" width="100%">{L_EVENT_TITLE}</td>
-	<td class="rowHead" colspan="2">{L_SETTINGS}</td>
+	<td class="rowHead">{L_TITLE}</td>
+	<td class="rowHead" colspan="2" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN event_row -->
+<!-- BEGIN row_event -->
 <tr>
-	<td class="{display.event_row.CLASS}" align="left" width="99%">{display.event_row.EVENT_TITLE}</td>
-	<td class="{display.event_row.CLASS}" nowrap="nowrap">{display.event_row.EVENT_DATE}</td>
-	<td class="{display.event_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.event_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.event_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.event_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{display.row_event.CLASS}" align="left" width="99%"><span style="float:right;">{display.row_event.DATE}</span>{display.row_event.TITLE}</td>
+	<td class="{display.row_event.CLASS}"><a href="{display.row_event.U_UPDATE}">{L_UPDATE}</a></td>		
+	<td class="{display.row_event.CLASS}"><a href="{display.row_event.U_DELETE}">{L_DELETE}</a></td>
 </tr>
-<!-- END event_row -->
+<!-- END row_event -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
 
-<table class="foot" cellspacing="2">
+<table class="footer" border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td width="100%" align="right"><input class="post" name="event_title" type="text" value=""></td>
-	<td><input class="button" type="submit" value="{L_EVENT_ADD}" /></td>
+	<td align="right"><input type="text" class="post" name="event_title"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END display -->
 
@@ -72,54 +69,55 @@ tinyMCE.init({
 	
 });
 </script>
-<form action="{S_EVENT_ACTION}" method="post">
-<table class="head" cellspacing="0">
+
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="{S_EVENT_ACTION}">{L_EVENT_HEAD}</a></li>
-				<li id="active"><a href="#" id="current">{L_EVENT_NEW_EDIT}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+	<td class="row2 small">{L_REQUIRED}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="160">{L_EVENT_TITLE}: *</td>
-	<td class="row2"><input class="post" type="text" name="event_title" value="{EVENT_TITLE}" ></td>
+	<td class="row1" width="23%"><label for="event_title">{L_TITLE}: *</label></td>
+	<td class="row3"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
 </tr>
 <tr>
-	<td class="row1">{L_EVENT_LEVEL}:</td>
-	<td class="row2">{S_EVENT_LEVEL}</td>
+	<td class="row1">{L_LEVEL}:</td>
+	<td class="row3">{S_LEVEL}</td>
 </tr>
 <tr>
-	<td class="row1">{L_EVENT_DESCRIPTION}: *</td>
-	<td class="row2"><textarea class="textarea" name="event_description" rows="20" style="width:100%">{EVENT_DESCRIPTION}</textarea></td>
+	<td class="row1 top"><label for="event_desc">{L_DESC}: *</label></td>
+	<td class="row3"><textarea class="textarea" name="event_desc" id="event_desc" rows="20" style="width:100%">{DESC}</textarea></td>
 </tr>
 <tr>
-	<td class="row1">{L_EVENT_DATE}:</td>
+	<td class="row1">{L_DATE}:</td>
 	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
 </tr>
 <tr>
-	<td class="row1">{L_EVENT_DURATION}:</td>
+	<td class="row1">{L_DURATION}:</td>
 	<td class="row3">{S_DURATION}</td>
 </tr>
 <tr>
-	<td class="row1">{L_EVENT_COMMENTS}:</td>
-	<td class="row3"><input type="radio" name="event_comments" value="1" {S_CHECKED_COMMENT_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="event_comments" value="0" {S_CHECKED_COMMENT_NO} />&nbsp;{L_NO} </td>
+	<td class="row1"><label for="event_comments">{L_COMMENTS}:</label></td>
+	<td class="row3"><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END event_edit -->

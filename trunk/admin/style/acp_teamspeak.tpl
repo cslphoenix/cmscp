@@ -183,16 +183,16 @@
 	<td>&nbsp;</td>
 </tr>
 <tr>
-	<td align="right" colspan="2"><input class="button" type="submit" value="{L_TEAMSPEAK_EDIT}" /></td>
+	<td align="right" colspan="2"><input class="button" type="submit" value="{L_TEAMSPEAK_EDIT}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END server -->
 
 
 <!-- BEGIN nothing -->
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td>&nbsp;</td>
 </tr>
@@ -212,7 +212,7 @@
 	<td>&nbsp;</td>
 </tr>
 <tr>
-	<td align="right"><input type="hidden" name="mode" value="add" /><input class="button" type="submit" value="{L_TEAMSPEAK_ADD}" /></td>
+	<td align="right"><input type="hidden" name="mode" value="add" /><input class="button" type="submit" value="{L_TEAMSPEAK_ADD}"></td>
 </tr>
 </table>
 
@@ -227,7 +227,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_TEAMSPEAK_ACTION}">{L_TEAMSPEAK_HEAD}</a></li>
+				<li><a href="{S_TEAMSPEAK_ACTION}" method="post">{L_TEAMSPEAK_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_TEAMSPEAK_NEW_EDIT}</a></li>
 				<!-- BEGIN user -->
 				<li id="active"><a href="{S_TEAMSPEAK_MEMBER}">{L_TEAMSPEAK_USER}</a></li>
@@ -244,71 +244,71 @@
 
 <br>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_NAME}: *</td>
-	<td class="row3" width="80%"><input id="teamspeak_name" class="post" type="text" name="teamspeak_name" size="25" value="{TEAMSPEAK_NAME}" ></td>
+	<td class="row3" width="80%"><input id="teamspeak_name" class="post" type="text" name="teamspeak_name" size="25" value="{TEAMSPEAK_NAME}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_IP}: *</td>
-	<td class="row3"><input id="teamspeak_ip" class="post" type="text" name="teamspeak_ip" size="25" value="{TEAMSPEAK_IP}" ></td>
+	<td class="row3"><input id="teamspeak_ip" class="post" type="text" name="teamspeak_ip" size="25" value="{TEAMSPEAK_IP}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_PORT}: *</td>
-	<td class="row3"><input id="teamspeak_port" class="post" type="text" name="teamspeak_port" value="{TEAMSPEAK_PORT}" ></td>
+	<td class="row3"><input id="teamspeak_port" class="post" type="text" name="teamspeak_port" value="{TEAMSPEAK_PORT}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_QPORT}: *</td>
-	<td class="row3"><input id="teamspeak_qport" class="post" type="text" name="teamspeak_qport" value="{TEAMSPEAK_QPORT}" ></td>
+	<td class="row3"><input id="teamspeak_qport" class="post" type="text" name="teamspeak_qport" value="{TEAMSPEAK_QPORT}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_PASS}: *</td>
-	<td class="row3"><input id="teamspeak_pass" class="post" type="text" name="teamspeak_pass" value="{TEAMSPEAK_PASS}" ></td>
+	<td class="row3"><input id="teamspeak_pass" class="post" type="text" name="teamspeak_pass" value="{TEAMSPEAK_PASS}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_TEAMSPEAK_JOIN}: *</td>
-	<td class="row3"><input id="teamspeak_join_name" class="post" type="text" name="teamspeak_join_name" value="{TEAMSPEAK_JOIN}" ></td>
+	<td class="row3"><input id="teamspeak_join_name" class="post" type="text" name="teamspeak_join_name" value="{TEAMSPEAK_JOIN}"></td>
 </tr>
 <tr>
 	<td class="row1">{L_TEAMSPEAK_CSTATS}:</td>
 	<td class="row3">
-		<input type="radio" name="teamspeak_cstats" value="1" {S_CHECKED_CSTATS_YES} /> {L_TEAMSPEAK_SHOW}
-		<input type="radio" name="teamspeak_cstats" value="0" {S_CHECKED_CSTATS_NO} /> {L_TEAMSPEAK_NOSHOW}
+		<input type="radio" name="teamspeak_cstats" value="1" {S_CSTATS_YES} /> {L_TEAMSPEAK_SHOW}
+		<input type="radio" name="teamspeak_cstats" value="0" {S_CSTATS_NO} /> {L_TEAMSPEAK_NOSHOW}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_TEAMSPEAK_USTATS}:</td>
 	<td class="row3">
-		<input type="radio" name="teamspeak_ustats" value="1" {S_CHECKED_USTATS_YES} /> {L_TEAMSPEAK_SHOW}
-		<input type="radio" name="teamspeak_ustats" value="0" {S_CHECKED_USTATS_NO} /> {L_TEAMSPEAK_NOSHOW}
+		<input type="radio" name="teamspeak_ustats" value="1" {S_USTATS_YES} /> {L_TEAMSPEAK_SHOW}
+		<input type="radio" name="teamspeak_ustats" value="0" {S_USTATS_NO} /> {L_TEAMSPEAK_NOSHOW}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_TEAMSPEAK_SSTATS}:</td>
 	<td class="row3">
-		<input type="radio" name="teamspeak_sstats" value="1" {S_CHECKED_SSTATS_YES} /> {L_TEAMSPEAK_SHOW}
-		<input type="radio" name="teamspeak_sstats" value="0" {S_CHECKED_SSTATS_NO} /> {L_TEAMSPEAK_NOSHOW}
+		<input type="radio" name="teamspeak_sstats" value="1" {S_SSTATS_YES} /> {L_TEAMSPEAK_SHOW}
+		<input type="radio" name="teamspeak_sstats" value="0" {S_SSTATS_NO} /> {L_TEAMSPEAK_NOSHOW}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_TEAMSPEAK_MOUSEO}:</td>
 	<td class="row3">
-		<input type="radio" name="teamspeak_mouseover" value="1" {S_CHECKED_MOUSEO_YES} /> {L_YES}
-		<input type="radio" name="teamspeak_mouseover" value="0" {S_CHECKED_MOUSEO_NO} />&nbsp;{L_NO}
+		<input type="radio" name="teamspeak_mouseover" value="1" {S_MOUSEO_YES} /> {L_YES}
+		<input type="radio" name="teamspeak_mouseover" value="0" {S_MOUSEO_NO} />&nbsp;{L_NO}
 	</td>
 </tr>
 <tr>
 	<td class="row1">{L_TEAMSPEAK_VIEWER}:</td>
 	<td class="row3">
-		<input type="radio" name="teamspeak_show" value="1" {S_CHECKED_VIEWER_YES} /> {L_TEAMSPEAK_SHOW}
-		<input type="radio" name="teamspeak_show" value="0" {S_CHECKED_VIEWER_NO} /> {L_TEAMSPEAK_NOSHOW}
+		<input type="radio" name="teamspeak_show" value="1" {S_VIEWER_YES} /> {L_TEAMSPEAK_SHOW}
+		<input type="radio" name="teamspeak_show" value="0" {S_VIEWER_NO} /> {L_TEAMSPEAK_NOSHOW}
 	</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END teamspeak_edit -->
 
@@ -320,7 +320,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_TEAMSPEAK_ACTION}">{L_TEAMSPEAK_TITLE}</a></li>
+				<li><a href="{S_TEAMSPEAK_ACTION}" method="post">{L_TEAMSPEAK_TITLE}</a></li>
 				<li><a href="{S_TEAMSPEAK_EDIT}">{L_TEAMSPEAK_NEW_EDIT}</a></li>
 				<li id="active"><a href="#" id="current">{L_TEAMSPEAK_USER}</a></li>
 			</ul>
@@ -361,7 +361,7 @@
 <table class="foot" cellspacing="2">
 <tr>
 	<td width="100%" align="right">{S_TEAMS}</td>
-	<td><input class="button" type="submit" name="add" value="{L_MATCH_CREATE}" /></td>
+	<td><input class="button" type="submit" name="add" value="{L_MATCH_CREATE}"></td>
 </tr>
 </table>
 </form>

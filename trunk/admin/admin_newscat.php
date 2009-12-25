@@ -29,81 +29,59 @@ if ( !empty($setmodules) )
 	
 	if ( $userauth['auth_newscat'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['news']['newscat'] = $filename;
+		$module['_headmenu_news']['_submenu_newscat'] = $filename;
 	}
 	
 	return;
 }
 else
 {
-	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
+	define('IN_CMS', true);
+	
+	$root_path	= './../';
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/acp_functions.php');
+	
+	$start		= ( request('start') ) ? request('start') : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
+	$newscat_id	= request(POST_NEWSCAT_URL);
+	$move		= request('move');
+	$confirm	= request('confirm');
+	$mode		= request('mode');
+	$show_index = '';
 	
 	if ( !$userauth['auth_newscat'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
 	{
 		redirect('admin/' . append_sid('admin_newscat.php', true));
 	}
-	
-	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-	$start = ( $start < 0 ) ? 0 : $start;
-	
-	if ( isset($HTTP_POST_VARS[POST_NEWSCAT_URL]) || isset($HTTP_GET_VARS[POST_NEWSCAT_URL]) )
-	{
-		$news_category_id = ( isset($HTTP_POST_VARS[POST_NEWSCAT_URL]) ) ? intval($HTTP_POST_VARS[POST_NEWSCAT_URL]) : intval($HTTP_GET_VARS[POST_NEWSCAT_URL]);
-	}
-	else
-	{
-		$news_category_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['newscat_add']) || isset($HTTP_GET_VARS['newscat_add']) )
-		{
-			$mode = 'newscat_add';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
-	
-	$show_index = '';
 		
 	if ( !empty($mode) )
 	{
 		switch ( $mode )
 		{
-			case 'newscat_add':
-			case 'newscat_edit':
+			case '_create':
+			case '_update':
 				
-				if ( $mode == 'newscat_edit' )
+				if ( $mode == '_update' )
 				{
-					$newscat	= get_data('newscat', $news_category_id, 0);
-					$new_mode	= 'newscat_update';
+					$newscat	= get_data('newscat', $newscat_id, 0);
+					$new_mode	= '_update_save';
 				}
 				else
 				{
 					$newscat  = array (
-						'news_category_title'	=> ( isset($HTTP_POST_VARS['news_category_title']) ) ? trim($HTTP_POST_VARS['news_category_title']) : '',
+						'news_category_title'	=> ( request('news_category_title') ) ? request('news_category_title', 'text') : '',
 						'news_category_image'	=> '',
 					);
-		
-					$new_mode = 'newscat_create';
+					$new_mode = '_create_save';
 				}
 		
 				$template->set_filenames(array('body' => 'style/acp_newscat.tpl'));
@@ -118,7 +96,7 @@ else
 				
 				foreach ($files as $file)
 				{
-					if ($file != '.' && $file != '..' && $file != 'index.htm')
+					if ($file != '.' && $file != '..' && $file != 'index.htm' && $file != '.svn')
 					{
 						$selected = ( $file == $newscat['news_category_image'] ) ? ' selected="selected"' : '';
 						$newscat_list .= '<option value="' . $file . '" ' . $selected . '>' . $file . '&nbsp;</option>';
@@ -126,155 +104,141 @@ else
 				}
 				$newscat_list .= '</select>';
 		
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_NEWSCAT_URL . '" value="' . $news_category_id . '" />';
+				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_NEWSCAT_URL . '" value="' . $newscat_id . '" />';
 		
 				$template->assign_vars(array(
-					'L_NEWSCAT_HEAD'		=> $lang['newscat_head'],
-					'L_NEWSCAT_NEW_EDIT'	=> ($mode == 'add') ? $lang['newscat_add'] : $lang['newscat_edit'],
+											 
+					'L_NEWSCAT_HEAD'		=> sprintf($lang['sprintf_head'], $lang['newscat']),
+					'L_NEWSCAT_NEW_EDIT'	=> ( $mode == '_create' ) ? sprintf($lang['sprintf_add'], $lang['newscat']) : sprintf($lang['sprintf_edit'], $lang['newscat']),
 					'L_REQUIRED'			=> $lang['required'],
 					
-					'L_NEWSCAT_TITLE'		=> $lang['newscat_title'],
-					'L_NEWSCAT_IMAGE'		=> $lang['newscat_image'],
+					'L_NEWSCAT_TITLE'		=> sprintf($lang['sprintf_title'], $lang['newscat']),
+					'L_NEWSCAT_IMAGE'		=> sprintf($lang['sprintf_image'], $lang['newscat']),
 									
-					'L_SUBMIT'				=> $lang['common_submit'],
-					'L_RESET'				=> $lang['common_reset'],
-					'L_YES'					=> $lang['common_yes'],
 					'L_NO'					=> $lang['common_no'],
+					'L_YES'					=> $lang['common_yes'],
+					'L_RESET'				=> $lang['common_reset'],
+					'L_SUBMIT'				=> $lang['common_submit'],
 					
 					'NEWSCAT_TITLE'			=> $newscat['news_category_title'],
-					'NEWSCAT_IMAGE'			=> ($mode == 'add') ? $root_path . 'images/spacer.gif' : $root_path . $settings['path_news_category'] . '/' . $newscat['news_category_image'],
+					'NEWSCAT_IMAGE'			=> ( $mode == '_create' ) ? $root_path . 'images/spacer.gif' : $root_path . $settings['path_news_category'] . '/' . $newscat['news_category_image'],
 					'NEWSCAT_PATH'			=> $root_path . $settings['path_news_category'],
 					
 					'S_NEWSCAT_LIST'		=> $newscat_list,
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_NEWSCAT_ACTION'		=> append_sid('admin_newscat.php'),
+					'S_FIELDS'		=> $s_hidden_fields,
+					'S_ACTION'		=> append_sid('admin_newscat.php'),
 				));
 			
 				$template->pparse('body');
 				
-			break;
+				break;
 			
-			case 'newscat_create':
-		
-				$newscat_title	= ( isset($HTTP_POST_VARS['news_category_title']) )	? trim($HTTP_POST_VARS['news_category_title']) : '';
-				$newscat_image	= ( isset($HTTP_POST_VARS['news_category_image']) )	? trim($HTTP_POST_VARS['news_category_image']) : '';
+			case '_create_save':
+			
+				$newscat_title = request('news_category_title', 'text');
+				$newscat_image = request('news_category_image', 'text');
 				
-				if ( $newscat_title == '' )
+				if ( !$newscat_title )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
+					message(GENERAL_ERROR, $lang['msg_select_title'] . $lang['back']);
 				}
 				
-				$sql = 'SELECT MAX(news_category_order) AS max_order FROM ' . NEWS_CATEGORY;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
+				$max_row	= get_data_max(NEWS_CATEGORY, 'news_category_order', '');
+				$max_order	= $max_row['max'];
+				$next_order	= $max_order + 10;
 		
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
-		
-				$sql = 'INSERT INTO ' . NEWS_CATEGORY . " (news_category_title, news_category_image, news_category_order)
-					VALUES ('" . str_replace("\'", "''", $newscat_title) . "', '" . str_replace("\'", "''", $newscat_image) . "', $next_order)";
+				$sql = "INSERT INTO " . NEWS_CATEGORY . " (news_category_title, news_category_image, news_category_order)
+							VALUES ('$newscat_title', '$newscat_image', '$next_order')";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newscat_add', $newscat_title);
-		
 				$message = $lang['create_newscat'] . sprintf($lang['click_return_newscat'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSCAT, 'create_newscat');
+				message(GENERAL_MESSAGE, $message);
 		
 				break;
 			
-			case 'newscat_update':
+			case '_update_save':
 				
-				$newscat_title		= ( isset($HTTP_POST_VARS['news_category_title']) )	? trim($HTTP_POST_VARS['news_category_title']) : '';
-				$newscat_image		= ( isset($HTTP_POST_VARS['news_category_image']) )	? trim($HTTP_POST_VARS['news_category_image']) : '';
+				$newscat_title = request('news_category_title', 'text');
+				$newscat_image = request('news_category_image', 'text');
 				
-				if ( $newscat_title == '' )
+				if ( !$newscat_title )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
+					message(GENERAL_ERROR, $lang['msg_select_title'] . $lang['back']);
 				}
 		
 				$sql = "UPDATE " . NEWS_CATEGORY . " SET
-							news_category_title	= '" . str_replace("\'", "''", $newscat_title) . "',
-							news_category_image	= '" . str_replace("\'", "''", $newscat_image) . "'
-						WHERE news_category_id		= " . intval($HTTP_POST_VARS[POST_NEWSCAT_URL]);
+							news_category_title	= '$newscat_title',
+							news_category_image	= '$newscat_image'
+						WHERE news_category_id = $newscat_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newscat_edit');
 				
 				$message = $lang['update_news'] . sprintf($lang['click_return_newscat'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSCAT, 'update_newscat');
+				message(GENERAL_MESSAGE, $message);
 		
 				break;
 		
-			case 'newscat_order':
+			case '_order':
+			
+				update(NEWS_CATEGORY, 'news_category', $move, $newscat_id);
+				orders('newscat');
 				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . NEWS_CATEGORY . " SET news_category_order = news_category_order + $move WHERE news_category_id = $news_category_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-		
-				renumber_order('newscat');
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NAVI, 'acp_newscat_order');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSCAT, 'acp_newscat_order');
 				
 				$show_index = TRUE;
-		
+				
 				break;
 			
-			case 'newscat_delete':
+			case '_delete':
 			
-				$confirm = isset($HTTP_POST_VARS['confirm']);
-				
-				if ( $news_category_id && $confirm )
+				if ( $newscat_id && $confirm )
 				{	
-					$newscat = get_data('newscat', $news_category_id);
+				#	$newscat = get_data('newscat', $newscat_id);
 					
-					$sql = 'UPDATE ' . NEWS . ' SET news_category = 0 WHERE news_category = ' . $news_category_id;
+					$sql = "UPDATE " . NEWS . " SET news_category = 0 WHERE news_category = $newscat_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Error getting information', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Error getting information', '', __LINE__, __FILE__, $sql);
 					}
 				
-					$sql = 'DELETE FROM ' . NEWS_CATEGORY . ' WHERE news_category_id = ' . $news_category_id;
+					$sql = "DELETE FROM " . NEWS_CATEGORY . " WHERE news_category_id = $newscat_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_category_delete', $newscat['news_category_title']);
-					
 					$message = $lang['delete_newscat'] . sprintf($lang['click_return_newscat'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSCAT, 'delete_newscat');
+					message(GENERAL_MESSAGE, $message);
 				
 				}
-				else if ( $news_category_id && !$confirm )
+				else if ( $newscat_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="newscat_delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_NEWSCAT_URL . '" value="' . $news_category_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_NEWSCAT_URL . '" value="' . $newscat_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_newscat'],
-						'L_YES'				=> $lang['common_yes'],
+						
 						'L_NO'				=> $lang['common_no'],
-						'S_CONFIRM_ACTION'	=> append_sid('admin_newscat.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'L_YES'				=> $lang['common_yes'],
+						
+						'S_FIELDS'	=> $s_fields,
+						'S_ACTION'	=> append_sid('admin_newscat.php'),
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_newscat']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_newscat']);
 				}
 				
 				$template->pparse('body');
@@ -283,77 +247,66 @@ else
 			
 			default:
 					
-				message_die(GENERAL_ERROR, $lang['no_mode']);
+				message(GENERAL_ERROR, $lang['no_mode']);
 					
 				break;
-			}
-		
-			if ( $show_index != TRUE )
-			{
-				include('./page_footer_admin.php');
-				exit;
-			}
 		}
+		
+		if ( $show_index != TRUE )
+		{
+			include('./page_footer_admin.php');
+			exit;
+		}
+	}
 			
 	$template->set_filenames(array('body' => 'style/acp_newscat.tpl'));
 	$template->assign_block_vars('display', array());
+	
+	$s_hidden_fields = '<input type="hidden" name="mode" value="_create" />';
 			
-	$template->assign_vars(array(
-		'L_NEWSCAT_TITLE'	=> $lang['newscat_head'],
+	$template->assign_vars(array(	 
+		'L_NEWSCAT_HEAD'	=> sprintf($lang['sprintf_head'], $lang['newscat']),
+		'L_NEWSCAT_CREATE'	=> sprintf($lang['sprintf_create'], $lang['newscat']),
+		'L_NEWSCAT_TITLE'	=> sprintf($lang['sprintf_title'], $lang['newscat']),
 		'L_NEWSCAT_EXPLAIN'	=> $lang['newscat_explain'],
-		'L_NEWSCAT_NAME'	=> $lang['team_name'],
-		'L_NEWSCAT_ADD'		=> $lang['newscat_add'],
-		'L_SETTINGS'		=> $lang['settings'],
-		'L_EDIT'			=> $lang['common_edit'],
+				
+		'L_UPDATE'			=> $lang['common_update'],
 		'L_DELETE'			=> $lang['common_delete'],
+		'L_SETTINGS'		=> $lang['common_settings'],
 		
 		'NEWSCAT_PATH'		=> $root_path . $settings['path_news_category'],
 		
-		'S_TEAM_ACTION'		=> append_sid('admin_newscat.php'),
+		'S_FIELDS'	=> $s_hidden_fields,
+		'S_NEWSCAT_CREATE'	=> append_sid('admin_newscat.php?mode=_create'),
+		'S_ACTION'	=> append_sid('admin_newscat.php'),
 	));
 	
-	$sql = 'SELECT * FROM ' . NEWS_CATEGORY . ' ORDER BY news_category_order';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$newscat_data = $db->sql_fetchrowset($result);
+	$max_order		= get_data_max(NEWS_CATEGORY, 'news_category_order', '');
+	$newscat_data	= get_data_array(NEWS_CATEGORY, '', 'news_category_order', 'ASC');
 	
-	$sql = 'SELECT MAX(news_category_order) AS max FROM ' . NEWS_CATEGORY;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$max_order = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	if ( !$newscat_data )
-	{
-		$template->assign_block_vars('display.no_entry', array());
-		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
-	}
-	else
+	if ( $newscat_data )
 	{
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($newscat_data)); $i++ )
 		{
 			$newscat_id	= $newscat_data[$i]['news_category_id'];
-			$icon_up	= ( $newscat_data[$i]['news_category_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
-			$icon_down	= ( $newscat_data[$i]['news_category_order'] != $max_order['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
 
-			$class = ($i % 2) ? 'row_class1' : 'row_class2';
-			
 			$template->assign_block_vars('display.newscat_row', array(
-				'CLASS' 		=> $class,
-				'NEWSCAT_NAME'	=> $newscat_data[$i]['news_category_title'],
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				'NEWSCAT_TITLE'	=> $newscat_data[$i]['news_category_title'],
 				'NEWSCAT_IMAGE'	=> $newscat_data[$i]['news_category_image'],
 				
-				'MOVE_UP'		=> ( $newscat_data[$i]['news_category_order'] != '10' )				? '<a href="' . append_sid('admin_newscat.php?mode=newscat_order&amp;move=-15&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $newscat_data[$i]['news_category_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_newscat.php?mode=newscat_order&amp;move=15&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'		=> ( $newscat_data[$i]['news_category_order'] != '10' )					? '<a href="' . append_sid('admin_newscat.php?mode=_order&amp;move=-15&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $newscat_data[$i]['news_category_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_newscat.php?mode=_order&amp;move=15&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_DELETE'		=> append_sid('admin_newscat.php?mode=newscat_delete&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id),
-				'U_EDIT'		=> append_sid('admin_newscat.php?mode=newscat_edit&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id),
+				'U_DELETE'		=> append_sid('admin_newscat.php?mode=_delete&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id),
+				'U_UPDATE'		=> append_sid('admin_newscat.php?mode=_update&amp;' . POST_NEWSCAT_URL . '=' . $newscat_id),
 			));
 		}
+	}
+	else
+	{
+		$template->assign_block_vars('display.no_entry', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	
 	$template->pparse('body');

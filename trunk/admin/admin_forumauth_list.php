@@ -33,16 +33,16 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	
 	if ( !$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 
 	//
@@ -163,9 +163,9 @@ else
 	
 			if ( $sql != '' )
 			{
-				if ( !$db->sql_query($sql) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not update auth table', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Could not update auth table', '', __LINE__, __FILE__, $sql);
 				}
 			}
 	
@@ -193,9 +193,9 @@ else
 	
 			if ( $sql != '' )
 			{
-				if ( !$db->sql_query($sql) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'Could not update auth table', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'Could not update auth table', '', __LINE__, __FILE__, $sql);
 				}
 			}
 	
@@ -204,7 +204,7 @@ else
 	
 		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('admin_forumauth_list.php') . '">'));
 		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid('admin_forumauth_list.php') . '">', "</a>");
-		message_die(GENERAL_MESSAGE, $message);
+		message(GENERAL_MESSAGE, $message);
 	
 	} // End of submit
 	
@@ -220,7 +220,7 @@ else
 		ORDER BY c.cat_order ASC, f.forum_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, "Couldn't obtain forum list", "", __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, "Couldn't obtain forum list", "", __LINE__, __FILE__, $sql);
 	}
 	
 	$forum_rows = $db->sql_fetchrowset($result);
@@ -254,7 +254,7 @@ else
 			ORDER BY c.cat_order";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 		}
 	
 		$category_rows = $db->sql_fetchrowset($result);
@@ -412,7 +412,7 @@ else
 	
 			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
 			'S_COLUMN_SPAN' => $s_column_span,
-			'S_HIDDEN_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_hidden_fields)
 		);
 	
 	}
@@ -433,7 +433,7 @@ else
 				ORDER BY c.cat_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 		}
 		$category_rows = $db->sql_fetchrowset($result);
 	
@@ -513,7 +513,7 @@ else
 	
 			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
 			'S_COLUMN_SPAN' => count($forum_auth_fields)+1,
-			'S_HIDDEN_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_hidden_fields)
 		);
 	
 	

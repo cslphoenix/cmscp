@@ -1,19 +1,10 @@
-<table class="head" cellspacing="0">
-<tr>
-	<th>
-	<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_WELCOME}</a></li>
-		</ul>
-	</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">{L_ADMIN_INTRO}</td>
-</tr>
-</table>
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_WELCOME}</a></li>
+</ul>
+</div>
 
-<br>
+<br />
 
 <!--
 <table class="head" cellspacing="0">

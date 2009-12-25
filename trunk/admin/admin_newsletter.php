@@ -36,10 +36,10 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
@@ -47,7 +47,7 @@ else
 	
 	if ( !$userauth['auth_newsletter'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -121,7 +121,7 @@ else
 					
 					'NL_MAIL'			=> $newsletter['newsletter_mail'],
 					
-					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
+					'S_FIELDS'	=> $s_hidden_fields,
 					'S_NL_ACTION'		=> append_sid('admin_newsletter.php'),
 				));
 			
@@ -135,20 +135,20 @@ else
 				
 				if ( $newsletter_mail == '' || check_mail_subscribe($newsletter_mail) )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_mail'] . $lang['back'], '');
+					message(GENERAL_ERROR, $lang['empty_mail'] . $lang['back']);
 				}
 	
 				$sql = 'INSERT INTO ' . NEWSLETTER . " (newsletter_mail, newsletter_status)
 					VALUES ('" . str_replace("\'", "''", $newsletter_mail) . "', '1')";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newsletter_edit', $newsletter_mail);
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newsletter_edit', $newsletter_mail);
 	
 				$message = $lang['create_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 
 				break;
 			
@@ -159,19 +159,19 @@ else
 				
 				if ( $newsletter_mail == '' || check_mail_subscribe($newsletter_mail) )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_mail'] . $lang['back'], '');
+					message(GENERAL_ERROR, $lang['empty_mail'] . $lang['back']);
 				}
 
 				$sql = "UPDATE " . NEWSLETTER . " SET newsletter_mail = '" . str_replace("\'", "''", $newsletter_mail) . "' WHERE newsletter_id = $newsletter_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
 				
 				$message = $lang['update_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 				break;
 		
@@ -186,34 +186,34 @@ else
 					$sql = 'DELETE FROM ' . NEWSLETTER . ' WHERE newsletter_id = ' . $newsletter_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
 					
 					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( $newsletter_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
-					$hidden_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="delete" />';
+					$s_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_newsletter'],
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
-						'S_CONFIRM_ACTION'	=> append_sid('admin_newsletter.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'S_ACTION'	=> append_sid('admin_newsletter.php'),
+						'S_FIELDS'	=> $s_fields,
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_newsletter']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_newsletter']);
 				}
 				
 				$template->pparse('body');
@@ -229,33 +229,33 @@ else
 					$sql = 'TRUNCATE TABLE ' . NEWSLETTER;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
 					
 					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 				
 				}
 				else if ( !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="alldelete" />';
+					$s_fields = '<input type="hidden" name="mode" value="alldelete" />';
 					
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_newsletter_all'],
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
-						'S_CONFIRM_ACTION'	=> append_sid('admin_newsletter.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'S_ACTION'	=> append_sid('admin_newsletter.php'),
+						'S_FIELDS'	=> $s_fields,
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_newsletter']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_newsletter']);
 				}
 				
 				$template->pparse('body');
@@ -264,7 +264,7 @@ else
 			
 			default:
 			
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['no_select_module']);
 				
 				break;
 				break;
@@ -286,8 +286,8 @@ else
 		'L_NL_EMAIL'		=> $lang['newsletter_email'],
 		'L_NL_ADD'			=> $lang['newsletter_add'],
 		
-		'L_SETTINGS'		=> $lang['settings'],
-		'L_EDIT'			=> $lang['common_edit'],
+		'L_SETTINGS'		=> $lang['common_settings'],
+		'L_EDIT'			=> $lang['common_update'],
 		'L_DELETE'			=> $lang['common_delete'],
 		'L_ALLDELETE'		=> $lang['alldelete'],
 		
@@ -297,7 +297,7 @@ else
 	$sql = 'SELECT * FROM ' . NEWSLETTER . ' ORDER BY newsletter_id';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$newsletter_data = $db->sql_fetchrowset($result);
 	

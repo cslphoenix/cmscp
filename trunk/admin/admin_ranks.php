@@ -29,97 +29,80 @@ if ( !empty($setmodules) )
 	
 	if ( $userauth['auth_ranks'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['main']['ranks_over'] = $filename;
+		$module['_headmenu_main']['_submenu_ranks'] = $filename;
 	}
 	
 	return;
 }
 else
 {
-	define('IN_CMS', 1);
-
-	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
+	define('IN_CMS', true);
+	
+	$root_path	= './../';
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
+	$no_header	= $cancel;
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/acp_functions.php');
+	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/ranks.php');
+	
+	$start		= ( request('start') ) ? request('start') : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
+	$rank_id	= request(POST_RANKS_URL);
+	$rank_type	= request('type');
+	$confirm	= request('confirm');
+	$mode		= request('mode');
+	$move		= request('move');
+	$show_index	= '';
 	
 	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
 	{
-		redirect('admin/' . append_sid('admin_match.php', true));
+		redirect('admin/' . append_sid('admin_ranks.php', true));
 	}
-	
-	if ( isset($HTTP_POST_VARS[POST_RANKS_URL]) || isset($HTTP_GET_VARS[POST_RANKS_URL]) )
-	{
-		$rank_id = ( isset($HTTP_POST_VARS[POST_RANKS_URL]) ) ? intval($HTTP_POST_VARS[POST_RANKS_URL]) : intval($HTTP_GET_VARS[POST_RANKS_URL]);
-	}
-	else
-	{
-		$rank_id = 0;
-	}
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['rank_add']) )
-		{
-			$mode = 'rank_add';
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
-	
-	$show_index = '';
 	
 	if ( !empty($mode) )
 	{
 		switch ( $mode )
 		{
-			case 'rank_add':
-			case 'rank_edit':
-				
-				if ( $mode == 'rank_edit' )
-				{
-					$rank		= get_data('ranks', $rank_id, 0);
-					$new_mode	= 'rank_update';
-				}
-				else
+			case '_create':
+			case '_update':
+			
+				$template->set_filenames(array('body' => 'style/acp_ranks.tpl'));
+				$template->assign_block_vars('ranks_edit', array());
+
+				if ( $mode == '_create' )
 				{
 					$rank = array (
-						'rank_title'	=> trim($HTTP_POST_VARS['rank_title']),
+						'rank_title'	=> request('rank_title', 'text'),
 						'rank_type'		=> '1',
 						'rank_min'		=> '0',
-						'rank_special'	=> '1',
+						'rank_special'	=> '0',
 						'rank_image'	=> '',
 						'rank_order'	=> '',
 						'rank_standard'	=> '0',
 					);
-
-					$new_mode = 'rank_create';
+					$new_mode = '_create_save';
 				}
-				
-				$template->set_filenames(array('body' => 'style/acp_ranks.tpl'));
-				$template->assign_block_vars('ranks_edit', array());
+				else
+				{
+					$rank = get_data(RANKS, $rank_id, 1);
+					$new_mode = '_update_save';
+				}
 				
 				$folder = $root_path . $settings['path_ranks'];
 				$files = scandir($folder);
 				
-				$filename_list = '<select name="rank_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+				$filename_list = '<select name="rank_image" id="rank_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
 				$filename_list .= '<option value="">----------</option>';
 				
 				foreach ( $files as $file )
 				{
-					if ( $file != '.' && $file != '..' && $file != 'index.htm' && $file != '.svn' )
+					if ( $file != '.' && $file != '..' && $file != 'index.htm' && $file != '.svn' && $file != 'spacer.gif' )
 					{
 						$selected = ( $file == $rank['rank_image'] ) ? ' selected="selected"' : '';
 						$filename_list .= '<option value="' . $file . '" ' . $selected . '>' . $file . '&nbsp;</option>';
@@ -127,253 +110,191 @@ else
 				}
 				$filename_list .= '</select>';
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
+				$to_ranks = $root_path . $settings['path_ranks'] . '/';
+				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
+				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
 
 				$template->assign_vars(array(
-					'L_RANK_HEAD'			=> $lang['rank_head'],
-					'L_RANK_NEW_EDIT'		=> ($mode == 'add') ? $lang['rank_add'] : $lang['rank_edit'],
-					'L_REQUIRED'			=> $lang['required'],
+					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['rank']),
+					'L_NEW_EDIT'		=> sprintf($lang[$ssprintf], $lang['rank']),
+					'L_NAME'			=> sprintf($lang['sprintf_title'], $lang['rank']),
+					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['rank']),
+					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['rank']),
 					
-					'L_RANK_NAME'			=> $lang['rank_title'],
-					'L_RANK_IMAGE'			=> $lang['rank_image'],
-					'L_RANK_TYPE'			=> $lang['rank_type'],
-					'L_RANK_SPECIAL'		=> $lang['rank_special'],
-					'L_RANK_MIN'			=> $lang['rank_min'],
-					'L_TYPE_PAGE'			=> $lang['rank_page'],
-					'L_TYPE_FORUM'			=> $lang['rank_forum'],
-					'L_TYPE_TEAM'			=> $lang['rank_team'],
-					'L_RANK_STANDARD'		=> $lang['rank_standard'],
+					'L_TYPE_PAGE'		=> $lang['rank_page'],
+					'L_TYPE_FORUM'		=> $lang['rank_forum'],
+					'L_TYPE_TEAM'		=> $lang['rank_team'],
+					'L_SPECIAL'			=> $lang['rank_special'],
+					'L_MIN'				=> $lang['rank_min'],
+					'L_STANDARD'		=> $lang['rank_standard'],
 					
-					'L_SUBMIT'				=> $lang['common_submit'],
-					'L_RESET'				=> $lang['common_reset'],
-					'L_YES'					=> $lang['common_yes'],
-					'L_NO'					=> $lang['common_no'],
+					'TITLE'				=> $rank['rank_title'],
+					'MIN'				=> $rank['rank_min'],
+					'IMAGE'				=> ( $mode == '_update' ) ? ( $rank['rank_image'] ) ? $to_ranks . $rank['rank_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
+					'IMAGE_PATH'		=> $to_ranks,
+					'IMAGE_DEFAULT'		=> $images['icon_acp_spacer'],
 					
-					'RANK_TITLE'			=> $rank['rank_title'],
-					'RANK_IMAGE'			=> ( $mode != 'add' ) ? ( $rank['rank_image'] ) ? $root_path . $settings['path_ranks'] . '/' . $rank['rank_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
-					'RANK_MIN'				=> $rank['rank_min'],
-					'RANKS_PATH'			=> $root_path . $settings['path_ranks'],
-					'CHECKED_TYPE_PAGE'		=> ($rank['rank_type'] == '1') ? ' checked="checked"' : '',
-					'CHECKED_TYPE_FORUM'	=> ($rank['rank_type'] == '2') ? ' checked="checked"' : '',
-					'CHECKED_TYPE_TEAM'		=> ($rank['rank_type'] == '3') ? ' checked="checked"' : '',
-					'CHECKED_SPECIAL_YES'	=> ( $rank['rank_special']) ? ' checked="checked"' : '',
-					'CHECKED_SPECIAL_NO'	=> (!$rank['rank_special']) ? ' checked="checked"' : '',
-					'CHECKED_STANDARD_YES'	=> ( $rank['rank_standard']) ? ' checked="checked"' : '',
-					'CHECKED_STANDARD_NO'	=> (!$rank['rank_standard']) ? ' checked="checked"' : '',
+					'S_TYPE_PAGE'		=> ( $rank['rank_type'] == RANK_PAGE ) ? ' checked="checked"' : '',
+					'S_TYPE_FORUM'		=> ( $rank['rank_type'] == RANK_FORUM ) ? ' checked="checked"' : '',
+					'S_TYPE_TEAM'		=> ( $rank['rank_type'] == RANK_TEAM ) ? ' checked="checked"' : '',
+					'S_SPECIAL_YES'		=> ( $rank['rank_special'] ) ? ' checked="checked"' : '',
+					'S_SPECIAL_NO'		=> ( !$rank['rank_special'] ) ? ' checked="checked"' : '',
+					'S_STANDARD_YES'	=> ( $rank['rank_standard'] ) ? ' checked="checked"' : '',
+					'S_STANDARD_NO'		=> ( !$rank['rank_standard'] ) ? ' checked="checked"' : '',
 					
-					'S_FILENAME_LIST'		=> $filename_list,
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-					'S_RANKS_ACTION'		=> append_sid('admin_ranks.php'),
+					'S_FILENAME_LIST'	=> $filename_list,
+					'S_FIELDS'			=> $s_fields,
+					'S_ACTION'			=> append_sid('admin_ranks.php'),
 				));
 			
 				$template->pparse('body');
 				
-			break;
+				break;
 			
-			case 'rank_create':
+			case '_create_save':
+			
+				$rank_title		= request('rank_title', 'text');
+				$rank_image		= request('rank_image', 'text');
+				$rank_type		= request('rank_type', 'num');
+				$rank_min		= request('rank_min', 'num');
+				$rank_special	= request('rank_special', 'num');
+				$rank_standard	= request('rank_standard', 'num');
 				
-				$rank_title		= ( isset($HTTP_POST_VARS['rank_title']) )	? trim($HTTP_POST_VARS['rank_title']) : '';
-				$rank_image		= ( isset($HTTP_POST_VARS['rank_image']) )	? trim($HTTP_POST_VARS['rank_image']) : '';
-				$rank_min		= ( isset($HTTP_POST_VARS['rank_min']) )	? intval($HTTP_POST_VARS['rank_min']) : -1;
-				$rank_special	= ( $HTTP_POST_VARS['rank_special'] == 1 )	? 1 : 0;
-				$rank_standard	= ( $HTTP_POST_VARS['rank_standard'] == 1 )	? 1 : 0;
-				
-				if ( $rank_title == '' )
+				if ( !$rank_title )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['back'], '');
+					message(GENERAL_ERROR, $lang['msg_select_title'] . $lang['back']);
 				}
 				
-				$sql = 'SELECT MAX(rank_order) AS max_order
-							FROM ' . RANKS . '
-							WHERE rank_type = ' . intval($HTTP_POST_VARS['rank_type']);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$row = $db->sql_fetchrow($result);
-	
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
+				$max_row	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . $rank_type);
+				$next_order	= $max_row['max'] + 10;
 				
 				if ( $rank_standard )
 				{
-					$sql = "UPDATE " . RANKS . " SET rank_standard	= 0 WHERE rank_type = " . intval($HTTP_POST_VARS['rank_type']);
+					$sql = "UPDATE " . RANKS . " SET rank_standard	= 0 WHERE rank_type = $rank_type";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				
-				$sql = 'INSERT INTO ' . RANKS . " (rank_title, rank_type, rank_min, rank_special, rank_standard, rank_image, rank_order)
-					VALUES ('" . str_replace("\'", "''", $rank_title) . "', '" . intval($HTTP_POST_VARS['rank_type']) . "', $rank_min, $rank_special, $rank_standard, '" . str_replace("\'", "''", $rank_image) . "', $next_order)";
+				$sql = "INSERT INTO " . RANKS . " (rank_title, rank_type, rank_min, rank_special, rank_standard, rank_image, rank_order)
+							VALUES ('$rank_title', '$rank_type', '$rank_min', '$rank_special', '$rank_standard', '$rank_image', '$next_order')";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_add', $rank_title);
-	
 				$message = $lang['create_rank'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'create_rank');
+				message(GENERAL_MESSAGE, $message);
 
 				break;
 			
-			case 'rank_update':
+			case '_update_save':
 			
-				$rank_title		= ( isset($HTTP_POST_VARS['rank_title']) )	? trim($HTTP_POST_VARS['rank_title']) : '';
-				$rank_image		= ( isset($HTTP_POST_VARS['rank_image']) )	? trim($HTTP_POST_VARS['rank_image']) : '';
-				$rank_min		= ( isset($HTTP_POST_VARS['rank_min']) )	? intval($HTTP_POST_VARS['rank_min']) : -1;
-				$rank_special	= ( $HTTP_POST_VARS['rank_special'] == 1 )	? 1 : 0;
-				$rank_standard	= ( $HTTP_POST_VARS['rank_standard'] == 1 )	? 1 : 0;
+				$rank_title		= request('rank_title', 'text');
+				$rank_image		= request('rank_image', 'text');
+				$rank_type		= request('rank_type', 'num');
+				$rank_min		= request('rank_min', 'num');
+				$rank_special	= request('rank_special', 'num');
+				$rank_standard	= request('rank_standard', 'num');
 				
-				if ( $rank_title == '' )
+				if ( !$rank_title )
 				{
-					message_die(GENERAL_ERROR, $lang['empty_title'] . $lang['back'], '');
+					message(GENERAL_ERROR, $lang['msg_select_title'] . $lang['back']);
 				}
 				
 				if ( $rank_standard )
 				{
-					$sql = "UPDATE " . RANKS . " SET rank_standard	= 0 WHERE rank_type = " . intval($HTTP_POST_VARS['rank_type']);
+					$sql = "UPDATE " . RANKS . " SET rank_standard	= 0 WHERE rank_type = $rank_type";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 					
 				$sql = "UPDATE " . RANKS . " SET
-							rank_title		= '" . str_replace("\'", "''", $rank_title) . "',
-							rank_type		= '" . intval($HTTP_POST_VARS['rank_type']) . "',
-							rank_min		= $rank_min,
-							rank_special	= $rank_special,
-							rank_standard	= $rank_standard,
-							rank_image		= '" . str_replace("\'", "''", $rank_image) . "'
-						WHERE rank_id = " . intval($HTTP_POST_VARS[POST_RANKS_URL]);
+							rank_title		= '$rank_title',
+							rank_type		= '$rank_type',
+							rank_min		= '$rank_min',
+							rank_special	= '$rank_special',
+							rank_standard	= '$rank_standard',
+							rank_image		= '$rank_image'
+						WHERE rank_id = $rank_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_edit');
-				
-				$message = $lang['update_rank'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				$message = $lang['update_rank']
+					. sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>')
+					. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id) . '">', '</a>');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'update_rank');
+				message(GENERAL_MESSAGE, $message);
 	
 				break;
-			
-			case 'rank_delete':
-			
-				$confirm = isset($HTTP_POST_VARS['confirm']);
 				
+			case '_order':
+				
+				update(RANKS, 'rank', $move, $rank_id);
+				orders('ranks', $rank_type);
+				
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_game_order');
+				
+				$show_index = TRUE;
+				
+				break;
+				
+			case '_delete':
+			
+				$rank = get_data(RANKS, $rank_id, 1);
+			
 				if ( $rank_id && $confirm )
 				{	
-					$rank = get_data('rank', $rank_id, 0);
-				
-					$sql = 'DELETE FROM ' . RANKS . " WHERE rank_id = $rank_id";
+					$sql = "DELETE FROM " . RANKS . " WHERE rank_id = $rank_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_delete', $rank['rank_title']);
-					
 					$message = $lang['delete_rank'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
-				
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'delete_rank');
+					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $rank_id && !$confirm )
 				{
-					$rank = get_data('ranks', $rank_id, 0);
-					
 					if ( $rank['rank_standard'] )
 					{
-						message_die(GENERAL_ERROR, $lang['msg_select_standard']);
+						message(GENERAL_ERROR, $lang['msg_select_standard'] . $lang['back']);
 					}
 					else
 					{
 						$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 			
-						$hidden_fields = '<input type="hidden" name="mode" value="delete" />';
-						$hidden_fields .= '<input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
+						$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $rank_id . '" />';
 			
 						$template->assign_vars(array(
 							'MESSAGE_TITLE'		=> $lang['common_confirm'],
 							'MESSAGE_TEXT'		=> $lang['confirm_delete_rank'],
-			
-							'L_YES'				=> $lang['common_yes'],
 							'L_NO'				=> $lang['common_no'],
-			
-							'S_CONFIRM_ACTION'	=> append_sid('admin_ranks.php'),
-							'S_HIDDEN_FIELDS'	=> $hidden_fields,
+							'L_YES'				=> $lang['common_yes'],
+							'S_FIELDS'	=> $s_fields,
+							'S_ACTION'	=> append_sid('admin_ranks.php'),
 						));
 					}
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_rank']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_rank']);
 				}
 					
 				$template->pparse('body');
 				
 				break;
-			
-			case 'order_page':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . RANKS . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-		
-				renumber_order('ranks', RANK_PAGE);
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_order', RANK_PAGE);
-				
-				$show_index = TRUE;
-	
-				break;
-			
-			case 'order_forum':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . RANKS . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-		
-				renumber_order('ranks', RANK_FORUM);
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_order', RANK_FORUM);
-				
-				$show_index = TRUE;
-	
-				break;
-			
-			case 'order_team':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . RANKS . " SET rank_order = rank_order + $move WHERE rank_id = $rank_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-		
-				renumber_order('ranks', RANK_TEAM);
-					
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_rank_order', RANK_TEAM);
-				
-				$show_index = TRUE;
-	
-				break;
 	
 			default:
 			
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['no_select_module']);
 				
 				break;
 		}
@@ -387,112 +308,116 @@ else
 	
 	$template->set_filenames(array('body' => 'style/acp_ranks.tpl'));
 	$template->assign_block_vars('display', array());
+	
+	$s_fields = '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_RANK_TITLE'			=> $lang['rank_head'],
-		'L_RANK_EXPLAIN'		=> $lang['rank_explain'],
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['rank']),
+		'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['rank']),
+		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['rank']),
+		'L_EXPLAIN'		=> $lang['rank_explain'],
 		
-		'L_RANK_PAGE'			=> $lang['rank_page'],
-		'L_RANK_FORUM'			=> $lang['rank_forum'],
-		'L_RANK_TEAM'			=> $lang['rank_team'],
-		'L_RANK_SPECIAL'		=> $lang['rank_special'],
-		'L_RANK_STANDARD'		=> $lang['rank_standard'],
-		'L_RANK_MIN'			=> $lang['rank_min'],
-		'L_RANK_ADD'			=> $lang['rank_add'],
+		'L_PAGE'		=> $lang['rank_page'],
+		'L_FORUM'		=> $lang['rank_forum'],
+		'L_TEAM'		=> $lang['rank_team'],
+		'L_SPECIAL'		=> $lang['rank_special'],
+		'L_STANDARD'	=> $lang['rank_standard'],
+		'L_MIN'			=> $lang['rank_min'],
 		
-		'L_EDIT'				=> $lang['common_edit'],
-		'L_SETTINGS'			=> $lang['settings'],
-		'L_DELETE'				=> $lang['common_delete'],
+		'L_UPDATE'		=> $lang['common_update'],
+		'L_DELETE'		=> $lang['common_delete'],
+		'L_SETTINGS'	=> $lang['common_settings'],
 		
-		'S_RANKS_ACTION'		=> append_sid('admin_ranks.php'),
+		'S_FIELDS'		=> $s_fields,
+		'S_CREATE'		=> append_sid('admin_ranks.php?mode=_create'),
+		'S_ACTION'		=> append_sid('admin_ranks.php'),
 	));
 	
-	$sql_forum = 'SELECT MAX(rank_order) AS max FROM ' . RANKS . ' WHERE rank_type = ' . RANK_FORUM . ' AND rank_special = 1';
-	if ( !($result = $db->sql_query($sql_forum)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql_forum);
-	}
-	$max_forum = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
+	$max_forum	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_FORUM . ' AND rank_special = 1');
+	$max_page	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_PAGE);
+	$max_team	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_TEAM);
 	
-	$sql_page = 'SELECT MAX(rank_order) AS max FROM ' . RANKS . ' WHERE rank_type = ' . RANK_PAGE;
-	if ( !($result = $db->sql_query($sql_page)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql_page);
-	}
-	$max_page = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
+	$data_forum	= get_data_array(RANKS, 'rank_type = ' . RANK_FORUM, 'rank_special DESC, rank_order', 'ASC');
+	$data_page	= get_data_array(RANKS, 'rank_type = ' . RANK_PAGE, 'rank_special DESC, rank_order', 'ASC');
+	$data_team	= get_data_array(RANKS, 'rank_type = ' . RANK_TEAM, 'rank_special DESC, rank_order', 'ASC');
 	
-	$sql_team = 'SELECT MAX(rank_order) AS max FROM ' . RANKS . ' WHERE rank_type = ' . RANK_TEAM;
-	if ( !($result = $db->sql_query($sql_team)) )
+	if ( $data_forum )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql_team);
-	}
-	$max_team = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT * FROM ' . RANKS . ' ORDER BY rank_type ASC, rank_special DESC, rank_order ASC';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	
-	$color = '';
-	
-	while ( $row = $db->sql_fetchrow($result) )
-	{
-		$class = ( $color % 2 ) ? 'row_class1' : 'row_class2';
-		$color++;
-		
-		$rank_id = $row['rank_id'];
-		
-		if ( $row['rank_type'] == RANK_FORUM )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_forum)); $i++ )
 		{
-			$icon_up	= ( $row['rank_order'] != '10' ) ? '<img src="' . $images['icon_acp_arrow_u'] . '" alt="" />' : '';
-			$icon_down	= ( $row['rank_order'] != $max_forum['max'] ) ? '<img src="' . $images['icon_acp_arrow_d'] . '" alt="" />' : '';
-			
-			$template->assign_block_vars('display.forum_row', array(
-				'CLASS' 		=> $class,
-				'RANK_TITLE'	=> $row['rank_title'],
-				'RANK_MIN'		=> ( $row['rank_special'] == '0' ) ? $row['rank_min'] : ' - ',
-				'RANK_SPECIAL'	=> ( $row['rank_special'] == '1' ) ? $lang['Yes'] : $lang['No'],
-				'MOVE_UP'		=> ( $row['rank_order'] != '10' && $row['rank_special'] ) ? '<a href="' . append_sid('admin_ranks.php?mode=order_forum&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['rank_order'] != $max_forum['max'] && $row['rank_special'] )	? '<a href="' . append_sid('admin_ranks.php?mode=order_forum&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-				'U_DELETE'		=> append_sid('admin_ranks.php?mode=rank_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
-				'U_EDIT'		=> append_sid('admin_ranks.php?mode=rank_edit&amp;' . POST_RANKS_URL . '=' . $rank_id),
-			));
-		}
-		else if ( $row['rank_type'] == RANK_PAGE )
-		{
-			$template->assign_block_vars('display.page_row', array(
-				'CLASS' 		=> $class,
-				'RANK_TITLE'	=> $row['rank_title'],
-				'MOVE_UP'		=> ( $row['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=order_page&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['rank_order'] != $max_page['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=order_page&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-				'STANDARD'		=> ( $row['rank_standard'] ) ? '*' : '',
-				'U_DELETE'		=> append_sid('admin_ranks.php?mode=rank_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
-				'U_EDIT'		=> append_sid('admin_ranks.php?mode=rank_edit&amp;' . POST_RANKS_URL . '=' . $rank_id),
+			$rank_id = $data_forum[$i]['rank_id'];
 				
-			));
-		}
-		else if ( $row['rank_type'] == RANK_TEAM )
-		{
-			$template->assign_block_vars('display.team_row', array(
-				'CLASS' 		=> $class,
-				'RANK_TITLE'	=> $row['rank_title'],
-				'MOVE_UP'		=> ( $row['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=order_team&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $row['rank_order'] != $max_team['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=order_team&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-				'STANDARD'		=> ( $row['rank_standard'] ) ? '*' : '',
-				'U_DELETE'		=> append_sid('admin_ranks.php?mode=rank_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
-				'U_EDIT'		=> append_sid('admin_ranks.php?mode=rank_edit&amp;' . POST_RANKS_URL . '=' . $rank_id),
+			$template->assign_block_vars('display.forum_row', array(
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'TITLE'	=> $data_forum[$i]['rank_title'],
+				'MIN'		=> ( $data_forum[$i]['rank_special'] == '0' ) ? $data_forum[$i]['rank_min'] : ' - ',
+				'SPECIAL'	=> ( $data_forum[$i]['rank_special'] == '1' ) ? $lang['common_yes'] : $lang['common_no'],
+				
+				'MOVE_UP'		=> ( $data_forum[$i]['rank_order'] != '10' && $data_forum[$i]['rank_special'] )					? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $data_forum[$i]['rank_order'] != $max_forum['max'] && $data_forum[$i]['rank_special'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				
+				'U_UPDATE'		=> append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_DELETE'		=> append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
 			));
 		}
 	}
-	
-	if ( !$db->sql_numrows($result) )
+	else
 	{
-		$template->assign_block_vars('no_ranks', array());
-		$template->assign_vars(array('NO_RANKS' => $lang['rank_empty']));
+		$template->assign_block_vars('display.no_entry_forum', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	
+	if ( $data_page )
+	{
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_page)); $i++ )
+		{
+			$rank_id = $data_page[$i]['rank_id'];
+				
+			$template->assign_block_vars('display.page_row', array(
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'TITLE'	=> $data_page[$i]['rank_title'],
+				'STANDARD'	=> ( $data_page[$i]['rank_standard'] ) ? '*' : '',
+				
+				'MOVE_UP'		=> ( $data_page[$i]['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_PAGE . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $data_page[$i]['rank_order'] != $max_page['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_PAGE . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				
+				'U_UPDATE'		=> append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_DELETE'		=> append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
+			));
+		}
+	}
+	else
+	{
+		$template->assign_block_vars('display.no_entry_page', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
+	
+	if ( $data_team )
+	{
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_team)); $i++ )
+		{
+			$rank_id = $data_team[$i]['rank_id'];
+				
+			$template->assign_block_vars('display.team_row', array(
+				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'TITLE'	=> $data_team[$i]['rank_title'],
+				'STANDARD'	=> ( $data_team[$i]['rank_standard'] ) ? '*' : '',
+				
+				'MOVE_UP'		=> ( $data_team[$i]['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_TEAM . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'		=> ( $data_team[$i]['rank_order'] != $max_team['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_TEAM . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				
+				'U_UPDATE'		=> append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_DELETE'		=> append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
+			));
+		}
+	}
+	else
+	{
+		$template->assign_block_vars('display.no_entry_team', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	
 	$template->pparse('body');

@@ -1,24 +1,21 @@
 <!-- BEGIN display -->
 <form action="{S_LOG_ACTION}" method="post" id="list" name="post">
-<table class="head" cellspacing="0">
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_LOG_ERROR}">{L_ERROR}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_LOG_TITLE}</a></li>
-				<li><a href="{S_LOG_ERROR}">{L_LOG_ERROR}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">{L_LOG_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="row" cellspacing="1">
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="rowHead" align="center">{L_LOG_USERNAME}</td>
 	<td class="rowHead" align="center">{L_LOG_IP}</td>
@@ -37,7 +34,7 @@
 	<td class="{display.logs_row.CLASS}" align="center">{display.logs_row.SEKTION}</td>
 	<td class="{display.logs_row.CLASS}" align="center">{display.logs_row.MESSAGE}</td>
 	<td class="{display.logs_row.CLASS}" align="center"><span class="small">{display.logs_row.DATA}</span></td>
-	<td class="{display.logs_row.CLASS}" align="center" width="1%"><input type="checkbox" name="log_id[]" value="{display.logs_row.LOG_ID}" /></td>
+	<td class="{display.logs_row.CLASS}" align="center" width="1%"><input type="checkbox" name="log_id[]" value="{display.logs_row.LOG_ID}"></td>
 </tr>
 <!-- END logs_row -->
 <!-- BEGIN no_entry -->
@@ -64,7 +61,7 @@
 	<td colspan="2" align="right"><a href="#" onclick="marklist('list', 'log', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'log', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END display -->
 
@@ -75,7 +72,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_LOG_ACTION}">{L_LOG_TITLE}</a></li>
+				<li><a href="{S_LOG_ACTION}" method="post">{L_LOG_TITLE}</a></li>
 				<li id="active"><a href="#" id="current">{L_LOG_ERROR}</a></li>
 			</ul>
 		</div>
@@ -95,7 +92,7 @@
 	<td class="{error.error_row.CLASS}" rowspan="6" align="left" valign="top" nowrap="nowrap"><b>{error.error_row.TIME}</b><br>Error ID: {error.error_row.ERROR_ID}<br>User ID: {error.error_row.ERROR_USERID}</td>
 	<td class="{error.error_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Line:</b></td>
 	<td class="{error.error_row.CLASS}" align="left" valign="top">{error.error_row.ERROR_FILE_LINE}<b> in File: </b>{error.error_row.ERROR_FILE}</td>
-	<td class="{error.error_row.CLASS}" rowspan="6" align="center"><input type="checkbox" name="log_id[]" value="{error.error_row.ERROR_ID}" /></td>
+	<td class="{error.error_row.CLASS}" rowspan="6" align="center"><input type="checkbox" name="log_id[]" value="{error.error_row.ERROR_ID}"></td>
 </tr>
 <tr>
 	<td class="{error.error_row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error:</b></td>
@@ -143,6 +140,6 @@
 	<td colspan="2" align="right"><a href="#" onclick="marklist('list', 'log_id', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'log_id', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END error -->

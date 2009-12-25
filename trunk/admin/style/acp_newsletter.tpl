@@ -40,8 +40,8 @@
 
 <table class="foot" cellspacing="2">
 <tr>
-	<td align="left"><input type="hidden" name="mode" value="alldelete" /><input class="button" type="submit" value="{L_ALLDELETE}" /></td>
-	<td align="right"><input class="post" name="newsletter_mail" type="text"> <input type="hidden" name="mode" value="add" /><input class="button" type="submit" value="{L_NL_ADD}" /></td>
+	<td align="left"><input type="hidden" name="mode" value="alldelete" /><input class="button" type="submit" value="{L_ALLDELETE}"></td>
+	<td align="right"><input class="post" name="newsletter_mail" type="text"> <input type="hidden" name="mode" value="add" /><input class="button" type="submit" value="{L_NL_ADD}"></td>
 </tr>
 </table>
 </form>
@@ -54,7 +54,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_NL_ACTION}">{L_NL_HEAD}</a></li>
+				<li><a href="{S_NL_ACTION}" method="post">{L_NL_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_NL_NEW_EDIT}</a></li>
 			</ul>
 		</div>
@@ -67,19 +67,19 @@
 
 <br>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1" width="20%">{L_NL_EMAIL}: *</td>
-	<td class="row2" width="80%"><input class="post" type="text" name="newsletter_mail" value="{NL_MAIL}" ></td>
+	<td class="row2" width="80%"><input type="text" class="post" name="newsletter_mail" value="{NL_MAIL}"></td>
 </tr>
 <tr>
 	<td class="row1">{L_NL_TYPE}:<br><span class="small">{L_NL_TYPE_EXPLAIN}</span></td>
-	<td class="row3"><input type="radio" name="send_type" value="1" />&nbsp;{L_ACTIVE}&nbsp;&nbsp;<input type="radio" name="send_type" value="0" checked="checked" /> {L_NEW}</td> 
+	<td class="row3"><input type="radio" name="send_type" value="1">&nbsp;{L_ACTIVE}&nbsp;&nbsp;<input type="radio" name="send_type" value="0" checked="checked" /> {L_NEW}</td> 
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END newsletter_edit -->

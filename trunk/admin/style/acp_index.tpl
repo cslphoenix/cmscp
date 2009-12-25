@@ -7,56 +7,102 @@
 <br />
 <br />
 
-<div id="navcontainer">
-<ul id="navlist">
-	<li><a href="#" id="current"><img src="{ICON_CAL}" width="12" height="12" alt="" />&nbsp;{L_CAL}</a></li>
-	<li><a href="#" id="right"><img src="{ICON_USER}" width="12" height="12" alt="" />&nbsp;{L_USER}</a></li>
-</ul>
-</div>
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="top" width="48%">
+	<td colspan="2">
+	<div id="navcontainer">
+	<ul id="navlist">
+		<li><a href="#" id="current"><img src="" width="12" height="12" alt="" />&nbsp;</a></li>
+		<li><a href="#" id="right"><img src="" width="12" height="12" alt="" />&nbsp;</a></li>
+	</ul>
+	</div>
+	</td>
+</tr>
+<tr>
+	<td class="top" width="50%">
 		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN event_row -->
+		<!-- BEGIN row_match -->
 		<tr>
-			<td align="left" width="97%"><span style="float:right;">{event_row.EVENT_DATE}</span>{event_row.EVENT_TITLE}</td>
-			<td><a href="{event_row.U_UPDATE}"><img src="{ICON_CAL_UPDATE}" title="{L_UPDATE}" alt="" /></a></td>
-			<td><a href="{event_row.U_DELETE}"><img src="{ICON_CAL_DELETE}" title="{L_DELETE}" alt="" /></a></td>
+			<td align="left" width="97%"><span style="float:right;">{row_match.MATCH_DATE}</span>{row_match.MATCH_RIVAL}</td>
+			<td>{row_match.MATCH_DETAILS}</td>
+			<td>{row_match.MATCH_UPDATE}</td>
+			<td>{row_match.MATCH_DELETE}</td>
 		</tr>
-		<!-- END event_row -->
-		<!-- BEGIN no_entry -->
+		<!-- END row_match -->
+		<!-- BEGIN no_entry_match -->
 		<tr>
-			<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
+			<td class="row_noentry2" colspan="4" align="center">{NO_ENTRY}</td>
 		</tr>
-		<!-- END no_entry -->
+		<!-- END no_entry_match -->
 		</table>
 	</td>
-	<td width="4%">&nbsp;</td>
-	<td class="top" width="48%">
+	<td class="top" width="50%">
 		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN users_row -->
+		<!-- BEGIN row_training -->
 		<tr>
-			<td align="left" width="97%"><span style="float:right;">{users_row.USER_REG}</span>{users_row.USERNAME}</td>
-			<td><a href="{users_row.U_AUTH}"><img src="{ICON_USER_GO}" title="{L_AUTH}" alt="" /></a></td>
-			<td><a href="{users_row.U_UPDATE}"><img src="{ICON_USER_UPDATE}" title="{L_UPDATE}" alt="" /></a></td>
-			<td><a href="{users_row.U_DELETE}"><img src="{ICON_USER_DELETE}" title="{L_DELETE}" alt="" /></a></td>
+			<td align="left" width="98%"><span style="float:right;">{row_training.TRAINING_DATE}</span>{row_training.TRAINING_VS}</td>
+			<td>{row_training.TRAINING_UPDATE}</td>
+			<td>{row_training.TRAINING_DELETE}</td>
 		</tr>
-		<!-- END users_row -->
-		<!-- BEGIN no_entry -->
+		<!-- END row_training -->
+		<!-- BEGIN no_entry_training -->
+		<tr>
+			<td class="row_noentry2" colspan="3" align="center">{NO_ENTRY}</td>
+		</tr>
+		<!-- END no_entry_training -->
+		</table>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+	<div id="navcontainer">
+	<ul id="navlist">
+		<li><a href="#" id="current"><img src="" width="12" height="12" alt="" />&nbsp;</a></li>
+		<li><a href="#" id="right"><img src="" width="12" height="12" alt="" />&nbsp;</a></li>
+	</ul>
+	</div>
+	</td>
+</tr>
+<tr>
+	<td class="top" width="50%">
+		<table class="small" border="0" cellspacing="2" cellpadding="1">
+		<!-- BEGIN row_event -->
+		<tr>
+			<td align="left" width="97%"><span style="float:right;">{row_event.EVENT_DATE}</span>{row_event.EVENT_TITLE}</td>
+			<td>{row_event.EVENT_UPDATE}</td>
+			<td>{row_event.EVENT_DELETE}</td>
+		</tr>
+		<!-- END row_event -->
+		<!-- BEGIN no_entry_event -->
+		<tr>
+			<td class="row_noentry2" colspan="3" align="center">{NO_ENTRY}</td>
+		</tr>
+		<!-- END no_entry_event -->
+		</table>
+	</td>
+	<td class="top" width="50%">
+		<table class="small" border="0" cellspacing="2" cellpadding="1">
+		<!-- BEGIN row_users -->
+		<tr>
+			<td align="left" width="97%"><span style="float:right;">{row_users.USER_REG}</span>{row_users.USERNAME}</td>
+			<td><a href="{row_users.U_AUTH}"><img src="{ICON_USER_GO}" title="{L_AUTH}" alt="" /></a></td>
+			<td><a href="{row_users.U_UPDATE}"><img src="{ICON_USER_UPDATE}" title="{L_UPDATE}" alt="" /></a></td>
+			<td><a href="{row_users.U_DELETE}"><img src="{ICON_USER_DELETE}" title="{L_DELETE}" alt="" /></a></td>
+		</tr>
+		<!-- END row_users -->
+		<!-- BEGIN no_entry_users -->
 		<tr>
 			<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
 		</tr>
-		<!-- END no_entry -->
+		<!-- END no_entry_users -->
 		</table>
 	</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
-	<td>&nbsp;</td>
 </tr>
 <tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 </tr>

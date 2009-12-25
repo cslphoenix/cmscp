@@ -43,9 +43,9 @@
 
 <table class="foot" cellspacing="2">
 <tr>
-	<td width="99%" align="right"><input class="post" name="username" type="text" /></td>
+	<td width="99%" align="right"><input class="post" name="username" type="text"></td>
 	<td width="1%" align="right">{S_TEAMS}</td>
-	<td><input class="button" type="submit" name="add" value="{L_USER_ADD}" /></td>
+	<td><input class="button" type="submit" name="add" value="{L_USER_ADD}"></td>
 </tr>
 </table>
 </form>
@@ -58,7 +58,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li><a href="{S_USER_ACTION}" method="post">{L_USER_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_USER_NEW_EDIT}</a></li>
 				<li><a href="{S_USER_GROUP}">{L_USER_GROUP}</a></li>
 				<li><a href="{S_USER_AUTHS}">{L_USER_AUTHS}</a></li>
@@ -92,10 +92,10 @@
 <br>
 <div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1" width="160">{L_USERNAME}: *</td>
-	<td class="row3"><input id="username" onBlur="javascript:checkEntry(this)" class="post" type="text" name="username" value="{USERNAME}" ></td>
+	<td class="row3"><input id="username" class="post" type="text" name="username" value="{USERNAME}"></td>
 </tr>
 <!-- BEGIN edituser -->
 <tr>
@@ -108,16 +108,16 @@
 </tr>
 <tr>
 	<td class="row1">{L_FOUNDER}:</td>
-	<td class="row3"><input type="radio" name="user_founder" value="1" {S_CHECKED_FOUNDER_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="user_founder" value="0" {S_CHECKED_FOUNDER_NO} />&nbsp;{L_NO} </td>
+	<td class="row3"><input type="radio" name="user_founder" value="1" {S_FOUNDER_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="user_founder" value="0" {S_FOUNDER_NO} />&nbsp;{L_NO} </td>
 </tr>
 <!-- END edituser -->
 <tr>
 	<td class="row1" width="160">{L_EMAIL}:</td>
-	<td class="row3"><input class="post" type="text" name="user_email" value="{USER_EMAIL}" ></td>
+	<td class="row3"><input type="text" class="post" name="user_email" value="{USER_EMAIL}"></td>
 </tr>
 <tr>
 	<td class="row1" width="160">{L_EMAIL_CONFIRM}:</td>
-	<td class="row3"><input class="post" type="text" name="email_confirm" value="" ></td>
+	<td class="row3"><input type="text" class="post" name="email_confirm" value=""></td>
 </tr>
 <tr>
 	<td class="row1" width="160">{L_PASSWORD}:</td>
@@ -140,11 +140,11 @@
 <tbody id="pass" style="display: none;">
 <tr>
 	<td class="row1" width="160">{L_PASSWORD}:</td>
-	<td class="row2"><input class="post" type="password" name="new_password" value="" ></td>
+	<td class="row2"><input class="post" type="password" name="new_password" value=""></td>
 </tr>
 <tr>
 	<td class="row1" width="160">{L_PASSWORD_CONFIRM}:</td>
-	<td class="row2"><input class="post" type="password" name="password_confirm" value="" ></td>
+	<td class="row2"><input class="post" type="password" name="password_confirm" value=""></td>
 </tr>
 </tbody>
 <!-- BEGIN catrow -->
@@ -159,10 +159,10 @@
 <!-- END profilerow -->
 <!-- END catrow -->
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END user_edit -->
 
@@ -173,7 +173,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li><a href="{S_USER_ACTION}" method="post">{L_USER_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_USER_NEW_EDIT}</a></li>
 				<li><a href="{S_USER_GROUP}">{L_USER_GROUP}</a></li>
 				<li><a href="{S_USER_AUTHS}">{L_USER_AUTHS}</a></li>
@@ -205,7 +205,7 @@
 </tr>
 </table>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN catrow -->
 <tr>
 	<th colspan="2">{user_fields.catrow.CATEGORY_NAME}</th>
@@ -218,10 +218,10 @@
 <!-- END profilerow -->
 <!-- END catrow -->
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END user_fields -->
 
@@ -232,7 +232,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li><a href="{S_USER_ACTION}" method="post">{L_USER_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_USER_NEW_EDIT}</a></li>
 				<li><a href="{S_USER_GROUP}">{L_USER_GROUP}</a></li>
 				<li><a href="{S_USER_AUTHS}">{L_USER_AUTHS}</a></li>
@@ -264,12 +264,12 @@
 </tr>
 </table>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END user_settings -->
 
@@ -293,7 +293,7 @@ function activate_checkbox(name)
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li><a href="{S_USER_ACTION}" method="post">{L_USER_HEAD}</a></li>
 				<li><a href="{S_USER_EDIT}">{L_USER_NEW_EDIT}</a></li>
 				<li id="active"><a href="#" id="current">{L_USER_GROUP}</a></li>
 				<li><a href="{S_USER_AUTHS}">{L_USER_AUTHS}</a></li>
@@ -308,7 +308,7 @@ function activate_checkbox(name)
 
 <br>
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<th colspan="2">{L_USER_GROUPS}</th>
 </tr>
@@ -328,7 +328,7 @@ function activate_checkbox(name)
 </tr>
 <tr>
 	<td class="row1">{L_EMAIL_NOTIFICATION}</td>
-	<td class="row3"><input type="radio" name="email_notification" value="1" />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="email_notification" value="0" checked="checked" />&nbsp;{L_NO}</td>
+	<td class="row3"><input type="radio" name="email_notification" value="1">&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="email_notification" value="0" checked="checked">&nbsp;{L_NO}</td>
 </tr>
 <tr>
 	<td colspan="3">&nbsp;</td>
@@ -348,10 +348,10 @@ function activate_checkbox(name)
 </tr>
 <!-- END teams_row -->
 <tr>
-	<td colspan="3" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="3" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2">&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <span class="middle">Checkboxen noch ohne Funktion!</span>
 <!-- END user_groups -->
@@ -363,7 +363,7 @@ function activate_checkbox(name)
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_USER_ACTION}">{L_USER_HEAD}</a></li>
+				<li><a href="{S_USER_ACTION}" method="post">{L_USER_HEAD}</a></li>
 				<li><a href="{S_USER_EDIT}">{L_USER_NEW_EDIT}</a></li>
 				<li><a href="{S_USER_GROUP}">{L_USER_GROUP}</a></li>
 				<li id="active"><a href="#" id="current">{L_USER_AUTHS}</a></li>
@@ -395,7 +395,7 @@ count = 18;
 
 
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN user_auth_data -->
 <tr>
 	<td class="row1" width="49%" align="right">{user_auths.user_auth_data.CELL_TITLE}</td>
@@ -404,10 +404,10 @@ count = 18;
 </tr>
 <!-- END user_auth_data -->
 <tr>
-	<td colspan="3" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="3" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2">&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 
 <!-- 

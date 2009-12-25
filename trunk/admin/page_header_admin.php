@@ -40,21 +40,6 @@ if ( $config['gzip_compress'] )
 	}
 }
 
-$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
-preg_match($time_reg, $config['default_dateformat'], $regs);
-$config['default_timeformat'] = $regs[1];
-unset($time_reg);
-unset($regs);
-
-
-
-//
-// GET THE TIME TODAY AND YESTERDAY
-//
-$today_ary = explode('|', create_date('m|d|Y', time(), $config['board_timezone']));
-$config['time_today'] = gmmktime(0 - $config['board_timezone'] - $config['board_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-$config['time_yesterday'] = $config['time_today'] - 86400;
-unset($today_ary);
 
 $template->set_filenames(array('header' => './../admin/style/page_header.tpl'));
 
@@ -67,7 +52,23 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 // in a template. Note that all URL's should be wrapped in append_sid, as
 // should all S_x_ACTIONS for forms.
 //
+
 $template->assign_vars(array(
+							 
+	'L_REQUIRED'		=> $lang['required'],
+	
+	'L_NO'				=> $lang['common_no'],
+	'L_YES'				=> $lang['common_yes'],
+	'L_RESET'			=> $lang['common_reset'],
+	'L_SUBMIT'			=> $lang['common_submit'],
+	
+	'L_UPDATE'			=> $lang['common_update'],
+	'L_DELETE'			=> $lang['common_delete'],
+	'L_SETTINGS'		=> $lang['common_settings'],
+	
+	'L_GOTO_PAGE'	=> $lang['Goto_page'],
+	
+	
 	'SITENAME' => $config['sitename'],
 	
 	'L_HEAD'	=> sprintf($lang['index_head'], $config['sitename']),

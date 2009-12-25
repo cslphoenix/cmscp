@@ -29,53 +29,38 @@ if ( !empty($setmodules) )
 	
 	if ( $userauth['auth_network'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['main']['network'] = $filename;
+		$module['_headmenu_main']['_submenu_network'] = $filename;
 	}
 	
 	return;
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_header	= $cancel;
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/selects.php');
-	include($root_path . 'includes/acp/functions.php');
+	include($root_path . 'includes/acp/acp_upload.php');
+	include($root_path . 'includes/acp/acp_selects.php');
+	include($root_path . 'includes/acp/acp_functions.php');
+	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/network.php');
 	
-	$start		= ( request('start') ) ? request('start', 'num') : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
-	$network_id	= request(POST_NETWORK_URL);
-	$confirm	= request('confirm');
-	$show_index = '';
-	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		if ( isset($HTTP_POST_VARS['_add']) || isset($HTTP_GET_VARS['_add']) )
-		{
-			$mode = '_add';
-			
-			list($type) = each($HTTP_POST_VARS['_add']);
-			
-			$network_type = intval($type);
-			$network_name = stripslashes($HTTP_POST_VARS['network_name'][$type]);
-		}
-		else
-		{
-			$mode = '';
-		}
-	}
+	$start			= ( request('start') ) ? request('start') : 0;
+	$start			= ( $start < 0 ) ? 0 : $start;
+	$network_id		= request(POST_NETWORK_URL);
+	$network_type	= request('type');
+	$confirm		= request('confirm');
+	$mode			= request('mode');
+	$move			= request('move');
+	$path_network	= $root_path . $settings['path_network'] . '/';
+	$show_index		= '';
 	
 	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -83,313 +68,229 @@ else
 		redirect('admin/' . append_sid('admin_network.php', true));
 	}
 	
-	debug($_POST);
-	
 	if ( !empty($mode) )
 	{
 		switch ( $mode )
 		{
-			case '_add':
-			case '_edit':
+			case '_create':
+			case '_update':
 			
 				$template->set_filenames(array('body' => 'style/acp_network.tpl'));
 				$template->assign_block_vars('network_edit', array());
 				
-				if ( $mode == '_edit' )
+				if ( $mode == '_create' )
 				{
-					$network	= get_data('network', $network_id, 0);
-					$new_mode	= '_update';
-					
-					$network_name	= $network['network_name'];
-					$network_type	= $network['network_type'];
-					$network_url	= $network['network_url'];
+					$network = array (
+						'network_name'	=> '',
+						'network_url'	=> '',
+						'network_image'	=> '',
+						'network_type'	=> '1',
+						'network_view'	=> '1',
+					);
+					$new_mode = '_create_save';
 				}
 				else
 				{
-					$network = array (
-						'network_image'	=> '',
-						'network_view'	=> '1',
-					);
-					
-					$network_url = '';
-
-					$new_mode = '_create';
+					$network = get_data(NETWORK, $network_id, 1);
+					$new_mode = '_update_save';
 				}
 				
-				$info = ( $network_type != NETWORK_LINK ) ? ( $network_type == NETWORK_PARTNER ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $network_id . '" />';
+				if ( $network['network_image'] )
+				{
+					$template->assign_block_vars('network_edit.network_image', array());
+				}
+				
+				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
+				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $network_id . '" />';
 				
 				$template->assign_vars(array(
-					'L_NETWORK_HEAD'			=> $lang['network_head'],
-					'L_NETWORK_NEW_EDIT'		=> ( $mode == '_add' ) ? sprintf($lang['network_add'], $info) : sprintf($lang['network_edit'], $info),
-					'L_REQUIRED'				=> $lang['required'],
+					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['network']),
+					'L_NEW_EDIT'		=> sprintf($lang[$ssprintf], $lang['network_field']),
+					'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['network']),
+					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['network']),
+					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['network']),
+					'L_URL'				=> $lang['network_url'],
 					
-					'L_NETWORK_NAME'			=> $lang['network_name'],
-					'L_NETWORK_TYPE'			=> $lang['network_type'],
-					'L_NETWORK_URL'				=> $lang['network_url'],
-					'L_NETWORK_IMAGE'			=> $lang['network_image'],
-					'L_NETWORK_VIEW'			=> $lang['common_view'],
-					'L_TYPE_LINK'				=> $lang['network_link'],
-					'L_TYPE_PARTNER'			=> $lang['network_partner'],
-					'L_TYPE_SPONSOR'			=> $lang['network_sponsor'],
+					'L_TYPE_LINK'		=> $lang['network_link'],
+					'L_TYPE_PARTNER'	=> $lang['network_partner'],
+					'L_TYPE_SPONSOR'	=> $lang['network_sponsor'],
 					
-					'L_NO'						=> $lang['common_no'],
-					'L_YES'						=> $lang['common_yes'],
-					'L_RESET'					=> $lang['common_reset'],
-					'L_SUBMIT'					=> $lang['common_submit'],
+					'L_VIEW'			=> $lang['common_view'],
+					'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
 					
-					'NETWORK_NAME'				=> $network_name,
-					'NETWORK_URL'				=> $network_url,
+					'NAME'				=> $network['network_name'],
+					'URL'				=> $network['network_url'],
+					'IMAGE'				=> $path_network . $network['network_image'],
 
-					'S_CHECKED_TYPE_LINK'		=> ( $network_type == NETWORK_LINK ) ? ' checked="checked"' : '',
-					'S_CHECKED_TYPE_PARTNER'	=> ( $network_type == NETWORK_PARTNER ) ? ' checked="checked"' : '',
-					'S_CHECKED_TYPE_SPONSOR'	=> ( $network_type == NETWORK_SPONSOR ) ? ' checked="checked"' : '',
-					'S_CHECKED_VIEW_YES'		=> ( $network['network_view'] ) ? ' checked="checked"' : '',
-					'S_CHECKED_VIEW_NO'			=> ( !$network['network_view'] ) ? ' checked="checked"' : '',
+					'S_TYPE_LINK'		=> ( $network['network_type'] == NETWORK_LINK ) ? ' checked="checked"' : '',
+					'S_TYPE_PARTNER'	=> ( $network['network_type'] == NETWORK_PARTNER ) ? ' checked="checked"' : '',
+					'S_TYPE_SPONSOR'	=> ( $network['network_type'] == NETWORK_SPONSOR ) ? ' checked="checked"' : '',
+					'S_VIEW_YES'		=> ( $network['network_view'] ) ? ' checked="checked"' : '',
+					'S_VIEW_NO'			=> ( !$network['network_view'] ) ? ' checked="checked"' : '',
 					
-					'S_HIDDEN_FIELDS'			=> $s_hidden_fields,
-					'S_NETWORK_ACTION'			=> append_sid('admin_network.php'),
+					'S_FIELDS'			=> $s_fields,
+					'S_ACTION'			=> append_sid('admin_network.php'),
 				));
 			
 				$template->pparse('body');
 				
-			break;
-
-			case '_create':
-			
-				$network_name		= request('network_name', 'text');
-				$network_url		= request('network_url', 'text');
-				$network_type		= request('network_type', 'num');
-				$network_view		= request('network_view', 'num');
-				
-				$error = ''; 
-				$error_msg = '';
-			
-				if ( !$network_name )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_name'];
-				}
-				
-				if ( !$network_url )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_url'];
-				}
-				
-				if ( $error )
-				{
-					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
-				}
-				
-				$sql = 'SELECT MAX(network_order) AS max_order FROM ' . NETWORK . ' WHERE network_type = ' . $network_type;
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$row = $db->sql_fetchrow($result);
-	
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
-				
-				$sql = 'INSERT INTO ' . NETWORK . " (network_name, network_type, network_url, network_view, network_order) VALUES ('" . str_replace("\'", "''", $network_name) . "', $network_type, '" . $network_url . "', $network_view, $next_order)";
-				if (!$result = $db->sql_query($sql))
-				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_add', $network_name);
-				
-				switch ( $network_type )
-				{
-					case NETWORK_LINK;
-						$info = $lang['network_link'];
-						$type = 'links';
-						break;
-					case NETWORK_PARTNER;
-						$info = $lang['network_partner'];
-						$type = 'partner';
-						break;
-					case NETWORK_SPONSOR;
-						$info = $lang['network_link'];
-						$type = 'sponsor';
-						break;
-				}
-				
-			//	$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
-	
-				$message = sprintf($lang['create_network'], $info) . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
-
 				break;
 
-			case '_update':
+			case '_create_save':
 			
-				$row		= get_data('network', $network_id, 0);
-				$type		= $row['network_type'];
-			
-				$network_name		= request('network_name', true);
-				$network_url		= request('network_url', true);
-				$network_type		= request('network_type');
-				$network_view		= request('network_view');
+				$network_name	= request('network_name', 'text');
+				$network_url	= request('network_url', 'text');
+				$network_type	= request('network_type', 'num');
+				$network_view	= request('network_view', 'num');
+				$network_pic	= request_files('network_image');
+				$info			= ( $network_type != NETWORK_LINK ) ? ( $network_type == NETWORK_PARTNER ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
 				
-				$error = ''; 
 				$error_msg = '';
-				$sql_order = '';
-			
-				if ( !$network_name )
+				$error_msg .= ( !$network_name ) ? $lang['msg_select_name'] : '';
+				$error_msg .= ( !$network_url ) ? ( $error_msg ? '<br>' : '' ) . $lang['msg_select_url'] : '';
+				
+				if ( $error_msg )
 				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_name'];
+					message(GENERAL_ERROR, $error_msg . $lang['back']);
 				}
 				
-				if ( !$network_url )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . $lang['msg_select_url'];
-				}
+				$max_row	= get_data_max(NETWORK, 'network_order', 'network_type = ' . $network_type);
+				$next_order	= $max_order['max'] + 10;
 				
-				if ( $error )
+				if ( $network_pic['temp'] )
 				{
-					message_die(GENERAL_ERROR, $error_msg . $lang['back'], '');
+					$sql_pic = image_upload('_create', 'image_network', 'network_image', '', $network['network_image'], '', $root_path . $settings['path_network'] . '/', $network_pic['temp'], $network_pic['name'], $network_pic['size'], $network_pic['type']);
 				}
 				else
 				{
-					if ( $network_type != $type )
-					{
-						$sql = 'SELECT MAX(network_order) AS max_order FROM ' . NETWORK . ' WHERE network_type = ' . $type;
-						if ( !($result = $db->sql_query($sql)) )
-						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-						}
-						$row = $db->sql_fetchrow($result);
-		
-						$max_order = $row['max_order'];
-						$next_order = $max_order + 10;
-						
-						$sql_order .= ', network_order = ' . $next_order;
-					}
-						
-					$sql = "UPDATE " . NETWORK . " SET
-								network_name	= '" . str_replace("\'", "''", $network_name) . "',
-								network_type	= $network_type,
-								network_url		= '" . str_replace("\'", "''", $network_url) . "',
-								network_view	= $network_view
-								$sql_order
-							WHERE network_id = " . intval($HTTP_POST_VARS[POST_NETWORK_URL]);
-					if (!$result = $db->sql_query($sql))
-					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_edit');
-					
-					$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
-					
-					$message = sprintf($lang['update_network'], $info) . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					$sql_pic = '';
 				}
-	
-				break;
 				
-			case 'order_link':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . NETWORK . " SET network_order = network_order + $move WHERE network_id = " . $network_id;
+				$sql = "INSERT INTO " . NETWORK . " (network_name, network_type, network_url, network_view, network_image, network_order)
+							VALUES ('$network_name', '$network_type', '$network_url', '$network_view', '$sql_pic', '$next_order')";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-		
-				renumber_order('network', NETWORK_LINK);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_order', NETWORK_LINK);
-				
-				$show_index = TRUE;
-	
+				$message = sprintf($lang['create_network'], $info) . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, sprintf($lang['create_network'], $info));
+				message(GENERAL_MESSAGE, $message);
+
 				break;
+
+			case '_update_save':
 			
-			case 'order_partner':
+				$network			= get_data(NETWORK, $network_id, 1);
+				$network_db_type	= $network['network_type'];
 				
-				$move = intval($HTTP_GET_VARS['move']);
+				$network_name	= request('network_name', 'text');
+				$network_url	= request('network_url', 'text');
+				$network_type	= request('network_type', 'num');
+				$network_view	= request('network_view', 'num');
+				$network_image	= request_files('network_image');
+				$info			= ( $network_type != NETWORK_LINK ) ? ( $network_type == NETWORK_PARTNER ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
 				
-				$sql = 'UPDATE ' . NETWORK . " SET network_order = network_order + $move WHERE network_id = " . $network_id;
-				if ( !($result = $db->sql_query($sql)) )
+				$error_msg = '';
+				$error_msg .= ( !$network_name ) ? $lang['msg_select_name'] : '';
+				$error_msg .= ( !$network_url ) ? ( $error_msg ? '<br>' : '' ) . $lang['msg_select_url'] : '';
+				
+				if ( $error_msg )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, $error_msg . $lang['back']);
 				}
-		
-				renumber_order('network', NETWORK_PARTNER);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_order', NETWORK_PARTNER);
-				
-				$show_index = TRUE;
-	
-				break;
-			
-			case 'order_sponsor':
-				
-				$move = intval($HTTP_GET_VARS['move']);
-				
-				$sql = 'UPDATE ' . NETWORK . " SET network_order = network_order + $move WHERE network_id = " . $network_id;
-				if ( !($result = $db->sql_query($sql)) )
+				if ( $network_type != $network_db_type )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-		
-				renumber_order('network', NETWORK_SPONSOR);
+					$max_row	= get_data_max(NETWORK, 'network_order', 'network_type = ' . $network_type);
+					$max_order	= $max_row['max'];
+					$next_order	= $max_order + 10;
+					$sql_order	= ', network_order = ' . $next_order;
 					
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_order', NETWORK_SPONSOR);
+					orders('network', $network_type);
+				}
+				else
+				{
+					$sql_order	= '';
+				}
 				
-				$show_index = TRUE;
+				if ( $network_image['temp'] )
+				{
+					$sql_pic = image_upload('_update', 'image_network', 'network_image', '', $network['network_image'], '', $root_path . $settings['path_network'] . '/', $network_image['temp'], $network_image['name'], $network_image['size'], $network_image['type']);
+				}
+				else if ( request('network_image_delete') )
+				{
+					$sql_pic = image_delete($network['network_image'], '', $root_path . $settings['path_network'] . '/', 'network_image');
+				}
+				else
+				{
+					$sql_pic = '';
+				}
+				
+				$sql = "UPDATE " . NETWORK . " SET
+							network_name	= '$network_name',
+							network_type	= '$network_type',
+							network_url		= '$network_url',
+							$sql_pic
+							network_view	= $network_view
+							$sql_order
+						WHERE network_id = $network_id";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				  
+				$message = sprintf($lang['update_network'], $info)
+					. sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>')
+					. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_network.php?mode=_update&' . POST_NETWORK_URL . '=' . $network_id) . '">', '</a>');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'update_network');
+				message(GENERAL_MESSAGE, $message);
 	
 				break;
-			
-			case 'network_delete':
-			
-				$confirm = isset($HTTP_POST_VARS['confirm']);
+
+			case '_order':
 				
-				$network		= get_data('network', $network_id, 0);
+				update(NETWORK, 'network', $move, $network_id);
+				orders('network', $network_type);
+				
+				break;
+			
+			case '_delete':
+			
+				$network		= get_data(NETWORK, $network_id, 1);
 				$network_type	= $network['network_type'];
-				
-				$info = ( $network_type != '1' ) ? ( $network_type == '2' ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
+				$info			= ( $network_type != NETWORK_LINK ) ? ( $network_type == NETWORK_PARTNER ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
 				
 				if ( $network_id && $confirm )
 				{	
-					$network = get_data('network', $network_id, 0);
-				
 					$sql = 'DELETE FROM ' . NETWORK . ' WHERE network_id = ' . $network_id;
-					if (!$result = $db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_delete', $network['network_name']);
-					
 					$message = sprintf($lang['delete_network'], $info) . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, sprintf($lang['delete_network'], $info));
+					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $network_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $network_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $network_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
 						'MESSAGE_TEXT'		=> sprintf($lang['confirm_delete_network'], $info),
-		
 						'L_NO'				=> $lang['common_no'],
 						'L_YES'				=> $lang['common_yes'],
-						
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
-						'S_CONFIRM_ACTION'	=> append_sid('admin_network.php'),
+						'S_FIELDS'	=> $s_fields,
+						'S_ACTION'	=> append_sid('admin_network.php'),
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_network']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_network']);
 				}
 				
 				$template->pparse('body');
@@ -398,7 +299,7 @@ else
 			
 			default:
 			
-				message_die(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['no_select_module']);
 				
 				break;
 		}
@@ -413,158 +314,115 @@ else
 	$template->set_filenames(array('body' => 'style/acp_network.tpl'));
 	$template->assign_block_vars('display', array());
 	
+	$s_fields = '<input type="hidden" name="mode" value="_create" />';
+	
 	$template->assign_vars(array(
-		'L_NETWORK_HEAD'		=> $lang['network_head'],
-		'L_NETWORK_EXPLAIN'		=> $lang['network_explain'],
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['network']),
+		'L_CREATE'		=> sprintf($lang['sprintf_createn'], $lang['network_field']),
+		'L_EXPLAIN'		=> $lang['network_explain'],
 		
-		'L_NETWORK_ADD_LINK'	=> sprintf($lang['network_add'], $lang['network_link']),
-		'L_NETWORK_ADD_PARTNER'	=> sprintf($lang['network_add'], $lang['network_partner']),
-		'L_NETWORK_ADD_SPONSOR'	=> sprintf($lang['network_add'], $lang['network_sponsor']),
+		'L_LINK'		=> $lang['network_link'],
+		'L_PARTNER'		=> $lang['network_partner'],
+		'L_SPONSOR'		=> $lang['network_sponsor'],
 		
-		'L_NETWORK_LINK'		=> $lang['network_link'],
-		'L_NETWORK_PARTNER'		=> $lang['network_partner'],
-		'L_NETWORK_SPONSOR'		=> $lang['network_sponsor'],
-		
-		'L_EDIT'				=> $lang['common_edit'],
-		'L_SETTINGS'			=> $lang['settings'],
+		'L_UPDATE'				=> $lang['common_update'],
 		'L_DELETE'				=> $lang['common_delete'],
+		'L_SETTINGS'			=> $lang['common_settings'],
+		'L_VISIBLE'				=> $lang['common_visible'],
 		
-		'S_NETWORK_ACTION'		=> append_sid('admin_network.php'),
+		'S_FIELDS'		=> $s_fields,
+		'S_CREATE'		=> append_sid('admin_network.php?mode=_create'),
+		'S_ACTION'		=> append_sid('admin_network.php'),
 	));
 	
-	$sql = 'SELECT MAX(network_order) AS max FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_LINK;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$max_link = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
+	$max_link		= get_data_max(NETWORK, 'network_order', 'network_type = ' . NETWORK_LINK);
+	$max_partner	= get_data_max(NETWORK, 'network_order', 'network_type = ' . NETWORK_PARTNER);
+	$max_sponsor	= get_data_max(NETWORK, 'network_order', 'network_type = ' . NETWORK_SPONSOR);
 	
-	$sql = 'SELECT MAX(network_order) AS max FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_PARTNER;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$max_partner = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
+	$data_link		= get_data_array(NETWORK, 'network_type = ' . NETWORK_LINK, 'network_order', 'ASC');
+	$data_partner	= get_data_array(NETWORK, 'network_type = ' . NETWORK_PARTNER, 'network_order', 'ASC');
+	$data_sponsor	= get_data_array(NETWORK, 'network_type = ' . NETWORK_SPONSOR, 'network_order', 'ASC');
 	
-	$sql = 'SELECT MAX(network_order) AS max FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_SPONSOR;
-	if ( !($result = $db->sql_query($sql)) )
+	if ( $data_link )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_link)); $i++ )
+		{
+			$network_id	= $data_link[$i]['network_id'];
+				
+			$template->assign_block_vars('display.link_row', array(
+				'CLASS' 			=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+				
+				'NAME'		=> $data_link[$i]['network_name'],
+				'VISIBLE'	=> ( $data_link[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
+				
+				'MOVE_UP'			=> ( $data_link[$i]['network_order'] != '10' )				? '<a href="' . append_sid('admin_network.php?mode=_order&amp;type=' . NETWORK_LINK . '&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $data_link[$i]['network_order'] != $max_link['max'] )	? '<a href="' . append_sid('admin_network.php?mode=_order&amp;type=' . NETWORK_LINK . '&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				
+				'U_UPDATE'			=> append_sid('admin_network.php?mode=_update&amp;' . POST_NETWORK_URL . '=' . $network_id),
+				'U_DELETE'			=> append_sid('admin_network.php?mode=_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
+			));
+		}
 	}
-	$max_sponsor = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	
-	$sql = 'SELECT * FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_LINK . ' ORDER BY network_order ASC';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$data_link = $db->sql_fetchrowset($result);
-	
-	$sql = 'SELECT * FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_PARTNER . ' ORDER BY network_order ASC';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$data_partner = $db->sql_fetchrowset($result);
-	
-	$sql = 'SELECT * FROM ' . NETWORK . ' WHERE network_type = ' . NETWORK_SPONSOR . ' ORDER BY network_order ASC';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$data_sponsor = $db->sql_fetchrowset($result);
-	
-	if ( !$data_link )
+	else
 	{
 		$template->assign_block_vars('display.no_entry_link', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
-	else
+	
+	if ( $data_partner )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_link)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_partner)); $i++ )
 		{
-			$class = ($i % 2) ? 'row_class1' : 'row_class2';
-			
-			$network_id	= $data_link[$i]['network_id'];
+			$network_id	= $data_partner[$i]['network_id'];
 				
-			$template->assign_block_vars('display.link_row', array(
-				'CLASS' 		=> $class,
+			$template->assign_block_vars('display.partner_row', array(
+				'CLASS' 			=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
 				
-				'NETWORK_NAME'	=> $data_link[$i]['network_name'],
-				'SHOW'			=> ( $data_link[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
+				'NAME'		=> $data_partner[$i]['network_name'],
+				'VISIBLE'	=> ( $data_partner[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
 				
-				'MOVE_UP'		=> ( $data_link[$i]['network_order'] != '10' )				? '<a href="' . append_sid('admin_network.php?mode=order_link&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $data_link[$i]['network_order'] != $max_link['max'] )	? '<a href="' . append_sid('admin_network.php?mode=order_link&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'			=> ( $data_partner[$i]['network_order'] != '10' )					? '<a href="' . append_sid('admin_network.php?mode=_order&amp;type=' . NETWORK_PARTNER . '&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $data_partner[$i]['network_order'] != $max_partner['max'] )	? '<a href="' . append_sid('admin_network.php?mode=_order&amp;type=' . NETWORK_PARTNER . '&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'U_EDIT'		=> append_sid('admin_network.php?mode=_edit&amp;' . POST_NETWORK_URL . '=' . $network_id),
-				'U_DELETE'		=> append_sid('admin_network.php?mode=_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
+				'U_UPDATE'			=> append_sid('admin_network.php?mode=_update&amp;' . POST_NETWORK_URL . '=' . $network_id),
+				'U_DELETE'			=> append_sid('admin_network.php?mode=_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
 			));
 		}
 	}
-	
-	if ( !$data_partner )
+	else
 	{
 		$template->assign_block_vars('display.no_entry_partner', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
-	else
-	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_partner)); $i++ )
-		{
-			$class = ($i % 2) ? 'row_class1' : 'row_class2';
-			
-			$network_id	= $data_partner[$i]['network_id'];
-				
-			$template->assign_block_vars('display.partner_row', array(
-				'CLASS' 		=> $class,
-				
-				'NETWORK_NAME'	=> $data_partner[$i]['network_name'],
-				'SHOW'			=> ( $data_partner[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
-				
-				'MOVE_UP'		=> ( $data_partner[$i]['network_order'] != '10' )					? '<a href="' . append_sid('admin_network.php?mode=order_partner&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $data_partner[$i]['network_order'] != $max_partner['max'] )	? '<a href="' . append_sid('admin_network.php?mode=order_partner&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-				
-				'U_EDIT'		=> append_sid('admin_network.php?mode=_edit&amp;' . POST_NETWORK_URL . '=' . $network_id),
-				'U_DELETE'		=> append_sid('admin_network.php?mode=_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
-			));
-		}
-	}
 	
-	if ( !$data_sponsor )
-	{
-		$template->assign_block_vars('display.no_entry_sponsor', array());
-		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
-	}
-	else
+	if ( $data_sponsor )
 	{
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_sponsor)); $i++ )
 		{
-			$class = ($i % 2) ? 'row_class1' : 'row_class2';
-			
 			$network_id	= $data_sponsor[$i]['network_id'];
 				
 			$template->assign_block_vars('display.sponsor_row', array(
-				'CLASS' 		=> $class,
+				'CLASS' 			=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
 				
-				'NETWORK_NAME'	=> $data_sponsor[$i]['network_name'],
-				'SHOW'			=> ( $data_sponsor[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
+				'NAME'		=> $data_sponsor[$i]['network_name'],
+				'VISIBLE'	=> ( $data_sponsor[$i]['network_view'] ) ? $images['icon_acp_yes'] : $images['icon_acp_no'],
+
+				'MOVE_UP'			=> ( $data_sponsor[$i]['network_order'] != '10' )					? '<a href="' . append_sid('admin_network.php?mode=_order&amp;type=' . NETWORK_SPONSOR . '&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+				'MOVE_DOWN'			=> ( $data_sponsor[$i]['network_order'] != $max_sponsor['max'] )	? '<a href="' . append_sid('admin_network.php?mode=_order&amp;type=' . NETWORK_SPONSOR . '&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 				
-				'MOVE_UP'		=> ( $data_sponsor[$i]['network_order'] != '10' )					? '<a href="' . append_sid('admin_network.php?mode=order_sponsor&amp;move=-15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'		=> ( $data_sponsor[$i]['network_order'] != $max_sponsor['max'] )	? '<a href="' . append_sid('admin_network.php?mode=order_sponsor&amp;move=15&amp;' . POST_NETWORK_URL . '=' . $network_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
-				
-				'U_EDIT'		=> append_sid('admin_network.php?mode=_edit&amp;' . POST_NETWORK_URL . '=' . $network_id),
-				'U_DELETE'		=> append_sid('admin_network.php?mode=_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
+				'U_UPDATE'			=> append_sid('admin_network.php?mode=_update&amp;' . POST_NETWORK_URL . '=' . $network_id),
+				'U_DELETE'			=> append_sid('admin_network.php?mode=_delete&amp;' . POST_NETWORK_URL . '=' . $network_id)
 			));
 		}
+	}
+	else
+	{
+		$template->assign_block_vars('display.no_entry_sponsor', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	
 	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
-	
 }
-
 ?>

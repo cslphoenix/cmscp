@@ -1,176 +1,143 @@
-
-<script language="javascript">
-
-function hdr_ref(object)
-{
-	if (document.getElementById)
-	{
-		return document.getElementById(object);
-	}
-	else if (document.all)
-	{
-		return eval('document.all.' + object);
-	}
-	else
-	{
-		return false;
-	}
-}
-
-function hdr_toggle(object, open_close, open_icon, close_icon)
-{
-	var object = hdr_ref(object);
-	var icone = hdr_ref(open_close);
-
-	if( !object.style )
-	{
-		return false;
-	}
-
-	if( object.style.display == 'none' )
-	{
-		object.style.display = '';
-		icone.src = close_icon;
-	}
-	else
-	{
-		object.style.display = 'none';
-		icone.src = open_icon;
-	}
-}
-</script>
-
 <!-- BEGIN display -->
-<form action="{S_BT_ACTION}" method="post" id="bt_sort" name="bt_sort">
-<table class="head" cellspacing="0">
+<form action="{S_ACTION}" method="post" id="bugtracker_sort" name="bugtracker_sort">
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_BT_HEAD}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">{L_BT_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="row" cellspacing="1">
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead">{L_BT_NAME}</td>
+	<td class="rowHead" colspan="3">{L_NAME}</td>
+	<td class="rowHead" colspan="2" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN bugtracker_row -->
+<!-- BEGIN row_bugtracker -->
 <tr>
-	<td class="{display.bugtracker_row.CLASS}" align="left" width="100%" onClick="hdr_toggle('bt_{display.bugtracker_row.BT_ID}','bt_{display.bugtracker_row.BT_ID}_open_close', './../admin/style/images/expand.gif', './../admin/style/images/collapse.gif'); return false;">
-		<span style="float:right;">{display.bugtracker_row.BT_CREATOR} {display.bugtracker_row.BT_DATE}</span><img src="./../admin/style/images/expand.gif" id="bt_{display.bugtracker_row.BT_ID}_open_close" border="0" />{display.bugtracker_row.BT_TITLE}
-	</td>
-<!--<td class="{display.bugtracker_row.CLASS}" align="center" width="1%"><a href="{display.bugtracker_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.bugtracker_row.CLASS}" align="center" width="1%"><a href="{display.bugtracker_row.U_DELETE}">{L_DELETE}</a></td>-->
+	<td class="{display.row_bugtracker.CLASS}" nowrap="nowrap">{display.row_bugtracker.STATUS}</td>
+	<td class="{display.row_bugtracker.CLASS}" width="97%"><span style="float:right;">{display.row_bugtracker.CREATOR} {display.row_bugtracker.DATE}</span>{display.row_bugtracker.TITLE}</td>
+	<td class="{display.row_bugtracker.CLASS}" nowrap="nowrap">{display.row_bugtracker.TYPE}</td>
+	<td class="{display.row_bugtracker.CLASS}"><a href="{display.row_bugtracker.U_DETAIL}">{L_DETAIL}</a></td>
+	<td class="{display.row_bugtracker.CLASS}"><a href="{display.row_bugtracker.U_DELETE}">{L_DELETE}</a></td>
 </tr>
-<tr id="bt_{display.bugtracker_row.BT_ID}" style="display:none;">
-	<td class="{display.bugtracker_row.CLASS}">
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td width="15%">&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>{L_DESCRIPTION}:</td>
-			<td>{display.bugtracker_row.BT_DESC}</td>
-		</tr>
-		<tr>
-			<td>{L_TYPE}:</td>
-			<td>{display.bugtracker_row.BT_TYPE}</td>
-		</tr>
-		<tr>
-			<td valign="top">{L_MESSAGE}:</td>
-			<td>{display.bugtracker_row.BT_MESSAGE}</td>
-		</tr>
-		<tr onClick="hdr_toggle('bt_s_{display.bugtracker_row.BT_ID}','bt_s_{display.bugtracker_row.BT_ID}_open_close', './../admin/style/images/expand.gif', './../admin/style/images/collapse.gif'); return false;">
-			<td><img src="./../admin/style/images/expand.gif" id="bt_s_{display.bugtracker_row.BT_ID}_open_close" border="0" /></td>
-			<td></td>
-		</tr>
-		
-		<tr id="bt_s_{display.bugtracker_row.BT_ID}" style="display:none;">
-			<td colspan="2">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="15%">&nbsp;</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
-					<td>{L_TYPE}:</td>
-					<td>{display.bugtracker_row.S_TYPE}</td>
-				</tr>
-				<tr>
-					<td>{L_STATUS}:</td>
-					<td>{display.bugtracker_row.S_STATUS}</td>
-				</tr>
-				<tr>
-					<td valign="top">{L_MESSAGE}:</td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-				</tr>
-				</table>
-			</td>
-		</tr>
-		</table>
-	</td>
-</tr>
-<!-- END bugtracker_row -->
+<!-- END row_bugtracker -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_noentry2" align="center" colspan="5">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
 
-<table class="foot" cellspacing="4">
+<table class="footer" border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td width="50%" align="left">{S_SORT}&nbsp;{PAGE_NUMBER}</td>
+	<td align="right" colspan="2">{S_SORT}</td>
+</tr>
+<tr>
+	<td width="50%" align="left">{PAGE_NUMBER}</td>
 	<td width="50%" align="right">{PAGINATION}</td>
 </tr>
 </table>
 </form>
-
 <!-- END display -->
 
-<!-- BEGIN authlist_edit -->
-<form action="{S_AUTHLIST_ACTION}" method="post">
-<table class="head" cellspacing="0">
+<!-- BEGIN detail -->
+<script type="text/javascript" src="./../includes/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+tinyMCE.init({
+	language : "de",
+	theme : "advanced",
+	mode : "textareas",
+	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager",
+	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,removeformat,cleanup,code,preview",
+	theme_advanced_buttons2 : "",
+	theme_advanced_buttons3 : "",
+	plugin_preview_width : "500",
+	plugin_preview_height : "600",
+	theme_advanced_toolbar_location : "top",
+	theme_advanced_toolbar_align : "left",
+	theme_advanced_statusbar_location : "bottom",
+	theme_advanced_resizing : true,
+	entity_encoding : "raw",
+	add_unload_trigger : false,
+	remove_linebreaks : false,
+	inline_styles : false,
+	convert_fonts_to_spans : false,	
+});
+// ]]>
+</script>
+
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_PROC}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="{S_AUTHLIST_ACTION}">{L_AUTHLIST_HEAD}</a></li>
-				<li id="active"><a href="#" id="current">{L_AUTHLIST_NEW_EDIT}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+	<td class="row2 small">{L_REQUIRED}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="edit" cellspacing="1">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="20%">{L_AUTHLIST_NAME}: *</td>
-	<td class="row3" width="80%"><input class="post" type="text" name="auth_name" value="{AUTH_NAME}" ></td>
+	<td class="row1" width="23%">{L_TITLE}:</td>
+	<td class="row3">{TITLE}</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" name="send" value="{L_SUBMIT}" class="button2" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td class="row1">{L_CREATOR}:</td>
+	<td class="row3">{CREATOR} / {DATE} {DATE_CHANGE}</td>
+</tr>
+<tr>
+	<td class="row1">{L_EDITOR}:</td>
+	<td class="row3">{EDITOR}</td>
+</tr>
+<tr>
+	<td class="row1">{L_STATUS}:</td>
+	<td class="row3"><span style="float:right;">{S_STATUS}</span>{STATUS}</td>
+</tr>
+<tr>
+	<td class="row1">{L_TYPE}:</td>
+	<td class="row3"><span style="float:right;">{S_TYPE}</span>{TYPE}</td>
+</tr>
+<tr>
+	<td class="row1">{L_DESC}:</td>
+	<td class="row3">{DESC}</td>
+</tr>
+<tr>
+	<td class="row1">{L_MESSAGE}:</td>
+	<td class="row3">{MESSAGE}</td>
+</tr>
+<tr>
+	<td class="row1">{L_PHP_SQL}:</td>
+	<td class="row3">{PHP_SQL}</td>
+</tr>
+<tr>
+	<td class="row1">{L_VERSION}:</td>
+	<td class="row3">{VERSION}</td>
+</tr>
+<tr>
+	<td class="row1 top">{L_REPORT}:</td>
+	<td class="row3"><textarea class="textarea" name="report" rows="5" style="width:100%">{REPORT}</textarea></td>
+</tr>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
-<!-- END authlist_edit -->
+<!-- END detail -->

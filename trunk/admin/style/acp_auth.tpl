@@ -1,15 +1,11 @@
 <!-- BEGIN display -->
 <form action="{S_AUTH_ACTION}" method="post">
+<div id="navcontainer">
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_AUTH_TITLE}</a></li>
+	</ul>
+</div>
 <table class="head" cellspacing="0">
-<tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_AUTH_TITLE}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
 <tr>
 	<td class="row2">{L_AUTH_EXPLAIN}</td>
 </tr>
@@ -22,7 +18,7 @@
 	<td class="rowHead">{L_AUTH_SELECT}</td>
 </tr>
 <tr>
-	<td class="row2">{S_HIDDEN_FIELDS}{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2" /></td>
+	<td class="row2">{S_FIELDS}{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
 </tr>
 </table>
 </form>
@@ -35,7 +31,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_NEWSCAT_ACTION}">{L_AUTH_TITLE}</a></li>
+				<li><a href="{S_ACTION}" method="post">{L_AUTH_TITLE}</a></li>
 				<li id="active"><a href="#" id="current">{L_FORUM}: {FORUM_NAME}</a></li>
 			</ul>
 		</div>
@@ -59,7 +55,7 @@
 	<td colspan="2" align="center" class="row3"><span class="gensmall">{U_SWITCH_MODE}</span></td>
 </tr>
 <tr>
-	<td colspan="2" align="center">{S_HIDDEN_FIELDS} <input type="submit" name="submit" value="{L_SUBMIT}" class="button2" /> <input type="reset" value="{L_RESET}" name="reset" class="button" /></td>
+	<td colspan="2" align="center">{S_FIELDS} <input type="submit" name="submit" value="{L_SUBMIT}" class="button2" /> <input type="reset" value="{L_RESET}" name="reset" class="button"></td>
 </tr>
 </table>
 </form>

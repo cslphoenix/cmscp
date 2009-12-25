@@ -35,10 +35,10 @@ if ( !empty($setmodules) )
 }
 else
 {
-	define('IN_CMS', 1);
+	define('IN_CMS', true);
 
 	$root_path = './../';
-	$cancel = ( isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel']) ) ? true : false;
+	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
 	include($root_path . 'includes/functions_admin.php');
@@ -46,7 +46,7 @@ else
 	
 	if ( !$userauth['auth_user'] && $userdata['user_level'] != ADMIN )
 	{
-		message_die(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
 	if ( $cancel )
@@ -107,7 +107,7 @@ else
 					
 					if ( $userdata['user_level'] < $user['user_level'] )
 					{
-						message_die(GENERAL_ERROR, $lang['auth_fail']);
+						message(GENERAL_ERROR, $lang['auth_fail']);
 					}
 				}
 				else if ( $mode == 'add' )
@@ -184,8 +184,8 @@ else
 					
 					'USER_EMAIL'			=> $user['user_email'],
 					
-					'S_CHECKED_FOUNDER_NO'	=> $check_founder_no,
-					'S_CHECKED_FOUNDER_YES'	=> $check_founder_yes,
+					'S_FOUNDER_NO'	=> $check_founder_no,
+					'S_FOUNDER_YES'	=> $check_founder_yes,
 					
 					'S_USER_REGISTER'		=> append_sid('admin_user.php?mode=register&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_FIELDS'			=> append_sid('admin_user.php?mode=fields&amp;' . POST_USERS_URL . '=' . $user_id),
@@ -197,7 +197,7 @@ else
 					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_ACTION'			=> append_sid('admin_user.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
+					'S_FIELDS'		=> $s_hidden_fields
 				));
 			
 				$template->pparse('body');
@@ -318,12 +318,12 @@ else
 								FROM ' . USERS;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not obtain next user_id information', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not obtain next user_id information', '', __LINE__, __FILE__, $sql);
 					}
 					
 					if ( !($row = $db->sql_fetchrow($result)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not obtain next user_id information', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not obtain next user_id information', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$user_id = $row['total'] + 1;
@@ -331,14 +331,14 @@ else
 					$sql = "INSERT INTO " . USERS . " (user_id, username, user_password, user_email, user_regdate) VALUES ($user_id, '$username_sql', '$new_password', '$user_email', " . time() . ")";
 					if ( !($result = $db->sql_query($sql, BEGIN_TRANSACTION)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not insert data into users table', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not insert data into users table', '', __LINE__, __FILE__, $sql);
 					}
 			
 					$sql = "INSERT INTO " . GROUPS . " (group_name, group_type, group_description, group_single_user)
 						VALUES ('$username_sql', 2, 'Personal User', 1)";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not insert data into groups table', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not insert data into groups table', '', __LINE__, __FILE__, $sql);
 					}
 			
 					$group_id = $db->sql_nextid();
@@ -347,7 +347,7 @@ else
 						VALUES ($user_id, $group_id, 0)";
 					if( !($result = $db->sql_query($sql, END_TRANSACTION)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not insert data into user_group table', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not insert data into user_group table', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$message = $lang['Account_added'];
@@ -374,17 +374,17 @@ else
 					$emailer->send();
 					$emailer->reset();
 					
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_add');
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_add');
 					
 				//	$oCache -> sCachePath = './../cache/';
 				//	$oCache -> deleteCache('display_subnavi_user');
 		
 					$message = $lang['create_user'] . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 				}
 				else
 				{
-					message_die(GENERAL_ERROR, $error_msg, '');
+					message(GENERAL_ERROR, $error_msg, '');
 				}
 
 			break;
@@ -396,7 +396,7 @@ else
 		
 				if (!($user_info = $db->sql_fetchrow($result)))
 				{
-					message_die(GENERAL_MESSAGE, $lang['user_not_exist']);
+					message(GENERAL_MESSAGE, $lang['user_not_exist']);
 				}
 			
 				$user_data = $user_info;
@@ -423,7 +423,7 @@ else
 					
 					if (!($game_info = $db->sql_fetchrow($result)))
 					{
-						message_die(GENERAL_MESSAGE, $lang['user_not_exist']);
+						message(GENERAL_MESSAGE, $lang['user_not_exist']);
 					}
 					
 					$user_game = ($game_info['game_id']) ? $game_info['game_id'] : '-1';
@@ -491,13 +491,13 @@ else
 						WHERE user_id = $user_id";
 				$result = $db->sql_query($sql);
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_edit');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_edit');
 				
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_user');
 				
 				$message = $lang['user_update'] . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 	
 			break;
 			
@@ -512,7 +512,7 @@ else
 				$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if ( $total_categories = $db->sql_numrows($result) )
@@ -522,9 +522,9 @@ else
 					$sql = 'SELECT *
 								FROM ' . PROFILE . '
 								ORDER BY profile_category, profile_order';
-					if (!$result = $db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
 					if ( $total_profile = $db->sql_numrows($result) )
@@ -556,7 +556,7 @@ else
 								}
 								else
 								{
-									$field = '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">';
+									$field = '<input type="text" class="post" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">';
 								}
 								
 								$template->assign_block_vars('user_fields.catrow.profilerow',	array(
@@ -597,7 +597,7 @@ else
 					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_ACTION'			=> append_sid('admin_user.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
+					'S_FIELDS'		=> $s_hidden_fields
 				));
 			
 				$template->pparse('body');
@@ -670,7 +670,7 @@ else
 					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_ACTION'			=> append_sid('admin_user.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields
+					'S_FIELDS'		=> $s_hidden_fields
 				));
 			
 				$template->pparse('body');
@@ -693,23 +693,23 @@ else
 				
 					if ( $userdata['user_level'] < $user['user_level'] )
 					{
-						message_die(GENERAL_ERROR, $lang['auth_fail']);
+						message(GENERAL_ERROR, $lang['auth_fail']);
 					}			
 
-					_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'ACP_USER_DELETE', $user_info['user_name']);
+					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'ACP_USER_DELETE', $user_info['user_name']);
 					
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('display_subnavi_user');
 					
 					$message = $lang['delete_user'] . sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 		
 				}
 				else if ( $user_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$hidden_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
+					$s_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -718,13 +718,13 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 		
-						'S_CONFIRM_ACTION'	=> append_sid('admin_user.php'),
-						'S_HIDDEN_FIELDS'	=> $hidden_fields,
+						'S_ACTION'	=> append_sid('admin_user.php'),
+						'S_FIELDS'	=> $s_fields,
 					));
 				}
 				else
 				{
-					message_die(GENERAL_MESSAGE, $lang['msg_must_select_user']);
+					message(GENERAL_MESSAGE, $lang['msg_must_select_user']);
 				}
 			
 				$template->pparse('body');
@@ -740,7 +740,7 @@ else
 				
 				if ( $userdata['user_level'] < $user['user_level'] )
 				{
-					message_die(GENERAL_ERROR, $lang['auth_fail']);
+					message(GENERAL_ERROR, $lang['auth_fail']);
 				}
 				
 				$sql_groups = 'SELECT group_id, group_name, group_type, group_access
@@ -749,7 +749,7 @@ else
 						ORDER BY group_order';
 				if ( !($result_groups = $db->sql_query($sql_groups)) )
 				{
-					message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql_groups);
+					message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql_groups);
 				}
 				
 				while ( $row_groups = $db->sql_fetchrow($result_groups) )
@@ -764,7 +764,7 @@ else
 									AND group_id = ' . $group_id;
 					if ( !($result_user = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$member = ( $row = $db->sql_fetchrow($result_user) ) ? TRUE : FALSE;
@@ -821,7 +821,7 @@ else
 						ORDER BY team_order';
 				if ( !($result_teams = $db->sql_query($sql_teams)) )
 				{
-					message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql_teams);
+					message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql_teams);
 				}
 				
 				while ( $row_teams = $db->sql_fetchrow($result_teams) )
@@ -835,7 +835,7 @@ else
 									AND team_id = ' . $team_id;
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$member = ( $row = $db->sql_fetchrow($result) ) ? TRUE : FALSE;
@@ -877,7 +877,7 @@ else
 					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_ACTION'			=> append_sid('admin_user.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_hidden_fields,
 				));
 			
 				$template->pparse('body');
@@ -909,16 +909,16 @@ else
 										AND group_id = ' . $groups_mark_lists[$i];
 						if ( !($result = $db->sql_query($sql) ) )
 						{
-							message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if ( !($row = $db->sql_fetchrow($result)) )
 						{
 							// here, we actually put the user into a selected group if there was no entry for the user in this group
 							$sql = 'INSERT INTO ' . GROUPS_USERS . " (group_id, user_id, user_pending) VALUES ($groups_mark_lists[$i], $user_id, 0)";
-							if ( !$db->sql_query($sql) )
+							if ( !($result = $db->sql_query($sql)) )
 							{
-								message_die(GENERAL_ERROR, 'Could not add user to checked groups', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'Could not add user to checked groups', '', __LINE__, __FILE__, $sql);
 							}
 							$temp_count = 1;
 						}
@@ -932,9 +932,9 @@ else
 												user_pending = 0
 											WHERE group_id = ' . $groups_mark_lists[$i] . '
 												AND user_id = ' . $user_id;
-								if ( !$db->sql_query($sql) )
+								if ( !($result = $db->sql_query($sql)) )
 								{
-									message_die(GENERAL_ERROR, 'Could not add user to checked groups', '', __LINE__, __FILE__, $sql);
+									message(GENERAL_ERROR, 'Could not add user to checked groups', '', __LINE__, __FILE__, $sql);
 								}
 								$temp_count = 1;
 							}
@@ -959,16 +959,16 @@ else
 										AND g.group_id = gu.group_id';
 						if ( !($result = $db->sql_query($sql) ) )
 						{
-							message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if ( $row = $db->sql_fetchrow($result) )
 						{
 							// here, we actually delete the user from the group if there an entry for the user in the group
 							$sql = 'DELETE FROM ' . GROUPS_USERS . ' WHERE user_id = ' . $row['user_id'] . ' AND group_id = ' . $group_id;
-							if ( !$db->sql_query($sql) )
+							if ( !($result = $db->sql_query($sql)) )
 							{
-								message_die(GENERAL_ERROR, 'Could not add delete user from group marked \'NO\'', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'Could not add delete user from group marked \'NO\'', '', __LINE__, __FILE__, $sql);
 							}
 						}
 						group_reset_auth($user_id, $group_id);
@@ -995,15 +995,15 @@ else
 										AND team_id = ' . $teams_mark_lists[$i];
 						if ( !($result = $db->sql_query($sql) ) )
 						{
-							message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if ( !($row = $db->sql_fetchrow($result)) )
 						{
 							$sql = 'INSERT INTO ' . TEAMS_USERS . " (team_id, user_id, team_join) VALUES ($teams_mark_lists[$i], $user_id, " . time() . ")";
-							if ( !$db->sql_query($sql) )
+							if ( !($result = $db->sql_query($sql)) )
 							{
-								message_die(GENERAL_ERROR, 'Could not add user to checked teams', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'Could not add user to checked teams', '', __LINE__, __FILE__, $sql);
 							}
 							$temp_count = 1;
 						}
@@ -1025,15 +1025,15 @@ else
 										AND t.team_id = tu.team_id';
 						if ( !($result = $db->sql_query($sql) ) )
 						{
-							message_die(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'Cannot find group info', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if ( $row = $db->sql_fetchrow($result) )
 						{
 							$sql = 'DELETE FROM ' . TEAMS_USERS . ' WHERE user_id = ' . $row['user_id'] . ' AND team_id = ' . $team_id;
-							if ( !$db->sql_query($sql) )
+							if ( !($result = $db->sql_query($sql)) )
 							{
-								message_die(GENERAL_ERROR, 'Could not add delete user from group marked \'NO\'', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'Could not add delete user from group marked \'NO\'', '', __LINE__, __FILE__, $sql);
 							}
 						}
 					}
@@ -1053,7 +1053,7 @@ else
 					AND ug.user_pending = 0";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not get group information', '', __LINE__, __FILE__, $group_sql);
+						message(GENERAL_ERROR, 'Could not get group information', '', __LINE__, __FILE__, $group_sql);
 					}
 					
 					$row = $db->sql_fetchrow($result);
@@ -1085,12 +1085,12 @@ else
 				}
 				*/
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_groups');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_groups');
 			
 				$message = $lang['user_change_groups']
 					. sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
 					. sprintf($lang['click_return_user_groups'], '<a href="' . append_sid('admin_user.php?mode=groups&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 				
 			break;
 			
@@ -1103,7 +1103,7 @@ else
 				
 				if ( $userdata['user_level'] < $user['user_level'] )
 				{
-					message_die(GENERAL_ERROR, $lang['auth_fail']);
+					message(GENERAL_ERROR, $lang['auth_fail']);
 				}
 				
 				$sql = 'SELECT g.group_id, ' . implode(', ', $group_auth_fields) . '
@@ -1112,7 +1112,7 @@ else
 								AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$auths_data = array();
@@ -1132,7 +1132,7 @@ else
 								AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$authd_data = array();
@@ -1152,7 +1152,7 @@ else
 						ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
 				}
 				
 				$auths_group = array();
@@ -1171,7 +1171,7 @@ else
 						ORDER BY group_id';
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
 				}
 				
 				$authd_group = array();
@@ -1292,7 +1292,7 @@ else
 					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_ACTION'			=> append_sid('admin_user.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_hidden_fields,
 				));
 			
 				$template->pparse('body');
@@ -1307,7 +1307,7 @@ else
 								AND gu.user_id = ' . $user_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$row = $db->sql_fetchrow($result);
 
@@ -1324,17 +1324,17 @@ else
 							
 							$sql_auth
 						WHERE group_id = " . $row['group_id'];
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				_log(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_auths_edit');
+				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_auths_edit');
 				
 				$message = $lang['user_change_auths']
 					. sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
 					. sprintf($lang['click_return_user_auths'], '<a href="' . append_sid('admin_user.php?mode=auths&' . POST_USERS_URL . '=' . $user_id) . '">', '</a>');				
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 			
 			break;
 			
@@ -1364,7 +1364,7 @@ else
 					'S_USER_GROUP'			=> append_sid('admin_user.php?mode=groups&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_AUTHS'			=> append_sid('admin_user.php?mode=auths&amp;' . POST_USERS_URL . '=' . $user_id),
 					'S_USER_ACTION'			=> append_sid('admin_user.php'),
-					'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_hidden_fields,
 				));
 			
 				$template->pparse('body');
@@ -1378,7 +1378,7 @@ else
 			break;
 			
 			default:
-				message_die(GENERAL_ERROR, $lang['no_mode']);
+				message(GENERAL_ERROR, $lang['no_mode']);
 				break;
 		}
 	
@@ -1399,7 +1399,7 @@ else
 		'L_USER'			=> $lang['users'],
 		'L_USER_ADD'		=> $lang['user_add'],
 		
-		'L_SETTINGS'		=> $lang['settings'],
+		'L_SETTINGS'		=> $lang['common_settings'],
 		
 		
 
@@ -1412,7 +1412,7 @@ else
 			ORDER BY user_id DESC';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain ranks data', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not obtain ranks data', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$user_list = $db->sql_fetchrowset($result);
