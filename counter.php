@@ -79,7 +79,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 						'; 
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if(!mysql_result($result, 0))
@@ -214,7 +214,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 						DAYOFMONTH(counter_date) = " . $i."";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
 		}
         $row = $db->sql_fetchrow($result);
 		
@@ -243,7 +243,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 						MONTH(counter_date) = '" . $i."'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
 		}
 		$row = $db->sql_fetchrow($result);
 		$diagramme['Monat']['Werte'][] = (int) $row['sum'];
@@ -270,7 +270,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
                      YEAR(counter_date) = "'.$i.'"';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
 		}
 		$row = $db->sql_fetchrow($result);
         $diagramme['Jahr']['Werte'][] = (int) $row['sum'];

@@ -35,75 +35,185 @@
  *
  */
 
-function select_box($type, $class, $field_id, $field_name, $default = '', $switch = '')
+function select_box($type, $class, $default = '', $switch = '')
 {
-	global $db, $lang, $config, $settings;
+	global $db, $lang;
 	
 	switch ( $type )
 	{
-		case 'match';
+		case 'match':
+			$table	= MATCH;
+			$fields	= 'match_id, match_rival';
+			$where	= ' WHERE match_date >= ' . time();
+			$order	= ' ORDER BY match_id DESC';
+			$selct	= false;
 			break;
 
-		case 'newscategory';
+		case 'news_category':
+			$table	= NEWSCAT;
+			$fields	= 'newscat_id, newscat_title, newscat_image';
+			$where	= '';
+			$order	= ' ORDER BY newscat_order ASC';
+			$selct	= true;
 			break;
 
 		case 'team';
-			$table = TEAMS;
-			$where = ( $switch != '0' ) ? ( $switch == '2' ) ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
-			$order = ' ORDER BY team_order';
+			$table	= TEAMS;
+			$fields	= 'team_id, team_name';
+			$where	= ( $switch != '' ) ? ( $switch == '2' ) ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
+			$order	= ' ORDER BY team_order';
+			$selct	= false;
 			break;
 
-		case 'user';
-			$table = USERS;
-			$where = ' WHERE user_id <> ' . ANONYMOUS;
-			$order = ' ORDER BY user_id DESC';
+		case 'user':
+			$table	= USERS;
+			$fields	= 'user_id, username';
+			$where	= ' WHERE user_id <> ' . ANONYMOUS;
+			$order	= ' ORDER BY user_id DESC';
+			$selct	= false;
 			break;
 			
+		case 'game':
+			$table	= GAMES;
+			$fields	= 'game_id, game_name, game_image';
+			$where	= ' WHERE game_id != -1 ';
+			$order	= ' ORDER BY game_order ASC';
+			$selct	= true;
+			break;
+			
+		case 'ranks':
+			$table	= RANKS;
+			$fields	= 'rank_id, rank_title';
+			$where	= ' WHERE rank_type = ' . $switch;
+			$order	= ' ORDER BY rank_order ASC';
+			$selct	= false;
+			break;
+		
 		default:
-			
-			message_die(GENERAL_ERROR, 'Error', '');
-			
+			message(GENERAL_ERROR, 'Error', '');
 			break;
 	}
 	
-	$sql = 'SELECT ' . $field_id . ', ' . $field_name . ' FROM ' . $table . $where . $order;
-	if (!($result = $db->sql_query($sql)))
+	$sql = 'SELECT ' . $fields . ' FROM ' . $table . $where . $order;
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$data = $db->sql_fetchrowset($result);
 	
-	$select = '<select class="' . $class . '" name="' . $field_id . '">';
-	$select .= '<option value="0">&raquo; ' . $lang['msg_select_' . $type ] . '</option>';
+	$field	= explode(', ', $fields);
+	$fielda	= $field[0];
+	$fieldb	= $field[1];
+	$fieldc	= ( isset($field[2]) ) ? $field[2] : $field[0];
 	
-	foreach ( $data as $info => $value )
-	{
-		$selected = ( $value[$field_id] == $default ) ? 'selected="selected"' : '';
-		$select .= '<option value="' . $value[$field_id] . '" ' . $selected . '>&raquo; ' . $value[$field_name] . '&nbsp;</option>';
+	if ( $data )
+	{		
+		$select = ( !$selct ) ? '<select class="' . $class . '" name="' . $fielda . '" id="' . $fielda . '">' : '<select class="' . $class . '" name="' . $fieldc . '" id="' . $fieldc . '" onchange="update_image(this.options[selectedIndex].value);">';
+		$select .= '<option value="-1">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
+		
+		foreach ( $data as $info => $value )
+		{
+			$selected = ( $value[$fielda] == $default ) ? 'selected="selected"' : '';
+			$select .= '<option value="' . $value[$fieldc] . '" ' . $selected . '>&raquo;&nbsp;' . $value[$fieldb] . '&nbsp;</option>';
+		}
+		$select .= '</select>';
 	}
-	$select .= '</select>';
+	else
+	{
+		$select = '&raquo;&nbsp;' . $lang['msg_select_' . $type ];
+	}
 
 	return $select;
+}
+
+function select_box_files($type, $class, $path, $default = '')
+{
+	global $db, $lang;
 	
+	$path_files = scandir($path);
+				
+	$select = '<select class="' . $class . '" name="' . $type . '" id="' . $type . '" onchange="update_image(this.options[selectedIndex].value);">';
+	$select .= '<option value="">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
+	
+	foreach ( $path_files as $file )
+	{
+		if ( $file != '.' && $file != '..' && $file != 'index.htm' && $file != '.svn' )
+		{
+			$marked = ( $file == $default ) ? ' selected="selected"' : '';
+			$select .= '<option value="' . $file . '" ' . $marked . '>' . $file . '&nbsp;</option>';
+		}
+	}
+	$select .= '</select>';
+	
+	return $select;
+}
+
+/*
+function select_box_game($class, $default)
+{
+	global $db, $lang;
+	
+	$sql = 'SELECT game_id, game_name, game_image FROM ' . GAMES . ' WHERE game_id != -1 ORDER BY game_order';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$func_select = '<select class="' . $class . '" name="game_image" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select .= '<option value="-1">&raquo; ' . $lang['msg_select_game'] . '&nbsp;</option>';
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$selected = ( $row['game_id'] == $default ) ? 'selected="selected"' : '';
+		$func_select .= '<option value="' . $row['game_image'] . '" ' . $selected . ' >&raquo; ' . $row['game_name'] . '&nbsp;</option>';
+	}
+	$func_select .= '</select>';
+
+	return $func_select;
+}
+*/
+
+function _select_rank($class, $default, $type)
+{
+	global $db, $lang;
+	
+	$order = ( $type == '2' ) ? 'rank_order' : 'rank_id';
+	
+	$sql = 'SELECT rank_id, rank_title, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+
+	$func_select = '<select class="' . $class . '" name="rank_id">';
+	$func_select .= '<option value="0">----------</option>';
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$selected = ( $row['rank_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
+	}
+	$func_select .= '</select>';
+
+	return $func_select;
 }
 
 function select_newscategory($default)
 {
 	global $db, $lang;
 		
-	$sql = 'SELECT * FROM ' . NEWS_CATEGORY . " ORDER BY news_category_order";
+	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY newscat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select name="news_category_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select = '<select name="newscat_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
 	$func_select .= '<option value="0">' . $lang['newscat_select'] . '</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['news_category_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['news_category_image'] . '"' . $selected . '>&raquo;&nbsp;' . $row['news_category_title'] . '&nbsp;</option>';
+		$selected = ( $row['newscat_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['newscat_image'] . '"' . $selected . '>&raquo;&nbsp;' . $row['newscat_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -114,7 +224,7 @@ function select_lang_box($var, $name, $default, $class)
 {
 	global $lang;
 		
-	$select_switch = '<select name="' . $name . '" class="' . $class . '">';
+	$select_switch = "<select class=\"$class\" name=\"$name\" id=\"$name\">";
 	foreach ( $lang[$var] as $key_s => $value_s )
 	{
 		$selected = ( $key_s == $default ) ? ' selected="selected"' : '';
@@ -141,57 +251,6 @@ function select_lang_box($var, $name, $default, $class)
 //
 //	type:			1 = Page / 2 = Forum / 3 = Team
 //
-function _select_rank($default, $type)
-{
-	global $db;
-	
-	$order = ($type == '2') ? 'rank_order' : 'rank_id';
-	
-	$sql = 'SELECT rank_id, rank_title, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
-	if (!($result = $db->sql_query($sql)))
-	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
-	}
-
-	$func_select = '<select class="select" name="rank_id">';
-	$func_select .= '<option value="0">----------</option>';
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['rank_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
-
-//
-//	Game Select
-//
-//	default: id
-//
-function _select_game($default)
-{
-	global $db, $lang;
-	
-	$sql = 'SELECT * FROM ' . GAMES . ' WHERE game_id != -1 ORDER BY game_order';
-	if (!($result = $db->sql_query($sql)))
-	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
-	}
-	
-	$func_select = '<select class="select" name="game_image" onchange="update_image(this.options[selectedIndex].value);">';
-	$func_select .= '<option value="">&raquo; ' . $lang['game_select'] . '</option>';
-	
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['game_id'] == $default ) ? 'selected="selected"' : '';
-		$func_select .= '<option value="' . $row['game_image'] . '" ' . $selected . ' >&raquo; ' . $row['game_name'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
 
 
 //
@@ -209,7 +268,7 @@ function _select_match($default, $type, $class)
 	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$func_select = '<select class="' . $class . '" name="match_id">';

@@ -59,36 +59,36 @@ if ( $userdata['session_logged_in'] )
 				ORDER BY news_time_public DESC';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$news_data = $db->sql_fetchrowset($result);
 //		$news_data = _cached($sql, 'lobby_news');
 		
-		$news_member = $news_guest = array();
-		
-		foreach ( $news_data as $news => $row )
-		{
-			if ( $userdata['user_level'] >= TRIAL )
-			{
-				$news_member[] = $row;
-			}
-			else if ( $row['news_intern'] == '0' )
-			{
-				$news_guest[] = $row;
-			}
-		}
-		
-		if ( $userdata['user_level'] >= TRIAL )
-		{
-			$news_data = $news_member;
-		}
-		else
-		{
-			$news_data = $news_guest;
-		}
-		
 		if ( $news_data )
 		{
+			$news_member = $news_guest = array();
+			
+			foreach ( $news_data as $news => $row )
+			{
+				if ( $userdata['user_level'] >= TRIAL )
+				{
+					$news_member[] = $row;
+				}
+				else if ( $row['news_intern'] == '0' )
+				{
+					$news_guest[] = $row;
+				}
+			}
+			
+			if ( $userdata['user_level'] >= TRIAL )
+			{
+				$news_data = $news_member;
+			}
+			else
+			{
+				$news_data = $news_guest;
+			}
+		
 			//
 			//	Schleife zum durchlaufen alle Wars
 			//	bei hoher Anzahl längere Wartezeit <- entfällt da ein Tagelimit gesetzt wird
@@ -104,7 +104,7 @@ if ( $userdata['session_logged_in'] )
 								AND news_id = ' . $news_data[$i]['news_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 							
 				if ( $db->sql_numrows($result) )
@@ -121,7 +121,7 @@ if ( $userdata['session_logged_in'] )
 									AND ncr.read_time < nc.time_create';
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$news_data_unread = $db->sql_fetchrow($result);
 					
@@ -159,36 +159,36 @@ if ( $userdata['session_logged_in'] )
 				ORDER BY match_date';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$match_data = $db->sql_fetchrowset($result);
 //		$match_data = _cached($sql, 'lobby_match');
 		
 		$match_member = $match_guest = array();
 		
-		foreach ( $match_data as $match => $row )
-		{
-			if ( $userdata['user_level'] >= TRIAL )
-			{
-				$match_member[] = $row;
-			}
-			else if ( $row['match_public'] == '0' )
-			{
-				$match_guest[] = $row;
-			}
-		}
-		
-		if ( $userdata['user_level'] >= TRIAL )
-		{
-			$match_data = $match_member;
-		}
-		else
-		{
-			$match_data = $match_guest;
-		}
-		
 		if ( $match_data )
 		{
+			foreach ( $match_data as $match => $row )
+			{
+				if ( $userdata['user_level'] >= TRIAL )
+				{
+					$match_member[] = $row;
+				}
+				else if ( $row['match_public'] == '0' )
+				{
+					$match_guest[] = $row;
+				}
+			}
+			
+			if ( $userdata['user_level'] >= TRIAL )
+			{
+				$match_data = $match_member;
+			}
+			else
+			{
+				$match_data = $match_guest;
+			}
+			
 			//
 			//	Schleife zum durchlaufen alle Wars
 			//	bei hoher Anzahl längere Wartezeit <- entfällt da ein Tagelimit gesetzt wird
@@ -210,7 +210,7 @@ if ( $userdata['session_logged_in'] )
 									AND match_id = ' . $match_data[$i]['match_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					if ( $db->sql_numrows($result) )
@@ -227,7 +227,7 @@ if ( $userdata['session_logged_in'] )
 										AND mcr.read_time < mc.time_create';
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						$match_data_unread = $db->sql_fetchrow($result);
 					
@@ -260,7 +260,7 @@ if ( $userdata['session_logged_in'] )
 									AND match_id = ' . $match_data[$i]['match_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					if ( $db->sql_numrows($result) )
@@ -277,7 +277,7 @@ if ( $userdata['session_logged_in'] )
 										AND mcr.read_time < mc.time_create';
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						$match_data_unread = $db->sql_fetchrow($result);
@@ -318,10 +318,10 @@ if ( $userdata['session_logged_in'] )
 			$sql = 'SELECT *
 						FROM ' . TRAINING . '
 						WHERE training_create > ' . (time() - $settings['lobby_limit_training']) . '
-					ORDER BY training_start';
+					ORDER BY training_date';
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$training_data = $db->sql_fetchrowset($result);
 //			$training_data = _cached($sql, 'lobby_training');
@@ -338,7 +338,7 @@ if ( $userdata['session_logged_in'] )
 					//	Aussortierung, Nicht Abgelaufene Wars werden
 					//	Angezeigt bis Sie abgelaufen sind
 					//
-					if ( $training_data[$i]['training_start'] > time() )
+					if ( $training_data[$i]['training_date'] > time() )
 					{
 						//
 						//	Überprüfung ob der Benutzer die Kommentare gesehen hat
@@ -349,7 +349,7 @@ if ( $userdata['session_logged_in'] )
 										AND training_id = ' . $training_data[$i]['training_id'];
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if ( $db->sql_numrows($result) )
@@ -366,7 +366,7 @@ if ( $userdata['session_logged_in'] )
 											AND mcr.read_time < mc.time_create';
 							if ( !($result = $db->sql_query($sql)) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							$training_data_unread = $db->sql_fetchrowset($result);
 							
@@ -378,7 +378,7 @@ if ( $userdata['session_logged_in'] )
 							//	Wenn noch kein Eintrag vorhanden ist, wird die Anzahl ausgelesen.
 							//	SQL Abfrage durch hochzählen erspart.
 							//
-							$count	= $match_data[$i]['match_comment'];
+							$count = $training_data[$i]['training_comment'];
 						}
 						
 						$language = ( $count == '1' ) ? $lang['common_num_comment'] : $lang['common_num_comments'];
@@ -388,7 +388,7 @@ if ( $userdata['session_logged_in'] )
 							'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=details&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 						));
 					}
-					else if ( $training_data[$i]['training_start'] < time() )
+					else if ( $training_data[$i]['training_date'] < time() )
 					{
 						//
 						//	Überprüfung ob der Benutzer die Kommentare gesehen hat
@@ -399,7 +399,7 @@ if ( $userdata['session_logged_in'] )
 										AND training_id = ' . $training_data[$i]['training_id'];
 						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						if ( $db->sql_numrows($result) )
@@ -416,7 +416,7 @@ if ( $userdata['session_logged_in'] )
 											AND mcr.read_time < mc.time_create';
 							if ( !($result = $db->sql_query($sql)) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							$training_data_unread = $db->sql_fetchrowset($result);
 							
@@ -428,7 +428,7 @@ if ( $userdata['session_logged_in'] )
 							//	Wenn noch kein Eintrag vorhanden ist, wird die Anzahl ausgelesen.
 							//	SQL Abfrage durch hochzählen erspart.
 							//
-							$count	= $match_data[$i]['match_comment'];
+							$count = $training_data[$i]['training_comment'];
 						}
 						
 						if ( $count )
@@ -467,14 +467,14 @@ if ( $userdata['session_logged_in'] )
 		$sql = 'SELECT * FROM ' . PROFILE_DATA . ' WHERE user_id = ' . $userdata['user_id'];
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$user_data = $db->sql_fetchrow($result);
 
 		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		if ( $total_categories = $db->sql_numrows($result) )
@@ -484,9 +484,9 @@ if ( $userdata['session_logged_in'] )
 			$sql = 'SELECT *
 						FROM ' . PROFILE . '
 						ORDER BY profile_category, profile_order';
-			if (!$result = $db->sql_query($sql))
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
 			if ( $total_profile = $db->sql_numrows($result) )
@@ -517,7 +517,7 @@ if ( $userdata['session_logged_in'] )
 						}
 						else
 						{
-							$field = '<input class="post" type="text" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">';
+							$field = '<input type="text" class="post" name="'.$profile_rows[$j]['profile_field'].'" value="'.$value.'">';
 						}
 						
 						$template->assign_block_vars('profile_edit.catrow.profilerow',	array(

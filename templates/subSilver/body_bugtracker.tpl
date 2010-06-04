@@ -73,7 +73,7 @@ tinyMCE.init({
 });
 </script>
 
-<form action="{S_BUGTRACKER_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
+<form action="{S_BUGTRACKER_ACTION}" method="post" name="form">
 <table class="out" width="100%" cellspacing="0">
 <tr>
 	<td class="info_head">{L_HEAD_ADD_EDIT}</td>
@@ -89,11 +89,11 @@ tinyMCE.init({
 		</tr>
 		<tr>
 			<td class="row1_form" width="25%">{L_TITLE}:*</td>
-			<td class="row2" width="75%"><input id="bt_title" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{BT_TITLE}" name="bt_title"></td>
+			<td class="row2" width="75%"><input id="bt_title" class="post" type="text" value="{BT_TITLE}" name="bt_title"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">{L_DESC}:*</td>
-			<td class="row2"><input id="bt_desc" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{BT_DESC}" name="bt_desc"></td>
+			<td class="row2"><input id="bt_desc" class="post" type="text" value="{BT_DESC}" name="bt_desc"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">{L_TYPE}:*</td>
@@ -113,7 +113,7 @@ tinyMCE.init({
 		</tr>
 		<tr>
 			<td class="row1_form" valign="top">{L_MESSAGE}:*</td>
-			<td class="row2"><textarea id="bt_message" onBlur="javascript:checkEntry(this)" class="textarea" name="bt_message" style="width:100%;">{BT_MESSAGE}</textarea></td>
+			<td class="row2"><textarea id="bt_message" class="textarea" name="bt_message" style="width:100%;">{BT_MESSAGE}</textarea></td>
 		</tr>
 		<tr>
 			<td class="row4" colspan="2" align="center">

@@ -8,9 +8,9 @@
 		<br>
 		{MESSAGE_TEXT}
 		<br><br>
-		{S_HIDDEN_FIELDS}
-		<input type="submit" name="confirm" value="{L_YES}" class="button2" />&nbsp;&nbsp;
-		<input type="submit" name="cancel" value="{L_NO}" class="button" /></td>
+		{S_FIELDS}
+		<input type="submit" name="confirm" value="{L_YES}" class="button2">&nbsp;&nbsp;
+		<input type="submit" name="cancel" value="{L_NO}" class="button"></td>
 </tr>
 </table>
 </form>

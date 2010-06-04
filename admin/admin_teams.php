@@ -48,13 +48,13 @@ else
 	include($root_path . 'includes/acp/acp_functions.php');
 	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/teams.php');
 	
-	$start		= ( request('start') ) ? request('start', 'num') : 0;
+	$start		= ( request('start') ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
-	$team_id	= request(POST_TEAMS_URL);
-	$confirm	= request('confirm');
-	$move		= request('move');
-	$mode		= request('mode');
-	$path_game	= $root_path . $settings['path_game'] . '/';
+	$team_id	= request(POST_TEAMS_URL, 0);
+	$confirm	= request('confirm', 1);
+	$move		= request('move', 1);
+	$mode		= request('mode', 1);
+	$path_game	= $root_path . $settings['path_games'] . '/';
 	$show_index	= '';
 		
 	if ( !$userauth['auth_teams'] && $userdata['user_level'] != ADMIN )
@@ -80,7 +80,7 @@ else
 				if ( $mode == '_create' )
 				{
 					$team = array (
-						'team_name'			=> request('team_name', 'text'),
+						'team_name'			=> request('team_name', 2),
 						'team_desc'			=> '',
 						'team_game'			=> '-1',
 						'team_navi'			=> '0',
@@ -126,7 +126,7 @@ else
 				
 
 
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
 				
 				$template->assign_vars(array(
 					'L_TITLE'			=> $lang['team_head'],
@@ -180,7 +180,7 @@ else
 					'CHECKED_SHOW_NO'		=> (!$team['team_show']) ? ' checked="checked"' : '',
 					'CHECKED_SHOW_YES'		=> ($team['team_show']) ? ' checked="checked"' : '',
 					
-					'GAME_PATH'				=> $root_path . $settings['path_game'],
+					'GAME_PATH'				=> $root_path . $settings['path_games'],
 					'GAME_IMAGE'			=> $game_image,
 					'GAME_SIZE'				=> $game_size,
 					
@@ -194,7 +194,7 @@ else
 					
 					
 					
-					'S_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_fields,
 					'S_MEMBER'			=> append_sid('admin_teams.php?mode=_member&amp;' . POST_TEAMS_URL . '=' . $team_id),
 					'S_ACTION'			=> append_sid('admin_teams.php'),
 				));
@@ -205,16 +205,16 @@ else
 			
 			case '_create_save':
 			
-				$team_name		= request('team_name', 'text');
+				$team_name		= request('team_name', 2);
 				$team_desc		= request('team_desc', 'textfeld_clean');
-				$game_image		= request('game_image', 'text');
-				$team_navi		= request('team_navi', 'num');
-				$team_join		= request('team_join', 'num');
-				$team_fight		= request('team_fight', 'num');
-				$team_wars		= request('team_wars', 'num');
-				$team_awards	= request('team_awards', 'num');
-				$team_show		= request('team_show', 'num');
-				$team_view		= request('team_view', 'num');
+				$game_image		= request('game_image', 2);
+				$team_navi		= request('team_navi', 0);
+				$team_join		= request('team_join', 0);
+				$team_fight		= request('team_fight', 0);
+				$team_wars		= request('team_wars', 0);
+				$team_awards	= request('team_awards', 0);
+				$team_show		= request('team_show', 0);
+				$team_view		= request('team_view', 0);
 				
 				if ( !$team_name )
 				{
@@ -306,16 +306,16 @@ else
 			
 			case '_update_save':
 			
-				$team_name		= request('team_name', 'text');
+				$team_name		= request('team_name', 2);
 				$team_desc		= request('team_desc', 'textfeld_clean');
-				$game_image		= request('game_image', 'text');
-				$team_navi		= request('team_navi', 'num');
-				$team_join		= request('team_join', 'num');
-				$team_fight		= request('team_fight', 'num');
-				$team_wars		= request('team_wars', 'num');
-				$team_awards	= request('team_awards', 'num');
-				$team_show		= request('team_show', 'num');
-				$team_view		= request('team_view', 'num');
+				$game_image		= request('game_image', 2);
+				$team_navi		= request('team_navi', 0);
+				$team_join		= request('team_join', 0);
+				$team_fight		= request('team_fight', 0);
+				$team_wars		= request('team_wars', 0);
+				$team_awards	= request('team_awards', 0);
+				$team_show		= request('team_show', 0);
+				$team_view		= request('team_view', 0);
 				
 				if ( !$team_name )
 				{
@@ -556,8 +556,8 @@ else
 				}
 				$rank_default = $db->sql_fetchrow($result);
 				
-				$s_hidden_fields = '<input type="hidden" name="rank_id" value="" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
-				$s_hidden_fields2 = '<input type="hidden" name="mode" value="_add_user" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+				$s_fields = '<input type="hidden" name="rank_id" value="" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+				$s_fields2 = '<input type="hidden" name="mode" value="_add_user" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
 
 				$template->assign_vars(array(
 					'L_TITLE'			=> $lang['team_head'],
@@ -590,8 +590,8 @@ else
 					
 					'S_EDIT'			=> append_sid('admin_teams.php?mode=_edit&amp;' . POST_TEAMS_URL . '=' . $team_id),
 					'S_ACTION'			=> append_sid('admin_teams.php'),
-					'S_FIELDS'		=> $s_hidden_fields,
-					'S_HIDDEN_FIELDS2'		=> $s_hidden_fields2)
+					'S_FIELDS'		=> $s_fields,
+					'S_HIDDEN_FIELDS2'		=> $s_fields2)
 				);
 			
 				$template->pparse('body');
@@ -693,8 +693,8 @@ else
 			
 				$members	= request('members', 'only');
 				$members_s	= request('members_select', 'only');
-				$rank_id	= request('rank_id', 'num');
-				$mod		= request('mod', 'num');
+				$rank_id	= request('rank_id', 0);
+				$mod		= request('mod', 0);
 				
 				if ( !$members && !$members_s )
 				{
@@ -1000,7 +1000,7 @@ else
 			
 			$template->assign_block_vars('display.teams_row', array(
 				'NAME'			=> $row['team_name'],
-				'GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['path_game'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
+				'GAME'			=> ($row['game_image'] != '-1') ? '<img src="' . $root_path . $settings['path_games'] . '/' . $row['game_image'] . '"  width="' . $game_size . '" height="' . $game_size . '" alt="">' : ' - ',
 				'MEMBER_COUNT'	=> $row['total_members'],
 				
 				'MOVE_UP'			=> ( $row['team_order'] != '10' )				? '<a href="' . append_sid('admin_teams.php?mode=_order&amp;move=-15&amp;' . POST_TEAMS_URL . '=' . $team_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',

@@ -121,7 +121,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 			$forum_match_sql";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Failed obtaining forum access control lists', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'Failed obtaining forum access control lists', '', __LINE__, __FILE__, $sql);
 		}
 
 		$sql_fetchrow = ( $forum_id != AUTH_LIST_ALL ) ? 'sql_fetchrow' : 'sql_fetchrowset';
@@ -152,7 +152,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 				$forum_match_sql";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Failed obtaining forum access control lists', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'Failed obtaining forum access control lists', '', __LINE__, __FILE__, $sql);
 		}
 
 		if ( $row = $db->sql_fetchrow($result) )
@@ -357,7 +357,7 @@ function auth_acp_check($user_id)
 					AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$usergroups_data = array();
@@ -377,7 +377,7 @@ function auth_acp_check($user_id)
 			ORDER BY group_id';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
+		message(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
 	}
 	
 	$group_data = array();

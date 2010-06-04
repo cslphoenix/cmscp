@@ -32,7 +32,7 @@ function counter_update()
     $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()'; 
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
     // ist der Tag nocht nicht vorhanden,  
@@ -40,50 +40,50 @@ function counter_update()
     if ( !$db->sql_numrows($result) )
 	{
 		$sql = 'INSERT INTO ' . COUNTER_COUNTER . ' SET counter_date = CURDATE()'; 
-		if ( !$result = $db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
     }
 	
 	// Alte (mehr als 1 Tag) IPs in 'Online' löschen 
 	// damit die Datenbank nicht überfüllt wird
 	$sql = 'DELETE FROM ' . COUNTER_ONLINE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_start'; 
-	if ( !$result = $db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	// Überprüfe, ob die IP bereits gespeichert ist
 	$sql = 'SELECT online_ip FROM ' . COUNTER_ONLINE . ' WHERE online_ip = "' . $userdata['session_ip'] . '"';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 		
 	// Falls nicht, wird sie gespeichert 
     if ( !$db->sql_numrows($result) )
 	{
 		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date, online_start) VALUES ("' . $userdata['session_ip'] . '", NOW(), NOW())'; 
-		if ( !$result = $db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		// ... und die Anzahl wird um 1 erhöht 
 		$sql = 'UPDATE ' . COUNTER_COUNTER . ' SET counter_entry = counter_entry + 1 WHERE counter_date = CURDATE()'; 
-		if ( !$result = $db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
     } 
     // Falls ja, wird ihr Datum aktualisiert 
     else
 	{
 		$sql = 'UPDATE ' . COUNTER_ONLINE . ' SET online_date = NOW() WHERE online_ip = "' . $userdata['session_ip'] . '"';
-		if ( !$result = $db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 	}
 }
@@ -96,7 +96,7 @@ function counter_result()
     $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$row = $db->sql_fetchrow($result);
 //	$row = _cached($sql, 'counter_stats_today', 1, 1800);
@@ -107,7 +107,7 @@ function counter_result()
 	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$row = $db->sql_fetchrow($result);
 //	$row = _cached($sql, 'counter_stats_yesterday', 1, 1800);
@@ -118,7 +118,7 @@ function counter_result()
 	$sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')"; 
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$row = $db->sql_fetchrow($result);
 //	$row = _cached($sql, 'counter_stats_month', 1, 1800);
@@ -131,7 +131,7 @@ function counter_result()
     $sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$row = $db->sql_fetchrow($result);
 //	$row = _cached($sql, 'counter_stats_total', 1, 1800);

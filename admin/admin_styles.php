@@ -534,7 +534,7 @@ else
 						}
 					}
 	
-					$s_hidden_fields = '<input type="hidden" name="style_id" value="' . $style_id . '" />';
+					$s_fields = '<input type="hidden" name="style_id" value="' . $style_id . '" />';
 				}
 				else
 				{
@@ -570,7 +570,7 @@ else
 					message(GENERAL_MESSAGE, $lang['No_template_dir']);
 				}
 	
-				$s_hidden_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
+				$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
 	
 				$template->assign_vars(array(
 					"L_THEMES_TITLE" => $themes_title,
@@ -694,7 +694,7 @@ else
 					
 					"S_THEME_ACTION" => append_sid('admin_styles.php'),
 					"S_TEMPLATE_SELECT" => $s_template_select,
-					"S_HIDDEN_FIELDS" => $s_hidden_fields)
+					"S_HIDDEN_FIELDS" => $s_fields)
 				);
 				
 				$template->pparse("body");
@@ -748,10 +748,10 @@ else
 					// Unable to open the file writeable do something here as an attempt
 					// to get around that...
 					//
-					$s_hidden_fields = '<input type="hidden" name="theme_info" value="' . htmlspecialchars($theme_data) . '" />';
-					$s_hidden_fields .= '<input type="hidden" name="send_file" value="1" /><input type="hidden" name="mode" value="export" />';
+					$s_fields = '<input type="hidden" name="theme_info" value="' . htmlspecialchars($theme_data) . '" />';
+					$s_fields .= '<input type="hidden" name="send_file" value="1" /><input type="hidden" name="mode" value="export" />';
 					
-					$download_form = '<form action="' . append_sid('admin_styles.php') . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $s_hidden_fields;
+					$download_form = '<form action="' . append_sid('admin_styles.php') . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $s_fields;
 	
 					$template->set_filenames(array(
 						"body" => "message_body.tpl")

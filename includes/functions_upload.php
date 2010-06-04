@@ -45,7 +45,7 @@ function image_check_type(&$type)
 		break;
 		
 		default:
-			message_die(GENERAL_ERROR, $lang['image_filetype_wrong'], '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, $lang['image_filetype_wrong'], '', __LINE__, __FILE__);
 		break;
 	}
 
@@ -104,7 +104,7 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 		{
 			$error_msg = sprintf($lang_system_filesize, round($image_system_filesize / 1024));
 			
-			message_die(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
 		}
 
 		list($width, $height, $type) = @getimagesize($image_filename);
@@ -122,7 +122,7 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 			if ( $imgtype != '.gif' )
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
@@ -135,7 +135,7 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 			if ( $imgtype != '.jpg' && $imgtype != '.jpeg' )
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
@@ -144,13 +144,13 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 			if ( $imgtype != '.png' )
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
 		default:
 			@unlink($tmp_filename);
-			message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
 	
 	switch ( $image_mode )
@@ -251,7 +251,7 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 
 		if (!is_uploaded_file($image_filename))
 		{
-			message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 		}
 		
 		$move_file($image_filename, './../' . $image_path . "/$new_filename");
@@ -270,7 +270,7 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 #		
 #		$error_msg = sprintf($limagesize, $slogo_max_width, $slogo_max_height);
 			
-		message_die(GENERAL_ERROR, 'einfach ein fehler -.-\'' . $error_msg, '', __LINE__, __FILE__);
+		message(GENERAL_ERROR, 'einfach ein fehler -.-\'' . $error_msg, '', __LINE__, __FILE__);
 	}
 }
 

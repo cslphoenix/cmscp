@@ -86,7 +86,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 					AND k.key_id = '" . md5($sessiondata['autologinid']) . "'";
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
 			}
 
 			$userdata = $db->sql_fetchrow($result);
@@ -105,7 +105,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 					AND user_active = 1';
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
 			}
 
 			$userdata = $db->sql_fetchrow($result);
@@ -133,7 +133,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 			WHERE user_id = ' . (int) $user_id;
 		if (!($result = $db->sql_query($sql)))
 		{
-			message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
 		}
 
 		$userdata = $db->sql_fetchrow($result);
@@ -157,14 +157,14 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 	}
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Could not obtain ban information', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Could not obtain ban information', '', __LINE__, __FILE__, $sql);
 	}
 
 	if ( $ban_info = $db->sql_fetchrow($result) )
 	{
 		if ( $ban_info['ban_ip'] || $ban_info['ban_userid'] || $ban_info['ban_email'] )
 		{
-			message_die(CRITICAL_MESSAGE, 'You_been_banned');
+			message(CRITICAL_MESSAGE, 'You_been_banned');
 		}
 	}
 
@@ -182,9 +182,9 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 		$sql = "INSERT INTO " . SESSIONS . "
 			(session_id, session_user_id, session_start, session_time, session_ip, session_page, session_logged_in, session_admin)
 			VALUES ('$session_id', $user_id, $current_time, $current_time, '$user_ip', $page_id, $login, $admin)";
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Error creating new session', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Error creating new session', '', __LINE__, __FILE__, $sql);
 		}
 	}
 
@@ -197,9 +197,9 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 			$sql = "UPDATE " . USERS . " 
 				SET user_session_time = $current_time, user_session_page = $page_id, user_lastvisit = $last_visit
 				WHERE user_id = $user_id";
-			if ( !$db->sql_query($sql) )
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'Error updating last visit time', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'Error updating last visit time', '', __LINE__, __FILE__, $sql);
 			}
 		}
 
@@ -224,9 +224,9 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 					VALUES ('" . md5($auto_login_key) . "', $user_id, '$user_ip', $current_time)";
 			}
 
-			if ( !$db->sql_query($sql) )
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'Error updating session key', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'Error updating session key', '', __LINE__, __FILE__, $sql);
 			}
 			
 			$sessiondata['autologinid'] = $auto_login_key;
@@ -327,7 +327,7 @@ function session_pagestart($user_ip, $thispage_id)
 		*/
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Error doing DB query userdata row fetch', '', __LINE__, __FILE__, $sql);
 		}
 
 		$userdata = $db->sql_fetchrow($result);
@@ -360,9 +360,9 @@ function session_pagestart($user_ip, $thispage_id)
 					$sql = "UPDATE " . SESSIONS . " 
 						SET session_time = $current_time, session_page = $thispage_id$update_admin
 						WHERE session_id = '" . $userdata['session_id'] . "'";
-					if ( !$db->sql_query($sql) )
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(CRITICAL_ERROR, 'Error updating sessions table', '', __LINE__, __FILE__, $sql);
+						message(CRITICAL_ERROR, 'Error updating sessions table', '', __LINE__, __FILE__, $sql);
 					}
 
 					if ( $userdata['user_id'] != ANONYMOUS )
@@ -370,9 +370,9 @@ function session_pagestart($user_ip, $thispage_id)
 						$sql = "UPDATE " . USERS . " 
 							SET user_session_time = $current_time, user_session_page = $thispage_id
 							WHERE user_id = " . $userdata['user_id'];
-						if ( !$db->sql_query($sql) )
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(CRITICAL_ERROR, 'Error updating sessions table', '', __LINE__, __FILE__, $sql);
+							message(CRITICAL_ERROR, 'Error updating sessions table', '', __LINE__, __FILE__, $sql);
 						}
 					}
 
@@ -401,7 +401,7 @@ function session_pagestart($user_ip, $thispage_id)
 
 	if ( !($userdata = session_begin($user_id, $user_ip, $thispage_id, TRUE)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error creating user session', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error creating user session', '', __LINE__, __FILE__, $sql);
 	}
 
 	return $userdata;
@@ -436,9 +436,9 @@ function session_end($session_id, $user_id)
 	$sql = 'DELETE FROM ' . SESSIONS . " 
 		WHERE session_id = '$session_id' 
 			AND session_user_id = $user_id";
-	if ( !$db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error removing user session', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error removing user session', '', __LINE__, __FILE__, $sql);
 	}
 
 	//
@@ -450,9 +450,9 @@ function session_end($session_id, $user_id)
 		$sql = 'DELETE FROM ' . SESSIONS_KEYS . '
 			WHERE user_id = ' . (int) $user_id . "
 				AND key_id = '$autologin_key'";
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Error removing auto-login key', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Error removing auto-login key', '', __LINE__, __FILE__, $sql);
 		}
 	}
 
@@ -465,11 +465,11 @@ function session_end($session_id, $user_id)
 		WHERE user_id = ' . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error obtaining user details', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error obtaining user details', '', __LINE__, __FILE__, $sql);
 	}
 	if ( !($userdata = $db->sql_fetchrow($result)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error obtaining user details', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error obtaining user details', '', __LINE__, __FILE__, $sql);
 	}
 	$db->sql_freeresult($result);
 
@@ -493,9 +493,9 @@ function session_clean($session_id)
 	$sql = 'DELETE FROM ' . SESSIONS . ' 
 		WHERE session_time < ' . (time() - (int) $config['session_length']) . " 
 			AND session_id <> '$session_id'";
-	if ( !$db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error clearing sessions table', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error clearing sessions table', '', __LINE__, __FILE__, $sql);
 	}
 
 	//
@@ -527,18 +527,18 @@ function session_reset_keys($user_id, $user_ip)
 		WHERE user_id = ' . (int) $user_id . "
 			$key_sql";
 
-	if ( !$db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error removing auto-login keys', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error removing auto-login keys', '', __LINE__, __FILE__, $sql);
 	}
 
 	$where_sql = 'session_user_id = ' . (int) $user_id;
 	$where_sql .= ($user_id == $userdata['user_id']) ? " AND session_id <> '" . $userdata['session_id'] . "'" : '';
 	$sql = 'DELETE FROM ' . SESSIONS . "
 		WHERE $where_sql";
-	if ( !$db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Error removing user session(s)', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Error removing user session(s)', '', __LINE__, __FILE__, $sql);
 	}
 
 	if ( !empty($key_sql) )
@@ -551,9 +551,9 @@ function session_reset_keys($user_id, $user_ip)
 			SET last_ip = '$user_ip', key_id = '" . md5($auto_login_key) . "', last_login = $current_time
 			WHERE key_id = '" . md5($userdata['session_key']) . "'";
 		
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Error updating session key', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Error updating session key', '', __LINE__, __FILE__, $sql);
 		}
 
 		// And now rebuild the cookie

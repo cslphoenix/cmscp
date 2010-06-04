@@ -61,7 +61,7 @@ function select_box($type, $class, $field_id, $field_name, $default = '', $switc
 			
 		default:
 			
-			message_die(GENERAL_ERROR, 'Error', '');
+			message(GENERAL_ERROR, 'Error', '');
 			
 			break;
 	}
@@ -69,7 +69,7 @@ function select_box($type, $class, $field_id, $field_name, $default = '', $switc
 	$sql = 'SELECT ' . $field_id . ', ' . $field_name . ' FROM ' . $table . $where . $order;
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$data = $db->sql_fetchrowset($result);
 	
@@ -115,76 +115,19 @@ function _select_newscat($default)
 {
 	global $db;
 		
-	$sql = 'SELECT * FROM ' . NEWS_CATEGORY . " ORDER BY news_category_order";
+	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY newscat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select name="news_category_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select = '<select name="newscat_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
 	$func_select .= '<option value="0">----------</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['news_category_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['news_category_image'] . '"' . $selected . '>' . $row['news_category_title'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
-
-//
-//	Rang (Page/Forum/Team) Select
-//
-//	type:			1 = Page / 2 = Forum / 3 = Team
-//
-function _select_rank($default, $type)
-{
-	global $db;
-	
-	$order = ($type == '2') ? 'rank_order' : 'rank_id';
-	
-	$sql = 'SELECT rank_id, rank_title, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
-	if (!($result = $db->sql_query($sql)))
-	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
-	}
-
-	$func_select = '<select class="select" name="rank_id">';
-	$func_select .= '<option value="0">----------</option>';
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['rank_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
-
-//
-//	Game Select
-//
-//	default: id
-//
-function _select_game($default)
-{
-	global $db, $lang;
-	
-	$sql = 'SELECT * FROM ' . GAMES . ' WHERE game_id != -1 ORDER BY game_order';
-	if (!($result = $db->sql_query($sql)))
-	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
-	}
-	
-	$func_select = '<select class="select" name="game_image" onchange="update_image(this.options[selectedIndex].value);">';
-	$func_select .= '<option value="">&raquo; ' . $lang['game_select'] . '</option>';
-	
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['game_id'] == $default ) ? 'selected="selected"' : '';
-		$func_select .= '<option value="' . $row['game_image'] . '" ' . $selected . ' >&raquo; ' . $row['game_name'] . '&nbsp;</option>';
+		$selected = ( $row['newscat_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['newscat_image'] . '"' . $selected . '>' . $row['newscat_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -207,7 +150,7 @@ function _select_match($default, $type, $class)
 	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$func_select = '<select class="' . $class . '" name="match_id">';
@@ -395,8 +338,8 @@ function page_mode_select($default, $select_name = 'page_disable_mode')
 		$default = explode(',', $default);
 	}
 
-	$disable_select = '<select class="select" name="' . $select_name . '[]" multiple="multiple">';
-	foreach ($lang['page_disable_mode_opt'] as $const => $name)
+	$disable_select = '<select class="select" name="' . $select_name . '[]" id="' . $select_name . '" multiple="multiple">';
+	foreach ( $lang['page_disable_mode_opt'] as $const => $name)
 	{
 		$selected = (in_array($const, $default)) ? ' selected="selected"' : '';
 		$disable_select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';

@@ -47,8 +47,8 @@ else
 	
 	$start			= ( request('start') ) ? request('start') : 0;
 	$start			= ( $start < 0 ) ? 0 : $start;
-	$sort			= ( request('sort') ) ? request('sort') : 'bugtracker_status_all';
-	$bugtracker_id	= request(POST_BUGTRACKER_URL);
+	$sort			= ( request('sort', 1) ) ? request('sort', 1) : 'bugtracker_status_all';
+	$bugtracker_id	= request(POST_BUGTRACKER_URL, 0);
 	$mode			= request('mode');
 	$move			= request('move');
 	$confirm		= request('confirm');

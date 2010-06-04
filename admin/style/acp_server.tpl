@@ -54,7 +54,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_SERVER_ACTION}" method="post">{L_SERVER_HEAD}</a></li>
+				<li><a href="{S_SERVER_ACTION}">{L_SERVER_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_SERVER_NEW_EDIT}</a></li>
 			</ul>
 		</div>
@@ -129,7 +129,7 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

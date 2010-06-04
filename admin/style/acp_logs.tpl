@@ -72,7 +72,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_LOG_ACTION}" method="post">{L_LOG_TITLE}</a></li>
+				<li><a href="{S_LOG_ACTION}">{L_LOG_TITLE}</a></li>
 				<li id="active"><a href="#" id="current">{L_LOG_ERROR}</a></li>
 			</ul>
 		</div>

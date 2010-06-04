@@ -153,14 +153,14 @@ if( !get_magic_quotes_gpc() )
 // malicious rewriting of language and otherarray values via
 // URI params
 //
-$config = array();
-$settings = array();
-$userdata = array();
-$theme = array();
-$images = array();
-$lang = array();
-$nav_links = array();
-$dss_seeded = false;
+$config		= array();
+$settings	= array();
+$userdata	= array();
+$theme		= array();
+$images		= array();
+$lang		= array();
+$nav_links	= array();
+$dss_seeded	= false;
 $gen_simple_header = FALSE;
 
 include($root_path . 'includes/config.php');
@@ -193,15 +193,13 @@ if ( !defined('IN_ADMIN') )
 {
 	if ( defined('CACHE') )
 	{
-		
-		
 		$sCacheNamea = 'config';
 		if ( ($config = $oCache -> readCache($sCacheNamea)) === false)
 		{
 			$sql = 'SELECT * FROM ' . CONFIG;
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 			}
 			
 			while ( $row = $db->sql_fetchrow($result) )
@@ -217,7 +215,7 @@ if ( !defined('IN_ADMIN') )
 			$sql = 'SELECT * FROM ' . SETTINGS;
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			while ( $row = $db->sql_fetchrow($result) )
@@ -226,13 +224,29 @@ if ( !defined('IN_ADMIN') )
 			}
 			$oCache -> writeCache($sCacheNameb, $settings);
 		}
+		
+		$sCacheNameb = 'gallery_settings';
+		if ( ($gallery_settings = $oCache -> readCache($sCacheNameb)) === false)
+		{
+			$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
+			if (!($result = $db->sql_query($sql)))
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$gallery_settings[$row['config_name']] = $row['config_value'];
+			}
+			$oCache -> writeCache($sCacheNameb, $gallery_settings);
+		}
 	}
 	else
 	{
 		$sql = 'SELECT * FROM ' . CONFIG;
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 		}
 		
 		while ( $row = $db->sql_fetchrow($result) )
@@ -243,12 +257,23 @@ if ( !defined('IN_ADMIN') )
 		$sql = 'SELECT * FROM ' . SETTINGS;
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
 			$settings[$row['settings_name']] = $row['settings_value'];
+		}
+		
+		$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$gallery_settings[$row['config_name']] = $row['config_value'];
 		}
 	}
 }
@@ -257,7 +282,7 @@ else
 	$sql = 'SELECT * FROM ' . CONFIG;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 	}
 	
 	while ( $row = $db->sql_fetchrow($result) )
@@ -268,18 +293,29 @@ else
 	$sql = 'SELECT * FROM ' . SETTINGS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Could not query settings information', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
 		$settings[$row['settings_name']] = $row['settings_value'];
 	}
+	
+	$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$gallery_settings[$row['config_name']] = $row['config_value'];
+	}
 }
 
-if (file_exists('install') || file_exists('contrib'))
+if ( file_exists('install') || file_exists('contrib') )
 {
-	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
+	message(GENERAL_MESSAGE, 'Please_remove_install_contrib');
 }
 
 ?>

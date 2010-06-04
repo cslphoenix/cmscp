@@ -49,11 +49,11 @@ else
 	include('./pagestart.php');
 	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/logs.php');
 	
-	$start		= ( request('start') ) ? request('start') : 0;
+	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
-	$log_id		= request(POST_LOG_URL);
-	$mode		= request('mode');
-	$confirm	= request('confirm');
+	$log_id		= request(POST_LOG_URL, 0);
+	$mode		= request('mode', 1);
+	$confirm	= request('confirm', 1);
 	
 	if ($userdata['user_level'] != ADMIN )
 	{
@@ -100,7 +100,7 @@ else
 					$error_sql_store	= $log_entry[$i]['error_sql_store'];
 					$error_file			= str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $log_entry[$i]['error_file']);
 					$error_file_line	= $log_entry[$i]['error_file_line'];
-					$error_time			= create_date($config['default_dateformat'], $log_entry[$i]['error_time'], $config['board_timezone']);
+					$error_time			= create_date($config['default_dateformat'], $log_entry[$i]['error_time'], $config['page_timezone']);
 					
 					$template->assign_block_vars('error.error_row', array(
 						'CLASS'		=> $class,

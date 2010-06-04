@@ -29,8 +29,7 @@ if( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['main']['set']		= $filename;
-//		$module['main']['set_ftp']	= $filename . "?mode=ftp";
+		$module['_headmenu_main']['_submenu_settings'] = $filename;
 	}
 	
 	return;
@@ -39,32 +38,27 @@ else
 {
 	define('IN_CMS', true);
 
-	$root_path = './../';
+	$root_path	= './../';
+	$current	= '_submenu_settings';
+	
 	require('./pagestart.php');
-//	include($root_path . 'includes/functions_selects.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
+	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/settings.php');
+	
+	$sort = ( request('sort', 1) ) ? request('sort', 1) : 'settings_default';
 
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		message(GENERAL_ERROR, $lang['auth_fail']);
 	}
 	
-	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
-	{
-		$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-	}
-	else
-	{
-		$mode = '';
-	}
-	
-	function _select_path($default='')
+	function _select_path($default = '')
 	{
 		global $root_path, $settings;
 		
 		$paths = array (
-			$settings['path_game'],
+			$settings['path_games'],
 			$settings['path_ranks'],
 			$settings['path_team_logo'],
 			$settings['path_team_logos'],
@@ -84,192 +78,161 @@ else
 		return $select_path;	
 	}
 	
-	function _select_perms($default='')
+	$s_sort = '<select class="postselect" name="sort" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
+	foreach ( $lang['settings_option'] as $key => $value )
 	{
-		global $lang;
-		
-		$perms = array (
-			'777'	=> '777',
-			'755'	=> '755',
-			'644'	=> '644',
-		);
-		
-		$select_perm = '';
-		$select_perm .= '<select name="perms" class="post">';
-		foreach ($perms as $perm)
+		$selected = ( $sort == $key ) ? ' selected="selected"' : '';
+		$s_sort .= '<option value="' . $key . '"' . $selected . '>&raquo;&nbsp;' . $value . '&nbsp;</option>';
+	}
+	$s_sort .= '</select>';
+	
+	$template->set_filenames(array('body' => 'style/acp_settings.tpl'));
+	$template->assign_block_vars($sort, array());
+	
+	$sql = 'SELECT * FROM ' . CONFIG;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	else
+	{
+		while ( $con = $db->sql_fetchrow($result) )
 		{
-			$selected = ( $perm == $default ) ? ' selected="selected"' : '';
-			$select_perm .= '<option value="' . $perm . '" ' . $selected . '>&raquo; ' . $perm . '&nbsp;</option>';
+			$config_name	= $con['config_name'];
+			$config_value	= $con['config_value'];
+			
+			$old[$config_name] = ( isset($_POST['submit']) )		? str_replace("'", "\'", $config_value) : $config_value;
+			$new[$config_name] = ( isset($_POST[$config_name]) )	? $_POST[$config_name] : $old[$config_name];
+
+			if ( $config_name == 'cookie_name' )
+			{
+				$new['cookie_name'] = str_replace('.', '_', $new['cookie_name']);
+			}
+	
+			if ( $config_name == 'server_name' )
+			{
+				$new['server_name'] = str_replace('http://', '', $new['server_name']);
+			}
+	
+#			if ($config_name == 'avatar_path')
+#			{
+#				$new['avatar_path'] = trim($new['avatar_path']);
+#				if (strstr($new['avatar_path'], "\0") || !is_dir($phpbb_root_path . $new['avatar_path']) || !is_writable($phpbb_root_path . $new['avatar_path']))
+#				{
+#					$new['avatar_path'] = $old['avatar_path'];
+#				}
+#			}
+
+			if ( isset($_POST['submit']) )
+			{
+				if ( $config_name == 'page_disable_mode' && is_array($new['page_disable_mode']) )
+				{
+					$new[$config_name] = implode(',', $new[$config_name]);
+				}
+				
+				$sql = "UPDATE " . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new[$config_name]) . "' WHERE config_name = '$config_name'";
+				if( !$db->sql_query($sql) )
+				{
+					message(GENERAL_ERROR, 'SQL Error: ' . $config_name, '', __LINE__, __FILE__, $sql);
+				}
+			}
 		}
-		$select_perm .= '</select>';
 		
-		return $select_perm;	
+		if ( isset($_POST['submit']) )
+		{
+			$oCache -> sCachePath = './../cache/';
+			$oCache -> deleteCache('config');
+			$oCache -> deleteCache('settings');
+	
+			$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
+			message(GENERAL_MESSAGE, $message);
+		}
 	}
 	
-	$show_index = '';
 	
-	if ( !empty($mode) )
-	{
-		switch ( $mode )
-		{
-			case 'ftp':
-				
-				$template->set_filenames(array('body' => 'style/acp_set.tpl'));
-				$template->assign_block_vars('ftp', array());
-				
-				$server = $_SERVER['HTTP_HOST'];
-				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="set_ftp" />';
-				
-				$template->assign_vars(array(
-											 
-					'L_SET_HEAD'		=> $lang['set_head'],
-					'L_SET_EXPLAIN'		=> $lang['set_explain'],
-					'L_SET_FTP'			=> $lang['set_ftp'],
-					'L_SET_FTP_EXPLAIN'	=> $lang['set_ftp_explain'],
-					
-					'L_SUBMIT'	=> $lang['common_submit'],
-					'L_RESET'	=> $lang['common_reset'],
-
-					
-					'SERVER'			=> $_SERVER['HTTP_HOST'],
-					'PORT'				=> '21',
-					
-					'S_PATH_PAGE'		=> _select_path(),
-					'S_PATH_PERMS'		=> _select_perms(),
-					
-					'S_FIELDS'	=> $s_hidden_fields,
-					'S_SET_ACTION'		=> append_sid('admin_set.php'),
-				));
-				
-				
-				$template->pparse('body');
-				
-				break;
-					
-			case 'set_ftp':
-			
-				$host	= $HTTP_POST_VARS['server'];
-				$port	= $HTTP_POST_VARS['port'];
-				$user	= $HTTP_POST_VARS['user'];
-				$pass	= $HTTP_POST_VARS['pass'];
-				$path	= $HTTP_POST_VARS['path'];
-				$perms	= $HTTP_POST_VARS['perms'];
-			
-				set_chmod($host, $port, $user, $pass, $root_path . $path, $file, $perms);
-			
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SET, 'ACP_SET_CHMOD');
-				
-				$show_index = TRUE;
-			
-				break;
-
-			default:
-				message(GENERAL_ERROR, $lang['no_mode']);
-				break;
-		}
 	
-		if ( $show_index != TRUE )
-		{
-			include('./page_footer_admin.php');
-			exit;
-		}
-	}
-
 	
 	//
 	//	_config Data
 	//
-	$sql = 'SELECT * FROM ' . CONFIG;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
-	}
-	else
-	{
-		while( $row_config = $db->sql_fetchrow($result) )
-		{
-			$config_name	= $row_config['config_name'];
-			$config_value	= $row_config['config_value'];
-			
-			$default_config[$config_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
-			
-			$new_config[$config_name] = ( isset($HTTP_POST_VARS[$config_name]) ) ? $HTTP_POST_VARS[$config_name] : $default_config[$config_name];
+//	$sql = 'SELECT * FROM ' . CONFIG;
+//	if ( !($result = $db->sql_query($sql)) )
+//	{
+//		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+//	}
+//	else
+//	{
+//		while( $row_config = $db->sql_fetchrow($result) )
+//		{
+//			$config_name	= $row_config['config_name'];
+//			$config_value	= $row_config['config_value'];
+//			
+//			$default_config[$config_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
+//			
+//			$new_config[$config_name] = ( isset($HTTP_POST_VARS[$config_name]) ) ? $HTTP_POST_VARS[$config_name] : $default_config[$config_name];
+//	
+//			if ($config_name == 'cookie_name')
+//			{
+//				$new_config['cookie_name'] = str_replace('.', '_', $new_config['cookie_name']);
+//			}
+//	
+//			// Attempt to prevent a common mistake with this value,
+//			// http:// is the protocol and not part of the server name
+//			if ($config_name == 'server_name')
+//			{
+//				$new_config['server_name'] = str_replace('http://', '', $new_config['server_name']);
+//			}
+//	
+//			if( isset($HTTP_POST_VARS['submit']) )
+//			{
+//				if ($config_name == 'page_disable_mode' && is_array($new_config['page_disable_mode']))
+//				{
+//					$new_config[$config_name] = implode(',', $new_config[$config_name]);
+//				}
+//				
+//				$sql = 'UPDATE ' . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
+//				if ( !($result = $db->sql_query($sql)) )
+//				{
+//					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
+//				}
+//			}
+//		}
+//	}
+//	
+//	//
+//	//	_settings Data
+//	//
+//	$sql = 'SELECT * FROM ' . SETTINGS;
+//	if ( !($result = $db->sql_query($sql)) )
+//	{
+//		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+//	}
+//	else
+//	{
+//		while( $row_settings = $db->sql_fetchrow($result) )
+//		{
+//			$settings_name = $row_settings['settings_name'];
+//			$settings_value = $row_settings['settings_value'];
+//			
+//			$default_settings[$settings_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $settings_value) : $settings_value;
+//			
+//			$new_settings[$settings_name] = ( isset($HTTP_POST_VARS[$settings_name]) ) ? $HTTP_POST_VARS[$settings_name] : $default_settings[$settings_name];
+//
+//			if( isset($HTTP_POST_VARS['submit']) )
+//			{
+//				$sql = 'UPDATE ' . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
+//				if ( !($result = $db->sql_query($sql)) )
+//				{
+//					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
+//				}
+//			}
+//		}
+//	}
 	
-			if ($config_name == 'cookie_name')
-			{
-				$new_config['cookie_name'] = str_replace('.', '_', $new_config['cookie_name']);
-			}
-	
-			// Attempt to prevent a common mistake with this value,
-			// http:// is the protocol and not part of the server name
-			if ($config_name == 'server_name')
-			{
-				$new_config['server_name'] = str_replace('http://', '', $new_config['server_name']);
-			}
-	
-			if( isset($HTTP_POST_VARS['submit']) )
-			{
-				if ($config_name == 'page_disable_mode' && is_array($new_config['page_disable_mode']))
-				{
-					$new_config[$config_name] = implode(',', $new_config[$config_name]);
-				}
-				
-				$sql = 'UPDATE ' . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
-				}
-			}
-		}
-	}
-	
-	//
-	//	_settings Data
-	//
-	$sql = 'SELECT * FROM ' . SETTINGS;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
-	}
-	else
-	{
-		while( $row_settings = $db->sql_fetchrow($result) )
-		{
-			$settings_name = $row_settings['settings_name'];
-			$settings_value = $row_settings['settings_value'];
-			
-			$default_settings[$settings_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $settings_value) : $settings_value;
-			
-			$new_settings[$settings_name] = ( isset($HTTP_POST_VARS[$settings_name]) ) ? $HTTP_POST_VARS[$settings_name] : $default_settings[$settings_name];
-
-			if( isset($HTTP_POST_VARS['submit']) )
-			{
-				$sql = 'UPDATE ' . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
-				}
-			}
-		}
-	}
-	
-	if (isset($HTTP_POST_VARS['submit']))
-	{
-		$oCache -> sCachePath = './../cache/';
-		$oCache -> deleteCache('config');
-		$oCache -> deleteCache('settings');
-	
-		$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_set.php') . '">', '</a>');
-		message(GENERAL_MESSAGE, $message);
-	}
-	
-	$template->set_filenames(array('body' => 'style/acp_set.tpl'));
-	$template->assign_block_vars('display', array());
 	
 //	$style_select = style_select($new['default_style'], 'default_style', "../templates");
 //	$lang_select = language_select($new['default_lang'], 'default_lang', "language");
-//	$timezone_select = tz_select($new['board_timezone'], 'board_timezone');
+//	$timezone_select = tz_select($new['page_timezone'], 'page_timezone');
 	
 	
 /*	
@@ -329,117 +292,130 @@ else
 	// Escape any quotes in the site description for proper display in the text
 	// box on the admin page 
 	//
-	$new_config['site_description'] = str_replace('"', '&quot;', $new_config['site_description']);
-	$new_config['sitename'] = str_replace('"', '&quot;', strip_tags($new_config['sitename']));
-	
+	$config['page_desc'] = str_replace('"', '&quot;', $config['page_desc']);
+	$config['page_name'] = str_replace('"', '&quot;', strip_tags($config['page_name']));
 	
 	$template->assign_vars(array(
-		
-		'L_SET_HEAD'				=> $lang['set_head'],
-		'L_SET_EXPLAIN'				=> $lang['set_explain'],
-		'L_SET_FTP'					=> $lang['set_ftp'],
-		
-		'L_GENERAL_SETTINGS'			=> $lang['settings_general'],
-		'L_GENERAL_SETTINGS_EXPLAIN'	=> $lang['settings_general_explain'],
-		'L_GENERAL_UPLOAD'				=> $lang['settings_upload'],
-		'L_GENERAL_UPLOAD_EXPLAIN'		=> $lang['settings_upload_explain'],
-		'L_TEAM_LOGO_SETTINGS'			=> $lang['settings_team_logo'],
-		'L_TEAM_LOGO_SETTINGS_EXPLAIN'	=> $lang['settings_team_logo_explain'],
+								 
+		'L_HEAD'				=> $lang['set_head'],
+		'L_EXPLAIN'				=> $lang['set_explain'],
+								 
+		'L_DEFAULT'					=> $lang['site_default'],
+		'L_DEFAULT_EXPLAIN'			=> $lang['site_default_explain'],
+		'L_UPLOAD'					=> $lang['site_upload'],
+		'L_UPLOAD_EXPLAIN'			=> $lang['site_upload_explain'],
 		
 		'L_SERVER_NAME'				=> $lang['server_name'],
 		'L_SERVER_NAME_EXPLAIN'		=> $lang['server_name_explain'],
 		'L_SERVER_PORT'				=> $lang['server_port'],
 		'L_SERVER_PORT_EXPLAIN'		=> $lang['server_port_explain'],
-		'L_SCRIPT_PATH'				=> $lang['script_pfad'],
-		'L_SCRIPT_PATH_EXPLAIN'		=> $lang['script_pfad_explain'],
-		'L_SITE_NAME'				=> $lang['site_name'],
-		'L_SITE_NAME_EXPLAIN'		=> $lang['site_name_explain'],
-		'L_SITE_DESCRIPTION'		=> $lang['site_description'],
+		'L_PAGE_PATH'				=> $lang['page_path'],
+		'L_PAGE_PATH_EXPLAIN'		=> $lang['page_path_explain'],
+		'L_PAGE_NAME'				=> $lang['page_name'],
+		'L_PAGE_NAME_EXPLAIN'		=> $lang['page_name_explain'],
+		'L_PAGE_DESC'				=> $lang['page_desc'],
 		'L_DISABLE_PAGE'			=> $lang['disable_page'],
-		'L_DISABLE_PAGE_EXPLAIN'	=> $lang['disable_page_explain'],
-		'L_DISABLE_PAGE_REASON'		=> $lang['disable_page_reason'],
 		'L_DISABLE_PAGE_MODE'		=> $lang['disable_page_mode'],
+		'L_DISABLE_PAGE_REASON'		=> $lang['disable_page_reason'],
+		'L_DISABLE_PAGE_EXPLAIN'	=> $lang['disable_page_explain'],
+		'L_EMAIL_ON-OFF'			=> $lang['email_enabled'],
+		'L_EMAIL_ON-OFF_EXPLAIN'	=> $lang['email_enabled_explain'],
 		
-		'SERVER_NAME'			=> $new_config['server_name'], 
-		'SERVER_PORT'			=> $new_config['server_port'], 
-		'SCRIPT_PATH'			=> $new_config['script_path'], 
-		'SITENAME'				=> $new_config['sitename'],
-		'SITE_DESCRIPTION'		=> $new_config['site_description'], 
-		'DISABLE_REASON'		=> $new_config['page_disable_msg'], 
+		'L_PATH_GAMES'				=> $lang['path_games'],
+		'L_PATH_GAMES_EXPLAIN'		=> $lang['path_games_explain'],
+		'L_PATH_RANKS'				=> $lang['path_ranks'],
+		'L_PATH_RANKS_EXPLAIN'		=> $lang['path_ranks_explain'],
+		'L_PATH_NEWSCAT'			=> $lang['path_newscat'],
+		'L_PATH_NEWSCAT_EXPLAIN'	=> $lang['path_newscat_explain'],
+		'L_PATH_GALLERY'			=> $lang['path_gallery'],
+		'L_PATH_GALLERY_EXPLAIN'	=> $lang['path_gallery_explain'],
+		'L_PATH_GROUPS'				=> $lang['path_groups'],
+		'L_PATH_GROUPS_EXPLAIN'		=> $lang['path_groups_explain'],
+		'L_PATH_MATCHS'				=> $lang['path_matchs'],
+		'L_PATH_MATCHS_EXPLAIN'		=> $lang['path_matchs_explain'],
+		'L_PATH_TEAMS'				=> $lang['path_teams'],
+		'L_PATH_TEAMS_EXPLAIN'		=> $lang['path_teams_explain'],
+		'L_PATH_USERS'				=> $lang['path_users'],
+		'L_PATH_USERS_EXPLAIN'		=> $lang['path_users_explain'],
 		
-		"L_EMAIL_ON-OFF" => $lang['email_enabled'],
-		"L_EMAIL_ON-OFF_EXPLAIN" => $lang['email_enabled_explain'],
+		'SERVER_NAME'				=> $config['server_name'], 
+		'SERVER_PORT'				=> $config['server_port'], 
+		'PAGE_PATH'					=> $config['page_path'], 
+		'PAGE_NAME'					=> $config['page_name'],
+		'PAGE_DESC'					=> $config['page_desc'], 
+		'DISABLE_REASON'			=> $config['page_disable_msg'], 
+		'PAGE_DISABLE_MODE'			=> page_mode_select($config['page_disable_mode']),
+		'S_DISABLE_PAGE_YES'		=> ( $config['page_disable'] ) ? 'checked="checked"' : '',
+		'S_DISABLE_PAGE_NO'			=> ( !$config['page_disable'] ) ? 'checked="checked"' : '',
+		'EMAIL_ON'					=> ( $config['email_enabled'] ) ? 'checked="checked"' : '',
+		'EMAIL_OFF'					=> ( !$config['email_enabled'] ) ? 'checked="checked"' : '',
+		
+		'PATH_GAMES'				=> $settings['path_games'],
+		'PATH_GAMES_CHECKED'		=> ( is_writable($root_path . $settings['path_games']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
+		'PATH_RANKS'				=> $settings['path_ranks'],
+		'PATH_RANKS_CHECKED'		=> ( is_writable($root_path . $settings['path_ranks']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
+		'PATH_NEWSCAT'				=> $settings['path_newscat'],
+		'PATH_NEWSCAT_CHECKED'		=> ( is_writable($root_path . $settings['path_newscat']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
+		'PATH_GALLERY'				=> $settings['path_gallery'],
+		'PATH_GALLERY_CHECKED'		=> ( is_writable($root_path . $settings['path_gallery']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
+		'PATH_GROUPS'				=> $settings['path_groups'],
+		'PATH_GROUPS_CHECKED'		=> ( is_writable($root_path . $settings['path_groups']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
+		'PATH_MATCHS'				=> $settings['path_matchs'],
+		'PATH_MATCHS_CHECKED'		=> ( is_writable($root_path . $settings['path_matchs']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
+		'PATH_TEAMS'				=> $settings['path_teams'],
+		'PATH_TEAMS_CHECKED'		=> ( is_writable($root_path . $settings['path_teams']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
+		'PATH_USERS'				=> $settings['path_users'],
+		'PATH_USERS_CHECKED'		=> ( is_writable($root_path . $settings['path_users']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
+		
+		
+		
+		
 	
-		"EMAIL_ON" => ( $new_config['email_enabled'] ) ? 'checked="checked"' : '',
-		"EMAIL_OFF" =>  ( !$new_config['email_enabled'] ) ? 'checked="checked"' : '',
 		
 		
-		'S_DISABLE_PAGE_YES'	=> ( $new_config['page_disable'] ) ? 'checked="checked"' : '',
-		'S_DISABLE_PAGE_NO'		=> (!$new_config['page_disable'] ) ? 'checked="checked"' : '',
-		'BOARD_DISABLE_MODE'	=> page_mode_select($new_config['page_disable_mode']),
 		
-		'L_GAMES_STORAGE_PATH'				=> $lang['games_storage'],
-		'L_GAMES_STORAGE_PATH_EXPLAIN'		=> $lang['games_storage_explain'],
-		'L_RANKS_STORAGE_PATH'				=> $lang['ranks_storage'],
-		'L_RANKS_STORAGE_PATH_EXPLAIN'		=> $lang['ranks_storage_explain'],
-		'L_TEAM_LOGO_STORAGE_PATH'			=> $lang['team_logo_storage'],
-		'L_TEAM_LOGO_STORAGE_PATH_EXPLAIN'	=> $lang['team_logo_storage_explain'],
-		'L_TEAM_LOGOS_STORAGE_PATH'			=> $lang['team_logos_storage'],
-		'L_TEAM_LOGOS_STORAGE_PATH_EXPLAIN'	=> $lang['team_logos_storage_explain'],
-		
-		'GAMES_PATH'				=> $new_settings['path_game'],
-		'GAMES_PATH_CHECKED'		=> is_writable($root_path . $new_settings['path_game']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-		'RANKS_PATH'				=> $new_settings['path_ranks'],
-		'RANKS_PATH_CHECKED'		=> is_writable($root_path . $new_settings['path_ranks']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-		'TEAM_LOGO_PATH'			=> $new_settings['path_team_logo'],
-		'TEAM_LOGO_PATH_CHECKED'	=> is_writable($root_path . $new_settings['path_team_logo']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-		'TEAM_LOGOS_PATH'			=> $new_settings['path_team_logos'],
-		'TEAM_LOGOS_PATH_CHECKED'	=> is_writable($root_path . $new_settings['path_team_logos']) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',	
-
-		'L_TEAM_LOGO_UPLOAD'				=> $lang['team_logo_upload'],
-		'L_TEAM_LOGO_UPLOAD_EXPLAIN'		=> $lang['team_logo_upload_explain'],
-		'L_TEAM_LOGO_MAX_FILESIZE'			=> $lang['team_logo_file'],
-		'L_TEAM_LOGO_MAX_FILESIZE_EXPLAIN'	=> $lang['team_logo_file_explain'],
-		'L_TEAM_LOGO_MAX_SIZE'				=> $lang['team_logo_size'],
-		'L_TEAM_LOGO_MAX_SIZE_EXPLAIN'		=> $lang['team_logo_size_explain'],
-		'L_TEAM_LOGOS_UPLOAD'				=> $lang['team_logos_upload'],
-		'L_TEAM_LOGOS_UPLOAD_EXPLAIN'		=> $lang['team_logos_upload_explain'],
-		'L_TEAM_LOGOS_MAX_FILESIZE'			=> $lang['team_logos_file'],
-		'L_TEAM_LOGOS_MAX_FILESIZE_EXPLAIN'	=> $lang['team_logos_file_explain'],
-		'L_TEAM_LOGOS_MAX_SIZE'				=> $lang['team_logos_size'],
-		'L_TEAM_LOGOS_MAX_SIZE_EXPLAIN'		=> $lang['team_logos_size_explain'],
-		
-		
-		"TEAM_LOGO_FILESIZE"		=> $new_settings['team_logo_filesize'],
-		"TEAM_LOGO_MAX_HEIGHT"		=> $new_settings['team_logo_max_height'],
-		"TEAM_LOGO_MAX_WIDTH"		=> $new_settings['team_logo_max_width'],
-		
-		"S_LOGO_UPLOAD_YES"	=> ( $new_settings['team_logo_upload'] ) ? 'checked="checked"' : '',
-		"S_LOGO_UPLOAD_NO"		=> (!$new_settings['team_logo_upload'] ) ? 'checked="checked"' : '',
-		
-		"TEAM_LOGOS_FILESIZE"		=> $new_settings['team_logos_filesize'],
-		"TEAM_LOGOS_MAX_HEIGHT"		=> $new_settings['team_logos_max_height'],
-		"TEAM_LOGOS_MAX_WIDTH"		=> $new_settings['team_logos_max_width'],	
-		
-		"S_LOGOS_UPLOAD_YES"	=> ( $new_settings['team_logos_upload'] ) ? 'checked="checked"' : '',
-		"S_LOGOS_UPLOAD_NO"	=> (!$new_settings['team_logos_upload'] ) ? 'checked="checked"' : '',
-		
-		'L_AUTOLOGIN_TIME_EXPLAIN'	=> $lang['Autologin_time_explain'],
-		'L_COOKIE_SETTINGS'			=> $lang['Cookie_settings'], 
-		'L_COOKIE_SETTINGS_EXPLAIN'	=> $lang['Cookie_settings_explain'], 
-		'L_COOKIE_DOMAIN'			=> $lang['Cookie_domain'],
-		'L_COOKIE_NAME'				=> $lang['Cookie_name'], 
-		'L_COOKIE_PATH'				=> $lang['Cookie_path'], 
-		'L_COOKIE_SECURE'			=> $lang['Cookie_secure'], 
-		'L_COOKIE_SECURE_EXPLAIN'	=> $lang['Cookie_secure_explain'], 
-		'L_SESSION_LENGTH'			=> $lang['Session_length'], 
-		
-		'COOKIE_DOMAIN'				=> $new_config['cookie_domain'], 
-		'COOKIE_NAME'				=> $new_config['cookie_name'], 
-		'COOKIE_PATH'				=> $new_config['cookie_path'], 
-		'SESSION_LENGTH'			=> $new_config['session_length'], 
-		'S_COOKIE_SECURE_ENABLED'	=> ( $new_config['cookie_secure'] ) ? 'checked="checked"' : '', 
-		'S_COOKIE_SECURE_DISABLED'	=> (!$new_config['cookie_secure'] ) ? 'checked="checked"' : '', 
+//		'L_TEAM_LOGO_UPLOAD'				=> $lang['team_logo_upload'],
+//		'L_TEAM_LOGO_UPLOAD_EXPLAIN'		=> $lang['team_logo_upload_explain'],
+//		'L_TEAM_LOGO_MAX_FILESIZE'			=> $lang['team_logo_file'],
+//		'L_TEAM_LOGO_MAX_FILESIZE_EXPLAIN'	=> $lang['team_logo_file_explain'],
+//		'L_TEAM_LOGO_MAX_SIZE'				=> $lang['team_logo_size'],
+//		'L_TEAM_LOGO_MAX_SIZE_EXPLAIN'		=> $lang['team_logo_size_explain'],
+//		'L_TEAM_LOGOS_UPLOAD'				=> $lang['team_logos_upload'],
+//		'L_TEAM_LOGOS_UPLOAD_EXPLAIN'		=> $lang['team_logos_upload_explain'],
+//		'L_TEAM_LOGOS_MAX_FILESIZE'			=> $lang['team_logos_file'],
+//		'L_TEAM_LOGOS_MAX_FILESIZE_EXPLAIN'	=> $lang['team_logos_file_explain'],
+//		'L_TEAM_LOGOS_MAX_SIZE'				=> $lang['team_logos_size'],
+//		'L_TEAM_LOGOS_MAX_SIZE_EXPLAIN'		=> $lang['team_logos_size_explain'],
+//		"TEAM_LOGO_FILESIZE"		=> $settings['team_logo_filesize'],
+//		"TEAM_LOGO_MAX_HEIGHT"		=> $settings['team_logo_max_height'],
+//		"TEAM_LOGO_MAX_WIDTH"		=> $settings['team_logo_max_width'],
+//		
+//		"S_LOGO_UPLOAD_YES"	=> ( $settings['team_logo_upload'] ) ? 'checked="checked"' : '',
+//		"S_LOGO_UPLOAD_NO"		=> (!$settings['team_logo_upload'] ) ? 'checked="checked"' : '',
+//		
+//		"TEAM_LOGOS_FILESIZE"		=> $settings['team_logos_filesize'],
+//		"TEAM_LOGOS_MAX_HEIGHT"		=> $settings['team_logos_max_height'],
+//		"TEAM_LOGOS_MAX_WIDTH"		=> $settings['team_logos_max_width'],	
+//		
+//		"S_LOGOS_UPLOAD_YES"	=> ( $settings['team_logos_upload'] ) ? 'checked="checked"' : '',
+//		"S_LOGOS_UPLOAD_NO"	=> (!$settings['team_logos_upload'] ) ? 'checked="checked"' : '',
+//		
+//		'L_AUTOLOGIN_TIME_EXPLAIN'	=> $lang['Autologin_time_explain'],
+//		'L_COOKIE_SETTINGS'			=> $lang['Cookie_settings'], 
+//		'L_COOKIE_SETTINGS_EXPLAIN'	=> $lang['Cookie_settings_explain'], 
+//		'L_COOKIE_DOMAIN'			=> $lang['Cookie_domain'],
+//		'L_COOKIE_NAME'				=> $lang['Cookie_name'], 
+//		'L_COOKIE_PATH'				=> $lang['Cookie_path'], 
+//		'L_COOKIE_SECURE'			=> $lang['Cookie_secure'], 
+//		'L_COOKIE_SECURE_EXPLAIN'	=> $lang['Cookie_secure_explain'], 
+//		'L_SESSION_LENGTH'			=> $lang['Session_length'], 
+//		
+//		'COOKIE_DOMAIN'				=> $config['cookie_domain'], 
+//		'COOKIE_NAME'				=> $config['cookie_name'], 
+//		'COOKIE_PATH'				=> $config['cookie_path'], 
+//		'SESSION_LENGTH'			=> $config['session_length'], 
+//		'S_COOKIE_SECURE_ENABLED'	=> ( $config['cookie_secure'] ) ? 'checked="checked"' : '', 
+//		'S_COOKIE_SECURE_DISABLED'	=> (!$config['cookie_secure'] ) ? 'checked="checked"' : '', 
 		
 		
 	
@@ -630,16 +606,10 @@ else
 		"L_ENABLED" => $lang['Enabled'], 
 		"L_DISABLED" => $lang['Disabled'], 
 		
-		"L_SUBMIT" => $lang['Submit'], 
-		"L_RESET" => $lang['Reset'], 
-		
-		"L_YES" => $lang['Yes'],
-		"L_NO" => $lang['No'],
-		
-		'S_SET_FTP'			=> append_sid('admin_set.php?mode=ftp'),
-		'S_SET_ACTION'	=> append_sid('admin_set.php'),
+		'S_SORT'			=> $s_sort,
+		'S_ACTION'			=> append_sid('admin_settings.php'),
 	));
-
+	
 	$template->pparse('body');
 
 	include('./page_footer_admin.php');

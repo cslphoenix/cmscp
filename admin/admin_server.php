@@ -180,9 +180,9 @@ else
 				$template->assign_block_vars('server_edit', array());
 				
 				//	Unsichtbare Felder für andere Infos
-				$s_hidden_fields = '';
-				$s_hidden_fields .= '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_GAMESERVER_URL . '" value="' . $server_id . '" />';
+				$s_fields = '';
+				$s_fields .= '<input type="hidden" name="mode" value="' . $new_mode . '" />';
+				$s_fields .= '<input type="hidden" name="' . POST_GAMESERVER_URL . '" value="' . $server_id . '" />';
 
 				//	Variablen zur Ausgabe
 				$template->assign_vars(array(
@@ -221,7 +221,7 @@ else
 
 					'S_LIVE'				=> _select_game($server['server_game']),
 					
-					'S_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_fields,
 					'S_ACTION'			=> append_sid('admin_server.php'),
 				));
 			

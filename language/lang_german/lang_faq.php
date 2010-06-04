@@ -97,16 +97,4 @@ $faq[] = array("Ich kann keine Privaten Nachrichten verschicken!", "Es gibt drei
 $faq[] = array("Ich erhalte dauernd ungewollte Private Nachrichten!", "In späteren Versionen wird es ein Ignorieren-System für Private Nachrichten geben. Im Moment musst du, falls du ununterbrochen unerwünschte Nachrichten von einer Person erhältst, den Administrator informieren. Er kann das Versenden von Privaten Nachrichten durch den jeweiligen Benutzer unterbinden.");
 $faq[] = array("Ich habe eine Spam- oder perverse E-Mail von jemandem auf diesem Board erhalten!", "Das E-Mail-System dieses Boards enthält Sicherheitsvorkehrungen, um solche Aktionen eines Benutzers zu verhindern. Du solltest dem Board-Administrator eine Kopie der erhaltenen E-Mail schicken; wichtig dabei ist, dass die Kopfzeilen angefügt bleiben (die Details über den Benutzer, der die E-Mail schickte). Erst dann kann er handeln.");
 
-//
-// DIE DREI UNTEN STEHENDEN FRAGEN DER FAQ SOLLEN UNÜBERSETZT BLEIBEN, DA ES SICH UM INTERNATIONALES RECHT HANDELT - LASST DIE DREI EINTRÄGE BITTE ENGLISCH!
-//
-$faq[] = array("--","phpBB 2 Issues");
-$faq[] = array("Who wrote this bulletin board?", "This software (in its unmodified form) is produced, released and is copyright  <a href=\"http://www.phpbb.com/\" target=\"_blank\">phpBB Group</a>. It is made available under the GNU General Public Licence and may be freely distributed, see link for more details");
-$faq[] = array("Why isn't X feature available?", "This software was written by and licensed through phpBB Group. If you believe a feature needs to be added then please visit the phpbb.com website and see what phpBB Group have to say. Please do not post feature requests to the board at phpbb.com, the Group uses sourceforge to handle tasking of new features. Please read through the forums and see what, if any, our position may already be for a feature and then follow the procedure given there.");
-$faq[] = array("Who do I contact about abusive and/or legal matters related to this board?", "You should contact the administrator of this board. If you cannot find who this you should first contact one of the forum moderators and ask them who you should in turn contact. If still get no response you should contact the owner of the domain (do a whois lookup) or, if this is running on a free service (e.g. yahoo, free.fr, f2s.com, etc.), the management or abuse department of that service. Please note that phpBB Group has absolutely no control and cannot in any way be held liable over how, where or by whom this board is used. It is absolutely pointless contacting phpBB Group in relation to any legal (cease and desist, liable, defamatory comment, etc.) matter not directly related to the phpbb.com website or the discrete software of phpBB itself. If you do email phpBB Group about any third party use of this software then you should expect a terse response or no response at all.");
-
-//
-// This ends the FAQ entries
-//
-
 ?>

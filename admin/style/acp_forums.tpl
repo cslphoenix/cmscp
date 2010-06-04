@@ -58,7 +58,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_FORUM_ACTION}" method="post">{L_FORUM_HEAD}</a></li>
+				<li><a href="{S_FORUM_ACTION}">{L_FORUM_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_EDIT_CATEGORY}</a></li>
 			</ul>
 		</div>
@@ -95,7 +95,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_FORUM_ACTION}" method="post">{L_FORUM_HEAD}</a></li>
+				<li><a href="{S_FORUM_ACTION}">{L_FORUM_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_FORUM_TITLE}</a></li>
 			</ul>
 		</div>

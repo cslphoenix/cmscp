@@ -44,8 +44,8 @@ if ( $config['gzip_compress'] )
 $template->set_filenames(array('header' => './../admin/style/page_header.tpl'));
 
 // Format Timezone. We are unable to use array_pop here, because of PHP3 compatibility
-$l_timezone = explode('.', $config['board_timezone']);
-$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['board_timezone'])] : $lang[number_format($config['board_timezone'])];
+$l_timezone = explode('.', $config['page_timezone']);
+$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['page_timezone'])] : $lang[number_format($config['page_timezone'])];
 
 //
 // The following assigns all _common_ variables that may be used at any point
@@ -53,7 +53,11 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 // should all S_x_ACTIONS for forms.
 //
 
+$current_page = ( isset($current) ) ? $lang[$current] : 'info';
+
 $template->assign_vars(array(
+							 
+	'L_HEADER'			=> sprintf($lang['index_header'], $config['page_name'], $current_page),
 							 
 	'L_REQUIRED'		=> $lang['required'],
 	
@@ -66,18 +70,36 @@ $template->assign_vars(array(
 	'L_DELETE'			=> $lang['common_delete'],
 	'L_SETTINGS'		=> $lang['common_settings'],
 	
+	'L_MARK_ALL'		=> $lang['mark_all'],
+	'L_MARK_DEALL'		=> $lang['mark_deall'],
+	
+	'L_MARK_YES'		=> $lang['mark_yes'],
+	'L_MARK_NO'			=> $lang['mark_no'],
+	
+	'L_SHOW'			=> $lang['show'],
+	'L_NOSHOW'			=> $lang['noshow'],
+	'L_MORE'			=> $lang['common_more'],
+	'L_REMOVE'			=> $lang['common_remove'],
+	'L_UPLOAD'			=> $lang['common_upload'],
+	
+	
+	'I_UPDATE'			=> '<img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" >',
+	'I_DELETE'			=> '<img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" >',
+	'I_MEMBER'			=> '<img src="' . $images['icon_option_member'] . '" title="' . $lang['common_members'] . '" alt="" >',
+	'I_DETAILS'			=> '<img src="' . $images['icon_option_details'] . '" title="' . $lang['common_details'] . '" alt="" >',
+	
 	'L_GOTO_PAGE'	=> $lang['Goto_page'],
 	
 	
-	'SITENAME' => $config['sitename'],
+	'SITENAME' => $config['page_name'],
 	
-	'L_HEAD'	=> sprintf($lang['index_head'], $config['sitename']),
+	
 
 	
 	'L_SESSION'		=> $lang['session'],
 	'L_LOGOUT'		=> $lang['logout'],
 	
-	'L_USER'		=> ' [ ' . $userdata['username'] . ' ] ',
+	'L_HEAD_USER'	=> ' [ ' . $userdata['username'] . ' ] ',
 	
 	
 
@@ -97,7 +119,7 @@ $template->assign_vars(array(
 	'S_TIMEZONE' => sprintf($lang['All_times'], $l_timezone),
 	'S_LOGIN_ACTION' => append_sid('../login.php'),
 	'S_JUMPBOX_ACTION' => append_sid('../viewforum.php'),
-	'S_CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['board_timezone'])), 
+	'S_CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['page_timezone'])), 
 	'S_CONTENT_DIRECTION' => $lang['DIRECTION'], 
 	'S_CONTENT_ENCODING' => $lang['ENCODING'], 
 	'S_CONTENT_DIR_LEFT' => $lang['LEFT'], 

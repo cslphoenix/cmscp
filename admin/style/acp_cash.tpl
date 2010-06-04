@@ -4,7 +4,7 @@
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
 	<li><a href="{S_CASH_CREATE}">{L_CREATE}</a></li>
 	<li><a href="{S_CASHUSER_CREATE}">{L_CASHUSER_CREATE}</a></li>
-	<li><a id="settings" href="{S_BANKDATA}">{L_BANKDATA}</a></li>
+	<li><a id="setting" href="{S_BANKDATA}">{L_BANKDATA}</a></li>
 	
 </ul>
 </div>
@@ -130,7 +130,7 @@
 <form action="{S_CASH_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_GAME_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_GAME_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 </ul>
 </div>
@@ -172,7 +172,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -183,7 +183,7 @@
 <form action="{S_CASH_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_CASH_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_CASH_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_CASHUSER_NEW_EDIT}</a></li>
 </ul>
 </div>
@@ -217,7 +217,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -228,7 +228,7 @@
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li><a href="#" id="right">{L_BANKDATA}</a></li>
 </ul>
 </div>
@@ -266,7 +266,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

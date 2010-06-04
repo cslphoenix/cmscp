@@ -43,7 +43,7 @@ function check_mail_subscribe($email)
 						if (preg_match('/^' . $match_email . '$/is', $mail))
 						{
 							$db->sql_freeresult($result);
-							message_die(GENERAL_ERROR, $lang['nl_mail_banned'], '');
+							message(GENERAL_ERROR, $lang['nl_mail_banned'], '');
 						}
 					}
 					while($row = $db->sql_fetchrow($result));
@@ -56,19 +56,19 @@ function check_mail_subscribe($email)
 						WHERE newsletter_mail = "' . str_replace("\'", "''", $email) . '"';
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			if ( $row = $db->sql_fetchrow($result) )
 			{
-				message_die(GENERAL_ERROR, $lang['nl_mail_taken'], '');
+				message(GENERAL_ERROR, $lang['nl_mail_taken'], '');
 			}
 			$db->sql_freeresult($result);
 			
 			return true;
 		}
 	}
-	message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+	message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 }
 
 function check_mail_unsubscribe($mail)
@@ -82,7 +82,7 @@ function check_mail_unsubscribe($mail)
 					WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '"';
 		if (!($result = $db->sql_query($sql)))
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		if ( $row = $db->sql_fetchrow($result) )
@@ -90,17 +90,17 @@ function check_mail_unsubscribe($mail)
 			$key_code = md5(uniqid(rand(), TRUE));
 			
 			$sql = 'UPDATE ' . NEWSLETTER . ' SET active_key = "' . $key_code . '" WHERE newsletter_mail = "' . $row['newsletter_mail'] . '"';
-			if ( !$db->sql_query($sql) )
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			return $key_code;
 		}
 		$db->sql_freeresult($result);
 		
-		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+		message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 	}
-	message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+	message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 }
 
 function domain_exists($email, $record = 'MX')
@@ -113,7 +113,7 @@ function domain_exists($email, $record = 'MX')
 	}
 	else
 	{
-		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+		message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 	}
 }
 
@@ -136,7 +136,7 @@ if (!function_exists('checkdnsrr') )
 				}                
 			}
 		}
-		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+		message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
     }
 }
 

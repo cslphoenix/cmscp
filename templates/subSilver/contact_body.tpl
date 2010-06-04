@@ -12,7 +12,7 @@
 <table class="out" width="100%" cellspacing="0">
 <tr>
 	<td align="center">
-		<form action="{S_CONTACT_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
+		<form action="{S_CONTACT_ACTION}" method="post" name="form">
 		<table class="info" cellspacing="0">
 		<tr>
 			<td colspan="2">&nbsp;</td>
@@ -22,11 +22,11 @@
 		</tr>
 		<tr>
 			<td class="row1_form" width="25%">Nickname: *</td>
-			<td class="row2" width="75%"><input id="contact_nick" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{CONTACT_NICK}" name="contact_nick"></td>
+			<td class="row2" width="75%"><input id="contact_nick" class="post" type="text" value="{CONTACT_NICK}" name="contact_nick"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Mail: *</td>
-			<td class="row2"><input id="contact_mail" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{CONTACT_MAIL}" name="contact_mail"></td>
+			<td class="row2"><input id="contact_mail" class="post" type="text" value="{CONTACT_MAIL}" name="contact_mail"></td>
 		</tr>
 		<!-- BEGIN joinus -->
 		<tr>
@@ -47,15 +47,15 @@
 		<!-- BEGIN fightus -->
 		<tr>
 			<td class="row1_form">Clanname: *</td>
-			<td class="row2"><input id="contact_rival_name" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{CONTACT_RIVAL_NAME}" name="contact_rival_name"></td>
+			<td class="row2"><input id="contact_rival_name" class="post" type="text" value="{CONTACT_RIVAL_NAME}" name="contact_rival_name"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Clantag: *</td>
-			<td class="row2"><input id="contact_rival_tag" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{CONTACT_RIVAL_TAG}" name="contact_rival_tag"></td>
+			<td class="row2"><input id="contact_rival_tag" class="post" type="text" value="{CONTACT_RIVAL_TAG}" name="contact_rival_tag"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Map:</td>
-			<td class="row2"><input id="contact_map" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{CONTACT_MAP}" name="contact_map"></td>
+			<td class="row2"><input id="contact_map" class="post" type="text" value="{CONTACT_MAP}" name="contact_map"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Datum: *</td>
@@ -80,16 +80,16 @@
 		<!-- END fightus -->
 		<tr>
 			<td class="row1_form" valign="top">Cpatcha:<br><span class="small">Reload des Captchas per Klick aufs Bild</span></td>
-			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
+			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden."></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Captcha-Code: *</td>
-			<td class="row2"><input id="captcha" onBlur="javascript:checkEntry(this)" class="post" type="text" name="captcha" /></td>
+			<td class="row2"><input id="captcha" class="post" type="text" name="captcha"></td>
 		</tr>
 		
 		<tr>
 			<td class="row1_form" valign="top">Nachricht: *</td>
-			<td class="row2"><textarea id="contact_message" onBlur="javascript:checkEntry(this)" class="textarea" name="contact_message" cols="40" rows="5">{CONTACT_MESSAGE}</textarea></td>
+			<td class="row2"><textarea id="contact_message" class="textarea" name="contact_message" cols="40" rows="5">{CONTACT_MESSAGE}</textarea></td>
 		</tr>
 		<tr>
 			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>

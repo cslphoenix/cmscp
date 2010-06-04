@@ -70,7 +70,7 @@ if ( $mode == '' )
 	$sql = 'SELECT * FROM ' . CASH_BANK;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$cash_bankdata = $db->sql_fetchrow($result);
 	
@@ -94,7 +94,7 @@ if ( $mode == '' )
 	$sql = 'SELECT * FROM ' . CASH;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$cash_data = $db->sql_fetchrowset($result);
 	
@@ -144,13 +144,13 @@ if ( $mode == '' )
 	//	Benutzereinträge
 	//
 	$sql = 'SELECT cu.*, u.username, u.user_color
-				FROM ' . CASH_USERS . ' cu
+				FROM ' . CASHUSERS . ' cu
 					LEFT JOIN ' . USERS . ' u ON cu.user_id = u.user_id
 				WHERE u.user_id <> ' . ANONYMOUS . '
 			ORDER BY cu.user_id, cu.user_interval';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$cash_users_data = $db->sql_fetchrowset($result);
 	
@@ -206,10 +206,10 @@ if ( $mode == '' )
 			{
 				$template->assign_block_vars('display.cash_users_row', array(
 					'CLASS' 				=> $class,
-					'CASH_USERNAME'			=> $user_name,
-					'CASH_USER_AMOUNT'		=> $user_amount,
-					'CASH_USER_INTERVAL'	=> $user_interval,
-					'CASH_USER_MONTH'		=> $user_month_info,
+					'CASHUSERNAME'			=> $user_name,
+					'CASHUSER_AMOUNT'		=> $user_amount,
+					'CASHUSER_INTERVAL'	=> $user_interval,
+					'CASHUSER_MONTH'		=> $user_month_info,
 				));
 			}
 		}
@@ -237,10 +237,10 @@ if ( $mode == '' )
 	
 				$template->assign_block_vars('display.cash_user', array(
 					'CLASS' 				=> $class,
-					'CASH_USER_NAME'		=> $data['username'],
-					'CASH_USER_AMOUNT'		=> $data['user_amount'],
-					'CASH_USER_INTERVAL'	=> ( $data['user_interval'] ) ? $lang['cash_interval_o'] : $lang['cash_interval_m'],
-					'CASH_USER_MONTH'		=> $user_month_info,
+					'CASHUSER_NAME'		=> $data['username'],
+					'CASHUSER_AMOUNT'		=> $data['user_amount'],
+					'CASHUSER_INTERVAL'	=> ( $data['user_interval'] ) ? $lang['cash_interval_o'] : $lang['cash_interval_m'],
+					'CASHUSER_MONTH'		=> $user_month_info,
 				));
 			}
 		}
@@ -255,7 +255,7 @@ if ( $mode == '' )
 		'L_CASH_AMOUNT'		=> $lang['cash_amount'],
 		'L_CASH_NAME'		=> $lang['cash_name'],
 		'L_CASH_INTERVAL'	=> $lang['cash_interval'],
-		'L_CASH_USERNAME'	=> $lang['username'],
+		'L_CASHUSER_USERNAME'	=> $lang['username'],
 		
 		'CASH_T_AMOUNT'		=> $total_amount,
 		'CASH_U_AMOUNT'		=> $total_users_amount,
@@ -274,7 +274,7 @@ else
 
 if ( $userdata['user_level'] <= TRIAL )
 {
-	message_die(GENERAL_ERROR, $lang['access_denied']);
+	message(GENERAL_ERROR, $lang['access_denied']);
 }
 
 $template->pparse('body');

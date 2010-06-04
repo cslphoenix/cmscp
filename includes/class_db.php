@@ -19,9 +19,6 @@
  *
  ***************************************************************************/
 
-define('DEBUG_RUN_STATS', true);
-define('DEBUG_SQL_ADMIN', true);
-
 // var_dump() reviewed for output
 function _dump($message, $line='', $file='')
 {
@@ -134,7 +131,7 @@ class db_class extends sql_db
 		}
 		if ( !$query_res && $break_on_error )
 		{
-			message_die(GENERAL_ERROR, 'SQL requests not achieved', '', $line, $file, htmlspecialchars($query));
+			message(GENERAL_ERROR, 'SQL requests not achieved', '', $line, $file, htmlspecialchars($query));
 		}
 		return $query_res;
 	}
@@ -173,7 +170,6 @@ class stat_run_class
 				'Stat_queries' => 'Queries: %2d (%.4fs)',
 				'Stat_gzip_enable' => 'GZIP on',
 				'Stat_debug_enable' => 'Debug on',
-
 				'Stat_request' => 'Request',
 				'Stat_line' => 'Line:&nbsp;%d',
 				'Stat_dur' => 'dur.:&nbsp;%.4fs',

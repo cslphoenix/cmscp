@@ -39,7 +39,7 @@ table.row {
 table.info {
 	border: 1px #CCC solid;
 	width:100%;
-	padding:0;
+	padding:0px;
 }
 
 table.edit {
@@ -116,13 +116,13 @@ td.rowHead {
 
 
 td.row_class1, td.row_class2, td.row_class3	{
-	background-color: #CEE1EB; /* DFE7EB */
-	padding: 1px 2px;
+	background-color: #E6EDF0; /* DFE7EB */
+	padding:2px;
 	vertical-align:middle;
 }
 
 td.row_class2 {
-	background-color: #E6EDF0; /* F0EFEF */
+	background-color: #CEE1EB; /* F0EFEF */
 }
 
 td.row_class3 {
@@ -144,17 +144,24 @@ td.row1 {
 }
 
 td.top {
-	vertical-align: top;
+	vertical-align:top;
 }
 
-td.middle {
-	vertical-align: middle;
+td.mid {
+	vertical-align:middle;
 }
 
 td.row_noentry	{
 	height:21px;
 	font-weight:bold;
-	background-color: #CEE1EB;
+	background-color: #E6EDF0;
+	padding: 0px 5px;
+	vertical-align:middle;
+}
+
+td.row_noentry1	{
+	height:21px;
+	font-weight:bold;
 	padding: 0px 5px;
 	vertical-align:middle;
 }
@@ -162,6 +169,7 @@ td.row_noentry	{
 td.row_noentry2	{
 	height:21px;
 	font-weight:bold;
+	background-color: #CEE1EB;
 	padding: 0px 5px;
 	vertical-align:middle;
 }
@@ -179,16 +187,26 @@ td.row3:hover {
 	color:#000;
 }
 
+input {
+	/* http://florianfranke.net/2009/05/08/tipp-radio-button-und-text-auf-gleicher-hohe/ */
+    vertical-align: bottom;
+	#vertical-align: baseline;
+}
+
 .button, .button:link, .button:visited, .button:active,
-.button2, .button2:link, .button2:visited, .button2:active{
+.button2, .button2:link, .button2:visited, .button2:active {
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 1px 4px 1px;
 	color:	#000;
-	height: auto;
 	background:	#F0EFEF;
 	border:	#000 1px solid;
 	font-size:10px;
-	vertical-align:top;
+}
+
+
+
+.button2, .button2:link, .button2:visited, .button2:active {
+	font-weight:bold;
 }
 
 .button:hover,
@@ -198,10 +216,6 @@ td.row3:hover {
 	border: #39F 1px solid;
 	background:	#FAFAFA;
 	
-}
-
-.button2, .button2:link, .button2:visited, .button2:active {
-	font-weight:bold;
 }
 
 .button2:hover {
@@ -436,7 +450,7 @@ a.copyright:hover	{ color: #fff; text-decoration: underline;}
 }
 
 #navlist a:link, #navlist a:visited,
-#navlist a:link#settings, #navlist a:visited#settings
+#navlist a:link#setting, #navlist a:visited#setting
 {
 	background: #E8EBF0;
 	border: 1px solid #ccc;
@@ -450,7 +464,7 @@ a.copyright:hover	{ color: #fff; text-decoration: underline;}
 	text-decoration: none;
 }
 
-#navlist a:link#settings, #navlist a:visited#settings
+#navlist a:link#setting, #navlist a:visited#setting
 {
 	float: right;
 }
@@ -471,7 +485,7 @@ a.copyright:hover	{ color: #fff; text-decoration: underline;}
 }
 
 #navlist a:hover,
-#navlist a:hover#settings
+#navlist a:hover#setting
 {
 	color: #39F;
 	background:#fdfdfd;

@@ -84,7 +84,7 @@ if ( $team_id )
 					AND team_id = ' . $team_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
 	}
 	$team_mods = $db->sql_fetchrowset($result);
 	
@@ -95,7 +95,7 @@ if ( $team_id )
 //	$team = _cached($sql, 'team_details_' . $team_id . '_member', 1);
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$team = $db->sql_fetchrow($result);
 	
@@ -119,7 +119,7 @@ if ( $team_id )
 		} 
 		else if ( $sid !== $userdata['session_id'] )
 		{
-			message_die(GENERAL_ERROR, $lang['Session_invalid']);
+			message(GENERAL_ERROR, $lang['Session_invalid']);
 		}
 
 		if ( !$is_moderator && $userdata['user_level'] != ADMIN )
@@ -127,7 +127,7 @@ if ( $team_id )
 			$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 
 			$message = $lang['Not_group_moderator'] . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 
 		if ( isset($HTTP_POST_VARS['add']) )
@@ -139,7 +139,7 @@ if ( $team_id )
 						WHERE u.user_id = ' . $userid;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$user = $db->sql_fetchrow($result);
 			
@@ -148,9 +148,9 @@ if ( $team_id )
 			$user_lang	= $user['user_lang'];
 			
 			$sql = 'INSERT INTO ' . TEAMS_USERS . " (user_id, team_id, rank_id, team_join, team_mod) VALUES ($user_id, $team_id, 0)";
-			if (!$db->sql_query($sql))
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			group_set_auth($user_id, $team_id);
@@ -169,7 +169,7 @@ if ( $team_id )
 			$emailer->set_subject($lang['Group_added']);
 
 			$emailer->assign_vars(array(
-				'SITENAME' => $config['sitename'], 
+				'SITENAME' => $config['page_name'], 
 				'GROUP_NAME' => $group_name,
 				'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
 
@@ -201,9 +201,9 @@ if ( $team_id )
 							WHERE team_id = ' . $team_id . '
 								AND team_mod = 1
 								AND user_id IN (' . $user_ids . ')';
-				if ( !$result = $db->sql_query($sql) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$team_mods = array();
@@ -219,9 +219,9 @@ if ( $team_id )
 								SET team_mod = 0
 								WHERE team_id = ' . intval($team_id) . '
 									AND user_id IN (' . implode(', ', $team_mods) . ')';
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				
@@ -231,9 +231,9 @@ if ( $team_id )
 							SET team_mod = 1
 							WHERE team_id = ' . intval($team_id) . '
 								AND user_id IN (' . implode(', ', $members_select) . ')' . $sql_in;
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 
 				
@@ -242,7 +242,7 @@ if ( $team_id )
 				$message = $lang['group_set_mod']
 					. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">', '</a>')
 					. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 
 			}
 		}
@@ -264,9 +264,9 @@ if ( $team_id )
 								SET user_pending = 0
 								WHERE user_id IN (' . $sql_in . ')
 									AND team_id = ' . $team_id;
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					for( $k = 0; $k < count($members); $k++)
@@ -279,9 +279,9 @@ if ( $team_id )
 				else if ( isset($HTTP_POST_VARS['deny']) || $mode == 'remove' )
 				{
 					$sql = 'DELETE FROM ' . GROUPS_USERS . ' WHERE user_id IN (' . $sql_in . ') AND team_id = ' . $team_id;
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					for( $i = 0; $i < count($members); $i++ )
@@ -297,7 +297,7 @@ if ( $team_id )
 				{
 					if ( !($result = $db->sql_query($sql_select)) )
 					{
-						message_die(GENERAL_ERROR, 'Could not get user email information', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Could not get user email information', '', __LINE__, __FILE__, $sql);
 					}
 
 					$bcc_list = array();
@@ -327,7 +327,7 @@ if ( $team_id )
 				*/
 
 					$emailer->assign_vars(array(
-						'SITENAME' => $config['sitename'], 
+						'SITENAME' => $config['page_name'], 
 						'GROUP_NAME' => $group_name,
 						'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['board_email_sig']) : '', 
 
@@ -350,7 +350,7 @@ if ( $team_id )
 				ORDER BY u.username';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
 	}
 	$team_members = $db->sql_fetchrowset($result);
 	$db->sql_freeresult($result);
@@ -507,7 +507,7 @@ if ( $team_id )
 				WHERE user_id <> ' . ANONYMOUS . $sql_id;
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$select_users = '<select class="postselect" name="user_id">';
@@ -585,7 +585,7 @@ if ( $team_id )
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
 		'S_SELECT_OPTION'	=> $select_options,
-		'S_TEAM_ACTION' => append_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
+		'S_ACTION' => append_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
 	));
 	
 }
@@ -602,7 +602,7 @@ else
 			ORDER BY game_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$games = $db->sql_fetchrowset($result);
 //	$games = _cached($sql, 'info_games', 0);
@@ -612,7 +612,7 @@ else
 			ORDER BY team_order';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$teams = $db->sql_fetchrowset($result);
 //	$teams = _cached($sql, 'info_teams', 0);

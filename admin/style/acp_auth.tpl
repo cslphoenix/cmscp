@@ -1,5 +1,5 @@
 <!-- BEGIN display -->
-<form action="{S_AUTH_ACTION}" method="post">
+<form action="{S_AUTH_ACTION}" method="get">
 <div id="navcontainer">
 	<ul id="navlist">
 		<li id="active"><a href="#" id="current">{L_AUTH_TITLE}</a></li>
@@ -31,7 +31,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_ACTION}" method="post">{L_AUTH_TITLE}</a></li>
+				<li><a href="{S_ACTION}">{L_AUTH_TITLE}</a></li>
 				<li id="active"><a href="#" id="current">{L_FORUM}: {FORUM_NAME}</a></li>
 			</ul>
 		</div>

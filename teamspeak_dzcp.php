@@ -191,7 +191,7 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 				}
 			}
 			
-			$channels = "<img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\" />&nbsp;<a style=\"font-weight:bold\" href=\"teamspeak.php?cID=".trim($innerArr[0])."&amp;type=1\">".removeChar($innerArr[1])."&nbsp;</a><br> " . $users."";
+			$channels = "<img src=\"images/teamspeak/channel.gif\" alt=\"\" class=\"tsicon\">&nbsp;<a style=\"font-weight:bold\" href=\"teamspeak.php?cID=".trim($innerArr[0])."&amp;type=1\">".removeChar($innerArr[1])."&nbsp;</a><br> " . $users."";
 			
 //			$chan .= show($dir."/channel", array(
 			$template->assign_block_vars('channel', array(

@@ -44,10 +44,10 @@ else
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 	
-	$start			= ( request('start') ) ? request('start', 'num') : 0;
+	$start			= ( request('start') ) ? request('start', 0) : 0;
 	$start			= ( $start < 0 ) ? 0 : $start;
-	$profile_id		= request(POST_PROFILE_URL);
-	$cat_id			= request(POST_CATEGORY_URL);
+	$profile_id		= request(POST_PROFILE_URL, 0);
+	$cat_id			= request(POST_CATEGORY_URL, 0);
 	$cat_type		= request('cat_type');
 	$confirm		= request('confirm');
 	$mode			= request('mode');
@@ -131,7 +131,7 @@ else
 					$new_mode = '_create_field_save';
 				}
 
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $profile_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $profile_id . '" />';
 
 				$template->assign_vars(array(
 					'L_PROFILE_HEAD'		=> sprintf($lang['sprintf_head'], $lang['profile']),
@@ -174,7 +174,7 @@ else
 					'S_REQ_YES'		=> ( $profile['profile_required'] ) ? ' checked="checked"' : '',
 					'S_REQ_NO'		=> ( !$profile['profile_required'] ) ? ' checked="checked"' : '',
 
-					'S_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_fields,
 					'S_PROFILE_ACTION'		=> append_sid('admin_profile.php'),
 				));
 			
@@ -186,15 +186,15 @@ else
 			
 				debuge($_POST);
 				
-				$profile_name		= request('profile_name', 'text');
-				$profile_field		= request('profile_field', 'num');
-				$profile_category	= request('profile_category', 'num');
-				$profile_language	= request('profile_language', 'num');
-				$profile_type		= request('profile_type', 'num');
-				$profile_sguest		= request('profile_sguest', 'num');
-				$profile_smember	= request('profile_smember', 'num');
-				$profile_sregister	= request('profile_sregister', 'num');
-				$profile_required	= request('profile_required', 'num');
+				$profile_name		= request('profile_name', 2);
+				$profile_field		= request('profile_field', 0);
+				$profile_category	= request('profile_category', 0);
+				$profile_language	= request('profile_language', 0);
+				$profile_type		= request('profile_type', 0);
+				$profile_sguest		= request('profile_sguest', 0);
+				$profile_smember	= request('profile_smember', 0);
+				$profile_sregister	= request('profile_sregister', 0);
+				$profile_required	= request('profile_required', 0);
 				
 				if ( $profile_name == '' || $profile_field == '' )
 				{
@@ -235,15 +235,15 @@ else
 				$type		= $profile['profile_type'];
 				$category	= $profile['profile_category'];
 				
-				$profile_name		= request('profile_name', 'text');
-				$profile_field		= request('profile_field', 'num');
-				$profile_category	= request('profile_category', 'num');
-				$profile_language	= request('profile_language', 'num');
-				$profile_type		= request('profile_type', 'num');
-				$profile_sguest		= request('profile_sguest', 'num');
-				$profile_smember	= request('profile_smember', 'num');
-				$profile_sregister	= request('profile_sregister', 'num');
-				$profile_required	= request('profile_required', 'num');
+				$profile_name		= request('profile_name', 2);
+				$profile_field		= request('profile_field', 0);
+				$profile_category	= request('profile_category', 0);
+				$profile_language	= request('profile_language', 0);
+				$profile_type		= request('profile_type', 0);
+				$profile_sguest		= request('profile_sguest', 0);
+				$profile_smember	= request('profile_smember', 0);
+				$profile_sregister	= request('profile_sregister', 0);
+				$profile_required	= request('profile_required', 0);
 				
 				if ( $profile_name == '' || $profile_field == '' )
 				{
@@ -396,8 +396,8 @@ else
 				$cat_id = intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
 				$row = get_data('profile_category', $cat_id, 0);
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="update_cat" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="update_cat" />';
+				$s_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
 	
 				$template->assign_vars(array(
 					'L_PROFILE_HEAD'			=> $lang['profile_head'],
@@ -408,7 +408,7 @@ else
 	
 					'CAT_TITLE'			=> $row['category_name'],
 	
-					'S_FIELDS' => $s_hidden_fields, 
+					'S_FIELDS' => $s_fields, 
 					
 					'S_SUBMIT_VALUE' => $lang['profile_cat_edit'], 
 					'S_PROFILE_ACTION' => append_sid('admin_profile.php'))

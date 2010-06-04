@@ -42,7 +42,7 @@ $sql = 'SELECT c.cat_id, c.cat_title, c.cat_order
 
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
+	message(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 }
 
 $category_rows = array();
@@ -74,7 +74,7 @@ if( ( $total_categories = count($category_rows) ) )
 	
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not query forums information', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not query forums information', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$forum_data = array();
@@ -86,7 +86,7 @@ if( ( $total_categories = count($category_rows) ) )
 	
 	if ( !($total_forums = count($forum_data)) )
 	{
-	//	message_die(GENERAL_MESSAGE, $lang['No_forums']);
+	//	message(GENERAL_MESSAGE, $lang['No_forums']);
 		
 		$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
 		$template->assign_block_vars('switch_no_forums', array() );
@@ -185,7 +185,7 @@ if( ( $total_categories = count($category_rows) ) )
 								/*
 									if ( !($result = $db->sql_query($sql)) )
 									{
-										message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
+										message(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
 									}
 									$forum_topics = $db->sql_fetchrowset($result);
 								*/
@@ -197,7 +197,7 @@ if( ( $total_categories = count($category_rows) ) )
 												WHERE tr.user_id = ' . $userdata['user_id'] . ' AND tr.forum_id = ' . $forum_id . ' AND tr.read_time < t.topic_time';
 									if ( !($result = $db->sql_query($sql)) )
 									{
-										message_die(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
+										message(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
 									}
 									$forum_topics_unread = $db->sql_fetchrowset($result);
 									//debug($forum_topics_unread);
@@ -223,7 +223,7 @@ if( ( $total_categories = count($category_rows) ) )
 
 							if ( $forum_data[$j]['forum_last_post_id'] )
 							{
-								$last_post_time = create_date($config['default_dateformat'], $forum_data[$j]['post_time'], $config['board_timezone']);
+								$last_post_time = create_date($config['default_dateformat'], $forum_data[$j]['post_time'], $config['page_timezone']);
 
 								$last_post = $last_post_time . '<br>';
 

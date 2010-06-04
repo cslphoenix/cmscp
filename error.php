@@ -56,6 +56,6 @@ switch ($code)
 	break;
 }
 
-message_die(GENERAL_ERROR, $message, $message_title);
+message(GENERAL_ERROR, $message, $message_title);
 
 ?>

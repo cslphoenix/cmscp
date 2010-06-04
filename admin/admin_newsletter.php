@@ -102,8 +102,8 @@ else
 				$template->set_filenames(array('body' => 'style/acp_newsletter.tpl'));
 				$template->assign_block_vars('newsletter_edit', array());
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
+				$s_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
 
 				$template->assign_vars(array(
 					'L_NL_HEAD'			=> $lang['newsletter_head'],
@@ -121,7 +121,7 @@ else
 					
 					'NL_MAIL'			=> $newsletter['newsletter_mail'],
 					
-					'S_FIELDS'	=> $s_hidden_fields,
+					'S_FIELDS'	=> $s_fields,
 					'S_NL_ACTION'		=> append_sid('admin_newsletter.php'),
 				));
 			

@@ -41,17 +41,18 @@ else
 	$root_path	= './../';
 	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_header	= $cancel;
+	$current	= '_submenu_event';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/event.php');
 	
-	$start		= ( request('start') ) ? request('start') : 0;
+	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
-	$event_id	= request(POST_EVENT_URL);
-	$confirm	= request('confirm');
-	$mode		= request('mode');
+	$data_id	= request(POST_EVENT_URL, 0);
+	$confirm	= request('confirm', 1);
+	$mode		= request('mode', 1);
 	
 	if ( !$userauth['auth_event'] && $userdata['user_level'] != ADMIN )
 	{
@@ -71,39 +72,50 @@ else
 			$template->set_filenames(array('body' => 'style/acp_event.tpl'));
 			$template->assign_block_vars('event_edit', array());
 			
-			if ( $mode == '_create' )
+			if ( $mode == '_create' && !request('submit', 2) )
 			{
-				$event = array (
-					'event_title'		=> request('event_title', 'text'),
+				$data = array(
+					'event_title'		=> request('event_title', 2),
 					'event_desc'		=> '',
-					'event_level'		=> '0',
+					'event_level'		=> GUEST,
 					'event_date'		=> time(),
 					'event_duration'	=> '0',
 					'event_comments'	=> '1',
 				);
-				$new_mode = '_create_save';
+			}
+			else if ( $mode == '_update' && !request('submit', 2) )
+			{
+				$data = get_data(EVENT, $data_id, 1);
 			}
 			else
 			{
-				$event		= get_data(EVENT, $event_id, 1);
-				$new_mode	= '_update_save';
+				$event_date		= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
+				$event_duration	= mktime(request('hour', 0), request('min', 0) + request('dmin', 0), 00, request('month', 0), request('day', 0), request('year', 0));
+				
+				$data = array(
+					'event_title'		=> request('event_title', 2),
+					'event_desc'		=> request('event_desc', 2),
+					'event_level'		=> request('event_level', 0),
+					'event_date'		=> $event_date,
+					'event_duration'	=> $event_duration,
+					'event_comments'	=> request('event_comments', 0),
+				);
 			}
 			
-			$s_select_level = '<select class="select" name="event_level">';
+			$s_select_level = '<select class="select" name="event_level" id="event_level">';
 			foreach ( $lang['switch_level'] as $const => $name )
 			{
-				$selected = ( $const == $event['event_level'] ) ? ' selected="selected"' : '';
-				
-				$s_select_level .= '<option value="' . $const . '"' . $selected . '>' . $name . '&nbsp;</option>';
+				$selected = ( $data['event_level'] == $const ) ? ' selected="selected"' : '';				
+				$s_select_level .= '<option value="' . $const . '"' . $selected . '>&raquo;&nbsp;' . $name . '&nbsp;</option>';
 			}
 			$s_select_level .= '</select>';
 			
 			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-			$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_EVENT_URL . '" value="' . $event_id . '" />';
+			$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_EVENT_URL . '" value="' . $data_id . '" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['event']),
-				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['event']),				
+				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['event'], $data['event_title']),				
 				'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['event']),
 				'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['event']),
 				
@@ -112,117 +124,99 @@ else
 				'L_DURATION'	=> $lang['common_duration'],
 				'L_COMMENTS'	=> $lang['common_comments'],
 				
-				'TITLE'			=> $event['event_title'],
-				'DESC'			=> $event['event_desc'],
+				'TITLE'			=> $data['event_title'],
+				'DESC'			=> $data['event_desc'],
 				
 				'S_LEVEL'		=> $s_select_level,
-				'S_DAY'			=> select_date('day',		'day',		date('d', $event['event_date'])),
-				'S_MONTH'		=> select_date('month',		'month',	date('m', $event['event_date'])),
-				'S_YEAR'		=> select_date('year',		'year',		date('Y', $event['event_date'])),
-				'S_HOUR'		=> select_date('hour',		'hour',		date('H', $event['event_date'])),
-				'S_MIN'			=> select_date('min',		'min',		date('i', $event['event_date'])),
-				'S_DURATION'	=> select_date('duration',	'dmin',		($event['event_duration'] - $event['event_date']) / 60),
-				'S_COMMENT_YES'	=> ( $event['event_comments'] )		? ' checked="checked"' : '',
-				'S_COMMENT_NO'	=> ( !$event['event_comments'] )	? ' checked="checked"' : '',
+				'S_DAY'			=> select_date('day',		'day',		date('d', $data['event_date'])),
+				'S_MONTH'		=> select_date('month',		'month',	date('m', $data['event_date'])),
+				'S_YEAR'		=> select_date('year',		'year',		date('Y', $data['event_date'])),
+				'S_HOUR'		=> select_date('hour',		'hour',		date('H', $data['event_date'])),
+				'S_MIN'			=> select_date('min',		'min',		date('i', $data['event_date'])),
+				'S_DURATION'	=> select_date('duration',	'dmin',		( $data['event_duration'] - $data['event_date'] ) / 60),
+				'S_COMMENT_YES'	=> ( $data['event_comments'] )	? ' checked="checked"' : '',
+				'S_COMMENT_NO'	=> ( !$data['event_comments'] )	? ' checked="checked"' : '',
 				
 				'S_FIELDS'		=> $s_fields,
 				'S_ACTION'		=> append_sid('admin_event.php'),
 			));
 			
-			break;
-		
-		case '_create_save':
-		
-			$event_title	= request('event_title', 'text');
-			$event_desc		= request('event_desc', 'text');
-			$event_level	= request('event_level', 'num');
-			$event_comments	= request('event_comments', 'num');
-			
-			$error_msg = '';
-			$error_msg .= ( !$event_title ) ? $lang['msg_select_title'] : '';
-			$error_msg .= ( !$event_desc ) ? '<br>' . $lang['msg_select_description'] : '';
-			$error_msg .= ( !checkdate(request('month'), request('day'), request('year')) ) ? '<br>' . $lang['msg_select_date'] : '';
-		
-			if ( $error_msg )
+			if ( request('submit', 2) )
 			{
-				message(GENERAL_ERROR, $error_msg . $lang['back']);
-			}
-							
-			$event_date		= mktime(request('hour'),	request('min'),						00, request('month'),	request('day'),	request('year'));
-			$event_duration	= mktime(request('hour'),	request('min') + request('dmin'),	00, request('month'),	request('day'),	request('year'));
-			
-			$sql = "INSERT INTO " . EVENT . " (event_title, event_desc, event_level, event_date, event_duration, event_comments, event_create)
-						VALUES ('$event_title', '$event_desc', '$event_level', '$event_date', '$event_duration', '$event_comments', '" . time() . "')";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-#			$monat = request('month', 'num');
-#			$oCache -> sCachePath = './../cache/';
-#			subnavi_calendar_' . $monat . '_member
-#			subnavi_calendar_' . $monat . '_guest
-			
-			$message = $lang['create_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'create_event');
-			message(GENERAL_MESSAGE, $message);
-
-			break;
-		
-		case '_update_save':
-		
-			$event_title	= request('event_title', 'text');
-			$event_desc		= request('event_desc', 'text');
-			$event_level	= request('event_level', 'num');
-			$event_comments	= request('event_comments', 'num');
-			
-			$error_msg = '';
-			$error_msg .= ( !$event_title ) ? $lang['msg_select_title'] : '';
-			$error_msg .= ( !$event_desc ) ? '<br>' . $lang['msg_select_description'] : '';
-			$error_msg .= ( !checkdate(request('month'), request('day'), request('year')) ) ? '<br>' . $lang['msg_select_date'] : '';
-		
-			if ( $error_msg )
-			{
-				message(GENERAL_ERROR, $error_msg . $lang['back']);
-			}
-			
-			$event_date		= mktime(request('hour'),	request('min'),						00, request('month'),	request('day'),	request('year'));
-			$event_duration	= mktime(request('hour'),	request('min') + request('dmin'),	00, request('month'),	request('day'),	request('year'));
-
-			$sql = "UPDATE " . EVENT . " SET
-						event_title		= '$event_title',
-						event_desc		= '$event_desc',
-						event_level		= '$event_level',
-						event_date		= '$event_date',
-						event_duration	= '$event_duration',
-						event_comments	= '$event_comments',
-						event_update	= '" . time() . "'
-					WHERE event_id = $event_id";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				$event_title	= request('event_title', 2);
+				$event_desc		= request('event_desc', 2);
+				$event_level	= request('event_level', 0);
+				$event_comments	= request('event_comments', 0);
+				
+				$error = '';
+				$error .= ( !$event_title ) ? $lang['msg_select_title'] : '';
+				$error .= ( !$event_desc ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_desc'] : '';
+				$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_date'] : '';
+				
+				$event_date		= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
+				$event_duration	= mktime(request('hour', 0), request('min', 0) + request('dmin', 0), 00, request('month', 0), request('day', 0), request('year', 0));
+				
+				if ( $error )
+				{
+					$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+					$template->assign_vars(array('ERROR_MESSAGE' => $error));
+					$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+				}					
+				else
+				{
+					if ( $mode == '_create' )
+					{
+						$max_row	= get_data_max(GAMES, 'game_order', '');
+						$next_order	= $max_row['max'] + 10;
+						
+						$sql = "INSERT INTO " . EVENT . " (event_title, event_desc, event_level, event_date, event_duration, event_comments, event_create)
+									VALUES ('$event_title', '$event_desc', '$event_level', '$event_date', '$event_duration', '$event_comments', '" . time() . "')";
+						if ( !($result = $db->sql_query($sql)) )
+						{
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+						
+						$message = $lang['create_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
+						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'create_event');
+					}
+					else
+					{
+						$sql = "UPDATE " . EVENT . " SET
+									event_title		= '$event_title',
+									event_desc		= '$event_desc',
+									event_level		= '$event_level',
+									event_date		= '$event_date',
+									event_duration	= '$event_duration',
+									event_comments	= '$event_comments',
+									event_update	= '" . time() . "'
+								WHERE event_id = $data_id";
+						if ( !($result = $db->sql_query($sql)) )
+						{
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+						
+						$message = $lang['update_event']
+							. sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>')
+							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_event.php?mode=_update&amp;' . POST_EVENT_URL . '=' . $data_id) . '">', '</a>');
+						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'update_event');
+					}
+		#			$monat = request('month', 0);
+		#			$oCache -> sCachePath = './../cache/';
+		#			subnavi_calendar_' . $monat . '_member
+		#			subnavi_calendar_' . $monat . '_guest
+					message(GENERAL_MESSAGE, $message);
+				}
 			}
 			
-#			$monat = request('month', 'num');
-#			$oCache -> sCachePath = './../cache/';
-#			subnavi_calendar_' . $monat . '_member
-#			subnavi_calendar_' . $monat . '_guest
-			
-			$message = $lang['update_event']
-				. sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>')
-				. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_event.php?mode=_update&amp;' . POST_EVENT_URL . '=' . $event_id) . '">', '</a>');
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'update_event');
-			message(GENERAL_MESSAGE, $message);
-
 			break;
 		
 		case '_delete':
 			
-#			$event = get_data(EVENT, $event_id, 1);
+			$data = get_data(EVENT, $data_id, 1);
 			
-			if ( $event_id && $confirm )
+			if ( $data_id && $confirm )
 			{	
-				$sql = "DELETE FROM " . EVENT . " WHERE event_id = $event_id";
+				$sql = "DELETE FROM " . EVENT . " WHERE event_id = $data_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -232,15 +226,15 @@ else
 				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'delete_event');
 				message(GENERAL_MESSAGE, $message);
 			}
-			else if ( $event_id && !$confirm )
+			else if ( $data_id && !$confirm )
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_EVENT_URL . '" value="' . $event_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_EVENT_URL . '" value="' . $data_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'	=> $lang['common_confirm'],
-					'MESSAGE_TEXT'	=> $lang['confirm_delete_event'],
+					'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_event'], $data['event_title']),
 					
 					'S_FIELDS'		=> $s_fields,
 					'S_ACTION'		=> append_sid('admin_event.php'),
@@ -261,16 +255,16 @@ else
 			$s_fields = '<input type="hidden" name="mode" value="_create" />';
 					
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['event']),
-				'L_EXPLAIN'		=> $lang['event_explain'],
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['event']),
+				'L_EXPLAIN'	=> $lang['event_explain'],
 				
-				'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['event']),
-				'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['event']),
-				'L_DATE'		=> $lang['common_date'],
+				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['event']),
+				'L_TITLE'	=> sprintf($lang['sprintf_title'], $lang['event']),
+				'L_DATE'	=> $lang['common_date'],
 				
-				'S_FIELDS'		=> $s_fields,
-				'S_CREATE'		=> append_sid('admin_event.php?mode=_create'),
-				'S_ACTION'		=> append_sid('admin_event.php'),
+				'S_FIELDS'	=> $s_fields,
+				'S_CREATE'	=> append_sid('admin_event.php?mode=_create'),
+				'S_ACTION'	=> append_sid('admin_event.php'),
 			));
 			
 			$event_data = get_data_array(EVENT, '', 'event_date', 'DESC');

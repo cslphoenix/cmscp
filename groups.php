@@ -31,7 +31,7 @@ $userdata = session_pagestart($user_ip, PAGE_GROUPS);
 init_userprefs($userdata);
 
 //	Link
-$script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['script_path']));
+$script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['page_path']));
 $script_name = ( $script_name != '' ) ? $script_name . '/groups.php' : 'groups.php';
 $server_name = trim($config['server_name']);
 $server_protocol = ( $config['cookie_secure'] ) ? 'https://' : 'http://';
@@ -72,7 +72,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 	}
 	else if ( $sid !== $userdata['session_id'] )
 	{
-		message_die(GENERAL_ERROR, $lang['Session_invalid']);
+		message(GENERAL_ERROR, $lang['Session_invalid']);
 	}
 	
 	$sql = 'SELECT group_id, group_type
@@ -81,7 +81,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 					AND group_type <> ' . GROUP_HIDDEN;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	if ( $row = $db->sql_fetchrow($result) )
@@ -91,7 +91,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 					WHERE group_id = ' . $row['group_id'];
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$row_users = $db->sql_fetchrowset($result);
 	
@@ -106,7 +106,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 						$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('group.php') . '">'));
 						
 						$message = $lang['Already_member_group'] . '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('groupcp.$phpEx?' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('group.php') . '">', '</a>');
-						message_die(GENERAL_MESSAGE, $message);
+						message(GENERAL_MESSAGE, $message);
 					}
 				}
 			}
@@ -114,9 +114,9 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 			if ( $row['group_type'] == GROUP_OPEN )
 			{
 				$sql = 'INSERT INTO ' . GROUPS_USERS . ' (group_id, user_id, user_pending) VALUES (' . $group_id . ', ' . $userdata['user_id'] . ', 0)';
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				group_set_auth($userdata['user_id'], $group_id);
@@ -124,9 +124,9 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 			else if ( $row['group_type'] == GROUP_REQUEST )
 			{
 				$sql = 'INSERT INTO ' . GROUPS_USERS . ' (group_id, user_id, user_pending) VALUES (' . $group_id . ', ' . $userdata['user_id'] . ', 1)';
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$sql = 'SELECT u.user_id, u.username, u.user_email, u.user_lang, u.user_send_type, u.user_notify_pm, g.group_name
@@ -137,7 +137,7 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 								AND gu.group_id = ' . $group_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, "Error getting group moderator data", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, "Error getting group moderator data", "", __LINE__, __FILE__, $sql);
 				}
 				$mail_data = $db->sql_fetchrow($result);
 				
@@ -149,19 +149,19 @@ if ( isset($HTTP_POST_VARS['joingroup']) && $group_id )
 			
 			$message = ( $row['group_type'] == GROUP_REQUEST ) ? $lang['group_msg_request'] : $lang['group_msg_open'];
 			$message .= '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('groups.php?' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 		else if ( $group['group_type'] == GROUP_CLOSED || $group['group_type'] == GROUP_HIDDEN || $group['group_type'] == GROUP_SYSTEM )
 		{
 //			$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 			
 			$message = $lang['This_closed_group'] . '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('groups.php?' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>') . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	else
 	{
-		message_die(GENERAL_MESSAGE, $lang['No_groups_exist'] . 'test'); 
+		message(GENERAL_MESSAGE, $lang['No_groups_exist'] . 'test'); 
 	}
 }
 else if ( isset($HTTP_POST_VARS['unsub']) || isset($HTTP_POST_VARS['unsubpending']) && $group_id )
@@ -180,15 +180,15 @@ else if ( isset($HTTP_POST_VARS['unsub']) || isset($HTTP_POST_VARS['unsubpending
 	}
 	else if ( $sid !== $userdata['session_id'] )
 	{
-		message_die(GENERAL_ERROR, $lang['Session_invalid']);
+		message(GENERAL_ERROR, $lang['Session_invalid']);
 	}
 
 	if ( $confirm )
 	{
 		$sql = 'DELETE FROM ' . GROUPS_USERS . ' WHERE user_id = ' . $userdata['user_id'] . ' AND group_id = ' . $group_id;
-		if (!$db->sql_query($sql))
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		group_reset_auth($userdata['user_id'], $group_id);
@@ -198,7 +198,7 @@ else if ( isset($HTTP_POST_VARS['unsub']) || isset($HTTP_POST_VARS['unsubpending
 		$message = $lang['Unsub_success']
 			. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('groups.php?' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>')
 			. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
-		message_die(GENERAL_MESSAGE, $message);
+		message(GENERAL_MESSAGE, $message);
 	}
 	else
 	{
@@ -242,7 +242,7 @@ else if ( $group_id )
 					AND group_id = ' . $group_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
 	}
 	$group_mods = $db->sql_fetchrowset($result);
 
@@ -252,7 +252,7 @@ else if ( $group_id )
 					AND group_type <> ' . GROUP_HIDDEN;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not get moderator information', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not get moderator information', '', __LINE__, __FILE__, $sql);
 	}
 //	$group_info = _cached($sql, 'groups' . $group_id, 1);
 //	if ( $group_info )
@@ -277,7 +277,7 @@ else if ( $group_id )
 			} 
 			else if ( $sid !== $userdata['session_id'] )
 			{
-				message_die(GENERAL_ERROR, $lang['Session_invalid']);
+				message(GENERAL_ERROR, $lang['Session_invalid']);
 			}
 
 			if ( !$is_moderator && $userdata['user_level'] != ADMIN )
@@ -285,7 +285,7 @@ else if ( $group_id )
 //				$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
 
 				$message = $lang['Not_group_moderator'] . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 			}
 
 			if ( isset($HTTP_POST_VARS['add']) )
@@ -297,7 +297,7 @@ else if ( $group_id )
 							WHERE u.user_id = ' . $userid;
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$user = $db->sql_fetchrow($result);
 				
@@ -306,9 +306,9 @@ else if ( $group_id )
 				$user_lang	= $user['user_lang'];
 				
 				$sql = 'INSERT INTO ' . GROUPS_USERS . " (user_id, group_id, user_pending) VALUES ($user_id, $group_id, 0)";
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				group_set_auth($user_id, $group_id);
@@ -326,7 +326,7 @@ else if ( $group_id )
 				$emailer->set_subject($lang['Group_added']);
 
 				$emailer->assign_vars(array(
-					'SITENAME' => $config['sitename'], 
+					'SITENAME' => $config['page_name'], 
 					'GROUP_NAME' => $group_name,
 					'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
 
@@ -357,9 +357,9 @@ else if ( $group_id )
 								WHERE group_id = ' . $group_id . '
 									AND group_mod = 1
 									AND user_id IN (' . $user_ids . ')';
-					if ( !$result = $db->sql_query($sql) )
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$group_mods = array();
@@ -375,9 +375,9 @@ else if ( $group_id )
 									SET group_mod = 0
 									WHERE group_id = ' . intval($group_id) . '
 										AND user_id IN (' . implode(', ', $group_mods) . ')';
-						if (!$db->sql_query($sql))
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 					}
 					
@@ -387,9 +387,9 @@ else if ( $group_id )
 								SET group_mod = 1
 								WHERE group_id = ' . intval($group_id) . '
 									AND user_id IN (' . implode(', ', $members_select) . ')' . $sql_in;
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 
 					
@@ -398,7 +398,7 @@ else if ( $group_id )
 					$message = $lang['group_set_mod']
 						. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('groups.php?' . POST_GROUPS_URL . '=' . $group_id) . '">', '</a>')
 						. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
-					message_die(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $message);
 
 				}
 			}
@@ -420,9 +420,9 @@ else if ( $group_id )
 									SET user_pending = 0
 									WHERE user_id IN (' . $sql_in . ')
 										AND group_id = ' . $group_id;
-						if (!$db->sql_query($sql))
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						for( $k = 0; $k < count($members); $k++)
@@ -435,9 +435,9 @@ else if ( $group_id )
 					else if ( isset($HTTP_POST_VARS['deny']) || $mode == 'remove' )
 					{
 						$sql = 'DELETE FROM ' . GROUPS_USERS . ' WHERE user_id IN (' . $sql_in . ') AND group_id = ' . $group_id;
-						if (!$db->sql_query($sql))
+						if ( !($result = $db->sql_query($sql)) )
 						{
-							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
 						for( $i = 0; $i < count($members); $i++ )
@@ -453,7 +453,7 @@ else if ( $group_id )
 					{
 						if ( !($result = $db->sql_query($sql_select)) )
 						{
-							message_die(GENERAL_ERROR, 'Could not get user email information', '', __LINE__, __FILE__, $sql);
+							message(GENERAL_ERROR, 'Could not get user email information', '', __LINE__, __FILE__, $sql);
 						}
 
 						$bcc_list = array();
@@ -479,7 +479,7 @@ else if ( $group_id )
 						$emailer->set_subject($lang['Group_approved']);
 
 						$emailer->assign_vars(array(
-							'SITENAME' => $config['sitename'], 
+							'SITENAME' => $config['page_name'], 
 							'GROUP_NAME' => $group_name,
 							'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['board_email_sig']) : '', 
 
@@ -494,7 +494,7 @@ else if ( $group_id )
 	}
 	else
 	{
-		message_die(GENERAL_MESSAGE, $lang['No_groups_exist']);
+		message(GENERAL_MESSAGE, $lang['No_groups_exist']);
 	}
 	
 	$page_title = $lang['Group_Control_Panel'];
@@ -511,7 +511,7 @@ else if ( $group_id )
 				ORDER BY u.username';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
 	}
 	$group_members = $db->sql_fetchrowset($result);
 	$db->sql_freeresult($result);
@@ -525,7 +525,7 @@ else if ( $group_id )
 				ORDER BY u.username';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Error getting user pending information', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Error getting user pending information', '', __LINE__, __FILE__, $sql);
 	}
 
 	$modgroup_pending_list = $db->sql_fetchrowset($result);
@@ -643,7 +643,7 @@ else if ( $group_id )
 				WHERE user_id <> ' . ANONYMOUS . $sql_id;
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not query table', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	$select_users = '<select class="postselect" name="user_id">';
@@ -960,7 +960,7 @@ else
 					ORDER BY g.group_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$groups_in = $db->sql_fetchrowset($result);
 		
@@ -1070,7 +1070,7 @@ else
 				ORDER BY g.group_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$groups_out = $db->sql_fetchrowset($result);
 

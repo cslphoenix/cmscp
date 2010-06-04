@@ -1117,8 +1117,8 @@ else
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
-		$s_hidden_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="adv" value="' . $adv . '" />';
-		$s_hidden_fields .= ( $mode == 'user' ) ? '<input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />' : '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
+		$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="adv" value="' . $adv . '" />';
+		$s_fields .= ( $mode == 'user' ) ? '<input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />' : '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
 	
 		if ( $mode == 'user' )
 		{
@@ -1156,7 +1156,7 @@ else
 	
 			'S_COLUMN_SPAN' => $s_column_span,
 			'S_AUTH_ACTION' => append_sid('admin_ug_auth.php'), 
-			'S_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_fields)
 		);
 	}
 	else
@@ -1223,7 +1223,7 @@ else
 			));
 		}
 	
-		$s_hidden_fields = '<input type="hidden" name="mode" value="' . $mode . '" />';
+		$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" />';
 	
 		$l_type = ( $mode == 'user' ) ? 'USER' : 'GROUP';
 	
@@ -1233,7 +1233,7 @@ else
 			'L_' . $l_type . '_SELECT' => ( $mode == 'user' ) ? $lang['Select_a_User'] : $lang['Select_a_Group'],
 			'L_LOOK_UP' => ( $mode == 'user' ) ? $lang['Look_up_User'] : $lang['Look_up_Group'],
 	
-			'S_FIELDS' => $s_hidden_fields, 
+			'S_FIELDS' => $s_fields, 
 			'S_' . $l_type . '_ACTION' => append_sid('admin_ug_auth.php'))
 		);
 	

@@ -8,7 +8,7 @@
 		</tr>
 		<!-- BEGIN forumrow -->
 		<tr>
-			<td class="row1" align="center" valign="middle" height="50"><img src="{catrow.forumrow.FORUM_FOLDER_IMG}" width="24" height="24" alt="{catrow.forumrow.L_FORUM_FOLDER_ALT}" title="{catrow.forumrow.L_FORUM_FOLDER_ALT}" /></td>
+			<td class="row1" align="center" valign="middle" height="50"><img src="{catrow.forumrow.FORUM_FOLDER_IMG}" width="24" height="24" alt="{catrow.forumrow.L_FORUM_FOLDER_ALT}" title="{catrow.forumrow.L_FORUM_FOLDER_ALT}"></td>
 			<td class="row1" width="100%" height="50">
 				<span style="float:right;">{L_TOPICS}: {catrow.forumrow.TOPICS} / {L_POSTS}: {catrow.forumrow.POSTS}</span>
 				<span>

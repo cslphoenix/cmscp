@@ -341,12 +341,12 @@ else
 				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
 				$template->assign_block_vars('forum_edit', array());
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode .'" /><input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $newmode .'" /><input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '" />';
 	
 				$template->assign_vars(array(
 					'S_FORUM_ACTION' => append_sid('admin_forums.php'),
 					'L_FORUM_HEAD' => $lang['Forum_admin'], 
-					'S_FIELDS' => $s_hidden_fields,
+					'S_FIELDS' => $s_fields,
 					'S_SUBMIT_VALUE' => $buttonvalue, 
 					'S_CAT_LIST' => $catlist,
 					'S_AUTH_LEVELS_SELECT' => $simple_auth,
@@ -537,7 +537,7 @@ else
 				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
 				$template->assign_block_vars('category_edit', array());
 	
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
 	
 				$template->assign_vars(array(
 					'CAT_TITLE' => $cat_title,
@@ -547,7 +547,7 @@ else
 					'L_CATEGORY' => $lang['Category'], 
 					'L_FORUM_HEAD' => $lang['Forum_admin'], 
 	
-					'S_FIELDS' => $s_hidden_fields, 
+					'S_FIELDS' => $s_fields, 
 					'S_SUBMIT_VALUE' => $buttonvalue, 
 					'S_FORUM_ACTION' => append_sid('admin_forums.php'),
 				));
@@ -592,7 +592,7 @@ else
 					'body' => "admin/forum_delete_body.tpl")
 				);
 	
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $forum_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $forum_id . '" />';
 	
 				$template->assign_vars(array(
 					'NAME' => $name, 
@@ -602,7 +602,7 @@ else
 					'L_MOVE_CONTENTS' => $lang['Move_contents'], 
 					'L_FORUM_NAME' => $lang['Forum_name'], 
 	
-					"S_HIDDEN_FIELDS" => $s_hidden_fields,
+					"S_HIDDEN_FIELDS" => $s_fields,
 					'S_FORUM_ACTION' => append_sid('admin_forums.php'), 
 					'S_SELECT_TO' => $select_to,
 					'S_SUBMIT_VALUE' => $buttonvalue)
@@ -809,7 +809,7 @@ else
 					'body' => "admin/forum_delete_body.tpl")
 				);
 	
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $cat_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $cat_id . '" />';
 	
 				$template->assign_vars(array(
 					'NAME' => $name, 
@@ -819,7 +819,7 @@ else
 					'L_MOVE_CONTENTS' => $lang['Move_contents'], 
 					'L_FORUM_NAME' => $lang['Forum_name'], 
 					
-					'S_FIELDS' => $s_hidden_fields,
+					'S_FIELDS' => $s_fields,
 					'S_FORUM_ACTION' => append_sid('admin_forums.php'), 
 					'S_SELECT_TO' => $select_to,
 					'S_SUBMIT_VALUE' => $buttonvalue)

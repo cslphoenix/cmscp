@@ -25,7 +25,7 @@ function get_data($mode, $id, $type)
 		break;
 		
 		case 'cash_user':
-			$table		= CASH_USERS;
+			$table		= CASHUSERS;
 			$idfield	= 'cash_user_id';
 		break;
 		
@@ -66,8 +66,8 @@ function get_data($mode, $id, $type)
 		break;
 		
 		case 'newscat':
-			$table		= NEWS_CATEGORY;
-			$idfield	= 'news_category_id';
+			$table		= NEWSCAT;
+			$idfield	= 'newscat_id';
 		break;
 		
 		case 'newsletter':
@@ -109,8 +109,8 @@ function get_data($mode, $id, $type)
 			$table		= NEWS;
 			$idfield	= 'news_id';
 			$connection	= 'news_category';
-			$table2		= NEWS_CATEGORY;
-			$idfield2	= 'news_category_id';
+			$table2		= NEWSCAT;
+			$idfield2	= 'newscat_id';
 		break;
 		
 		case 'profile':
@@ -134,7 +134,7 @@ function get_data($mode, $id, $type)
 			break;
 
 		default:
-			message_die(GENERAL_ERROR, 'Error Data Mode', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'Error Data Mode', '', __LINE__, __FILE__);
 			break;
 	}
 	
@@ -159,13 +159,13 @@ function get_data($mode, $id, $type)
 		break;
 		
 		default:
-			message_die(GENERAL_ERROR, "Wrong mode for data", "", __LINE__, __FILE__);
+			message(GENERAL_ERROR, "Wrong mode for data", "", __LINE__, __FILE__);
 			break;
 	}
 	
-	if ( !$result = $db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	$return = $db->sql_fetchrow($result);
@@ -173,7 +173,7 @@ function get_data($mode, $id, $type)
 	return $return;
 }
 	
-function renumber_order($mode, $type = '')
+function orders($mode, $type = '')
 {
 	global $db;
 
@@ -205,9 +205,9 @@ function renumber_order($mode, $type = '')
 		break;
 		
 		case 'newscat':
-			$table		= NEWS_CATEGORY;
-			$idfield	= 'news_category_id';
-			$orderfield	= 'news_category_order';
+			$table		= NEWSCAT;
+			$idfield	= 'newscat_id';
+			$orderfield	= 'newscat_order';
 		break;
 		
 		case 'server':
@@ -265,7 +265,7 @@ function renumber_order($mode, $type = '')
 	$sql .= " ORDER BY $orderfield ASC";
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	$i = 10;
@@ -273,9 +273,9 @@ function renumber_order($mode, $type = '')
 	while( $row = $db->sql_fetchrow($result) )
 	{
 		$sql = "UPDATE $table SET $orderfield = $i WHERE $idfield = " . $row[$idfield];
-		if (!$db->sql_query($sql))
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		$i += 10;

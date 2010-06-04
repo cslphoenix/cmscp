@@ -23,205 +23,69 @@
  *
  */
 
-function dir_remove($path)
-{
-	$dir = opendir($path);
-	
-	while ( $entry = readdir($dir) )
-	{
-		if ( $entry == '..' || $entry == '.' )
-		{
-			continue;
-		}
-		
-		if ( is_dir($path . $entry) )
-		{
-			dir_remove($path . $entry . "/");
-		}
-		else
-		{
-			unlink($path . $entry);
-		}
-	}
-	closedir($dir);
-	rmdir($path);
-}
-
-function set_http(&$website)
-{
-	if (!preg_match('#^http[s]?:\/\/#i', $website))
-	{
-		$website = 'http://' . $website;
-	}
-}
-			
 function get_data($mode, $id, $type)
 {
-	global $db;
-
+	global $db, $lang;
+	
 	switch ( $mode )
 	{
-		case 'authlist':
-			$table		= AUTHLIST;
-			$idfield	= 'auth_id';
-		break;
-		
-		case 'gallery':
-			$table		= GALLERY;
-			$idfield	= 'gallery_id';
-		break;
-		
-		case 'cash':
-			$table		= CASH;
-			$idfield	= 'cash_id';
-		break;
-		
-		case 'cash_user':
-			$table		= CASH_USERS;
-			$idfield	= 'cash_user_id';
-		break;
-		
-		case 'event':
-			$table		= EVENT;
-			$idfield	= 'event_id';
-		break;
-		
-		case 'network':
-			$table		= NETWORK;
-			$idfield	= 'network_id';
-		break;
-		
-		case 'teams':
-			$table		= TEAMS;
-			$idfield	= 'team_id';
-		break;
-		
-		case 'server':
-			$table		= SERVER;
-			$idfield	= 'server_id';
-		break;
-		
-		case 'groups':
-			$table		= GROUPS;
-			$idfield	= 'group_id';
-		break;
-		
-		case 'games':
-			$table		= GAMES;
-			$idfield	= 'game_id';
+		case AUTHLIST:			$idfield = 'authlist_id';			break;
+		case CASH:				$idfield = 'cash_id';				break;
+		case CASH_USERS:		$idfield = 'cash_user_id';			break;		
+		case EVENT:				$idfield = 'event_id';				break;
+		case GALLERY:			$idfield = 'gallery_id';			break;
+		case GAMES:				$idfield = 'game_id';				break;
+		case GROUPS:			$idfield = 'group_id';				break;
+		case MATCH:				$idfield = 'match_id';				break;
+		case NAVIGATION;		$idfield = 'navi_id';				break;
+		case NETWORK:			$idfield = 'network_id';			break;
+		case NEWSCAT:			$idfield = 'newscat_id';			break;
+		case NEWSLETTER:		$idfield = 'newsletter_id';			break;
+		case PROFILE:			$idfield = 'profile_id';			break;
+		case PROFILE_CATEGORY:	$idfield = 'profile_category_id';	break;
+		case PROFILE_DATA:		$idfield = 'user_id';				break;
+		case RANKS:				$idfield = 'rank_id';				break;			
+		case SERVER:			$idfield = 'server_id';				break;
+		case THEMES:			$idfield = 'themes_id';				break;
+		case TEAMSPEAK:			$idfield = 'teamspeak_id';			break;
+		case TRAINING:			$idfield = 'training_id';			break;
+		case USERS:				$idfield = 'user_id';				break;
 			
-		break;
-		
-		case 'news':
-			$table		= NEWS;
-			$idfield	= 'news_id';
-		break;
-		
-		case 'newscat':
-			$table		= NEWS_CATEGORY;
-			$idfield	= 'news_category_id';
-		break;
-		
-		case 'newsletter':
-			$table		= NEWSLETTER;
-			$idfield	= 'newsletter_id';
-		break;
-		
-		case 'server':
-			$table		= SERVER;
-			$idfield	= 'server_id';
-			break;
-		
-		case 'ranks':
-			$table		= RANKS;
-			$idfield	= 'rank_id';
-			break;
-		
-		case 'navi':
-			$table		= NAVIGATION;
-			$idfield	= 'navi_id';
-			break;
-			
-		case 'user':
-			$table		= USERS;
-			$idfield	= 'user_id';
-			break;
-			
-		case 'teamspeak':
-			$table		= TEAMSPEAK;
-			$idfield	= 'teamspeak_id';
-			break;
-			
-		case 'match':
-			$table		= MATCH;
-			$idfield	= 'match_id';
-			break;
-		
-		case 'news_newscat':
-			$table		= NEWS;
+		case NEWS:
 			$idfield	= 'news_id';
 			$connection	= 'news_category';
-			$table2		= NEWS_CATEGORY;
-			$idfield2	= 'news_category_id';
-		break;
-		
-		case 'profile':
-			$table		= PROFILE;
-			$idfield	= 'profile_id';
+			$table2		= NEWSCAT;
+			$idfield2	= 'newscat_id';
 			break;
 			
-		case 'profile_category':
-			$table		= PROFILE_CATEGORY;
-			$idfield	= 'profile_category_id';
-			break;
-			
-		case 'profile_data':
-			$table		= PROFILE_DATA;
-			$idfield	= 'user_id';
-			break;
-			
-		case 'training':
-			$table		= TRAINING;
-			$idfield	= 'training_id';
+		case TEAMS:
+			$idfield	= 'team_id';
+			$connection	= 'team_game';
+			$table2		= GAMES;
+			$idfield2	= 'game_id';
 			break;
 
-		default:
-			message_die(GENERAL_ERROR, 'Error Data Mode', '', __LINE__, __FILE__);
-			break;
+		default:	message(GENERAL_ERROR, 'Error Data Mode' . $lang['back']);		break;
 	}
 	
-	switch($type)
+	switch( $type )
 	{
-		case '0':
-			$sql = "SELECT * FROM $table WHERE $idfield = $id";
-		break;
-		
-		case '1':
-			$sql = "SELECT  t1.*, t2.*
-						FROM $table t1, $table2 t2
-						WHERE t1.$idfield = $id
-							AND t1.$connection = t2.$idfield2";
-		break;
-		
-		case '2':
-			$sql = "SELECT  t1.*, t2.*
-						FROM $table t1
-							LEFT JOIN $table2 t2 ON t1.$connection = $idfield2
-						WHERE $idfield = $id";
-		break;
-		
-		case '3':
-			$sql = "SELECT * FROM $table ORDER BY $idfield DESC";
-			break;
-		
-		default:
-			message_die(GENERAL_ERROR, "Wrong mode for data", "", __LINE__, __FILE__);
-			break;
+		case '0':	$sql = "SELECT * FROM $mode";											break;
+		case '1':	$sql = "SELECT * FROM $mode WHERE $idfield = $id";						break;
+		case '2':	$sql = "SELECT  t1.*, t2.*
+								FROM $mode t1, $table2 t2
+								WHERE t1.$idfield = $id
+										AND t1.$connection = t2.$idfield2";					break;
+		case '3':	$sql = "SELECT  t1.*, t2.*
+								FROM $mode t1
+									LEFT JOIN $table2 t2 ON t1.$connection = $idfield2
+								WHERE $idfield = $id";										break;
+		default:	message(GENERAL_ERROR, 'Wrong mode for data', '', __LINE__, __FILE__);	break;
 	}
 	
-	if ( !$result = $db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	$return = $db->sql_fetchrow($result);
@@ -229,59 +93,98 @@ function get_data($mode, $id, $type)
 	return $return;
 }
 
-function get_data_array($table, $where, $order)
+function get_data_array($table, $where, $order, $sort)
 {
 	global $db;
 	
-	$where_to = ( $where ) ? 'WHERE ' . $where : '';
-	$order_to = ( $order ) ? 'ORDER BY ' . $order . ' DESC' : '';
+	$where_to = ( $where ) ? "WHERE $where" : '';
+	$order_to = ( $order ) ? "ORDER BY $order $sort" : '';
 	
 	$sql = "SELECT * FROM $table $where_to $order_to";
-	if ( !$result = $db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$return = $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
 	
 	return $return;
 }
+
+function get_data_max($table, $order, $where)
+{
+	global $db;
 	
-function renumber_order($mode, $type = '')
+	$where_to = ( $where ) ? "WHERE $where" : '';
+	
+	$sql = "SELECT MAX($order) AS max FROM $table $where_to";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$return = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	
+	return $return;
+}
+
+
+function get_data_index($table, $field, $where, $order)
+{
+	global $db;
+	
+	$field_to = ( $field ) ? "WHERE $field" : '*';
+	$where_to = ( $where ) ? "WHERE $where" : '';
+	$order_to = ( $order ) ? "ORDER BY $order" : '';
+	
+	$sql = "SELECT $field FROM $table $where_to $order_to LIMIT 0, 5";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$return = $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
+	
+	return $return;
+}
+
+function update($table, $index, $move, $index_id)
+{
+	global $db;
+	
+	$sql = "UPDATE $table SET " . $index . "_order = " . $index . "_order + $move WHERE " . $index . "_id = $index_id";
+	if ( !$db->sql_query($sql) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	return;
+}
+
+function orders($mode, $type = '')
 {
 	global $db;
 
 	switch ( $mode )
 	{
-		case 'teams':
-			$table		= TEAMS;
-			$idfield	= 'team_id';
-			$orderfield	= 'team_order';
-		break;
-		
-		case 'server':
-			$table		= SERVER;
-			$idfield	= 'server_id';
-			$orderfield	= 'server_order';
-		break;
-		
-		case 'games':
-			$table		= GAMES;
-			$idfield	= 'game_id';
-			$orderfield	= 'game_order';
-		break;
-		
-		case 'groups':
-			$table		= GROUPS;
+		case GAMES:			$idfield = 'game_id';		$orderfield = 'game_order';		break;
+		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
+		case NEWSCAT:		$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
+		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
+	
+		case GROUPS:
 			$idfield	= 'group_id';
 			$orderfield	= 'group_order';
 			$typefield	= 'group_single_user';
 		break;
 		
-		case 'newscat':
-			$table		= NEWS_CATEGORY;
-			$idfield	= 'news_category_id';
-			$orderfield	= 'news_category_order';
-		break;
+		case NETWORK:
+			$idfield	= 'network_id';
+			$orderfield = 'network_order';
+			$typefield	= 'network_type';
+			break;
+		
+		
 		
 		case 'server':
 			$table		= SERVER;
@@ -297,12 +200,7 @@ function renumber_order($mode, $type = '')
 			$typefield	= 'rank_type';
 			break;
 			
-		case 'network':
-			$table		= NETWORK;
-			$idfield	= 'network_id';
-			$orderfield = 'network_order';
-			$typefield	= 'network_type';
-			break;
+		
 		
 		case 'navi':
 			$table		= NAVIGATION;
@@ -323,9 +221,23 @@ function renumber_order($mode, $type = '')
 			$orderfield = 'forum_order';
 			$typefield = 'cat_id';
 			break;
+			
+		case 'teams':
+			$table		= TEAMS;
+			$idfield	= 'team_id';
+			$orderfield	= 'team_order';
+			break;
+			
+		case 'profile':
+			$table		= PROFILE;
+			$idfield	= 'profile_id';
+			$orderfield	= 'profile_order';
+			$typefield	= 'profile_category';
+			break;
 	}
 
-	$sql = "SELECT * FROM $table";
+	$sql = "SELECT $idfield, $orderfield FROM $mode";
+	
 	if ( $type == '-1' )
 	{
 		$sql .= " WHERE $idfield != $type";
@@ -335,20 +247,22 @@ function renumber_order($mode, $type = '')
 		$sql .= " WHERE $typefield = $type";
 		$sql .= ( $mode == 'ranks' && $type == RANK_FORUM ) ?  ' AND rank_special = 1' : '';
 	}
+	
 	$sql .= " ORDER BY $orderfield ASC";
-	if (!($result = $db->sql_query($sql)))
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
-
+	
 	$i = 10;
 
 	while( $row = $db->sql_fetchrow($result) )
 	{
-		$sql = "UPDATE $table SET $orderfield = $i WHERE $idfield = " . $row[$idfield];
-		if (!$db->sql_query($sql))
+		$sql = "UPDATE $mode SET $orderfield = $i WHERE $idfield = " . $row[$idfield];
+#		if ( !($result = $db->sql_query($sql)) )
+		if ( !$db->sql_query($sql) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		$i += 10;
@@ -357,7 +271,7 @@ function renumber_order($mode, $type = '')
 
 function size_dir($path)
 {
-	global $sttings, $db, $lang;
+	global $settings, $db, $lang;
 	
 	$size = 0;
 
@@ -392,11 +306,88 @@ function size_dir($path)
 	}
 	else
 	{
-		// Couldn't open Avatar dir.
 		$size = $lang['Not_available'];
 	}
 	
 	return $size;
 }
+
+function size_file($file)
+{
+	$size = 0;
+	
+	if ( $file >= 1048576 )
+	{
+		$size = round($file / 1048576 * 100) / 100 . " MB";
+	}
+	else if($file >= 1024)
+	{
+		$size = round($file / 1024 * 100) / 100 . " KB";
+	}
+	else
+	{
+		$size = $size . " Bytes";
+	}
+	
+	return $size;
+}
+
+function dir_remove($path)
+{
+	$dir = opendir($path);
+	
+	while ( $entry = readdir($dir) )
+	{
+		if ( $entry == '..' || $entry == '.' )
+		{
+			continue;
+		}
+		
+		if ( is_dir($path . $entry) )
+		{
+			dir_remove($path . $entry . "/");
+		}
+		else
+		{
+			unlink($path . $entry);
+		}
+	}
+	closedir($dir);
+	rmdir($path);
+}
+
+function set_http(&$website)
+{
+	if ( !preg_match('#^http[s]?:\/\/#i', $website) )
+	{
+		$website = 'http://' . $website;
+	}
+	
+	return $website;
+}
+
+function set_chmod($host, $port, $user, $pass, $path, $file, $perms)
+{
+	global $root_path, $db, $config, $settings, $lang;
+	
+	$conn = ftp_connect($host, $port, 3);
+	
+	if (!$conn) die('Verbindung zu ftp.example.com konnte nicht aufgebaut werden');
+	
+	// Login mit Benutzername und Passwort
+	if (!ftp_login($conn, $user, $pass)) die('Fehler beim Login zu ftp.example.com');
+	
+	// Kommando "SITE CHMOD 0600 /home/user/privatefile" an den Server senden */
+	if (ftp_site($conn, 'CHMOD 0' . $perms . ' ' . $path))
+	{
+		echo "Kommando erfolgreich ausgeführt.\n";
+	}
+	else
+	{
+		die('Kommando fehlgeschlagen.');
+//		message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
+	}
+}
+
 
 ?>

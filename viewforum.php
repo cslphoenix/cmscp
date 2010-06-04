@@ -27,17 +27,17 @@ if ( !empty($forum_id) )
 		WHERE forum_id = $forum_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain forums information', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not obtain forums information', '', __LINE__, __FILE__, $sql);
 	}
 }
 else
 {
-	message_die(GENERAL_MESSAGE, 'Forum_not_exist');
+	message(GENERAL_MESSAGE, 'Forum_not_exist');
 }
 
 if ( !($forum_row = $db->sql_fetchrow($result)) )
 {
-	message_die(GENERAL_MESSAGE, 'Forum_not_exist');
+	message(GENERAL_MESSAGE, 'Forum_not_exist');
 }
 
 $userdata = session_pagestart($user_ip, $forum_id);
@@ -58,7 +58,7 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 	//
 	$message = ( !$is_auth['auth_view'] ) ? $lang['Forum_not_exist'] : sprintf($lang['Sorry_auth_read'], $is_auth['auth_read_type']);
 
-	message_die(GENERAL_MESSAGE, $message);
+	message(GENERAL_MESSAGE, $message);
 }
 
 $sql = "SELECT u.user_id, u.username, u.user_color 
@@ -73,7 +73,7 @@ $sql = "SELECT u.user_id, u.username, u.user_color
 	ORDER BY u.user_id";
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
+	message(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
 }
 
 $moderators = array();
@@ -94,7 +94,7 @@ $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
 	ORDER BY g.group_order";
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
+	message(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
 }
 
 while( $row = $db->sql_fetchrow($result) )
@@ -140,7 +140,7 @@ $sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as i
 	ORDER BY t.topic_last_post_id DESC ";
 if ( !($result = $db->sql_query($sql)) )
 {
-   message_die(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
+   message(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
 }
 
 $topic_rowset = array();
@@ -169,7 +169,7 @@ $sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as i
 	LIMIT $start, " . $settings['site_entry_per_page'];
 if ( !($result = $db->sql_query($sql)) )
 {
-   message_die(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
+   message(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
 }
 
 $total_topics = 0;
@@ -417,9 +417,9 @@ if( $total_topics )
 
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
 
-		$first_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['topic_time'], $board_config['board_timezone']);
+		$first_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['topic_time'], $board_config['page_timezone']);
 
-		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['board_timezone']);
+		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['page_timezone']);
 
 		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_username2'] != '' ) ? $topic_rowset[$i]['post_username2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid('profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
 

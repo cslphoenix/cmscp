@@ -12,11 +12,11 @@
 		</tr>
 		<tr>
 			<td width="50%" align="right">{L_USERNAME}:</td>
-			<td><input type="text" class="post" name="username" size="25" maxlength="40" value="{USERNAME}" /></td>
+			<td><input type="text" class="post" name="username" size="25" maxlength="40" value="{USERNAME}"></td>
 		</tr>
 		<tr>
 			<td align="right">{L_PASSWORD}:</td>
-			<td><input type="password" class="post" name="password" size="25" maxlength="32" /></td>
+			<td><input type="password" class="post" name="password" size="25" maxlength="32"></td>
 		</tr>
 		<!-- BEGIN switch_allow_autologin -->
 		<tr align="center">

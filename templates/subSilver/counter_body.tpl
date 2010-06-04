@@ -4,7 +4,7 @@
 </tr>
 <tr>
 	<td class="row4">
-		<form method="post" action="{S_COUNTER_ACTION}">
+		<form action="{S_COUNTER_ACTION}" method="post">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td width="50%" valign="top">{SELECT_DAY}{SELECT_MONTH}{SELECT_YEAR} <input class="button" type="submit" name="submit" value="Daten anzeigen"></td>

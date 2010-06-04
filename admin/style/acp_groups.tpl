@@ -1,16 +1,16 @@
 <!-- BEGIN display -->
-<form action="{S_GROUP_ACTION}" method="post">
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_GROUP_HEAD}</a></li>
-	<li><a href="{S_GROUP_CREATE}">{L_GROUP_CREATE}</a></li>
-	<li><a id="settings" href="{S_GROUP_OVERVIEW}">{L_GROUP_OVERVIEW}</a></li>
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+	<li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
 </ul>
 </div>
 
 <table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_GROUP_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -18,20 +18,15 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead">{L_GROUP_NAME}</td>
-	<td class="rowHead" nowrap="nowrap">{L_GROUP_MEMBERCOUNT}</td>
-	<td class="rowHead" colspan="4" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" width="99%"><span style="float:right;">{L_MEMBERCOUNT}</span>{L_NAME}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN group_row -->
+<!-- BEGIN row_group -->
 <tr>
-	<td class="row_class1" align="left" width="95%">{display.group_row.NAME}</td>
-	<td class="row_class1" align="center">{display.group_row.MEMBER_COUNT}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.group_row.MOVE_UP} {display.group_row.MOVE_DOWN}</td>
-	<td class="row_class2" align="center"><a href="{display.group_row.U_MEMBER}">{L_MEMBER}</a></td>
-	<td class="row_class2" align="center"><a href="{display.group_row.U_UPDATE}">{L_UPDATE}</a></td>
-	<td class="row_class2" align="center"><a href="{display.group_row.U_DELETE}">{display.group_row.L_DELETE}</a></td>
+	<td class="row_class1" align="left"><span style="float:right;">{display.row_group.COUNT}&nbsp;</span>{display.row_group.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.row_group.MOVE_UP} {display.row_group.MOVE_DOWN} <a href="{display.row_group.U_MEMBER}">{I_MEMBER}</a> <a href="{display.row_group.U_UPDATE}">{I_UPDATE}</a> {display.row_group.DELETE}</td>
 </tr>
-<!-- END group_row -->
+<!-- END row_group -->
 <!-- BEGIN no_groups -->
 <tr>
 	<td class="row_class1" align="center" colspan="7">{NO_GROUPS}</td>
@@ -42,7 +37,7 @@
 <table class="footer" border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="group_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_GROUP_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -51,15 +46,37 @@
 
 <!-- BEGIN groups_edit -->
 <script type="text/javascript" src="./../admin/style/jscolor.js"></script>
-<form action="{S_GROUP_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
+
+<script type="text/javascript">
+// <![CDATA[
+
+function activated()
+{
+	<!-- BEGIN group_auth_data -->
+	document.getElementById("{group_auth_data.NAME}").checked = true;
+	<!-- END group_auth_data -->
+}
+
+function deactivated()
+{
+	var radios = document.forms["post"].elements["deactivated"];
+	
+	for ( var i = 0; i < radios.length; i++ )
+	{
+		radios[i].checked = true;
+	}
+}
+
+// ]]>
+</script>
+<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_GROUP_ACTION}" method="post">{L_GROUP_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_GROUP_NEW_EDIT}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 	<!-- BEGIN edit_group -->
-	<li><a href="{S_MEMBER_ACTION}" method="post">{L_GROUP_MEMBER}</a></li>
+	<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
 	<!-- END edit_group -->
-	<li><a id="settings" href="{S_GROUP_OVERVIEW}">{L_GROUP_OVERVIEW}</a></li>
 </ul>
 </div>
 
@@ -69,12 +86,12 @@
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
 <div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_GROUP_DATA}</a></li>
-	<li><a href="#" id="right">{L_GROUP_AUTH}</a></li>
+	<li id="active"><a href="#" id="current">{L_DATA}</a></li>
+	<li><a href="#" id="right">{L_AUTH}</a></li>
 </ul>
 </div>
 
@@ -83,69 +100,74 @@
 	<td valign="top">
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td class="row1" width="23%"><label for="group_name">{L_GROUP_NAME}: *</label></td>
-			<td class="row2"><input type="text" class="post" name="group_name" id="group_name" value="{GROUP_NAME}"></td>
+			<td class="row1" width="23%"><label for="group_name">{L_NAME}: *</label></td>
+			<td class="row3"><input type="text" class="post" name="group_name" id="group_name" value="{NAME}"></td>
 		</tr>
 		<!-- BEGIN add_group -->
 		<tr>
-			<td class="row1">{L_GROUP_MOD}: *</td>
-			<td class="row2">{S_GROUP_MOD}</td>
+			<td class="row1"><label for="user_id">{L_MOD}: *</label></td>
+			<td class="row3">{S_MOD}</td>
 		</tr>
 		<!-- END add_group -->
 		<tr>
-			<td class="row1">{L_GROUP_ACCESS}:</td>
-			<td class="row2">{S_GROUP_ACCESS}</td>
+			<td class="row1"><label for="group_access">{L_ACCESS}:</label></td>
+			<td class="row3">{S_ACCESS}</td>
 		</tr>
 		<tr>
-			<td class="row1">{L_GROUP_TYPE}:</td>
-			<td class="row2">{S_GROUP_TYPE}</td>
+			<td class="row1"><label for="group_type">{L_TYPE}:</label></td>
+			<td class="row3">{S_TYPE}</td>
 		</tr>
 		<tr>
-			<td class="row1 top"><label for="group_desc">{L_GROUP_DESC}:</label></td>
+			<td class="row1 top"><label for="group_desc">{L_DESC}:</label></td>
 			<td class="row3"><textarea class="textarea" name="group_desc" id="group_desc" rows="5" cols="40">{GROUP_DESC}</textarea></td>
 		</tr>
 		<tr>
-			<td class="row1"><label for="group_color">{L_GROUP_COLOR}:</label></td>
-			<td class="row2"><input size="7" class="color post" type="text" name="group_color" id="group_color" value="{GROUP_COLOR}"></td>
+			<td class="row1"><label for="group_color">{L_COLOR}:</label></td>
+			<td class="row3"><input size="7" class="color post" type="text" name="group_color" id="group_color" value="{COLOR}"></td>
 		</tr>
 		<tr>
-			<td class="row1"><label for="group_legend">{L_GROUP_LEGEND}:</label></td>
-			<td class="row3"><input type="radio" name="group_legend" id="group_legend" value="1" {S_LEGEND_YES} /> {L_SHOW} <input type="radio" name="group_legend" value="0" {S_LEGEND_NO} /> {L_NOSHOW} </td>
+			<td class="row1"><label for="group_legend">{L_LEGEND}:</label></td>
+			<td class="row3"><label><input type="radio" name="group_legend" id="group_legend" value="1" {S_LEGEND_YES} />&nbsp;{L_SHOW}</label>&nbsp;&nbsp;<label><input type="radio" name="group_legend" value="0" {S_LEGEND_NO} />&nbsp;{L_NOSHOW}</label></td>
 		</tr>
 		<tr>
-			<td class="row1">{L_GROUP_RANK}:</td>
-			<td class="row3">{S_GROUP_RANK}</td>
+			<td class="row1"><label for="rank_id">{L_RANK}:</label></td>
+			<td class="row3">{S_RANK}</td>
 		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-		</table>
-		
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_GROUP_IMAGE}</a></li>
-		</ul>
-		</div>
-		<table class="edit" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td class="row1 top">{L_GROUP_IMAGE_CURRENT}:</td>
-			<td class="row3 top"><img src="{GROUP_IMAGE}" alt="" />&nbsp;<input type="checkbox" name="group_image_delete">&nbsp;{L_IMAGE_DELETE}</td>
+			<td colspan="2">
+				<div id="navcontainer">
+				<ul id="navlist">
+					<li id="active"><a href="#" id="current">{L_IMAGE}</a></li>
+				</ul>
+				</div>
+			</td>
 		</tr>
+		<!-- BEGIN image -->
 		<tr>
-			<td class="row1">{L_GROUP_IMAGE_UPLOAD}:</td>
-			<td class="row3"></td>
+			<td class="row1 top">{L_IMAGE_CURRENT}:</td>
+			<td class="row3"><img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="group_image_delete">&nbsp;{L_IMAGE_DELETE}</td>
 		</tr>
-		
+		<!-- END image -->
+		<tr>
+			<td class="row1"><label for="ufile">{L_IMAGE_UPLOAD}:</label></td>
+			<td class="row3"><input type="file" class="post" name="group_image" /></td>
+		</tr>		
 		</table>
 	</td>
-	<td valign="top">
+	<td valign="top" align="right">
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN group_auth_data -->
 		<tr>
-			<td class="row1"><label for="{groups_edit.group_auth_data.S_AUTH_NAME}">{groups_edit.group_auth_data.CELL_TITLE}</label></td>
-			<td class="row3">{groups_edit.group_auth_data.S_AUTH_LEVELS_SELECT}</td>
+			<td class="row1"><label for="{groups_edit.group_auth_data.NAME}">{groups_edit.group_auth_data.TITLE}</label></td>
+			<td class="row3">{groups_edit.group_auth_data.S_SELECT}</td>
 		</tr>
 		<!-- END group_auth_data -->
+		<tr>
+			<td class="row2" colspan="2" align="right"><a class="small" href="#" onclick="activated();">&raquo;&nbsp;{L_MARK_YES}</a>&nbsp;&nbsp;<a class="small" href="#" onclick="deactivated();">&raquo;&nbsp;{L_MARK_NO}</a></td>
+		</tr>
 		</table>
 	</td>
 </tr>
@@ -153,7 +175,7 @@
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -161,19 +183,18 @@
 <!-- END groups_edit -->
 
 <!-- BEGIN group_member -->
-<form action="{S_GROUP_ACTION}" method="post" name="post" id="list">
+<form action="{S_ACTION}" method="post" name="post" id="list">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_GROUP_ACTION}" method="post">{L_GROUP_HEAD}</a></li>
-	<li><a href="{S_GROUP_EDIT}">{L_GROUP_EDIT}</a></li>
-	<li id="active"><a href="#" id="current">{L_GROUP_MEMBER}</a></li>
-	<li><a id="settings" href="{S_GROUP_OVERVIEW}">{L_GROUP_OVERVIEW}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li><a href="{S_EDIT}">{L_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_MEMBER}</a></li>
 </ul>
 </div>
 
 <table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_GROUP_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -186,20 +207,20 @@
 </div>
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" align="left" width="98%">{L_USERNAME}</td>
+	<td class="rowHead" align="left" width="100%">{L_USERNAME}</td>
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
 <!-- BEGIN mods_row -->
 <tr>
-	<td class="{group_member.mods_row.CLASS}" align="left" width="100%">{group_member.mods_row.USERNAME}</td>
-	<td class="{group_member.mods_row.CLASS}" align="center" nowrap="nowrap">{group_member.mods_row.REGISTER}</td>
-	<td class="{group_member.mods_row.CLASS}" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{group_member.mods_row.USER_ID}"></td>
+	<td class="row_class1" align="left" width="100%">{group_member.mods_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{group_member.mods_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{group_member.mods_row.USER_ID}"></td>
 </tr>
 <!-- END mods_row -->
 <!-- BEGIN switch_no_moderators -->
 <tr>
-	<td colspan="7" class="row_noentry" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
+	<td class="row_noentry" colspan="3" align="center">{L_NO_MODERATORS}</td>
 </tr>
 <!-- END switch_no_moderators -->
 </table>
@@ -213,20 +234,20 @@
 </div>
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" align="left" width="98%">{L_USERNAME}</td>
+	<td class="rowHead" align="left" width="100%">{L_USERNAME}</td>
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
 <!-- BEGIN nomods_row -->
 <tr>
-	<td class="{group_member.nomods_row.CLASS}" align="left" width="100%">{group_member.nomods_row.USERNAME}</td>
-	<td class="{group_member.nomods_row.CLASS}" align="center" nowrap="nowrap">{group_member.nomods_row.REGISTER}</td>
-	<td class="{group_member.nomods_row.CLASS}" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{group_member.nomods_row.USER_ID}"></td>
+	<td class="row_class1" align="left" width="100%">{group_member.nomods_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{group_member.nomods_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{group_member.nomods_row.USER_ID}"></td>
 </tr>
 <!-- END nomods_row -->
 <!-- BEGIN switch_no_members -->
 <tr>
-	<td colspan="7" class="row_noentry" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
+	<td class="row_noentry" colspan="3" align="center">{L_NO_MEMBERS}</td>
 </tr>
 <!-- END switch_no_members -->
 </table>
@@ -266,19 +287,19 @@
 {S_FIELDS}
 </form>
 
-<form action="{S_GROUP_ACTION}" method="post" name="post" id="list">
+<form action="{S_ACTION}" method="post" name="post" id="list">
 <table class="head" cellspacing="0">
 <tr>
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_GROUP_ADD_MEMBER}</a></li>
+				<li id="active"><a href="#" id="current">{L_ADD_MEMBER}</a></li>
 			</ul>
 		</div>
 	</th>
 </tr>
 <tr>
-	<td class="row2"><span class="small">{L_GROUP_ADD_MEMBER_EX}</span></td>
+	<td class="row2"><span class="small">{L_ADD_MEMBER_EX}</span></td>
 </tr>
 </table>
 
@@ -301,14 +322,14 @@
 <!-- BEGIN groups_list -->
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_GROUP_ACTION}" method="post">{L_GROUP_HEAD}</a></li>
-	<li><a href="#" id="right">{L_GROUP_OVERVIEW}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li><a href="#" id="right">{L_OVERVIEW}</a></li>
 </ul>
 </div>
 
 <table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_GROUP_OVERVIEW_EXPLAIN}</td>
+	<td class="row2 small">{L_OVERVIEW_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -320,14 +341,14 @@
 	<td>
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{groups_list.groups_data.GROUP_NAME}</a></li>
+			<li id="active"><a href="#" id="current">{groups_list.groups_data.NAME}</a></li>
 		</ul>
 		</div>
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN groups_auth -->
 		<tr>
-			{groups_list.groups_data.groups_auth.CELL_TITLE}
-			<td class="row3">{groups_list.groups_data.groups_auth.S_AUTH_LEVELS_SELECT}</td>
+			{groups_list.groups_data.groups_auth.TITLE}
+			<td class="row3">{groups_list.groups_data.groups_auth.SELECT}</td>
 		</tr>
 		<!-- END groups_auth -->
 		</table>
