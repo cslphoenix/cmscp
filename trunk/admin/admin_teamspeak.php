@@ -133,9 +133,9 @@ else
 					$template->assign_block_vars('teamspeak_edit.user', array());
 				}
 				
-				$s_hidden_fields = '';
-				$s_hidden_fields .= '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak_id . '" />';
+				$s_fields = '';
+				$s_fields .= '<input type="hidden" name="mode" value="' . $new_mode . '" />';
+				$s_fields .= '<input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak_id . '" />';
 
 				$template->assign_vars(array(
 					'L_TEAMSPEAK_HEAD'		=> $lang['teamspeak_head'],
@@ -182,7 +182,7 @@ else
 					'S_VIEWER_YES'	=> ( $teamspeak['teamspeak_show'] ) ? ' checked="checked"' : '',
 					'S_VIEWER_NO'	=> ( !$teamspeak['teamspeak_show'] ) ? ' checked="checked"' : '',
 
-					'S_FIELDS'		=> $s_hidden_fields,
+					'S_FIELDS'		=> $s_fields,
 					'S_TEAMSPEAK_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member'),
 					'S_TEAMSPEAK_ACTION'	=> append_sid('admin_teamspeak.php'),
 				));
@@ -508,8 +508,8 @@ else
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	
-	$s_hidden_fields = '<input type="hidden" name="mode" value="edit" />';
-	$s_hidden_fields .= '<input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak['teamspeak_id'] . '" />';
+	$s_fields = '<input type="hidden" name="mode" value="edit" />';
+	$s_fields .= '<input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak['teamspeak_id'] . '" />';
 	
 	$template->assign_vars(array(
 		'L_TEAMSPEAK_TITLE'		=> $lang['teamspeak_head'],
@@ -526,7 +526,7 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['common_delete'],
 		
-		'S_FIELDS'		=> $s_hidden_fields,
+		'S_FIELDS'		=> $s_fields,
 		'S_TEAMSPEAK_EDIT'		=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_TEAMSPEAK_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_TEAMSPEAK_ACTION'	=> append_sid('admin_teamspeak.php'),

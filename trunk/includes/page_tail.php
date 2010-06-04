@@ -10,8 +10,8 @@ global $do_gzip_compress, $userdata;
 
 $template->set_filenames(array('overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl'));
 
-$debug = (defined('DEBUG')) ? '[ Debug: on ]' : '[ Debug: off ]';
-$cache = (defined('CACHE')) ? '[ Cache: on ]' : '[ Cache: off ]';
+$debug = (defined('DEBUG')) ? '[ Debug: On ]' : '[ Debug: Off ]';
+$cache = (defined('CACHE')) ? '[ Cache: On ]' : '[ Cache: Off ]';
 
 $template->assign_vars(array(
 	

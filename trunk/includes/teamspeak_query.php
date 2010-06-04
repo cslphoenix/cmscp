@@ -679,7 +679,7 @@ function channelInfo($ip,$tPort,$port,$cID)
 		$html .= "<tr><td><span class=\"fontBold\">Codec:</span></td></tr>\n";
 		$html .= "<tr><td>".getCodec($codec)."<br><br></td></tr>\n";
 		$name = str_replace("'","¶",$name);
-		$html .= "<tr><td><br><input type=\"button\" id=\"submit\" onclick=\"javascript:w('login.php?cName=".removeChar($name)."', 'TS2', '420', '150');\" value=\"Join Channel\" class=\"submit\" /></td></tr>\n";
+		$html .= "<tr><td><br><input type=\"button\" id=\"submit\" onclick=\"javascript:w('login.php?cName=".removeChar($name)."', 'TS2', '420', '150');\" value=\"Join Channel\" class=\"submit\"></td></tr>\n";
 	} else {
 		$html = "<tr><td>Channel is deleted!</td></tr>\n";
 	}

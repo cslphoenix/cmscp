@@ -90,7 +90,7 @@ class emailer
 
 		if (trim($template_file) == '')
 		{
-			message_die(GENERAL_ERROR, 'No template file set', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'No template file set', '', __LINE__, __FILE__);
 		}
 
 		if (trim($template_lang) == '')
@@ -108,13 +108,13 @@ class emailer
 
 				if (!@file_exists(@cms_realpath($tpl_file)))
 				{
-					message_die(GENERAL_ERROR, 'Could not find email template file :: ' . $template_file, '', __LINE__, __FILE__);
+					message(GENERAL_ERROR, 'Could not find email template file :: ' . $template_file, '', __LINE__, __FILE__);
 				}
 			}
 
 			if (!($fd = @fopen($tpl_file, 'r')))
 			{
-				message_die(GENERAL_ERROR, 'Failed opening template file :: ' . $tpl_file, '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Failed opening template file :: ' . $tpl_file, '', __LINE__, __FILE__);
 			}
 
 			$this->tpl_msg[$template_lang . $template_file] = fread($fd, filesize($tpl_file));
@@ -220,9 +220,9 @@ class emailer
 					$sql = "UPDATE " . CONFIG . " 
 						SET config_value = '1'
 						WHERE config_name = 'sendmail_fix'";
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'Unable to update config table', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'Unable to update config table', '', __LINE__, __FILE__, $sql);
 					}
 	
 					$config['sendmail_fix'] = 1;
@@ -233,7 +233,7 @@ class emailer
 			// Did it work?
 			if (!$result)
 			{
-				message_die(GENERAL_ERROR, 'Failed sending email :: ' . (($this->use_smtp) ? 'SMTP' : 'PHP') . ' :: ' . $result, '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Failed sending email :: ' . (($this->use_smtp) ? 'SMTP' : 'PHP') . ' :: ' . $result, '', __LINE__, __FILE__);
 			}
 		}
 

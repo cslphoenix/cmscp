@@ -45,7 +45,7 @@ else
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 	
-	$authlist_id	= request(POST_AUTHLIST_URL);
+	$authlist_id	= request(POST_AUTHLIST_URL, 0);
 	$confirm		= request('confirm');
 	$mode			= request('mode');
 	
@@ -70,7 +70,7 @@ else
 			if ( $mode == '_create' )
 			{
 				$authlist = array(
-					'authlist_name' => request('authlist_name', 'text'),
+					'authlist_name' => request('authlist_name', 2),
 				);
 				$new_mode = '_create_save';
 			}
@@ -101,7 +101,7 @@ else
 		
 		case '_create_save':
 		
-			$authlist_name = request('authlist_name', 'text');
+			$authlist_name = request('authlist_name', 2);
 			
 			if ( !$authlist_name )
 			{
@@ -132,7 +132,7 @@ else
 		case '_update_save':
 		
 			$authlist		= get_data('authlist', $authlist_id, 0);
-			$authlist_name	= request('authlist_name', 'text');
+			$authlist_name	= request('authlist_name', 2);
 			
 			if ( !$authlist_name )
 			{
@@ -211,24 +211,20 @@ else
 			
 		default:
 		
-			$template->set_filenames(array('body' => 'style/acp_authlist.tpl'));
+			$template->set_filenames(array('body' => 'style/acp_changelog.tpl'));
 			$template->assign_block_vars('display', array());
 			
 			$s_fields = '<input type="hidden" name="mode" value="_create" />';
 					
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['authlist_field']),
-				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
-				'L_EXPLAIN'		=> $lang['authlist_explain'],
-				
-				'L_UPDATE'		=> $lang['common_update'],
-				'L_DELETE'		=> $lang['common_delete'],
-				'L_SETTINGS'	=> $lang['common_settings'],
+				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['changelog']),
+				'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['changelog']),
+				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['changelog']),
+				'L_EXPLAIN'		=> $lang['changelog_explain'],
 				
 				'S_FIELDS'		=> $s_fields,
-				'S_CREATE'		=> append_sid('admin_authlist.php?mode=_create'),
-				'S_ACTION'		=> append_sid('admin_authlist.php'),
+				'S_CREATE'		=> append_sid('admin_changelog.php?mode=_create'),
+				'S_ACTION'		=> append_sid('admin_changelog.php'),
 			));
 			
 			$authlist_data = get_data_array(AUTHLIST, '', 'authlist_id', 'ASC');

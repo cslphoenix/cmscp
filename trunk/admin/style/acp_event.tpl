@@ -17,19 +17,18 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead">{L_TITLE}</td>
-	<td class="rowHead" colspan="2" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" width="99%">{L_TITLE}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN row_event -->
 <tr>
-	<td class="{display.row_event.CLASS}" align="left" width="99%"><span style="float:right;">{display.row_event.DATE}</span>{display.row_event.TITLE}</td>
-	<td class="{display.row_event.CLASS}"><a href="{display.row_event.U_UPDATE}">{L_UPDATE}</a></td>		
-	<td class="{display.row_event.CLASS}"><a href="{display.row_event.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class1" align="left"><span style="float:right;">{display.row_event.DATE}</span>{display.row_event.TITLE}</td>
+	<td class="row_class2" align="center"><a href="{display.row_event.U_UPDATE}">{I_UPDATE}</a> <a href="{display.row_event.U_DELETE}">{I_DELETE}</a></td>		
 </tr>
 <!-- END row_event -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
+	<td class="row_noentry" colspan="2" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -73,7 +72,7 @@ tinyMCE.init({
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 </ul>
 </div>
@@ -84,7 +83,7 @@ tinyMCE.init({
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -92,7 +91,7 @@ tinyMCE.init({
 	<td class="row3"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
 </tr>
 <tr>
-	<td class="row1">{L_LEVEL}:</td>
+	<td class="row1"><label for="event_level">{L_LEVEL}:</label></td>
 	<td class="row3">{S_LEVEL}</td>
 </tr>
 <tr>
@@ -109,13 +108,13 @@ tinyMCE.init({
 </tr>
 <tr>
 	<td class="row1"><label for="event_comments">{L_COMMENTS}:</label></td>
-	<td class="row3"><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</td>
+	<td class="row3"><label><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

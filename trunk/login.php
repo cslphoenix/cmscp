@@ -6,7 +6,7 @@
 //
 define("IN_LOGIN", true);
 //define('IN_CMS', true);
-define('IN_CMS', 1);
+define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
 
@@ -41,7 +41,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			WHERE username = '" . str_replace("\\'", "''", $username) . "'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Error in obtaining userdata', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'Error in obtaining userdata', '', __LINE__, __FILE__, $sql);
 		}
 
 		if ( $row = $db->sql_fetchrow($result) )
@@ -65,7 +65,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				if ($row['user_last_login_try'] && $config['login_reset_time'] && $config['max_login_attempts'] && 
 					$row['user_last_login_try'] >= (time() - ($config['login_reset_time'] * 60)) && $row['user_login_tries'] >= $config['max_login_attempts'] && $userdata['user_level'] != ADMIN )
 				{
-					message_die(GENERAL_MESSAGE, sprintf($lang['Login_attempts_exceeded'], $config['max_login_attempts'], $config['login_reset_time']));
+					message(GENERAL_MESSAGE, sprintf($lang['Login_attempts_exceeded'], $config['max_login_attempts'], $config['login_reset_time']));
 				}
 				
 				if ( md5($password) == $row['user_password'] && $row['user_active'] )
@@ -73,7 +73,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					if ( isset($HTTP_POST_VARS['admin']) && $userdata['username'] != $username )
 					{
 						$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid('news.php') . '">', '</a>');
-						message_die(GENERAL_MESSAGE, $message);
+						message(GENERAL_MESSAGE, $message);
 					}
 					$autologin = ( isset($HTTP_POST_VARS['autologin']) ) ? TRUE : 0;
 
@@ -86,8 +86,8 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					if (isset($HTTP_POST_VARS['admin']))
 					{
 //						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
-//						add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
-						_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'UCP_ACP_LOGIN');
+//						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
+						log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'UCP_ACP_LOGIN');
 					}
 
 					if( $session_id )
@@ -97,7 +97,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					}
 					else
 					{
-						message_die(CRITICAL_ERROR, "Couldn't start session : login", "", __LINE__, __FILE__);
+						message(CRITICAL_ERROR, "Couldn't start session : login", "", __LINE__, __FILE__);
 					}
 				}
 				// Only store a failed login attempt for an active user - inactive users can't login even with a correct password
@@ -115,8 +115,8 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					if (isset($HTTP_POST_VARS['admin']))
 					{
 //						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
-//						add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
-						_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, UCP_ACP_LOGIN_FALSE, '');
+//						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
+						log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, UCP_ACP_LOGIN_FALSE, '');
 					}
 				}
 
@@ -125,14 +125,14 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 
 				if (strstr(urldecode($redirect), "\n") || strstr(urldecode($redirect), "\r") || strstr(urldecode($redirect), ';url'))
 				{
-					message_die(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
+					message(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
 				}
 				
 				$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
 				$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid('news.php') . '">', '</a>');
 
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 			}
 		}
 		else
@@ -142,21 +142,21 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 
 			if (strstr(urldecode($redirect), "\n") || strstr(urldecode($redirect), "\r") || strstr(urldecode($redirect), ';url'))
 			{
-				message_die(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
+				message(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
 			}
 				
 			if (isset($HTTP_POST_VARS['admin']))
 			{
 //				$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
-//				add_log($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_False'], '');
-				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_login_false');
+//				log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_False'], '');
+				log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_login_false');
 			}
 
 			$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
 
 			$message = $lang['Error_login'] . '<br><br>' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br><br>' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid('news.php') . '">', '</a>');
 
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	// Admin Session Logout
@@ -166,16 +166,16 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		// session id check
 		if ( $sid == '' || $sid != $userdata['session_id'] )
 		{
-			message_die(GENERAL_ERROR, 'Invalid_session');
+			message(GENERAL_ERROR, 'Invalid_session');
 		}
 		
 		$sql = "UPDATE " . SESSIONS . " SET session_admin = 0 WHERE session_id = '" . $userdata['session_id'] . "'";
 		if (!($result = $db->sql_query($sql)))
 		{
-			message_die(CRITICAL_ERROR, 'Couldn\'t update Sessions Table', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'Couldn\'t update Sessions Table', '', __LINE__, __FILE__, $sql);
 		}
 		
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_acp_logout');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_acp_logout');
 		
 		redirect(append_sid('news.php', true));
 	}
@@ -184,7 +184,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		// session id check
 		if ($sid == '' || $sid != $userdata['session_id'])
 		{
-			message_die(GENERAL_ERROR, 'Invalid_session');
+			message(GENERAL_ERROR, 'Invalid_session');
 		}
 
 		if( $userdata['session_logged_in'] )

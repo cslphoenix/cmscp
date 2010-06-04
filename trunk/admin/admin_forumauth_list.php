@@ -397,7 +397,7 @@ else
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
-		$s_hidden_fields = '<input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '">';
+		$s_fields = '<input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '">';
 	
 		$template->assign_vars(array(
 			'FORUM_NAME' => $forum_name,
@@ -412,7 +412,7 @@ else
 	
 			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
 			'S_COLUMN_SPAN' => $s_column_span,
-			'S_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_fields)
 		);
 	
 	}
@@ -499,7 +499,7 @@ else
 		//
 		// Finally pass any remaining items to the template
 		//
-		$s_hidden_fields = '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '">';
+		$s_fields = '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '">';
 	
 		$template->assign_vars(array(
 			'CAT_NAME' => $cat_name,
@@ -513,7 +513,7 @@ else
 	
 			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
 			'S_COLUMN_SPAN' => count($forum_auth_fields)+1,
-			'S_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_fields)
 		);
 	
 	

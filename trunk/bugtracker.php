@@ -126,7 +126,7 @@ if ( $mode == 'list' )
 				' . $order_by;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$bugtracker_data = $db->sql_fetchrowset($result);
 //	$bugtracker_data = _cached($sql, 'bugtracker_list');
@@ -233,7 +233,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 					WHERE bugtracker_id = ' . $bugtracker_id;
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$bugtracker_data = $db->sql_fetchrow($result);
 		
@@ -325,7 +325,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 			
 			$message = ( $mode == 'add' ) ? $lang['bt_add'] : $lang['bt_edit'];
 			$message .= '<br><br>' . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid('bugtracker.php') . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	
@@ -364,13 +364,13 @@ else if ( $mode == 'details' && $bugtracker_id )
 				WHERE bt.bugtracker_id = ' . $bugtracker_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$details = $db->sql_fetchrow($result);
 	
 	if ( !$details )
 	{
-		message_die(GENERAL_ERROR, 'Falsche ID ?');
+		message(GENERAL_ERROR, 'Falsche ID ?');
 	}
 	
 	$template->assign_block_vars('details.bt_comment', array());
@@ -383,7 +383,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 	
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$comment_entry = $db->sql_fetchrowset($result);
 //	$comment_entry = _cached($sql, 'bugtracker_details_' . $bugtracker_id . '_comments');
@@ -405,7 +405,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 							AND bugtracker_id = ' . $bugtracker_id;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$unread = $db->sql_fetchrow($result);
 			
@@ -416,9 +416,9 @@ else if ( $mode == 'details' && $bugtracker_id )
 				$sql = 'UPDATE ' . BUGTRACKER_COMMENTS_READ . '
 							SET read_time = ' . time() . '
 						WHERE bugtracker_id = ' . $bugtracker_id . ' AND user_id = ' . $userdata['user_id'];
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 			else
@@ -427,9 +427,9 @@ else if ( $mode == 'details' && $bugtracker_id )
 				
 				$sql = 'INSERT INTO ' . BUGTRACKER_COMMENTS_READ . ' (bugtracker_id, user_id, read_time)
 					VALUES (' . $bugtracker_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 		}
@@ -514,7 +514,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 							AND user_id = ' . $userdata['user_id'];
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			if ( $db->sql_numrows($result) )
@@ -522,18 +522,18 @@ else if ( $mode == 'details' && $bugtracker_id )
 				$sql = 'UPDATE ' . BUGTRACKER_COMMENTS_READ . '
 							SET read_time = ' . time() . '
 						WHERE bugtracker_id = ' . $bugtracker_id . ' AND user_id = ' . $userdata['user_id'];					
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 			else
 			{				
 				$sql = 'INSERT INTO ' . BUGTRACKER_COMMENTS_READ . ' (bugtracker_id, user_id, read_time)
 					VALUES (' . $bugtracker_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 
@@ -541,7 +541,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			_comment_message('add', 'bugtracker', $bugtracker_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
 			$message = $lang['add_comment'] . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_id) . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	

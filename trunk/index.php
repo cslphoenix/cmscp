@@ -70,7 +70,7 @@ if ( $mode == 'cache')
 {
 	_cache_clear();
 	
-	message_die(GENERAL_MESSAGE, 'Cache geleert!');
+	message(GENERAL_MESSAGE, 'Cache geleert!');
 }
 
 redirect(append_sid('news.php', true));
@@ -87,7 +87,7 @@ $sql = 'SELECT g.group_id, ' . implode(', g.', $group_auth_fields) . '
 				AND gu.user_id = ' . $userdata['user_id'] . ' ORDER BY group_id';
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 }
 
 $usergroup_index_data = $group_in = array();
@@ -107,7 +107,7 @@ $sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . '
 		ORDER BY group_id';
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
+	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql2);
 }
 
 $group_index_data = array();

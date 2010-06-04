@@ -41,30 +41,9 @@ if ( $config['gzip_compress'] )
 }
 
 //
-// MOD - TODAY AT - BEGIN
-// PARSE DATEFORMAT TO GET TIME FORMAT 
-//
-$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
-//eregi($time_reg, $config['default_dateformat'], $regs);
-preg_match($time_reg, $config['default_dateformat'], $regs);
-$config['default_timeformat'] = $regs[1];
-unset($time_reg);
-unset($regs);
-
-//
-// GET THE TIME TODAY AND YESTERDAY
-//
-$today_ary = explode('|', create_date('m|d|Y', time(), $config['board_timezone']));
-$config['time_today'] = gmmktime(0 - $config['board_timezone'] - $config['board_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-$config['time_yesterday'] = $config['time_today'] - 86400;
-unset($today_ary);
-
-//
 // Parse and show the overall header.
 //
-$template->set_filenames(array(
-	'overall_header' => ( empty($gen_simple_header) ) ? 'overall_header.tpl' : 'simple_header.tpl')
-);
+$template->set_filenames(array('overall_header' => ( empty($gen_simple_header) ) ? 'overall_header.tpl' : 'simple_header.tpl'));
 
 //
 // Generate logged in/logged out status
@@ -105,7 +84,7 @@ else
 	$l_login_logout = $lang['Login'];
 }
 
-$s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($config['default_dateformat'], $userdata['user_lastvisit'], $config['board_timezone']) : '';
+$s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($config['default_dateformat'], $userdata['user_lastvisit'], $config['page_timezone']) : '';
 
 //
 //	Counter
@@ -119,27 +98,20 @@ if ( $settings['site_counter'] == '1' )
 	counter_result();
 }
 
-$sql = 'SELECT group_id, group_name, group_color, group_order
-			FROM ' . GROUPS . '
-			WHERE group_legend = 1
-		ORDER BY group_order';
-//$group_data = _cached($sql, 'list_overall_group');
-if ( !($result = $db->sql_query($sql)) )
-{
-	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-}
-$groups_data = $db->sql_fetchrowset($result);
+$sql = "SELECT group_id, group_name, group_color, group_order FROM " . GROUPS . " WHERE group_legend = 1 ORDER BY group_order";
+$groups_data = _cached($sql, 'list_overall_group');
 
 if ( $groups_data )
 {
 	$groups_list = array();
+	
 	for ( $i=0; $i < count($groups_data); $i++ )
 	{
 		$groups_id		= $groups_data[$i]['group_id'];
 		$groups_name	= $groups_data[$i]['group_name'];
 		$groups_style	= $groups_data[$i]['group_color'];
 		
-		$groups_list[] = '<a href="' . append_sid('groups.php?mode=view&amp;' . POST_GROUPS_URL . '=' . $groups_id) . '" style="color:' . $groups_style . '"><b>' . $groups_name . '</b></a>';
+		$groups_list[] = '<a href="' . append_sid('groups.php?mode=view&amp;' . POST_GROUPS_URL . '=' . $groups_id) . '" style="color:#' . $groups_style . '"><b>' . $groups_name . '</b></a>';
 	}
 	
 	$groups_list = implode(', ', $groups_list);
@@ -169,7 +141,7 @@ $sql = "SELECT u.username, u.user_id, u.user_allow_viewonline, u.user_level, u.u
 	ORDER BY u.username ASC, s.session_ip ASC";
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 }
 
 $userlist_ary = array();
@@ -237,15 +209,15 @@ if ( $total_online_users > $config['record_online_users'])
 	$config['record_online_date'] = time();
 
 	$sql = "UPDATE " . CONFIG . " SET config_value = '$total_online_users' WHERE config_name = 'record_online_users'";
-	if ( !$result = $db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	$sql = "UPDATE " . CONFIG . " SET config_value = '" . $config['record_online_date'] . "' WHERE config_name = 'record_online_date'";
-	if ( !$result = $db->sql_query($sql) )
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 }
 
@@ -286,9 +258,9 @@ if ( ($userdata['session_logged_in']) && (empty($gen_simple_header)) )
 			$sql = "UPDATE " . USERS . "
 				SET user_last_privmsg = " . $userdata['user_lastvisit'] . "
 				WHERE user_id = " . $userdata['user_id'];
-			if ( !$db->sql_query($sql) )
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'Could not update private message new/read time for user', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'Could not update private message new/read time for user', '', __LINE__, __FILE__, $sql);
 			}
 
 			$s_privmsg_new = 1;
@@ -411,13 +383,13 @@ foreach ($userauth as $key => $value)
 //
 $admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br><br>' : '';
 
-$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
-if ( !($result = $db->sql_query($sql)) )
-{
-	message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
-}
-
-$changelog = $db->sql_fetchrow($result);
+//$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
+//if ( !($result = $db->sql_query($sql)) )
+//{
+//	message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+//}
+//
+//$changelog = $db->sql_fetchrow($result);
 
 //
 // Standardseitentitel
@@ -428,8 +400,8 @@ if (!isset($page_title))
 }
 
 // Format Timezone. We are unable to use array_pop here, because of PHP3 compatibility
-$l_timezone = explode('.', $config['board_timezone']);
-$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['board_timezone'])] : $lang[number_format($config['board_timezone'])];
+$l_timezone = explode('.', $config['page_timezone']);
+$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['page_timezone'])] : $lang[number_format($config['page_timezone'])];
 
 //
 // The following assigns all _common_ variables that may be used at any point
@@ -438,11 +410,11 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 $template->assign_vars(array(
 							 
 	
-	'VERSION'		=> $config['version'],
-	'CMS_VERSION'	=> $changelog['changelog_number'],
+	'VERSION'		=> $config['page_version'],
+#	'CMS_VERSION'	=> $changelog['changelog_number'],
 							 
 	
-	'SITENAME' => $config['sitename'],
+	'SITENAME' => $config['page_name'],
 	
 	'ADMIN_LINK'	=> $admin_link,
 	
@@ -452,7 +424,7 @@ $template->assign_vars(array(
 	'U_FORUM'	=> append_sid('forum.php'),
 	
 	'LAST_VISIT_DATE' => sprintf($lang['You_last_visit'], $s_last_visit),
-	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['board_timezone'])),
+	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['page_timezone'])),
 	'TOTAL_USERS_ONLINE' => $l_online_users,
 	
 	
@@ -461,7 +433,7 @@ $template->assign_vars(array(
 	'GROUPS_LEGENED'	=> 'Gruppen: ' . $groups_list,
 	
 	'LOGGED_IN_USER_LIST' => $online_userlist,
-	'RECORD_USERS' => sprintf($lang['Record_online_users'], $config['record_online_users'], create_date($config['default_dateformat'], $config['record_online_date'], $config['board_timezone'])),
+	'RECORD_USERS' => sprintf($lang['Record_online_users'], $config['record_online_users'], create_date($config['default_dateformat'], $config['record_online_date'], $config['page_timezone'])),
 
 	'L_USERNAME' => $lang['Username'],
 	'L_PASSWORD' => $lang['Password'],

@@ -262,13 +262,13 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				
 			$sql = "INSERT INTO " . CONTACT . " (contact_from, contact_type, contact_mail, contact_homepage, contact_rival_name, contact_rival_tag, contact_maps, contact_message, contact_team, contact_age, contact_date, contact_categorie, contact_wartype, contact_status, contact_time)
 				VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['contact_nick']) . "', $contact_type, '" . str_replace("\'", "''", $HTTP_POST_VARS['contact_mail']) . "', '" . str_replace("\'", "''", $HTTP_POST_VARS['contact_hp']) . "', '$contact_rival_name', '$contact_rival_tag', '$contact_maps', '$contact_message', '$contact_team', '$contact_age', '$contact_date', '$contact_categorie', '$contact_wartype', 0, '" . time() . "')";
-			if (!$result = $db->sql_query($sql))
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
 			$message = $lang['contact_save'] . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
-			message_die(GENERAL_MESSAGE, $message);
+			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	

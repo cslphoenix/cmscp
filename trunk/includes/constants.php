@@ -10,6 +10,7 @@ define('DELETED',	-1);
 define('ANONYMOUS',	1);
 
 //	Userlevel
+define('ANONYMOUS',	0);
 define('GUEST',		0);
 define('USER',		1);
 define('TRIAL',		2);
@@ -38,16 +39,17 @@ define('LOG_SEK_MATCH',			9);
 define('LOG_SEK_NAVI',			10);
 define('LOG_SEK_NETWORK',		11);
 define('LOG_SEK_NEWS',			12);
-define('LOG_SEK_NEWSLETTER',	13);
-define('LOG_SEK_PROFILE',		14);
-define('LOG_SEK_RANK',			15);
-define('LOG_SEK_TEAM',			16);
-define('LOG_SEK_TEAMSPEAK',		17);
-define('LOG_SEK_TRAINING',		18);
-define('LOG_SEK_USER',			19);
+define('LOG_SEK_NEWSCAT',		13);
+define('LOG_SEK_NEWSLETTER',	14);
+define('LOG_SEK_PROFILE',		15);
+define('LOG_SEK_RANK',			16);
+define('LOG_SEK_TEAM',			17);
+define('LOG_SEK_TEAMSPEAK',		18);
+define('LOG_SEK_TRAINING',		19);
+define('LOG_SEK_USER',			20);
 
-define('LOG_SEK_CASH',			20);
-define('LOG_SEK_GALLERY',		21);
+define('LOG_SEK_CASH',			21);
+define('LOG_SEK_GALLERY',		22);
 
 define('LOG_SEK_CHANGELOG',		98);
 define('LOG_SEK_BUGTRACKER',	99);
@@ -117,13 +119,13 @@ define('AUTH_ALLOWED',		1);//	erlaubt
 define('AUTH_SPECIAL',		2);//	Special für Benutzer
 define('AUTH_DEFAULT',		3);//	Vorgabe Einstellung
 
-define('AUTH_USER',			0);//	Benutzer
-define('AUTH_TRIAL',		1);//	Trialmember
-define('AUTH_MEMBER',		2);//	Member
-define('AUTH_COLEADER',		3);//	Squadleader
-define('AUTH_LEADER',		4);//	Leader
-define('AUTH_UPLOAD',		5);//	Leader
-
+define('AUTH_GUEST',		0);//	Gäste
+define('AUTH_USER',			1);//	Benutzer
+define('AUTH_TRIAL',		2);//	Trialmember
+define('AUTH_MEMBER',		3);//	Member
+define('AUTH_COLEADER',		4);//	Squadleader
+define('AUTH_LEADER',		5);//	Leader
+define('AUTH_UPLOAD',		6);//	Uploader
 
 //	Newsletter Status
 define('NL_ADD',		0);
@@ -204,8 +206,10 @@ define('POST_GAMES_URL',		'g');
 define('POST_GAMESERVER_URL',	'gs');
 define('POST_GROUPS_URL',		'g');
 define('POST_GALLERY_URL',		'g');
+define('POST_GALLERY_PIC_URL',	'gp');
 define('POST_LOG_URL',			'l');
 define('POST_MATCH_URL',		'm');
+define('POST_MATCH_PIC_URL',	'mp');
 define('POST_NAVIGATION_URL',	'n');
 define('POST_NETWORK_URL',		'n');
 define('POST_NEWS_URL',			'n');
@@ -214,14 +218,14 @@ define('POST_NEWSLETTER_URL',	'nl');
 define('POST_POST_URL',			'p');
 define('POST_PROFILE_URL',		'p');
 define('POST_RANKS_URL',		'r');
-define('POST_TEAMS_URL',			't');
+define('POST_TEAMS_URL',		't');
 define('POST_TEAMSPEAK_URL',	't');
 define('POST_TOPIC_URL',		't');
 define('POST_TRAINING_URL',		'tr');
 define('POST_USERS_URL',		'u');
 define('POST_EVENT_URL',		'e');
 define('POST_CASH_URL',			'c');
-define('POST_CASH_USER_URL',	'cu');
+define('POST_CASHUSER_URL',	'cu');
 
 define('POST_BUGTRACKER_URL',	'bt');
 define('POST_CHANGELOG_URL',	'cl');
@@ -265,8 +269,10 @@ define('THEMES_NAME',				$db_prefix . 'themes_name');
 define('USERS',						$db_prefix . 'users');
 
 //	Galerie
+
 define('GALLERY',					$db_prefix . 'gallery');
-define('GALLERY_CATEGORY',			$db_prefix . 'gallery_category');
+define('GALLERY_PIC',				$db_prefix . 'gallery_pic');
+define('GALLERY_SETTINGS',			$db_prefix . 'gallery_settings');
 
 //	Gruppen
 define('GROUPS',					$db_prefix . 'groups');
@@ -279,7 +285,7 @@ define('PROFILE_DATA',				$db_prefix . 'profile_data');
 
 //	News
 define('NEWS',						$db_prefix . 'news');
-define('NEWS_CATEGORY',				$db_prefix . 'news_category');
+define('NEWSCAT',					$db_prefix . 'newscategory');
 define('NEWS_COMMENTS',				$db_prefix . 'news_comments');
 define('NEWS_COMMENTS_READ',		$db_prefix . 'news_comments_read');
 
@@ -324,6 +330,7 @@ define('MATCH_COMMENTS_READ',		$db_prefix . 'match_comments_read');
 define('MATCH_DETAILS',				$db_prefix . 'match_details');
 define('MATCH_LINEUP',				$db_prefix . 'match_lineup');
 define('MATCH_USERS',				$db_prefix . 'match_users');
+define('MATCH_MAPS',				$db_prefix . 'match_maps');
 
 //	Training
 define('TRAINING',					$db_prefix . 'training');
@@ -335,5 +342,6 @@ define('TRAINING_USERS',			$db_prefix . 'training_users');
 define('CASH',						$db_prefix . 'cash');
 define('CASH_BANK',					$db_prefix . 'cash_bank');
 define('CASH_USERS',				$db_prefix . 'cash_users');
+
 
 ?>

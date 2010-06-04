@@ -76,9 +76,9 @@ if ( $mode == 'subscribe' || !$mode )
 				
 				$sql = 'INSERT INTO ' . NEWSLETTER . " (newsletter_mail, newsletter_status, active_key)
 					VALUES ('$mail', 0, '$active_key')";
-				if ( !$db->sql_query($sql) )
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				include($root_path . 'includes/functions_mail.php');
@@ -92,19 +92,19 @@ if ( $mode == 'subscribe' || !$mode )
 				
 				_send_notice($mail_data, 'newsletter_subscribe_confirm', 'newsletter', "?mode=active&mail=$mail&key_code=$active_key");
 				
-				_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
+				log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
 				$message = $lang['newsletter_subscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 			}
 			else
 			{
-				message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+				message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 			}
 		}
 		else
 		{
-			message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+			message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 		}
 	}
 }
@@ -115,15 +115,15 @@ else if ( $mode == 'active' && $mail && $key_code )
 				WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '" AND active_key = "' . $key_code . '"';
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 			
 	if ($row = $db->sql_fetchrow($result))
 	{
 		$sql = 'UPDATE ' . NEWSLETTER . ' SET newsletter_status = 1 WHERE newsletter_mail = "' . $row['newsletter_mail'] . '"';
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 
 		include($root_path . 'includes/functions_mail.php');
@@ -137,17 +137,17 @@ else if ( $mode == 'active' && $mail && $key_code )
 		
 		_send_notice($mail_data, 'newsletter_subscribe', 'newsletter');
 		
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
 		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
-		message_die(GENERAL_MESSAGE, $message);
+		message(GENERAL_MESSAGE, $message);
 	}
 	$db->sql_freeresult($result);
 	
-	_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add_confirm');
+	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add_confirm');
 		
 	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
-	message_die(GENERAL_ERROR, $message);
+	message(GENERAL_ERROR, $message);
 }
 else if ( $mode == 'unsubscribe' )
 {
@@ -164,14 +164,14 @@ else if ( $mode == 'unsubscribe' )
 		
 		_send_notice($mail_data, 'newsletter_unsubscribe_confirm', 'newsletter', "?mode=delete&mail=$mail&key_code=$deactive_key");
 				
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete');
 		
 		$message = $lang['newsletter_unsubscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
-		message_die(GENERAL_MESSAGE, $message);
+		message(GENERAL_MESSAGE, $message);
 	}
 	else
 	{
-		message_die(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
+		message(GENERAL_ERROR, $lang['nl_mail_invalid'], '');
 	}
 }
 else if ( $mode == 'delete' && $mail && $deactive_key )
@@ -181,7 +181,7 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 				WHERE newsletter_mail = "' . str_replace("\'", "''", $mail) . '" AND active_key = "' . $deactive_key . '"';
 	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 			
 	if ($row = $db->sql_fetchrow($result))
@@ -189,9 +189,9 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 		$active_key = md5(uniqid(rand(), TRUE));
 		
 		$sql = 'DELETE FROM ' . NEWSLETTER . ' WHERE newsletter_mail = "' . $mail . '" AND active_key = "' . $deactive_key . '"';
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		include($root_path . 'includes/functions_mail.php');
@@ -205,14 +205,14 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 		
 		_send_notice($mail_data, 'newsletter_unsubscribe', 'newsletter');
 		
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete_confirm');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete_confirm');
 		
 		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
-		message_die(GENERAL_MESSAGE, $message);
+		message(GENERAL_MESSAGE, $message);
 	}
 		
 	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
-	message_die(GENERAL_ERROR, $message);
+	message(GENERAL_ERROR, $message);
 }
 else
 {

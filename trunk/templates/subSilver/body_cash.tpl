@@ -53,22 +53,22 @@
 
 <table class="out" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head" width="100%">{L_CASH_USERNAME}</td>
+	<td class="info_head" width="100%">{L_CASHUSER_USERNAME}</td>
 	<td class="info_head">{L_CASH_AMOUNT}</td>
 	<td class="info_head">{L_CASH_INTERVAL}</td>
 </tr>
 <!-- BEGIN cash_users_row -->
 <tr>
-	<td class="{display.cash_users_row.CLASS}" align="left" width="99%">{display.cash_users_row.CASH_USERNAME} <span class="small">({display.cash_users_row.CASH_USER_MONTH})</span></td>
-	<td class="{display.cash_users_row.CLASS}" align="right" width="99%">{display.cash_users_row.CASH_USER_AMOUNT}&nbsp;</td>
-	<td class="{display.cash_users_row.CLASS}" align="center" nowrap="nowrap">{display.cash_users_row.CASH_USER_INTERVAL}</td>
+	<td class="{display.cash_users_row.CLASS}" align="left" width="99%">{display.cash_users_row.CASHUSER_USERNAME} <span class="small">({display.cash_users_row.CASHUSER_MONTH})</span></td>
+	<td class="{display.cash_users_row.CLASS}" align="right" width="99%">{display.cash_users_row.CASHUSER_AMOUNT}&nbsp;</td>
+	<td class="{display.cash_users_row.CLASS}" align="center" nowrap="nowrap">{display.cash_users_row.CASHUSER_INTERVAL}</td>
 </tr>
 <!-- END cash_users_row -->
 <!-- BEGIN cash_user -->
 <tr>
-	<td class="{display.cash_user.CLASS}" align="left" width="99%"><b>{display.cash_user.CASH_USER_NAME}</b> <span class="small">({display.cash_user.CASH_USER_MONTH})</span></td>
-	<td class="{display.cash_user.CLASS}" align="center" width="99%"><b>{display.cash_user.CASH_USER_AMOUNT}</b>&nbsp;</td>
-	<td class="{display.cash_user.CLASS}" align="center" nowrap="nowrap"><b>{display.cash_user.CASH_USER_INTERVAL}</b></td>
+	<td class="{display.cash_user.CLASS}" align="left" width="99%"><b>{display.cash_user.CASHUSER_NAME}</b> <span class="small">({display.cash_user.CASHUSER_MONTH})</span></td>
+	<td class="{display.cash_user.CLASS}" align="center" width="99%"><b>{display.cash_user.CASHUSER_AMOUNT}</b>&nbsp;</td>
+	<td class="{display.cash_user.CLASS}" align="center" nowrap="nowrap"><b>{display.cash_user.CASHUSER_INTERVAL}</b></td>
 </tr>
 <!-- END cash_user -->
 <!-- BEGIN no_entry_users -->

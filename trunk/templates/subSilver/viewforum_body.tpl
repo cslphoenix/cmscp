@@ -1,4 +1,4 @@
-<form method="post" action="{S_POST_DAYS_ACTION}">
+<form action="{S_POST_DAYS_ACTION}" method="post">
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
@@ -33,7 +33,7 @@
 	</tr>
 	<!-- BEGIN topicrow -->
 	<tr>
-		<td class="row1" align="center" valign="middle" width="20"><img src="{topicrow.TOPIC_FOLDER_IMG}" width="19" height="18" alt="{topicrow.L_TOPIC_FOLDER_ALT}" title="{topicrow.L_TOPIC_FOLDER_ALT}" /></td>
+		<td class="row1" align="center" valign="middle" width="20"><img src="{topicrow.TOPIC_FOLDER_IMG}" width="19" height="18" alt="{topicrow.L_TOPIC_FOLDER_ALT}" title="{topicrow.L_TOPIC_FOLDER_ALT}"></td>
 		<td class="row1" width="100%"><span class="topictitle">{topicrow.NEWEST_POST_IMG}{topicrow.TOPIC_TYPE}<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a></span><span class="gensmall"><br>{topicrow.GOTO_PAGE}</span></td>
 		<td class="row2" align="center" valign="middle"><span class="postdetails">{topicrow.REPLIES}</span></td>
 		<td class="row3" align="center" valign="middle"><span class="name">{topicrow.TOPIC_AUTHOR}</span></td>
@@ -63,31 +63,31 @@
 		<td align="left" valign="top">
 			<table cellspacing="3" cellpadding="0" border="0">
 			<tr>
-				<td width="20" align="left"><img src="{FOLDER_NEW_IMG}" alt="{L_NEW_POSTS}" width="19" height="18" /></td>
+				<td width="20" align="left"><img src="{FOLDER_NEW_IMG}" alt="{L_NEW_POSTS}" width="19" height="18"></td>
 				<td class="gensmall">{L_NEW_POSTS}</td>
 				<td>&nbsp;&nbsp;</td>
-				<td width="20" align="center"><img src="{FOLDER_IMG}" alt="{L_NO_NEW_POSTS}" width="19" height="18" /></td>
+				<td width="20" align="center"><img src="{FOLDER_IMG}" alt="{L_NO_NEW_POSTS}" width="19" height="18"></td>
 				<td class="gensmall">{L_NO_NEW_POSTS}</td>
 			</tr>
 			<tr> 
-				<td width="20" align="center"><img src="{FOLDER_HOT_NEW_IMG}" alt="{L_NEW_POSTS_HOT}" width="19" height="18" /></td>
+				<td width="20" align="center"><img src="{FOLDER_HOT_NEW_IMG}" alt="{L_NEW_POSTS_HOT}" width="19" height="18"></td>
 				<td class="gensmall">{L_NEW_POSTS_HOT}</td>
 				<td>&nbsp;&nbsp;</td>
-				<td width="20" align="center"><img src="{FOLDER_HOT_IMG}" alt="{L_NO_NEW_POSTS_HOT}" width="19" height="18" /></td>
+				<td width="20" align="center"><img src="{FOLDER_HOT_IMG}" alt="{L_NO_NEW_POSTS_HOT}" width="19" height="18"></td>
 				<td class="gensmall">{L_NO_NEW_POSTS_HOT}</td>
 			</tr>
 			<tr>
-				<td class="gensmall"><img src="{FOLDER_LOCKED_NEW_IMG}" alt="{L_NEW_POSTS_LOCKED}" width="19" height="18" /></td>
+				<td class="gensmall"><img src="{FOLDER_LOCKED_NEW_IMG}" alt="{L_NEW_POSTS_LOCKED}" width="19" height="18"></td>
 				<td class="gensmall">{L_NEW_POSTS_LOCKED}</td>
 				<td>&nbsp;&nbsp;</td>
-				<td class="gensmall"><img src="{FOLDER_LOCKED_IMG}" alt="{L_NO_NEW_POSTS_LOCKED}" width="19" height="18" /></td>
+				<td class="gensmall"><img src="{FOLDER_LOCKED_IMG}" alt="{L_NO_NEW_POSTS_LOCKED}" width="19" height="18"></td>
 				<td class="gensmall">{L_NO_NEW_POSTS_LOCKED}</td>
 			</tr>
 			<tr>
-				<td width="20" align="center"><img src="{FOLDER_ANNOUNCE_IMG}" alt="{L_ANNOUNCEMENT}" width="19" height="18" /></td>
+				<td width="20" align="center"><img src="{FOLDER_ANNOUNCE_IMG}" alt="{L_ANNOUNCEMENT}" width="19" height="18"></td>
 				<td class="gensmall">{L_ANNOUNCEMENT}</td>
 				<td>&nbsp;&nbsp;</td>
-				<td width="20" align="center"><img src="{FOLDER_STICKY_IMG}" alt="{L_STICKY}" width="19" height="18" /></td>
+				<td width="20" align="center"><img src="{FOLDER_STICKY_IMG}" alt="{L_STICKY}" width="19" height="18"></td>
 				<td class="gensmall">{L_STICKY}</td>
 			</tr>
 			</table>

@@ -65,38 +65,38 @@ if ( $mode == '' )
 	//
 	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
 	{
-		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT n.*, nc.newscat_title, nc.newscat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS . ' n
 						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
+						LEFT JOIN ' . NEWSCAT . ' nc ON n.news_category = nc.newscat_id
 					WHERE n.news_time_public < ' . time() . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC, n.news_id DESC';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$news_data = $db->sql_fetchrowset($result);
 //		$news_data = _cached($sql, 'news_list_member');
 	}
 	else
 	{
-		$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT n.*, nc.newscat_title, nc.newscat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS . ' n
 						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
+						LEFT JOIN ' . NEWSCAT . ' nc ON n.news_category = nc.newscat_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 				ORDER BY n.news_time_public DESC, n.news_id DESC';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$news_data = $db->sql_fetchrowset($result);
 //		$news_data = _cached($sql, 'news_list_guest');
@@ -131,8 +131,8 @@ if ( $mode == '' )
 				'NEWS_PUBLIC_TIME'	=> $news_date,
 				
 				
-				'NEWSCAT_TITLE'		=> ( $news_data[$i]['news_category_title'] ) ? $news_data[$i]['news_category_title'] : '',
-				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news_data[$i]['news_category_image'] : '',
+				'NEWSCAT_TITLE'		=> ( $news_data[$i]['newscat_title'] ) ? $news_data[$i]['newscat_title'] : '',
+				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['newscat_image'] ) ? $root_path . $settings['path_newscat'] . '/' . $news_data[$i]['newscat_image'] : '',
 				
 				'U_NEWS'			=> append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']),
 				
@@ -204,7 +204,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				ORDER BY n.news_time_public DESC';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$news_details = $db->sql_fetchrow($result);
 //		$news_details = _cached($sql, 'news_details_' . $news_id . '_member', 1);
@@ -222,7 +222,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				ORDER BY n.news_time_public DESC';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$news_details = $db->sql_fetchrow($result);
 //		$news_details = _cached($sql, 'news_details_' . $news_id . '_guest', 1);
@@ -230,7 +230,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 	
 	if ( !$news_details )
 	{
-		message_die(GENERAL_ERROR, 'Falsche ID ?');
+		message(GENERAL_ERROR, 'Falsche ID ?');
 	}
 	
 	$page_title = sprintf($lang['news_head_info'], $news_details['news_title']);
@@ -248,7 +248,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 					WHERE news_id = ' . $news_id . ' ORDER BY time_create DESC';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$comment_entry = $db->sql_fetchrowset($result);
 //		$comment_entry = _cached($sql, 'news_details_' . $news_id . '_comments');
@@ -260,7 +260,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 						WHERE user_id = ' . $userdata['user_id'] . ' AND news_id = ' . $news_id;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$unread = $db->sql_fetchrow($result);
 
@@ -271,9 +271,9 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				$sql = 'UPDATE ' . NEWS_COMMENTS_READ . '
 							SET read_time = ' . time() . '
 						WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 			else
@@ -282,9 +282,9 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				
 				$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
 					VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-				if (!$db->sql_query($sql))
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 		}
@@ -430,7 +430,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				$sql = 'SELECT * FROM ' . NEWS_COMMENTS_READ . ' WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if ( $db->sql_numrows($result) )
@@ -438,18 +438,18 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 					$sql = 'UPDATE ' . NEWS_COMMENTS_READ . '
 								SET read_time = ' . time() . '
 							WHERE news_id = ' . $news_id . ' AND user_id = ' . $userdata['user_id'];					
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				else
 				{				
 					$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
 						VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
-					if (!$db->sql_query($sql))
+					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				
@@ -461,7 +461,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				_comment_message('add', 'news', $news_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
 				$message = $lang['add_comment'] . sprintf($lang['click_return_news'],  '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_id) . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 			}
 		}
 	}

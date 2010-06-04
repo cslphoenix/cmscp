@@ -127,7 +127,7 @@ function validate_email($email)
 				WHERE user_email = '" . str_replace("\'", "''", $email) . "'";
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
 			}
 		
 			if ($row = $db->sql_fetchrow($result))

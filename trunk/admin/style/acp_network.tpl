@@ -18,21 +18,17 @@
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="rowHead" width="100%">{L_LINK}</td>
-	<td class="rowHead">{L_VISIBLE}</td>
-	<td class="rowHead" colspan="3" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN link_row -->
 <tr>
-	<td class="{display.link_row.CLASS}" align="left" width="100%">{display.link_row.NAME}</td>
-	<td class="{display.link_row.CLASS}" align="center"><img src="{display.link_row.VISIBLE}" alt=""></td>
-	<td class="{display.link_row.CLASS}" align="center" nowrap="nowrap">{display.link_row.MOVE_UP} {display.link_row.MOVE_DOWN}</td>
-	<td class="{display.link_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.link_row.U_UPDATE}">{L_UPDATE}</a></td>
-	<td class="{display.link_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.link_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{display.link_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.link_row.SHOW} {display.link_row.MOVE_UP} {display.link_row.MOVE_DOWN} <a href="{display.link_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.link_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END link_row -->
 <!-- BEGIN no_entry_link -->
 <tr>
-	<td class="row_noentry" align="center" colspan="5">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_link -->
 </table>
@@ -42,21 +38,17 @@
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="rowHead" width="100%">{L_PARTNER}</td>
-	<td class="rowHead">{L_VISIBLE}</td>
-	<td class="rowHead" colspan="3" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN partner_row -->
 <tr>
-	<td class="{display.partner_row.CLASS}" align="left" width="100%">{display.partner_row.NAME}</td>
-	<td class="{display.partner_row.CLASS}" align="center"><img src="{display.partner_row.VISIBLE}" alt=""></td>
-	<td class="{display.partner_row.CLASS}" align="center" nowrap="nowrap">{display.partner_row.MOVE_UP} {display.partner_row.MOVE_DOWN}</td>
-	<td class="{display.partner_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.partner_row.U_UPDATE}">{L_UPDATE}</a></td>
-	<td class="{display.partner_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.partner_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{display.partner_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.partner_row.SHOW} {display.partner_row.MOVE_UP} {display.partner_row.MOVE_DOWN} <a href="{display.partner_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.partner_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END partner_row -->
 <!-- BEGIN no_entry_partner -->
 <tr>
-	<td class="row_noentry" align="center" colspan="5">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_partner -->
 </table>
@@ -66,21 +58,17 @@
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="rowHead" width="100%">{L_SPONSOR}</td>
-	<td class="rowHead">{L_VISIBLE}</td>
-	<td class="rowHead" colspan="3" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN sponsor_row -->
 <tr>
-	<td class="{display.sponsor_row.CLASS}" align="left" width="100%">{display.sponsor_row.NAME}</td>
-	<td class="{display.sponsor_row.CLASS}" align="center"><img src="{display.sponsor_row.VISIBLE}" alt=""></td>
-	<td class="{display.sponsor_row.CLASS}" align="center" nowrap="nowrap">{display.sponsor_row.MOVE_UP} {display.sponsor_row.MOVE_DOWN}</td>
-	<td class="{display.sponsor_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.sponsor_row.U_UPDATE}">{L_UPDATE}</a></td>
-	<td class="{display.sponsor_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.sponsor_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{display.sponsor_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.sponsor_row.SHOW} {display.sponsor_row.MOVE_UP} {display.sponsor_row.MOVE_DOWN} <a href="{display.sponsor_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.sponsor_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END sponsor_row -->
 <!-- BEGIN no_entry_sponsor -->
 <tr>
-	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry_sponsor -->
 </table>
@@ -108,7 +96,7 @@
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 </ul>
 </div>
@@ -134,9 +122,9 @@
 	<td class="row1 top"><label for="network_image">{L_IMAGE}:</label></td>
 	<td class="row3">
 		<!-- BEGIN network_image -->
-		<img src="{IMAGE}" alt="" />&nbsp;<input type="checkbox" name="network_image_delete">&nbsp;{L_IMAGE_DELETE}<br />
+		<img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="network_image_delete">&nbsp;{L_IMAGE_DELETE}<br />
 		<!-- END network_image -->
-		<input type="file" class="post" name="network_image" id="network_image">
+		<input type="file" class="post" name="network_image">
 	</td>
 </tr>
 <tr>
@@ -151,7 +139,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

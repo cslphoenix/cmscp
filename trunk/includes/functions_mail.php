@@ -36,7 +36,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 	$user_send_type		= $mail_data['user_send_type'];
 	$user_notify_pm		= $mail_data['user_notify_pm'];
 
-	$sitename			= $config['sitename'];
+	$page_name			= $config['page_name'];
 	$page_email			= $config['page_email'];
 	$page_email_sig		= $config['page_email_sig'];
 	$smtp_delivery		= $config['smtp_delivery'];
@@ -44,7 +44,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 	if ( $user_send_type )
 	{
 		$privmsg_subject = $lang[$type];
-		$privmsg_message = sprintf($lang[$type . '_msg'], $user_name, $sitename, '<a href=' . append_sid(server_url($file)) . '>', '</a>', $page_email_sig);
+		$privmsg_message = sprintf($lang[$type . '_msg'], $user_name, $page_name, '<a href=' . append_sid(server_url($file)) . '>', '</a>', $page_email_sig);
 
 		$sql = 'INSERT INTO ' . PRIVMSGS . '
 				(
@@ -72,15 +72,15 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 					1,
 					1
 				)';
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 	
 		$sql = 'UPDATE ' . USERS . ' SET user_new_privmsg = user_new_privmsg + 1 WHERE user_id = ' . $user_id;
-		if ( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 
 		if ( $user_notify_pm )
@@ -96,7 +96,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 			$emailer->set_subject($lang['Notification_subject']);
 
 			$emailer->assign_vars(array(
-				'SITENAME'		=> $sitename,
+				'SITENAME'		=> $page_name,
 				'USERNAME'		=> $user_name,
 				'EMAIL_SIG'		=> (!empty($page_email_sig)) ? str_replace('<br>', "\n", "-- \n" . $page_email_sig) : '', 
 				'U_INBOX'		=> server_url('privmsg') . '?folder=inbox'
@@ -119,7 +119,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 		$emailer->set_subject($lang[$type]);
 		
 		$emailer->assign_vars(array(
-			'SITENAME'	=> $sitename,
+			'SITENAME'	=> $page_name,
 			'USERNAME'	=> $user_name,
 			'EMAIL_SIG'	=> (!empty($page_email_sig)) ? str_replace('<br>', "\n", "-- \n" . $page_email_sig) : '', 
 			'U_URL'		=> server_url($file) . $urlstring,
@@ -138,7 +138,7 @@ function server_url($file)
 {
 	global $db, $config;
 	
-	$script_name		= preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['script_path']));
+	$script_name		= preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['page_path']));
 	$script_name		= ( $script_name != '' ) ? $script_name . '/' . $file . '.php' : $file . '.php';
 	$server_name		= trim($config['server_name']);
 	$server_protocol	= ( $config['cookie_secure'] ) ? 'https://' : 'http://';

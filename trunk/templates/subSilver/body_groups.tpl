@@ -7,7 +7,7 @@
 </tr>
 <!-- BEGIN grouprow -->
 <tr>
-	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.member.grouprow.GROUP_NAME}" title="{select.joined.member.grouprow.GROUP_NAME}" /></td>
+	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.member.grouprow.GROUP_NAME}" title="{select.joined.member.grouprow.GROUP_NAME}"></td>
 	<td class="row1" height="50">
 		<span class="forumlink">
 			<a href="{select.joined.member.grouprow.U_GROUP}" class="forumlink">{select.joined.member.grouprow.GROUP_NAME}</a><br>
@@ -26,7 +26,7 @@
 </tr>
 <!-- BEGIN grouprow -->
 <tr>
-	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.pending.grouprow.GROUP_NAME}" title="{select.joined.pending.grouprow.GROUP_NAME}" /></td>
+	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.pending.grouprow.GROUP_NAME}" title="{select.joined.pending.grouprow.GROUP_NAME}"></td>
 	<td class="row1" height="50">
 		<span class="forumlink">
 			<a href="{select.joined.pending.grouprow.U_GROUP}" class="forumlink">{select.joined.pending.grouprow.GROUP_NAME}</a><br>
@@ -47,7 +47,7 @@
 </tr>
       <!-- BEGIN grouprow -->
 	  <tr>
-		<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.remaining.grouprow.GROUP_NAME}" title="{select.remaining.grouprow.GROUP_NAME}" /></td>
+		<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.remaining.grouprow.GROUP_NAME}" title="{select.remaining.grouprow.GROUP_NAME}"></td>
 	   <td class="row1" height="50"><span class="forumlink">
  			<a href="{select.remaining.grouprow.U_GROUP}" class="forumlink">{select.remaining.grouprow.GROUP_NAME}</a><br>
 		  </span> <span class="genmed">{select.remaining.grouprow.GROUP_DESC}
@@ -88,7 +88,7 @@
 	</td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 
 </form>
 
@@ -118,7 +118,7 @@
 	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.EMAIL_IMG}</td>
 	<td class="{details.mod_row.ROW_CLASS}" align="center" {COLSPAN}>{details.mod_row.JOINED}</td>
 	<!-- BEGIN switch_admin_option -->
-	<td class="{details.mod_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.mod_row.USER_ID}" /></td>
+	<td class="{details.mod_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.mod_row.USER_ID}"></td>
 	<!-- END switch_admin_option -->
 </tr>
 <!-- END mod_row -->
@@ -149,7 +149,7 @@
 	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.EMAIL_IMG}</td>
 	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.JOINED}</td>
 	<!-- BEGIN switch_mod_option -->
-	<td class="{details.member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.member_row.USER_ID}" /></td>
+	<td class="{details.member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.member_row.USER_ID}"></td>
 	<!-- END switch_mod_option -->
 </tr>
 <!-- END member_row -->
@@ -167,8 +167,8 @@
 <!-- BEGIN switch_add_member -->
 <table class="out" width="100%" cellspacing="3">
 <tr>
-	<td align="left" colspan="3">{S_SELECT_USERS} <input type="submit" name="add" value="{L_ADD_MEMBER}" class="button2" /></td>
-	<td align="right" colspan="3">{S_SELECT_OPTION} <input type="submit" value="Absenden" class="button2" /></td>
+	<td align="left" colspan="3">{S_SELECT_USERS} <input type="submit" name="add" value="{L_ADD_MEMBER}" class="button2"></td>
+	<td align="right" colspan="3">{S_SELECT_OPTION} <input type="submit" value="Absenden" class="button2"></td>
 </tr>
 </table>
 <!-- END switch_add_member -->
@@ -203,14 +203,14 @@
 	<td class="{details.pending.pending_row.ROW_CLASS}" align="center">{details.pending.pending_row.POSTS}</td>
 	<td class="{details.pending.pending_row.ROW_CLASS}" align="center">{details.pending.pending_row.EMAIL_IMG}</td>
 	<td class="{details.pending.pending_row.ROW_CLASS}" align="center">{details.pending.pending_row.JOINED}</td>
-	<td class="{details.pending.pending_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="pending_members[]" value="{details.pending.pending_row.USER_ID}" checked="checked" /></td>
+	<td class="{details.pending.pending_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="pending_members[]" value="{details.pending.pending_row.USER_ID}" checked="checked"></td>
 </tr>
 <!-- END pending_row -->
 <tr>
-	<td class="row3" colspan="6" align="right"><input type="submit" name="approve" value="{L_APPROVE_SELECTED}" class="button2" />&nbsp;<input type="submit" name="deny" value="{L_DENY_SELECTED}" class="button" /></td>
+	<td class="row3" colspan="6" align="right"><input type="submit" name="approve" value="{L_APPROVE_SELECTED}" class="button2">&nbsp;<input type="submit" name="deny" value="{L_DENY_SELECTED}" class="button"></td>
 	</tr>
 </table>
 <!-- END pending -->
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END details -->

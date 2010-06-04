@@ -206,7 +206,7 @@ else
 						$class = ($i % 2) ? 'row_class1' : 'row_class2';
 							
 						$game_size	= $contact_entry[$i]['game_size'];
-						$game_image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $contact_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
+						$game_image	= '<img src="' . $root_path . $settings['path_games'] . '/' . $contact_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
 						
 						
 						$template->assign_block_vars('categorie.contact_row', array(
@@ -323,7 +323,7 @@ else
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 				
 			$game_size	= $contact_entry[$i]['game_size'];
-			$game_image	= '<img src="' . $root_path . $settings['path_game'] . '/' . $contact_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
+			$game_image	= '<img src="' . $root_path . $settings['path_games'] . '/' . $contact_entry[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
 			
 			
 			$template->assign_block_vars('display.contact_row', array(

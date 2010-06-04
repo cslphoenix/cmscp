@@ -54,7 +54,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_NL_ACTION}" method="post">{L_NL_HEAD}</a></li>
+				<li><a href="{S_NL_ACTION}">{L_NL_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_NL_NEW_EDIT}</a></li>
 			</ul>
 		</div>
@@ -77,7 +77,7 @@
 	<td class="row3"><input type="radio" name="send_type" value="1">&nbsp;{L_ACTIVE}&nbsp;&nbsp;<input type="radio" name="send_type" value="0" checked="checked" /> {L_NEW}</td> 
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

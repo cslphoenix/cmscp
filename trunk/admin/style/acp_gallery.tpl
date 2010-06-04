@@ -4,7 +4,7 @@
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="settings" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
+	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
 </ul>
 </div>
 
@@ -18,22 +18,18 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead">{L_NAME}</td>
-	<td class="rowHead" colspan="5" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" width="99%">{L_NAME}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN gallery_row -->
+<!-- BEGIN row_gallery -->
 <tr>
-	<td class="{display.gallery_row.CLASS}" align="left" width="99%"><span style="float:right;">{display.gallery_row.INFO}&nbsp;</span><b>{display.gallery_row.NAME}</b><br />{display.gallery_row.DESC}</td>
-	<td class="{display.gallery_row.CLASS}" align="center" nowrap="nowrap">{display.gallery_row.MOVE_UP}{display.gallery_row.MOVE_DOWN}</td>
-	<td class="{display.gallery_row.CLASS}" align="center" nowrap="nowrap">{display.gallery_row.OVERVIEW}</td>
-	<td class="{display.gallery_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.gallery_row.U_UPLOAD}">{L_UPLOAD}</a></td>
-	<td class="{display.gallery_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.gallery_row.U_UPDATE}">{L_UPDATE}</a></td>
-	<td class="{display.gallery_row.CLASS}" align="center" nowrap="nowrap"><a href="{display.gallery_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="row_class1" align="left"><span style="float:right;">{display.row_gallery.INFO}&nbsp;</span><b>{display.row_gallery.NAME}</b><br />{display.row_gallery.DESC}</td>
+	<td class="row_class2" align="left" nowrap="nowrap">{display.row_gallery.MOVE_UP}{display.row_gallery.MOVE_DOWN} {display.row_gallery.OVERVIEW} <a href="{display.row_gallery.U_UPLOAD}">{I_UPLOAD}</a> <a href="{display.row_gallery.U_UPDATE}">{I_UPDATE}</a> <a href="{display.row_gallery.U_DELETE}">{I_DELETE}</a></td>
 </tr>
-<!-- END gallery_row -->
+<!-- END row_gallery -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -79,7 +75,7 @@ tinyMCE.init({
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 	<!-- BEGIN overview -->
 	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
@@ -87,6 +83,7 @@ tinyMCE.init({
 	<!-- BEGIN upload -->
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
 	<!-- END upload -->
+	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
 </ul>
 </div>
 
@@ -96,7 +93,7 @@ tinyMCE.init({
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -107,42 +104,42 @@ tinyMCE.init({
 	<td class="row1 top"><label>{L_AUTH}:</label></td>
 	<td class="row3">
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN gallery_auth_data -->
+		<!-- BEGIN auth_gallery_data -->
 		<tr>
-			<td nowrap="nowrap">{gallery_edit.gallery_auth_data.S_AUTH_LEVELS_SELECT}</td>
-			<td width="99%">{gallery_edit.gallery_auth_data.CELL_TITLE}</td>
+			<td nowrap="nowrap">{gallery_edit.auth_gallery_data.S_AUTH_LEVELS_SELECT}</td>
+			<td width="99%">&nbsp;<label for="{gallery_edit.auth_gallery_data.CELL_INFO}">{gallery_edit.auth_gallery_data.CELL_TITLE}</label></td>
 		</tr>
-		<!-- END gallery_auth_data -->
+		<!-- END auth_gallery_data -->
 		</table>
 	</td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row3"><input type="text" class="post" name="max_height" id="max_height" value="{HEIGHT}"></td>
+	<td class="row3"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
-	<td class="row3"><input type="text" class="post" name="max_width" id="max_width" value="{WIDTH}"></td>
+	<td class="row3"><input type="text" class="post" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
-	<td class="row3"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{FILESIZE}"></td>
+	<td class="row3"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="pics_per_line">{L_PICS_PER_LINE}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pics_per_line" id="pics_per_line" value="{PICS_PER_LINE}"></td>
+	<td class="row1"><label for="per_rows">{L_PER_ROWS}:</label></td>
+	<td class="row3"><input type="text" class="post" name="per_rows" id="per_rows" value="{PER_ROWS}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="pics_per_page">{L_PICS_PER_PAGE}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pics_per_page" id="pics_per_page" value="{PICS_PER_PAGE}"></td>
+	<td class="row1"><label for="per_cols">{L_PER_COLS}:</label></td>
+	<td class="row3"><input type="text" class="post" name="per_cols" id="per_cols" value="{PER_COLS}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="pic_preview_widht">{L_PIC_PREVIEW_WIDHT}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pic_preview_widht" id="pic_preview_widht" value="{PIC_PREVIEW_WIDHT}"></td>
+	<td class="row1"><label for="preview_widht">{L_PREVIEW_WIDHT}:</label></td>
+	<td class="row3"><input type="text" class="post" name="preview_widht" id="preview_widht" value="{PREVIEW_WIDHT}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="pic_preview_height">{L_PIC_PREVIEW_HEIGHT}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pic_preview_height" id="pic_preview_height" value="{PIC_PREVIEW_HEIGHT}"></td>
+	<td class="row1"><label for="preview_height">{L_PREVIEW_HEIGHT}:</label></td>
+	<td class="row3"><input type="text" class="post" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
 </tr>
 <tr>
 	<td class="row1 top"><label>{L_DESC}: *</label></td>
@@ -160,7 +157,7 @@ tinyMCE.init({
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -201,7 +198,7 @@ function clone(objButton)
 <form action="{S_ACTION}" method="post" name="form" id="form" enctype="multipart/form-data">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li><a href="{S_EDIT}">{L_EDIT}</a></li>
 	<!-- BEGIN overview -->
 	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
@@ -216,7 +213,7 @@ function clone(objButton)
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -232,7 +229,7 @@ function clone(objButton)
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -243,7 +240,7 @@ function clone(objButton)
 <form action="{S_ACTION}" method="post" id="list" name="form">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li><a href="{S_EDIT}">{L_EDIT}</a></li>
 	<li id="active"><a href="#" id="current">{L_OVERVIEW}</a></li>
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
@@ -259,32 +256,32 @@ function clone(objButton)
 <br />
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
-<!-- BEGIN gallery_row -->
+<!-- BEGIN row_gallery -->
 <tr>
 	<!-- BEGIN gallery_col -->
     <td>
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current"><input type="checkbox" name="pics[]" value="{gallery_overview.gallery_row.gallery_col.PIC_ID}">&nbsp;{gallery_overview.gallery_row.gallery_col.TITLE}</a></li>
+			<li id="active"><a href="#" id="current"><input type="checkbox" name="pics[]" value="{gallery_overview.row_gallery.gallery_col.PIC_ID}">&nbsp;{gallery_overview.row_gallery.gallery_col.TITLE}</a></li>
 		</ul>
 		</div>
 
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
         <tr>
-        	<td class="row2"><a href="{gallery_overview.gallery_row.gallery_col.IMAGE}" rel="lightbox"><img src="{gallery_overview.gallery_row.gallery_col.PREV}" alt="" border="" /></a></td>
+        	<td class="row2"><a href="{gallery_overview.row_gallery.gallery_col.IMAGE}" rel="lightbox"><img src="{gallery_overview.row_gallery.gallery_col.PREV}" alt="" border="" /></a></td>
 			<td class="row3">
 				<table class="edit" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td align="right">{L_WIDTH}:</td>
-					<td align="center">{gallery_overview.gallery_row.gallery_col.WIDTH}</td>
+					<td align="center">{gallery_overview.row_gallery.gallery_col.WIDTH}</td>
 				</tr>
 				<tr>
 					<td align="right">{L_HEIGHT}:</td>
-					<td align="center">{gallery_overview.gallery_row.gallery_col.HEIGHT}</td>
+					<td align="center">{gallery_overview.row_gallery.gallery_col.HEIGHT}</td>
 				</tr>
 				<tr>
 					<td align="right">{L_SIZE}:</td>
-					<td align="center">{gallery_overview.gallery_row.gallery_col.SIZE}</td>
+					<td align="center">{gallery_overview.row_gallery.gallery_col.SIZE}</td>
 				</tr>
 				</table>
 			</td>
@@ -293,9 +290,9 @@ function clone(objButton)
     </td>
     <!-- END gallery_col -->
 </tr>
-<!-- END gallery_row -->
+<!-- END row_gallery -->
 <tr>
-	<td colspan="{PICS_PER_LINE}" align="center">&nbsp;</td>
+	<td colspan="{PER_ROWS}" align="center">&nbsp;</td>
 </tr>
 </table>
 
@@ -322,7 +319,8 @@ function clone(objButton)
 <form action="{S_ACTION}" method="post" name="form">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_ACTION}" method="post">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 	<li id="active"><a href="#" id="right">{L_DEFAULT}</a></li>
 </ul>
 </div>
@@ -332,50 +330,50 @@ function clone(objButton)
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
     <td class="row1" width="23%"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row3"><input type="text" class="post" name="max_height" id="max_height" value="{HEIGHT}"></td>
+	<td class="row3"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
 </tr>
 <tr>
     <td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
-	<td class="row3"><input type="text" class="post" name="max_width" id="max_width" value="{WIDTH}"></td>
+	<td class="row3"><input type="text" class="post" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
 </tr>
 <tr>
     <td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
-	<td class="row3"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{FILESIZE}"></td>
+	<td class="row3"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
 </tr>
 <tr>
 	<td class="row1 top">{L_AUTH}:</td>
 	<td class="row3">
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN gallery_auth_data -->
+		<!-- BEGIN auth_gallery_data -->
 		<tr>
-			<td nowrap="nowrap">{gallery_default.gallery_auth_data.S_AUTH_LEVELS_SELECT}</td>
-			<td width="99%">{gallery_default.gallery_auth_data.CELL_TITLE}</td>
+			<td nowrap="nowrap">{gallery_default.auth_gallery_data.S_SELECT}</td>
+			<td width="99%">&nbsp;{gallery_default.auth_gallery_data.TITLE}</td>
 		</tr>
-		<!-- END gallery_auth_data -->
+		<!-- END auth_gallery_data -->
 		</table>
 	</td>
 </tr>
 <tr>
-    <td class="row1"><label for="pics_per_line">{L_PICS_PER_LINE}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pics_per_line" id="pics_per_line" value="{PICS_PER_LINE}"></td>
+    <td class="row1"><label for="per_rows">{L_PER_ROWS}:</label></td>
+	<td class="row3"><input type="text" class="post" name="per_rows" id="per_rows" value="{PER_ROWS}"></td>
 </tr>
 <tr>
-    <td class="row1"><label for="pics_per_page">{L_PICS_PER_PAGE}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pics_per_page" id="pics_per_page" value="{PICS_PER_PAGE}"></td>
+    <td class="row1"><label for="per_cols">{L_PER_COLS}:</label></td>
+	<td class="row3"><input type="text" class="post" name="per_cols" id="per_cols" value="{PER_COLS}"></td>
 </tr>
 <tr>
-    <td class="row1"><label for="pic_preview_widht">{L_PIC_PREVIEW_WIDHT}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pic_preview_widht" id="pic_preview_widht" value="{PIC_PREVIEW_WIDHT}"></td>
+    <td class="row1"><label for="preview_widht">{L_PREVIEW_WIDHT}:</label></td>
+	<td class="row3"><input type="text" class="post" name="preview_widht" id="preview_widht" value="{PREVIEW_WIDHT}"></td>
 </tr>
 <tr>
-    <td class="row1"><label for="pic_preview_height">{L_PIC_PREVIEW_HEIGHT}:</label></td>
-	<td class="row3"><input type="text" class="post" name="pic_preview_height" id="pic_preview_height" value="{PIC_PREVIEW_HEIGHT}"></td>
+    <td class="row1"><label for="preview_height">{L_PREVIEW_HEIGHT}:</label></td>
+	<td class="row3"><input type="text" class="post" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
 </tr>
 <tr>
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="6" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="6" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

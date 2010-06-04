@@ -26,45 +26,52 @@
 /*
  * Idee von phpBB3
  */
-function request($name, $type = false)
+function request($request_var, $request_type = '')
 {
-	global $HTTP_POST_VARS, $HTTP_GET_VARS;
+	global $_POST, $_GET;
 	
-	if ( isset($HTTP_POST_VARS[$name]) || isset($HTTP_GET_VARS[$name]) )
+	if ( isset($_POST[$request_var]) || isset($_GET[$request_var]) )
 	{
-		switch ( $type )
+		switch ( $request_type )
 		{
-			case 'text':
-			
-				$var = ( isset($HTTP_POST_VARS[$name]) ) ? htmlspecialchars(trim($HTTP_POST_VARS[$name])) : htmlspecialchars(trim($HTTP_GET_VARS[$name]));
-				
-				break;
-				
-			case 'textfeld':
-			
-				$var = ( isset($HTTP_POST_VARS[$name]) ) ? htmlentities(trim($HTTP_POST_VARS[$name]), ENT_QUOTES) : htmlentities(trim($HTTP_GET_VARS[$name]), ENT_QUOTES);
-				
-				break;
-				
-			case 'textfeld_clean':
-			
-				$var = ( isset($HTTP_POST_VARS[$name]) ) ? strip_tags(trim($HTTP_POST_VARS[$name]), '<br>') : strip_tags(trim($HTTP_GET_VARS[$name]), '<br>');
-				
-				break;
-				
-				
-				
-			case 'num':
-			
-				$var = ( isset($HTTP_POST_VARS[$name]) ) ? intval($HTTP_POST_VARS[$name]) : intval($HTTP_GET_VARS[$name]);
+			/*
+			 *	Zahlen
+			 */
+			case 0:
+				$var = ( isset($_POST[$request_var]) ) ? intval($_POST[$request_var]) : intval($_GET[$request_var]);
 				$var = ( isset($var) ) ? $var : 0;
-				
 				break;
 				
-			default:
-			
-				$var = ( isset($HTTP_POST_VARS[$name]) ) ? trim($HTTP_POST_VARS[$name]) : trim($HTTP_GET_VARS[$name]);
+			/*
+			 *	Mode/Confirm/Sort
+			 */
+			case 1:
+				$var = ( isset($_POST[$request_var]) ) ? str_replace("'", "\'", $_POST[$request_var]) : str_replace("'", "\'", $_GET[$request_var]);
+				break;
 				
+			/*
+			 *	Texte
+			 */
+			case 2:
+				$var = ( isset($_POST[$request_var]) ) ? trim(htmlentities(str_replace("'", "\'", $_POST[$request_var]), ENT_COMPAT)) : trim(htmlentities(str_replace("'", "\'", $_GET[$request_var]), ENT_COMPAT));
+				break;
+				
+			/*
+			 *	Texte ohne HTML Tags
+			 */
+			case 3:
+				$var = ( isset($_POST[$request_var]) ) ? trim(htmlentities(str_replace("'", "\'", strip_tags($_POST[$request_var])), ENT_COMPAT)) : trim(htmlentities(str_replace("'", "\'", strip_tags($_GET[$request_var])), ENT_COMPAT));
+				break;
+
+			/*
+			 *	Arrays
+			 */
+			case 4:
+			#	$var = ( isset($_POST[$request_var]) ) ? trim(htmlentities(str_replace("'", "\'", $_POST[$request_var]), ENT_COMPAT)) : trim(htmlentities(str_replace("'", "\'", $_GET[$request_var]), ENT_COMPAT));
+				break;
+			
+			default:
+				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
 				break;
 		}
 	}
@@ -74,6 +81,49 @@ function request($name, $type = false)
 	}
 	
 	return $var;
+}
+
+function request_file($request_var)
+{
+	global $_FILES;
+	
+	$var['temp'] = $_FILES[$request_var]['tmp_name'];
+	$var['name'] = $_FILES[$request_var]['name'];
+	$var['type'] = $_FILES[$request_var]['type'];
+	$var['size'] = $_FILES[$request_var]['size'];
+	$var['error'] = $_FILES[$request_var]['error'];
+	
+	if ( $var['error'] == '4' )
+	{
+		return false;
+	}
+	else
+	{
+		return $var;
+	}
+}
+
+function request_files($request_var)
+{
+	global $_FILES;
+	
+	$var['temp'] = $_FILES[$request_var]['tmp_name'];
+	$var['name'] = $_FILES[$request_var]['name'];
+	$var['type'] = $_FILES[$request_var]['type'];
+	$var['size'] = $_FILES[$request_var]['size'];
+	$var['error'] = $_FILES[$request_var]['error'];
+	
+	foreach ( $var['error'] as $key => $value )
+	{
+		if ( $value == '4' )
+		{
+			return false;
+		}
+		else
+		{
+			return $var;
+		}
+	}
 }
 
 function cut_string($string, $length)
@@ -87,7 +137,6 @@ function cut_string($string, $length)
 	
 	***/
 	
-//	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3)) . '...';
 	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3)) . '...';
 	
 	return $string;
@@ -103,17 +152,24 @@ function get_authlist()
 	
 	global $db;
 	
-	$sql = 'SELECT auth_name FROM ' . AUTHLIST . ' ORDER BY auth_name';
-//	if ( !($result = $db->sql_query($sql)) )
-//	{
-//		message_die(GENERAL_ERROR, 'SQL ERROR', '', __LINE__, __FILE__, $sql);
-//	}
-//	$authlist_data = $db->sql_fetchrowset($result);
-	$authlist_data = _cached($sql, 'authlist', 0);
+	$sql = 'SELECT authlist_name FROM ' . AUTHLIST . ' ORDER BY authlist_name';
+	
+	if ( defined('IN_ADMIN') )
+	{
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$authlist_data = $db->sql_fetchrowset($result);
+	}
+	else
+	{
+		$authlist_data = _cached($sql, 'authlist', 0);
+	}
 
 	for ( $i = 0; $i < count($authlist_data); $i++ )
 	{
-		$authlist[] = $authlist_data[$i]['auth_name'];
+		$authlist[] = $authlist_data[$i]['authlist_name'];
 	}
 	
 	return $authlist;
@@ -165,47 +221,54 @@ function group_set_auth($user_id, $group_id)
 				FROM ' . GROUPS . '
 				WHERE group_id = ' . $group_id . '
 					AND group_type <> ' . GROUP_HIDDEN;
-	if ( !($result = $db->sql_query($sql)) )
+	if ( !$result = $db->sql_query($sql) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$group = $db->sql_fetchrow($result);
 	
-	$sql = 'SELECT user_level
-				FROM ' . USERS . '
-				WHERE user_id = ' . $user_id;
-	if ( !($result = $db->sql_query($sql)) )
+	$sql = "SELECT user_level FROM " . USERS . " WHERE user_id = $user_id";
+	if ( !$result = $db->sql_query($sql) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$user = $db->sql_fetchrow($result);
 	
 	$group_access	= $group['group_access'];
 	$group_color	= $group['group_color'];
-	
 	$user_level		= $user['user_level'];
 	
 	if ( $group_access == ADMIN && ( $user_level < ADMIN || $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
 	{
 		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . ADMIN . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 	}
 	else if ( $group_access == MOD && ( $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
 	{
 		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 	}
 	else if ( $group_access == MEMBER && ( $user_level < MEMBER || $user_level < TRIAL ) )
 	{
 		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 	}
 	else if ( $group_access == TRIAL && $user_level <= TRIAL )
 	{
 		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
-		
-	}
-	
-	if (!$db->sql_query($sql))
-	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		if ( !$result = $db->sql_query($sql) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 	}
 	
 	##	Löschung des Cacheintrages
@@ -226,23 +289,23 @@ function group_reset_auth($user_id, $group_id)
 				GROUP BY g.group_id ASC';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$group = $db->sql_fetchrow($result);
 	
 	$sql = 'SELECT user_founder FROM ' . USERS . ' WHERE user_id = ' . $user_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$user = $db->sql_fetchrow($result);
 	
 	if ( $user['user_founder'] == '0' )
 	{
 		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . $group['group_access'] . ', user_color = "' . $group['group_color'] . '" WHERE user_id = ' . $user_id;
-		if (!$db->sql_query($sql))
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 	}
 }
@@ -252,7 +315,7 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 	global $lang, $images, $config, $phpEx;
 
 	$from = ( !empty($row['user_from']) ) ? $row['user_from'] : '&nbsp;';
-	$joined = create_date($date_format, $row['user_regdate'], $config['board_timezone']);
+	$joined = create_date($date_format, $row['user_regdate'], $config['page_timezone']);
 
 	$posts = ( $row['user_posts'] ) ? $row['user_posts'] : 0;
 
@@ -300,7 +363,7 @@ function get_userdata($user, $force_str = false)
 	$sql .= ( ( is_integer($user) ) ? 'user_id = ' . $user : 'username = "' .  str_replace("\'", "''", $user) . "'" ) . ' AND user_id <> ' . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
@@ -313,7 +376,7 @@ function get_profiledata($user_id)
 	$sql = 'SELECT * FROM ' . PROFILE_DATA . ' WHERE user_id = ' . $user_id;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
 	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
@@ -403,7 +466,7 @@ function _cached($sql, $name, $row = '', $time = '')
 		{
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
@@ -415,36 +478,13 @@ function _cached($sql, $name, $row = '', $time = '')
 	{
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
 	}
 	
 	return $fetch;
-}
-
-function _set_chmod($host, $port, $user, $pass, $path, $file, $perms)
-{
-	global $root_path, $db, $config, $settings, $lang;
-	
-	$conn = ftp_connect($host, $port, 3);
-	
-	if (!$conn) die('Verbindung zu ftp.example.com konnte nicht aufgebaut werden');
-	
-	// Login mit Benutzername und Passwort
-	if (!ftp_login($conn, $user, $pass)) die('Fehler beim Login zu ftp.example.com');
-	
-	// Kommando "SITE CHMOD 0600 /home/user/privatefile" an den Server senden */
-	if (ftp_site($conn, 'CHMOD 0' . $perms . ' ' . $path))
-	{
-		echo "Kommando erfolgreich ausgeführt.\n";
-	}
-	else
-	{
-		die('Kommando fehlgeschlagen.');
-//		message_die(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
-	}
 }
 
 function error_handler($errno, $errstr, $errfile, $errline)
@@ -557,11 +597,18 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
 function debuge($data)
 {
+	global $root_path, $db, $config, $template;
+	
 	print '<br>';
 	print '<pre>';
 	print_r($data);
 	print '</pre>';
 	print '<br>';
+	
+	$inc = ( defined('IN_ADMIN') ) ? 'admin/page_footer_admin.php' : 'includes/page_footer.php';
+	
+	include($root_path . $inc);
+	
 	exit;
 }
 
@@ -601,7 +648,7 @@ function check_image_type(&$type)
 		default:
 			$error_msg = $lang['wrong_filetype'];
 
-			message_die(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
 			break;
 	}
 
@@ -631,7 +678,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 		{
 			$error_msg = sprintf($lfilesize, round($sfilesize / 1024));
 			
-			message_die(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
 		}
 
 		list($width, $height, $type) = @getimagesize($logo_filename);
@@ -649,7 +696,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 			if ($imgtype != '.gif')
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
@@ -662,7 +709,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 			if ($imgtype != '.jpg' && $imgtype != '.jpeg')
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
@@ -671,13 +718,13 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 			if ($imgtype != '.png')
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
 		default:
 			@unlink($tmp_filename);
-			message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
 	
 	$slogo_max_width	= ($format == 'n') ? $settings['team_logo_max_width'] : $settings['team_logos_max_width'];
@@ -696,7 +743,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 		{
 			if ( @phpversion() < '4.0.3' )
 			{
-				message_die(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file', '', __LINE__, __FILE__);
 			}
 
 			$move_file = 'move_uploaded_file';
@@ -708,7 +755,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 
 		if (!is_uploaded_file($logo_filename))
 		{
-			message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 		}
 		
 		$spath = ($format == 'n') ? $settings['team_logo_path'] : $settings['team_logos_path'];
@@ -734,7 +781,7 @@ function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_
 		
 		$error_msg = sprintf($limagesize, $slogo_max_width, $slogo_max_height);
 			
-		message_die(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
+		message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
 	}
 	
 	if ($format == 'n')
@@ -800,7 +847,7 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 			if ($imgtype != '.gif')
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
@@ -813,7 +860,7 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 			if ($imgtype != '.jpg' && $imgtype != '.jpeg')
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
@@ -822,13 +869,13 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 			if ($imgtype != '.png')
 			{
 				@unlink($tmp_filename);
-				message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
 		default:
 			@unlink($tmp_filename);
-			message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
 	
 	
@@ -891,7 +938,7 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 	{
 		if ( @phpversion() < '4.0.3' )
 		{
-			message_die(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file', '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file', '', __LINE__, __FILE__);
 		}
 
 		$move_file = 'move_uploaded_file';
@@ -903,7 +950,7 @@ function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_file
 
 	if (!is_uploaded_file($logo_filename))
 	{
-		message_die(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+		message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
 
 	$move_file($logo_filename, './../' . $settings['path_match_picture'] . "/$new_filename");
@@ -937,7 +984,7 @@ function picture_delete($num, $logo_file, $logo_preview_file)
 	return "details_map_pic_$num = '', pic_" . $num . "_preview = '', ";
 }
 
-function _log($type, $user_id, $user_ip, $sektion, $message, $data='')
+function log_add($type, $user_id, $user_ip, $sektion, $message, $data='')
 {
 	global $db;
 	
@@ -946,7 +993,7 @@ function _log($type, $user_id, $user_ip, $sektion, $message, $data='')
 	$sql = "INSERT INTO " . LOGS . " SET log_type = '$type', log_time = " . time() . ", user_id = '$user_id', user_ip = '$user_ip', log_sektion = '$sektion', log_message = '$message', log_data = '$data'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'log fail', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'log fail', '', __LINE__, __FILE__, $sql);
 	}
 }
 
@@ -1101,9 +1148,9 @@ function dss_rand()
 			config_value = '" . $config['rand_seed'] . "'
 			WHERE config_name = 'rand_seed'";
 		
-		if( !$db->sql_query($sql) )
+		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Unable to reseed PRNG', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'Unable to reseed PRNG', '', __LINE__, __FILE__, $sql);
 		}
 
 		$dss_seeded = true;
@@ -1135,7 +1182,7 @@ function get_userdata($user, $force_str = false)
 	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "username = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Tried obtaining data for a non-existent user', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Tried obtaining data for a non-existent user', '', __LINE__, __FILE__, $sql);
 	}
 
 	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
@@ -1164,7 +1211,7 @@ function init_userprefs($userdata)
 
 		if ( isset($userdata['user_timezone']) )
 		{
-			$config['board_timezone'] = $userdata['user_timezone'];
+			$config['page_timezone'] = $userdata['user_timezone'];
 		}
 	}
 	else
@@ -1189,7 +1236,7 @@ function init_userprefs($userdata)
 
 		if ( !file_exists(@cms_realpath($root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
 		{
-			message_die(CRITICAL_ERROR, 'Could not locate valid language pack');
+			message(CRITICAL_ERROR, 'Could not locate valid language pack');
 		}
 	}
 
@@ -1203,7 +1250,7 @@ function init_userprefs($userdata)
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Could not update user language info');
+			message(CRITICAL_ERROR, 'Could not update user language info');
 		}
 
 		$userdata['user_lang'] = $default_lang;
@@ -1216,7 +1263,7 @@ function init_userprefs($userdata)
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(CRITICAL_ERROR, 'Could not update user language info');
+			message(CRITICAL_ERROR, 'Could not update user language info');
 		}
 	}
 
@@ -1247,6 +1294,7 @@ function init_userprefs($userdata)
 
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_adm.php');
+		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_acp.php');
 	}
 	
 	board_disable();
@@ -1275,7 +1323,7 @@ function init_userprefs($userdata)
 	//
 	$nav_links['top'] = array ( 
 		'url' => append_sid($root_path . 'index.php'),
-		'title' => sprintf($lang['Forum_Index'], $config['sitename'])
+		'title' => sprintf($lang['Forum_Index'], $config['page_name'])
 	);
 	$nav_links['search'] = array ( 
 		'url' => append_sid($root_path . 'search.php'),
@@ -1300,7 +1348,7 @@ function setup_style($style)
 	$sql = 'SELECT * FROM ' . THEMES . ' WHERE themes_id = ' . (int) $style;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(CRITICAL_ERROR, 'Could not query database for theme info');
+		message(CRITICAL_ERROR, 'Could not query database for theme info');
 	}
 
 	if ( !($row = $db->sql_fetchrow($result)) )
@@ -1315,7 +1363,7 @@ function setup_style($style)
 				WHERE themes_id = ' . (int) $config['default_style'];
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'Could not query database for theme info');
+				message(CRITICAL_ERROR, 'Could not query database for theme info');
 			}
 
 			if ( $row = $db->sql_fetchrow($result) )
@@ -1327,17 +1375,17 @@ function setup_style($style)
 					WHERE user_style = $style";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(CRITICAL_ERROR, 'Could not update user theme info');
+					message(CRITICAL_ERROR, 'Could not update user theme info');
 				}
 			}
 			else
 			{
-				message_die(CRITICAL_ERROR, "Could not get theme data for themes_id [$style]");
+				message(CRITICAL_ERROR, "Could not get theme data for themes_id [$style]");
 			}
 		}
 		else
 		{
-			message_die(CRITICAL_ERROR, "Could not get theme data for themes_id [$style]");
+			message(CRITICAL_ERROR, "Could not get theme data for themes_id [$style]");
 		}
 	}
 
@@ -1353,7 +1401,7 @@ function setup_style($style)
 
 		if ( !defined('TEMPLATE_CONFIG') )
 		{
-			message_die(CRITICAL_ERROR, "Could not open $template_name template config file", '', __LINE__, __FILE__);
+			message(CRITICAL_ERROR, "Could not open $template_name template config file", '', __LINE__, __FILE__);
 		}
 
 		$img_lang = ( file_exists(@cms_realpath($root_path . $current_template_path . '/images/lang_' . $config['default_lang'])) ) ? $config['default_lang'] : 'english';
@@ -1400,6 +1448,52 @@ function create_date($format, $gmepoch, $tz)
 	}
 
 	return ( !empty($translate) ) ? strtr(@gmdate($format, $gmepoch + (3600 * ($tz+date("I", $gmepoch)))), $translate) : @gmdate($format, $gmepoch + (3600 * ($tz+date("I", $gmepoch))));
+//	$thetime = ( !empty($translate) ) ? strtr(@gmdate($format, $gmepoch + (3600 * ($tz+date("I", $gmepoch)))), $translate) : @gmdate($format, $gmepoch + (3600 * ($tz+date("I", $gmepoch))));
+//	
+//	$L_Today = 'Heute um ';
+//	$L_Yesterday = 'Gestern um';
+//	$L_Tomorrow = 'Morgen um';
+//	$time_format = "H:i";// - hour:minute am/pm
+//	
+//	$date = getdate();
+//	$today = $date['mday'];
+//	$month = $date['mon'];
+//	$year = $date['year'];
+//
+//	$forum_date_today = @gmdate ("d", $gmepoch);
+//	$forum_date_month = @gmdate ("m", $gmepoch);
+//	$forum_date_year = @gmdate ("Y", $gmepoch);
+//	
+//	if ($forum_date_today == $today && $forum_date_month == $month && $forum_date_year == $year)
+//		$thetime = $L_Today . @gmdate ($time_format, $gmepoch);//today
+//	
+//	else
+//	if ($today != 1 && $forum_date_today == ($today-1) && $forum_date_month == $month && $forum_date_year == $year)
+//		$thetime = $L_Yesterday . @gmdate ($time_format, $gmepoch);//yesterday
+//	
+//	else
+//	if ($today != 1 && $forum_date_today == ($today+1) && $forum_date_month == $month && $forum_date_year == $year)
+//		$thetime = $L_Tomorrow . @gmdate ($time_format, $gmepoch);//yesterday
+//		
+//	else
+//	//if today is 1 and the month is not 1, then we have to check how many days in the previews month
+//	//and then set $yesterday to the last day in the previews month
+//	if ($today == 1 && $month != 1)
+//	{
+//	$yesterday = date ("t", mktime(0,0,0,($month-1),1,$year));//returns how many days in the previews month
+//	if ($forum_date_today == $yesterday && $forum_date_month == ($month-1) && $forum_date_year == $year)
+//		$thetime = $L_Yesterday . @gmdate ($time_format, $gmepoch);//yesterday
+//	}
+//	else 
+//	//if we are in the first day in the year
+//	if ($today == 1 && $month == 1)
+//	{
+//	$yesterday = date ("t", mktime(0,0,0,12,1,($year -1)));
+//	if ($forum_date_today == $yesterday && $forum_date_month == 12 && $forum_date_year == ($year-1))
+//		$thetime = $L_Yesterday . @gmdate ($time_format, $gmepoch);//yesterday
+//	}
+//
+//   	return ($thetime);
 }
 
 //
@@ -1527,7 +1621,7 @@ function obtain_word_list(&$orig_word, &$replacement_word)
 		FROM  " . WORDS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'Could not get censored words from database', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not get censored words from database', '', __LINE__, __FILE__, $sql);
 	}
 
 	if ( $row = $db->sql_fetchrow($result) )
@@ -1562,7 +1656,7 @@ function obtain_word_list(&$orig_word, &$replacement_word)
 // CRITICAL_ERROR : Used when config data cannot be obtained, eg
 // no database connection. Should _not_ be used in 99.5% of cases
 //
-function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $err_file = '', $sql = '')
+function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $err_file = '', $sql = '')
 {
 	global $db, $template, $config, $settings, $theme, $lang, $root_path, $nav_links, $gen_simple_header, $images;
 	global $userdata, $user_ip, $session_length;
@@ -1584,7 +1678,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 	
 	if(defined('HAS_DIED'))
 	{
-	//	die("message_die() was called multiple times. This isn't supposed to happen. Was message_die() used in page_tail.php?");
+	//	die("message() was called multiple times. This isn't supposed to happen. Was message() used in page_tail.php?");
 		//
 		// This message is printed at the end of the report.
 		// Of course, you can change it to suit your own needs. ;-)
@@ -1598,7 +1692,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		{
 			$custom_error_message = sprintf($custom_error_message, '', '');
 		}
-		echo "<html>\n<body>\n<b>Critical Error!</b><br>\nmessage_die() was called multiple times.<br>&nbsp;<hr />";
+		echo "<html>\n<body>\n<b>Critical Error!</b><br>\nmessage() was called multiple times.<br>&nbsp;<hr />";
 		for( $i = 0; $i < count($msg_history); $i++ )
 		{
 			echo '<b>Error #' . ($i+1) . "</b>\n<br>\n";
@@ -1854,13 +1948,13 @@ function redirect($url)
 
 	if (strstr(urldecode($url), "\n") || strstr(urldecode($url), "\r") || strstr(urldecode($url), ';url'))
 	{
-		message_die(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
+		message(GENERAL_ERROR, 'Tried to redirect to potentially insecure url.');
 	}
 
 	$server_protocol = ($config['cookie_secure']) ? 'https://' : 'http://';
 	$server_name = preg_replace('#^\/?(.*?)\/?$#', '\1', trim($config['server_name']));
 	$server_port = ($config['server_port'] <> 80) ? ':' . trim($config['server_port']) : '';
-	$script_name = preg_replace('#^\/?(.*?)\/?$#', '\1', trim($config['script_path']));
+	$script_name = preg_replace('#^\/?(.*?)\/?$#', '\1', trim($config['page_path']));
 	$script_name = ($script_name == '') ? $script_name : '/' . $script_name;
 	$url = preg_replace('#^\/?(.*?)\/?$#', '/\1', trim($url));
 	$url = str_replace('&amp;', '&', $url);
@@ -1898,7 +1992,7 @@ function board_disable()
 		if (in_array($user_level, $disable_mode))
 		{
 			$disable_message = (!empty($config['page_disable_msg'])) ? htmlspecialchars($config['page_disable_msg']) : $lang['Board_disable'];
-			message_die(GENERAL_MESSAGE, str_replace("\n", '<br>', $disable_message));
+			message(GENERAL_MESSAGE, str_replace("\n", '<br>', $disable_message));
 		}
 		else
 		{

@@ -13,7 +13,7 @@ global $do_gzip_compress;
 $template->set_filenames(array('page_footer' => './../admin/style/page_footer.tpl'));
 
 $template->assign_vars(array(
-	'CMS_VERSION' => $config['version'], 
+	'CMS_VERSION' => $config['page_version'], 
 ));
 
 if ( defined('DEBUG_SQL_ADMIN') )

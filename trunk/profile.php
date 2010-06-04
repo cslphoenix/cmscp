@@ -40,7 +40,7 @@ else
 }
 
 //	Set default email variables
-$script_name		= preg_replace('/^\/?(.*?)\/?$/', '\1', trim($config['script_path']));
+$script_name		= preg_replace('/^\/?(.*?)\/?$/', '\1', trim($config['page_path']));
 $script_name		= ( $script_name != '' ) ? $script_name . '/profile.'.$phpEx : 'profile.'.$phpEx;
 $server_name		= trim($config['server_name']);
 $server_protocol	= ( $config['cookie_secure'] ) ? 'https://' : 'http://';
@@ -61,7 +61,7 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 		
 		if ( empty($HTTP_GET_VARS[POST_USERS_URL]) || $HTTP_GET_VARS[POST_USERS_URL] == ANONYMOUS )
 		{
-			message_die(GENERAL_MESSAGE, $lang['No_user_id_specified']);
+			message(GENERAL_MESSAGE, $lang['No_user_id_specified']);
 		}
 		
 		$user_data = get_userdata($HTTP_GET_VARS[POST_USERS_URL]);
@@ -69,13 +69,13 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 		
 		if (!$user_data)
 		{
-			message_die(GENERAL_MESSAGE, $lang['No_user_id_specified']);
+			message(GENERAL_MESSAGE, $lang['No_user_id_specified']);
 		}
 		
 		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		if ( $total_categories = $db->sql_numrows($result) )
@@ -85,9 +85,9 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 			$sql = 'SELECT *
 						FROM ' . PROFILE . '
 						ORDER BY profile_category, profile_order';
-			if (!$result = $db->sql_query($sql))
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
 			if ( $total_profile = $db->sql_numrows($result) )

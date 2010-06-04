@@ -77,7 +77,7 @@
 <!-- BEGIN news_comments -->
 <tr>
 	<td colspan="3" align="center">
-		<form action="{S_NEWS_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
+		<form action="{S_NEWS_ACTION}" method="post" name="form">
 		<table class="info" width="55%" cellspacing="0">
 		<tr>
 			<td colspan="2">&nbsp;</td>
@@ -93,11 +93,11 @@
 		<!-- BEGIN news_comments_guest -->
 		<tr>
 			<td class="row1_form" width="30%">Nickname: *</td>
-			<td class="row2" width="70%"><input id="poster_nick" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
+			<td class="row2" width="70%"><input id="poster_nick" class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Mail: *</td>
-			<td class="row2"><input id="poster_mail" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{POSTER_MAIL}" name="poster_mail"></td>
+			<td class="row2"><input id="poster_mail" class="post" type="text" value="{POSTER_MAIL}" name="poster_mail"></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Homepage:</td>
@@ -105,11 +105,11 @@
 		</tr>
 		<tr>
 			<td class="row1_form" valign="top">Cpatcha:<br><span class="small">Reload des Captchas per Klick aufs Bild</span></td>
-			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
+			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden."></td>
 		</tr>
 		<tr>
 			<td class="row1_form">Captcha-Code: *</td>
-			<td class="row2"><input id="captcha" onBlur="javascript:checkEntry(this)" class="post" type="text" name="captcha" /></td>
+			<td class="row2"><input id="captcha" class="post" type="text" name="captcha"></td>
 		</tr>
 		<tr>
 			<td class="row1_form" width="25%" valign="top">Kommentar:</td>

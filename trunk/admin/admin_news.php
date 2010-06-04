@@ -46,11 +46,11 @@ else
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 	
-	$start		= ( request('start') ) ? request('start', 'num') : 0;
+	$start		= ( request('start') ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
-	$news_id	= request(POST_NEWS_URL);
-	$confirm	= request('confirm');
-	$mode		= request('mode');
+	$news_id	= request(POST_NEWS_URL, 0);
+	$confirm	= request('confirm', 1);
+	$mode		= request('mode', 1);
 	$show_index = '';
 	
 	
@@ -82,7 +82,7 @@ else
 				else
 				{
 					$news = array (
-						'news_title'		=> request('news_title', 'text'),
+						'news_title'		=> request('news_title', 2),
 						'news_category'		=> '0',
 						'news_text'			=> '',
 						'news_url'			=> '',
@@ -125,7 +125,7 @@ else
 					));
 				}
 				
-				$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_NEWS_URL . '" value="' . $news_id . '" />';
+				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_NEWS_URL . '" value="' . $news_id . '" />';
 				
 				$template->assign_vars(array(
 					
@@ -155,7 +155,7 @@ else
 					
 					'NEWS_TITLE'				=> $news['news_title'],
 					'NEWS_TEXT'					=> html_entity_decode($news['news_text'], ENT_QUOTES),
-	#				'NEWSCAT_IMAGE'				=> ( $mode != '_create' ) ? ( $news['news_category_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news['news_category_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
+	#				'NEWSCAT_IMAGE'				=> ( $mode != '_create' ) ? ( $news['newscat_image'] ) ? $root_path . $settings['path_news_category'] . '/' . $news['newscat_image'] : $images['icon_acp_spacer'] : $images['icon_acp_spacer'],
 	
 					'S_RATING_YES'		=> ( $news['news_rating'] ) ? ' checked="checked"' : '',
 					'S_RATING_NO'		=> ( !$news['news_rating'] ) ? ' checked="checked"' : '',
@@ -177,7 +177,7 @@ else
 					'S_NEWS_CAT_LIST'			=> select_box('news_category', 'select', $news['news_category']),
 					'S_NEWS_MATCH_LIST'			=> _select_match($news['match_id'], '1', 'post'),
 					
-					'S_FIELDS'			=> $s_hidden_fields,
+					'S_FIELDS'			=> $s_fields,
 					'S_NEWS_ACTION'				=> append_sid('admin_news.php'),
 				));
 				
@@ -187,16 +187,16 @@ else
 			
 			case '_create_save':
 			
-				$match_id			= request('match_id', 'num');
-				$news_text			= request('news_text', 'text');
-				$news_title			= request('news_title', 'text');
-				$news_public		= request('news_public', 'num');
-				$news_intern		= request('news_intern', 'num');
-				$news_rating		= request('news_rating', 'num');
-				$news_category		= request('news_category_image', 'text');
+				$match_id			= request('match_id', 0);
+				$news_text			= request('news_text', 2);
+				$news_title			= request('news_title', 2);
+				$news_public		= request('news_public', 0);
+				$news_intern		= request('news_intern', 0);
+				$news_rating		= request('news_rating', 0);
+				$news_category		= request('newscat_image', 2);
 				$news_url			= request('news_url');
 				$news_name			= request('news_name');
-				$news_time_public	= mktime(request('hour', 'num'), request('min', 'num'), 00, request('month', 'num'), request('day', 'num'), request('year', 'num'));
+				$news_time_public	= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
 				
 				for ( $i = 0; $i < count($news_url); $i++ )
 				{
@@ -210,6 +210,7 @@ else
 				if ( $news_url )
 				{
 					array_multisort($news_url);
+					array_multisort($news_name);
 					
 					for ( $j = 0; $j < count($news_url); $j++ )
 					{	
@@ -230,14 +231,14 @@ else
 				
 				if ( $news_category )
 				{
-					$sql = "SELECT news_category_id FROM " . NEWS_CATEGORY . " WHERE news_category_image = '$news_category'";
+					$sql = "SELECT newscat_id FROM " . NEWSCAT . " WHERE newscat_image = '$news_category'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$news_cat = $db->sql_fetchrow($result);
 					
-					$news_category = ( $news_cat['news_category_id'] ) ? $news_cat['news_category_id'] : '0';
+					$news_category = ( $news_cat['newscat_id'] ) ? $news_cat['newscat_id'] : '0';
 				}
 				
 				$error_msg = '';
@@ -277,16 +278,16 @@ else
 			
 			case '_update_save':
 			
-				$match_id			= request('match_id', 'num');
-				$news_text			= request('news_text', 'text');
-				$news_title			= request('news_title', 'text');
-				$news_public		= request('news_public', 'num');
-				$news_intern		= request('news_intern', 'num');
-				$news_rating		= request('news_rating', 'num');
-				$news_category		= request('news_category_image', 'text');
+				$match_id			= request('match_id', 0);
+				$news_text			= request('news_text', 2);
+				$news_title			= request('news_title', 2);
+				$news_public		= request('news_public', 0);
+				$news_intern		= request('news_intern', 0);
+				$news_rating		= request('news_rating', 0);
+				$news_category		= request('newscat_image', 2);
 				$news_url			= request('news_url');
 				$news_name			= request('news_name');
-				$news_time_public	= mktime(request('hour', 'num'), request('min', 'num'), 00, request('month', 'num'), request('day', 'num'), request('year', 'num'));
+				$news_time_public	= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
 				
 				for ( $i = 0; $i < count($news_url); $i++ )
 				{
@@ -300,6 +301,7 @@ else
 				if ( $news_url )
 				{
 					array_multisort($news_url);
+					array_multisort($news_name);
 					
 					for ( $j = 0; $j < count($news_url); $j++ )
 					{	
@@ -320,14 +322,14 @@ else
 				
 				if ( $news_category )
 				{
-					$sql = "SELECT news_category_id FROM " . NEWS_CATEGORY . " WHERE news_category_image = '$news_category'";
+					$sql = "SELECT newscat_id FROM " . NEWSCAT . " WHERE newscat_image = '$news_category'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					$news_cat = $db->sql_fetchrow($result);
 					
-					$news_category = ( $news_cat['news_category_id'] ) ? $news_cat['news_category_id'] : '0';
+					$news_category = ( $news_cat['newscat_id'] ) ? $news_cat['newscat_id'] : '0';
 				}
 				
 				$error_msg = '';
@@ -449,7 +451,7 @@ else
 	$template->set_filenames(array('body' => 'style/acp_news.tpl'));
 	$template->assign_block_vars('display', array());
 	
-	$s_hidden_fields = '<input type="hidden" name="mode" value="_create" />';
+	$s_fields = '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
 		'L_NEWS_HEAD'		=> sprintf($lang['sprintf_head'], $lang['news']),
@@ -461,7 +463,7 @@ else
 		'L_DELETE'			=> $lang['common_delete'],
 		'L_SETTINGS'		=> $lang['common_settings'],
 		
-		'S_FIELDS'	=> $s_hidden_fields,
+		'S_FIELDS'	=> $s_fields,
 		'S_NEWS_CREATE'		=> append_sid('admin_news.php?mode=_create'),
 		'S_NEWS_ACTION'		=> append_sid('admin_news.php'),
 	));

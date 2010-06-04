@@ -49,8 +49,8 @@ else
 	
 	$start			= ( request('start') ) ? request('start') : 0;
 	$start			= ( $start < 0 ) ? 0 : $start;
-	$cash_id		= request(POST_CASH_URL);
-	$cashuser_id	= request(POST_CASHUSER_URL);
+	$cash_id		= request(POST_CASH_URL, 0);
+	$cashuser_id	= request(POST_CASHUSER_URL, 0);
 	$confirm		= request('confirm');
 	$mode			= request('mode');
 
@@ -77,7 +77,7 @@ else
 			if ( $mode == '_create' )
 			{
 				$cash = array(
-					'cash_name'		=> request('cash_name', 'text'),
+					'cash_name'		=> request('cash_name', 2),
 					'cash_type'		=> '0',
 					'cash_amount'	=> '0',
 					'cash_interval'	=> '0',
@@ -132,10 +132,10 @@ else
 		
 		case '_create_save':
 		
-			$cash_name		= request('cash_name', 'text');
-			$cash_type		= request('cash_type', 'num');
-			$cash_amount	= request('cash_amount', 'text');
-			$cash_interval	= request('cash_interval', 'num');
+			$cash_name		= request('cash_name', 2);
+			$cash_type		= request('cash_type', 0);
+			$cash_amount	= request('cash_amount', 2);
+			$cash_interval	= request('cash_interval', 0);
 			
 			$error_msg = '';
 			$error_msg .= ( !$cash_name ) ? $lang['msg_select_name'] : '';
@@ -161,10 +161,10 @@ else
 		
 		case '_update_save':
 		
-			$cash_name		= request('cash_name', 'text');
-			$cash_type		= request('cash_type', 'num');
-			$cash_amount	= request('cash_amount', 'text');
-			$cash_interval	= request('cash_interval', 'num');
+			$cash_name		= request('cash_name', 2);
+			$cash_type		= request('cash_type', 0);
+			$cash_amount	= request('cash_amount', 2);
+			$cash_interval	= request('cash_interval', 0);
 			
 			$error_msg = '';
 			$error_msg .= ( !$cash_name ) ? $lang['msg_select_name'] : '';
@@ -206,7 +206,7 @@ else
 			else
 			{
 				$cash_user = array(
-					'user_id'		=> request('user_id', 'num'),
+					'user_id'		=> request('user_id', 0),
 					'user_amount'	=> '0',
 					'user_month'	=> date("m", time()),
 					'user_interval'	=> '1',
@@ -214,7 +214,7 @@ else
 				$new_mode = '_cashuser_create_save';
 			}
 			
-			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CASHUSER_URL . '" value="' . $cashuser_id . '" />';
+			$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CASHUSER_URL . '" value="' . $cashuser_id . '" />';
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['cash_head'],
@@ -238,7 +238,7 @@ else
 				'S_INTAVAL_O'	=> ( $cash_user['user_interval'] == '1' ) ? ' checked="checked"' : '',
 				
 				'S_CASHUSER'			=> select_box('user', 'select', 'user_id', 'username', $cash_user['user_id']),
-				'S_FIELDS'		=> $s_hidden_fields,
+				'S_FIELDS'		=> $s_fields,
 				'S_ACTION'			=> append_sid('admin_cash.php'),
 			));
 			
@@ -246,8 +246,8 @@ else
 			
 		case '_cashuser_create_save':
 		
-			$user_id		= request('user_id', 'num');
-			$user_amount	= request('user_amount', 'num');
+			$user_id		= request('user_id', 0);
+			$user_amount	= request('user_amount', 0);
 			$user_month		= ( request('user_month', 'only') ) ? implode(', ', request('user_month', 'only')) : '';
 			$user_interval	= request('user_interval');
 			
@@ -274,8 +274,8 @@ else
 		
 		case '_cashuser_update_save':
 		
-			$user_id		= request('user_id', 'num');
-			$user_amount	= request('user_amount', 'num');
+			$user_id		= request('user_id', 0);
+			$user_amount	= request('user_amount', 0);
 			$user_month		= ( request('user_month', 'only') ) ? implode(', ', request('user_month', 'only')) : '';
 			$user_interval	= request('user_interval');
 			
@@ -334,11 +334,11 @@ else
 			
 		case '_bankdata_save':
 			
-			$bankdata_name		= request('bankdata_name', 'text');
-			$bankdata_bank		= request('bankdata_bank', 'text');
-			$bankdata_blz		= request('bankdata_blz', 'text');
-			$bankdata_number	= request('bankdata_number', 'text');
-			$bankdata_reason	= request('bankdata_reason', 'text');
+			$bankdata_name		= request('bankdata_name', 2);
+			$bankdata_bank		= request('bankdata_bank', 2);
+			$bankdata_blz		= request('bankdata_blz', 2);
+			$bankdata_number	= request('bankdata_number', 2);
+			$bankdata_reason	= request('bankdata_reason', 2);
 			
 			$error_msg = '';
 			$error_msg .= ( !$bankdata_name ) ? $lang['msg_select_name'] : '';

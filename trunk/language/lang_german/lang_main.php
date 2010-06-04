@@ -25,6 +25,10 @@
 
 include('lang_head.php');
 
+$lang['sprintf_match_name']		= 'vs. %s';
+$lang['sprintf_match_intern']	= 'vs. <span style="font-style:italic;">%s</span>';
+
+
 
 $lang['sprintf_subnavi_match']			= 'vs. %s';
 $lang['sprintf_subnavi_match_i']		= '<span style="font-style:italic;">vs. %s</span>';
@@ -89,6 +93,7 @@ $lang['forum_index'] = 'Forum:';
 
 $lang['today_at'] = "Heute um %s"; // %s is the time
 $lang['yesterday_at'] = "Gestern um %s"; // %s is the time
+$lang['tomorrow_at'] = "Morgen um %s"; // %s is the time
 
 $lang['news']		= 'News';
 
@@ -108,9 +113,16 @@ $lang['page_disable'] = 'Seite deaktiviert.';
 $lang['Board_disable_explain'] = 'This will deny access to the board for several user groups you can define below.';
 $lang['Board_disable_mode'] = 'Disable board for...';
 $lang['Board_disable_mode_explain'] = 'Here you can choose who isn\'t allowed to access the board when it\'s disabled. With Ctrl key pressed you can select more than one user group.';
-$lang['page_disable_mode_opt'] = array(ANONYMOUS => 'Gäste', USER => 'Registierte Benutzer', TRIAL => 'Trial Member', MEMBER => 'Member');
+
 $lang['Board_disable_msg'] = 'Board disabled message';
 $lang['Board_disable_msg_explain'] = 'This message will be shown when the board is disabled (empty message = phpBB default message).';
+
+$lang['page_disable_mode_opt'] = array(
+										GUEST => 'Gäste',
+										USER => 'Registierte Benutzer',
+										TRIAL => 'Trial Member',
+										MEMBER => 'Member'
+									);
 
 
 $lang['cal_birthday']		= 'Geburtstag';
@@ -377,7 +389,7 @@ $lang['AIM'] = 'AIM-Name';
 $lang['MSNM'] = 'MSN Messenger';
 $lang['YIM'] = 'Yahoo Messenger';
 
-$lang['Forum_Index'] = '%s Foren-Übersicht'; // eg. sitename Forum Index, %s can be removed if you prefer
+$lang['Forum_Index'] = '%s Foren-Übersicht'; // eg. page_name Forum Index, %s can be removed if you prefer
 
 $lang['Post_new_topic'] = 'Neues Thema eröffnen';
 $lang['Reply_to_topic'] = 'Neue Antwort erstellen';
@@ -1443,7 +1455,14 @@ $lang['month'] = array(
 
 $lang['network_link']		= 'Links';
 $lang['network_partner']	= 'Partner';
-$lang['network_sponsor']	= 'Sponsoren';
+$lang['network_sponsor']	= 'Sponsor';
 
+$lang['main_changelog'] = array(
+	'cl_added'		=> 'Hinzugefügt',
+	'cl_change'		=> 'Geändert',
+	'cl_fixed'		=> 'Beseitigt',
+	'cl_improved'	=> 'Verbessert',
+	'cl_removed'	=> 'Entfernt',	
+);
 
 ?>

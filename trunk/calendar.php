@@ -75,7 +75,7 @@ if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $u
 				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$day_rows_b = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -83,7 +83,7 @@ if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $u
 				$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$day_rows_e = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -91,15 +91,15 @@ if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $u
 				$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$day_rows_w = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
 				
-				$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+				$sql = 'SELECT training_vs, training_date FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				$day_rows_t = $db->sql_fetchrowset($result);
 				$db->sql_freeresult($result);
@@ -126,7 +126,7 @@ if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $u
 			$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$day_rows_b = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
@@ -134,7 +134,7 @@ if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $u
 			$sql = 'SELECT event_date, event_duration, event_title FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$day_rows_e = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
@@ -142,15 +142,15 @@ if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $u
 			$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$day_rows_w = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 			
-			$sql = 'SELECT training_vs, training_start FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_start), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
+			$sql = 'SELECT training_vs, training_date FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%d.%m.%Y') = '" . $i."." . $monat."." . $jahr."'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$day_rows_t = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
@@ -268,7 +268,7 @@ $cal_days = '';
 
 for ( $i = 1; $i < $tage_im_monat + 1; $i++ )
 {
-	$cal_weekday = $arr_woche_kurz[$erster];
+	$cal_weekday = $arr_woche_kurz[date("w", mktime(0, 0, 0, $monat, $i, $jahr))];
 	
 	if ( $i < 10 ) { $i = '0' . $i; }
 	

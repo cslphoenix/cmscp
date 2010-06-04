@@ -1,10 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<head>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><head>
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
 	
-	<title>{SITENAME} :: {PAGE_TITLE}</title>
+	
+<title>{SITENAME} :: {PAGE_TITLE}</title>
 	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
 	
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -100,20 +100,6 @@
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
 <a name="top"></a>
-<!--
-<table width="100%" cellspacing="0" cellpadding="1" border="0" align="center"> 
-<tr> 
-	<td><table width="100%" cellspacing="0" cellpadding="0" border="0">
-		<tr> 
-			<td align="center" width="100%" valign="middle">
-				{SITENAME}<br>{SITE_DESCRIPTION}<br>
-				
-			</td>
-		</tr>
-	</table>
-
-	<br>
--->
 <div align="center">
 <table width="986" border="0" cellspacing="0" cellpadding="0" align="center" class="table">
 <tr>
@@ -149,20 +135,15 @@
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}<br>CMS Version: {VERSION}</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
 				<!-- BEGIN switch_user_logged_out -->
-				<form method="post" action="{S_LOGIN_ACTION}">
+				<form action="{S_LOGIN_ACTION}" method="post">
 				<table width="90%" border="0" cellspacing="2" cellpadding="0">
 				<tr>
 					<td width="100%">&nbsp;
-						<!--<input class="post" type="hidden" name="redirect" size="10" maxlength="32" value="{redirect}"/>-->
-						<!--
-						<- BEGIN switch_allow_autologin ->
-						<input class="text" type="checkbox" name="autologin" />
-						<- END switch_allow_autologin ->
-						-->
 					</td>
-					<td align="left"><input class="post" type="text" name="username" size="10" /></td>
-					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32" /></td>
-					<td align="left"><input type="submit" class="button3" name="login" value="" /></td>
+					<td align="left"><input type="text" class="post" name="username" size="10"></td>
+					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32"></td>
+					<!-- autocomplete="off" -->
+					<td align="left"><input type="submit" class="button3" name="login" value=""></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -329,6 +310,12 @@
 					<td class="{subnavi_news_row.CLASS}" align="left" width="99%"><a href="{subnavi_news_row.U_DETAILS}">{subnavi_news_row.NEWS_TITLE}</a></td>
 				</tr>
 				<!-- END subnavi_news_row -->
+				<!-- BEGIN no_entry_navi_news -->
+				<tr>
+					<td colspan="3" align="center">{NO_ENTRY}</td>
+				</tr>
+				<!-- END no_entry_navi_news -->
+
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -346,7 +333,7 @@
 				<!-- END subnavi_match_row -->
 				<!-- BEGIN no_entry_navi_match -->
 				<tr>
-					<td colspan="3" class="{subnavi_match_row.CLASS}" align="center">{NO_ENTRY}</td>
+					<td colspan="3" align="center">{NO_ENTRY}</td>
 				</tr>
 				<!-- END no_entry_navi_match -->
 				</table>

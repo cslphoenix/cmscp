@@ -46,7 +46,7 @@
 <form action="{S_PROFILE_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_PROFILE_ACTION}" method="post">{L_PROFILE_HEAD}</a></li>
+	<li><a href="{S_PROFILE_ACTION}">{L_PROFILE_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_PROFILE_EDIT_CATEGORY}</a></li>
 </ul>
 </div>
@@ -55,7 +55,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_PROFILE_ACTION}" method="post">{L_PROFILE_HEAD}</a></li>
+				<li><a href="{S_PROFILE_ACTION}">{L_PROFILE_HEAD}</a></li>
 				<li id="active"><a href="#" id="current">{L_PROFILE_EDIT_CATEGORY}</a></li>
 			</ul>
 		</div>
@@ -88,7 +88,7 @@
 <form action="{S_PROFILE_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_PROFILE_ACTION}" method="post">{L_PROFILE_HEAD}</a></li>
+	<li><a href="{S_PROFILE_ACTION}">{L_PROFILE_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_PROFILE_NEW_EDIT}</a></li>
 </ul>
 </div>
@@ -145,7 +145,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

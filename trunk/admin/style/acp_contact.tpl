@@ -94,7 +94,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_CONTACT_ACTION}" method="post">{L_CONTACT_TITLE}</a></li>
+				<li><a href="{S_CONTACT_ACTION}">{L_CONTACT_TITLE}</a></li>
 				<!-- BEGIN contact -->
 				<li {TAB_AKTIV1} href="{S_CONTACT_NORMAL}">{L_CONTACT_HEAD_NORMAL}</a></li>
 				<!-- END contact -->

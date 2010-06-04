@@ -59,7 +59,7 @@
 	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.EMAIL_IMG}</td>
 	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.JOINED}</td>
 	<!-- BEGIN switch_mod_option -->
-	<td class="{details.mod_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.mod_row.USER_ID}" /></td>
+	<td class="{details.mod_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.mod_row.USER_ID}"></td>
 	<!-- END switch_mod_option -->
 </tr>
 <!-- END mod_row -->
@@ -82,7 +82,7 @@
 	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.EMAIL_IMG}</td>
 	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.JOINED}</td>
 	<!-- BEGIN switch_mod_option -->
-	<td class="{details.member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.member_row.USER_ID}" /></td>
+	<td class="{details.member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.member_row.USER_ID}"></td>
 	<!-- END switch_mod_option -->
 </tr>
 <!-- END member_row -->
@@ -96,8 +96,8 @@
 
 <table class="out" width="100%" cellspacing="3">
 <tr>
-	<td align="left" colspan="3">{S_SELECT_USERS} <input type="submit" name="add" value="{L_ADD_MEMBER}" class="button2" /></td>
-	<td align="right" colspan="3">{S_SELECT_OPTION} <input type="submit" value="Absenden" class="button2" /></td>
+	<td align="left" colspan="3">{S_SELECT_USERS} <input type="submit" name="add" value="{L_ADD_MEMBER}" class="button2"></td>
+	<td align="right" colspan="3">{S_SELECT_OPTION} <input type="submit" value="Absenden" class="button2"></td>
 </tr>
 </table>
 <!-- END switch_mod_option -->
@@ -108,6 +108,6 @@
 	<td align="right">{PAGINATION}</td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS}
+{S_FIELDS}
 </form>
 <!-- END details -->

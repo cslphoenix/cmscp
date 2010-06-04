@@ -4,72 +4,23 @@
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
-	<title>{L_HEAD}</title>
+	<title>{L_HEADER}</title>
 	<link rel="stylesheet" href="style/style.css" type="text/css">
 	<link rel="stylesheet" href="style/lightbox.css" type="text/css" media="screen" />
 	
 	<link rel="icon" href="./../favicon.ico" type="image/x-icon">
 
-	<!--	
-	/***
-	*
-	*	http://www.lokeshdhakar.com/projects/lightbox/
-	*
-	***/
-	-->
+	<!--	http://www.lokeshdhakar.com/projects/lightbox/	-->
 	<script type="text/javascript" src="style/lightbox.js"></script>
 	
 	<script type="text/javascript">
 	// <![CDATA[
 				
-	/***
-	*	
-	*	....
-	*	
-	***/
 	/*
-	function checkEntry(element)
-	{
-		id = element.id;
-		
-		if ( document.getElementById(id).value.length == 0 )
-		{
-			document.getElementById(id).style.border="solid #FF0000 2px";
-			document.getElementById('msg').innerHTML = 'Fehler: wichtige Eingaben fehlen!';
-			return false;
-		}
-		else
-		{
-			document.getElementById(id).style.border="solid #000 1px";
-			document.getElementById('msg').innerHTML = '';
-			return true;
-		}
-	}
-	
-	function checkForm()
-	{
-		retValue = true;
-		
-		for (var i=0; i < document.form.elements.length; i++)
-		{
-			element = document.form.elements[i];
-			
-			if (element.type == 'text' && element.id != '')
-			{
-				if (checkEntry(element) == false)
-				{
-					retValue=false;
-				}
-			}
-		}
-		return retValue;
-	}
-	*/
-	/***
-	*	ToggleScript
-	*
-	*	name = name ;)
-	***/			
+	 *	ToggleScript
+	 *
+	 *	name = name ;)
+	 */			
 	function toggle(name)
 	{
 		var el = document.getElementById(name);
@@ -84,10 +35,10 @@
 		}
 	}
 				
-	/**
-	* Mark/unmark checkboxes
-	* id = ID of parent container, name = name prefix, aktion = aktion [true/false]
-	*/
+	/*
+	 *	Mark/unmark checkboxes
+	 *	id = ID of parent container, name = name prefix, aktion = aktion [true/false]
+	 */
 	function marklist(id, name, aktion)
 	{
 		var parent = document.getElementById(id);
@@ -131,7 +82,7 @@
 			<tr>
 				<th width="35%" align="left">{L_HEAD}</th>
 				<td width="30%" align="center"><a href="{U_ADMIN_INDEX}">&raquo; {L_ADMIN_INDEX}</a><span class="small"> :: </span><a href="{U_PAGE_INDEX}">&raquo; {L_PAGE_INDEX}</a></td>
-				<td width="35%" align="right"><a href="{U_ADMIN_LOGOUT}" target="_parent">&raquo; {L_SESSION}</a><span class="small"> :: </span><a href="{U_LOGOUT}" target="_parent">&raquo; {L_LOGOUT}</a>{L_USER}</td>
+				<td width="35%" align="right"><a href="{U_ADMIN_LOGOUT}" target="_parent">&raquo; {L_SESSION}</a><span class="small"> :: </span><a href="{U_LOGOUT}" target="_parent">&raquo; {L_LOGOUT}</a>{L_HEAD_USER}</td>
 			</tr>
 			</table>
 

@@ -116,7 +116,7 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 			$id_name	= 'bugtracker_id';
 		break;
 		default:
-			message_die(GENERAL_ERROR, 'No Table given');
+			message(GENERAL_ERROR, 'No Table given');
 		break;
 	}
 	
@@ -126,16 +126,16 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 			VALUES ('" . intval($id) . "', '" . intval($poster_id) . "', $sql_data '" . $poster_ip . "', '" . str_replace("\'", "''", $message) . "', '" . time() . "')";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		$sql = "UPDATE $table_name SET " . $table . "_comment = " . $table . "_comment + 1 WHERE $id_name = $id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
-		_log(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_COMMENT, 'comment_' . $table);
+		log_add(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_COMMENT, 'comment_' . $table);
 	}
 	
 	return;

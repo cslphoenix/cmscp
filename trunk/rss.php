@@ -31,7 +31,7 @@ $userdata = session_pagestart($user_ip, PAGE_RSS);
 init_userprefs($userdata);
 
 // Build URL components
-$script_name = preg_replace('/^\/?(.*?)\/?$/', '\1', trim($config['script_path']));
+$script_name = preg_replace('/^\/?(.*?)\/?$/', '\1', trim($config['page_path']));
 $viewpost = ( $script_name != '' ) ? $script_name . '/viewtopic.' . $phpEx : 'viewtopic.'. $phpEx;
 $index = ( $script_name != '' ) ? $script_name . '/index.' . $phpEx : 'index.'. $phpEx;
 $server_name = trim($config['server_name']);
@@ -41,8 +41,8 @@ $server_port = ( $config['server_port'] <> 80 ) ? ':' . trim($config['server_por
 $index_url = $server_protocol . $server_name . $server_port . $script_name . '/';
 $viewpost_url = $server_protocol . $server_name . $server_port . $viewpost;
 // Reformat site name and description
-$site_name = strip_tags($config['sitename']);
-$site_description = strip_tags($config['site_description']);
+$site_name = strip_tags($config['page_name']);
+$page_desc = strip_tags($config['page_desc']);
 //
 // END Create main board information
 //
@@ -59,8 +59,8 @@ unset($regs);
 //
 // GET THE TIME TODAY AND YESTERDAY
 //
-$today_ary = explode('|', create_date('m|d|Y', time(), $config['board_timezone']));
-$config['time_today'] = gmmktime(0 - $config['board_timezone'] - $config['board_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+$today_ary = explode('|', create_date('m|d|Y', time(), $config['page_timezone']));
+$config['time_today'] = gmmktime(0 - $config['page_timezone'] - $config['page_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
 $config['time_yesterday'] = $config['time_today'] - 86400;
 unset($today_ary);
 
@@ -75,7 +75,7 @@ $template->assign_vars(array(
 	'S_CONTENT_ENCODING' => $lang['ENCODING'],
 	'BOARD_URL' => $index_url,
 	'BOARD_TITLE' => $site_name,
-	'BOARD_DESCRIPTION' => $site_description,
+	'BOARD_DESCRIPTION' => $page_desc,
 	'BOARD_MANAGING_EDITOR' => $config['page_email'],
 	'BOARD_WEBMASTER' => $config['page_email'],
 	'BUILD_DATE' => gmdate('D, d M Y H:i:s', time()) . ' GMT', 
@@ -88,25 +88,25 @@ $template->assign_vars(array(
 // END Assign static variabless to template
 //
 
-$sql = 'SELECT n.*, nc.news_category_title, nc.news_category_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+$sql = 'SELECT n.*, nc.newscat_title, nc.newscat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 			FROM ' . NEWS . ' n
 				LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 				LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 				LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-				LEFT JOIN ' . NEWS_CATEGORY . ' nc ON n.news_category = nc.news_category_id
+				LEFT JOIN ' . NEWSCAT . ' nc ON n.news_category = nc.newscat_id
 			WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 		ORDER BY n.news_time_public DESC, n.news_id DESC';
 if ( !($result = $db->sql_query($sql)) )
 {
-	message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 }
 $news_data = $db->sql_fetchrowset($result);
 
 if ( !$news_data )
 {
-	message_die(GENERAL_MESSAGE, $lang['No_match']);
+	message(GENERAL_MESSAGE, $lang['No_match']);
 }
 else
 {

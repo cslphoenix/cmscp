@@ -69,8 +69,8 @@ if ( $mode == '' )
 					LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					LEFT JOIN ' . MATCH . ' m ON m.match_id = tr.match_id
-				WHERE tr.training_start > ' . time() . '
-			ORDER BY tr.training_start DESC';
+				WHERE tr.training_date > ' . time() . '
+			ORDER BY tr.training_date DESC';
 	$training_entry = _cached($sql, 'training_list_open');
 	
 	if (!$training_entry)
@@ -90,7 +90,7 @@ if ( $mode == '' )
 				'CLASS' 		=> $class,
 				'TRAINING_GAME'	=> display_gameicon($training_entry[$i]['game_size'], $training_entry[$i]['game_image']),
 				'TRAINING_NAME'	=> $training_name,
-				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_start'], $userdata['user_timezone']),
+				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_date'], $userdata['user_timezone']),
 				'U_DETAILS'		=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_entry[$i]['training_id'])
 			));
 		}
@@ -101,8 +101,8 @@ if ( $mode == '' )
 					LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 					LEFT JOIN ' . MATCH . ' m ON m.match_id = tr.match_id
-				WHERE tr.training_start < ' . time() . '
-			ORDER BY tr.training_start DESC';
+				WHERE tr.training_date < ' . time() . '
+			ORDER BY tr.training_date DESC';
 	$training_entry = _cached($sql, 'training_list_close');
 	
 	if (!$training_entry)
@@ -122,7 +122,7 @@ if ( $mode == '' )
 				'CLASS' 		=> $class,
 				'TRAINING_GAME'	=> display_gameicon($training_entry[$i]['game_size'], $training_entry[$i]['game_image']),
 				'TRAINING_NAME'	=> $training_name,
-				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_start'], $userdata['user_timezone']),
+				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_date'], $userdata['user_timezone']),
 				'U_DETAILS'		=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_entry[$i]['training_id'])
 			));
 		}
@@ -256,7 +256,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 			WHERE user_id = ' . $userdata['user_id'] . ' AND team_id = ' . $row_details['team_id'];
 	$result = $db->sql_query($sql);
 	
-	if ($db->sql_numrows($result) && $row_details['training_start'] > time())
+	if ($db->sql_numrows($result) && $row_details['training_date'] > time())
 	{
 		$template->assign_block_vars('training_users.users_status', array());
 		
@@ -418,7 +418,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				$sql = 'SELECT * FROM ' . TRAINING_COMMENTS_READ . ' WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				if ( $db->sql_numrows($result) )
@@ -428,7 +428,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 							WHERE training_id = ' . $training_id . ' AND user_id = ' . $userdata['user_id'];					
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				else
@@ -437,7 +437,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 						VALUES (' . $training_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 				
@@ -449,7 +449,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				_comment_message('add', 'training', $training_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
 				$message = $lang['add_comment'] . sprintf($lang['click_return_training'],  '<a href="' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">', '</a>');
-				message_die(GENERAL_MESSAGE, $message);
+				message(GENERAL_MESSAGE, $message);
 			}
 		}
 	}
@@ -500,7 +500,7 @@ else if ($mode == 'change')
 		
 		$message = $lang['update_training_status_add'];
 
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'UCP_STATUS_ADD');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'UCP_STATUS_ADD');
 	}
 	else if ($HTTP_POST_VARS['training_users_status'] != $HTTP_POST_VARS['users_status'])
 	{
@@ -512,7 +512,7 @@ else if ($mode == 'change')
 		
 		$message = $lang['update_training_status_edit'];
 		
-		_log(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'UCP_STATUS_EDIT');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'UCP_STATUS_EDIT');
 	}
 	else
 	{
@@ -520,7 +520,7 @@ else if ($mode == 'change')
 	}
 
 	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">'));
-	message_die(GENERAL_MESSAGE, $message);
+	message(GENERAL_MESSAGE, $message);
 }
 else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 {
@@ -537,7 +537,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	$sql = 'SELECT * FROM ' . TEAMS . ' WHERE team_id = ' . $team_id;
 	if (!($result_team = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
 	}
 	$teams = $db->sql_fetchrow($result_team);
 	$db->sql_freeresult($result_team);
@@ -590,7 +590,7 @@ else
 
 if ( $userdata['user_level'] <= TRIAL )
 {
-	message_die(GENERAL_ERROR, $lang['access_denied']);
+	message(GENERAL_ERROR, $lang['access_denied']);
 }
 
 $template->pparse('body');

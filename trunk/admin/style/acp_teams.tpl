@@ -66,7 +66,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_ACTION}" method="post">{L_TITLE}</a></li>
+				<li><a href="{S_ACTION}">{L_TITLE}</a></li>
 				<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 				<!-- BEGIN member -->
 				<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
@@ -196,7 +196,7 @@
 
 
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -210,7 +210,7 @@
 	<th>
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li><a href="{S_ACTION}" method="post">{L_TITLE}</a></li>
+				<li><a href="{S_ACTION}">{L_TITLE}</a></li>
 				<li><a href="{S_EDIT}">{L_EDIT}</a></li>
 				<li id="active"><a href="#" id="current">{L_MEMBER}</a></li>
 			</ul>
