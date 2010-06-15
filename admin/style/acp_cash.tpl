@@ -2,10 +2,9 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CASH_CREATE}">{L_CREATE}</a></li>
-	<li><a href="{S_CASHUSER_CREATE}">{L_CASHUSER_CREATE}</a></li>
-	<li><a id="setting" href="{S_BANKDATA}">{L_BANKDATA}</a></li>
-	
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+	<li><a href="{S_USER_CREATE}">{L_CASH_USER_CREATE}</a></li>
+	<li><a id="setting" href="{S_BANKDATA}">{L_BD_INFO}</a></li>
 </ul>
 </div>
 
@@ -51,7 +50,7 @@
 <br />
 <!-- END show_bank -->
 
-<form action="{S_CASH_ACTION}" method="post">
+<form action="{S_ACTION}" method="post">
 <table class="row" cellspacing="1">
 <tr>
 	<td class="rowHead" colspan="2" width="100%">{L_NAME}</td>
@@ -89,7 +88,7 @@
 
 <br />
 
-<form action="{S_CASH_ACTION}" method="post">
+<form action="{S_ACTION}" method="post">
 <table class="row" cellspacing="1">
 <tr>
 	<td class="rowHead" colspan="2" width="100%">{L_CASHUSER_USERNAME}</td>
@@ -127,7 +126,7 @@
 <!-- END display -->
 
 <!-- BEGIN cash_edit -->
-<form action="{S_CASH_ACTION}" method="post">
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_GAME_ACTION}">{L_HEAD}</a></li>
@@ -180,10 +179,10 @@
 <!-- END cash_edit -->
 
 <!-- BEGIN cashuser_edit -->
-<form action="{S_CASH_ACTION}" method="post">
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_CASH_ACTION}">{L_HEAD}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_CASHUSER_NEW_EDIT}</a></li>
 </ul>
 </div>

@@ -295,7 +295,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 
 function image_gallery_upload($image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, $max_width, $max_height, $max_filesize, $pic_preview_widht, $pic_preview_height)
 {
-	global $db, $lang, $settings;
+	global $db, $lang, $settings, $error;
 
 	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
 	
@@ -320,7 +320,7 @@ function image_gallery_upload($image_path, $image_filename, $image_realname, $im
 		list($width, $height, $type) = @getimagesize($image_filename);
 	}
 
-	if ( !($imgtype = image_check_type($image_filetype)) )
+	if ( !($imgtype = image_check_type($image_filetype, $error)) )
 	{
 		return;
 	}
@@ -356,6 +356,11 @@ function image_gallery_upload($image_path, $image_filename, $image_realname, $im
 			@unlink($tmp_filename);
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
+
+	debug($width);
+	debug($height);
+	debug($max_width);
+	debug($max_height);
 
 	if ( $width > 0 && $height > 0 && $width <= $max_width && $height <= $max_height )
 	{
@@ -425,8 +430,8 @@ function image_gallery_upload($image_path, $image_filename, $image_realname, $im
 	}
 	else
 	{
-		$error_msg = sprintf($lang['gallery_imagesize'], $max_width, $max_height);
-		message(GENERAL_ERROR, 'einfach ein fehler -.-\'' . $error_msg, '', __LINE__, __FILE__);
+		$error = sprintf($lang['msg_imagesize'], $max_width, $max_height);
+		message(GENERAL_ERROR, $error, '');
 	}
 }
 

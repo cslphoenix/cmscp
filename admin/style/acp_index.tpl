@@ -9,21 +9,37 @@
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td colspan="2">
+	<td class="top" width="49%">
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li><a href="{U_MATCH}" id="current"><img src="{I_MATCH}" width="12" height="12" alt="" />&nbsp;{L_MATCH}</a></li>
-			<li><a href="#" id="right"><img src="" width="12" height="12" alt="" />&nbsp;</a></li>
+			<li><a href="{U_NEWS}" id="current"><img src="{I_NEWS}" width="12" height="12" alt="" />&nbsp;{L_NEWS}</a></li>
 		</ul>
 		</div>
+		<table class="small" border="0" cellspacing="2" cellpadding="1">
+		<!-- BEGIN row_news -->
+		<tr class="wihte">
+			<td width="90%"><span style="float:right;">{row_news.NEWS_DATE}</span>{row_news.NEWS_TITLE}</td>
+			<td nowrap="nowrap">{row_news.NEWS_PUBLIC} {row_news.NEWS_UPDATE} {row_news.NEWS_DELETE}</td>
+		</tr>
+		<!-- END row_news -->
+		<!-- BEGIN no_entry_news -->
+		<tr>
+			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
+		</tr>
+		<!-- END no_entry_news -->
+		</table>
 	</td>
-</tr>
-<tr>
-	<td class="top" width="50%">
+	<td width="2%"></td>
+	<td class="top" width="49%">
+		<div id="navcontainer">
+		<ul id="navlist">
+			<li><a href="{U_MATCH}" id="right">{L_MATCH}&nbsp;<img src="{I_MATCH}" width="12" height="12" alt="" /></a></li>
+		</ul>
+		</div>
 		<table class="small" border="0" cellspacing="2" cellpadding="1">
 		<!-- BEGIN row_match -->
-		<tr>
-			<td class="top" width="90%"><span style="float:right;">{row_match.MATCH_DATE}</span>{row_match.MATCH_RIVAL}</td>
+		<tr class="wihte">
+			<td width="90%"><span style="float:right;">{row_match.MATCH_DATE}</span>{row_match.MATCH_RIVAL}</td>
 			<td nowrap="nowrap">{row_match.MATCH_DETAILS} {row_match.MATCH_UPDATE} {row_match.MATCH_DELETE}</td>
 		</tr>
 		<!-- END row_match -->
@@ -34,11 +50,44 @@
 		<!-- END no_entry_match -->
 		</table>
 	</td>
-	<td class="top" width="50%">
+</tr>
+</table>
+
+<br />
+
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="top" width="49%">
+		<div id="navcontainer">
+		<ul id="navlist">
+			<li><a href="{U_EVENT}" id="current"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li>
+		</ul>
+		</div>
+		<table class="small" border="0" cellspacing="2" cellpadding="1">
+		<!-- BEGIN row_event -->
+		<tr class="wihte">
+			<td width="90%"><span style="float:right;">{row_event.EVENT_DATE}</span>{row_event.EVENT_TITLE}</td>
+			<td>{row_event.EVENT_UPDATE} {row_event.EVENT_DELETE}</td>
+		</tr>
+		<!-- END row_event -->
+		<!-- BEGIN no_entry_event -->
+		<tr>
+			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
+		</tr>
+		<!-- END no_entry_event -->
+		</table>
+	</td>
+	<td width="2%"></td>
+	<td class="top" width="49%">
+		<div id="navcontainer">
+		<ul id="navlist">
+			<li><a href="{U_TRAIN}" id="right">{L_TRAIN}&nbsp;<img src="{I_TRAIN}" width="12" height="12" alt="" /></a></li>
+		</ul>
+		</div>
 		<table class="small" border="0" cellspacing="2" cellpadding="1">
 		<!-- BEGIN row_training -->
-		<tr>
-			<td class="top" width="90%"><span style="float:right;">{row_training.TRAINING_DATE}</span>{row_training.TRAINING_VS}</td>
+		<tr class="wihte">
+			<td width="90%"><span style="float:right;">{row_training.TRAINING_DATE}</span>{row_training.TRAINING_VS}</td>
 			<td nowrap="nowrap">{row_training.TRAINING_UPDATE} {row_training.TRAINING_DELETE}</td>
 		</tr>
 		<!-- END row_training -->
@@ -50,36 +99,21 @@
 		</table>
 	</td>
 </tr>
+</table>
+
+<br />
+
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td colspan="2">
+	<td class="top">
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li><a href="{U_EVENT}" id="current"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li>
-			<li><a href="{U_USERS}" id="right"><img src="{I_USERS}" width="12" height="12" alt="" />&nbsp;{L_USERS}</a></li>
+			<li><a href="{U_USERS}" id="right">{L_USERS}&nbsp;<img src="{I_USERS}" width="12" height="12" alt="" /></a></li>
 		</ul>
 		</div>
-	</td>
-</tr>
-<tr>
-	<td class="top" width="50%">
-		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN row_event -->
-		<tr>
-			<td class="top" width="90%"><span style="float:right;">{row_event.EVENT_DATE}</span>{row_event.EVENT_TITLE}</td>
-			<td nowrap="nowrap">{row_event.EVENT_UPDATE} {row_event.EVENT_DELETE}</td>
-		</tr>
-		<!-- END row_event -->
-		<!-- BEGIN no_entry_event -->
-		<tr>
-			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
-		</tr>
-		<!-- END no_entry_event -->
-		</table>
-	</td>
-	<td class="top" width="50%">
 		<table class="small" border="0" cellspacing="2" cellpadding="1">
 		<!-- BEGIN row_user -->
-		<tr>
+		<tr class="wihte">
 			<td align="left" width="97%"><span style="float:right;">{row_user.USER_REGDATE}</span>{row_user.USER_NAME}</td>
 			<td nowrap="nowrap">{row_user.USER_AUTH} {row_user.USER_UPDATE} {row_user.USER_DELETE}</td>
 		</tr>
@@ -91,14 +125,6 @@
 		<!-- END no_entry_user -->
 		</table>
 	</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
 </tr>
 </table>
 

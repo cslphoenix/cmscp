@@ -55,7 +55,7 @@ else
 	$map_id		= request(POST_MATCH_PIC_URL, 0);
 	$team_id	= request(POST_TEAMS_URL, 0);
 	$confirm	= request('confirm', 1);
-	$order		= request('order');
+	$order		= request('order', 0);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	$path_dir	= $root_path . $settings['path_matchs'] . '/';
@@ -665,8 +665,8 @@ else
 							'INFO_MAP_RIVAL'	=> $match_maps_data[$i]['map_points_rival'],
 							'INFO_PIC_URL'		=> '<a href="' . $path_dir . $match_maps_data[$i]['map_picture'] . '" rel="lightbox"><img src="' . $path_dir . $match_maps_data[$i]['map_preview'] . '" alt="" /></a>',
 							
-							'MOVE_UP'			=> ( $match_maps_data[$i]['map_order'] != '10' )				? '<a href="' . append_sid('admin_match.php?mode=_details&amp;' . POST_MATCH_URL . '=' . $data_id . '&amp;order=true&amp;move=-15&amp;' . POST_MATCH_PIC_URL . '=' . $map_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-							'MOVE_DOWN'			=> ( $match_maps_data[$i]['map_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_match.php?mode=_details&amp;' . POST_MATCH_URL . '=' . $data_id . '&amp;order=true&amp;move=15&amp;' . POST_MATCH_PIC_URL . '=' . $map_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+							'MOVE_UP'			=> ( $match_maps_data[$i]['map_order'] != '10' )				? '<a href="' . append_sid('admin_match.php?mode=_details&amp;' . POST_MATCH_URL . '=' . $data_id . '&amp;order=1&amp;move=-15&amp;' . POST_MATCH_PIC_URL . '=' . $map_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
+							'MOVE_DOWN'			=> ( $match_maps_data[$i]['map_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_match.php?mode=_details&amp;' . POST_MATCH_URL . '=' . $data_id . '&amp;order=1&amp;move=15&amp;' . POST_MATCH_PIC_URL . '=' . $map_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
 	
 						));
 						

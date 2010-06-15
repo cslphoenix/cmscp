@@ -1,15 +1,15 @@
 <!-- BEGIN display -->
-<form action="{S_NEWS_ACTION}" method="post">
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_NEWS_HEAD}</a></li>
-	<li><a href="{S_NEWS_CREATE}">{L_NEWS_CREATE}</a></li>
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
 </div>
 
 <table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_NEWS_EXPLAIN}</td>
+	<td class="row2 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -17,7 +17,7 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" colspan="2">{L_NEWS_NAME}</td>
+	<td class="rowHead" colspan="2">{L_NAME}</td>
 	<td class="rowHead" colspan="3" align="center" width="1%">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN news_row -->
@@ -39,7 +39,7 @@
 <table class="footer" border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="news_title"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_NEWS_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -102,11 +102,11 @@
 // ]]>
 </script>
 
-<form action="{S_NEWS_ACTION}" method="post" name="form">
+<form action="{S_ACTION}" method="post" name="form">
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="{S_NEWS_ACTION}">{L_NEWS_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEWS_NEW_EDIT}</a></li>
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
 </ul>
 </div>
 
@@ -116,60 +116,60 @@
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="23%"><label for="news_title">{L_NEWS_TITLE}: *</label></td>
-	<td class="row2" width="77%"><input type="text" class="post" name="news_title" id="news_title" value="{NEWS_TITLE}"></td>
+	<td class="row1" width="23%"><label for="news_title">{L_TITLE}: *</label></td>
+	<td class="row2" width="77%"><input type="text" class="post" name="news_title" id="news_title" value="{TITLE}"></td>
 </tr>
 <tr>
-	<td class="row1 top">{L_NEWS_CAT}: *</td>
-	<td class="row2">{S_NEWS_CAT_LIST}<br><img src="{NEWSCAT_IMAGE}" id="image" alt=""></td>
+	<td class="row1 top"><label for="image">{L_CAT}: *</label></td>
+	<td class="row2">{S_LIST_CAT}<br><img src="{IMAGE}" id="image" alt=""></td>
 </tr>
 <tr>
-	<td class="row1">{L_NEWS_MATCH}:</td>
-	<td class="row2">{S_NEWS_MATCH_LIST}</td>
+	<td class="row1"><label for="match_id">{L_MATCH}:</label></td>
+	<td class="row2">{S_LIST_MATCH}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="news_text">{L_NEWS_TEXT}: *</label></td>
-	<td class="row2"><textarea class="textarea" name="news_text" id="news_text" rows="20" style="width:100%">{NEWS_TEXT}</textarea></td>
+	<td class="row1 top"><label for="news_text">{L_TEXT}: *</label></td>
+	<td class="row2"><textarea class="textarea" name="news_text" id="news_text" rows="20" style="width:100%">{TEXT}</textarea></td>
 </tr>
 
 <tr>
-	<td class="row1 top">{L_NEWS_LINK}:</td>
+	<td class="row1 top"><label for="news_url">{L_LINK}:</label></td>
 	<td class="row2">
 		<table border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN link_row -->
 		<tr>
-			<td><input type="text" class="post" name="news_url[]" value="{news_edit.link_row.NEWS_URL}">	<input type="text" class="post" name="news_name[]" value="{news_edit.link_row.NEWS_NAME}"> <input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
+			<td><input type="text" class="post" name="news_url[]" value="{news_edit.link_row.NEWS_URL}"> <input type="text" class="post" name="news_link[]" value="{news_edit.link_row.NEWS_LINK}"> <input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
 		</tr>
 		<!-- END link_row -->
 		</table>
-		<div><div><input type="text" class="post" name="news_url[]" value=""> <input type="text" class="post" name="news_name[]" value=""> <input class="button2" type="button" value="{L_MORE}"onclick="clone(this)"></div></div>
+			<div><div><input type="text" class="post" name="news_url[]" value=""> <input type="text" class="post" name="news_link[]" value=""> <input class="button2" type="button" value="{L_MORE}"onclick="clone(this)"></div></div>
 	</td>
 </tr>
 <tr>
-	<td class="row1">{L_NEWS_PUBLIC_TIME}:</td>
+	<td class="row1"><label>{L_PUBLIC_TIME}:</label></td>
 	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}  </td>
 </tr>
 <!-- BEGIN public -->
 <tr>
-	<td class="row1"><label for="news_public">{L_NEWS_PUBLIC}:</label></td>
-	<td class="row3"><input type="radio" name="news_public" id="news_public" value="1" {S_PUBLIC_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_public" value="0" {S_PUBLIC_NO} />&nbsp;{L_NO} </td>
+	<td class="row1"><label for="news_public">{L_PUBLIC}:</label></td>
+	<td class="row3"><label><input type="radio" name="news_public" id="news_public" value="1" {S_PUBLIC_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_public" value="0" {S_PUBLIC_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <!-- END public -->
 <tr>
-	<td class="row1"><label for="news_comments">{L_NEWS_COMMENTS}:</label></td>
-	<td class="row3"><input type="radio" name="news_comments" id="news_comments" value="1" {S_COMMENTS_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_comments" value="0" {S_COMMENTS_NO} />&nbsp;{L_NO} </td>
+	<td class="row1"><label for="news_comments">{L_COMMENTS}:</label></td>
+	<td class="row3"><label><input type="radio" name="news_comments" id="news_comments" value="1" {S_COMMENTS_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_comments" value="0" {S_COMMENTS_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td class="row1"><label for="news_intern">{L_NEWS_INTERN}:</label></td>
-	<td class="row3"><input type="radio" name="news_intern" id="news_intern" value="1" {S_INTERN_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_intern" value="0" {S_INTERN_NO} />&nbsp;{L_NO} </td>
+	<td class="row1"><label for="news_intern">{L_INTERN}:</label></td>
+	<td class="row3"><label><input type="radio" name="news_intern" id="news_intern" value="1" {S_INTERN_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_intern" value="0" {S_INTERN_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td class="row1"><label for="news_rating">{L_NEWS_RATING}:</label></td>
-	<td class="row3"><input type="radio" name="news_rating" id="news_rating" value="1" {S_RATING_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="news_rating" value="0" {S_RATING_NO} />&nbsp;{L_NO} </td>
+	<td class="row1"><label for="news_rating">{L_RATING}:</label></td>
+	<td class="row3"><label><input type="radio" name="news_rating" id="news_rating" value="1" {S_RATING_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_rating" value="0" {S_RATING_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>

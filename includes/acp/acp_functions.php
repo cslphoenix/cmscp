@@ -31,6 +31,7 @@ function get_data($mode, $id, $type)
 	{
 		case AUTHLIST:			$idfield = 'authlist_id';			break;
 		case CASH:				$idfield = 'cash_id';				break;
+		case CASH_BANK:			$idfield = '';						break;
 		case CASH_USERS:		$idfield = 'cash_user_id';			break;		
 		case EVENT:				$idfield = 'event_id';				break;
 		case GALLERY:			$idfield = 'gallery_id';			break;
@@ -65,7 +66,7 @@ function get_data($mode, $id, $type)
 			$idfield2	= 'game_id';
 			break;
 
-		default:	message(GENERAL_ERROR, 'Error Data Mode' . $lang['back']);		break;
+		default:	message(GENERAL_ERROR, 'Error Data Mode ' . $mode . $lang['back']);		break;
 	}
 	
 	switch( $type )
@@ -182,6 +183,12 @@ function orders($mode, $type = '')
 			$idfield	= 'network_id';
 			$orderfield = 'network_order';
 			$typefield	= 'network_type';
+			break;
+			
+		case GALLERY_PIC:
+			$idfield	= 'pic_id';
+			$orderfield = 'pic_order';
+			$typefield	= 'gallery_id';
 			break;
 		
 		

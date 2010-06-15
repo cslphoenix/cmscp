@@ -41,6 +41,25 @@ if ( $config['gzip_compress'] )
 }
 
 //
+// MOD - TODAY AT - BEGIN
+// PARSE DATEFORMAT TO GET TIME FORMAT 
+//
+$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
+//eregi($time_reg, $config['default_dateformat'], $regs);
+preg_match($time_reg, $config['default_dateformat'], $regs);
+$config['default_timeformat'] = $regs[1];
+unset($time_reg);
+unset($regs);
+
+//
+// GET THE TIME TODAY AND YESTERDAY
+//
+$today_ary = explode('|', create_date('m|d|Y', time(), $config['page_timezone']));
+$config['time_today'] = gmmktime(0 - $config['page_timezone'] - $config['page_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+$config['time_yesterday'] = $config['time_today'] - 86400;
+unset($today_ary);
+
+//
 // Parse and show the overall header.
 //
 $template->set_filenames(array('overall_header' => ( empty($gen_simple_header) ) ? 'overall_header.tpl' : 'simple_header.tpl'));
@@ -408,8 +427,6 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 // in a template.
 //
 $template->assign_vars(array(
-							 
-	
 	'VERSION'		=> $config['page_version'],
 #	'CMS_VERSION'	=> $changelog['changelog_number'],
 							 
@@ -531,13 +548,13 @@ if (defined('PAGE_DISABLE'))
 
 // Work around for "current" Apache 2 + PHP module which seems to not
 // cope with private cache control setting
-if (!empty($HTTP_SERVER_VARS['SERVER_SOFTWARE']) && strstr($HTTP_SERVER_VARS['SERVER_SOFTWARE'], 'Apache/2'))
+if ( !empty($HTTP_SERVER_VARS['SERVER_SOFTWARE']) && strstr($HTTP_SERVER_VARS['SERVER_SOFTWARE'], 'Apache/2') )
 {
-	header('Cache-Control: no-cache, pre-check=0, post-check=0');
+	header("Cache-Control: no-cache, pre-check=0, post-check=0", FALSE);
 }
 else
 {
-	header('Cache-Control: private, pre-check=0, post-check=0, max-age=0');
+	header("Cache-Control: private, pre-check=0, post-check=0, max-age=0");
 }
 header('Expires:0');
 header('Pragma:no-cache');

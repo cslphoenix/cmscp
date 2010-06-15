@@ -713,43 +713,44 @@ function display_navi_minical()
 				
 				if ( is_array($monat_events[$i]) )
 				{
+					#	Noch Fehler enthalten, wenn 1 Event mit Benutzerlevel eingetragen wird, wird es doppelt angezeigt für admins vorerst!
+					$data = array();
 					$list = array();
-					
+
 					for ( $k = 0; $k < count($monat_events[$i]); $k++ )
 					{
 						if ( $userdata['user_level'] >= $monat_events[$i][$k]['event_level'] )
 						{
-							$list[$k]['title']	= $monat_events[$i][$k]['event_title'];
-							$list[$k]['date']	= $monat_events[$i][$k]['event_date'];
-							$list[$k]['dura']	= $monat_events[$i][$k]['event_duration'];
-						}
-					}
+							$data[$k]['title']	= $monat_events[$i][$k]['event_title'];
+							$data[$k]['date']	= $monat_events[$i][$k]['event_date'];
+							$data[$k]['dura']	= $monat_events[$i][$k]['event_duration'];
 					
-					if ( $list )
-					{
-						foreach ( $list as $value )
-						{
-							$time = create_date('H:i', $value['date'], $userdata['user_timezone']);
-							$dura = create_date('H:i', $value['dura'], $userdata['user_timezone']);
-					
-							if ( $value['date'] == $value['dura'] )
+							if ( $data )
 							{
-								$date = ": am gesamten Tag";
+								foreach ( $data as $value )
+								{
+									$time = create_date('H:i', $value['date'], $userdata['user_timezone']);
+									$dura = create_date('H:i', $value['dura'], $userdata['user_timezone']);
+									
+									if ( $value['date'] == $value['dura'] )
+									{
+										$date = ": am gesamten Tag";
+									}
+									else
+									{
+										$date = ": von $time bis $dura";
+									}
+									$list[] = $value['title'] . $date;
+								}
 							}
-							else
-							{
-								$date = ": von $time bis $dura";
-							}
-
-							$list_date[] = $value['title'] . $date;
 						}
-						
-						$language		= ( count($list) == '1' ) ? $lang['cal_event'] : $lang['cal_events'];
-						$day_class		= 'events';
-						$list			= implode('<br>', $list_date);	
-						$day_event		.= ( empty($day_event) ) ? "<span><em class=\"events\">$language:</em><br />$list" : "<br /><em class=\"events\">$language</em><br />$list";
-						$day_event_num	= $day_event_num + 1;
-					}
+					}				
+					
+					$language		= ( count($list) == '1' ) ? $lang['cal_event'] : $lang['cal_events'];
+					$list			= implode('<br>', $list);	
+					$day_event		.= ( empty($day_event) ) ? "<span><em class=\"events\">$language:</em><br />$list" : "<br /><em class=\"events\">$language</em><br />$list";
+					$day_class		= 'events';
+					$day_event_num	= $day_event_num + 1;
 				}
 				
 				if ( is_array($monat_matchs[$i]) )

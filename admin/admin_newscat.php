@@ -104,7 +104,7 @@ else
 		
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['newscat']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['newscat']),
+					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['newscat'], $data['newscat_title']),
 					'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['newscat']),
 					'L_IMAGE'		=> sprintf($lang['sprintf_image'], $lang['newscat']),
 					

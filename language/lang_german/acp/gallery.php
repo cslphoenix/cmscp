@@ -34,7 +34,7 @@ $lang['gallery']				= 'Galerie';
 $lang['gallery_explain']		= 'Hier kannst Du Galerien verwalten.';
 
 $lang['per_rows']				= 'Bilder pro Zeile';
-$lang['per_cols']				= 'Bilder pro Spalte';
+$lang['per_cols']				= 'Bilder pro Seite';
 $lang['max_width']				= 'Maximale Breite';
 $lang['max_height']				= 'Maximale H&ouml;he';
 $lang['max_filesize']			= 'Maximale Gr&ouml;&szlig;e';
@@ -54,5 +54,9 @@ $lang['auth_gallery_member']	= 'Member';
 $lang['auth_gallery_coleader']	= 'Squadleader';
 $lang['auth_gallery_leader']	= 'Leader';
 $lang['auth_gallery_upload']	= 'Uploader';
+
+$lang['pic_widht']				= 'Breite';
+$lang['pic_height']				= 'H&ouml;he';
+$lang['pic_size']				= 'Gr&ouml;&szlig;e';
 
 ?>

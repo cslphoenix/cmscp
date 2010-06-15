@@ -18,8 +18,8 @@
  *
  *	- Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel Â© 2009
- *	- @code:	Sebastian Frickel Â© 2009
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
  *
  */
 
@@ -46,25 +46,8 @@ $page_desc = strip_tags($config['page_desc']);
 //
 // END Create main board information
 //
-//
-// MOD - TODAY AT - BEGIN
-// PARSE DATEFORMAT TO GET TIME FORMAT 
-//
-$time_reg = '([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)';
-//eregi($time_reg, $config['default_dateformat'], $regs);
-//$config['default_timeformat'] = $regs[1];
-unset($time_reg);
-unset($regs);
 
-//
-// GET THE TIME TODAY AND YESTERDAY
-//
-$today_ary = explode('|', create_date('m|d|Y', time(), $config['page_timezone']));
-$config['time_today'] = gmmktime(0 - $config['page_timezone'] - $config['page_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-$config['time_yesterday'] = $config['time_today'] - 86400;
-unset($today_ary);
-
-$template->set_filenames(array('body' => 'body_rss.xml'));
+$template->set_filenames(array('body' => 'body_rss.tpl'));
 
 //
 // BEGIN Assign static variables to template
@@ -73,11 +56,11 @@ $template->set_filenames(array('body' => 'body_rss.xml'));
 $l_topic_replies = $lang['Topic'] . ' ' . $lang['Replies'];
 $template->assign_vars(array(
 	'S_CONTENT_ENCODING' => $lang['ENCODING'],
-	'BOARD_URL' => $index_url,
-	'BOARD_TITLE' => $site_name,
-	'BOARD_DESCRIPTION' => $page_desc,
-	'BOARD_MANAGING_EDITOR' => $config['page_email'],
-	'BOARD_WEBMASTER' => $config['page_email'],
+	'PAGE_URL' => $index_url,
+	'PAGE_TITLE' => $site_name,
+	'PAGE_DESCRIPTION' => $page_desc,
+	'PAGE_MANAGING_EDITOR' => $config['page_email'],
+	'PAGE_WEBMASTER' => $config['page_email'],
 	'BUILD_DATE' => gmdate('D, d M Y H:i:s', time()) . ' GMT', 
 	'L_AUTHOR' => $lang['Author'],
 	'L_POSTED' => $lang['Posted'],
@@ -112,16 +95,7 @@ else
 {
 	for ( $i = 0; $i < count($news_data); $i++ )
 	{
-		$news_date = create_date($userdata['user_dateformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone']); 
-			
-		if ( $config['time_today'] < $news_data[$i]['news_time_public'])
-		{ 
-			$news_date = sprintf($lang['today_at'], create_date($config['default_timeformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone'])); 
-		}
-		else if ( $config['time_yesterday'] < $news_data[$i]['news_time_public'])
-		{ 
-			$news_date = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone'])); 
-		}
+		$news_date = create_date($config['default_dateformat'], $news_data[$i]['news_time_public'], $config['page_timezone']); 
 		
 		$template->assign_block_vars('post_item', array(
 			'NEWS_TITLE'		=> $news_data[$i]['news_title'],
@@ -131,8 +105,8 @@ else
 	}
 }
 
+header("Content-type: text/xml");
 
 $template->pparse('body');
-header("Content-type: text/xml");
 
 ?>

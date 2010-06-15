@@ -41,6 +41,7 @@ else
 	$root_path	= './../';
 	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_header	= $cancel;
+	$current	= '_submenu_cash';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
@@ -64,8 +65,6 @@ else
 		redirect('admin/' . append_sid('admin_cash.php', true));
 	}
 	
-	debug($mode);
-	
 	switch ( $mode )
 	{
 		case '_create':
@@ -74,20 +73,27 @@ else
 			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('cash_edit', array());
 			
-			if ( $mode == '_create' )
+			if ( $mode == '_create' && !request('submit', 2) )
 			{
-				$cash = array(
+				$data = array(
 					'cash_name'		=> request('cash_name', 2),
 					'cash_type'		=> '0',
 					'cash_amount'	=> '0',
 					'cash_interval'	=> '0',
 				);
-				$new_mode = '_create_save';
+			}
+			else if ( $mode == '_update' && !request('submit', 2) )
+			{
+				$data = get_data(CASH, $data_id, 1);
 			}
 			else
 			{
-				$cash		= get_data('cash', $cash_id, 0);
-				$new_mode	= '_update_save';
+				$data = array(
+					'cash_name'		=> request('cash_name', 2),
+					'cash_type'		=> request('cash_type', 0),
+					'cash_amount'	=> request('cash_amount', 0),
+					'cash_interval'	=> request('cash_interval', 0),
+				);
 			}
 			
 			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
@@ -105,94 +111,83 @@ else
 				'L_TYPE_A'		=> $lang['cash_type_a'],
 				'L_TYPE_B'		=> $lang['cash_type_b'],
 				'L_TYPE_C'		=> $lang['cash_type_c'],
-				'L_INTAVAL_0'		=> $lang['cash_interval_month'],
-				'L_INTAVAL_1'		=> $lang['cash_interval_2weeks'],
-				'L_INTAVAL_2'		=> $lang['cash_interval_week'],
+				'L_INTAVAL_0'	=> $lang['cash_interval_month'],
+				'L_INTAVAL_1'	=> $lang['cash_interval_2weeks'],
+				'L_INTAVAL_2'	=> $lang['cash_interval_week'],
 				
-				'L_NO'				=> $lang['common_no'],
-				'L_YES'				=> $lang['common_yes'],
-				'L_RESET'			=> $lang['common_reset'],
-				'L_SUBMIT'			=> $lang['common_submit'],
+				'L_NO'			=> $lang['common_no'],
+				'L_YES'			=> $lang['common_yes'],
+				'L_RESET'		=> $lang['common_reset'],
+				'L_SUBMIT'		=> $lang['common_submit'],
 				
-				'CASH_NAME'			=> $cash['cash_name'],
-				'CASH_AMOUNT'		=> $cash['cash_amount'],
+				'CASH_NAME'		=> $cash['cash_name'],
+				'CASH_AMOUNT'	=> $cash['cash_amount'],
 				
-				'S_TYPE_A'	=> ( $cash['cash_type'] == '0' ) ? ' checked="checked"' : '',
-				'S_TYPE_B'	=> ( $cash['cash_type'] == '1' ) ? ' checked="checked"' : '',
-				'S_TYPE_C'	=> ( $cash['cash_type'] == '2' ) ? ' checked="checked"' : '',
-				'S_INT_1'	=> ( $cash['cash_interval'] == '0' ) ? ' checked="checked"' : '',
-				'S_INT_1'	=> ( $cash['cash_interval'] == '1' ) ? ' checked="checked"' : '',
-				'S_INT_2'	=> ( $cash['cash_interval'] == '2' ) ? ' checked="checked"' : '',
+				'S_TYPE_A'		=> ( $cash['cash_type'] == '0' ) ? ' checked="checked"' : '',
+				'S_TYPE_B'		=> ( $cash['cash_type'] == '1' ) ? ' checked="checked"' : '',
+				'S_TYPE_C'		=> ( $cash['cash_type'] == '2' ) ? ' checked="checked"' : '',
+				'S_INT_1'		=> ( $cash['cash_interval'] == '0' ) ? ' checked="checked"' : '',
+				'S_INT_1'		=> ( $cash['cash_interval'] == '1' ) ? ' checked="checked"' : '',
+				'S_INT_2'		=> ( $cash['cash_interval'] == '2' ) ? ' checked="checked"' : '',
 				
 				'S_FIELDS'		=> $s_fields,
 				'S_ACTION'		=> append_sid('admin_cash.php'),
 			));
-		
-			break;
-		
-		case '_create_save':
-		
-			$cash_name		= request('cash_name', 2);
-			$cash_type		= request('cash_type', 0);
-			$cash_amount	= request('cash_amount', 2);
-			$cash_interval	= request('cash_interval', 0);
 			
-			$error_msg = '';
-			$error_msg .= ( !$cash_name ) ? $lang['msg_select_name'] : '';
-			$error_msg .= ( !$cash_amount ) ? ( $error_msg ? '<br>' : '' ) . $lang['msg_select_amount'] : '';
-			
-			if ( $error_msg )
+			if ( request('submit', 2) )
 			{
-				message(GENERAL_ERROR, $error_msg . $lang['back']);
-			}
+				$cash_name		= request('cash_name', 2);
+				$cash_type		= request('cash_type', 0);
+				$cash_amount	= request('cash_amount', 2);
+				$cash_interval	= request('cash_interval', 0);
 				
-			$sql = "INSERT INTO " . CASH . " (cash_name, cash_type, cash_amount, cash_interval)
-						VALUES ('$cash_name', '$cash_type', '$cash_amount', '$cash_interval')";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
+				$error = '';
+				$error .= ( !$cash_name ) ? $lang['msg_select_name'] : '';
+				$error .= ( !$cash_amount ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_amount'] : '';
 				
-			$message = $lang['create_cash'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'create_cash');
-			message(GENERAL_MESSAGE, $message);
-
-			break;
-		
-		case '_update_save':
-		
-			$cash_name		= request('cash_name', 2);
-			$cash_type		= request('cash_type', 0);
-			$cash_amount	= request('cash_amount', 2);
-			$cash_interval	= request('cash_interval', 0);
-			
-			$error_msg = '';
-			$error_msg .= ( !$cash_name ) ? $lang['msg_select_name'] : '';
-			$error_msg .= ( !$cash_amount ) ? ( $error_msg ? '<br>' : '' ) . $lang['msg_select_amount'] : '';
-			
-			if ( $error_msg )
-			{
-				message(GENERAL_ERROR, $error_msg . $lang['back']);
+				if ( $error )
+				{
+					$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+					$template->assign_vars(array('ERROR_MESSAGE' => $error));
+					$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+				}
+				else
+				{
+					if ( $mode == '_create' )
+					{
+						$sql = "INSERT INTO " . CASH . " (cash_name, cash_type, cash_amount, cash_interval) VALUES ('$cash_name', '$cash_type', '$cash_amount', '$cash_interval')";
+						if ( !($result = $db->sql_query($sql)) )
+						{
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+						
+						$message = $lang['create_cash'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
+						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'create_cash');
+					}
+					else
+					{
+						$sql = "UPDATE " . CASH . " SET
+									cash_name		= '$cash_name',
+									cash_type		= '$cash_type',
+									cash_amount		= '$cash_amount',
+									cash_interval	= '$cash_interval'
+								WHERE cash_id = $cash_id";
+						if ( !($result = $db->sql_query($sql)) )
+						{
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+						
+						$message = $lang['update_cash']
+							. sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>')
+							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_cash.php?mode=_update&amp;' . POST_CASH_URL . '=' . $data_id) . '">', '</a>');
+						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'update_cash');
+					}
+					message(GENERAL_MESSAGE, $message);
+				}
 			}
 			
-			$sql = "UPDATE " . CASH . " SET
-						cash_name		= '$cash_name',
-						cash_type		= '$cash_type',
-						cash_amount		= '$cash_amount',
-						cash_interval	= '$cash_interval'
-					WHERE cash_id = $cash_id";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			$message = $lang['update_cash'] . sprintf($lang['click_return_cash'], '<a href="' . append_sid('admin_cash.php') . '">', '</a>');
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_CASH, 'update_cash');
-			message(GENERAL_MESSAGE, $message);
-			
 			break;
-			
-		case '_cashuser_create':
+		
 		case '_cashuser_update':
 
 			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
@@ -260,7 +255,7 @@ else
 				message(GENERAL_ERROR, $error_msg . $lang['back']);
 			}
 			
-			$sql = 'INSERT INTO ' . CASHUSERS . " (user_id, user_amount, user_month, user_interval) VALUES ($user_id, '" . str_replace("\'", "''", $user_amount) . "', '$user_month', $user_interval)";
+			$sql = 'INSERT INTO ' . CASH_USERS . " (user_id, user_amount, user_month, user_interval) VALUES ($user_id, '" . str_replace("\'", "''", $user_amount) . "', '$user_month', $user_interval)";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -284,7 +279,7 @@ else
 				message(GENERAL_ERROR, $lang['msg_select_amount'] . $lang['back']);
 			}
 			
-			$sql = "UPDATE " . CASHUSERS . " SET
+			$sql = "UPDATE " . CASH_USERS . " SET
 						user_id			= $user_id,
 						user_amount		= $user_amount,
 						user_month		= '$user_month',
@@ -421,7 +416,7 @@ else
 			{	
 			#	$cash_user = get_data('cash_user', $cashuser_id, 0);
 			
-				$sql = 'DELETE FROM ' . CASHUSERS . ' WHERE cash_user_id = ' . $cashuser_id;
+				$sql = 'DELETE FROM ' . CASH_USERS . ' WHERE cash_user_id = ' . $cashuser_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -496,7 +491,7 @@ else
 			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('display', array());
 			
-			$cash_bank = get_data('cash_bank', '', 4);
+			$cash_bank = get_data(CASH_BANK, '', 0);
 			
 			if ( $cash_bank )
 			{
@@ -559,7 +554,7 @@ else
 			}
 			
 			$sql = 'SELECT cu.*, u.username, u.user_color
-						FROM ' . CASHUSERS . ' cu
+						FROM ' . CASH_USERS . ' cu
 							LEFT JOIN ' . USERS . ' u ON cu.user_id = u.user_id
 						WHERE u.user_id <> ' . ANONYMOUS . '
 					ORDER BY cu.user_id, cu.user_interval';
@@ -609,14 +604,10 @@ else
 			}
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['cash']),
-				'L_BANKDATA'	=> $lang['bankdata'],
-				'L_EXPLAIN'		=> $lang['cash_explain'],
-				
-				'L_NAME'		=> $lang['cash_name'],
-				'L_BD'			=> $lang['cash_bankdata'],
-				
-				'L_CASHUSER_USERNAME'	=> $lang['username'],
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['cash']),
+				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['cash']),
+				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['cash']),
+				'L_EXPLAIN'	=> $lang['cash_explain'],
 				
 				'L_BD_INFO'			=> $lang['bankdata'],
 				'L_BD_NAME'			=> $lang['bankdata_name'],
@@ -625,6 +616,13 @@ else
 				'L_BD_NUMBER'		=> $lang['bankdata_number'],
 				'L_BD_REASON'		=> $lang['bankdata_reason'],
 				'L_BD_DELETE'		=> $lang['bankdata_delete'],
+				
+				'L_NAME'		=> $lang['cash_name'],
+				'L_BD'			=> $lang['cash_bankdata'],
+				
+				'L_CASHUSER_USERNAME'	=> $lang['username'],
+				
+				
 				
 				'L_ADD'		=> $lang['cash_add'],
 				'L_CASHUSER_ADD'	=> $lang['cash_user_add'],
@@ -637,8 +635,8 @@ else
 				'TOTAL_CASH'		=> $total_amount,
 				'USER_CASH'			=> $total_amount_users,
 				
-				'S_CASHUSER_ADD'	=> select_box('user', 'selectsmall', 'user_id', 'username'),
-				
+				'S_CREATE'			=> append_sid('admin_games.php?mode=_create'),
+				'S_USER_ADD'	=> select_box('user', 'selectsmall', 'user_id', 'username'),
 				'S_BANKDATA'		=> append_sid('admin_cash.php?mode=_bankdata'),
 				'S_ACTION'			=> append_sid('admin_cash.php'),
 			));
@@ -651,3 +649,4 @@ else
 	include('./page_footer_admin.php');
 }
 ?>
+<!-- 655 -->

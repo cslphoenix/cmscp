@@ -191,6 +191,9 @@ define('PAGE_RSS',			-20);
 define('PAGE_EVENT',		-21);
 
 define('PAGE_CASH',			-22);
+define('PAGE_GALLERY',		-23);
+define('PAGE_IMPRINT',		-24);
+
 
 define('PAGE_BUGTRACKER',	-98);
 define('PAGE_CHANGELOG',	-99);

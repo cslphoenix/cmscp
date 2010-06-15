@@ -92,6 +92,7 @@ $lang['sprintf_news_title']		= '<em><b>%s</b></em>';
 $lang['sprintf_event']			= 'am: %s von %s - %s';
 $lang['sprintf_processing']		= '%s Bearbeitung';
 $lang['sprintf_message']		= '%s Nachricht';
+$lang['sprintf_normal']			= '%s';
 
 /*
  *	Allgemeine Sprachdateien
@@ -117,7 +118,7 @@ $lang['common_setting']			= 'Einstellung';
 $lang['common_settings']		= 'Einstellungen';		
 $lang['common_submit']			= 'Absenden';	
 $lang['common_update']			= 'Bearbeiten';	
-$lang['common_upload']			= 'Hochladen';	
+$lang['common_upload']			= 'Upload';	
 $lang['common_userlevel']		= 'Benutzerlevel';		
 $lang['common_view']			= 'Anzeigen';	
 $lang['common_yes']				= 'Ja';
@@ -214,6 +215,7 @@ $lang['msg_select_title']			= 'Bitte ein Titel eintragen';
 $lang['msg_select_name']			= 'Bitte ein Namen eintragen';
 $lang['msg_select_desc']			= 'Bitte eine Beschreibung eintragen';
 $lang['msg_select_date']			= 'Bitte ein Gültiges Datum auswählen';
+$lang['msg_select_past']			= 'Bitte kein verganges Datum auswählen';
 $lang['msg_select_rival']			= 'Bitte ein Gegnernamen eintragen';
 $lang['msg_select_rival_tag']		= 'Bitte ein Gegnerclantag eintragen';
 $lang['msg_select_server']			= 'Bitte ein Gameserver eintragen';
@@ -298,6 +300,7 @@ $lang['update_cash']				= 'Daten erfolgreich geändert';
 $lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
 $lang['update_cash_bankdata']		= 'Bankdaten erfolgreich geändert';
 $lang['update_gallery']				= 'Galerie erfolgreich geändert';
+$lang['update_gallery_pic']			= 'Galeriebilder erfolgreich geändert';
 $lang['update_gallery_upload']		= 'Bild oder Bilder hochgeladen.';
 $lang['update_gallery_default']		= 'Galerie Standardeinstellungen geändert!';
 
@@ -332,8 +335,10 @@ $lang['delete_gallery_pic']			= 'Das Bilder oder die Bilder wurden gelöscht!';
 
 $lang['delete_confirm_authlist']	= 'dass dieses Berechtigunsfeld:';
 $lang['delete_confirm_event']		= 'dass dieses Event:';
+$lang['delete_confirm_news']		= 'das diese News:';
 $lang['delete_confirm_newscat']		= 'das diese Newskategorie:';
 $lang['delete_confirm_game']		= 'dass dieses Spiel:';
+$lang['delete_confirm_gallery']		= 'dass diese Galerie:';
 $lang['delete_confirm_match']		= 'dass dieses Begegnung:';
 $lang['delete_confirm_rank']		= 'dass dieser Rang:';
 $lang['delete_confirm_group']		= 'das diese Gruppe:';
@@ -397,6 +402,7 @@ $lang['click_return_user_auths']		= '<br><br>Klicke %shier%s, um zur Benutzer (S
 $lang['click_return_user_groups']		= '<br><br>Klicke %shier%s, um zur Benutzer (Benutzergruppen & Teams) Administration zurückzukehren';
 $lang['click_return_cash']				= '<br><br>Klicke %shier%s, um zur Clankassen Administration zurückzukehren';
 $lang['click_return_gallery']			= '<br><br>Klicke %shier%s, um zur Galerie Administration zurückzukehren';
+$lang['click_return_gallery_pic']		= '<br><br>Klicke %shier%s, um zur Galerie Übersicht zurückzukehren';
 
 $lang['click_return_update']			= '<br><br><strong>%s&laquo; zurück%s</strong>';
 

@@ -55,7 +55,6 @@ $lang['cash_interval_month']	= 'Monatlich';
 $lang['cash_interval_2weeks']	= 'alle 2 Wochen';
 $lang['cash_interval_week']		= 'Wöchentlich';
 
-
 $lang['bankdata']			= 'Bankdaten';
 $lang['bankdata_bank']		= 'Kreditinstitut';
 $lang['bankdata_number']	= 'Kontonummer';
