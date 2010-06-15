@@ -8,6 +8,8 @@ if ( !defined('IN_CMS') )
 $starttime = microtime();
 $trc_loc_start = $trc_loc_end = 0;
 
+ob_start();
+
 //
 //error_reporting (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 //error_reporting(E_ALL ^ E_NOTICE); // will report all errors
@@ -184,7 +186,6 @@ error_reporting((defined('DEBUG')) ? E_ALL : E_ALL ^ E_NOTICE);
 defined('DEBUG') ? set_error_handler('error_handler') : '';
 
 unset($db_pwd);
-
 
 $client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
 $user_ip = encode_ip($client_ip);

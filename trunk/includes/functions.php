@@ -26,6 +26,7 @@
 /*
  * Idee von phpBB3
  */
+
 function request($request_var, $request_type = '')
 {
 	global $_POST, $_GET;
@@ -67,7 +68,15 @@ function request($request_var, $request_type = '')
 			 *	Arrays
 			 */
 			case 4:
-			#	$var = ( isset($_POST[$request_var]) ) ? trim(htmlentities(str_replace("'", "\'", $_POST[$request_var]), ENT_COMPAT)) : trim(htmlentities(str_replace("'", "\'", $_GET[$request_var]), ENT_COMPAT));
+				
+				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
+				
+				foreach ( $var as $_k => $_v )
+				{
+					$_var = trim(htmlentities(str_replace("'", "\'", $_v), ENT_COMPAT));
+					$var[$_k] = $_var;
+				}
+				
 				break;
 			
 			default:
@@ -489,7 +498,7 @@ function _cached($sql, $name, $row = '', $time = '')
 
 function error_handler($errno, $errstr, $errfile, $errline)
 {
-	global $root_path;
+	global $root_path, $debug_msg;
 	
 	$errfile = str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $errfile);
 	
@@ -510,9 +519,9 @@ function error_handler($errno, $errstr, $errfile, $errline)
 		define('E_RECOVERABLE_ERROR', 4096);
 	}
 	
-	$msg = '<b>';
+	$msg = '<b>[';
 	
-	switch ($errno)
+	switch ( $errno )
 	{
 		case E_ERROR:
 			$msg .= 'Error';
@@ -524,7 +533,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 			$msg .= 'Parse Error';
 		break;
 		case E_NOTICE:
-			$msg .= 'Notice';
+			$msg .= 'Information';
 		break;
 		case E_CORE_ERROR:
 			$msg .= 'Core Error';
@@ -558,31 +567,8 @@ function error_handler($errno, $errstr, $errfile, $errline)
 		break;
 	}
 	
-	$msg .= ":</b> $errstr in <b>$errfile</b> on line <b>$errline</b>";
-/*	
-	if (function_exists('debug_backtrace'))
-	{
-		//echo "backtrace:\n";
-		$backtrace = debug_backtrace();
-		array_shift($backtrace);
-		
-		foreach ($backtrace as $i => $l)
-		{
-			print "[$i] in function <b>{$l['class']}{$l['type']}{$l['function']}</b>";
-			
-			if ($l['file'])
-			{
-				print " in <b>{$l['file']}</b>";
-			}
-			
-			if ($l['line'])
-			{
-				print " on line <b>{$l['line']}</b>";
-			}
-        }
-    }
-*/
-    $msg .= "<br>";
+	$msg .= "]:</b> $errstr in <b>$errfile</b> Zeile: <b>$errline</b>";
+    $msg .= "<br />";
 	
 	if (isset($GLOBALS['error_fatal']))
 	{
@@ -592,7 +578,9 @@ function error_handler($errno, $errstr, $errfile, $errline)
 		}
 	}
 	
-	echo $msg;
+	$debug_msg = $msg;
+	
+	print $debug_msg;
 }
 
 function debuge($data)
@@ -612,12 +600,12 @@ function debuge($data)
 	exit;
 }
 
-function debug($data)
+function debug($data, $name='')
 {
 	print '<div align="left">';
-	print '<br>';
 	print '<-- start -->';
 	print '<br>';
+	print ( $name ) ? '<br>' . $name : '';
 	print '<br>';
 	print '<pre>';
 	print_r($data);
@@ -1274,6 +1262,7 @@ function init_userprefs($userdata)
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_ucp.php');
+	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_imprint.php');
 	
 	if ( file_exists($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php') )
 	{
@@ -1291,7 +1280,7 @@ function init_userprefs($userdata)
 		{
 			include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php');
 		}
-
+		
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_adm.php');
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_acp.php');

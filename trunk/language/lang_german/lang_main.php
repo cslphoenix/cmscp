@@ -25,6 +25,9 @@
 
 include('lang_head.php');
 
+$lang['Today_at'] = "Today at %s"; // %s is the time
+$lang['Yesterday_at'] = "Yesterday at %s"; // %s is the time
+
 $lang['sprintf_match_name']		= 'vs. %s';
 $lang['sprintf_match_intern']	= 'vs. <span style="font-style:italic;">%s</span>';
 
@@ -1464,5 +1467,24 @@ $lang['main_changelog'] = array(
 	'cl_improved'	=> 'Verbessert',
 	'cl_removed'	=> 'Entfernt',	
 );
+
+#
+#	Gallerie / Gallery
+#
+$lang['gallery']			= 'Galerie';
+$lang['gallery_overview']	= 'Galerieübersicht von: %s';
+
+$lang['sprintf_pic']		= '%s Bilder';
+
+
+$lang['gallery_rule_can_edit']		= 'Du <b>kannst</b> Bilder bearbeiten.';
+$lang['gallery_rule_cannot_edit']	= 'Du <b>kannst keine</b> Bilder bearbeiten.';
+$lang['gallery_rule_can_delete']	= 'Du <b>kannst</b> Bilder löschen.';
+$lang['gallery_rule_cannot_delete']	= 'Du <b>kannst keine</b> Bilder löschen.';
+$lang['gallery_rule_can_rate']		= 'Du <b>kannst</b> Bilder bewerten.';
+$lang['gallery_rule_cannot_rate']	= 'Du <b>kannst keine</b> Bilder bewerten.';
+$lang['gallery_rule_can_upload']	= 'Du <b>kannst</b> Bilder hochladen.';
+$lang['gallery_rule_cannot_upload']	= 'Du <b>kannst keine</b> Bilder hochladen.';
+
 
 ?>

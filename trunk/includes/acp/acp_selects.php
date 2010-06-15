@@ -49,7 +49,7 @@ function select_box($type, $class, $default = '', $switch = '')
 			$selct	= false;
 			break;
 
-		case 'news_category':
+		case 'newscat':
 			$table	= NEWSCAT;
 			$fields	= 'newscat_id, newscat_title, newscat_image';
 			$where	= '';
@@ -105,7 +105,7 @@ function select_box($type, $class, $default = '', $switch = '')
 	$fielda	= $field[0];
 	$fieldb	= $field[1];
 	$fieldc	= ( isset($field[2]) ) ? $field[2] : $field[0];
-	
+
 	if ( $data )
 	{		
 		$select = ( !$selct ) ? '<select class="' . $class . '" name="' . $fielda . '" id="' . $fielda . '">' : '<select class="' . $class . '" name="' . $fieldc . '" id="' . $fieldc . '" onchange="update_image(this.options[selectedIndex].value);">';
@@ -197,6 +197,7 @@ function _select_rank($class, $default, $type)
 	return $func_select;
 }
 
+/*
 function select_newscategory($default)
 {
 	global $db, $lang;
@@ -207,7 +208,7 @@ function select_newscategory($default)
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select name="newscat_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select = '<select name="news_category" class="post" onchange="update_image(this.options[selectedIndex].value);">';
 	$func_select .= '<option value="0">' . $lang['newscat_select'] . '</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
@@ -219,6 +220,7 @@ function select_newscategory($default)
 
 	return $func_select;
 }
+*/
 
 function select_lang_box($var, $name, $default, $class)
 {
@@ -272,7 +274,7 @@ function _select_match($default, $type, $class)
 	}
 	
 	$func_select = '<select class="' . $class . '" name="match_id">';
-	$func_select .= '<option value="0">&raquo; ' . $lang['select_match'] . '</option>';
+	$func_select .= '<option value="0">&raquo;&nbsp;' . $lang['msg_select_match'] . '&nbsp;</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
 	{

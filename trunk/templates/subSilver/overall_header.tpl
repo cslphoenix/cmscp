@@ -100,6 +100,7 @@
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
 <a name="top"></a>
+
 <div align="center">
 <table width="986" border="0" cellspacing="0" cellpadding="0" align="center" class="table">
 <tr>
@@ -132,34 +133,58 @@
 	<td>
 		<table width="986" border="0" cellspacing="0" cellpadding="0" >
 		<tr>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px;" align="right">{SITENAME}<br>{SITE_DESCRIPTION}<br>CMS Version: {VERSION}</td>
-			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; background-repeat:repeat-x;" align="center">
-				<!-- BEGIN switch_user_logged_out -->
-				<form action="{S_LOGIN_ACTION}" method="post">
-				<table width="90%" border="0" cellspacing="2" cellpadding="0">
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_08.png); height:54px; width:300px; background-repeat:repeat-x;" align="right">
+				<table width="100%" border="0" cellspacing="2" cellpadding="0">
 				<tr>
-					<td width="100%">&nbsp;
-					</td>
-					<td align="left"><input type="text" class="post" name="username" size="10"></td>
-					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32"></td>
-					<!-- autocomplete="off" -->
-					<td align="left"><input type="submit" class="button3" name="login" value=""></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td align="left"><img src="templates/subSilver/images/design/arrow_right.png"> <a href="#">register</a></td>
-					<td align="left"><img src="templates/subSilver/images/design/arrow_right.png"> <a href="#">password</a></td>
 					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td align="right">CMS Version: {VERSION}</td>
 				</tr>
 				</table>
+			</td>
+			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_09.png); height:54px; width:686px; background-repeat:repeat-x;" align="center">
+				<!-- BEGIN switch_user_logged_out -->
+				<table width="100%" border="0" cellspacing="2" cellpadding="0">
+				<form action="{S_LOGIN_ACTION}" method="post">
+				<tr>
+					<td width="100%">{SITENAME}</td>
+					<td align="left"><input type="text" class="post" name="username" size="10"></td>
+					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32" autocomplete="off"></td>
+					<td align="left"><input type="submit" class="button3" name="login" value=""></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>{SITE_DESCRIPTION}</td>
+					<td align="left">&nbsp;<img src="templates/subSilver/images/design/arrow_right.png">&nbsp;<a href="#">register</a></td>
+					<td align="left">&nbsp;<img src="templates/subSilver/images/design/arrow_right.png">&nbsp;<a href="#">password</a></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
 				</form>
+				</table>
 				<!-- END switch_user_logged_out -->
 				<!-- BEGIN switch_user_logged_in -->
-				<table width="90%" border="0" cellspacing="2" cellpadding="0">
+				<table width="100%" border="0" cellspacing="2" cellpadding="0">
 				<tr>
-					<td align="right">
-						<a href="index.php?mode=cache">Cache Leeren</a>
-					</td>
+					<td width="100%">{SITENAME}</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>{SITE_DESCRIPTION}</td>
+					<td>&nbsp;</td>
+					<td nowrap><a href="index.php?mode=cache">Cache Leeren</a></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 				</tr>
 				</table>
 				<!-- END switch_user_logged_in -->
@@ -169,54 +194,34 @@
 	</td>
 </tr>
 <tr>
-	<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_15.png); height:15px;"></td>
+	<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_15.png); height:15px; background-repeat:repeat-x;"></td>
 </tr>
 
 <tr>
 	<td>
 		<table width="986" border="0" cellspacing="0" cellpadding="0">
 		<tr>
+			<td>
 			<div class="menu">
 				<ul>
 					<!-- BEGIN navi_main -->
 					<li><a class="hide" href="#"><br>Main</a>
-					<!--[if lte IE 6]>
-						<a href="index.html">MENUS
-						<table>
-						<tr>
-							<td>
-					<![endif]-->			
 						<ul>
 							<!-- BEGIN navi_main_row -->
 							<li><a href="{navi_main.navi_main_row.NAVI_URL}" target="{navi_main.navi_main_row.NAVI_TARGET}" title="{navi_main.navi_main_row.NAVI_NAME}">{navi_main.navi_main_row.NAVI_NAME}</a></li>
 							<!-- END navi_main_row -->
 						</ul>	
-					<!--[if lte IE 6]>
-					</td></tr></table>
-					</a>
-					<![endif]-->
 					</li>
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<!-- END navi_main -->
 					
 					<!-- BEGIN navi_clan -->
 					<li><a class="hide" href="#"><br>Clan</a>
-					<!--[if lte IE 6]>
-						<a href="index.html">MENUS
-						<table>
-						<tr>
-							<td>
-					<![endif]-->			
 						<ul>
 							<!-- BEGIN navi_clan_row -->
 							<li><a href="{navi_clan.navi_clan_row.NAVI_URL}" target="{navi_clan.navi_clan_row.NAVI_TARGET}" title="{navi_clan.navi_clan_row.NAVI_NAME}">{navi_clan.navi_clan_row.NAVI_NAME}</a></li>
 							<!-- END navi_clan_row -->
 						</ul>	
-					<!--[if lte IE 6]>
-					</td></tr></table>
-					</a>
-					<![endif]-->
-					
 					</li>
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<!-- END navi_clan -->
@@ -224,22 +229,11 @@
 					<!-- BEGIN navi_community -->
 					<li>
 						<a class="hide" href="#"><br>Community</a>
-					<!--[if lte IE 6]>
-						<a href="index.html">MENUS
-						<table>
-						<tr>
-							<td>
-					<![endif]-->			
 						<ul>
 							<!-- BEGIN navi_community_row -->
 							<li><a href="{navi_community.navi_community_row.NAVI_URL}" target="{navi_community.navi_community_row.NAVI_TARGET}" title="{navi_community.navi_community_row.NAVI_NAME}">{navi_community.navi_community_row.NAVI_NAME}</a></li>
 							<!-- END navi_community_row -->
 						</ul>	
-					<!--[if lte IE 6]>
-					</td></tr></table>
-					</a>
-					<![endif]-->
-					
 					</li>
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<!-- END navi_community -->
@@ -247,22 +241,11 @@
 					<!-- BEGIN navi_misc -->
 					<li>
 						<a class="hide" href="#"><br>Misc</a>
-					<!--[if lte IE 6]>
-						<a href="index.html">MENUS
-						<table>
-						<tr>
-							<td>
-					<![endif]-->			
 						<ul>
 							<!-- BEGIN navi_misc_row -->
 							<li><a href="{navi_misc.navi_misc_row.NAVI_URL}" target="{navi_misc.navi_misc_row.NAVI_TARGET}" title="{navi_misc.navi_misc_row.NAVI_NAME}">{navi_misc.navi_misc_row.NAVI_NAME}</a></li>
 							<!-- END navi_misc_row -->
 						</ul>	
-					<!--[if lte IE 6]>
-					</td></tr></table>
-					</a>
-					<![endif]-->
-					</li>
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<!-- END navi_misc -->
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_22.png); height:32px; width:476px;"></li>
@@ -270,12 +253,6 @@
 					<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 					<li>
 						<a class="hide" href="#"><br>User</a>
-					<!--[if lte IE 6]>
-						<a href="index.html">MENUS
-						<table>
-						<tr>
-							<td>
-					<![endif]-->			
 						<ul>
 							<!-- BEGIN navi_user_row -->
 							<li><a href="{navi_user.navi_user_row.NAVI_URL}" target="{navi_user.navi_user_row.NAVI_TARGET}" title="{navi_user.navi_user_row.NAVI_NAME}">{navi_user.navi_user_row.NAVI_NAME}</a></li>
@@ -283,14 +260,11 @@
 							<li><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></li>
 							<li>{ADMIN_LINK}</li>
 						</ul>	
-					<!--[if lte IE 6]>
-					</td></tr></table>
-					</a>
-					<![endif]-->
 					</li>
 					<!-- END navi_misc -->
 				</ul>
 			</div>
+			</td>
 		</tr>
 		</table>
 	</td>
@@ -398,6 +372,7 @@
 					<td>&nbsp;</td>
 				</tr>
 				<!-- END subnavi_newusers -->
+				
 				<!-- BEGIN subnavi_teams -->
 				<tr>
 					<td class="info_head">{L_TEAMS}</td>

@@ -155,6 +155,7 @@ else
 				$error .= ( !$training_maps ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_map'] : '';
 				$error .= ( $training_duration == '00' ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_duration'] : '';
 				$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_date'] : '';
+				$error .= ( time() >= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0))) ? ( $error ? '<br>' : '' ) . $lang['msg_select_past'] : '';
 				
 				if ( $error )
 				{

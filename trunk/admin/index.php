@@ -10,10 +10,39 @@ include($root_path . 'includes/acp/acp_functions.php');
 
 $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 
+	$data_news	= get_data_index(NEWS, 'news_id, news_title, news_time_public, news_public, news_intern', '', 'news_time_public DESC');
 	$data_match	= get_data_index(MATCH, 'match_id, match_rival, match_public, match_date', '', 'match_date DESC');
 	$data_train	= get_data_index(TRAINING, 'training_id, training_vs, training_date', '', 'training_date DESC');
 	$data_event	= get_data_index(EVENT, 'event_id, event_title, event_date', '', 'event_date DESC');
 	$data_users	= get_data_index(USERS, 'user_id, username, user_regdate, user_level, user_lastvisit', '', 'user_regdate DESC');
+	
+	if ( $data_news )
+	{
+		for ( $i = 0; $i < count($data_news); $i++ )
+		{
+			$news_id		= $data_news[$i]['news_id'];
+			$news_typ		= ( $data_news[$i]['news_intern'] ) ? 'sprintf_intern' : 'sprintf_normal';
+			$news_date		= create_date($userdata['user_dateformat'], $data_news[$i]['news_time_public'], $userdata['user_timezone']);
+			$news_public	= ( $data_news[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="">' : '<img src="' . $images['icon_acp_privat'] . '" alt="">';
+			
+			$link_update = ( $userauth['auth_news'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_update&amp;' . POST_NEWS_URL . '=' . $news_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>' : '';
+			$link_delete = ( $userauth['auth_news'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_delete&amp;' . POST_NEWS_URL . '=' . $news_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>' : '';
+			$link_public = ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_switch&amp;' . POST_NEWS_URL . '=' . $news_id) . '">' . $news_public . '</a>' : '<img src="' . $images['icon_acp_denied'] . '" alt="">';
+
+			$template->assign_block_vars('row_news', array(
+				'NEWS_TITLE'	=> sprintf($lang[$news_typ], $data_news[$i]['news_title']),
+				'NEWS_DATE'		=> $news_date,
+				'NEWS_UPDATE'	=> $link_update,
+				'NEWS_DELETE'	=> $link_delete,
+				'NEWS_PUBLIC'	=> $link_public,
+			));
+		}
+	}
+	else
+	{
+		$template->assign_block_vars('no_entry_news', array());
+		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+	}
 	
 	if ( $data_match )
 	{
@@ -103,7 +132,7 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 				
 			$template->assign_block_vars('row_event', array(
 				'EVENT_TITLE'	=> $data_event[$i]['event_title'],
-				'EVENT_DATE'		=> $event_date,
+				'EVENT_DATE'	=> $event_date,
 				'EVENT_UPDATE'	=> $link_update,
 				'EVENT_DELETE'	=> $link_delete,
 			));
@@ -149,16 +178,22 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 
 
 $template->assign_vars(array(
-							 
+
+	'L_NEWS'				=> $lang['news'],							 
 	'L_MATCH'				=> $lang['match'],
+	'L_TRAIN'				=> $lang['training'],
 	'L_EVENT'				=> $lang['event'],
 	'L_USERS'				=> $lang['users'],
 	
+	'I_NEWS'				=> $images['news'],
 	'I_MATCH'				=> $images['match'],
+	'I_TRAIN'				=> $images['training'],
 	'I_EVENT'				=> $images['event'],
 	'I_USERS'				=> $images['user'],
 	
+	'U_NEWS'				=> append_sid('admin_news.php'),
 	'U_MATCH'				=> append_sid('admin_match.php'),
+	'U_TRAIN'				=> append_sid('admin_training.php'),
 	'U_EVENT'				=> append_sid('admin_event.php'),
 	'U_USERS'				=> append_sid('admin_user.php'),
 	

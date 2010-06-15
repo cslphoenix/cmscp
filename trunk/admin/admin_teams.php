@@ -41,6 +41,7 @@ else
 	$root_path	= './../';
 	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_header	= $cancel;
+	$current	= '_submenu_teams';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_upload.php');
@@ -48,15 +49,15 @@ else
 	include($root_path . 'includes/acp/acp_functions.php');
 	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/teams.php');
 	
-	$start		= ( request('start') ) ? request('start', 0) : 0;
+	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
-	$team_id	= request(POST_TEAMS_URL, 0);
+	$data_id	= request(POST_TEAMS_URL, 0);
 	$confirm	= request('confirm', 1);
-	$move		= request('move', 1);
 	$mode		= request('mode', 1);
-	$path_game	= $root_path . $settings['path_games'] . '/';
+	$move		= request('move', 1);	
+	$path_dir	= $root_path . $settings['path_teams'] . '/';
 	$show_index	= '';
-		
+	
 	if ( !$userauth['auth_teams'] && $userdata['user_level'] != ADMIN )
 	{
 		message(GENERAL_ERROR, $lang['auth_fail']);
@@ -77,9 +78,9 @@ else
 				$template->set_filenames(array('body' => 'style/acp_teams.tpl'));
 				$template->assign_block_vars('team_edit', array());
 				
-				if ( $mode == '_create' )
+				if ( $mode == '_create' && !request('submit', 2) )
 				{
-					$team = array (
+					$data = array(
 						'team_name'			=> request('team_name', 2),
 						'team_desc'			=> '',
 						'team_game'			=> '-1',
@@ -90,21 +91,38 @@ else
 						'team_fight'		=> '1',
 						'team_view'			=> '1',
 						'team_show'			=> '1',
-						'game_size'			=> '16',
 					);
-					$new_mode = '_create_save';
 				}
-				else
+				else if ( $mode == '_update' && !request('submit', 2) )
 				{
-					$team = get_data(TEAMS, $team_id, 1);
-					$new_mode = '_update_save';
+					$data = get_data(TEAMS, $data_id, 1);
 					
 					$template->assign_block_vars('team_edit.member', array());
 				}
+				else
+				{
+					$data = array(
+						'team_name'			=> request('team_name', 2),
+						'team_desc'			=> request('team_desc', 3),
+						'team_game'			=> request('team_game', 0),
+						'team_navi'			=> request('team_navi', 0),
+						'team_awards'		=> request('team_awards', 0),
+						'team_wars'			=> request('team_wars', 0),
+						'team_join'			=> request('team_join', 0),
+						'team_fight'		=> request('team_fight', 0),
+						'team_view'			=> request('team_view', 0),
+						'team_show'			=> request('team_show', 0),
+					);
+				}
+				
+				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
+				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $data_id . '" />';
+				
+				
 				
 				$game_empty	= $images['icon_acp_spacer'];
-				$game_size	= $team['game_size'];
-				$game_image = ( $mode == '_create' ) ? $images['icon_acp_spacer'] : ($team['game_id'] == '-1') ? $images['icon_acp_spacer'] : $game_path . $team['game_image'];
+				$game_size	= $data['game_size'];
+				$game_image = ( $mode == '_create' ) ? $images['icon_acp_spacer'] : ($data['game_id'] == '-1') ? $images['icon_acp_spacer'] : $game_path . $data['game_image'];
 				
 			#	$logo_up_explain	= $settings['team_logo_max_height'] . ' x ' . $settings['team_logo_max_width'] . ' / ' . round($settings['team_logo_filesize']/1024) . ' KBs';
 			#	$logos_up_explain	= $settings['team_logos_max_height'] . ' x ' . $settings['team_logos_max_width'] . ' / ' . round($settings['team_logos_filesize']/1024) . ' KBs';
@@ -129,22 +147,13 @@ else
 				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
 				
 				$template->assign_vars(array(
-					'L_TITLE'			=> $lang['team_head'],
-					'L_NEW_EDIT'		=> ( $mode == '_add' ) ? $lang['team_new_add'] : $lang['team_edit'],
-					'L_MEMBER'			=> $lang['team_view_member'],
-					'L_REQUIRED'			=> $lang['required'],
+					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['team']),
+					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['team'], $data['team_name']),
+					'L_MEMBER'		=> $lang['team_view_member'],
 					
 					'L_NAME'			=> $lang['team_name'],
 					'L_DESC'			=> $lang['team_desc'],
 					'L_GAME'			=> $lang['team_game'],
-					
-				#	'L_LOGO_UP'		=> $lang['team_logo_upload'],
-				#	'L_LOGO_LINK'		=> $lang['team_logo_link'],
-				#	'L_UPLOAD_LOGO'			=> $lang['logo_upload'],
-				#	'L_LOGOS_UP'		=> $lang['team_logos_upload'],
-				#	'L_LOGOS_LINK'		=> $lang['team_logos_link'],
-				#	'L_UPLOAD_LOGOS'		=> $lang['logos_upload'],
-					
 					'L_NAVI'			=> $lang['team_navi'],
 					'L_AWARDS'			=> $lang['team_sawards'],
 					'L_FIGHTS'			=> $lang['team_sfight'],
@@ -153,32 +162,34 @@ else
 					'L_VIEW'			=> $lang['team_view'],
 					'L_SHOW'			=> $lang['team_show'],
 					
+				#	'L_LOGO_UP'		=> $lang['team_logo_upload'],
+				#	'L_LOGO_LINK'		=> $lang['team_logo_link'],
+				#	'L_UPLOAD_LOGO'			=> $lang['logo_upload'],
+				#	'L_LOGOS_UP'		=> $lang['team_logos_upload'],
+				#	'L_LOGOS_LINK'		=> $lang['team_logos_link'],
+				#	'L_UPLOAD_LOGOS'		=> $lang['logos_upload'],
+					
 					'L_INFOS'			=> $lang['team_infos'],
-					'L_LOGO_SETTINGS'		=> $lang['team_logo_setting'],
-					'L_MENU_SETTINGS'		=> $lang['team_menu_setting'],
+					'L_LOGO_SETTINGS'	=> $lang['team_logo_setting'],
+					'L_MENU_SETTINGS'	=> $lang['team_menu_setting'],
 					
-					'L_SUBMIT'				=> $lang['common_submit'],
-					'L_RESET'				=> $lang['common_reset'],
-					'L_YES'					=> $lang['common_yes'],
-					'L_NO'					=> $lang['common_no'],
+					'TEAM_NAME'			=> $data['team_name'],
+					'TEAM_DESC'			=> $data['team_desc'],
 					
-					'TEAM_NAME'				=> $team['team_name'],
-					'TEAM_DESC'				=> $team['team_desc'],
-					
-					'CHECKED_NAVI_NO'		=> (!$team['team_navi']) ? ' checked="checked"' : '',
-					'CHECKED_NAVI_YES'		=> ($team['team_navi']) ? ' checked="checked"' : '',
-					'CHECKED_SAWARDS_NO'	=> (!$team['team_awards']) ? ' checked="checked"' : '',
-					'CHECKED_SAWARDS_YES'	=> ($team['team_awards']) ? ' checked="checked"' : '',
-					'CHECKED_SWARS_NO'		=> (!$team['team_wars']) ? ' checked="checked"' : '',
-					'CHECKED_SWARS_YES'		=> ($team['team_wars']) ? ' checked="checked"' : '',
-					'CHECKED_JOIN_NO'		=> (!$team['team_join']) ? ' checked="checked"' : '',
-					'CHECKED_JOIN_YES'		=> ($team['team_join']) ? ' checked="checked"' : '',
-					'CHECKED_FIGHT_NO'		=> (!$team['team_fight']) ? ' checked="checked"' : '',
-					'CHECKED_FIGHT_YES'		=> ($team['team_fight']) ? ' checked="checked"' : '',
-					'CHECKED_VIEW_NO'		=> (!$team['team_view']) ? ' checked="checked"' : '',
-					'CHECKED_VIEW_YES'		=> ($team['team_view']) ? ' checked="checked"' : '',
-					'CHECKED_SHOW_NO'		=> (!$team['team_show']) ? ' checked="checked"' : '',
-					'CHECKED_SHOW_YES'		=> ($team['team_show']) ? ' checked="checked"' : '',
+					'CHECKED_NAVI_NO'		=> (!$data['team_navi']) ? ' checked="checked"' : '',
+					'CHECKED_NAVI_YES'		=> ($data['team_navi']) ? ' checked="checked"' : '',
+					'CHECKED_SAWARDS_NO'	=> (!$data['team_awards']) ? ' checked="checked"' : '',
+					'CHECKED_SAWARDS_YES'	=> ($data['team_awards']) ? ' checked="checked"' : '',
+					'CHECKED_SWARS_NO'		=> (!$data['team_wars']) ? ' checked="checked"' : '',
+					'CHECKED_SWARS_YES'		=> ($data['team_wars']) ? ' checked="checked"' : '',
+					'CHECKED_JOIN_NO'		=> (!$data['team_join']) ? ' checked="checked"' : '',
+					'CHECKED_JOIN_YES'		=> ($data['team_join']) ? ' checked="checked"' : '',
+					'CHECKED_FIGHT_NO'		=> (!$data['team_fight']) ? ' checked="checked"' : '',
+					'CHECKED_FIGHT_YES'		=> ($data['team_fight']) ? ' checked="checked"' : '',
+					'CHECKED_VIEW_NO'		=> (!$data['team_view']) ? ' checked="checked"' : '',
+					'CHECKED_VIEW_YES'		=> ($data['team_view']) ? ' checked="checked"' : '',
+					'CHECKED_SHOW_NO'		=> (!$data['team_show']) ? ' checked="checked"' : '',
+					'CHECKED_SHOW_YES'		=> ($data['team_show']) ? ' checked="checked"' : '',
 					
 					'GAME_PATH'				=> $root_path . $settings['path_games'],
 					'GAME_IMAGE'			=> $game_image,
@@ -189,8 +200,8 @@ else
 					
 			#		'L_LOGO_UP_EXPLAIN'		=> $logo_up_explain,
 			#		'L_LOGOS_UP_EXPLAIN'	=> $logos_up_explain,
-					'S_GAME'			=> select_box('game', 'select', $team['team_game']),
-			#		'S_GAME'			=> _select_game($team['team_game']),
+					'S_GAME'			=> select_box('game', 'select', $data['team_game']),
+			#		'S_GAME'			=> _select_game($data['team_game']),
 					
 					
 					
@@ -198,6 +209,66 @@ else
 					'S_MEMBER'			=> append_sid('admin_teams.php?mode=_member&amp;' . POST_TEAMS_URL . '=' . $team_id),
 					'S_ACTION'			=> append_sid('admin_teams.php'),
 				));
+				
+				if ( request('submit', 2) )
+				{
+					$team_name		= request('team_name', 2);
+					$team_desc		= request('team_desc', 3);
+					$game_image		= request('game_image', 2);
+					$team_navi		= request('team_navi', 0);
+					$team_join		= request('team_join', 0);
+					$team_fight		= request('team_fight', 0);
+					$team_wars		= request('team_wars', 0);
+					$team_awards	= request('team_awards', 0);
+					$team_show		= request('team_show', 0);
+					$team_view		= request('team_view', 0);
+					
+					$error = '';
+					$error .= ( !$game_name ) ? $lang['msg_select_name'] : '';
+					
+					$error = '';
+					$error .= ( !$team_name )				? $lang['msg_select_name'] : '';
+					$error .= ( $news_category == '-1' )	? ( $error ? '<br>' : '' ) . $lang['msg_select_newscat'] : '';
+					$error .= ( !$news_text )				? ( $error ? '<br>' : '' ) . $lang['msg_select_text'] : '';
+					
+					if ( $error )
+					{
+						$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+					}					
+					else
+					{
+						if ( $mode == '_create' )
+						{
+							$max_row	= get_data_max(GAMES, 'game_order', '');
+							$next_order	= $max_row['max'] + 10;
+							
+							$sql = "INSERT INTO " . GAMES . " (game_name, game_image, game_size, game_order) VALUES ('$game_name', '$game_image', '$game_size', '$next_order')";
+							if ( !($result = $db->sql_query($sql)) )
+							{
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$message = $lang['create_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
+							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'create_game');
+						}
+						else
+						{
+							$sql = "UPDATE " . GAMES . " SET game_name = '$game_name', game_image = '$game_image', game_size = '$game_size' WHERE game_id = $data_id";
+							if ( !($result = $db->sql_query($sql)) )
+							{
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$message = $lang['update_game']
+								. sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>')
+								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_GAMES_URL . '=' . $data_id) . '">', '</a>');
+							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'update_game');
+						}
+						message(GENERAL_MESSAGE, $message);
+					}
+				}
 			
 				$template->pparse('body');
 				

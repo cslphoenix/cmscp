@@ -1,4 +1,3 @@
-	
 			</td>
 			<td width="15%" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -77,8 +76,8 @@
 </tr>
 <tr>
 	<td>
-	<form action="{S_NEWSLETTER_ACTION}" method="post">
 		<table width="986" border="0" cellspacing="0" cellpadding="0">
+		<form action="{S_NEWSLETTER_ACTION}" method="post">
 		<tr>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_28-14.png); height:125px; width:267px;" valign="top"></td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_29.png); height:125px; width:233px; padding: 5px;">
@@ -101,8 +100,8 @@
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_32.png); height:125px; width:486px;"></td>
 		</tr>
+		</form>
 		</table>
-	</form>
 	</td>
 </tr>
 <tr>
@@ -117,13 +116,13 @@
 				<table width="100%" height="100" border="0" cellspacing="0" cellpadding="0">
 				<tr style="height:46px;">
 					<td style="padding:15px 10px 5px 10px;" width="100%">&copy; by CMS-Phoenix.de</td>
-					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">Impressum</td>
+					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="imprint.php">Impressum</a></td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
 					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="contact.php">Kontatkt</a></td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
 					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">FAQ</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">RSS-Feed</td>
+					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="rss/news.php">RSS-Feed</a></td>
 				</tr>
 				<tr>
 					<td colspan="8">
@@ -140,8 +139,6 @@
 									<br>
 									{DEBUG} {CACHE}
 								</div>
-								
-							
 							</td>
 							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap="nowrap">Nach Oben <img src="templates/subSilver/images/page_/democms1.3-schnitt_44.png" alt=""></td>
 						</tr>
@@ -157,7 +154,6 @@
 </tr>
 </table>
 </div>
-
 <div align="center">{RUN_STATS_BOX}</div>
 </body>
 </html>

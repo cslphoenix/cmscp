@@ -35,6 +35,7 @@
  *
  */
 
+/*
 function select_box($type, $class, $field_id, $field_name, $default = '', $switch = '')
 {
 	global $db, $lang, $config, $settings;
@@ -84,8 +85,8 @@ function select_box($type, $class, $field_id, $field_name, $default = '', $switc
 	$select .= '</select>';
 
 	return $select;
-	
 }
+*/
 
 function select_lang_box($var, $name, $default, $class)
 {

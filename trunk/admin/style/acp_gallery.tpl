@@ -24,7 +24,7 @@
 <!-- BEGIN row_gallery -->
 <tr>
 	<td class="row_class1" align="left"><span style="float:right;">{display.row_gallery.INFO}&nbsp;</span><b>{display.row_gallery.NAME}</b><br />{display.row_gallery.DESC}</td>
-	<td class="row_class2" align="left" nowrap="nowrap">{display.row_gallery.MOVE_UP}{display.row_gallery.MOVE_DOWN} {display.row_gallery.OVERVIEW} <a href="{display.row_gallery.U_UPLOAD}">{I_UPLOAD}</a> <a href="{display.row_gallery.U_UPDATE}">{I_UPDATE}</a> <a href="{display.row_gallery.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class2" align="left" nowrap="nowrap">{display.row_gallery.MOVE_UP}{display.row_gallery.MOVE_DOWN} {display.row_gallery.OVERVIEW} <a href="{display.row_gallery.U_UPLOAD}">{I_UPLOAD}</a> <!--{display.row_gallery.RESYNC} --><a href="{display.row_gallery.U_UPDATE}">{I_UPDATE}</a> <a href="{display.row_gallery.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END row_gallery -->
 <!-- BEGIN no_entry -->
@@ -83,7 +83,6 @@ tinyMCE.init({
 	<!-- BEGIN upload -->
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
 	<!-- END upload -->
-	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
 </ul>
 </div>
 
@@ -258,42 +257,57 @@ function clone(objButton)
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN row_gallery -->
 <tr>
-	<!-- BEGIN gallery_col -->
     <td>
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current"><input type="checkbox" name="pics[]" value="{gallery_overview.row_gallery.gallery_col.PIC_ID}">&nbsp;{gallery_overview.row_gallery.gallery_col.TITLE}</a></li>
+			<li id="active"><a href="#" id="current"><span class="middle">{gallery_overview.row_gallery.TITLE}</span></a></li>
 		</ul>
 		</div>
-
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
         <tr>
-        	<td class="row2"><a href="{gallery_overview.row_gallery.gallery_col.IMAGE}" rel="lightbox"><img src="{gallery_overview.row_gallery.gallery_col.PREV}" alt="" border="" /></a></td>
-			<td class="row3">
+        	<td class="row1" width="{PRE_WIDHT}"><a href="{gallery_overview.row_gallery.IMAGE}" rel="lightbox"><img src="{gallery_overview.row_gallery.PREV}" alt="" border="0" /></a></td>
+			<td class="row3" nowrap="nowrap">
 				<table class="edit" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td align="right">{L_WIDTH}:</td>
-					<td align="center">{gallery_overview.row_gallery.gallery_col.WIDTH}</td>
+					<td class="small" align="right"><label for="pic_title[{gallery_overview.row_gallery.PIC_ID}]">{L_TITLE}:&nbsp;</label></td>
+					<td class="small" align="left"><input type="text" class="postsmall" name="pic_title[{gallery_overview.row_gallery.PIC_ID}]" id="pic_title[{gallery_overview.row_gallery.PIC_ID}]" value="{gallery_overview.row_gallery.TITLE}"></td>
 				</tr>
 				<tr>
-					<td align="right">{L_HEIGHT}:</td>
-					<td align="center">{gallery_overview.row_gallery.gallery_col.HEIGHT}</td>
+					<td class="small" align="right">{L_WIDTH}:&nbsp;</td>
+					<td class="small" align="left">{gallery_overview.row_gallery.WIDTH}</td>
 				</tr>
 				<tr>
-					<td align="right">{L_SIZE}:</td>
-					<td align="center">{gallery_overview.row_gallery.gallery_col.SIZE}</td>
+					<td class="small" align="right">{L_HEIGHT}:&nbsp;</td>
+					<td class="small" align="left">{gallery_overview.row_gallery.HEIGHT}</td>
+				</tr>
+				<tr>
+					<td class="small" align="right">{L_SIZE}:&nbsp;</td>
+					<td class="small" align="left">{gallery_overview.row_gallery.SIZE}</td>
+				</tr>
+				<tr>
+					<td class="small" align="right">{L_SIZE}:&nbsp;</td>
+					<td class="small" align="left">{gallery_overview.row_gallery.NAME}</td>
 				</tr>
 				</table>
 			</td>
+			<td class="row2" width="100%">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>Bewertung</td>
+				</tr>
+				<tr>
+					<td>Kommentare</td>
+				</tr>
+				</table>
+			</td>
+			<td class="row2 small" nowrap="nowrap"><input type="text" class="postsmall" name="pic_order[{gallery_overview.row_gallery.PIC_ID}]" id="pic_title[{gallery_overview.row_gallery.PIC_ID}]" value="{gallery_overview.row_gallery.ORDER}" size="2"></td>
+			<td class="row2 small" nowrap="nowrap">{gallery_overview.row_gallery.MOVE_UP}{gallery_overview.row_gallery.MOVE_DOWN}</td>
+			<td class="row2 small" nowrap="nowrap"><input type="checkbox" name="pics[]" value="{gallery_overview.row_gallery.PIC_ID}"></td>
 		</tr>
         </table>
     </td>
-    <!-- END gallery_col -->
 </tr>
 <!-- END row_gallery -->
-<tr>
-	<td colspan="{PER_ROWS}" align="center">&nbsp;</td>
-</tr>
 </table>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
@@ -308,7 +322,7 @@ function clone(objButton)
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" value="{L_DELETE}" class="button2"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -341,7 +355,7 @@ function clone(objButton)
 	<td class="row3"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
 </tr>
 <tr>
-	<td class="row1 top">{L_AUTH}:</td>
+	<td class="row1 top"><label>{L_AUTH}:</label></td>
 	<td class="row3">
 		<table class="edit" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN auth_gallery_data -->
@@ -379,3 +393,22 @@ function clone(objButton)
 {S_FIELDS}
 </form>
 <!-- END gallery_default -->
+
+<!-- BEGIN gallery_resync -->
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="row2 small">{L_EXPLAIN}</td>
+</tr>
+</table>
+
+<br />
+
+<!-- END gallery_resync -->
