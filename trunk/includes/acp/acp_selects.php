@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -292,7 +292,7 @@ function _select_match($default, $type, $class)
 //	default:	day/month/year/hour/min
 //	value:		select Wert
 //
-function select_date($default, $var, $value)
+function select_date($class, $default, $var, $value)
 {
 	$lang;
 	
@@ -300,7 +300,7 @@ function select_date($default, $var, $value)
 	{
 		case 'day':
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\">";
 			for ( $i = 1; $i < 32; $i++ )
 			{
 				if ($i < 10)
@@ -308,15 +308,15 @@ function select_date($default, $var, $value)
 					$i = '0'.$i;
 				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&nbsp;$i&nbsp;</option>";
 			}
-			$select .= '</select>';
+			$select .= "</select>";
 			
 		break;
 		
 		case 'month':
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\">";
 			for ( $i = 1; $i < 13; $i++ )
 			{
 				if ( $i < 10 )
@@ -335,7 +335,7 @@ function select_date($default, $var, $value)
 			$monate = array(
 				'01'	=> 'Januar',
 				'02'	=> 'Februar',
-				'03'	=> 'M&auml;rz',
+				'03'	=> 'März',
 				'04'	=> 'April',
 				'05'	=> 'Mai',
 				'06'	=> 'Juni',
@@ -347,7 +347,7 @@ function select_date($default, $var, $value)
 				'12'	=> 'Dezember'
 			);
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\">";
 			for ( $i = 1; $i < 13; $i++ )
 			{
 				if ( $i < 10 )
@@ -366,7 +366,7 @@ function select_date($default, $var, $value)
 			$monate = array(
 				'01'	=> 'Januar',
 				'02'	=> 'Februar',
-				'03'	=> 'M&auml;rz',
+				'03'	=> 'März',
 				'04'	=> 'April',
 				'05'	=> 'Mai',
 				'06'	=> 'Juni',
@@ -383,7 +383,8 @@ function select_date($default, $var, $value)
 				$value = explode(',', $value);
 			}
 		
-			$select = '<select class="select" name="' . $var . '[]" multiple="multiple rows="12" size="12">';
+			$select = '<select class=\"$class\" name="' . $var . '[]" multiple="multiple rows="12" size="12">';
+			
 			foreach ($monate as $const => $name)
 			{
 				$selected = (in_array($const, $value)) ? ' selected="selected"' : '';
@@ -395,7 +396,7 @@ function select_date($default, $var, $value)
 		
 		case 'year':
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\">";
 			for ($i=$value; $i < $value+2; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -407,7 +408,7 @@ function select_date($default, $var, $value)
 		
 		case 'hour':
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\">";
 			for ($i=0; $i < 24; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -419,7 +420,7 @@ function select_date($default, $var, $value)
 		
 		case 'min':
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\">";
 			for ($i="00"; $i < 60; $i = $i + 15)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
@@ -431,7 +432,7 @@ function select_date($default, $var, $value)
 		
 		case 'duration':
 		
-			$select = '<select class="select" name="' . $var . '">';
+			$select = "<select class=\"$class\" name=\"$var\" id=\"duration\">";
 			for ($i="00"; $i < 260; $i = $i + 30)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';

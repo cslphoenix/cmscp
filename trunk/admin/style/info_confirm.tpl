@@ -7,9 +7,9 @@
 
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><br />{MESSAGE_TEXT}<br /><br /><input type="submit" name="confirm" value="{L_YES}" class="button2">&nbsp;&nbsp;<input type="submit" name="cancel" value="{L_NO}" class="button" /></td>
+	<td align="center"><br />{MESSAGE_TEXT}<br /><br /><input type="submit" class="button2" name="confirm" value="{L_YES}"><span style="padding:4px;"></span><input type="submit" class="button" name="cancel" value="{L_NO}" /></td>
 </tr>
 </table>
 {S_FIELDS}

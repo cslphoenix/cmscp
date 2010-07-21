@@ -51,9 +51,9 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	
-	if ( $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -94,12 +94,12 @@ else
 				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['authlist_field'], $data['authlist_name']),
 				'L_INFOS'		=> $lang['common_data_input'],
 				
-				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
+				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
-				'NAME' => str_replace('auth_', '', $data['authlist_name']),
+				'NAME'		=> str_replace('auth_', '', $data['authlist_name']),
 				
-				'S_FIELDS' => $s_fields,
-				'S_ACTION' => append_sid('admin_authlist.php'),
+				'S_FIELDS'	=> $s_fields,
+				'S_ACTION'	=> append_sid('admin_authlist.php'),
 			));
 			
 			if ( request('submit', 2) )
@@ -197,8 +197,8 @@ else
 					'MESSAGE_TITLE'	=> $lang['common_confirm'],
 					'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_authlist'], $data['authlist_name']),
 					
-					'S_FIELDS' => $s_fields,
-					'S_ACTION' => append_sid('admin_authlist.php'),
+					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid('admin_authlist.php'),
 				));
 			}
 			else
@@ -218,9 +218,9 @@ else
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['authlist']),
 				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['authlist_field']),
-				'L_EXPLAIN'	=> $lang['authlist_explain'],
-				
 				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
+				
+				'L_EXPLAIN'	=> $lang['authlist_explain'],
 				
 				'S_FIELDS'	=> $s_fields,
 				'S_CREATE'	=> append_sid('admin_authlist.php?mode=_create'),

@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -76,6 +76,8 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 {
 	global $db, $lang, $settings, $error;
 	
+	$error = '';
+	
 	switch ( $mode_category )
 	{
 		case 'image_group':
@@ -100,10 +102,10 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 			$system_max_width	= $settings['team_logo_max_width'];
 			$system_max_height	= $settings['team_logo_max_height'];
 			break;
-		case 'image_team_banner':
-			$system_filesize	= $settings['team_banner_filesize'];
-			$system_max_width	= $settings['team_banner_max_width'];
-			$system_max_height	= $settings['team_banner_max_height'];
+		case 'image_team_flag':
+			$system_filesize	= $settings['team_flag_filesize'];
+			$system_max_width	= $settings['team_flag_max_width'];
+			$system_max_height	= $settings['team_flag_max_height'];
 			break;
 		case 'image_network_links':
 			$system_filesize	= $settings['gallery_filesize'];
@@ -269,7 +271,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 		
 		if ( $mode )
 		{
-			$sql_pic = ( $mode == '_update' ) ?  "$mode_sql = '$new_filename', " : $new_filename;
+			$sql_pic = ( $mode == '_update' ) ?  "$mode_sql = '$new_filename'," : $new_filename;
 		}
 		else
 		{
@@ -279,16 +281,10 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	}
 	else
 	{
-#		$limagesize			= ($format == 'n') ? $lang['logo_imagesize'] : $lang['logos_imagesize'];
-#		$slogo_max_width	= ($format == 'n') ? $settings['team_logo_max_width'] : $settings['team_logos_max_width'];
-#		$slogo_max_height	= ($format == 'n') ? $settings['team_logo_max_height'] : $settings['team_logos_max_height'];
-#		
-		$error .= sprintf($limagesize, $slogo_max_width, $slogo_max_height);
-			
-#		message(GENERAL_ERROR, 'einfach ein fehler -.-\'', '', __LINE__, __FILE__);
+		$error .= sprintf($lang['common_msg_imagesize'], $system_max_width, $system_max_height);
+		
+		return;
 	}
-	
-#	debug($sql_pic);
 	
 	return $sql_pic;
 }
@@ -356,11 +352,6 @@ function image_gallery_upload($image_path, $image_filename, $image_realname, $im
 			@unlink($tmp_filename);
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
-
-	debug($width);
-	debug($height);
-	debug($max_width);
-	debug($max_height);
 
 	if ( $width > 0 && $height > 0 && $width <= $max_width && $height <= $max_height )
 	{

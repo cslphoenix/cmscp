@@ -16,12 +16,19 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
+
+function load_lang($file)
+{
+	global $root_path, $userdata, $lang;
+	
+	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/' . $file . '.php');
+}
 
 function get_data($mode, $id, $type)
 {
@@ -168,10 +175,18 @@ function orders($mode, $type = '')
 
 	switch ( $mode )
 	{
+		case TEAMS:			$idfield = 'team_id';		$orderfield	= 'team_order';		break;
 		case GAMES:			$idfield = 'game_id';		$orderfield = 'game_order';		break;
 		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
-		case NEWSCAT:		$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
-		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
+		case NEWSCAT:		$idfield = 'newscat_id';	$orderfield = 'newscat_order';								break;
+		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';									break;
+		case RANKS:			$idfield = 'rank_id';		$orderfield = 'rank_order';		$typefield = 'rank_type';	break;
+		
+		case NAVIGATION:
+			$idfield	= 'navi_id';
+			$orderfield = 'navi_order';
+			$typefield	= 'navi_type';
+			break;
 	
 		case GROUPS:
 			$idfield	= 'group_id';
@@ -200,12 +215,7 @@ function orders($mode, $type = '')
 			$typefield	= 'server_type';
 			break;
 		
-		case 'ranks':
-			$table		= RANKS;
-			$idfield	= 'rank_id';
-			$orderfield = 'rank_order';
-			$typefield	= 'rank_type';
-			break;
+		
 			
 		
 		
@@ -227,12 +237,6 @@ function orders($mode, $type = '')
 			$idfield = 'forum_id';
 			$orderfield = 'forum_order';
 			$typefield = 'cat_id';
-			break;
-			
-		case 'teams':
-			$table		= TEAMS;
-			$idfield	= 'team_id';
-			$orderfield	= 'team_order';
 			break;
 			
 		case 'profile':
@@ -394,6 +398,54 @@ function set_chmod($host, $port, $user, $pass, $path, $file, $perms)
 		die('Kommando fehlgeschlagen.');
 //		message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
 	}
+}
+
+function select_image_name($mode, $img_id)
+{
+	global $db, $images;
+	
+	switch ( $mode )
+	{
+		case GAMES:
+			$field_id	= 'game_id';
+			$field_img	= 'game_image';
+			break;
+	}
+	
+	$sql = "SELECT $field_img FROM $mode WHERE $field_id = $img_id";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$data = $db->sql_fetchrow($result);
+	
+	$data_image = ( $data[$field_img] ) ? $data[$field_img] : $images['icon_acp_spacer'];
+
+	return $data_image;
+}
+
+function select_image_id($mode, $img_name)
+{
+	global $db;
+	
+	switch ( $mode )
+	{
+		case GAMES:
+			$field_id	= 'game_id';
+			$field_img	= 'game_image';
+			break;
+	}
+	
+	$sql = "SELECT $field_id FROM $mode WHERE $field_img = '$img_name'";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$data = $db->sql_fetchrow($result);
+	
+	$data_id = ( $data[$field_id] ) ? $data[$field_id] : '-1';
+	
+	return $data_id;
 }
 
 

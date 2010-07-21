@@ -130,6 +130,7 @@ td.rowHead {
 td.row {
 	padding: 0px 3px;
 	text-align:left;
+
 }
 
 
@@ -151,8 +152,6 @@ td.row {
 
 /*	für Debug */
 .gensmall { font-size : 10px; }
-
-
 
 td.row1	{ background-color: #444; padding:2px;}
 td.row2	{ background-color: #666; padding:2px;}

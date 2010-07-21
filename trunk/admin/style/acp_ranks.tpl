@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -7,9 +7,9 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_EXPLAIN}</td>
+	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -25,19 +25,19 @@
 			<td class="rowHead" align="center" nowrap="nowrap">{L_MIN}</td>
 			<td class="rowHead" align="center">{L_SETTINGS}</td>
 		</tr>
-		<!-- BEGIN forum_row -->
+		<!-- BEGIN _forum_row -->
 		<tr>
-			<td class="row_class1" align="left" width="98%">{display.forum_row.TITLE}</td>
-			<td class="row_class1" align="center" width="1%">{display.forum_row.SPECIAL}</td>
-			<td class="row_class1" align="center" width="1%">{display.forum_row.MIN}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{display.forum_row.MOVE_UP} {display.forum_row.MOVE_DOWN} <a href="{display.forum_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.forum_row.U_DELETE}">{I_DELETE}</a></td>
+			<td class="row_class1" align="left" width="98%">{_display._forum_row.TITLE}</td>
+			<td class="row_class1" align="center" width="1%">{_display._forum_row.SPECIAL}</td>
+			<td class="row_class1" align="center" width="1%">{_display._forum_row.MIN}</td>
+			<td class="row_class2" align="center" nowrap="nowrap">{_display._forum_row.MOVE_UP} {_display._forum_row.MOVE_DOWN} <a href="{_display._forum_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._forum_row.U_DELETE}">{I_DELETE}</a></td>
 		</tr>
-		<!-- END forum_row -->
-		<!-- BEGIN no_ranks -->
+		<!-- END _forum_row -->
+		<!-- BEGIN _no_forum -->
 		<tr>
-			<td class="row_class1" align="center" colspan="7">{NO_RANKS}</td>
+			<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
 		</tr>
-		<!-- END no_ranks -->
+		<!-- END _no_forum -->
 		</table>
 	</td>
 </tr>
@@ -51,17 +51,17 @@
 			<td class="rowHead">{L_PAGE}</td>
 			<td class="rowHead" align="center">{L_SETTINGS}</td>
 		</tr>
-		<!-- BEGIN page_row -->
+		<!-- BEGIN _page_row -->
 		<tr>
-			<td class="row_class1" align="left" width="100%"><span style="float:right;">{display.page_row.STANDARD}</span>{display.page_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{display.page_row.MOVE_UP} {display.page_row.MOVE_DOWN} <a href="{display.page_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.page_row.U_DELETE}">{I_DELETE}</a></td>
+			<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._page_row.STANDARD}</span>{_display._page_row.TITLE}</td>
+			<td class="row_class2" align="center" nowrap="nowrap">{_display._page_row.MOVE_UP} {_display._page_row.MOVE_DOWN} <a href="{_display._page_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._page_row.U_DELETE}">{I_DELETE}</a></td>
 		</tr>
-		<!-- END page_row -->
-		<!-- BEGIN no_ranks -->
+		<!-- END _page_row -->
+		<!-- BEGIN _no_page -->
 		<tr>
-			<td class="row_class1" align="center" colspan="7">{NO_RANKS}</td>
+			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
 		</tr>
-		<!-- END no_ranks -->
+		<!-- END _no_page -->
 		</table>
 	</td>
 </tr>
@@ -75,33 +75,33 @@
 			<td class="rowHead">{L_TEAM}</td>
 			<td class="rowHead" align="center">{L_SETTINGS}</td>
 		</tr>
-		<!-- BEGIN team_row -->
+		<!-- BEGIN _team_row -->
 		<tr>
-			<td class="row_class1" align="left" width="100%"><span style="float:right;">{display.team_row.STANDARD}</span>{display.team_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{display.team_row.MOVE_UP} {display.team_row.MOVE_DOWN} <a href="{display.team_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.team_row.U_DELETE}">{I_DELETE}</a></td>
+			<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._team_row.STANDARD}</span>{_display._team_row.TITLE}</td>
+			<td class="row_class2" align="center" nowrap="nowrap">{_display._team_row.MOVE_UP} {_display._team_row.MOVE_DOWN} <a href="{_display._team_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._team_row.U_DELETE}">{I_DELETE}</a></td>
 		</tr>
-		<!-- END team_row -->
-		<!-- BEGIN no_ranks -->
+		<!-- END _team_row -->
+		<!-- BEGIN _no_team -->
 		<tr>
-			<td class="row_class1" align="center" colspan="7">{NO_RANKS}</td>
+			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
 		</tr>
-		<!-- END no_ranks -->
+		<!-- END _no_team -->
 		</table>
 	</td>
 </tr>
 </table>
 
-<table class="footer" border="0" cellspacing="1" cellpadding="2">
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="rank_title"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END display -->
+<!-- END _display -->
 
-<!-- BEGIN ranks_edit -->
+<!-- BEGIN _input -->
 <script type="text/javascript">
 // <![CDATA[
 	function update_image(newimage)
@@ -119,17 +119,26 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_REQUIRED}</td>
+	<td class="row4 small">{L_REQUIRED}</td>
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="23%"><label for="rank_title">{L_NAME}: *</label></td>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row1" width="150"><label for="rank_title">{L_NAME}: *</label></td>
 	<td class="row3"><input type="text" class="post" name="rank_title" id="rank_title" value="{TITLE}"></td>
 </tr>
 <tr>
@@ -146,7 +155,7 @@
 </tr>
 <tr>
 	<td class="row1"><label for="rank_special">{L_SPECIAL}: <sup>1</sup></label></td>
-	<td class="row3"><label><input type="radio" name="rank_special" value="1" id="rank_special" onClick="this.form.rank_min.value='';" {S_SPECIAL_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="rank_special" value="0" {S_SPECIAL_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row3"><label><input type="radio" name="rank_special" value="1" id="rank_special" onClick="this.form.rank_min.value='';" {S_SPECIAL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_special" value="0" {S_SPECIAL_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="rank_min">{L_MIN}: <sup>1</sup></label></td>
@@ -154,7 +163,7 @@
 </tr>
 <tr>
 	<td class="row1"><label for="rank_standard">{L_STANDARD}: <sup>2</sup></label></td>
-	<td class="row3"><label><input type="radio" name="rank_standard" value="1" id="rank_standard" {S_STANDARD_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="rank_standard" value="0" {S_STANDARD_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row3"><label><input type="radio" name="rank_standard" value="1" id="rank_standard" {S_STANDARD_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_standard" value="0" {S_STANDARD_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <!--
 <tr>
@@ -188,9 +197,9 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END ranks_edit -->
+<!-- END _input -->
