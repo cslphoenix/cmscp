@@ -67,7 +67,6 @@
 
 </head>
 <body onload="initLightbox()">
-
 <div id="wrap">
 	<div class="border-left">
 	<div class="border-right">
@@ -75,22 +74,19 @@
 	<div class="border-top-left">
 	<div class="border-top-right">
 	<div class="inside">
-	
 		<div id="page-header">
-
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<th width="35%" align="left">{L_HEAD}</th>
-				<td width="30%" align="center"><a href="{U_ADMIN_INDEX}">&raquo; {L_ADMIN_INDEX}</a><span class="small"> :: </span><a href="{U_PAGE_INDEX}">&raquo; {L_PAGE_INDEX}</a></td>
-				<td width="35%" align="right"><a href="{U_ADMIN_LOGOUT}" target="_parent">&raquo; {L_SESSION}</a><span class="small"> :: </span><a href="{U_LOGOUT}" target="_parent">&raquo; {L_LOGOUT}</a>{L_HEAD_USER}</td>
+				<td width="35%" align="left"><span class="small">{CURRENT_TIME}</span></td>
+				<td width="30%" align="center"><a href="{U_INDEX_ADMIN}">{L_INDEX_ADMIN}</a><span class="small">&nbsp;&bull;&nbsp;</span><a href="{U_INDEX_PAGE}">{L_INDEX_PAGE}</a></td>
+				<td width="35%" align="right"><span class="small"><b>{L_HEAD_USER}</b> [ <a href="{U_LOGOUT}" target="_parent">{L_LOGOUT}</a> ] [ <a href="{U_ADMIN_LOGOUT}" target="_parent">{L_SESSION}</a> ]</span></td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
 			</tr>
 			</table>
-
 		</div>
-		
 		<div id="page-body">
-		
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td width="150" valign="top">
-				
+				<td width="150" valign="top">			

@@ -18,10 +18,10 @@
  *
  *	- Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	- @autor:	Sebastian Frickel Â© 2009
+ *	- @code:	Sebastian Frickel Â© 2009
  *
- *	Spiele (Games)
+ *	Protokoll (Logs)
  *
  */
 
@@ -30,9 +30,5 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-$lang['game']				= 'Spiel';
-$lang['game_explain']		= 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.';
-
-$lang['game_size']			= 'Bildgrö&szlig;e';
 
 ?>
