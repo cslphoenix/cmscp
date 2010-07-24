@@ -24,33 +24,22 @@ body {
 		
 }
 
-table.head {
+table {
 	width:100%;
 	border:none;
-	padding:0;
+	padding:0px;
 }
 
 table.row {
 	border: 1px #CCC solid;
-	width:100%;
-	padding:0;
 }
 
 table.info {
 	border: 1px #CCC solid;
-	width:100%;
-	padding:0px;
 }
 
-table.edit {
+table.update {
 	font-size: 12px;
-	width: 100%;
-	padding: 0;
-}
-table.footer {
-	width:100%;
-	border:none;
-	padding:0;
 }
 
 table.normal {
@@ -116,22 +105,15 @@ td.rowHead {
 
 
 td.row_class1, td.row_class2, td.row_class3	{
-	background-color: #E6EDF0; /* DFE7EB */
 	padding:2px;
 	vertical-align:middle;
 }
 
-td.row_class2 {
-	background-color: #CEE1EB; /* F0EFEF */
-}
+td.row_class1 { background-color: #E6EDF0; /* DFE7EB */ }
+td.row_class2 { background-color: #CEE1EB; /* F0EFEF */ }
+td.row_class3 { background-color: #F0F8FF; /* B8DEEB */ }
 
-td.row_class3 {
-	background-color: #F0F8FF;
-}
-
-/*B8DEEB*/
-
-td.row1, td.row2, td.row3 {
+td.row1, td.row2, td.row3, td.row4 {
 	padding: 5px;
 	vertical-align: middle;
 	border-left:1px #FFF solid;
@@ -141,15 +123,32 @@ td.row1, td.row2, td.row3 {
 td.row1 {
 	font-weight: bold;
 	font-size: 11px;
+	width: 160px;
 }
 
-td.top {
-	vertical-align:top;
+td.row1_1 {
+	font-weight: bold;
+	font-size: 11px;
+	width: auto;
 }
 
-td.mid {
-	vertical-align:middle;
+td.row1:hover {
+	border-right:1px #39F solid;
+	color:#39F;
 }
+
+td.row2:hover {
+	border-left:1px #39F solid;
+	color:#000;
+}
+
+td.row4:hover {
+	color:#000;
+	cursor: default;
+}
+
+td.top { vertical-align:top; }
+td.mid { vertical-align:middle; }
 
 td.row_noentry	{
 	height:21px;
@@ -172,19 +171,6 @@ td.row_noentry2	{
 	background-color: #CEE1EB;
 	padding: 0px 5px;
 	vertical-align:middle;
-}
-
-tr.wihte:hover {background-color:#efefef;}
-
-
-td.row1:hover {
-	border-right:1px #39F solid;
-	color:#39F;
-}
-
-td.row3:hover {
-	border-left:1px #39F solid;
-	color:#000;
 }
 
 input {
@@ -496,3 +482,5 @@ a.copyright:hover	{ color: #fff; text-decoration: underline;}
 {
 	color: #f00 !important;
 }
+
+tr.wihte:hover {background-color:#efefef;}

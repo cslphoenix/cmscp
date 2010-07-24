@@ -127,6 +127,8 @@ define('AUTH_COLEADER',		4);//	Squadleader
 define('AUTH_LEADER',		5);//	Leader
 define('AUTH_UPLOAD',		6);//	Uploader
 
+define('URL',	'url');
+
 //	Newsletter Status
 define('NL_ADD',		0);
 define('NL_CONFIRM',	1);
@@ -228,10 +230,13 @@ define('POST_TRAINING_URL',		'tr');
 define('POST_USERS_URL',		'u');
 define('POST_EVENT_URL',		'e');
 define('POST_CASH_URL',			'c');
-define('POST_CASHUSER_URL',	'cu');
+define('POST_CASH_USERS_URL',	'cu');
 
 define('POST_BUGTRACKER_URL',	'bt');
 define('POST_CHANGELOG_URL',	'cl');
+
+define('POST_DOWNLOAD_URL',		'd');
+define('POST_DOWNLOAD_CAT_URL',	'cat');
 
 //	Forum Status
 define('FORUM_UNLOCKED',	0);
@@ -345,6 +350,10 @@ define('TRAINING_USERS',			$db_prefix . 'training_users');
 define('CASH',						$db_prefix . 'cash');
 define('CASH_BANK',					$db_prefix . 'cash_bank');
 define('CASH_USERS',				$db_prefix . 'cash_users');
+
+/*	Downloads	*/
+define('DOWNLOAD',					$db_prefix . 'downloads');
+define('DOWNLOAD_CAT',				$db_prefix . 'downloads_cat');
 
 
 ?>

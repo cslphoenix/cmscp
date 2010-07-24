@@ -16,19 +16,19 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" colspan="2" width="100%">{L_UPCOMING}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" width="99%" colspan="2">{L_UPCOMING}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN _training_row_new -->
+<!-- BEGIN _training_new_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._training_row_new.IMAGE}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_row_new.DATE}</span>{_display._training_row_new.NAME}</td>
-	<td class="row_class2" align="center"><a href="{_display._training_row_new.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._training_row_new.U_DELETE}">{I_DELETE}</a></td>		
+	<td class="row_class1" align="center">{_display._training_new_row.IMAGE}</td>
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_new_row.DATE}</span>{_display._training_new_row.NAME}</td>
+	<td class="row_class2" align="center"><a href="{_display._training_new_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._training_new_row.U_DELETE}">{I_DELETE}</a></td>		
 </tr>
-<!-- END _training_row_new -->
+<!-- END _training_new_row -->
 <!-- BEGIN _no_entry_new -->
 <tr>
-	<td class="row_noentry" colspan="3" align="center">{L_NOENTRY}</td>
+	<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END _no_entry_new -->
 </table>
@@ -37,19 +37,19 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" colspan="2" width="100%">{L_EXPIRED}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<td class="rowHead" width="99%" colspan="2">{L_UPCOMING}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN _training_row_old -->
+<!-- BEGIN _training_old_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._training_row_old.IMAGE}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_row_old.DATE}</span>{_display._training_row_old.NAME}</td>
-	<td class="row_class2" align="center"><a href="{_display._training_row_old.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._training_row_old.U_DELETE}">{I_DELETE}</a></td>		
+	<td class="row_class1" align="center">{_display._training_old_row.IMAGE}</td>
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_old_row.DATE}</span>{_display._training_old_row.NAME}</td>
+	<td class="row_class2" align="center"><a href="{_display._training_old_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._training_old_row.U_DELETE}">{I_DELETE}</a></td>		
 </tr>
-<!-- END _training_row_old -->
+<!-- END _training_old_row -->
 <!-- BEGIN _no_entry_old -->
 <tr>
-	<td class="row_noentry" align="center" colspan="3">{L_NOENTRY}</td>
+	<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END _no_entry_old -->
 </table>
@@ -62,7 +62,7 @@
 	<form action="{S_ACTION}" method="post">
 	<td align="right"><input type="text" class="post" name="training_vs"></td>
 	<td class="top" align="right" width="1%">{S_TEAMS}</td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 	{S_FIELDS}
 	</form>
 </tr>
@@ -81,7 +81,7 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 
@@ -95,7 +95,16 @@
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="150"><label for="training_vs">{L_VS}: *</label></td>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr>
+	<td class="row1"><label for="training_vs">{L_VS}: *</label></td>
 	<td class="row2"><input class="post" type="text" name="training_vs" id="training_vs" value="{VS}"></td>
 </tr>
 <tr>

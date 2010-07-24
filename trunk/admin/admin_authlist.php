@@ -86,13 +86,12 @@ else
 				);
 			}
 			
-			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-			$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
+			$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
+			$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['authlist_field'], $data['authlist_name']),
-				'L_INFOS'		=> $lang['common_data_input'],
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['authlist']),
+				'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['authlist_field'], $data['authlist_name']),
 				
 				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
@@ -154,7 +153,7 @@ else
 				}
 				else
 				{
-					$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
 				}

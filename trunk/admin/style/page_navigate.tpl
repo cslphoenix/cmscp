@@ -10,7 +10,7 @@
 	</tr>
 	<!-- BEGIN modulerow -->
 	<tr>
-		<td><a href="{catrownav.modulerow.U_ADMIN_MODULE}">&raquo;&nbsp;{catrownav.modulerow.ADMIN_MODULE}</a></td>
+		<td><a href="{catrownav.modulerow.U_MODULE}">&raquo;&nbsp;{catrownav.modulerow.L_MODULE}</a></td>
 	</tr>
 	<!-- END modulerow -->
 	<!-- END catrownav -->

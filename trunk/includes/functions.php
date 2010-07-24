@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -27,7 +27,7 @@
  * Idee von phpBB3
  */
 
-function request($request_var, $request_type = '')
+function request($request_var, $request_type = '', $filter = '')
 {
 	global $_POST, $_GET;
 	
@@ -73,14 +73,38 @@ function request($request_var, $request_type = '')
 				
 				foreach ( $var as $_k => $_v )
 				{
-					$_var = trim(htmlentities(str_replace("'", "\'", $_v), ENT_COMPAT));
-					$var[$_k] = $_var;
+					if ( $_v != '' )
+					{
+						if ( $filter == 'url' )
+						{
+							if ( !preg_match('#^http[s]?:\/\/#i', $_v) )
+							{
+								$_var = 'http://' . $_v;
+							}
+							else if ( $_v == '' )
+							{
+								$_var = '';
+							}
+						}
+						else
+						{
+							$_var = trim(htmlentities(str_replace("'", "\'", $_v), ENT_COMPAT));
+						}
+						
+						$var[$_k] = $_var;
+					}
+					else
+					{
+						$var[$_k] = '';
+					}
 				}
 				
 				break;
 			
 			default:
+				
 				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
+				
 				break;
 		}
 	}
@@ -519,7 +543,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 		define('E_RECOVERABLE_ERROR', 4096);
 	}
 	
-	$msg = '<b>[';
+	$msg = '<div align="left"><b>[';
 	
 	switch ( $errno )
 	{
@@ -568,7 +592,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 	}
 	
 	$msg .= "]:</b> $errstr in <b>$errfile</b> Zeile: <b>$errline</b>";
-    $msg .= "<br />";
+    $msg .= "<br /></div>";
 	
 	if (isset($GLOBALS['error_fatal']))
 	{
@@ -1259,7 +1283,7 @@ function init_userprefs($userdata)
 
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_main.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_newsletter.php');
-	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
+#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_ucp.php');
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_imprint.php');
@@ -1281,9 +1305,10 @@ function init_userprefs($userdata)
 			include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php');
 		}
 		
-		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
-		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_adm.php');
-		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_acp.php');
+	#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
+	#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_adm.php');
+	#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_acp.php');
+		include($root_path . 'language/lang_' . $config['default_lang'] . '/acp/common.php');
 	}
 	
 	board_disable();

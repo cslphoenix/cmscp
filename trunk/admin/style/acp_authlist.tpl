@@ -43,7 +43,7 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 
@@ -60,13 +60,13 @@
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
 			</ul>
 		</div>
 	</th>
 </tr>
 <tr>
-	<td class="row1" width="150"><label for="authlist_name">{L_NAME}: *</label></td>
+	<td class="row1"><label for="authlist_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="authlist_name" id="authlist_name" value="{NAME}"></td>
 </tr>
 <tr>
