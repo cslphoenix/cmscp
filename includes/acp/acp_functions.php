@@ -178,9 +178,10 @@ function orders($mode, $type = '')
 		case TEAMS:			$idfield = 'team_id';		$orderfield	= 'team_order';		break;
 		case GAMES:			$idfield = 'game_id';		$orderfield = 'game_order';		break;
 		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
-		case NEWSCAT:		$idfield = 'newscat_id';	$orderfield = 'newscat_order';								break;
-		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';									break;
+		case NEWSCAT:		$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
+		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
 		case RANKS:			$idfield = 'rank_id';		$orderfield = 'rank_order';		$typefield = 'rank_type';	break;
+		case CATEGORIES:	$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
 		
 		case NAVIGATION:
 			$idfield	= 'navi_id';
@@ -226,11 +227,7 @@ function orders($mode, $type = '')
 			$typefield	= 'navi_type';
 			break;
 			
-		case 'category':
-			$table = CATEGORIES;
-			$idfield = 'cat_id';
-			$orderfield = 'cat_order';
-			break;
+		
 
 		case 'forum':
 			$table = FORUMS;
@@ -317,7 +314,8 @@ function size_dir($path)
 	}
 	else
 	{
-		$size = $lang['Not_available'];
+		$size = 'Not_available';
+#		$size = $lang['Not_available'];
 	}
 	
 	return $size;

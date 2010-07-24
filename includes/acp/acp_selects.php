@@ -120,7 +120,7 @@ function select_box($type, $class, $default = '', $switch = '')
 	}
 	else
 	{
-		$select = '&raquo;&nbsp;' . $lang['msg_select_' . $type ];
+		$select = '&nbsp;&raquo;&nbsp;' . sprintf($lang['msg_sprintf_noentry'], $lang[$type]) . '!';
 	}
 
 	return $select;
@@ -292,25 +292,33 @@ function _select_match($default, $type, $class)
 //	default:	day/month/year/hour/min
 //	value:		select Wert
 //
-function select_date($class, $default, $var, $value)
+function select_date($class, $default, $var, $value, $create = '')
 {
 	$lang;
 	
-	switch ($default)
+	switch ( $default )
 	{
 		case 'day':
 		
-			$select = "<select class=\"$class\" name=\"$var\">";
-			for ( $i = 1; $i < 32; $i++ )
+			if ( isset($create) && $create <= (time()- 86400) )
 			{
-				if ($i < 10)
-				{
-					$i = '0'.$i;
-				}
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= "<option value=\"$i\" $selected>&nbsp;$i&nbsp;</option>";
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
-			$select .= "</select>";
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				for ( $i = 1; $i < 32; $i++ )
+				{
+					if ( $i < 10 )
+					{
+						$i = '0' . $i;
+					}
+					$selected = ( $i == $value ) ? 'selected="selected"' : '';
+				#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+					$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+				}
+				$select .= "</select>";
+			}
 			
 		break;
 		
@@ -324,7 +332,8 @@ function select_date($class, $default, $var, $value)
 					$i = '0'.$i;
 				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+			#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 			
@@ -355,7 +364,8 @@ function select_date($class, $default, $var, $value)
 					$i = '0'.$i;
 				}
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . '>' . $monate[$i] . '&nbsp;</option>';
+			#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $monate[$i] . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 			
@@ -400,7 +410,8 @@ function select_date($class, $default, $var, $value)
 			for ($i=$value; $i < $value+2; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+			#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 		
@@ -412,7 +423,8 @@ function select_date($class, $default, $var, $value)
 			for ($i=0; $i < 24; $i++)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+			#	$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 			
@@ -424,7 +436,8 @@ function select_date($class, $default, $var, $value)
 			for ($i="00"; $i < 60; $i = $i + 15)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+			#	$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 			
@@ -436,7 +449,8 @@ function select_date($class, $default, $var, $value)
 			for ($i="00"; $i < 260; $i = $i + 30)
 			{
 				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+			#	$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
+				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 			

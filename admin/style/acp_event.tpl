@@ -73,7 +73,7 @@ tinyMCE.init({
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 
@@ -90,13 +90,13 @@ tinyMCE.init({
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
 			</ul>
 		</div>
 	</th>
 </tr>
 <tr>
-	<td class="row1" width="23%"><label for="event_title">{L_TITLE}: *</label></td>
+	<td class="row1"><label for="event_title">{L_TITLE}: *</label></td>
 	<td class="row3"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
 </tr>
 <tr>

@@ -53,7 +53,7 @@ else
 	$data_id	= request(POST_GAMES_URL, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
-	$move		= request('move', 1);	
+	$move		= request('move', 1);
 	$path_dir	= $root_path . $settings['path_games'] . '/';
 	$show_index	= '';
 	
@@ -162,7 +162,7 @@ else
 					}
 					else
 					{
-						$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
 					}

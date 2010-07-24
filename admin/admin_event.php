@@ -110,13 +110,12 @@ else
 			}
 			$s_select_level .= '</select>';
 			
-			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-			$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_EVENT_URL . '" value="' . $data_id . '" />';
+			$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_EVENT_URL . '" value="' . $data_id . '" />';
+			$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['event']),
-				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['event'], $data['event_title']),	
-				'L_INFOS'		=> $lang['common_data_input'],
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['event']),
+				'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['event'], $data['event_title']),	
 				
 				'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['event']),
 				'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['event']),
@@ -135,6 +134,7 @@ else
 				'S_HOUR'		=> select_date('selectsmall', 'hour', 'hour', date('H', $data['event_date'])),
 				'S_MIN'			=> select_date('selectsmall', 'min', 'min', date('i', $data['event_date'])),
 				'S_DURATION'	=> select_date('selectsmall', 'duration', 'dmin', ( $data['event_duration'] - $data['event_date'] ) / 60),
+				
 				'S_COMMENT_YES'	=> ( $data['event_comments'] )	? ' checked="checked"' : '',
 				'S_COMMENT_NO'	=> ( !$data['event_comments'] )	? ' checked="checked"' : '',
 				
@@ -191,15 +191,17 @@ else
 							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_event.php?mode=_update&amp;' . POST_EVENT_URL . '=' . $data_id) . '">', '</a>');
 						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'update_event');
 					}
-		#			$monat = request('month', 0);
-		#			$oCache -> sCachePath = './../cache/';
-		#			subnavi_calendar_' . $monat . '_member
-		#			subnavi_calendar_' . $monat . '_guest
+					
+				#	$monat = request('month', 0);
+				#	$oCache -> sCachePath = './../cache/';
+				#	subnavi_calendar_' . $monat . '_member
+				#	subnavi_calendar_' . $monat . '_guest
+		
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
 				{
-					$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
 				}
@@ -218,7 +220,12 @@ else
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-			
+				
+			#	$monat = request('month', 0);
+			#	$oCache -> sCachePath = './../cache/';
+			#	subnavi_calendar_' . $monat . '_member
+			#	subnavi_calendar_' . $monat . '_guest
+		
 				$message = $lang['delete_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'delete_event');
 				message(GENERAL_MESSAGE, $message);
@@ -259,8 +266,6 @@ else
 				'L_TITLE'	=> sprintf($lang['sprintf_title'], $lang['event']),
 				'L_DATE'	=> $lang['common_date'],
 				
-				'NO_ENTRY'	=> $lang['no_entry'],
-				
 				'S_FIELDS'	=> $s_fields,
 				'S_CREATE'	=> append_sid('admin_event.php?mode=_create'),
 				'S_ACTION'	=> append_sid('admin_event.php'),
@@ -286,10 +291,7 @@ else
 					));
 				}
 			}
-			else
-			{
-				$template->assign_block_vars('_display._no_entry', array());
-			}
+			else { $template->assign_block_vars('_display._no_entry', array()); }
 			
 			break;
 	}

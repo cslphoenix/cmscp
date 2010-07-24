@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -216,7 +216,7 @@ function select_date($default, $var, $value)
 			$monate = array(
 				'01'	=> 'Januar',
 				'02'	=> 'Februar',
-				'03'	=> 'M&auml;rz',
+				'03'	=> 'März',
 				'04'	=> 'April',
 				'05'	=> 'Mai',
 				'06'	=> 'Juni',
@@ -247,7 +247,7 @@ function select_date($default, $var, $value)
 			$monate = array(
 				'01'	=> 'Januar',
 				'02'	=> 'Februar',
-				'03'	=> 'M&auml;rz',
+				'03'	=> 'März',
 				'04'	=> 'April',
 				'05'	=> 'Mai',
 				'06'	=> 'Juni',
