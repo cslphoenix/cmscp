@@ -19,7 +19,7 @@ a.info{
 
 a.info:hover{z-index:25; background-color:#ff0}
 
-a.info span{display: none}
+a.info span{_display: none}
 
 a.info:hover span{ /*the span will display just on :hover state*/
     display:block;

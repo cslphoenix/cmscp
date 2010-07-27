@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -27,7 +27,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_network'] || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_network'] )
 	{
 		$module['_headmenu_main']['_submenu_network'] = $filename;
 	}
@@ -39,15 +39,15 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_network';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_upload.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
-	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/network.php');
+	
+	load_lang('network');
 	
 	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
@@ -59,12 +59,13 @@ else
 	$path_dir	= $root_path . $settings['path_network'] . '/';
 	$show_index	= '';
 	
-	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		log_add(LOG_ADMIN, LOG_SEK_NAVI, 'auth_fail' . $current));
+		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_network.php', true));
 	}
@@ -77,7 +78,7 @@ else
 			case '_update':
 			
 				$template->set_filenames(array('body' => 'style/acp_network.tpl'));
-				$template->assign_block_vars('network_edit', array());
+				$template->assign_block_vars('_input', array());
 				
 				if ( $mode == '_create' && !request('submit', 2) )
 				{
@@ -106,19 +107,21 @@ else
 				
 				if ( $data['network_image'] )
 				{
-					$template->assign_block_vars('network_edit.network_image', array());
+					$template->assign_block_vars('_input._image', array());
 				}
 				
 				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $data_id . '" />';
 				
 				$template->assign_vars(array(
-					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['network']),
-					'L_NEW_EDIT'		=> sprintf($lang[$ssprintf], $lang['network_field'], $data['network_name']),
-					'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['network']),
-					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['network']),
-					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['network']),
-					'L_URL'				=> $lang['network_url'],
+					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['network']),
+					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['network_field'], $data['network_name']),
+					'L_INFOS'		=> $lang['common_data_input'],
+					
+					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['network']),
+					'L_TYPE'	=> sprintf($lang['sprintf_type'], $lang['network']),
+					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['network']),
+					'L_URL'		=> $lang['network_url'],
 					
 					'L_TYPE_LINK'		=> $lang['network_link'],
 					'L_TYPE_PARTNER'	=> $lang['network_partner'],
@@ -127,9 +130,9 @@ else
 					'L_VIEW'			=> $lang['common_view'],
 					'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
 					
-					'NAME'				=> $data['network_name'],
-					'URL'				=> $data['network_url'],
-					'IMAGE'				=> $path_dir . $data['network_image'],
+					'NAME'	=> $data['network_name'],
+					'URL'	=> $data['network_url'],
+					'IMAGE'	=> $path_dir . $data['network_image'],
 
 					'S_TYPE_LINK'		=> ( $data['network_type'] == NETWORK_LINK ) ? ' checked="checked"' : '',
 					'S_TYPE_PARTNER'	=> ( $data['network_type'] == NETWORK_PARTNER ) ? ' checked="checked"' : '',
@@ -137,8 +140,8 @@ else
 					'S_VIEW_YES'		=> ( $data['network_view'] ) ? ' checked="checked"' : '',
 					'S_VIEW_NO'			=> ( !$data['network_view'] ) ? ' checked="checked"' : '',
 					
-					'S_FIELDS'			=> $s_fields,
-					'S_ACTION'			=> append_sid('admin_network.php'),
+					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid('admin_network.php'),
 				));
 				
 				if ( request('submit', 2) )
@@ -154,13 +157,7 @@ else
 					$error .= ( !$network_name ) ? $lang['msg_select_name'] : '';
 					$error .= ( !$network_url ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_url'] : '';
 					
-					if ( $error )
-					{
-						$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
-					}					
-					else
+					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
@@ -171,13 +168,12 @@ else
 							
 							$sql = "INSERT INTO " . NETWORK . " (network_name, network_type, network_url, network_view, network_image, network_order)
 										VALUES ('$network_name', '$network_type', '$network_url', '$network_view', '$sql_pic', '$next_order')";
-							if ( !($result = $db->sql_query($sql)) )
+							if ( !$db->sql_query($sql) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
 							$message = sprintf($lang['create_network'], $network_info) . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, sprintf($lang['create_network'], $network_info));
 						}
 						else
 						{
@@ -216,7 +212,7 @@ else
 										network_view	= '$network_view'
 										$sql_order
 									WHERE network_id = $data_id";
-							if ( !($result = $db->sql_query($sql)) )
+							if ( !$db->sql_query($sql) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
@@ -224,13 +220,19 @@ else
 							$message = sprintf($lang['update_network'], $network_info)
 								. sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>')
 								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_network.php?mode=_update&' . POST_NETWORK_URL . '=' . $data_id) . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'update_network');
 						}
 						
 						$oCache -> sCachePath = './../cache/';
 						$oCache -> deleteCache('display_subnavi_network');
 						
+						log_add(LOG_ADMIN, LOG_SEK_NETWORK, 'acp_network_order');
 						message(GENERAL_MESSAGE, $message);
+					}
+					else
+					{
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
 					}
 				}
 			
@@ -243,7 +245,7 @@ else
 				update(NETWORK, 'network', $move, $data_id);
 				orders(NETWORK, $data_type);
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, 'acp_network_order');
+				log_add(LOG_ADMIN, LOG_SEK_NETWORK, $mode . '_navigation');
 				
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_network');
@@ -260,7 +262,7 @@ else
 				if ( $data_id && $confirm )
 				{	
 					$sql = "DELETE FROM " . NETWORK . " WHERE network_id = $data_id";
-					if ( !($result = $db->sql_query($sql)) )
+					if ( !$db->sql_query($sql) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
@@ -269,7 +271,8 @@ else
 					$oCache -> deleteCache('display_subnavi_network');
 				
 					$message = sprintf($lang['delete_network'], $network_info) . sprintf($lang['click_return_network'], '<a href="' . append_sid('admin_network.php') . '">', '</a>');
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NETWORK, sprintf($lang['delete_network'], $info));
+				#	log_add(LOG_ADMIN, LOG_SEK_NETWORK, sprintf($lang['delete_network'], $info));
+					log_add(LOG_ADMIN, LOG_SEK_NETWORK, $mode . '_navigation');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
@@ -282,8 +285,8 @@ else
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
 						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], sprintf($lang['delete_confirm_network'], $network_info), $data['network_name']),
 						
-						'S_FIELDS'		=> $s_fields,
-						'S_ACTION'		=> append_sid('admin_network.php'),
+						'S_FIELDS'	=> $s_fields,
+						'S_ACTION'	=> append_sid('admin_network.php'),
 					));
 				}
 				else
@@ -310,7 +313,7 @@ else
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_network.tpl'));
-	$template->assign_block_vars('display', array());
+	$template->assign_block_vars('_display', array());
 	
 	$s_fields = '<input type="hidden" name="mode" value="_create" />';
 	
@@ -319,13 +322,15 @@ else
 		'L_CREATE'		=> sprintf($lang['sprintf_createn'], $lang['network_field']),
 		'L_EXPLAIN'		=> $lang['network_explain'],
 		
-		'L_LINK'		=> $lang['network_link'],
-		'L_PARTNER'		=> $lang['network_partner'],
-		'L_SPONSOR'		=> $lang['network_sponsor'],
+		'L_LINK'	=> $lang['network_link'],
+		'L_PARTNER'	=> $lang['network_partner'],
+		'L_SPONSOR'	=> $lang['network_sponsor'],
 		
-		'S_FIELDS'		=> $s_fields,
-		'S_CREATE'		=> append_sid('admin_network.php?mode=_create'),
-		'S_ACTION'		=> append_sid('admin_network.php'),
+		'NO_ENTRY'	=> $lang['no_entry'],
+		
+		'S_FIELDS'	=> $s_fields,
+		'S_CREATE'	=> append_sid('admin_network.php?mode=_create'),
+		'S_ACTION'	=> append_sid('admin_network.php'),
 	));
 	
 	$max_link		= get_data_max(NETWORK, 'network_order', 'network_type = ' . NETWORK_LINK);
@@ -342,7 +347,7 @@ else
 		{
 			$network_id	= $data_link[$i]['network_id'];
 				
-			$template->assign_block_vars('display.link_row', array(
+			$template->assign_block_vars('_display._link_row', array(
 				'NAME'		=> $data_link[$i]['network_name'],
 				'SHOW'		=> ( $data_link[$i]['network_view'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
 				
@@ -356,8 +361,7 @@ else
 	}
 	else
 	{
-		$template->assign_block_vars('display.no_entry_link', array());
-		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+		$template->assign_block_vars('_display._no_entry_link', array());
 	}
 	
 	if ( $data_partner )
@@ -366,7 +370,7 @@ else
 		{
 			$network_id	= $data_partner[$i]['network_id'];
 				
-			$template->assign_block_vars('display.partner_row', array(
+			$template->assign_block_vars('_display._partner_row', array(
 				'NAME'		=> $data_partner[$i]['network_name'],
 				'SHOW'		=> ( $data_partner[$i]['network_view'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
 				
@@ -380,8 +384,7 @@ else
 	}
 	else
 	{
-		$template->assign_block_vars('display.no_entry_partner', array());
-		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+		$template->assign_block_vars('_display._no_entry_partner', array());
 	}
 	
 	if ( $data_sponsor )
@@ -390,7 +393,7 @@ else
 		{
 			$network_id	= $data_sponsor[$i]['network_id'];
 				
-			$template->assign_block_vars('display.sponsor_row', array(
+			$template->assign_block_vars('_display._sponsor_row', array(
 				'NAME'		=> $data_sponsor[$i]['network_name'],
 				'SHOW'		=> ( $data_sponsor[$i]['network_view'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
 
@@ -405,12 +408,12 @@ else
 	}
 	else
 	{
-		$template->assign_block_vars('display.no_entry_sponsor', array());
-		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+		$template->assign_block_vars('_display._no_entry_sponsor', array());
 	}
 	
 	$template->pparse('body');
 			
 	include('./page_footer_admin.php');
 }
+
 ?>

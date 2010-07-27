@@ -59,6 +59,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_GAME, 'auth_fail' . $current));
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -98,13 +99,12 @@ else
 					);
 				}
 				
-				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_GAMES_URL . '" value="' . $data_id . '" />';
+				$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_GAMES_URL . '" value="' . $data_id . '" />';
+				$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 		
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['game']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['game'], $data['game_name']),
-					'L_INFOS'		=> $lang['common_data_input'],
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
+					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['game'], $data['game_name']),
 					
 					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['game']),
 					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['game']),
@@ -143,7 +143,6 @@ else
 							}
 							
 							$message = $lang['create_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'create_game');
 						}
 						else
 						{
@@ -156,8 +155,9 @@ else
 							$message = $lang['update_game']
 								. sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>')
 								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_GAMES_URL . '=' . $data_id) . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'update_game');
 						}
+						
+						log_add(LOG_ADMIN, LOG_SEK_GAME, $mode . '_game');
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -177,7 +177,7 @@ else
 				update(GAMES, 'game', $move, $data_id);
 				orders(GAMES, -1);
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_order');
+				log_add(LOG_ADMIN, LOG_SEK_GAME, $mode . '_game');
 				
 				$show_index = true;
 				
@@ -196,7 +196,8 @@ else
 					}
 					
 					$message = $lang['delete_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'delete_game');
+					
+					log_add(LOG_ADMIN, LOG_SEK_GAME, $mode . '_game');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )

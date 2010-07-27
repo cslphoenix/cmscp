@@ -113,7 +113,7 @@ td.row_class1 { background-color: #E6EDF0; /* DFE7EB */ }
 td.row_class2 { background-color: #CEE1EB; /* F0EFEF */ }
 td.row_class3 { background-color: #F0F8FF; /* B8DEEB */ }
 
-td.row1, td.row2, td.row3, td.row4 {
+td.row1, td.row1_1, td.row2, td.row3, td.row4 {
 	padding: 5px;
 	vertical-align: middle;
 	border-left:1px #FFF solid;
@@ -129,10 +129,9 @@ td.row1 {
 td.row1_1 {
 	font-weight: bold;
 	font-size: 11px;
-	width: auto;
 }
 
-td.row1:hover {
+td.row1:hover, td.row1_1:hover {
 	border-right:1px #39F solid;
 	color:#39F;
 }
@@ -209,6 +208,7 @@ input {
 }
 
 .post, .post:link, .post:visited, .post:active,
+.postsmall, .postsmall:link, .postsmall:visited, .postsmall:active,
 .select, .selectsmall {
 	font-family: Verdana, Geneva, sans-serif;
 	color:	#000;
@@ -218,11 +218,16 @@ input {
 	font-size:12px;
 }
 
+.postsmall {
+	font-size: 10px;
+}
+
 .selectsmall {
 	font-size:10px;
 }
 
 .post:hover,
+.postsmall:hover,
 .select:hover,
 .selectsmall:hover {
 	color: #39F;
@@ -284,7 +289,7 @@ row2 FFF
 .big										{ font-size : 12px; }
 .middle										{ font-size : 11px; }
 .small										{ font-size : 10px; }
-.big,.middle,.small							{ color: #536482; }
+/*.big,.middle,.small							{ color: #536482; }*/
 
 a.big,a.middle,a.small						{ color: #03C; text-decoration: none; }
 a.big:hover,a.middle:hover,a.small:hover	{ color: #39F; text-decoration: underline; }

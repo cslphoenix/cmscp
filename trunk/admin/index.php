@@ -55,14 +55,14 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 			if ( $userauth['auth_match'] || $userdata['user_level'] == ADMIN )
 			{
 				$link_update = '<a href="' . append_sid('admin_match.php?mode=_update&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
-				$link_delete = '<a href="' . append_sid('admin_match.php?mode=_delete&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
-				$link_details = '<a href="' . append_sid('admin_match.php?mode=_details&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['icon_option_details'] . '" title="' . $lang['common_details'] . '" alt="" /></a>';
+				$link_detail = '<a href="' . append_sid('admin_match.php?mode=_detail&amp;' . POST_MATCH_URL . '=' . $match_id) . '"><img src="' . $images['icon_option_details'] . '" title="' . $lang['common_details'] . '" alt="" /></a>';
+				$link_delete = '<a href="' . append_sid('admin_match.php?mode=_delete&amp;' . POST_MATCH_URL . '=' . $match_id . '&amp;index=1') . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
 			}
 			else
 			{
 				$link_update = '';
+				$link_detail = '';
 				$link_delete = '';
-				$link_details = '';
 			}
 				
 			$template->assign_block_vars('row_match', array(
@@ -70,7 +70,7 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 				'MATCH_DATE'	=> $match_date,
 				'MATCH_UPDATE'	=> $link_update,
 				'MATCH_DELETE'	=> $link_delete,
-				'MATCH_DETAILS'	=> $link_details,
+				'MATCH_DETAIL'	=> $link_detail,
 			));
 		}
 	}
@@ -179,23 +179,26 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 
 $template->assign_vars(array(
 
-	'L_NEWS'				=> $lang['news'],							 
-	'L_MATCH'				=> $lang['match'],
-	'L_TRAIN'				=> $lang['training'],
-	'L_EVENT'				=> $lang['event'],
-	'L_USERS'				=> $lang['users'],
+	'L_NEWS'			=> $lang['_submenu_news'],							 
+	'L_MATCH'			=> $lang['_submenu_match'],
+	'L_TRAIN'			=> $lang['_submenu_training'],
+	'L_EVENT'			=> $lang['_submenu_event'],
+	'L_USERS'			=> $lang['_submenu_users'],
 	
-	'I_NEWS'				=> $images['news'],
-	'I_MATCH'				=> $images['match'],
-	'I_TRAIN'				=> $images['training'],
-	'I_EVENT'				=> $images['event'],
-	'I_USERS'				=> $images['user'],
+	'U_NEWS'			=> append_sid('admin_news.php'),
+	'U_MATCH'			=> append_sid('admin_match.php'),
+	'U_TRAIN'			=> append_sid('admin_training.php'),
+	'U_EVENT'			=> append_sid('admin_event.php'),
+	'U_USERS'			=> append_sid('admin_user.php'),
 	
-	'U_NEWS'				=> append_sid('admin_news.php'),
-	'U_MATCH'				=> append_sid('admin_match.php'),
-	'U_TRAIN'				=> append_sid('admin_training.php'),
-	'U_EVENT'				=> append_sid('admin_event.php'),
-	'U_USERS'				=> append_sid('admin_user.php'),
+	'I_NEWS'			=> $images['news'],
+	'I_MATCH'			=> $images['match'],
+	'I_TRAIN'			=> $images['match'],
+	'I_EVENT'			=> $images['event'],
+	'I_USERS'			=> $images['user'],
+	
+	'L_WELCOME'			=> $lang['index_cms'],
+	'L_WELCOME_EXPLAIN'	=> $lang['index_cms_explain'],
 	
 	
 							 
@@ -217,33 +220,30 @@ $template->assign_vars(array(
 #	'ICON_USER_UPDATE'		=> $images['user_edit'],
 #	'ICON_USER_DELETE'		=> $images['user_delete'],
 								 
-	
-		
-		'L_WELCOME'			=> $lang['welcome_cms'],
-		'L_ADMIN_INTRO'		=> $lang['welcome_cms_explain'],
 		
 		
-		"L_FORUM_STATS" => $lang['Forum_stats'],
-		"L_WHO_IS_ONLINE" => $lang['Who_is_Online'],
-		"L_USERNAME" => $lang['Username'],
-		"L_LOCATION" => $lang['Location'],
-		"L_LAST_UPDATE" => $lang['Last_updated'],
-		"L_IP_ADDRESS" => $lang['IP_Address'],
-		"L_STATISTIC" => $lang['Statistic'],
-		"L_VALUE" => $lang['Value'],
-		"L_NUMBER_POSTS" => $lang['Number_posts'],
-		"L_POSTS_PER_DAY" => $lang['Posts_per_day'],
-		"L_NUMBER_TOPICS" => $lang['Number_topics'],
-		"L_TOPICS_PER_DAY" => $lang['Topics_per_day'],
-		"L_NUMBER_USERS" => $lang['Number_users'],
-		"L_USERS_PER_DAY" => $lang['Users_per_day'],
-		"L_BOARD_STARTED" => $lang['Board_started'],
-		"L_AVATAR_DIR_SIZE" => $lang['Avatar_dir_size'],
-		"L_DB_SIZE" => $lang['Database_size'], 
-		"L_FORUM_LOCATION" => $lang['Forum_Location'],
-		"L_STARTED" => $lang['Login'],
-		"L_GZIP_COMPRESSION" => $lang['Gzip_compression'])
-	);
+		
+#		"L_FORUM_STATS" => $lang['Forum_stats'],
+#		"L_WHO_IS_ONLINE" => $lang['Who_is_Online'],
+#		"L_USERNAME" => $lang['Username'],
+#		"L_LOCATION" => $lang['Location'],
+#		"L_LAST_UPDATE" => $lang['Last_updated'],
+#		"L_IP_ADDRESS" => $lang['IP_Address'],
+#		"L_STATISTIC" => $lang['Statistic'],
+#		"L_VALUE" => $lang['Value'],
+#		"L_NUMBER_POSTS" => $lang['Number_posts'],
+#		"L_POSTS_PER_DAY" => $lang['Posts_per_day'],
+#		"L_NUMBER_TOPICS" => $lang['Number_topics'],
+#		"L_TOPICS_PER_DAY" => $lang['Topics_per_day'],
+#		"L_NUMBER_USERS" => $lang['Number_users'],
+#		"L_USERS_PER_DAY" => $lang['Users_per_day'],
+#		"L_BOARD_STARTED" => $lang['Board_started'],
+#		"L_AVATAR_DIR_SIZE" => $lang['Avatar_dir_size'],
+#		"L_DB_SIZE" => $lang['Database_size'], 
+#		"L_FORUM_LOCATION" => $lang['Forum_Location'],
+#		"L_STARTED" => $lang['Login'],
+#		"L_GZIP_COMPRESSION" => $lang['Gzip_compression']
+	));
 
 	//
 	// Get forum statistics

@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -44,13 +44,14 @@ else
 	require('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
-	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/settings.php');
 	
-	$sort = ( request('sort', 1) ) ? request('sort', 1) : 'settings_default';
+	load_lang('settings');
+	
+	$sort = ( request('sort', 1) ) ? request('sort', 1) : '_default';
 
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	function _select_path($default = '')
@@ -142,93 +143,46 @@ else
 		{
 			$oCache -> sCachePath = './../cache/';
 			$oCache -> deleteCache('config');
-			$oCache -> deleteCache('settings');
 	
 			$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	
+	$sql = 'SELECT * FROM ' . SETTINGS;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	else
+	{
+		while ( $set = $db->sql_fetchrow($result) )
+		{
+			$settings_name	= $set['settings_name'];
+			$settings_value	= $set['settings_value'];
+			
+			$old[$settings_name] = ( isset($_POST['submit']) )		? str_replace("'", "\'", $settings_value) : $settings_value;
+			$new[$settings_name] = ( isset($_POST[$settings_name]) )	? $_POST[$settings_name] : $old[$settings_name];
+
+			if ( isset($_POST['submit']) )
+			{
+				$sql = "UPDATE " . CONFIG . " SET settings_value = '" . str_replace("\'", "''", $new[$settings_name]) . "' WHERE settings_name = '$settings_name'";
+				if( !$db->sql_query($sql) )
+				{
+					message(GENERAL_ERROR, 'SQL Error: ' . $settings_name, '', __LINE__, __FILE__, $sql);
+				}
+			}
+		}
+		
+		if ( isset($_POST['submit']) )
+		{
+			$oCache -> sCachePath = './../cache/';
+			$oCache -> deleteCache('settings');
 	
-	
-	
-	//
-	//	_config Data
-	//
-//	$sql = 'SELECT * FROM ' . CONFIG;
-//	if ( !($result = $db->sql_query($sql)) )
-//	{
-//		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-//	}
-//	else
-//	{
-//		while( $row_config = $db->sql_fetchrow($result) )
-//		{
-//			$config_name	= $row_config['config_name'];
-//			$config_value	= $row_config['config_value'];
-//			
-//			$default_config[$config_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
-//			
-//			$new_config[$config_name] = ( isset($HTTP_POST_VARS[$config_name]) ) ? $HTTP_POST_VARS[$config_name] : $default_config[$config_name];
-//	
-//			if ($config_name == 'cookie_name')
-//			{
-//				$new_config['cookie_name'] = str_replace('.', '_', $new_config['cookie_name']);
-//			}
-//	
-//			// Attempt to prevent a common mistake with this value,
-//			// http:// is the protocol and not part of the server name
-//			if ($config_name == 'server_name')
-//			{
-//				$new_config['server_name'] = str_replace('http://', '', $new_config['server_name']);
-//			}
-//	
-//			if( isset($HTTP_POST_VARS['submit']) )
-//			{
-//				if ($config_name == 'page_disable_mode' && is_array($new_config['page_disable_mode']))
-//				{
-//					$new_config[$config_name] = implode(',', $new_config[$config_name]);
-//				}
-//				
-//				$sql = 'UPDATE ' . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new_config[$config_name]) . "' WHERE config_name = '$config_name'";
-//				if ( !($result = $db->sql_query($sql)) )
-//				{
-//					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
-//				}
-//			}
-//		}
-//	}
-//	
-//	//
-//	//	_settings Data
-//	//
-//	$sql = 'SELECT * FROM ' . SETTINGS;
-//	if ( !($result = $db->sql_query($sql)) )
-//	{
-//		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
-//	}
-//	else
-//	{
-//		while( $row_settings = $db->sql_fetchrow($result) )
-//		{
-//			$settings_name = $row_settings['settings_name'];
-//			$settings_value = $row_settings['settings_value'];
-//			
-//			$default_settings[$settings_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $settings_value) : $settings_value;
-//			
-//			$new_settings[$settings_name] = ( isset($HTTP_POST_VARS[$settings_name]) ) ? $HTTP_POST_VARS[$settings_name] : $default_settings[$settings_name];
-//
-//			if( isset($HTTP_POST_VARS['submit']) )
-//			{
-//				$sql = 'UPDATE ' . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new_settings[$settings_name]) . "' WHERE settings_name = '$settings_name'";
-//				if ( !($result = $db->sql_query($sql)) )
-//				{
-//					message(GENERAL_ERROR, 'Failed to update general configuration for $config_name', '', __LINE__, __FILE__, $sql);
-//				}
-//			}
-//		}
-//	}
-	
+			$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
+			message(GENERAL_MESSAGE, $message);
+		}
+	}
 	
 //	$style_select = style_select($new['default_style'], 'default_style', "../templates");
 //	$lang_select = language_select($new['default_lang'], 'default_lang', "language");
@@ -304,6 +258,8 @@ else
 		'L_DEFAULT_EXPLAIN'			=> $lang['site_default_explain'],
 		'L_UPLOAD'					=> $lang['site_upload'],
 		'L_UPLOAD_EXPLAIN'			=> $lang['site_upload_explain'],
+		'L_SESSION'					=> $lang['site_session'],
+		'L_SESSION_EXPLAIN'			=> $lang['site_session_explain'],
 		
 		'L_SERVER_NAME'				=> $lang['server_name'],
 		'L_SERVER_NAME_EXPLAIN'		=> $lang['server_name_explain'],
@@ -318,8 +274,6 @@ else
 		'L_DISABLE_PAGE_MODE'		=> $lang['disable_page_mode'],
 		'L_DISABLE_PAGE_REASON'		=> $lang['disable_page_reason'],
 		'L_DISABLE_PAGE_EXPLAIN'	=> $lang['disable_page_explain'],
-		'L_EMAIL_ON-OFF'			=> $lang['email_enabled'],
-		'L_EMAIL_ON-OFF_EXPLAIN'	=> $lang['email_enabled_explain'],
 		
 		'L_PATH_GAMES'				=> $lang['path_games'],
 		'L_PATH_GAMES_EXPLAIN'		=> $lang['path_games_explain'],
@@ -372,6 +326,8 @@ else
 		
 	
 		
+#		'L_EMAIL_ON-OFF'			=> $lang['email_enabled'],
+#		'L_EMAIL_ON-OFF_EXPLAIN'	=> $lang['email_enabled_explain'],
 		
 		
 //		'L_TEAM_LOGO_UPLOAD'				=> $lang['team_logo_upload'],
@@ -601,18 +557,19 @@ else
 		"SMTP_HOST" => $new['smtp_host'],
 		"SMTP_USERNAME" => $new['smtp_username'],
 		"SMTP_PASSWORD" => $new['smtp_password'],
-		*/
 		
 		"L_ENABLED" => $lang['Enabled'], 
 		"L_DISABLED" => $lang['Disabled'], 
-		
-		'S_SORT'			=> $s_sort,
-		'S_ACTION'			=> append_sid('admin_settings.php'),
+		*/
+
+		'S_SORT'	=> $s_sort,
+		'S_ACTION'	=> append_sid('admin_settings.php'),
 	));
 	
 	$template->pparse('body');
 
 	include('./page_footer_admin.php');
+
 }
 
 ?>

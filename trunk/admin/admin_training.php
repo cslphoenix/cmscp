@@ -58,6 +58,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_training'] )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_TRAINING, 'auth_fail' . $current));
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 
@@ -171,7 +172,6 @@ else
 						}
 						
 						$message = $lang['create_training'] . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
-						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'create_training');
 					}
 					else
 					{
@@ -193,12 +193,13 @@ else
 						$message = $lang['update_training']
 							. sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>')
 							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_training.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $data_id) . '">', '</a>');
-						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'update_training');
 					}
 					
 				#	$oCache -> sCachePath = './../cache/';
 				#	$oCache -> deleteCache('subnavi_calendar_' . request('month', 0) . '_member');
 				#	$oCache -> deleteCache('subnavi_training_' . request('month', 0));
+					
+					log_add(LOG_ADMIN, LOG_SEK_TRAINING, $mode . '_training');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -245,7 +246,8 @@ else
 			#	$oCache -> deleteCache('subnavi_training_*');
 				
 				$message = $lang['delete_training'] . sprintf($lang['click_return_training'], '<a href="' . append_sid('admin_training.php') . '">', '</a>');
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_TRAINING, 'delete_training');
+				
+				log_add(LOG_ADMIN, LOG_SEK_TRAINING, $mode . '_training');
 				message(GENERAL_MESSAGE, $message);
 			
 			}

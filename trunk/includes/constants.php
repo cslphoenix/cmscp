@@ -20,9 +20,9 @@ define('ADMIN',		5);
 
 //	Log types
 //	- wo gespeichert wird, Admin, Moderation oder Benutzerbereich
-define('LOG_ADMIN',		0);
-define('LOG_MOD',		1);
-define('LOG_USERS',		2);
+define('LOG_USERS',		1);
+define('LOG_MOD',		2);
+define('LOG_ADMIN',		3);
 
 //	Log Sektion
 //	- Unterteilung im Admin, Moderations oder Benutzerbreich

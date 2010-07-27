@@ -156,7 +156,7 @@
 				<tr>
 					<td width="100%">{SITENAME}</td>
 					<td align="left"><input type="text" class="post" name="username" size="10"></td>
-					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32" autocomplete="off"></td>
+					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32"> <!--  autocomplete="off" --></td>
 					<td align="left"><input type="submit" class="button3" name="login" value=""></td>
 					<td>&nbsp;</td>
 				</tr>

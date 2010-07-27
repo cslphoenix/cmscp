@@ -4,10 +4,16 @@
 </ul>
 </div>
 
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="row4 small">{L_WELCOME_EXPLAIN}</td>
+</tr>
+</table>
+
 <br />
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="top" width="49%">
 		<div id="navcontainer">
@@ -55,7 +61,7 @@
 
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="top" width="49%">
 		<div id="navcontainer">
@@ -103,7 +109,7 @@
 
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="top">
 		<div id="navcontainer">

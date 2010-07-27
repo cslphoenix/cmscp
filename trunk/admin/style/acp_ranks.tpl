@@ -138,8 +138,8 @@
 	</th>
 </tr>
 <tr>
-	<td class="row1" width="150"><label for="rank_title">{L_NAME}: *</label></td>
-	<td class="row3"><input type="text" class="post" name="rank_title" id="rank_title" value="{TITLE}"></td>
+	<td class="row1" width="155"><label for="rank_title">{L_NAME}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="rank_title" id="rank_title" value="{TITLE}"></td>
 </tr>
 <tr>
 	<td class="row1 top"><label for="rank_image">{L_IMAGE}:</label></td>
@@ -155,15 +155,15 @@
 </tr>
 <tr>
 	<td class="row1"><label for="rank_special">{L_SPECIAL}: <sup>1</sup></label></td>
-	<td class="row3"><label><input type="radio" name="rank_special" value="1" id="rank_special" onClick="this.form.rank_min.value='';" {S_SPECIAL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_special" value="0" {S_SPECIAL_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="rank_special" value="1" id="rank_special" onClick="this.form.rank_min.value='';" {S_SPECIAL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_special" value="0" {S_SPECIAL_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="rank_min">{L_MIN}: <sup>1</sup></label></td>
-	<td class="row3"><input type="text" class="post" name="rank_min" id="rank_min" value="{MIN}"></td>
+	<td class="row2"><input type="text" class="post" name="rank_min" id="rank_min" value="{MIN}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="rank_standard">{L_STANDARD}: <sup>2</sup></label></td>
-	<td class="row3"><label><input type="radio" name="rank_standard" value="1" id="rank_standard" {S_STANDARD_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_standard" value="0" {S_STANDARD_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="rank_standard" value="1" id="rank_standard" {S_STANDARD_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_standard" value="0" {S_STANDARD_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <!--
 <tr>
@@ -177,19 +177,19 @@
 <tbody id="forum" style="display:none;">
 <tr>
 	<td class="row1">{L_SPECIAL}:</td>
-	<td class="row3"><input type="radio" name="rank_special" value="1" onClick="this.form.rank_min.value=''; document.getElementById('special').style.display = 'none';" {S_SPECIAL_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="rank_special" value="0" onClick="document.getElementById('special').style.display = '';" {S_SPECIAL_NO} />&nbsp;{L_NO}</td>
+	<td class="row2"><input type="radio" name="rank_special" value="1" onClick="this.form.rank_min.value=''; document.getElementById('special').style.display = 'none';" {S_SPECIAL_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="rank_special" value="0" onClick="document.getElementById('special').style.display = '';" {S_SPECIAL_NO} />&nbsp;{L_NO}</td>
 </tr>
 <tbody id="special" style="display:none;">
 <tr>
 	<td class="row1">{L_MIN}:</td>
-	<td class="row3"><input type="text" class="post" name="rank_min" value="{MIN}"></td>
+	<td class="row2"><input type="text" class="post" name="rank_min" value="{MIN}"></td>
 </tr>
 </tbody>
 </tbody>
 <tbody id="other" style="display:;">
 <tr>
 	<td class="row1">{L_STANDARD}:</td>
-	<td class="row3"><input type="radio" name="rank_standard" value="1" {S_STANDARD_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="rank_standard" value="0" {S_STANDARD_NO} />&nbsp;{L_NO}</td>
+	<td class="row2"><input type="radio" name="rank_standard" value="1" {S_STANDARD_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="rank_standard" value="0" {S_STANDARD_NO} />&nbsp;{L_NO}</td>
 </tr>
 </tbody>
 -->
