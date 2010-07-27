@@ -53,6 +53,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'auth_fail' . $current));
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -71,9 +72,7 @@ else
 			
 			if ( $mode == '_create' && !(request('submit', 2)) )
 			{
-				$data = array(
-					'authlist_name' => request('authlist_name', 2),
-				);
+				$data = array('authlist_name' => request('authlist_name', 2));
 			}
 			else if ( $mode == '_update' && !(request('submit', 2)) )
 			{
@@ -81,9 +80,7 @@ else
 			}
 			else
 			{
-				$data = array(
-					'authlist_name' => request('authlist_name', 2)
-				);
+				$data = array('authlist_name' => request('authlist_name', 2));
 			}
 			
 			$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
@@ -95,7 +92,7 @@ else
 				
 				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
-				'NAME'		=> str_replace('auth_', '', $data['authlist_name']),
+				'NAME'	=> str_replace('auth_', '', $data['authlist_name']),
 				
 				'S_FIELDS'	=> $s_fields,
 				'S_ACTION'	=> append_sid('admin_authlist.php'),
@@ -124,7 +121,6 @@ else
 						}
 						
 						$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
-						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'create_authlist');
 					}
 					else
 					{
@@ -143,12 +139,12 @@ else
 						$message = $lang['create_authlist']
 							. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
 							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id) . '">', '</a>');
-						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'create_authlist');
 					}
 					
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('authlist');
-			
+					
+					log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode . '_authlist');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -183,7 +179,8 @@ else
 				$oCache -> deleteCache('authlist');
 				
 				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'delete_authlist');
+				
+				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode . '_authlist');
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_id && !$confirm )

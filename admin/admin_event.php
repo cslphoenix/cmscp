@@ -56,6 +56,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_event'] )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_EVENT, 'auth_fail' . $current));
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -135,8 +136,8 @@ else
 				'S_MIN'			=> select_date('selectsmall', 'min', 'min', date('i', $data['event_date'])),
 				'S_DURATION'	=> select_date('selectsmall', 'duration', 'dmin', ( $data['event_duration'] - $data['event_date'] ) / 60),
 				
-				'S_COMMENT_YES'	=> ( $data['event_comments'] )	? ' checked="checked"' : '',
-				'S_COMMENT_NO'	=> ( !$data['event_comments'] )	? ' checked="checked"' : '',
+				'S_COMMENT_YES'	=> ( $data['event_comments'] ) ? ' checked="checked"' : '',
+				'S_COMMENT_NO'	=> ( !$data['event_comments'] ) ? ' checked="checked"' : '',
 				
 				'S_FIELDS'	=> $s_fields,
 				'S_ACTION'	=> append_sid('admin_event.php'),
@@ -168,7 +169,6 @@ else
 						}
 						
 						$message = $lang['create_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
-						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'create_event');
 					}
 					else
 					{
@@ -189,14 +189,14 @@ else
 						$message = $lang['update_event']
 							. sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>')
 							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_event.php?mode=_update&amp;' . POST_EVENT_URL . '=' . $data_id) . '">', '</a>');
-						log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'update_event');
 					}
 					
 				#	$monat = request('month', 0);
 				#	$oCache -> sCachePath = './../cache/';
 				#	subnavi_calendar_' . $monat . '_member
 				#	subnavi_calendar_' . $monat . '_guest
-		
+					
+					log_add(LOG_ADMIN, LOG_SEK_EVENT, $mode . '_event');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -227,7 +227,8 @@ else
 			#	subnavi_calendar_' . $monat . '_guest
 		
 				$message = $lang['delete_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_EVENT, 'delete_event');
+				
+				log_add(LOG_ADMIN, LOG_SEK_EVENT, $mode . '_event');
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_id && !$confirm )

@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -347,10 +347,11 @@ function display_navi_teams()
 	{
 		$template->assign_block_vars('subnavi_teams', array());
 		
-		$sql = 'SELECT t.team_id, t.team_name, t.team_fight, g.game_size, g.game_image
-					FROM ' . TEAMS . ' t, ' . GAMES . ' g
-					WHERE t.team_game = g.game_id AND team_navi = 1
-				ORDER BY t.team_order';
+		$sql = "SELECT t.team_id, t.team_name, t.team_fight, g.game_size, g.game_image
+					FROM " . TEAMS . " t, " . GAMES . " g
+					WHERE t.team_game = g.game_id AND t.team_navi = 1
+				ORDER BY t.team_order
+					LIMIT 0, " . $settings['subnavi_teams_limit'];
 //		if ( !($result = $db->sql_query($sql)) )
 //		{
 //			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -365,8 +366,7 @@ function display_navi_teams()
 				$template->assign_block_vars('subnavi_teams.teams_row', array(
 					'I_TEAM'	=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 					'L_TEAM'	=> cut_string($teams[$i]['team_name'], $settings['subnavi_teams_length']),
-					'U_TEAM'	=> append_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
-//					'U_TEAM'	=> append_sid('teams.php?' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+					'U_TEAM'	=> append_sid("teams.php?" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
 				));
 			}
 		}

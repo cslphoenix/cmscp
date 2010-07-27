@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -7,9 +7,9 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_EXPLAIN}</td>
+	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -22,8 +22,8 @@
 </tr>
 <!-- BEGIN link_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{display.link_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.link_row.SHOW} {display.link_row.MOVE_UP} {display.link_row.MOVE_DOWN} <a href="{display.link_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.link_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{_display.link_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display.link_row.SHOW} {_display.link_row.MOVE_UP} {_display.link_row.MOVE_DOWN} <a href="{_display.link_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display.link_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END link_row -->
 <!-- BEGIN no_entry_link -->
@@ -42,8 +42,8 @@
 </tr>
 <!-- BEGIN partner_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{display.partner_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.partner_row.SHOW} {display.partner_row.MOVE_UP} {display.partner_row.MOVE_DOWN} <a href="{display.partner_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.partner_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{_display.partner_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display.partner_row.SHOW} {_display.partner_row.MOVE_UP} {_display.partner_row.MOVE_DOWN} <a href="{_display.partner_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display.partner_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END partner_row -->
 <!-- BEGIN no_entry_partner -->
@@ -62,8 +62,8 @@
 </tr>
 <!-- BEGIN sponsor_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{display.sponsor_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.sponsor_row.SHOW} {display.sponsor_row.MOVE_UP} {display.sponsor_row.MOVE_DOWN} <a href="{display.sponsor_row.U_UPDATE}">{I_UPDATE}</a> <a href="{display.sponsor_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{_display.sponsor_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display.sponsor_row.SHOW} {_display.sponsor_row.MOVE_UP} {_display.sponsor_row.MOVE_DOWN} <a href="{_display.sponsor_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display.sponsor_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END sponsor_row -->
 <!-- BEGIN no_entry_sponsor -->
@@ -73,7 +73,7 @@
 <!-- END no_entry_sponsor -->
 </table>
 
-<table class="footer" border="0" cellspacing="1" cellpadding="2">
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="network_name"></td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
@@ -81,9 +81,9 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END display -->
+<!-- END _display -->
 
-<!-- BEGIN network_edit -->
+<!-- BEGIN _input -->
 <script type="text/javascript">
 // <![CDATA[
 	function update_image(newimage)
@@ -101,47 +101,55 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_REQUIRED}</td>
+	<td class="row4 small">{L_REQUIRED}</td>
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="23%"><label for="network_name">{L_NAME}: *</label></td>
-	<td class="row3"><input type="text" class="post" name="network_name" id="network_name" value="{NAME}"></td>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr><tr>
+	<td class="row1" width="155"><label for="network_name">{L_NAME}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="network_name" id="network_name" value="{NAME}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="network_url">{L_URL}: *</label></td>
-	<td class="row3"><input type="text" class="post" name="network_url" id="network_url" value="{URL}"></td>
+	<td class="row2"><input type="text" class="post" name="network_url" id="network_url" value="{URL}"></td>
 </tr>
 <tr>
 	<td class="row1 top"><label for="network_image">{L_IMAGE}:</label></td>
 	<td class="row3">
-		<!-- BEGIN network_image -->
+		<!-- BEGIN _image -->
 		<img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="network_image_delete">&nbsp;{L_IMAGE_DELETE}<br />
-		<!-- END network_image -->
+		<!-- END _image -->
 		<input type="file" class="post" name="network_image">
 	</td>
 </tr>
 <tr>
 	<td class="row1 top"><label>{L_TYPE}:</label></td>
-	<td class="row3"><label><input type="radio" name="network_type" value="1" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br /><label><input type="radio" name="network_type" value="2" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br /><label><input type="radio" name="network_type" value="3" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label></td> 
+	<td class="row2"><label><input type="radio" name="network_type" value="1" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br /><label><input type="radio" name="network_type" value="2" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br /><label><input type="radio" name="network_type" value="3" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label></td> 
 </tr>
 <tr>
 	<td class="row1"><label for="network_view">{L_VIEW}:</label></td>
-	<td class="row3"><label><input type="radio" name="network_view" id="network_view" value="1" {S_VIEW_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="network_view" value="0" {S_VIEW_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="network_view" id="network_view" value="1" {S_VIEW_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="network_view" value="0" {S_VIEW_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END network_edit -->
+<!-- END _input -->

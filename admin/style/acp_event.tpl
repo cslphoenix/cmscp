@@ -36,7 +36,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="event_title"></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -97,27 +97,27 @@ tinyMCE.init({
 </tr>
 <tr>
 	<td class="row1"><label for="event_title">{L_TITLE}: *</label></td>
-	<td class="row3"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
+	<td class="row2"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="event_level">{L_LEVEL}:</label></td>
-	<td class="row3">{S_LEVEL}</td>
+	<td class="row2">{S_LEVEL}</td>
 </tr>
 <tr>
 	<td class="row1 top"><label for="event_desc">{L_DESC}: *</label></td>
-	<td class="row3"><textarea class="textarea" name="event_desc" id="event_desc" rows="20" style="width:100%">{DESC}</textarea></td>
+	<td class="row2"><textarea class="textarea" name="event_desc" id="event_desc" rows="20" style="width:100%">{DESC}</textarea></td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_DATE}:</label></td>
-	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
+	<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="duration">{L_DURATION}:</label></td>
-	<td class="row3">{S_DURATION}</td>
+	<td class="row2">{S_DURATION}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="event_comments">{L_COMMENTS}:</label></td>
-	<td class="row3"><label><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>

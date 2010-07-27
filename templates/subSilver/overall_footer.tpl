@@ -114,26 +114,25 @@
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_36.png); height:100px; width:27px;"></td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.2_37.png); height:100px; background-repeat:repeat-x;">
 				<table width="100%" height="100" border="0" cellspacing="0" cellpadding="0">
-				<tr style="height:46px;">
-					<td style="padding:15px 10px 5px 10px;" width="100%">&copy; by CMS-Phoenix.de</td>
-					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="imprint.php">Impressum</a></td>
+				<tr style="height:23px;">
+					<td style="padding:10px 5px 0px 5px;" width="100%">&copy; by CMS-Phoenix.de</td>
+					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap">{ADMIN_LINK}</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="contact.php">Kontatkt</a></td>
+					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap"><a href="imprint.php">Impressum</a></td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap">FAQ</td>
+					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap"><a href="contact.php">Kontatkt</a></td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
-					<td style="padding:15px 10px 5px 10px;" nowrap="nowrap"><a href="rss/news.php">RSS-Feed</a></td>
+					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap">FAQ</td>
+					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
+					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap"><a href="rss/news.php">RSS-Feed</a></td>
 				</tr>
 				<tr>
-					<td colspan="8">
+					<td colspan="10">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap="nowrap">&nbsp;</td>
 							<td colspan="6" width="80%" align="center">
-							
 								<div class="copyright">
-									<br>
-									{ADMIN_LINK}
 									<br>
 									powered by<a class="copyright" href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a>&copy; 2009 Phoenix - Version: {VERSION}
 									<br>

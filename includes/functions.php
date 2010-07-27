@@ -996,13 +996,13 @@ function picture_delete($num, $logo_file, $logo_preview_file)
 	return "details_map_pic_$num = '', pic_" . $num . "_preview = '', ";
 }
 
-function log_add($type, $user_id, $user_ip, $sektion, $message, $data='')
+function log_add($type, $sektion, $message, $data = '')
 {
-	global $db;
+	global $db, $userdata;
 	
 	$message = strtolower($message);
 	
-	$sql = "INSERT INTO " . LOGS . " SET log_type = '$type', log_time = " . time() . ", user_id = '$user_id', user_ip = '$user_ip', log_sektion = '$sektion', log_message = '$message', log_data = '$data'";
+	$sql = "INSERT INTO " . LOGS . " SET log_type = '$type', log_time = " . time() . ", user_id = '" . $userdata['user_id'] . "', user_ip = '" . $userdata['session_ip'] . "', log_sektion = '$sektion', log_message = '$message', log_data = '$data'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'log fail', '', __LINE__, __FILE__, $sql);

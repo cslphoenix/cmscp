@@ -24,7 +24,7 @@
 	<td class="row2l">
 	<!-- END light_ELSE -->
 		<table cellpadding="2" cellspacing="1" width="100%" class="bodyline">
-		<tr><td class="row3"><span class="gensmall">{L_STAT_REQUEST}
+		<tr><td class="row2"><span class="gensmall">{L_STAT_REQUEST}
 		</span></td></tr><tr><td class="row1l"><span class="gensmall">&nbsp;{stat_run.STAT_REQUEST}&nbsp;
 		</span></td></tr>
 		</table>

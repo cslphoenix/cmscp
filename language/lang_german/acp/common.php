@@ -181,6 +181,7 @@ $lang['msg_select_no_members']		= 'Keine Member ausgewählt.';
 $lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
 
 $lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
+$lang['select_rank']				= 'Rang setzen:';
 $lang['msg_select_rank_set']		= 'Status %s setzen';
 
 $lang['msg_must_select_authlist']		= 'Wähle ein Authfeld aus';
@@ -415,8 +416,8 @@ $lang['auth_teamspeak']		= 'Teamspeak';
 $lang['auth_training']		= 'Training';	
 $lang['auth_user']			= 'Benutzer';
 $lang['auth_user_perm']		= 'Benutzer Befugnisse';
+$lang['auth_download']		= 'Downloads';
 $lang['auth_download_cat']	= 'Downloadkategorien';
-$lang['auth_downloads']		= 'Downloads';
 
 /*
  *	Forum: kommt noch
@@ -469,8 +470,8 @@ $lang['auths'] = array(
 	'auth_training'			=> $lang['auth_training'],	
 	'auth_user'				=> $lang['auth_user'],
 	'auth_user_perm'		=> $lang['auth_user_perm'],
+	'auth_download'			=> $lang['auth_download'],
 	'auth_download_cat'		=> $lang['auth_download_cat'],
-	'auth_downloads'		=> $lang['auth_downloads'],
 );
 
 $lang['no_members']		= 'Diese Gruppe hat keine Mitglieder.';
