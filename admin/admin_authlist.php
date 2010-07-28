@@ -53,7 +53,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'auth_fail' . $current));
+		log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -136,15 +136,15 @@ else
 							message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$message = $lang['create_authlist']
+						$message = $lang['update_authlist']
 							. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
 							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id) . '">', '</a>');
 					}
 					
-					$oCache -> sCachePath = './../cache/';
-					$oCache -> deleteCache('authlist');
+				#	$oCache -> sCachePath = './../cache/';
+				#	$oCache -> deleteCache('authlist');
 					
-					log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode . '_authlist');
+					log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode, $authlist_name);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -175,12 +175,12 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('authlist');
+			#	$oCache -> sCachePath = './../cache/';
+			#	$oCache -> deleteCache('authlist');
 				
 				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
 				
-				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode . '_authlist');
+				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode, $data['authlist_name']);
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_id && !$confirm )

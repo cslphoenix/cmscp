@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -7,9 +7,9 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_EXPLAIN}</td>
+	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -17,26 +17,26 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" colspan="2">{L_NAME}</td>
-	<td class="rowHead" colspan="3" align="center" width="1%">{L_SETTINGS}</td>
+	<td class="rowHead" width="99%" colspan="2">{L_TITLE}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN news_row -->
+<!-- BEGIN _news_row -->
 <tr>
-	<td class="{display.news_row.CLASS}" align="center" width="1%"><img src="{display.news_row.NEWS_STATUS}" alt=""></td>
-	<td class="{display.news_row.CLASS}" align="left">{display.news_row.NEWS_TITLE}</td>
-	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.NEWS_LINK}</td>
-	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.NEWS_UPDATE}</td>		
-	<td class="{display.news_row.CLASS}" align="center" width="1%">{display.news_row.NEWS_DELETE}</td>
+	<td class="row_class1" align="center" width="1%"><img src="{_display._news_row.STATUS}" alt=""></td>
+	<td class="row_class1" align="left">{_display._news_row.TITLE}</td>
+	<td class="row_class2" align="center">{_display._news_row.LINK} {_display._news_row.UPDATE} {_display._news_row.DELETE}</td>		
 </tr>
-<!-- END news_row -->
-<!-- BEGIN no_entry -->
+<!-- END _news_row -->
+
+
+<!-- BEGIN _no_entry -->
 <tr>
 	<td class="row_noentry" colspan="5" align="center">{NO_ENTRY}</td>
 </tr>
-<!-- END no_entry -->
+<!-- END _no_entry -->
 </table>
 
-<table class="footer" border="0" cellspacing="1" cellpadding="2">
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="news_title"></td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
@@ -44,9 +44,9 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END display -->
+<!-- END _display -->
 
-<!-- BEGIN news_edit -->
+<!-- BEGIN _input -->
 <script type="text/javascript" src="./../includes/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 // <![CDATA[
@@ -110,17 +110,17 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_REQUIRED}</td>
+	<td class="row4 small">{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="23%"><label for="news_title">{L_TITLE}: *</label></td>
+	<td class="row1" width="155"><label for="news_title">{L_TITLE}: *</label></td>
 	<td class="row2" width="77%"><input type="text" class="post" name="news_title" id="news_title" value="{TITLE}"></td>
 </tr>
 <tr>
@@ -151,30 +151,30 @@
 </tr>
 <tr>
 	<td class="row1"><label>{L_PUBLIC_TIME}:</label></td>
-	<td class="row3">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}  </td>
+	<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}  </td>
 </tr>
-<!-- BEGIN public -->
+<!-- BEGIN _public -->
 <tr>
 	<td class="row1"><label for="news_public">{L_PUBLIC}:</label></td>
-	<td class="row3"><label><input type="radio" name="news_public" id="news_public" value="1" {S_PUBLIC_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_public" value="0" {S_PUBLIC_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="news_public" id="news_public" value="1" {S_PUBLIC_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="news_public" value="0" {S_PUBLIC_NO} />&nbsp;{L_NO}</label></td>
 </tr>
-<!-- END public -->
+<!-- END _public -->
 <tr>
 	<td class="row1"><label for="news_comments">{L_COMMENTS}:</label></td>
-	<td class="row3"><label><input type="radio" name="news_comments" id="news_comments" value="1" {S_COMMENTS_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_comments" value="0" {S_COMMENTS_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="news_comments" id="news_comments" value="1" {S_COMMENTS_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="news_comments" value="0" {S_COMMENTS_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="news_intern">{L_INTERN}:</label></td>
-	<td class="row3"><label><input type="radio" name="news_intern" id="news_intern" value="1" {S_INTERN_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_intern" value="0" {S_INTERN_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="news_intern" id="news_intern" value="1" {S_INTERN_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="news_intern" value="0" {S_INTERN_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="news_rating">{L_RATING}:</label></td>
-	<td class="row3"><label><input type="radio" name="news_rating" id="news_rating" value="1" {S_RATING_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="news_rating" value="0" {S_RATING_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="news_rating" id="news_rating" value="1" {S_RATING_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="news_rating" value="0" {S_RATING_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END news_edit -->
+<!-- END _input -->

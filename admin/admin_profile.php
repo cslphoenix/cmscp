@@ -16,19 +16,20 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
 if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
+	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['main']['profile'] = $filename;
+		$module['_headmenu_main']['_submenu_profile'] = $filename;
 	}
 	
 	return;
@@ -38,37 +39,40 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$current	= '_submenu_profile';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
+
+	load_lang('profile');
 	
-	$start			= ( request('start') ) ? request('start', 0) : 0;
-	$start			= ( $start < 0 ) ? 0 : $start;
-	$profile_id		= request(POST_PROFILE_URL, 0);
-	$cat_id			= request(POST_CATEGORY_URL, 0);
-	$cat_type		= request('cat_type');
-	$confirm		= request('confirm');
-	$mode			= request('mode');
-	$move			= request('move');
-	$show_index		= '';
+	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start		= ( $start < 0 ) ? 0 : $start;
+	$data_id	= request(POST_PROFILE_URL, 0);
+	$data_cat	= request(POST_CATEGORY_URL, 0);
+	$data_type	= request('cat_type', 0);
+	$confirm	= request('confirm', 1);
+	$mode		= request('mode', 1);
+	$move		= request('move', 1);
+	$show_index	= '';
 	
-	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		log_add(LOG_ADMIN, LOG_SEK_PROFILE, 'auth_fail' . $current);
+		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_profile.php', true));
 	}
 	
-	if ( request('add_profile') || request('addcategory') )
+	if ( request('add_profile', 2) || request('addcategory', 2) )
 	{
-		$mode = ( request('add_profile') ) ? '_create_field' : '_create_cat';
+		$mode = ( request('add_profile', 2) ) ? '_create' : '_create_cat';
 	
-		if ( $mode == '_create_field' )
+		if ( $mode == '_create' )
 		{
 			list($cat_id) = each(request('add_profile'));
 			$cat_id = intval($cat_id);
@@ -77,11 +81,12 @@ else
 		}
 	}
 	
-	function _select_category($select)
+#	function _select_category($select)
+	function select_cat($select)
 	{
 		global $db;
 		
-		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+		$sql = "SELECT * FROM " . PROFILE_CATEGORY . " ORDER BY category_order ASC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -90,36 +95,31 @@ else
 		$category = '<select name="profile_category" id="profile_category" class="post">';
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$selected = ( $row['profile_category_id'] == $select ) ? ' selected="selected"' : '';
-			$category .= '<option value="' . $row['profile_category_id'] . '"' . $selected . '>' . $row['category_name'] . '&nbsp;</option>';
+			$selected = ( $row['category_id'] == $select ) ? ' selected="selected"' : '';
+			$category .= '<option value="' . $row['category_id'] . '"' . $selected . '>' . $row['category_name'] . '&nbsp;</option>';
 		}
 		$category .= '</select>';
 		
 		return $category;	
 	}
 	
+	
+	
 	if ( !empty($mode) )
 	{
 		switch ( $mode )
 		{
-			case '_create_field':
-			case '_update_field':
+			case '_create':
+			case '_update':
 			
 				$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
-				$template->assign_block_vars('profile_edit', array());
+				$template->assign_block_vars('_input', array());
 				
-				if ( $mode == '_update_field' )
+				if ( $mode == '_create' && !(request('submit', 2)) )
 				{
-					$profile	= get_data('profile', $profile_id, 0);
-					$new_mode	= '_update_field_save';
-					
-					$profile_name	= $profile['profile_name'];
-					$cat_id			= $profile['profile_category'];
-				}
-				else
-				{
-					$profile = array (
-						'profile_category'		=> _select_category($cat_id),
+					$data = array(
+						'profile_name'			=> request('profile_name', 2),
+						'profile_category'		=> select_cat($cat_id),
 						'profile_field'			=> '',
 						'profile_type'			=> '0',
 						'profile_language'		=> '0',
@@ -128,38 +128,50 @@ else
 						'profile_show_register'	=> '0',
 						'profile_required'		=> '0',
 					);
-					$new_mode = '_create_field_save';
 				}
-
-				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $profile_id . '" />';
+				else if ( $mode == '_update' && !(request('submit', 2)) )
+				{
+					$data = get_data(PROFILE, $data_id, 1);
+				}
+				else
+				{
+					$data = array(
+						'profile_name'			=> request('profile_name', 2),
+						'profile_category'		=> request('profile_category', 0),
+						'profile_field'			=> request('profile_field', 2),
+						'profile_type'			=> request('profile_type', 0),
+						'profile_language'		=> request('profile_language', 0),
+						'profile_show_guest'	=> request('profile_show_guest', 0),
+						'profile_show_member'	=> request('profile_show_member', 0),
+						'profile_show_register'	=> request('profile_show_register', 0),
+						'profile_required'		=> request('profile_required', 0),
+					);
+				}
+				
+				$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $data_id . '" />';
+				$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 
 				$template->assign_vars(array(
-					'L_PROFILE_HEAD'		=> sprintf($lang['sprintf_head'], $lang['profile']),
-					'L_PROFILE_NEW_EDIT'	=> ( $mode == '_create' ) ? sprintf($lang['sprintf_add'], $lang['profile_field']) : sprintf($lang['sprintf_edit'], $lang['profile_field']),
-					
-					'L_PROFILE_NAME'		=> sprintf($lang['sprintf_name'], $lang['profile_field']),
-					'L_PROFILE_FIELD'		=> $lang['profile_field'],
-					'L_PROFILE_CATEGORY'	=> $lang['common_category'],
-					'L_PROFILE_LANGUAGE'	=> $lang['common_language'],
-					'L_PROFILE_TYPE'		=> sprintf($lang['sprintf_type'], $lang['profile_field']),
-					'L_PROFILE_SHOW'		=> $lang['common_view'],
-					'L_PROFILE_SGUEST'		=> $lang['profile_show_guest'],
-					'L_PROFILE_SMEMBER'		=> $lang['profile_show_member'],
-					'L_PROFILE_SREG'		=> $lang['profile_show_reg'],
-					'L_PROFILE_REQUIRED'	=> $lang['profile_required'],
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
+					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['profile_field'], $data['profile_name']),
+				
+					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['profile_field']),
+					'L_FIELD'		=> $lang['profile_field'],
+					'L_CATEGORY'	=> $lang['common_category'],
+					'L_LANGUAGE'	=> $lang['common_language'],
+					'L_TYPE'		=> sprintf($lang['sprintf_type'], $lang['profile_field']),
+					'L_SHOW'		=> $lang['common_view'],
+					'L_SGUEST'		=> $lang['profile_show_guest'],
+					'L_SMEMBER'		=> $lang['profile_show_member'],
+					'L_SREG'		=> $lang['profile_show_reg'],
 
-					'L_TYPE_TEXT'			=> $lang['profile_type_text'],
-					'L_TYPE_AREA'			=> $lang['profile_type_area'],
+					'L_TYPE_TEXT'	=> $lang['profile_type_text'],
+					'L_TYPE_AREA'	=> $lang['profile_type_area'],
 					
-					'L_NO'					=> $lang['common_no'],
-					'L_YES'					=> $lang['common_yes'],
-					'L_RESET'				=> $lang['common_reset'],
-					'L_SUBMIT'				=> $lang['common_submit'],
+					'NAME'	=> $profile_name,
+					'FIELD'	=> str_replace('profile_', '', $profile['profile_field']),
 					
-					'PROFILE_NAME'			=> $profile_name,
-					'PROFILE_FIELD'			=> str_replace('profile_', '', $profile['profile_field']),
-					
-					'S_PROFILE_CATEGORY'	=> _select_category($cat_id),
+					'S_CATEGORY'	=> select_cat($cat_id),
 					
 					'S_TYPE_TEXT'	=> ( $profile['profile_type'] ) ? ' checked="checked"' : '',
 					'S_TYPE_AREA'	=> ( !$profile['profile_type'] ) ? ' checked="checked"' : '',
@@ -174,10 +186,84 @@ else
 					'S_REQ_YES'		=> ( $profile['profile_required'] ) ? ' checked="checked"' : '',
 					'S_REQ_NO'		=> ( !$profile['profile_required'] ) ? ' checked="checked"' : '',
 
-					'S_FIELDS'		=> $s_fields,
-					'S_PROFILE_ACTION'		=> append_sid('admin_profile.php'),
+					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid('admin_profile.php'),
 				));
-			
+				
+				if ( request('submit', 2) )
+				{
+					$profile_name			= request('profile_name', 2);
+					$profile_category		= request('profile_category', 0);
+					$profile_field			= request('profile_field', 2);
+					$profile_type			= request('profile_type', 0);
+					$profile_language		= request('profile_language', 0);
+					$profile_show_guest		= request('profile_show_guest', 0);
+					$profile_show_member	= request('profile_show_member', 0);
+					$profile_show_register	= request('profile_show_register', 0);
+					$profile_required		= request('profile_required', 0);
+						
+					$error =	( !$profile_name ) ? $lang['msg_select_name'] : '';
+					$error .= 	( !$profile_field ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_profilefield'] : '';
+					
+					str_replace('profile_', '', $profile_field);
+					
+					if ( !$error )
+					{
+						if ( $mode == '_create' )
+						{
+							$max	= get_data_max(PROFILE, 'profile_order', 'profile_category = ' . $profile_category);
+							$next	= $max['max'] + 10;
+							
+							$sql = "INSERT INTO " . PROFILE . " (profile_name, profile_field, profile_category, profile_type, profile_language, profile_show_guest, profile_show_member, profile_show_register, profile_required, profile_order)
+										VALUES ('$profile_name', 'profile_" . $profile_field . "', '$profile_category', '$profile_type', '$profile_language', '$profile_sguest', '$profile_smember', '$profile_sregister', '$profile_required', '$next')";
+							if ( !$db->sql_query($sql) )
+							{
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+						#	$typ = ( $profile_type ) ? 'VARCHAR( 255 ) NOT NULL' : 'TEXT NOT NULL';
+							
+							$sql = "ALTER TABLE " . PROFILE_DATA . " ADD '$profile_field' 'profile_" . $profile_field . "'" . ( $profile_type ) ? "VARCHAR( 255 ) NOT NULL" : "TEXT NOT NULL" ;
+							if ( !$db->sql_query($sql) )
+							{
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+						}
+						else
+						{
+							$sql = "UPDATE " . AUTHLIST . " SET authlist_name = 'auth_" . $authlist_name . "' WHERE authlist_id = $data_id";
+							if ( !$db->sql_query($sql) )
+							{
+								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$sql = "ALTER TABLE " . GROUPS . " CHANGE '" . $data['authlist_name'] . "' 'auth_" . $authlist_name . "' TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+							if ( !$db->sql_query($sql) )
+							{
+								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$message = $lang['update_authlist']
+								. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
+								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id) . '">', '</a>');
+						}
+						
+						$oCache -> sCachePath = './../cache/';
+						$oCache -> deleteCache('authlist');
+						
+						log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode . '_authlist');
+						message(GENERAL_MESSAGE, $message);
+					}
+					else
+					{
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+					}
+				}
+				
 				$template->pparse('body');
 				
 				break;
@@ -221,7 +307,7 @@ else
 				}
 				
 				$message = $lang['create_profile'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'create_profile');
+				log_add(LOG_ADMIN, LOG_SEK_PROFILE, 'create_profile');
 				message(GENERAL_MESSAGE, $message);
 
 				break;
@@ -290,7 +376,7 @@ else
 				}
 				
 				$message = $lang['update_profile'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'update_profile');
+				log_add(LOG_ADMIN, LOG_SEK_PROFILE, 'update_profile');
 				message(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -307,7 +393,7 @@ else
 //						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 //					}
 //				
-//					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_delete', $profile['profile_name']);
+//					log_add(LOG_ADMIN, LOG_SEK_PROFILE, 'acp_profile_delete', $profile['profile_name']);
 //					
 //					$message = $lang['delete_profile'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
 //					message(GENERAL_MESSAGE, $message);
@@ -339,109 +425,117 @@ else
 //				$template->pparse('body');
 //				
 //				break;
+
 			
-//			case '_order_cat':
-//				
-//				update(PROFILE_CATEGORY, 'game', $move, $game_id);
-//				orders('games', -1);
-//				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_GAME, 'acp_game_order');
-//				$show_index = TRUE;
-//				
-//				break;
-//				
+			
 			case '_order_field':
 				
-				update(PROFILE, 'profile', $move, $profile_id);
-				orders('profile', $cat_type);
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_PROFILE, 'acp_profile_order');
+				update(PROFILE, 'profile', $move, $data_id);
+				orders(PROFILE, $data_type);
+				
+				log_add(LOG_ADMIN, LOG_SEK_PROFILE, $mode);
+				
 				$show_index = TRUE;
 				
 				break;
 				
-			case 'addcat':
-				
-				if ( trim($HTTP_POST_VARS['categoryname']) == '' )
-				{
-					message(GENERAL_ERROR, "Can't create a category without a name");
-				}
-	
-				$sql = 'SELECT MAX(category_order) AS max_order
-							FROM ' . PROFILE_CATEGORY;
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$row = $db->sql_fetchrow($result);
-	
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
-	
-				$sql = 'INSERT INTO ' . PROFILE_CATEGORY . " (category_name, category_order)
-						VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['categoryname']) . "', $next_order)";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-	
-				$message = $lang['create_profile_cat'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-				
-			case 'editcat':
-
+			case '_create_cat':
+			case '_update_cat':
+			
 				$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
-				$template->assign_block_vars('category_edit', array());
+				$template->assign_block_vars('_input_cat', array());
 				
-				$cat_id = intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
-				$row = get_data('profile_category', $cat_id, 0);
+				if ( $mode == '_create_cat' && !(request('submit', 2)) )
+				{
+					$data = array('category_name' => request('category_name', 2));
+				}
+				else if ( $mode == '_update_cat' && !(request('submit', 2)) )
+				{
+					$data = get_data(PROFILE_CATEGORY, $data_cat, 1);
+				}
+				else
+				{
+					$data = array('category_name' => request('category_name', 2));
+				}
 				
-				$s_fields = '<input type="hidden" name="mode" value="update_cat" />';
-				$s_fields .= '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
+				$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $data_cat . '" />';
+				$s_sprintf	= ( $mode == '_create_cat' ) ? 'sprintf_add' : 'sprintf_edit';
 	
 				$template->assign_vars(array(
-					'L_PROFILE_HEAD'			=> $lang['profile_head'],
-					'L_PROFILE_EDIT_CATEGORY'	=> $lang['profile_edit_categpry'],
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile_cat']),
+					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['profile_cat'], $data['category_name']),
 											 
-					'L_CATEGORY'		=> $lang['Category'], 
+					'L_NAME'	=> sprintf($lang['sprintf_category'], $lang['profile_field']),
 					
-	
-					'CAT_TITLE'			=> $row['category_name'],
-	
-					'S_FIELDS' => $s_fields, 
+					'NAME'	=> $data['category_name'],
 					
-					'S_SUBMIT_VALUE' => $lang['profile_cat_edit'], 
-					'S_PROFILE_ACTION' => append_sid('admin_profile.php'))
-				);
+					'S_FIELDS'	=> $s_fields, 
+					'S_ACTION'	=> append_sid('admin_profile.php'),
+				));
+				
+				if ( request('submit', 2) )
+				{
+					$category_name = request('category_name', 2);
+					
+					$error = ( !$category_name ) ? $lang['msg_select_name'] : '';
+					
+					if ( !$error )
+					{
+						if ( $mode == '_create_cat' )
+						{
+							$max	= get_data_max(PROFILE_CATEGORY, 'category_order', '');
+							$next	= $max_row['max'] + 10;
+							
+							$sql = "INSERT INTO " . PROFILE_CATEGORY . " (category_name, category_order) VALUES ('$category_name', '$next')";
+							if ( !$db->sql_query($sql) )
+							{
+								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$message = $lang['create_profile_cat'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
+						}
+						else
+						{
+							$sql = "UPDATE " . PROFILE_CATEGORY . " SET category_name = '$category_name' WHERE category_id = $data_cat";
+							if ( !$db->sql_query($sql) )
+							{
+								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							$message = $lang['update_profile_cat']
+								. sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>')
+								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_profile.php?mode=_update_cat&amp;' . POST_CATEGORY_URL . '=' . $data_cat) . '">', '</a>');
+						}
+						
+						log_add(LOG_ADMIN, LOG_SEK_PROFILE, $mode . '_profile');
+						message(GENERAL_MESSAGE, $message);
+					}
+					else
+					{
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+					}
+				}
 				
 				$template->pparse('body');
-	
+			
 				break;
-	
-			case 'update_cat':
+			
+			case '_order_cat':
 				
-				if ( trim($HTTP_POST_VARS['categoryname']) == '' )
-				{
-					message(GENERAL_ERROR, "Can't create a category without a name");
-				}
+				update(PROFILE_CATEGORY, 'category', $move, $data_cat);
+				orders(PROFILE_CATEGORY);
 				
-				$sql = "UPDATE " . PROFILE_CATEGORY . "
-							SET
-								category_name = '" . str_replace("\'", "''", $HTTP_POST_VARS['category_name']) . "'
-							WHERE profile_category_id = " . intval($HTTP_POST_VARS[POST_CATEGORY_URL]);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-	
-				$message = $lang['update_profile_cat'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
-				message(GENERAL_MESSAGE, $message);
-	
+				log_add(LOG_ADMIN, LOG_SEK_PROFILE, $mode);
+				
+				$show_index = TRUE;
+				
 				break;
 				
 			default:
 			
-				message(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['msg_no_module_select']);
 				
 				break;
 		}
@@ -454,35 +548,29 @@ else
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
-	$template->assign_block_vars('display', array());
+	$template->assign_block_vars('_display', array());
 			
 	$template->assign_vars(array(
-		'L_PROFILE_HEAD'		=> sprintf($lang['sprintf_head'], $lang['profile']),
-		'L_PROFILE_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['profile_field']),
-		'L_PROFILE_NAME'		=> sprintf($lang['sprintf_name'], $lang['profile']),
-		'L_PROFILE_EXPLAIN'		=> $lang['profile_explain'],
+	#	'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['profile']),
+	#	'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['profile_field']),
+	#	'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['profile']),
+	#	'L_EXPLAIN'		=> $lang['profile_explain'],
+	#	
+		'L_CAT_CREATE'	=> sprintf($lang['sprintf_create'], $lang['profile_cat']), 
 		
-		'L_CREATE_CATEGORY'	=> $lang['create_category'], 
-		
-		'L_UPDATE'			=> $lang['common_update'],
-		'L_DELETE'			=> $lang['common_delete'],
-		
-		'L_MOVE_UP'			=> $lang['move_up'], 
-		'L_MOVE_DOWN'		=> $lang['move_down'], 
-		
-		'S_ACTION'		=> append_sid('admin_profile.php'),
+		'S_ACTION'	=> append_sid('admin_profile.php'),
 	));
 	
-	$max_order = get_data_max(PROFILE_CATEGORY, 'category_order', '');
-	$cats_data = get_data_array(PROFILE_CATEGORY, '', 'category_order', 'ASC');
+	$max	= get_data_max(PROFILE_CATEGORY, 'category_order', '');
+	$cats	= get_data_array(PROFILE_CATEGORY, '', 'category_order', 'ASC');
 	
-	if ( $cats_data )
+	if ( $cats )
 	{
-		$profile_data = get_data_array(PROFILE, '', 'profile_category, profile_order', '');
+		$profile = get_data_array(PROFILE, '', 'profile_category, profile_order', '');
 		
-		for ( $i = 0; $i < count($cats_data); $i++ )
+		for ( $i = 0; $i < count($cats); $i++ )
 		{
-			$cat_id = $cats_data[$i]['profile_category_id'];
+			$cat_id = $cats[$i]['category_id'];
 			
 			$sql = "SELECT MAX(profile_order) AS max$cat_id FROM " . PROFILE . " WHERE profile_category = $cat_id";
 			if ( !($result = $db->sql_query($sql)) )
@@ -491,40 +579,39 @@ else
 			}
 			$max_profile = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
-
-			$template->assign_block_vars('display.catrow', array( 
-				'CATEGORY_ID'			=> $cat_id,
-				'CATEGORY_NAME'			=> $cats_data[$i]['category_name'],
+			
+			$template->assign_block_vars('_display._cat_row', array( 
+				'CAT_ID'	=> $cat_id,
+				'CAT_NAME'	=> $cats[$i]['category_name'],
 				
-				'CATEGORY_MOVE_UP'		=> ( $cats_data[$i]['category_order'] != '10' )					? '<a href="' . append_sid('admin_profile.php?mode=_order&amp;move=-15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'CATEGORY_MOVE_DOWN'	=> ( $cats_data[$i]['category_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_profile.php?mode=_order&amp;move=15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'CAT_MOVE_UP'	=> ( $cats[$i]['category_order'] != '10' )			? '<a id="right" href="' . append_sid('admin_profile.php?mode=_order_cat&amp;move=-15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img width="75%" src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<a id="right" href="' . append_sid('admin_profile.php') .'"><img width="75%" src="' . $images['icon_acp_arrow_u2'] . '" alt="" /></a>',
+				'CAT_MOVE_DOWN'	=> ( $cats[$i]['category_order'] != $max['max'] )	? '<a id="right" href="' . append_sid('admin_profile.php?mode=_order_cat&amp;move=15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img width="75%" src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<a id="right" href="' . append_sid('admin_profile.php') .'"><img width="75%" src="' . $images['icon_acp_arrow_d2'] . '" alt="" /></a>',
 				
-				'U_CAT_UPDATE'			=> append_sid('admin_profile.php?mode=_update_cat&amp;' . POST_CATEGORY_URL . '=' .$cat_id),
-				'U_CAT_DELETE'			=> append_sid('admin_profile.php?mode=_delete_cat&amp;' . POST_CATEGORY_URL . '=' .$cat_id),
+				'U_CAT_UPDATE'	=> append_sid('admin_profile.php?mode=_update_cat&amp;' . POST_CATEGORY_URL . '=' .$cat_id),
+				'U_CAT_DELETE'	=> append_sid('admin_profile.php?mode=_delete_cat&amp;' . POST_CATEGORY_URL . '=' .$cat_id),
 				
-				'S_ADD_PROFILE_SUBMIT'	=> "add_profile[$cat_id]",
-				'S_ADD_PROFILE_NAME'		=> "profile_name[$cat_id]",
+				'S_ADD_PROFILE_NAME'	=> 'profile_name[' . $cat_id . ']',
+				'S_ADD_PROFILE_SUBMIT'	=> 'add_profile[' . $cat_id . ']',
 
 			));
 	
-			for($j = 0; $j < count($profile_data); $j++)
+			for ( $j = 0; $j < count($profile); $j++ )
 			{
-				$profile_id = $profile_data[$j]['profile_id'];
+				$profile_id = $profile[$j]['profile_id'];
 
-				if ( $profile_data[$j]['profile_category'] == $cat_id )
+				if ( $profile[$j]['profile_category'] == $cat_id )
 				{
-					$template->assign_block_vars('display.catrow.profilerow',	array(
-						'CLASS'				=> ( $j % 2 ) ? 'row_class1' : 'row_class2',
+					$template->assign_block_vars('_display._cat_row._profile_row', array(
+						'NAME'	=> $profile[$j]['profile_name'],
+						'FIELD'	=> $profile[$j]['profile_field'],
 						
-						'PROFILE_NAME'		=> $profile_data[$j]['profile_name'],
-						'PROFILE_FIELD'		=> $profile_data[$j]['profile_field'],
-						
-						'PROFILE_MOVE_UP'	=> ( $profile_data[$j]['profile_order'] != '10' )							? '<a href="' . append_sid('admin_profile.php?mode=_order_field&amp;cat_type=' . $cat_id . '&amp;move=-15&amp;' . POST_PROFILE_URL . '=' . $profile_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-						'PROFILE_MOVE_DOWN'	=> ( $profile_data[$j]['profile_order'] != $max_profile['max'.$cat_id] )	? '<a href="' . append_sid('admin_profile.php?mode=_order_field&amp;cat_type=' . $cat_id . '&amp;move=15&amp;' . POST_PROFILE_URL . '=' . $profile_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+						'MOVE_UP'	=> ( $profile[$j]['profile_order'] != '10' )						? '<a href="' . append_sid('admin_profile.php?mode=_order_field&amp;cat_type=' . $cat_id . '&amp;move=-15&amp;' . POST_PROFILE_URL . '=' . $profile_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+						'MOVE_DOWN'	=> ( $profile[$j]['profile_order'] != $max_profile['max'.$cat_id] )	? '<a href="' . append_sid('admin_profile.php?mode=_order_field&amp;cat_type=' . $cat_id . '&amp;move=15&amp;' . POST_PROFILE_URL . '=' . $profile_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
-						'U_PROFILE_PERMIS' => append_sid('admin_profileauth.php?' . POST_PROFILE_URL . '=' .$profile_id . '&amp;adv=1'),
-						'U_PROFILE_UPDATE' => append_sid('admin_profile.php?mode=_update_field&amp;' . POST_PROFILE_URL . '=' . $profile_id),
-						'U_PROFILE_DELETE' => append_sid('admin_profile.php?mode=_delete_field&amp;' . POST_PROFILE_URL . '=' . $profile_id),
+						'U_PERMISSION' => append_sid('admin_profileauth.php?' . POST_PROFILE_URL . '=' . $profile_id . '&amp;adv=1'),
+						
+						'U_UPDATE' => append_sid('admin_profile.php?mode=_update&amp;' . POST_PROFILE_URL . '=' . $profile_id),
+						'U_DELETE' => append_sid('admin_profile.php?mode=_delete&amp;' . POST_PROFILE_URL . '=' . $profile_id),
 					));
 				}
 			}
@@ -569,7 +656,7 @@ else
 		//
 		for ( $i = 0; $i < $total_categories; $i++ )
 		{
-			$cat_id = $category_rows[$i]['profile_category_id'];
+			$cat_id = $category_rows[$i]['category_id'];
 			
 			$sql = "SELECT MAX(profile_order) AS max$cat_id FROM " . PROFILE . " WHERE profile_category = $cat_id";
 			if ( !($result = $db->sql_query($sql)) )
@@ -599,8 +686,8 @@ else
 				'U_CAT_MOVE_DOWN'		=> append_sid('admin_profile.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id'),
 				'U_VIEWCAT'				=> append_sid($root_path."profile.php?" . POST_CATEGORY_URL . "=$cat_id"),
 		
-				'CATEGORY_MOVE_UP'		=> ( $category_rows[$i]['category_order'] != '10' )				? '<a href="' . append_sid('admin_profile.php?mode=_order&amp;move=-15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'CATEGORY_MOVE_DOWN'	=> ( $category_rows[$i]['category_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_profile.php?mode=_order&amp;move=15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'CATEGORY_MOVE_UP'		=> ( $category_rows[$i]['category_order'] != '10' )				? '<a href="' . append_sid('admin_profile.php?mode=_order&amp;move=-15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'CATEGORY_MOVE_DOWN'	=> ( $category_rows[$i]['category_order'] != $max_order['max'] )	? '<a href="' . append_sid('admin_profile.php?mode=_order&amp;move=15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'S_ADD_PROFILE_SUBMIT'	=> "add_profile[$cat_id]",
 				'S_ADD_PROFILE_NAME'		=> "profile_name[$cat_id]",

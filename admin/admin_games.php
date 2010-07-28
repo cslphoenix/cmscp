@@ -59,7 +59,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_GAME, 'auth_fail' . $current));
+		log_add(LOG_ADMIN, LOG_SEK_GAME, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -157,7 +157,7 @@ else
 								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_GAMES_URL . '=' . $data_id) . '">', '</a>');
 						}
 						
-						log_add(LOG_ADMIN, LOG_SEK_GAME, $mode . '_game');
+						log_add(LOG_ADMIN, LOG_SEK_GAME, $mode, $game_name);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -177,7 +177,7 @@ else
 				update(GAMES, 'game', $move, $data_id);
 				orders(GAMES, -1);
 				
-				log_add(LOG_ADMIN, LOG_SEK_GAME, $mode . '_game');
+				log_add(LOG_ADMIN, LOG_SEK_GAME, $mode);
 				
 				$show_index = true;
 				
@@ -197,7 +197,7 @@ else
 					
 					$message = $lang['delete_game'] . sprintf($lang['click_return_game'], '<a href="' . append_sid('admin_games.php') . '">', '</a>');
 					
-					log_add(LOG_ADMIN, LOG_SEK_GAME, $mode . '_game');
+					log_add(LOG_ADMIN, LOG_SEK_GAME, $mode, $data['game_name']);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
@@ -254,8 +254,8 @@ else
 		'S_ACTION'	=> append_sid('admin_games.php'),
 	));
 	
-	$maxo = get_data_max(GAMES, 'game_order', '');
-	$data = get_data_array(GAMES, 'game_id != -1', 'game_order', 'ASC');
+	$max	= get_data_max(GAMES, 'game_order', '');
+	$data	= get_data_array(GAMES, 'game_id != -1', 'game_order', 'ASC');
 	
 	if ( $data )
 	{
@@ -267,10 +267,10 @@ else
 			
 			$template->assign_block_vars('_display._game_row', array(
 				'NAME'	=> $data[$i]['game_name'],
-				'IMAGE'	=> '<img src="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" alt="">',
+				'IMAGE'	=> '<img src="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $data[$i]['game_order'] != '10' )			? '<a href="' . append_sid('admin_games.php?mode=_order&amp;move=-15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data[$i]['game_order'] != $maxo['max'] )	? '<a href="' . append_sid('admin_games.php?mode=_order&amp;move=15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data[$i]['game_order'] != '10' )			? '<a href="' . append_sid('admin_games.php?mode=_order&amp;move=-15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data[$i]['game_order'] != $max['max'] )	? '<a href="' . append_sid('admin_games.php?mode=_order&amp;move=15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid('admin_games.php?mode=_update&amp;' . POST_GAMES_URL . '=' . $game_id),
 				'U_DELETE'	=> append_sid('admin_games.php?mode=_delete&amp;' . POST_GAMES_URL . '=' . $game_id),

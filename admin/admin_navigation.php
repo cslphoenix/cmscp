@@ -58,7 +58,7 @@ else
 		
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_navi'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_NAVI, 'auth_fail' . $current));
+		log_add(LOG_ADMIN, LOG_SEK_NAVI, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -191,13 +191,13 @@ else
 					{
 						if ( $mode == '_create' )
 						{
-							$max_row	= get_data_max(NAVIGATION, 'navi_order', '');
-							$next_order	= $max_row['max'] + 10;
+							$max	= get_data_max(NAVIGATION, 'navi_order', '');
+							$next	= $max['max'] + 10;
 							
 							$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
 							
 							$sql = "INSERT INTO " . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
-										VALUES ('$navi_name', '$navi_type', '$navi_url', '$navi_lang', '$navi_show', '$navi_url', '$navi_intern', '$next_order')";
+										VALUES ('$navi_name', '$navi_type', '$navi_url', '$navi_lang', '$navi_show', '$navi_url', '$navi_intern', '$next')";
 							if ( !$db->sql_query($sql) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -228,7 +228,7 @@ else
 								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_navigation.php?mode=_update&' . POST_NAVIGATION_URL . '=' . $data_id) . '">', '</a>');
 						}
 						
-						log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode . '_navigation');
+						log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode, $navi_name);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -248,7 +248,7 @@ else
 				update(NAVIGATION, 'navi', $move, $data_id);
 				orders(NAVIGATION, $data_type);
 				
-				log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode . '_navigation');
+				log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode);
 				
 				$show_index = TRUE;
 	
@@ -347,7 +347,7 @@ else
 									
 					$message = $lang['update_navigation_set'] . sprintf($lang['click_return_navigation_set'], '<a href="' . append_sid('admin_navigation.php?mode=_settings') . '">', '</a>');
 					
-					log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode . '_navigation');
+					log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode);
 					message(GENERAL_MESSAGE, $message);
 				}
 			
@@ -369,7 +369,7 @@ else
 				
 					$message = $lang['delete_navigation'] . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
 					
-					log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode . '_navigation');
+					log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode, $data['navi_name']);
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -398,7 +398,7 @@ else
 			
 			default:
 			
-				message(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['msg_no_module_select']);
 				
 				break;
 		}
@@ -456,11 +456,11 @@ else
 				
 			$template->assign_block_vars('_display._main_row', array(
 				'TITLE'		=> ( $data_main[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_main[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="">' : '<img src="' . $images['icon_option_lang2'] . '" alt="">',
-				'SHOW'		=> ( $data_main[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
+				'LANG'		=> ( $data_main[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $data_main[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $data_main[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MAIN . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_main[$i]['navi_order'] != $max_main['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MAIN . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_main[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MAIN . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_main[$i]['navi_order'] != $max_main['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MAIN . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
@@ -481,11 +481,11 @@ else
 				
 			$template->assign_block_vars('_display._clan_row', array(
 				'TITLE'		=> ( $data_clan[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_clan[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="">' : '<img src="' . $images['icon_option_lang2'] . '" alt="">',
-				'SHOW'		=> ( $data_clan[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
+				'LANG'		=> ( $data_clan[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $data_clan[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $data_clan[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_clan[$i]['navi_order'] != $max_clan['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_clan[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_clan[$i]['navi_order'] != $max_clan['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
@@ -506,11 +506,11 @@ else
 				
 			$template->assign_block_vars('_display._com_row', array(
 				'TITLE'		=> ( $data_com[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_com[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="">' : '<img src="' . $images['icon_option_lang2'] . '" alt="">',
-				'SHOW'		=> ( $data_com[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
+				'LANG'		=> ( $data_com[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $data_com[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $data_com[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_COM . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_com[$i]['navi_order'] != $max_com['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_COM . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_com[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_COM . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_com[$i]['navi_order'] != $max_com['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_COM . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
@@ -531,11 +531,11 @@ else
 				
 			$template->assign_block_vars('_display._misc_row', array(
 				'TITLE'		=> ( $data_misc[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_misc[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="">' : '<img src="' . $images['icon_option_lang2'] . '" alt="">',
-				'SHOW'		=> ( $data_misc[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
+				'LANG'		=> ( $data_misc[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $data_misc[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $data_misc[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MISC . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_misc[$i]['navi_order'] != $max_misc['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MISC . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_misc[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MISC . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_misc[$i]['navi_order'] != $max_misc['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MISC . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
@@ -556,11 +556,11 @@ else
 				
 			$template->assign_block_vars('_display._user_row', array(
 				'TITLE'		=> ( $data_user[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_user[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="">' : '<img src="' . $images['icon_option_lang2'] . '" alt="">',
-				'SHOW'		=> ( $data_user[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="">' : '<img src="' . $images['icon_option_show2'] . '" alt="">',
+				'LANG'		=> ( $data_user[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $data_user[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $data_user[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_USER . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_user[$i]['navi_order'] != $max_user['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_USER . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_user[$i]['navi_order'] != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_USER . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_user[$i]['navi_order'] != $max_user['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_USER . '&amp;move=15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
 				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),

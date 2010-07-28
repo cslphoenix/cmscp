@@ -18,8 +18,8 @@
  *
  *	- Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel Â© 2009
- *	- @code:	Sebastian Frickel Â© 2009
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
  *
  *	Clankasse (Cash)
  *
@@ -31,6 +31,7 @@ if ( !defined('IN_CMS') )
 }
 
 $lang['cash']			= 'Clankasse';
+$lang['cash_user']		= 'Benutzereintrag';
 $lang['cash_explain']	= 'Clankassen verwaltung!';
 
 $lang['cash_field']		= 'Beitrags';
@@ -42,7 +43,7 @@ $lang['type_voice']		= 'Voiceserver';
 $lang['type_other']		= 'sonstiges';
 
 $lang['cash_user_add']		= 'Neuen Benutzereintrag erstellen';
-$lang['cash_user_new_add']	= 'Benutzer hinzufÃ¼gen';
+$lang['cash_user_new_add']	= 'Benutzer hinzufügen';
 $lang['cash_user_edit']		= 'Benutzer bearbeiten';
 
 $lang['cash_username']			= 'Benutzer';
@@ -53,7 +54,7 @@ $lang['cash_user_interval_o']	= 'Einmalig';
 
 $lang['cash_interval_month']	= 'Monatlich';
 $lang['cash_interval_2weeks']	= 'alle 2 Wochen';
-$lang['cash_interval_week']		= 'WÃ¶chentlich';
+$lang['cash_interval_week']		= 'Wöchentlich';
 
 $lang['bankdata']			= 'Bankdaten';
 $lang['bankdata_bank']		= 'Kreditinstitut';
@@ -61,7 +62,7 @@ $lang['bankdata_number']	= 'Kontonummer';
 $lang['bankdata_blz']		= 'Bankleitzahl';
 $lang['bankdata_name']		= 'Inhaber';
 $lang['bankdata_reason']	= 'Verwendungszweck';
-$lang['bankdata_delete']	= 'Bankdaten l&ouml;schen';
+$lang['bankdata_delete']	= 'Bankdaten löschen';
 
 $lang['msg_select_name']	= 'Bitte Inhaber des Kontos eintragen';
 $lang['msg_select_bank']	= 'Bitte Bankname eintragen';

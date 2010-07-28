@@ -58,7 +58,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_training'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_TRAINING, 'auth_fail' . $current));
+		log_add(LOG_ADMIN, LOG_SEK_TRAINING, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 

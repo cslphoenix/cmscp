@@ -64,6 +64,7 @@ $lang['_submenu_users']			= 'Benutzer';
 $lang['_submenu_teamspeak']		= 'Teamspeak';
 $lang['_submenu_downloads']		= 'Downloads';
 $lang['_submenu_forum']			= 'Forum';
+$lang['_submenu_profile']		= 'Profilefelder';
 
 
 /*
@@ -179,6 +180,7 @@ $lang['msg_select_text']			= 'Bitte einen Text eingeben';
 $lang['msg_select_no_users']		= 'Keine Benutzer ausgewählt.';
 $lang['msg_select_no_members']		= 'Keine Member ausgewählt.';
 $lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
+$lang['msg_select_profilefield']	= 'Bitte Profilefeld eintragen!';
 
 $lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
 $lang['select_rank']				= 'Rang setzen:';
@@ -188,6 +190,7 @@ $lang['msg_must_select_authlist']		= 'Wähle ein Authfeld aus';
 $lang['msg_must_select_game']			= 'Wähle ein Spiel aus';
 
 $lang['msg_sprintf_noentry']		= 'Es sind keine %s eingetragen';
+$lang['msg_no_module_select']		= 'Keine Funktion ausgewählt!';
 
 
 /*
@@ -353,6 +356,9 @@ $lang['click_return_user_groups']		= '<br><br><strong>%s&laquo; Benutzer (Benutz
 $lang['click_return_cash']				= '<br><br><strong>%s&laquo; Clankassen Administration%s</strong>';
 $lang['click_return_gallery']			= '<br><br><strong>%s&laquo; Galerie Administration%s</strong>';
 $lang['click_return_gallery_pic']		= '<br><br><strong>%s&laquo; Galerie Übersicht%s</strong>';
+
+$lang['click_return_profile']			= '<br><br><strong>%s&laquo; Profilefelder Übersicht%s</strong>';
+
 $lang['click_return_update']			= '<br><br><strong>%s&laquo; zurück%s</strong>';
 
 $lang['index_header']		= 'Adminbereich von: %s :: %s';

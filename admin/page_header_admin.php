@@ -48,10 +48,12 @@ $template->assign_vars(array(
 	'L_GOTO_PAGE'		=> $lang['Goto_page'],
 	
 	
-	'I_UPDATE'			=> '<img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" >',
-	'I_DELETE'			=> '<img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" >',
-	'I_MEMBER'			=> '<img src="' . $images['icon_option_member'] . '" title="' . $lang['common_members'] . '" alt="" >',
-	'I_DETAILS'			=> '<img src="' . $images['icon_option_details'] . '" title="' . $lang['common_details'] . '" alt="" >',
+	'I_UPDATE'			=> '<img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" />',
+	'I_UPDATE_SMALL'	=> '<img width="75%" src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" />',
+	'I_DELETE'			=> '<img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" />',
+	'I_DELETE_SMALL'	=> '<img width="75%" src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" />',
+	'I_MEMBER'			=> '<img src="' . $images['icon_option_member'] . '" title="' . $lang['common_members'] . '" alt="" />',
+	'I_DETAILS'			=> '<img src="' . $images['icon_option_details'] . '" title="' . $lang['common_details'] . '" alt="" />',
 	
 	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['page_timezone'])),
 

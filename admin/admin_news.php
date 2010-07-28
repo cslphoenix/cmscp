@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -27,7 +27,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_news'] || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] || $userauth['auth_news_public'] )
 	{
 		$module['_headmenu_news']['_submenu_news'] = $filename;
 	}
@@ -39,14 +39,14 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_news';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
-	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/news.php');
+	
+	load_lang('news');
 	
 	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
@@ -56,12 +56,13 @@ else
 	$path_dir	= $root_path . $settings['path_newscat'] . '/';
 	$show_index	= '';
 	
-	if ( !$userauth['auth_news'] && $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && ( !$userauth['auth_news'] || !$userauth['auth_news_public'] ) )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		log_add(LOG_ADMIN, LOG_SEK_NEWS, 'auth_fail' . $current);
+		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_news.php', true));
 	}
@@ -78,7 +79,6 @@ else
 		$news_cat = $db->sql_fetchrow($result);
 		
 		$newscat_image = ( $news_cat['newscat_image'] ) ? $news_cat['newscat_image'] : '-1';
-;
 		
 		return $newscat_image;
 	}
@@ -107,7 +107,7 @@ else
 			case '_update':
 			
 				$template->set_filenames(array('body' => 'style/acp_news.tpl'));
-				$template->assign_block_vars('news_edit', array());
+				$template->assign_block_vars('_input', array());
 				
 				if ( $mode == '_create' && !(request('submit', 2)) )
 				{
@@ -133,7 +133,7 @@ else
 					
 				#	$newscat_image = select_newscat_name($data['news_category']);
 					
-					debug($data);
+				#	debug($data);
 				#	debug($newscat_image);
 				
 					$data['news_category'] = $data['newscat_image'];
@@ -147,10 +147,10 @@ else
 						'news_title'		=> request('news_title', 2),
 						'news_category'		=> request('newscat_image', 1),
 						'news_text'			=> request('news_text', 3),
-					#	'news_url'			=> request('news_url', 4),
+						'news_url'			=> request('news_url', 4, URL),
 					#	'news_link'			=> request('news_link', 4),
-						'news_url'			=> $_POST['news_url'],
-						'news_link'			=> $_POST['news_link'],
+					#	'news_url'			=> $_POST['news_url'],
+					#	'news_link'			=> $_POST['news_link'],
 						'user_id'			=> request('user_id', 0),
 						'match_id'			=> request('match_id', 0),
 						'news_time_create'	=> $news_time_create,
@@ -165,9 +165,9 @@ else
 				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_NEWS_URL . '" value="' . $data_id . '" />';
 			
-				if ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN )
+				if ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )
 				{
-					$template->assign_block_vars('news_edit.public', array());				
+					$template->assign_block_vars('_input._public', array());				
 				}
 				
 				/* alter code 
@@ -279,11 +279,11 @@ else
 					'S_INTERN_NO'		=> ( !$data['news_intern'] )	? ' checked="checked"' : '',
 					'S_INTERN_YES'		=> ( $data['news_intern'] )		? ' checked="checked"' : '',
 					
-					'S_DAY'		=> select_date('day', 'day',		date('d', $data['news_time_public'])),
-					'S_MONTH'	=> select_date('month', 'month',	date('m', $data['news_time_public'])),
-					'S_YEAR'	=> select_date('year', 'year',		date('Y', $data['news_time_public'])),
-					'S_HOUR'	=> select_date('hour', 'hour',		date('H', $data['news_time_public'])),
-					'S_MIN'		=> select_date('min', 'min',		date('i', $data['news_time_public'])),
+					'S_DAY'		=> select_date('selectsmall', 'day', 'day',		date('d', $data['news_time_public'])),
+					'S_MONTH'	=> select_date('selectsmall', 'month', 'month',	date('m', $data['news_time_public'])),
+					'S_YEAR'	=> select_date('selectsmall', 'year', 'year',		date('Y', $data['news_time_public'])),
+					'S_HOUR'	=> select_date('selectsmall', 'hour', 'hour',		date('H', $data['news_time_public'])),
+					'S_MIN'		=> select_date('selectsmall', 'min', 'min',		date('i', $data['news_time_public'])),
 					
 					'NEWSCAT_PATH'	=> $path_dir,
 					'IMAGE'			=> ( $mode == '_create' && !(request('submit', 2)) ) ? '' : $path_dir . $imageorid,
@@ -297,6 +297,8 @@ else
 				
 				if ( request('submit', 2) )
 				{
+					debug($_POST);
+					
 					$match_id			= request('match_id', 0);
 					$news_text			= request('news_text', 3);
 					$news_title			= request('news_title', 2);
@@ -304,41 +306,58 @@ else
 					$news_intern		= request('news_intern', 0);
 					$news_rating		= request('news_rating', 0);
 					$news_category		= select_newscat_id(request('newscat_image', 1));
+					$news_url			= request('news_url', 4, URL);
+				#	$news_link			= request('news_link', 4);
 				#	$news_url			= $_POST['news_url'];
 				#	$news_link			= $_POST['news_link'];
 					$news_time_public	= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
-					/*	
-					for ( $i = 0; $i < count($news_url); $i++ )
-					{
-						if ( empty($news_url[$i]) )
-						{
-							unset($news_url[$i]);
-							unset($news_name[$i]);
-						}
-					}
 					
 					if ( $news_url )
 					{
-						array_multisort($news_url);
-						array_multisort($news_name);
-						
-						for ( $j = 0; $j < count($news_url); $j++ )
-						{	
-							if ( !preg_match('#^http[s]?:\/\/#i', $news_url[$j]) )
+						for ( $i = 0; $i < count($news_url); $i++ )
+						{
+							if ( $news_url[$i] == 'http://' || empty($news_url[$i]) )
 							{
-								$news_url[$j] = 'http://' . $news_url[$j];
+								unset($news_url[$i]);
+						#		unset($news_name[$i]);
 							}
 						}
 						
+						array_multisort($news_url);
+						
 						$news_url = serialize($news_url);
-						$news_name = serialize($news_name);
+						
+						debug($news_url);
 					}
-					else
-					{
-						$news_url = '';
-						$news_name = '';
-					}
-					*/	
+					
+					
+					
+						
+				#	if ( $news_url )
+				#	{					
+				#		array_multisort($news_url);
+				#	#	array_multisort($news_name);
+				#		
+				#	#	for ( $j = 0; $j < count($news_url); $j++ )
+					#	{	
+				#	#		if ( !preg_match('#^http[s]?:\/\/#i', $news_url[$j]) )
+				#	#		{
+				#	#			$news_url[$j] = 'http://' . $news_url[$j];
+				#	#		}
+				#	#	}
+				#		
+				#		debug($news_url, 'test 2');
+				#		
+				#		$news_url = serialize($news_url);
+				#	#	$news_name = serialize($news_name);
+				#	}
+				#	else
+				#	{
+				#		$news_url = '';
+				#	#	$news_name = '';
+				#	}
+					
+					debuge($news_url);
 					
 					$error = '';
 					$error .= ( !$news_title )				? $lang['msg_select_title'] : '';
@@ -347,7 +366,7 @@ else
 					
 					if ( $error )
 					{
-						$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
 					}					
@@ -373,10 +392,10 @@ else
 							}
 							
 							$oCache -> sCachePath = './../cache/';
-							$oCache -> deleteCache('display_navi_news');
+							$oCache -> deleteCache('_display_navi_news');
 							
 							$message = $lang['create_news'] . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'create_news');
+							log_add(LOG_ADMIN, LOG_SEK_NEWS, 'create_news');
 						}
 						else
 						{
@@ -400,10 +419,10 @@ else
 							}
 							
 							$oCache -> sCachePath = './../cache/';
-							$oCache -> deleteCache('display_navi_news');
+							$oCache -> deleteCache('_display_navi_news');
 							
 							$message = $lang['update_news'] . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'update_news');
+							log_add(LOG_ADMIN, LOG_SEK_NEWS, 'update_news');
 						}
 						message(GENERAL_MESSAGE, $message);						
 					}
@@ -426,9 +445,9 @@ else
 				}
 				
 				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('display_navi_news');
+				$oCache -> deleteCache('_display_navi_news');
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'change_news_public');
+				log_add(LOG_ADMIN, LOG_SEK_NEWS, 'change_news_public');
 				
 				$show_index = TRUE;
 				
@@ -447,10 +466,10 @@ else
 					}
 					
 					$oCache -> sCachePath = './../cache/';
-					$oCache -> deleteCache('display_navi_news');
+					$oCache -> deleteCache('_display_navi_news');
 					
 					$message = $lang['delete_news'] . sprintf($lang['click_return_news'], '<a href="' . append_sid('admin_news.php') . '">', '</a>');
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'delete_news');
+					log_add(LOG_ADMIN, LOG_SEK_NEWS, 'delete_news');
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -492,19 +511,21 @@ else
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_news.tpl'));
-	$template->assign_block_vars('display', array());
+	$template->assign_block_vars('_display', array());
 	
 	$s_fields = '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['news']),
-		'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['news']),
-		'L_NAME'		=> sprintf($lang['sprintf_title'], $lang['news']),
-		'L_EXPLAIN'		=> $lang['news_explain'],
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['news']),
+		'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['news']),
+		'L_NAME'	=> sprintf($lang['sprintf_title'], $lang['news']),
+		'L_EXPLAIN'	=> $lang['news_explain'],
 		
-		'S_FIELDS'		=> $s_fields,
-		'S_CREATE'		=> append_sid('admin_news.php?mode=_create'),
-		'S_ACTION'		=> append_sid('admin_news.php'),
+		'NO_ENTRY'	=> $lang['no_entry'],
+		
+		'S_FIELDS'	=> $s_fields,
+		'S_CREATE'	=> append_sid('admin_news.php?mode=_create'),
+		'S_ACTION'	=> append_sid('admin_news.php'),
 	));
 	
 	$news_data = get_data_array(NEWS, '', 'news_id', 'DESC');
@@ -513,21 +534,21 @@ else
 	{
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($news_data)); $i++ )
 		{
-			if ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN )
+			if ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )
 			{
-				$name = ( $news_data[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="">' : '<img src="' . $images['icon_acp_privat'] . '" alt="">';
+				$name = ( $news_data[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="" />' : '<img src="' . $images['icon_acp_privat'] . '" alt="" />';
 				$link = '<a href="' . append_sid('admin_news.php?mode=_switch&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $name . '</a>';
 			}
 			else
 			{
-				$name = '<img src="' . $images['icon_acp_denied'] . '" alt="">';
+				$name = '<img src="' . $images['icon_acp_denied'] . '" alt="" />';
 				$link = $name;
 			}
 			
-			if ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN || $news_data[$i]['user_id'] == $userdata['user_id'] )
+			if ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] || $news_data[$i]['user_id'] == $userdata['user_id'] )
 			{
-				$update	= '<a href="' . append_sid('admin_news.php?mode=_update&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $lang['common_update'] . '</a>';
-				$delete	= '<a href="' . append_sid('admin_news.php?mode=_delete&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'">' . $lang['common_delete'] . '</a>';
+				$update	= '<a href="' . append_sid('admin_news.php?mode=_update&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
+				$delete	= '<a href="' . append_sid('admin_news.php?mode=_delete&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) .'"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
 			}
 			else
 			{
@@ -535,26 +556,24 @@ else
 				$delete	= $lang['common_delete'];
 			}
 			
-			$template->assign_block_vars('display.news_row', array(
-				'CLASS' 		=> ( $i % 2 ) ? 'row_class1' : 'row_class2',
+			$template->assign_block_vars('_display._news_row', array(
+				'TITLE'		=> ( $news_data[$i]['news_intern'] ) ? sprintf($lang['sprintf_news_title'], $news_data[$i]['news_title']) : $news_data[$i]['news_title'],
+				'STATUS'	=> ( $news_data[$i]['news_public'] ) ? $images['icon_acp_public'] : $images['icon_acp_privat'],
 				
-				'NEWS_TITLE'	=> ( $news_data[$i]['news_intern'] ) ? sprintf($lang['sprintf_news_title'], $news_data[$i]['news_title']) : $news_data[$i]['news_title'],
-				'NEWS_STATUS'	=> ( $news_data[$i]['news_public'] ) ? $images['icon_acp_public'] : $images['icon_acp_privat'],
-				
-				'NEWS_LINK'		=> $link,
-				'NEWS_UPDATE'	=> $update,
-				'NEWS_DELETE'	=> $delete,
+				'LINK'		=> $link,
+				'UPDATE'	=> $update,
+				'DELETE'	=> $delete,
 			));
 		}
 	}
 	else
 	{
-		$template->assign_block_vars('display.no_entry', array());
-		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+		$template->assign_block_vars('_display._no_entry', array());
 	}
 
 	$template->pparse('body');
 
 	include('./page_footer_admin.php');
 }
+
 ?>
