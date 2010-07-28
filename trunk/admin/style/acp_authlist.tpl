@@ -31,7 +31,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="authlist_name" value=""></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}

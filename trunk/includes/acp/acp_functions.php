@@ -50,7 +50,7 @@ function get_data($mode, $id, $type)
 		case NEWSCAT:			$idfield = 'newscat_id';			break;
 		case NEWSLETTER:		$idfield = 'newsletter_id';			break;
 		case PROFILE:			$idfield = 'profile_id';			break;
-		case PROFILE_CATEGORY:	$idfield = 'profile_category_id';	break;
+		case PROFILE_CATEGORY:	$idfield = 'category_id';	break;
 		case PROFILE_DATA:		$idfield = 'user_id';				break;
 		case RANKS:				$idfield = 'rank_id';				break;			
 		case SERVER:			$idfield = 'server_id';				break;
@@ -175,13 +175,16 @@ function orders($mode, $type = '')
 
 	switch ( $mode )
 	{
-		case TEAMS:			$idfield = 'team_id';		$orderfield	= 'team_order';		break;
-		case GAMES:			$idfield = 'game_id';		$orderfield = 'game_order';		break;
-		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
-		case NEWSCAT:		$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
-		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
-		case RANKS:			$idfield = 'rank_id';		$orderfield = 'rank_order';		$typefield = 'rank_type';	break;
-		case CATEGORIES:	$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
+		case TEAMS:				$idfield = 'team_id';		$orderfield	= 'team_order';		break;
+		case GAMES:				$idfield = 'game_id';		$orderfield = 'game_order';		break;
+		case GALLERY:			$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
+		case NEWSCAT:			$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
+		case MATCH_MAPS:		$idfield = 'map_id';		$orderfield = 'map_order';		break;
+		case RANKS:				$idfield = 'rank_id';		$orderfield = 'rank_order';		$typefield = 'rank_type';			break;
+		case CATEGORIES:		$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
+		
+		case PROFILE;			$idfield = 'profile_id'; 	$orderfield = 'profile_order'; 	$typefield = 'profile_category';	break;
+		case PROFILE_CATEGORY:	$idfield = 'category_id';	$orderfield = 'category_order';	break;
 		
 		case NAVIGATION:
 			$idfield	= 'navi_id';
@@ -236,12 +239,9 @@ function orders($mode, $type = '')
 			$typefield = 'cat_id';
 			break;
 			
-		case 'profile':
-			$table		= PROFILE;
-			$idfield	= 'profile_id';
-			$orderfield	= 'profile_order';
-			$typefield	= 'profile_category';
-			break;
+		
+			
+		
 	}
 
 	$sql = "SELECT $idfield, $orderfield FROM $mode";

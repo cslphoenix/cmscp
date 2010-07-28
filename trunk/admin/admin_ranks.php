@@ -60,6 +60,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_ranks'] )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_RANK, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -105,13 +106,12 @@ else
 					);
 				}
 
-				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $data_id . '" />';
+				$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $data_id . '" />';
+				$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['rank']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['rank'], $data['rank_title']),
-					'L_INFOS'		=> $lang['common_data_input'],
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['rank']),
+					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['rank'], $data['rank_title']),
 					
 					'L_NAME'	=> sprintf($lang['sprintf_title'], $lang['rank']),
 					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['rank']),
@@ -179,7 +179,6 @@ else
 							}
 							
 							$message = $lang['create_rank'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'create_rank');
 						}
 						else
 						{
@@ -199,13 +198,14 @@ else
 							$message = $lang['update_rank']
 								. sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>')
 								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $data_id) . '">', '</a>');
-							log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'update_rank');
 						}
+						
+						log_add(LOG_ADMIN, LOG_SEK_RANK, $mode, $rank_title);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
 					{
-						$template->set_filenames(array('reg_header' => 'style/error_body.tpl'));
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
 					}
@@ -220,7 +220,7 @@ else
 				update(RANKS, 'rank', $move, $data_id);
 				orders(RANKS, $data_type);
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'acp_game_order');
+				log_add(LOG_ADMIN, LOG_SEK_RANK, $mode);
 				
 				$show_index = TRUE;
 				
@@ -239,7 +239,8 @@ else
 					}
 				
 					$message = $lang['delete_rank'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_ranks.php') . '">', '</a>');
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_RANK, 'delete_rank');
+					
+					log_add(LOG_ADMIN, LOG_SEK_RANK, $mode, $data['rank_title']);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
@@ -258,8 +259,8 @@ else
 							'MESSAGE_TITLE'	=> $lang['common_confirm'],
 							'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_rank'], $data['rank_title']),
 							
-							'S_FIELDS'		=> $s_fields,
-							'S_ACTION'		=> append_sid('admin_ranks.php'),
+							'S_FIELDS'	=> $s_fields,
+							'S_ACTION'	=> append_sid('admin_ranks.php'),
 						));
 					}
 				}
@@ -274,7 +275,7 @@ else
 	
 			default:
 			
-				message(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['msg_no_module_select']);
 				
 				break;
 		}
@@ -295,6 +296,7 @@ else
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['rank']),
 		'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['rank']),
 		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['rank']),
+		
 		'L_EXPLAIN'	=> $lang['rank_explain'],
 		
 		'L_PAGE'		=> $lang['rank_page'],
@@ -303,12 +305,6 @@ else
 		'L_SPECIAL'		=> $lang['rank_special'],
 		'L_STANDARD'	=> $lang['rank_standard'],
 		'L_MIN'			=> $lang['rank_min'],
-		
-		'NO_ENTRY'		=> $lang['no_entry'],
-		
-		'L_UPDATE'		=> $lang['common_update'],
-		'L_DELETE'		=> $lang['common_delete'],
-		'L_SETTINGS'	=> $lang['common_settings'],
 		
 		'S_FIELDS'	=> $s_fields,
 		'S_CREATE'	=> append_sid('admin_ranks.php?mode=_create'),
@@ -334,18 +330,15 @@ else
 				'MIN'		=> ( $data_forum[$i]['rank_special'] == '0' ) ? $data_forum[$i]['rank_min'] : ' - ',
 				'SPECIAL'	=> ( $data_forum[$i]['rank_special'] == '1' ) ? $lang['common_yes'] : $lang['common_no'],
 				
-				'MOVE_UP'	=> ( $data_forum[$i]['rank_order'] != '10' && $data_forum[$i]['rank_special'] )					? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_forum[$i]['rank_order'] != $max_forum['max'] && $data_forum[$i]['rank_special'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_forum[$i]['rank_order'] != '10' && $data_forum[$i]['rank_special'] )					? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_forum[$i]['rank_order'] != $max_forum['max'] && $data_forum[$i]['rank_special'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE' => append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
-				'U_DELETE' => append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_UPDATE'	=> append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_DELETE'	=> append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_forum', array());
-	}
+	else { $template->assign_block_vars('_display._no_forum', array()); }
 	
 	if ( $data_page )
 	{
@@ -357,18 +350,15 @@ else
 				'TITLE'		=> $data_page[$i]['rank_title'],
 				'STANDARD'	=> ( $data_page[$i]['rank_standard'] ) ? $lang['rank_standard'] : '',
 				
-				'MOVE_UP'	=> ( $data_page[$i]['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_PAGE . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_page[$i]['rank_order'] != $max_page['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_PAGE . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_page[$i]['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_PAGE . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_page[$i]['rank_order'] != $max_page['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_PAGE . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE' => append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
-				'U_DELETE' => append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_UPDATE'	=> append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_DELETE'	=> append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_page', array());
-	}
+	else { $template->assign_block_vars('_display._no_page', array()); }
 	
 	if ( $data_team )
 	{
@@ -380,18 +370,15 @@ else
 				'TITLE'		=> $data_team[$i]['rank_title'],
 				'STANDARD'	=> ( $data_team[$i]['rank_standard'] ) ? $lang['rank_standard'] : '',
 				
-				'MOVE_UP'	=> ( $data_team[$i]['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_TEAM . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt=""></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="">',
-				'MOVE_DOWN'	=> ( $data_team[$i]['rank_order'] != $max_team['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_TEAM . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="">',
+				'MOVE_UP'	=> ( $data_team[$i]['rank_order'] != '10' )				? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_TEAM . '&amp;move=-15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data_team[$i]['rank_order'] != $max_team['max'] )	? '<a href="' . append_sid('admin_ranks.php?mode=_order&amp;type=' . RANK_TEAM . '&amp;move=15&amp;' . POST_RANKS_URL . '=' . $rank_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE' => append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
-				'U_DELETE' => append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_UPDATE'	=> append_sid('admin_ranks.php?mode=_update&amp;' . POST_RANKS_URL . '=' . $rank_id),
+				'U_DELETE'	=> append_sid('admin_ranks.php?mode=_delete&amp;' . POST_RANKS_URL . '=' . $rank_id),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_team', array());
-	}
+	else { $template->assign_block_vars('_display._no_team', array()); }
 	
 	$template->pparse('body');
 			

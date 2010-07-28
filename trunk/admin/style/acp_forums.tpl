@@ -1,55 +1,57 @@
-<!-- BEGIN display -->
-<form action="{S_FORUM_ACTION}" method="post">
-<table class="head" cellspacing="0">
+<!-- BEGIN _display -->
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE_FORUM}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE_CATEGORY}</a></li>
+</ul>
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<th>
-	<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_FORUM_TITLE}</a></li>
-		</ul>
-	</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">{L_FORUM_EXPLAIN}</td>
+	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
-<br>
+<br />
 
-<table class="row" cellspacing="1">
+<!-- BEGIN _cat_row -->
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-		<td class="rowHead" colspan="7">{L_FORUM_TITLE}</td>
-	</tr>
-	<!-- BEGIN catrow -->
-	<tr>
-		<td class="rowHead" width="97%"><a href="{display.catrow.U_VIEWCAT}">{display.catrow.CAT_DESC}</a></td>
-		<td class="rowHead" width="97%"><a href="{display.catrow.U_PERMISSIONS}">{display.catrow.PERMISSIONS}</a></td>
-		<td class="rowHead" align="center" valign="middle" width="1%" nowrap="nowrap"><a class="small" href="{display.catrow.U_CAT_MOVE_UP}">{display.catrow.L_MOVE_UP}</a> <a class="small" href="{display.catrow.U_CAT_MOVE_DOWN}">{display.catrow.L_MOVE_DOWN}</a></td>
-		<td class="rowHead" align="center" valign="middle" width="1%"><a class="small" href="{display.catrow.U_CAT_EDIT}">{L_EDIT}</a></td>
-		<td class="rowHead" align="center" valign="middle" width="1%"><a class="small" href="{display.catrow.U_CAT_DELETE}">{L_DELETE}</a></td>
-		<td class="rowHead" align="center" valign="middle" width="1%">&nbsp;</td>
-	</tr>
-	<!-- BEGIN forumrow -->
-	<tr> 
-		<td class="{display.catrow.forumrow.CLASS}" width="100%"><span class="gen"><a href="{display.catrow.forumrow.U_VIEWFORUM}">{display.catrow.forumrow.FORUM_NAME}</a></span><br><span class="small">{display.catrow.forumrow.FORUM_DESC}<br>{display.catrow.forumrow.NUM_TOPICS} / {display.catrow.forumrow.NUM_POSTS}</span></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap="nowrap"><a href="{display.catrow.forumrow.U_FORUM_PERMISSIONS}">{display.catrow.forumrow.PERMISSIONS}</a></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle" nowrap="nowrap"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_MOVE_UP}">{display.catrow.forumrow.L_MOVE_UP}</a> <a href="{display.catrow.forumrow.U_FORUM_MOVE_DOWN}">{display.catrow.forumrow.L_MOVE_DOWN}</a></span></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_EDIT}">{L_EDIT}</a></span></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_DELETE}">{L_DELETE}</a></span></td>
-		<td class="{display.catrow.forumrow.CLASS}" align="center" valign="middle"><span class="gen"><a href="{display.catrow.forumrow.U_FORUM_RESYNC}">{L_RESYNC}</a></span></td>
-	</tr>
-	<!-- END forumrow -->
-	<tr>
-		<td colspan="7" class="row_class2"><input type="text" class="post" name="{display.catrow.S_ADD_FORUM_NAME}" /> <input type="submit" class="button2" name="{display.catrow.S_ADD_FORUM_SUBMIT}" value="{L_CREATE_FORUM}"></td>
-	</tr>
-	<!-- END catrow -->
-	<tr>
-		<td colspan="7" class="row_class2"><input type="text" class="post" name="categoryname" /> <input type="submit" class="button2"  name="addcategory" value="{L_CREATE_CATEGORY}"></td>
-	</tr>
+	<td class="rowHead" align="left" width="99%" colspan="5"><a href="{_display._cat_row.U_VIEWCAT}">{_display._cat_row.CAT_DESC}</a></td>
+	<td class="rowHead" align="center" nowrap="nowrap">{_display._cat_row.MOVE_UP}{_display._cat_row.MOVE_DOWN} <a href="{_display._cat_row.U_CAT_UPDATE}">{I_UPDATE}</a> <a href="{_display._cat_row.U_CAT_DELETE}">{I_DELETE}</a></td>
+</tr>
+<!-- BEGIN _forum_row -->
+<tr> 
+	<td class="{_display._cat_row._forum_row.CLASS}" width="100%"><span class="gen"><a href="{_display._cat_row._forum_row.U_VIEWFORUM}">{_display._cat_row._forum_row.FORUM_NAME}</a></span><br><span class="small">{_display._cat_row._forum_row.FORUM_DESC}<br>{_display._cat_row._forum_row.NUM_TOPICS} / {_display._cat_row._forum_row.NUM_POSTS}</span></td>
+	<td class="{_display._cat_row._forum_row.CLASS}" align="center" valign="middle" nowrap="nowrap"><a href="{_display._cat_row._forum_row.U_FORUM_PERMISSIONS}">{_display._cat_row._forum_row.PERMISSIONS}</a></td>
+	<td class="{_display._cat_row._forum_row.CLASS}" align="center" valign="middle" nowrap="nowrap"><span class="gen"><a href="{_display._cat_row._forum_row.U_FORUM_MOVE_UP}">{_display._cat_row._forum_row.L_MOVE_UP}</a> <a href="{_display._cat_row._forum_row.U_FORUM_MOVE_DOWN}">{_display._cat_row._forum_row.L_MOVE_DOWN}</a></span></td>
+	<td class="{_display._cat_row._forum_row.CLASS}" align="center" valign="middle"><span class="gen"><a href="{_display._cat_row._forum_row.U_UPDATE}">{L_EDIT}</a></span></td>
+	<td class="{_display._cat_row._forum_row.CLASS}" align="center" valign="middle"><span class="gen"><a href="{_display._cat_row._forum_row.U_DELETE}">{L_DELETE}</a></span></td>
+	<td class="{_display._cat_row._forum_row.CLASS}" align="center" valign="middle"><span class="gen"><a href="{_display._cat_row._forum_row.U_RESYNC}">{L_RESYNC}</a></span></td>
+</tr>
+<!-- END _forum_row -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td align="right"><input type="text" class="post" name="{_display._cat_row.S_ADD_FORUM_NAME}" /></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="{_display._cat_row.S_ADD_FORUM_SUBMIT}" value="{L_CREATE_FORUM}"></td>
+</tr>
+</table>
+
+<br />
+
+<table border="0" cellspacing="1" cellpadding="0">
+<!-- END _cat_row -->
+<tr>
+	<td align="right"><input type="text" class="post" name="categoryname" /></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="addcategory" value="{L_CREATE_CATEGORY}"></td>
+</tr>
 </table>
 </form>
-<!-- END display -->
+<!-- END _display -->
 
 <!-- BEGIN category_edit -->
 <form action="{S_FORUM_ACTION}" method="post">
@@ -108,7 +110,7 @@
 
 <br>
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1">{L_FORUM_NAME}</td>
 	<td class="row2"><input type="text" size="25" name="forum_name" value="{FORUM_NAME}" class="post"></td>

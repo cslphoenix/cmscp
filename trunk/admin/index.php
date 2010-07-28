@@ -23,11 +23,11 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 			$news_id		= $data_news[$i]['news_id'];
 			$news_typ		= ( $data_news[$i]['news_intern'] ) ? 'sprintf_intern' : 'sprintf_normal';
 			$news_date		= create_date($userdata['user_dateformat'], $data_news[$i]['news_time_public'], $userdata['user_timezone']);
-			$news_public	= ( $data_news[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="">' : '<img src="' . $images['icon_acp_privat'] . '" alt="">';
+			$news_public	= ( $data_news[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="" />' : '<img src="' . $images['icon_acp_privat'] . '" alt="" />';
 			
 			$link_update = ( $userauth['auth_news'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_update&amp;' . POST_NEWS_URL . '=' . $news_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>' : '';
 			$link_delete = ( $userauth['auth_news'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_delete&amp;' . POST_NEWS_URL . '=' . $news_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>' : '';
-			$link_public = ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_switch&amp;' . POST_NEWS_URL . '=' . $news_id) . '">' . $news_public . '</a>' : '<img src="' . $images['icon_acp_denied'] . '" alt="">';
+			$link_public = ( $userauth['auth_news_public'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_news.php?mode=_switch&amp;' . POST_NEWS_URL . '=' . $news_id) . '">' . $news_public . '</a>' : '<img src="' . $images['icon_acp_denied'] . '" alt="" />';
 
 			$template->assign_block_vars('row_news', array(
 				'NEWS_TITLE'	=> sprintf($lang[$news_typ], $data_news[$i]['news_title']),

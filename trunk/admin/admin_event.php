@@ -56,7 +56,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_event'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_EVENT, 'auth_fail' . $current));
+		log_add(LOG_ADMIN, LOG_SEK_EVENT, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
 	}
 	
@@ -196,7 +196,7 @@ else
 				#	subnavi_calendar_' . $monat . '_member
 				#	subnavi_calendar_' . $monat . '_guest
 					
-					log_add(LOG_ADMIN, LOG_SEK_EVENT, $mode . '_event');
+					log_add(LOG_ADMIN, LOG_SEK_EVENT, $mode, $event_title);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
@@ -228,7 +228,7 @@ else
 		
 				$message = $lang['delete_event'] . sprintf($lang['click_return_event'], '<a href="' . append_sid('admin_event.php') . '">', '</a>');
 				
-				log_add(LOG_ADMIN, LOG_SEK_EVENT, $mode . '_event');
+				log_add(LOG_ADMIN, LOG_SEK_EVENT, $mode, $data['event_title']);
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_id && !$confirm )
@@ -262,9 +262,9 @@ else
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['event']),
 				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['event']),
-				'L_EXPLAIN'	=> $lang['event_explain'],
-				
 				'L_TITLE'	=> sprintf($lang['sprintf_title'], $lang['event']),
+				
+				'L_EXPLAIN'	=> $lang['event_explain'],
 				'L_DATE'	=> $lang['common_date'],
 				
 				'S_FIELDS'	=> $s_fields,
