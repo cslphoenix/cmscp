@@ -1,8 +1,6 @@
 <?php
 
 /*
- *
- *
  *							___.          
  *	  ____   _____   ______ \_ |__ ___.__.
  *	_/ ___\ /     \ /  ___/  | __ <   |  |
@@ -21,6 +19,7 @@
  *	@autor:	Sebastian Frickel © 2009, 2010
  *	@code:	Sebastian Frickel © 2009, 2010
  *
+ *	Berechtigungsfelder
  */
 
 if ( !empty($setmodules) )
@@ -54,7 +53,7 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -83,16 +82,14 @@ else
 				$data = array('authlist_name' => request('authlist_name', 2));
 			}
 			
-			$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
-			$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
+			$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
 
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['authlist_field'], $data['authlist_name']),
-				
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['authlist_field'], $data['authlist_name']),
 				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
-				'NAME'	=> str_replace('auth_', '', $data['authlist_name']),
+				'NAME'		=> str_replace('auth_', '', $data['authlist_name']),
 				
 				'S_FIELDS'	=> $s_fields,
 				'S_ACTION'	=> append_sid('admin_authlist.php'),
@@ -138,7 +135,7 @@ else
 						
 						$message = $lang['update_authlist']
 							. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
-							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_games.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id) . '">', '</a>');
+							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id) . '">', '</a>');
 					}
 					
 				#	$oCache -> sCachePath = './../cache/';
@@ -193,8 +190,8 @@ else
 					'MESSAGE_TITLE'	=> $lang['common_confirm'],
 					'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_authlist'], $data['authlist_name']),
 					
-					'S_FIELDS'	=> $s_fields,
-					'S_ACTION'	=> append_sid('admin_authlist.php'),
+					'S_FIELDS'		=> $s_fields,
+					'S_ACTION'		=> append_sid('admin_authlist.php'),
 				));
 			}
 			else
@@ -209,20 +206,6 @@ else
 			$template->set_filenames(array('body' => 'style/acp_authlist.tpl'));
 			$template->assign_block_vars('_display', array());
 			
-			$s_fields = '<input type="hidden" name="mode" value="_create" />';
-					
-			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['authlist_field']),
-				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
-				
-				'L_EXPLAIN'	=> $lang['authlist_explain'],
-				
-				'S_FIELDS'	=> $s_fields,
-				'S_CREATE'	=> append_sid('admin_authlist.php?mode=_create'),
-				'S_ACTION'	=> append_sid('admin_authlist.php'),
-			));
-			
 			$data = get_data_array(AUTHLIST, '', 'authlist_id', 'ASC');
 			
 			for ( $i = 0; $i < count($data); $i++ )
@@ -230,12 +213,25 @@ else
 				$data_id = $data[$i]['authlist_id'];
 				
 				$template->assign_block_vars('_display._authlist_row', array(
-					'NAME'	=> $data[$i]['authlist_name'],
+					'NAME'		=> $data[$i]['authlist_name'],
 					
 					'U_UPDATE'	=> append_sid('admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id),
 					'U_DELETE'	=> append_sid('admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST_URL . '=' . $data_id),
 				));
 			}
+			
+			$s_fields = '<input type="hidden" name="mode" value="_create" />';
+			
+			$template->assign_vars(array(
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['authlist']),
+				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['authlist_field']),
+				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
+				'L_EXPLAIN'	=> $lang['authlist_explain'],
+				
+				'S_FIELDS'	=> $s_fields,
+				'S_CREATE'	=> append_sid('admin_authlist.php?mode=_create'),
+				'S_ACTION'	=> append_sid('admin_authlist.php'),
+			));
 			
 			break;
 	}

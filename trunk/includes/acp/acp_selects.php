@@ -133,7 +133,7 @@ function select_box_files($type, $class, $path, $default = '')
 	$path_files = scandir($path);
 				
 	$select = '<select class="' . $class . '" name="' . $type . '" id="' . $type . '" onchange="update_image(this.options[selectedIndex].value);">';
-	$select .= '<option value="">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
+	$select .= '<option value="spacer.gif">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
 	
 	foreach ( $path_files as $file )
 	{
@@ -294,13 +294,13 @@ function _select_match($default, $type, $class)
 //
 function select_date($class, $default, $var, $value, $create = '')
 {
-	$lang;
+	global $lang;
 	
 	switch ( $default )
 	{
 		case 'day':
 		
-			if ( isset($create) && $create <= (time()- 86400) )
+			if ( $create <= ( time()- 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
@@ -313,79 +313,90 @@ function select_date($class, $default, $var, $value, $create = '')
 					{
 						$i = '0' . $i;
 					}
-					$selected = ( $i == $value ) ? 'selected="selected"' : '';
-				#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
-					$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
 				}
 				$select .= "</select>";
 			}
 			
-		break;
+			break;
 		
 		case 'month':
 		
-			$select = "<select class=\"$class\" name=\"$var\">";
-			for ( $i = 1; $i < 13; $i++ )
+			if ( $create <= ( time()- 86400 ) )
 			{
-				if ( $i < 10 )
-				{
-					$i = '0'.$i;
-				}
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-			#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
-				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
-			$select .= '</select>';
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				for ( $i = 1; $i < 13; $i++ )
+				{
+					if ( $i < 10 )
+					{
+						$i = '0' . $i;
+					}
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
+				}
+				$select .= '</select>';
+			}
 			
-		break;
+			break;
 		
 		case 'monthn':
 		
 			$monate = array(
-				'01'	=> 'Januar',
-				'02'	=> 'Februar',
-				'03'	=> 'März',
-				'04'	=> 'April',
-				'05'	=> 'Mai',
-				'06'	=> 'Juni',
-				'07'	=> 'Juli',
-				'08'	=> 'August',
-				'09'	=> 'September',
-				'10'	=> 'Oktober',
-				'11'	=> 'November',
-				'12'	=> 'Dezember'
+				'01'	=> $lang['datetime']['month_01'],
+				'02'	=> $lang['datetime']['month_02'],
+				'03'	=> $lang['datetime']['month_03'],
+				'04'	=> $lang['datetime']['month_04'],
+				'05'	=> $lang['datetime']['month_05'],
+				'06'	=> $lang['datetime']['month_06'],
+				'07'	=> $lang['datetime']['month_07'],
+				'08'	=> $lang['datetime']['month_08'],
+				'09'	=> $lang['datetime']['month_09'],
+				'10'	=> $lang['datetime']['month_10'],
+				'11'	=> $lang['datetime']['month_11'],
+				'12'	=> $lang['datetime']['month_12'],
 			);
-		
-			$select = "<select class=\"$class\" name=\"$var\">";
-			for ( $i = 1; $i < 13; $i++ )
-			{
-				if ( $i < 10 )
-				{
-					$i = '0'.$i;
-				}
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-			#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $monate[$i] . '&nbsp;</option>';
-				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
-			}
-			$select .= '</select>';
 			
-		break;
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				for ( $i = 1; $i < 13; $i++ )
+				{
+					if ( $i < 10 )
+					{
+						$i = '0' . $i;
+					}
+					$mark = ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
+				}
+				$select .= '</select>';
+			}
+			
+			break;
 		
 		case 'monthm':
 		
 			$monate = array(
-				'01'	=> 'Januar',
-				'02'	=> 'Februar',
-				'03'	=> 'März',
-				'04'	=> 'April',
-				'05'	=> 'Mai',
-				'06'	=> 'Juni',
-				'07'	=> 'Juli',
-				'08'	=> 'August',
-				'09'	=> 'September',
-				'10'	=> 'Oktober',
-				'11'	=> 'November',
-				'12'	=> 'Dezember'
+				'01'	=> $lang['datetime']['month_01'],
+				'02'	=> $lang['datetime']['month_02'],
+				'03'	=> $lang['datetime']['month_03'],
+				'04'	=> $lang['datetime']['month_04'],
+				'05'	=> $lang['datetime']['month_05'],
+				'06'	=> $lang['datetime']['month_06'],
+				'07'	=> $lang['datetime']['month_07'],
+				'08'	=> $lang['datetime']['month_08'],
+				'09'	=> $lang['datetime']['month_09'],
+				'10'	=> $lang['datetime']['month_10'],
+				'11'	=> $lang['datetime']['month_11'],
+				'12'	=> $lang['datetime']['month_12'],
 			);
 			
 			if ( !is_array($value) )
@@ -393,69 +404,87 @@ function select_date($class, $default, $var, $value, $create = '')
 				$value = explode(',', $value);
 			}
 		
-			$select = '<select class=\"$class\" name="' . $var . '[]" multiple="multiple rows="12" size="12">';
+			$select = "<select class=\"$class\" name=\"" . $var . "[]\" multiple=\"multiple\" rows=\"12\" size=\"12\">";
 			
-			foreach ($monate as $const => $name)
+			foreach ( $monate as $const => $name )
 			{
-				$selected = (in_array($const, $value)) ? ' selected="selected"' : '';
-				$select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
+				$mark = ( in_array($const, $value) ) ? ' selected="selected"' : '';
+			#	$select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
+				
+				$select .= "<option value=\"$const\" $mark>&raquo;&nbsp;$name&nbsp;</option>";
 			}
 			$select .= '</select>';
 			
-		break;
+			break;
 		
 		case 'year':
 		
-			$select = "<select class=\"$class\" name=\"$var\">";
-			for ($i=$value; $i < $value+2; $i++)
+			if ( $create <= ( time()- 86400 ) )
 			{
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-			#	$select .= '<option value="' . $i . '" ' . $selected . '>' . $i . '&nbsp;</option>';
-				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
-			$select .= '</select>';
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				for ( $i = $value; $i < $value + 2; $i++ )
+				{
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
+				}
+				$select .= '</select>';
+			}
 		
-		break;
+			break;
 		
 		case 'hour':
 		
-			$select = "<select class=\"$class\" name=\"$var\">";
-			for ($i=0; $i < 24; $i++)
+			if ( $create <= ( time()- 86400 ) )
 			{
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-			#	$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
-				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
-			$select .= '</select>';
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				for ( $i = 0; $i < 24; $i++ )
+				{
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
+				}
+				$select .= '</select>';
+			}
 			
-		break;
+			break;
 		
 		case 'min':
 		
-			$select = "<select class=\"$class\" name=\"$var\">";
-			for ($i="00"; $i < 60; $i = $i + 15)
+			if ( $create <= ( time()- 86400 ) )
 			{
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-			#	$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
-				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
-			$select .= '</select>';
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				for ( $i = '00';$i < 60; $i = $i + 15 )
+				{
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
+				}
+				$select .= '</select>';
+			}
 			
-		break;
+			break;
 		
 		case 'duration':
 		
 			$select = "<select class=\"$class\" name=\"$var\" id=\"duration\">";
-			for ($i="00"; $i < 260; $i = $i + 30)
+			for ( $i='00';$i < 260; $i = $i + 30 )
 			{
-				$selected = ( $i == $value ) ? 'selected="selected"' : '';
-			#	$select .= '<option value="' . $i . '" ' . $selected . ' >' . $i . '&nbsp;</option>';
-				$select .= "<option value=\"$i\" $selected>&raquo;&nbsp;$i&nbsp;</option>";
+				$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+				$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
 			}
 			$select .= '</select>';
 			
-		break;
-			
+			break;
 	}
 	
 	return $select;

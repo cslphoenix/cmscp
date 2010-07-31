@@ -1,8 +1,6 @@
 <?php
 
 /*
- *
- *
  *							___.          
  *	  ____   _____   ______ \_ |__ ___.__.
  *	_/ ___\ /     \ /  ___/  | __ <   |  |
@@ -16,13 +14,12 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
- *	Clankasse (Cash)
- *
+ *	Clankasse
  */
 
 if ( !defined('IN_CMS') )
@@ -46,15 +43,15 @@ $lang['cash_user_add']		= 'Neuen Benutzereintrag erstellen';
 $lang['cash_user_new_add']	= 'Benutzer hinzufügen';
 $lang['cash_user_edit']		= 'Benutzer bearbeiten';
 
-$lang['cash_username']			= 'Benutzer';
 $lang['cash_user_month']		= 'Monat';
-$lang['cash_user_interval_m']	= 'Monatlich';
-$lang['cash_user_interval_o']	= 'Einmalig';
+$lang['interval_month']			= 'Monatlich';
+$lang['interval_only']			= 'Einmalig';
 
+$lang['postage']	= 'Gesammtbetrag';
 
 $lang['cash_interval_month']	= 'Monatlich';
-$lang['cash_interval_2weeks']	= 'alle 2 Wochen';
-$lang['cash_interval_week']		= 'Wöchentlich';
+$lang['cash_interval_weeks']	= 'alle 2 Wochen';
+$lang['cash_interval_weekly']	= 'Wöchentlich';
 
 $lang['bankdata']			= 'Bankdaten';
 $lang['bankdata_bank']		= 'Kreditinstitut';
