@@ -1,8 +1,6 @@
 <?php
 
 /*
- *
- *
  *							___.          
  *	  ____   _____   ______ \_ |__ ___.__.
  *	_/ ___\ /     \ /  ___/  | __ <   |  |
@@ -16,13 +14,12 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  *	Berechtigungsfelder
- *
  */
 
 if ( !defined('IN_CMS') )

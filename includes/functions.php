@@ -431,7 +431,7 @@ function _cut($text)
 	// Links werden später noch gesondert behandelt 
 	$max_link_lenght = 200; 
 	// Trennzeichen 
-	$splitter = ' '; 
+	$splitter = ' ';
 	// Text in Zeilen aufteilen, sonst würden Zeilenumbrüche (\n) nicht als Worttrennung erkannt 
 	$lines = explode("\n", $text);
 	

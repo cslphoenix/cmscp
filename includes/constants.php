@@ -5,6 +5,14 @@ if ( !defined('IN_CMS') )
 	die('Hacking attempt');
 }
 
+define('TYPE_GAME',		0);
+define('TYPE_VOICE',	1);
+define('TYPE_OTHER',	2);
+
+define('INTERVAL_MONTH',	0);
+define('INTERVAL_WEEKS',	1);
+define('INTERVAL_WEEKLY',	2);
+
 // User Levels <- Do not change the values of USER or ADMIN
 define('DELETED',	-1);
 define('ANONYMOUS',	1);
@@ -230,7 +238,7 @@ define('POST_TRAINING_URL',		'tr');
 define('POST_USERS_URL',		'u');
 define('POST_EVENT_URL',		'e');
 define('POST_CASH_URL',			'c');
-define('POST_CASH_USERS_URL',	'cu');
+define('POST_CASH_USER_URL',	'cu');
 
 define('POST_BUGTRACKER_URL',	'bt');
 define('POST_CHANGELOG_URL',	'cl');
@@ -349,7 +357,7 @@ define('TRAINING_USERS',			$db_prefix . 'training_users');
 
 define('CASH',						$db_prefix . 'cash');
 define('CASH_BANK',					$db_prefix . 'cash_bank');
-define('CASH_USERS',				$db_prefix . 'cash_users');
+define('CASH_USER',					$db_prefix . 'cash_user');
 
 /*	Downloads	*/
 define('DOWNLOAD',					$db_prefix . 'downloads');

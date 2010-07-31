@@ -36,28 +36,28 @@ function get_data($mode, $id, $type)
 	
 	switch ( $mode )
 	{
-		case AUTHLIST:			$idfield = 'authlist_id';			break;
-		case CASH:				$idfield = 'cash_id';				break;
-		case CASH_BANK:			$idfield = '';						break;
-		case CASH_USERS:		$idfield = 'cash_user_id';			break;		
-		case EVENT:				$idfield = 'event_id';				break;
-		case GALLERY:			$idfield = 'gallery_id';			break;
-		case GAMES:				$idfield = 'game_id';				break;
-		case GROUPS:			$idfield = 'group_id';				break;
-		case MATCH:				$idfield = 'match_id';				break;
-		case NAVIGATION;		$idfield = 'navi_id';				break;
-		case NETWORK:			$idfield = 'network_id';			break;
-		case NEWSCAT:			$idfield = 'newscat_id';			break;
-		case NEWSLETTER:		$idfield = 'newsletter_id';			break;
-		case PROFILE:			$idfield = 'profile_id';			break;
-		case PROFILE_CATEGORY:	$idfield = 'category_id';	break;
-		case PROFILE_DATA:		$idfield = 'user_id';				break;
-		case RANKS:				$idfield = 'rank_id';				break;			
-		case SERVER:			$idfield = 'server_id';				break;
-		case THEMES:			$idfield = 'themes_id';				break;
-		case TEAMSPEAK:			$idfield = 'teamspeak_id';			break;
-		case TRAINING:			$idfield = 'training_id';			break;
-		case USERS:				$idfield = 'user_id';				break;
+		case AUTHLIST:			$idfield = 'authlist_id';		break;
+		case CASH:				$idfield = 'cash_id';			break;
+		case CASH_BANK:			$idfield = '';					break;
+		
+		case EVENT:				$idfield = 'event_id';			break;
+		case GALLERY:			$idfield = 'gallery_id';		break;
+		case GAMES:				$idfield = 'game_id';			break;
+		case GROUPS:			$idfield = 'group_id';			break;
+		case MATCH:				$idfield = 'match_id';			break;
+		case NAVIGATION;		$idfield = 'navi_id';			break;
+		case NETWORK:			$idfield = 'network_id';		break;
+		case NEWSCAT:			$idfield = 'newscat_id';		break;
+		case NEWSLETTER:		$idfield = 'newsletter_id';		break;
+		case PROFILE:			$idfield = 'profile_id';		break;
+		case PROFILE_CATEGORY:	$idfield = 'category_id';		break;
+		case PROFILE_DATA:		$idfield = 'user_id';			break;
+		case RANKS:				$idfield = 'rank_id';			break;		
+		case SERVER:			$idfield = 'server_id';			break;
+		case THEMES:			$idfield = 'themes_id';			break;
+		case TEAMSPEAK:			$idfield = 'teamspeak_id';		break;
+		case TRAINING:			$idfield = 'training_id';		break;
+		case USERS:				$idfield = 'user_id';			break;
 			
 		case NEWS:
 			$idfield	= 'news_id';
@@ -71,6 +71,13 @@ function get_data($mode, $id, $type)
 			$connection	= 'team_game';
 			$table2		= GAMES;
 			$idfield2	= 'game_id';
+			break;
+			
+		case CASH_USER:
+			$idfield	= 'cash_user_id';
+			$connection	= 'user_id';
+			$table2		= USERS;
+			$idfield2	= 'user_id';
 			break;
 
 		default:	message(GENERAL_ERROR, 'Error Data Mode ' . $mode . $lang['back']);		break;
@@ -175,16 +182,24 @@ function orders($mode, $type = '')
 
 	switch ( $mode )
 	{
-		case TEAMS:				$idfield = 'team_id';		$orderfield	= 'team_order';		break;
-		case GAMES:				$idfield = 'game_id';		$orderfield = 'game_order';		break;
+		case TEAMS:
+				$idfield	= 'team_id';
+				$orderfield	= 'team_order';
+			break;
+		
+		case GAMES:
+				$idfield	= 'game_id';
+				$orderfield	= 'game_order';
+			break;
+			
 		case GALLERY:			$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
 		case NEWSCAT:			$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
 		case MATCH_MAPS:		$idfield = 'map_id';		$orderfield = 'map_order';		break;
-		case RANKS:				$idfield = 'rank_id';		$orderfield = 'rank_order';		$typefield = 'rank_type';			break;
+		case RANKS:				$idfield = 'rank_id';		$orderfield = 'rank_order';	$typefield = 'rank_type';		break;
 		case CATEGORIES:		$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
 		
-		case PROFILE;			$idfield = 'profile_id'; 	$orderfield = 'profile_order'; 	$typefield = 'profile_category';	break;
-		case PROFILE_CATEGORY:	$idfield = 'category_id';	$orderfield = 'category_order';	break;
+		case PROFILE;			$idfield = 'profile_id';$orderfield = 'profile_order';$typefield = 'profile_category';break;
+		case PROFILE_CATEGORY:	$idfield = 'category_id';$orderfield = 'category_order';break;
 		
 		case NAVIGATION:
 			$idfield	= 'navi_id';

@@ -1981,7 +1981,7 @@ class cyts {
 		fputs($fp, "Content-length: ". strlen($sCall) ."\r\n");
 		fputs($fp, "Connection: close\r\n\r\n");
 		fputs($fp, $sCall);
-		$hPattern = '/([A-Za-z0-9_-]+): *(.*)\r\n/i';		
+		$hPattern = '/([A-Za-z0-9_-]+): *(.*)\r\n/i';
 		$header = array();
 		do {
 			$cRead = fgets($fp);
@@ -2023,7 +2023,7 @@ class cyts {
 		if ($this->wiCookie)
 			fputs($fp, "Cookie: " . $this->wiCookie."\r\n");
 		fputs($fp, "Connection: close\r\n\r\n");
-		$hPattern = '/([A-Za-z0-9_-]+): *(.*)\r\n/i';		
+		$hPattern = '/([A-Za-z0-9_-]+): *(.*)\r\n/i';
 		$header = array();
 		do {
 			$cRead = fgets($fp);
