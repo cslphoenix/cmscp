@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -43,11 +43,12 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$current	= '_submenu_logs';
 	
 	include('./pagestart.php');
-	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/logs.php');
+
+	load_lang('logs');
 	
 	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
@@ -55,12 +56,12 @@ else
 	$mode		= request('mode', 1);
 	$confirm	= request('confirm', 1);
 	
-	if ($userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
-
-	if ( $cancel )
+	
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_logs.php', true));
 	}
@@ -156,7 +157,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_error');
+				log_add(LOG_ADMIN, LOG_SEK_LOG, 'acp_log_delete_error');
 				
 				$message = $lang['delete_log_error'] . sprintf($lang['click_return_log_error'], '<a href="' . append_sid('admin_logs.php?mode=error') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -201,7 +202,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete_all');
+				log_add(LOG_ADMIN, LOG_SEK_LOG, 'acp_log_delete_all');
 				
 				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -247,7 +248,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOG, 'acp_log_delete');
+				log_add(LOG_ADMIN, LOG_SEK_LOG, 'acp_log_delete');
 				
 				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -283,7 +284,7 @@ else
 		default:
 
 			$template->set_filenames(array('body' => 'style/acp_logs.tpl'));
-			$template->assign_block_vars('display', array());
+			$template->assign_block_vars('_display', array());
 					
 			$template->assign_vars(array(
 				'L_LOG_TITLE'		=> $lang['log_head'],
@@ -318,7 +319,7 @@ else
 			
 			if ( !$log_entry )
 			{
-				$template->assign_block_vars('display.no_entry', array());
+				$template->assign_block_vars('_display._no_entry', array());
 				$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 			}
 			else

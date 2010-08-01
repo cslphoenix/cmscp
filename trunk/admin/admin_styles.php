@@ -49,10 +49,10 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_styles.php', true));
 	}
@@ -736,7 +736,7 @@ else
 					$theme_data .= "\n";
 				}
 				
-				$theme_data .= '?' . '>'; // Done this to prevent highlighting editors getting confused!
+				$theme_data .= '?' . '>';// Done this to prevent highlighting editors getting confused!
 				
 				@umask(0111);
 	

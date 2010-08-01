@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -39,8 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+		$no_header	= ( isset($_POST['cancel']) ) ? true : false;
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
@@ -56,10 +55,10 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_match.php', true));
 	}
@@ -165,7 +164,7 @@ else
 		default:
 		
 			$template->set_filenames(array('body' => 'style/acp_bugtracker.tpl'));
-			$template->assign_block_vars('display', array());
+			$template->assign_block_vars('_display', array());
 			
 			$s_sort = '<select class="postselect" name="sort" onchange="document.getElementById(\'bugtracker_sort\').submit()">';
 			foreach ( $lang['bugtracker_status'] as $key => $value )
@@ -222,7 +221,7 @@ else
 			}
 			else
 			{
-				$template->assign_block_vars('display.no_entry', array());
+				$template->assign_block_vars('_display._no_entry', array());
 				$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 			}
 			

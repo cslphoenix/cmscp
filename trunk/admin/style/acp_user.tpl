@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -7,9 +7,9 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_EXPLAIN}</td>
+	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -20,44 +20,44 @@
 	<td class="rowHead" width="99%">{L_NAME}</td>
 	<td class="rowHead">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN row_users -->
+<!-- BEGIN _user_row -->
 <tr>
-	<td class="row_class1" align="left"><span style="float:right;">{display.row_users.USER_LEVEL} {display.row_users.JOINED}</span>{display.row_users.USERNAME}</td>
-	<td class="row_class2" align="center">{display.row_users.EDIT} {display.row_users.DELETE}</td>		
+	<td class="row_class1" align="left"><span style="float:right;">{_display._user_row.USER_LEVEL} {_display._user_row.JOINED}</span>{_display._user_row.USERNAME}</td>
+	<td class="row_class2" align="center">{_display._user_row.EDIT} {_display._user_row.DELETE}</td>		
 </tr>
-<!-- END row_users -->
+<!-- END _user_row -->
 </table>
 
-<table class="footer" border="0" cellspacing="1" cellpadding="2">
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="username"></td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
 </tr>
 </table>
 
-<table class="footer" border="0" cellspacing="1" cellpadding="2">
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td width="50%" align="left">{PAGE_NUMBER}</td>
-	<td width="50%" align="right">{PAGINATION}</td>
+	<td width="50%" align="right">{PAGE_PAGING}</td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END display -->
+<!-- END _display -->
 
 <!-- BEGIN user_regedit -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_REQUIRED}</td>
-	<td class="row2 small" align="right">{S_MODE}</td>
+	<td class="row4 small">{L_REQUIRED}</td>
+	<td class="row4 small" align="right">{S_MODE}</td>
 </tr>
 </table>
 
@@ -74,41 +74,44 @@
 
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="23%"><label for="username">{L_USERNAME}: *</label></td>
-	<td class="row3"><input class="post" type="text" name="username" id="username" value="{USERNAME}"></td>
+	<td class="row1" width="155"><label for="username">{L_USERNAME}: *</label></td>
+	<td class="row2"><input class="post" type="text" name="username" id="username" value="{USERNAME}"></td>
 </tr>
 <!-- BEGIN edituser -->
 <tr>
 	<td class="row1"><label>{L_REGISTER}:</label></td>
-	<td class="row3">{REGISTER}</td>
+	<td class="row2">{REGISTER}</td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_LASTLOGIN}:</label></td>
-	<td class="row3">{LASTLOGIN}</td>
+	<td class="row2">{LASTLOGIN}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="user_founder">{L_FOUNDER}:</label></td>
-	<td class="row3"><label><input type="radio" name="user_founder" value="1" {S_FOUNDER_YES} />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="user_founder" id="user_founder" value="0" {S_FOUNDER_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="user_founder" value="1" {S_FOUNDER_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="user_founder" id="user_founder" value="0" {S_FOUNDER_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <!-- END edituser -->
 <tr>
 	<td class="row1"><label for="user_email">{L_EMAIL}:</label></td>
-	<td class="row3"><input type="text" class="post" name="user_email" id="user_email" value="{USER_EMAIL}"></td>
+	<td class="row2"><input type="text" class="post" name="user_email" id="user_email" value="{USER_EMAIL}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="email_confirm">{L_EMAIL_CONFIRM}:</label></td>
-	<td class="row3"><input type="text" class="post" name="email_confirm" id="email_confirm" value=""></td>
+	<td class="row2"><input type="text" class="post" name="email_confirm" id="email_confirm" value=""></td>
 </tr>
 <tr>
-	<td class="row1">{L_PASSWORD}:</td>
-	<td class="row3"><label><input type="radio" name="pass" value="1" onChange="document.getElementById('pass').style.display = 'none'; document.getElementById('pass2').style.display = '';" />&nbsp;{L_PASSWORD_REGISTER}</label>&nbsp;&nbsp;<label><input type="radio" name="pass" value="0" onChange="document.getElementById('pass').style.display = ''; document.getElementById('pass2').style.display = 'none';" checked="checked" />&nbsp;{L_PASSWORD_GENERATE}</label></td>
+	<td class="row1"><label>{L_PASSWORD}:</label></td>
+	<td class="row2">
+	<label><input type="radio" name="pass" value="1" onChange="document.getElementById('pass').style.display = 'none';document.getElementById('pass2').style.display = '';" />&nbsp;{L_PASSWORD_REGISTER}</label><br />
+	<label><input type="radio" name="pass" value="0" onChange="document.getElementById('pass2').style.display = 'none';document.getElementById('pass').style.display = '';" checked="checked" />&nbsp;{L_PASSWORD_GENERATE}</label>
+</td>
 </tr>
 <tbody id="pass" style="display:;">
 <tr>
 	<td class="row1 top"><label>{L_PASSWORD}:</label></td>
-	<td class="row3">
+	<td class="row2">
 		<label><input type="radio" name="random" value="0" /> {PASS_1}</label><br />
 		<label><input type="radio" name="random" value="1" /> {PASS_2}</label><br />
 		<label><input type="radio" name="random" value="2" /> {PASS_3}</label><br />
@@ -121,18 +124,18 @@
 <tbody id="pass2" style="display:none;">
 <tr>
 	<td class="row1"><label for="password_new">{L_PASSWORD}:</label></td>
-	<td class="row3"><input class="post" type="password" name="password_new" id="password_new" value=""></td>
+	<td class="row2"><input class="post" type="password" name="password_new" id="password_new" value=""></td>
 </tr>
 <tr>
 	<td class="row1"><label for="password_confirm">{L_PASSWORD_CONFIRM}:</label></td>
-	<td class="row3"><input class="post" type="password" name="password_confirm" id="password_confirm" value=""></td>
+	<td class="row2"><input class="post" type="password" name="password_confirm" id="password_confirm" value=""></td>
 </tr>
 </tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -146,7 +149,7 @@
 <!-- BEGIN profilerow -->
 <tr> 
 	<td class="row1" >{user_regedit.catrow.profilerow.NAME}</td>
-	<td class="row3">{user_regedit.catrow.profilerow.FIELD}</td>
+	<td class="row2">{user_regedit.catrow.profilerow.FIELD}</td>
 </tr>
 <!-- END profilerow -->
 <!-- END catrow -->
@@ -160,7 +163,7 @@
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-				<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 				<li><a href="{S_GROUP}">{L_GROUP}</a></li>
 				<li><a href="{S_AUTHS}">{L_AUTHS}</a></li>
 			</ul>
@@ -191,7 +194,7 @@
 </tr>
 </table>
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN catrow -->
 <tr>
 	<th colspan="2">{user_fields.catrow.CATEGORY_NAME}</th>
@@ -199,12 +202,12 @@
 <!-- BEGIN profilerow -->
 <tr> 
 	<td class="row1" width="160">{user_fields.catrow.profilerow.NAME}</td>
-	<td class="row3">{user_fields.catrow.profilerow.FIELD}</td>
+	<td class="row2">{user_fields.catrow.profilerow.FIELD}</td>
 </tr>
 <!-- END profilerow -->
 <!-- END catrow -->
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -241,16 +244,16 @@
 
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="23%"><label for="username">{L_USERNAME}: *</label></td>
-	<td class="row3"><input class="post" type="text" name="username" id="username" value="{USERNAME}"></td>
+	<td class="row1" width="155"><label for="username">{L_USERNAME}: *</label></td>
+	<td class="row2"><input class="post" type="text" name="username" id="username" value="{USERNAME}"></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -295,11 +298,11 @@ function activate_checkbox(name)
 	<li id="active"><a href="#" id="current">{L_GROUPS}</a></li>
 </ul>
 </div>
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN row_group -->
 <tr>
 	<td class="row1" width="46%">{user_groups.row_group.U_GROUP_NAME}</td>
-	<td class="row3"><label><input type="radio" onClick="activate_checkbox('checkbox_group_{user_groups.row_group.S_MARK_ID}');" name="{user_groups.row_group.S_MARK_NAME}" value="{user_groups.row_group.S_MARK_ID}" {user_groups.row_group.S_ASSIGNED_GROUP}  />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" onClick="disable_checkbox('checkbox_group_{user_groups.row_group.S_MARK_ID}');" name="{user_groups.row_group.S_MARK_NAME}" value="{user_groups.row_group.S_NEG_MARK_ID}" {user_groups.row_group.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label>&nbsp;&nbsp;<label><input type="checkbox" id="checkbox_group_{user_groups.row_group.S_MARK_ID}" name="mod_group_{user_groups.row_group.S_MARK_ID}" {user_groups.row_group.S_MOD_GROUP} />&nbsp;{L_MODERATOR}</label>{user_groups.row_group.U_USER_PENDING}</td>
+	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_group_{user_groups.row_group.S_MARK_ID}');" name="{user_groups.row_group.S_MARK_NAME}" value="{user_groups.row_group.S_MARK_ID}" {user_groups.row_group.S_ASSIGNED_GROUP}  />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{user_groups.row_group.S_MARK_ID}');" name="{user_groups.row_group.S_MARK_NAME}" value="{user_groups.row_group.S_NEG_MARK_ID}" {user_groups.row_group.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{user_groups.row_group.S_MARK_ID}" name="mod_group_{user_groups.row_group.S_MARK_ID}" {user_groups.row_group.S_MOD_GROUP} />&nbsp;{L_MODERATOR}</label>{user_groups.row_group.U_USER_PENDING}</td>
 </tr>
 <!-- END row_group -->
 <tr>
@@ -307,7 +310,7 @@ function activate_checkbox(name)
 </tr>
 <tr>
 	<td class="row1"><label for="email_notification">{L_EMAIL_NOTIFICATION}</label></td>
-	<td class="row3"><label><input type="radio" name="email_notification" value="1">&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="email_notification" id="email_notification" value="0" checked="checked">&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="email_notification" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_notification" id="email_notification" value="0" checked="checked">&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td colspan="3">&nbsp;</td>
@@ -319,11 +322,11 @@ function activate_checkbox(name)
 	<li id="active"><a href="#" id="current">{L_TEAMS}</a></li>
 </ul>
 </div>
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN row_team -->
 <tr>
 	<td class="row1" width="46%">{user_groups.row_team.U_TEAM_NAME}</td>
-	<td class="row3"><label><input type="radio" onClick="activate_checkbox('checkbox_team_{user_groups.row_team.S_MARK_ID}');" name="{user_groups.row_team.S_MARK_NAME}" value="{user_groups.row_team.S_MARK_ID}" {user_groups.row_team.S_ASSIGNED_TEAM}  />&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" onClick="disable_checkbox('checkbox_team_{user_groups.row_team.S_MARK_ID}');" name="{user_groups.row_team.S_MARK_NAME}" value="{user_groups.row_team.S_NEG_MARK_ID}" {user_groups.row_team.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label>&nbsp;&nbsp;<label><input type="checkbox" id="checkbox_team_{user_groups.row_team.S_MARK_ID}" name="mod_team_{user_groups.row_team.S_MARK_ID}" {user_groups.row_team.S_MOD_TEAM} />&nbsp;{L_MODERATOR}</label></td>
+	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_team_{user_groups.row_team.S_MARK_ID}');" name="{user_groups.row_team.S_MARK_NAME}" value="{user_groups.row_team.S_MARK_ID}" {user_groups.row_team.S_ASSIGNED_TEAM}  />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{user_groups.row_team.S_MARK_ID}');" name="{user_groups.row_team.S_MARK_NAME}" value="{user_groups.row_team.S_NEG_MARK_ID}" {user_groups.row_team.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{user_groups.row_team.S_MARK_ID}" name="mod_team_{user_groups.row_team.S_MARK_ID}" {user_groups.row_team.S_MOD_TEAM} />&nbsp;{L_MODERATOR}</label></td>
 </tr>
 <!-- END row_team -->
 <tr>
@@ -331,13 +334,13 @@ function activate_checkbox(name)
 </tr>
 <tr>
 	<td class="row1"><label for="email_notification2">{L_EMAIL_NOTIFICATION}</label></td>
-	<td class="row3"><label><input type="radio" name="email_notification2" value="1">&nbsp;{L_YES}</label>&nbsp;&nbsp;<label><input type="radio" name="email_notification2" id="email_notification2" value="0" checked="checked">&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="email_notification2" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_notification2" id="email_notification2" value="0" checked="checked">&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -401,10 +404,10 @@ function set_color(name,farbe)
 
 <br />
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <!-- BEGIN data -->
 <tr>
-	<td class="row1" width="23%"><label for="{user_auth.data.NAME}">{user_auth.data.TITLE}</label></td>
+	<td class="row1" width="155"><label for="{user_auth.data.NAME}">{user_auth.data.TITLE}</label></td>
 	<td class="row3" {user_auth.data.STATUS} id="color_{user_auth.data.NAME}" nowrap="nowrap">{user_auth.data.S_SELECT} {user_auth.data.S_DEFAULT}</td>
 </tr>
 <!-- END data -->
@@ -416,7 +419,7 @@ function set_color(name,farbe)
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

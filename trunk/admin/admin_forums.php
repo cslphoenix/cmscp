@@ -42,7 +42,6 @@ else
 	$current	= '_submenu_forum';
 	
 	include('./pagestart.php');
-#	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 
 	load_lang('forums');
@@ -52,10 +51,12 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
+	$show_index	= '';
 	
-	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum'] )
 	{
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		log_add(LOG_ADMIN, LOG_SEK_EVENT, 'auth_fail' . $current);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -110,11 +111,6 @@ else
 	
 	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ACL', 'ADM');
 	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
-	
-	$data_id	= request(POST_FORUM_URL, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$show_index	= '';
 	
 	// ------------------
 	// Begin function block
@@ -922,8 +918,8 @@ else
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['forum']),
 		
-		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_creates'], $lang['forum']),
-		'L_CREATE_CATEGORY'	=> sprintf($lang['sprintf_create'], $lang['category']),
+		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['forum']),
+		'L_CREATE_CATEGORY'	=> sprintf($lang['sprintf_new_create'], $lang['category']),
 				
 	#	'L_FORUM_TITLE'		=> $lang['Forum_admin'], 
 	#	'L_FORUM_EXPLAIN'	=> $lang['Forum_admin_explain'], 

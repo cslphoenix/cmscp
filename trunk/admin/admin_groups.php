@@ -63,7 +63,7 @@ else
 	
 	if ( !$userauth['auth_groups'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -195,7 +195,7 @@ else
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['groups']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['group'], $data['group_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['group'], $data['group_name']),
 					'L_OVERVIEW'	=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
 					'L_MEMBER'		=> $lang['group_view_member'],
 					
@@ -1039,7 +1039,7 @@ else
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['groups']),
 		'L_OVERVIEW'	=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
-		'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['group']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['group']),
 		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['groups']),
 		'L_EXPLAIN'		=> $lang['group_explain'],
 		

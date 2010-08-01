@@ -406,7 +406,7 @@ class Template {
 				}
 				else
 				{
-					$code_lines[$i] = '$' . $retvar . '.= \'' . $code_lines[$i] . '\' . "\\n";'; 
+					$code_lines[$i] = '$' . $retvar . '.= \'' . $code_lines[$i] . '\' . "\\n";';
 				}
 			}
 		}

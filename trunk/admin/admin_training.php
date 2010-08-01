@@ -59,7 +59,7 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_training'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_TRAINING, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 
 	if ( $no_header )
@@ -114,7 +114,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['training']),
-				'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['training'], $data['training_vs']),
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['training'], $data['training_vs']),
 				
 				'L_VS'			=> $lang['training_vs'],
 				'L_TEAM'		=> $lang['training_team'],
@@ -293,7 +293,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['training']),
-				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['training']),
+				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['training']),
 				'L_EXPLAIN'	=> $lang['training_explain'],
 				
 				'L_TRAINING'	=> $lang['training'],

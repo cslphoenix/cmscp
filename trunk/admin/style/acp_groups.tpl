@@ -75,7 +75,7 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 	<!-- BEGIN _update -->
 	<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
 	<!-- END _update -->

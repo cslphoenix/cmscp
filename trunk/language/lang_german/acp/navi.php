@@ -49,15 +49,15 @@ $lang['navi_user']			= 'Benutzer Navi';
 
 $lang['subnavi_news_limit']				= 'Anzahl an Nachrichtentiteln';
 $lang['subnavi_news_limit_explain']		= 'Die Zahl angeben, wieviele News untereinander angezeigt werden sollen.';
-$lang['subnavi_news_length']			= 'Anzahl der Zeichen vom Nachrichtentitel';	
+$lang['subnavi_news_length']			= 'Anzahl der Zeichen vom Nachrichtentitel';
 $lang['subnavi_news_length_explain']	= 'Maximale Anzahl an Zeichen die angezeigt werden, der Text wird bei Überschreitung gekürzt und mit ... ergänzt.';
-$lang['subnavi_match_length']			= 'Anzahl der Zeichen vom Name der Gegner';	
+$lang['subnavi_match_length']			= 'Anzahl der Zeichen vom Name der Gegner';
 $lang['subnavi_match_length_explain']	= 'Maximale Anzahl an Zeichen die angezeigt werden, der Text wird bei Überschreitung gekürzt und mit ... ergänzt.';
 $lang['subnavi_match_limit']			= 'Anzahl der Begegnungen';
 $lang['subnavi_match_limit_explain']	= 'Die Zahl angeben, wieviele Begegnungen untereinander angezeigt werden sollen.';
 
 $lang['subnavi_user_cache']		= 'Cachedauer in Sekunden';
-$lang['subnavi_user_length']	= 'Anzahl der Zeichen vom Benutzername';	
+$lang['subnavi_user_length']	= 'Anzahl der Zeichen vom Benutzername';
 $lang['subnavi_user_limit']		= 'Anzahl an Benutzern';
 $lang['subnavi_user_show']		= 'Letzten Neuen Benutzer anzeigen';
 $lang['subnavi_teams_show']		= 'Teams anzeigen';

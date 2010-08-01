@@ -84,6 +84,9 @@ $lang['group_option_access'] = array(
 	USER	=> $lang['auth_user'],
 );
 
+$lang['no_members']		= 'Diese Gruppe hat keine Mitglieder.';
+$lang['no_moderators']	= 'Diese Gruppe hat keine Moderatoren.';
+
 
 
 ?>

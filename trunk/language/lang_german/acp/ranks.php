@@ -30,5 +30,6 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
+$lang['rank']				= 'Rang';
 
 ?>

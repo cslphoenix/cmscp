@@ -90,7 +90,7 @@ $lang['Database_size'] = 'Datenbankgröße';
 $lang['Gzip_compression'] ='GZip-Kompression';
 $lang['Not_available'] = 'Nicht verfügbar';
 
-$lang['ON'] = 'Aktiv'; // This is for GZip compression
+$lang['ON'] = 'Aktiv';// This is for GZip compression
 $lang['OFF'] = 'Inaktiv';
 
 
@@ -163,7 +163,7 @@ $lang['Registered'] = 'Registriert';
 $lang['Administrators'] = 'Administratoren';
 $lang['Hidden'] = 'Versteckt';
 
-// These are displayed in the drop down boxes for advanced
+// These are _displayed in the drop down boxes for advanced
 // mode forum auth, try and keep them short!
 $lang['Forum_ALL'] = 'Alle';
 $lang['Forum_REG'] = 'Reg';
@@ -259,7 +259,7 @@ $lang['Site_desc'] = 'Beschreibung der Seite';
 $lang['Board_disable'] = 'Board deaktivieren';
 $lang['Board_disable_explain'] = 'Hiermit sperrst du das Forum für alle Benutzer. Administratoren können auf den Administrations-Bereich zugreifen, wenn das Forum gesperrt ist.';
 $lang['Acct_activation'] = 'Account-Freischaltung aktivieren';
-$lang['Acc_None'] = 'Keine'; // These three entries are the type of activation
+$lang['Acc_None'] = 'Keine';// These three entries are the type of activation
 $lang['Acc_User'] = 'Per E-Mail';
 $lang['Acc_Admin'] = 'Durch den Admin';
 

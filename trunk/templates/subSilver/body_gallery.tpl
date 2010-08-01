@@ -20,7 +20,7 @@
 <tr>
 	<!-- BEGIN col_pics -->
     <td align="center">
-		<table class="edit" border="0" cellspacing="0" cellpadding="0">
+		<table class="update" border="0" cellspacing="0" cellpadding="0">
         <tr>
         	<td>
 				<a href="{details.row_pics.col_pics.IMAGE}" rel="lightbox" class="info">

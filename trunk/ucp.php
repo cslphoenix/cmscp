@@ -496,7 +496,7 @@ if ( $userdata['session_logged_in'] )
 			
 			for ( $i = 0; $i < $total_categories; $i++ )
 			{
-				$cat_id = $category_rows[$i]['profile_category_id'];
+				$cat_id = $category_rows[$i]['category_id'];
 		
 				$template->assign_block_vars('profile_edit.catrow', array( 
 					'CATEGORY_ID'			=> $cat_id,

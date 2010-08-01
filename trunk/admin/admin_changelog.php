@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -39,8 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
@@ -51,10 +50,10 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_authlist.php', true));
 	}
@@ -85,7 +84,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['authlist_field']),
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['authlist_field']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
 				'L_RESET'		=> $lang['common_reset'],
@@ -124,7 +123,7 @@ else
 			$oCache -> deleteCache('authlist');
 			
 			$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'create_authlist');
+			log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'create_authlist');
 			message(GENERAL_MESSAGE, $message);
 
 			break;
@@ -157,7 +156,7 @@ else
 			$message = $lang['update_authlist']
 				. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
 				. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id) . '">', '</a>');
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'update_authlist');
+			log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'update_authlist');
 			message(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -184,7 +183,7 @@ else
 				$oCache -> deleteCache('authlist');
 				
 				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_AUTHLIST, 'delete_authlist');
+				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'delete_authlist');
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $authlist_id && !$confirm )
@@ -212,13 +211,13 @@ else
 		default:
 		
 			$template->set_filenames(array('body' => 'style/acp_changelog.tpl'));
-			$template->assign_block_vars('display', array());
+			$template->assign_block_vars('_display', array());
 			
 			$s_fields = '<input type="hidden" name="mode" value="_create" />';
 					
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['changelog']),
-				'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['changelog']),
+				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['changelog']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['changelog']),
 				'L_EXPLAIN'		=> $lang['changelog_explain'],
 				

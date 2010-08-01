@@ -11,7 +11,7 @@ class tss2info
 {
 	////// TeamSpeak Einstellungen ///////////////////////////
 //	var $sitetitle       = "TS"; // SeitenTitle und Scriptversion
-//	var $serverAddress   = '88.198.52.237'; // Hier die TeamSpeak IP Adresse eintragen !!wichtig!! (Beispiel: 192.168.7.1)
+//	var $serverAddress   = '88.198.52.237';// Hier die TeamSpeak IP Adresse eintragen !!wichtig!! (Beispiel: 192.168.7.1)
 //	var $serverQueryPort = "26384"; // TeamSpeak QueryPort.. Schau in die server.ini von TeamSpeak (Standard 51234)
 //	var $serverUDPPort   = "8767"; // UDP Port für Teamspeak der auch hinter der IP Adresse genutzt wird (Standard 8767)
 //	var $serverPasswort  = ""; // Serverpasswort das bei Serversettings eingestellt wird (wenn kein Passwort erteilt, dann leer lassen)

@@ -30,6 +30,8 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
+$lang['user_pass_random']	= 'Beispiel: %s';
+
 //
 //	Benutzer
 //

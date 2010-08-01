@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_CONTACT_ACTION}" method="post">
 <table class="head" cellspacing="0">
 <tr>
@@ -32,22 +32,22 @@
 	<td class="rowHead" colspan="3">{L_CONTACT_SETTINGS}</td>
 </tr>
 <!-- BEGIN contact_row -->
-<tr onClick="document.getElementById('id_{display.contact_row.CONTACT_ID}').style.display = '';">
-	<td class="{display.contact_row.CLASS}" align="center" width="1%">{display.contact_row.CONTACT_GAME}</td>
-	<td class="{display.contact_row.CLASS}" align="center" width="1%">{display.contact_row.CONTACT_TYPE}</td>
-	<td class="{display.contact_row.CLASS}" align="left" width="1%">{display.contact_row.CONTACT_STATUS}</td>
-	<td class="{display.contact_row.CLASS}" align="left" width="100%" nowrap="nowrap">{display.contact_row.CONTACT_FROM}</td>
-	<td class="{display.contact_row.CLASS}" align="left" width="1%" nowrap="nowrap">{display.contact_row.CONTACT_DATE}</td>
+<tr onClick="document.getElementById('id_{_display.contact_row.CONTACT_ID}').style.display = '';">
+	<td class="{_display.contact_row.CLASS}" align="center" width="1%">{_display.contact_row.CONTACT_GAME}</td>
+	<td class="{_display.contact_row.CLASS}" align="center" width="1%">{_display.contact_row.CONTACT_TYPE}</td>
+	<td class="{_display.contact_row.CLASS}" align="left" width="1%">{_display.contact_row.CONTACT_STATUS}</td>
+	<td class="{_display.contact_row.CLASS}" align="left" width="100%" nowrap="nowrap">{_display.contact_row.CONTACT_FROM}</td>
+	<td class="{_display.contact_row.CLASS}" align="left" width="1%" nowrap="nowrap">{_display.contact_row.CONTACT_DATE}</td>
 
-	<td class="{display.contact_row.CLASS}" align="center" width="1%"><a href="{display.contact_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{_display.contact_row.CLASS}" align="center" width="1%"><a href="{_display.contact_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
-<tr id="id_{display.contact_row.CONTACT_ID}" style="display: none;">
-	<td class="{display.contact_row.CLASS}" colspan="8">
+<tr id="id_{_display.contact_row.CONTACT_ID}" style="display: none;">
+	<td class="{_display.contact_row.CLASS}" colspan="8">
 	
 		<table width="10%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td>Mail:</td>
-			<td>{display.contact_row.CONTACT_MAIL}</td>
+			<td>{_display.contact_row.CONTACT_MAIL}</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -59,7 +59,7 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><a onClick="document.getElementById('id_{display.contact_row.CONTACT_ID}').style.display = 'none';" href="#">close</a></td>
+			<td><a onClick="document.getElementById('id_{_display.contact_row.CONTACT_ID}').style.display = 'none';" href="#">close</a></td>
 		</tr>
 		</table>
 
@@ -74,14 +74,14 @@
 <!-- END no_entry -->
 </table>
 
-<table class="foot" cellspacing="4">
+<table class="footer" cellspacing="4">
 <tr>
 	<td width="50%" align="left">{PAGE_NUMBER}</td>
 	<td width="50%" align="right">{PAGINATION}</td>
 </tr>
 </table>
 </form>
-<!-- END display -->
+<!-- END _display -->
 
 <!-- BEGIN _edit -->
 
@@ -159,7 +159,7 @@
 </tr>
 <!-- END no_entry -->
 </table>
-<table class="foot" cellspacing="4">
+<table class="footer" cellspacing="4">
 <tr>
 	<td width="50%" align="left">{PAGE_NUMBER}</td>
 	<td width="50%" align="right">{PAGINATION}</td>

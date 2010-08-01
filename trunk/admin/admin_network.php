@@ -59,10 +59,10 @@ else
 	$path_dir	= $root_path . $settings['path_network'] . '/';
 	$show_index	= '';
 	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_network'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_NETWORK, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -110,29 +110,24 @@ else
 					$template->assign_block_vars('_input._image', array());
 				}
 				
-				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_NETWORK_URL . '" value="' . $data_id . '" />';
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['network']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['network_field'], $data['network_name']),
-					'L_INFOS'		=> $lang['common_data_input'],
-					
-					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['network']),
-					'L_TYPE'	=> sprintf($lang['sprintf_type'], $lang['network']),
-					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['network']),
-					'L_URL'		=> $lang['network_url'],
-					
+					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['network']),
+					'L_INPUT'			=> sprintf($lang['sprintf' . $mode], $lang['network_field'], $data['network_name']),
+					'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['network']),
+					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['network']),
+					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['network']),
+					'L_URL'				=> $lang['network_url'],
 					'L_TYPE_LINK'		=> $lang['network_link'],
 					'L_TYPE_PARTNER'	=> $lang['network_partner'],
 					'L_TYPE_SPONSOR'	=> $lang['network_sponsor'],
-					
 					'L_VIEW'			=> $lang['common_view'],
 					'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
 					
-					'NAME'	=> $data['network_name'],
-					'URL'	=> $data['network_url'],
-					'IMAGE'	=> $path_dir . $data['network_image'],
+					'NAME'				=> $data['network_name'],
+					'URL'				=> $data['network_url'],
+					'IMAGE'				=> $path_dir . $data['network_image'],
 
 					'S_TYPE_LINK'		=> ( $data['network_type'] == NETWORK_LINK ) ? ' checked="checked"' : '',
 					'S_TYPE_PARTNER'	=> ( $data['network_type'] == NETWORK_PARTNER ) ? ' checked="checked"' : '',
@@ -140,8 +135,8 @@ else
 					'S_VIEW_YES'		=> ( $data['network_view'] ) ? ' checked="checked"' : '',
 					'S_VIEW_NO'			=> ( !$data['network_view'] ) ? ' checked="checked"' : '',
 					
-					'S_FIELDS'	=> $s_fields,
-					'S_ACTION'	=> append_sid('admin_network.php'),
+					'S_FIELDS'			=> $s_fields,
+					'S_ACTION'			=> append_sid('admin_network.php'),
 				));
 				
 				if ( request('submit', 2) )
@@ -153,21 +148,19 @@ else
 					$network_image	= request_file('network_image');
 					$network_info	= ( $network_type != NETWORK_LINK ) ? ( $network_type == NETWORK_PARTNER ) ? $lang['network_partner'] : $lang['network_sponsor'] : $lang['network_link'];
 					
-					$error = '';
-					$error .= ( !$network_name ) ? $lang['msg_select_name'] : '';
+					$error = ( !$network_name ) ? $lang['msg_select_name'] : '';
 					$error .= ( !$network_url ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_url'] : '';
 					
 					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
-							$max_row	= get_data_max(NETWORK, 'network_order', 'network_type = ' . $network_type);
-							$next_order	= $max_row['max'] + 10;
+							$max = get_data_max(NETWORK, 'network_order', 'network_type = ' . $network_type);
 							
 							$sql_pic = ( $network_image ) ? image_upload('_create', 'image_network', 'network_image', '', '', '', $root_path . $settings['path_network'] . '/', $network_image['temp'], $network_image['name'], $network_image['size'], $network_image['type']) : '';
 							
 							$sql = "INSERT INTO " . NETWORK . " (network_name, network_type, network_url, network_view, network_image, network_order)
-										VALUES ('$network_name', '$network_type', '$network_url', '$network_view', '$sql_pic', '$next_order')";
+										VALUES ('$network_name', '$network_type', '$network_url', '$network_view', '$sql_pic', " . ($max['max'] + 10) . ")";
 							if ( !$db->sql_query($sql) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -319,7 +312,7 @@ else
 	
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['network']),
-		'L_CREATE'		=> sprintf($lang['sprintf_createn'], $lang['network_field']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_createn'], $lang['network_field']),
 		'L_EXPLAIN'		=> $lang['network_explain'],
 		
 		'L_LINK'	=> $lang['network_link'],
