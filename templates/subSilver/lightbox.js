@@ -216,7 +216,7 @@ function showLightbox(objLink)
 			pause(250);
 		} 
 
-		if (objLoadingImage) {	objLoadingImage.style.display = 'none'; }
+		if (objLoadingImage) {	objLoadingImage.style.display = 'none';}
 
 		// Hide select boxes as they will 'peek' through the image in IE
 		selects = document.getElementsByTagName("select");
@@ -357,7 +357,7 @@ function initLightbox()
 	objLightbox.setAttribute('id','lightbox');
 	objLightbox.style.display = 'none';
 	objLightbox.style.position = 'absolute';
-	objLightbox.style.zIndex = '100';	
+	objLightbox.style.zIndex = '100';
 	objBody.insertBefore(objLightbox, objOverlay.nextSibling);
 	
 	// create link

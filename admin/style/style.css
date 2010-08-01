@@ -489,3 +489,7 @@ a.copyright:hover	{ color: #fff; text-decoration: underline;}
 }
 
 tr.wihte:hover {background-color:#efefef;}
+
+.win { color:#0C0; }
+.lose { color:#F00; }
+.draw { color:#FC0; }

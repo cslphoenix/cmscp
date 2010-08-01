@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -97,7 +97,7 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 			
 			for ( $i = 0; $i < $total_categories; $i++ )
 			{
-				$cat_id = $category_rows[$i]['profile_category_id'];
+				$cat_id = $category_rows[$i]['category_id'];
 		
 				$template->assign_block_vars('details.info_cat', array( 
 					'CATEGORY_ID'			=> $cat_id,

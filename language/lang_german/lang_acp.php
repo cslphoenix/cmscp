@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -35,6 +35,7 @@ $lang['_headmenu_news']			= 'News';
 $lang['_headmenu_teams']		= 'Teams';
 $lang['_headmenu_development']	= 'Entwicklung';
 $lang['_headmenu_users']		= 'Benutzer';
+$lang['_headmenu_group']		= 'Gruppe';
 
 $lang['_submenu_authlist']		= 'Berechtigungsfelder';
 $lang['_submenu_cash']			= 'Clankasse';
@@ -48,6 +49,7 @@ $lang['_submenu_newscat']		= 'Newskategorie';
 $lang['_submenu_newsletter']	= 'Newsletter';
 $lang['_submenu_settings']		= 'Einstellungen';
 $lang['_submenu_index']			= 'Übersicht';
+$lang['_submenu_teams']			= 'Teams';
 
 $lang['_submenu_training']		= 'Training';
 $lang['_submenu_auth']			= 'Berechtigung';
@@ -57,7 +59,6 @@ $lang['_submenu_bugtracker']	= 'Bugtracker';
 $lang['_submenu_logs']			= 'Protokoll';
 $lang['_submenu_logs_error']	= 'Fehlerprotokoll';
 $lang['_submenu_settings']		= 'Einstellungen';
-$lang['_headmenu_group']		= 'Gruppe';
 
 
 
@@ -94,35 +95,38 @@ $lang['sprintf_processing']		= '%s Bearbeitung';
 $lang['sprintf_message']		= '%s Nachricht';
 $lang['sprintf_normal']			= '%s';
 
+$lang['sprintf_upload_info']	= '%s x %s / %s KB\'s';
+
 /*
  *	Allgemeine Sprachdateien
  */
-$lang['common_auth']			= 'Berechtigung';	
-$lang['common_comment']			= 'Kommentar';	
+$lang['common_auth']			= 'Berechtigung';
+$lang['common_comment']			= 'Kommentar';
 $lang['common_comments']		= 'Kommentare?';		
-$lang['common_date']			= 'Datum';	
-$lang['common_default']			= 'Standarteinstellungen';	
-$lang['common_delete']			= 'Löschen';	
-$lang['common_details']			= 'Details';	
+$lang['common_date']			= 'Datum';
+$lang['common_default']			= 'Standarteinstellungen';
+$lang['common_delete']			= 'Löschen';
+$lang['common_details']			= 'Details';
 $lang['common_duration']		= 'Dauer';		
-$lang['common_member']			= 'Mitglied';	
-$lang['common_members']			= 'Mitglieder';	
+$lang['common_member']			= 'Mitglied';
+$lang['common_members']			= 'Mitglieder';
 $lang['common_moderator']		= 'Moderator';		
 $lang['common_moderators']		= 'Moderatoren';		
-$lang['common_more']			= 'Erweitern';	
+$lang['common_more']			= 'Erweitern';
 $lang['common_no']				= 'Nein';
 $lang['common_overview']		= 'Übersicht';		
-$lang['common_remove']			= 'Entfernen';	
-$lang['common_reset']			= 'Zurücksetzen';	
-$lang['common_setting']			= 'Einstellung';	
+$lang['common_remove']			= 'Entfernen';
+$lang['common_reset']			= 'Zurücksetzen';
+$lang['common_setting']			= 'Einstellung';
 $lang['common_settings']		= 'Einstellungen';		
-$lang['common_submit']			= 'Absenden';	
-$lang['common_update']			= 'Bearbeiten';	
-$lang['common_upload']			= 'Upload';	
+$lang['common_submit']			= 'Absenden';
+$lang['common_update']			= 'Bearbeiten';
+$lang['common_upload']			= 'Upload';
 $lang['common_userlevel']		= 'Benutzerlevel';		
-$lang['common_view']			= 'Anzeigen';	
+$lang['common_view']			= 'Anzeigen';
 $lang['common_yes']				= 'Ja';
 $lang['common_default']			= 'Standarteinstellungen';
+$lang['common_add']				= 'Hinzufügen';
 
 $lang['common_image']			= 'Bild';
 $lang['common_image_delete']	= 'Bild löschen';
@@ -132,6 +136,8 @@ $lang['common_language']		= 'Sprachdatei?';
 $lang['common_desc']			= 'Beschreibung';
 $lang['common_message']			= 'Nachricht';
 $lang['common_intern']			= 'Intern?';
+
+$lang['common_msg_imagesize']	= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
 /*
  *	Profilefelder
@@ -202,7 +208,7 @@ $lang['rank_image']		= 'Rangbild';
 $lang['rank_type']		= 'Rangtype';
 $lang['rank_standard']	= 'Standardrang';
 
-$lang['switch_level']		= array(ADMIN => $lang['auth_admin'], MOD => $lang['auth_mod'], MEMBER => $lang['auth_member'], TRIAL => $lang['auth_trial'], USER => $lang['auth_user'], GUEST => $lang['auth_guest']);
+$lang['switch_level']		= array(GUEST => $lang['auth_guest'], USER => $lang['auth_user'], TRIAL => $lang['auth_trial'], MEMBER => $lang['auth_member'], MOD => $lang['auth_mod'], ADMIN => $lang['auth_admin']);
 
 
 $lang['image_filesize']			= 'Die Dateigröße muss kleiner als %d KB sein.';
@@ -246,13 +252,10 @@ $lang['msg_select_no_members']			= 'Keine Member ausgewählt.';
 
 $lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
 
-$lang['auth_fail']					= 'Keine Berechtiung für dieses Modul';
-
-
 /*
  *	Erstellen / Erneuern / Löschen / Bestätigen zum Löschen / Klicks
  */	
-$lang['create_authlist']			= 'Neues Berechtigungsfeld hinzugefügt.';
+
 $lang['create_event']				= 'Neues Event hinzugefügt.';
 $lang['create_forum']				= 'Neues Forum hinzugefügt.';
 $lang['create_game']				= 'Neues Spiel hinzugefügt.';
@@ -268,6 +271,7 @@ $lang['create_profile']				= 'Neues Profilefeld hinzugefügt.';
 $lang['create_profile_cat']			= 'Neues Profilekategorie hinzugefügt.';
 $lang['create_rank']				= 'Neuer Rang hinzugefügt.';
 $lang['create_team']				= 'Neues Team hinzugefügt.';
+$lang['create_team_user']			= 'Neuen Spieler hinzugefügt.';
 $lang['create_teamspeak']			= 'Neuen Teamspeak Server hinzugefügt.';
 $lang['create_training']			= 'Neues Training hinzugefügt.';
 $lang['create_user']				= 'Neuen Benutzer hinzugefügt.';
@@ -293,6 +297,8 @@ $lang['update_profile']				= 'Profilefeld erfolgreich geändert';
 $lang['update_profile_cat']			= 'Profilekategorie erfolgreich geändert';
 $lang['update_rank']				= 'Rangdaten erfolgreich geändert';
 $lang['update_team']				= 'Teamdaten erfolgreich geändert';
+$lang['update_team_rank']			= 'Spielerränge geändert';
+$lang['update_team_level']			= 'Spielerrechte geändert';
 $lang['update_teamspeak']			= 'Teamspeakdaten erfolgreich geändert';
 $lang['update_training']			= 'Trainingsdaten erfolgreich geändert';
 $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
@@ -322,6 +328,7 @@ $lang['delete_profile']				= 'Das Profilefeld wurde gelöscht';
 $lang['delete_profile_cat']			= 'Die Profilekategorie wurde gelöscht';
 $lang['delete_rank']				= 'Der Rang wurde gelöscht';
 $lang['delete_team']				= 'Das Team wurde gelöscht';
+$lang['delete_team_user']			= 'Spieler aus dem Team entfernt';
 $lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht';
 $lang['delete_training']			= 'Der Rang wurde gelöscht';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht';
@@ -332,6 +339,8 @@ $lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht';
 $lang['delete_cash_bankdata']		= 'Die Bankdaten wurden gelöscht';
 $lang['delete_gallery']				= 'Die Galerie wurde gelöscht';
 $lang['delete_gallery_pic']			= 'Das Bilder oder die Bilder wurden gelöscht!';
+
+$lang['confirm_delete_bankdata']	= 'Bist du sicher, dass die Bankdaten gelöscht werden soll?';
 
 $lang['delete_confirm_authlist']	= 'dass dieses Berechtigunsfeld:';
 $lang['delete_confirm_event']		= 'dass dieses Event:';
@@ -344,6 +353,8 @@ $lang['delete_confirm_rank']		= 'dass dieser Rang:';
 $lang['delete_confirm_group']		= 'das diese Gruppe:';
 $lang['delete_confirm_navigation']	= 'das der Link:';
 $lang['delete_confirm_network']		= 'das der %s:';
+$lang['delete_confirm_team']		= 'dass dieses Team:';
+$lang['delete_confirm_team_user']	= 'dass dieser Spiele(r): %s vom Team:';
 
 $lang['sprintf_delete_confirm']		= 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?';
 
@@ -358,7 +369,7 @@ $lang['sprintf_confirm_delete_log_error']		= 'Bist du sicher, das dieser oder di
 $lang['sprintf_confirm_delete_news']			= 'Bist du sicher, das die News gelöscht werden soll?';
 
 $lang['sprintf_confirm_delete_newsletter']		= 'Bist du sicher, das die eMailadresse gelöscht werden soll?';
-$lang['sprintf_confirm_delete_newsletter_all']	= 'Bist du sicher, das alle eMailadresse gelöscht werden sollen?';	
+$lang['sprintf_confirm_delete_newsletter_all']	= 'Bist du sicher, das alle eMailadresse gelöscht werden sollen?';
 $lang['sprintf_confirm_delete_profile']			= 'Bist du sicher, dass dieses Profilefeld gelöscht werden soll?';
 $lang['sprintf_confirm_delete_profile_cat']		= 'Bist du sicher, dass diese Profilekategorie gelöscht werden soll?';
 $lang['sprintf_confirm_delete_rank']			= 'Bist du sicher, dass dieser Rang gelöscht werden soll?';
@@ -401,10 +412,12 @@ $lang['click_return_user']				= '<br><br>Klicke %shier%s, um zur Benutzer Admini
 $lang['click_return_user_auths']		= '<br><br>Klicke %shier%s, um zur Benutzer (Seitenberechtigung) Administration zurückzukehren';
 $lang['click_return_user_groups']		= '<br><br>Klicke %shier%s, um zur Benutzer (Benutzergruppen & Teams) Administration zurückzukehren';
 $lang['click_return_cash']				= '<br><br>Klicke %shier%s, um zur Clankassen Administration zurückzukehren';
-$lang['click_return_gallery']			= '<br><br>Klicke %shier%s, um zur Galerie Administration zurückzukehren';
+#$lang['click_return_gallery']			= '<br><br>Klicke %shier%s, um zur Galerie Administration zurückzukehren';
 $lang['click_return_gallery_pic']		= '<br><br>Klicke %shier%s, um zur Galerie Übersicht zurückzukehren';
 
 $lang['click_return_update']			= '<br><br><strong>%s&laquo; zurück%s</strong>';
+
+$lang['click_return_gallery']			= '<br><br><strong>%s&laquo; Galerie Administration%s</strong>';
 
 
 ?>

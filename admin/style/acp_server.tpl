@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_SERVER_ACTION}" method="post">
 <table class="head" cellspacing="0">
 <tr>
@@ -24,10 +24,10 @@
 </tr>
 <!-- BEGIN server_row -->
 <tr>
-	<td class="{display.server_row.CLASS}" align="left">{display.server_row.SERVER_NAME}</td>
-	<td class="{display.server_row.CLASS}" align="center" width="1%"><a href="{display.server_row.U_EDIT}">{L_EDIT}</a></td>		
-	<td class="{display.server_row.CLASS}" align="center" width="6%"><a href="{display.server_row.U_MOVE_UP}">{display.server_row.ICON_UP}</a> <a href="{display.server_row.U_MOVE_DOWN}">{display.server_row.ICON_DOWN}</a></td>
-	<td class="{display.server_row.CLASS}" align="center" width="1%"><a href="{display.server_row.U_DELETE}">{L_DELETE}</a></td>
+	<td class="{_display.server_row.CLASS}" align="left">{_display.server_row.SERVER_NAME}</td>
+	<td class="{_display.server_row.CLASS}" align="center" width="1%"><a href="{_display.server_row.U_EDIT}">{L_EDIT}</a></td>		
+	<td class="{_display.server_row.CLASS}" align="center" width="6%"><a href="{_display.server_row.U_MOVE_UP}">{_display.server_row.ICON_UP}</a> <a href="{_display.server_row.U_MOVE_DOWN}">{_display.server_row.ICON_DOWN}</a></td>
+	<td class="{_display.server_row.CLASS}" align="center" width="1%"><a href="{_display.server_row.U_DELETE}">{L_DELETE}</a></td>
 </tr>
 <!-- END server_row -->
 <!-- BEGIN no_entry -->
@@ -37,14 +37,14 @@
 <!-- END no_entry -->
 </table>
 
-<table class="foot" cellspacing="2">
+<table class="footer" cellspacing="2">
 <tr>
 	<td width="100%" align="right"><input class="post" name="game_name" type="text" value=""></td>
 	<td><input type="hidden" name="mode" value="add" /><input class="button" type="submit" name="add" value="{L_SERVER_ADD}"></td>
 </tr>
 </table>
 </form>
-<!-- END display -->
+<!-- END _display -->
 
 
 <!-- BEGIN server_edit -->
@@ -67,7 +67,7 @@
 
 <br>
 
-<table class="edit" border="0" cellspacing="0" cellpadding="0">
+<table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
 	<td class="row3" width="80%"><input type="text" class="post" name="server_name" value="{SERVER_NAME}"></td>
@@ -81,23 +81,23 @@
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input type="text" class="post" name="server_ip" value="{SERVER_IP}"></td>
+	<td class="row2"><input type="text" class="post" name="server_ip" value="{SERVER_IP}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input type="text" class="post" name="server_port" value="{SERVER_PORT}"></td>
+	<td class="row2"><input type="text" class="post" name="server_port" value="{SERVER_PORT}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input type="text" class="post" name="server_qport" value="{SERVER_QPORT}"></td>
+	<td class="row2"><input type="text" class="post" name="server_qport" value="{SERVER_QPORT}"></td>
 </tr>
 <tr>
 	<td class="row1" width="20%">{L_SERVER_NAME}: *</td>
-	<td class="row3"><input type="text" class="post" name="server_pw" value="{SERVER_PW}"></td>
+	<td class="row2"><input type="text" class="post" name="server_pw" value="{SERVER_PW}"></td>
 </tr>
 <tr>
 	<td class="row1">{L_SERVER_LIVE}:</td>
-	<td class="row3">{S_LIVE}&nbsp;
+	<td class="row2">{S_LIVE}&nbsp;
 	</td>
 </tr>
 <tr>
@@ -129,7 +129,7 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;&nbsp;<input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

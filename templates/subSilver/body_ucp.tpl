@@ -134,7 +134,7 @@
 <!-- BEGIN profilerow -->
 <tr> 
 	<td class="row1" width="160">{profile_edit.catrow.profilerow.NAME}</td>
-	<td class="row3">{profile_edit.catrow.profilerow.FIELD}</td>
+	<td class="row2">{profile_edit.catrow.profilerow.FIELD}</td>
 </tr>
 <!-- END profilerow -->
 <!-- END catrow -->

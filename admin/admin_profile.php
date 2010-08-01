@@ -60,7 +60,7 @@ else
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_PROFILE, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -153,7 +153,7 @@ else
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
-					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['profile_field'], $data['profile_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['profile_field'], $data['profile_name']),
 				
 					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['profile_field']),
 					'L_FIELD'		=> $lang['profile_field'],
@@ -463,7 +463,7 @@ else
 	
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile_cat']),
-					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['profile_cat'], $data['category_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['profile_cat'], $data['category_name']),
 											 
 					'L_NAME'	=> sprintf($lang['sprintf_category'], $lang['profile_field']),
 					
@@ -552,11 +552,11 @@ else
 			
 	$template->assign_vars(array(
 	#	'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['profile']),
-	#	'L_CREATE'		=> sprintf($lang['sprintf_creates'], $lang['profile_field']),
+	#	'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['profile_field']),
 	#	'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['profile']),
 	#	'L_EXPLAIN'		=> $lang['profile_explain'],
 	#	
-		'L_CAT_CREATE'	=> sprintf($lang['sprintf_create'], $lang['profile_cat']), 
+		'L_CAT_CREATE'	=> sprintf($lang['sprintf_new_create'], $lang['profile_cat']), 
 		
 		'S_ACTION'	=> append_sid('admin_profile.php'),
 	));

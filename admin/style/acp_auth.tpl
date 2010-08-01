@@ -1,4 +1,4 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 <form action="{S_AUTH_ACTION}" method="get">
 <div id="navcontainer">
 	<ul id="navlist">
@@ -22,7 +22,7 @@
 </tr>
 </table>
 </form>
-<!-- END display -->
+<!-- END _display -->
 
 <!-- BEGIN auth_forum -->
 <form action="{S_FORUMAUTH_ACTION}" method="post">

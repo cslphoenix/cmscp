@@ -94,7 +94,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="rank_title"></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -106,7 +106,7 @@
 // <![CDATA[
 	function update_image(newimage)
 	{
-		document.getElementById('image').src = (newimage) ? "{IMAGE_PATH}/" + encodeURI(newimage) : "{IMAGE_DEFAULT}";
+		document.getElementById('image').src = (newimage) ? "{S_PATH}/" + encodeURI(newimage) : "./images/spacer.gif";
 	}
 // ]]>
 </script>
@@ -115,7 +115,7 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 
@@ -138,16 +138,16 @@
 	</th>
 </tr>
 <tr>
-	<td class="row1" width="155"><label for="rank_title">{L_NAME}: *</label></td>
+	<td class="row1" width="155"><label for="rank_title">{L_TITLE}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="rank_title" id="rank_title" value="{TITLE}"></td>
 </tr>
 <tr>
 	<td class="row1 top"><label for="rank_image">{L_IMAGE}:</label></td>
-	<td class="row3 top">{IMAGE_LIST}<br /><img src="{IMAGE}" id="image" alt="" /></td>
+	<td class="row2 top">{S_LIST}<br /><img src="{PIC}" id="image" alt="" /></td>
 </tr>
 <tr>
 	<td class="row1 top"><label for="rank_type">{L_TYPE}:</label></td>
-	<td class="row3">
+	<td class="row2">
 		<label><input type="radio" name="rank_type" value="2" id="rank_type" {S_TYPE_FORUM} />&nbsp;{L_TYPE_FORUM} <sup>1</sup></label><br />
 		<label><input type="radio" name="rank_type" value="1" {S_TYPE_PAGE} />&nbsp;{L_TYPE_PAGE} <sup>2</sup></label><br />
 		<label><input type="radio" name="rank_type" value="3" {S_TYPE_TEAM} />&nbsp;{L_TYPE_TEAM} <sup>2</sup></label>
@@ -169,15 +169,15 @@
 <tr>
 	<td class="row1 top"><label for="rank_type">{L_TYPE}:</label></td>
 	<td class="row3">
-		<label><input type="radio" name="rank_type" value="1" onChange="document.getElementById('forum').style.display = 'none'; document.getElementById('other').style.display = ''; document.getElementById('special').style.display = 'none';" id="rank_type" {S_TYPE_PAGE} />&nbsp;{L_TYPE_PAGE}</label><br />
-		<label><input type="radio" name="rank_type" value="2" onChange="document.getElementById('forum').style.display = ''; document.getElementById('other').style.display = 'none';" {S_TYPE_FORUM} />&nbsp;{L_TYPE_FORUM}</label><br />
-		<label><input type="radio" name="rank_type" value="3" onChange="document.getElementById('forum').style.display = 'none'; document.getElementById('other').style.display = ''; document.getElementById('special').style.display = 'none';" {S_TYPE_TEAM} />&nbsp;{L_TYPE_TEAM}</label>
+		<label><input type="radio" name="rank_type" value="1" onChange="document.getElementById('forum').style.display = 'none';document.getElementById('other').style.display = '';document.getElementById('special').style.display = 'none';" id="rank_type" {S_TYPE_PAGE} />&nbsp;{L_TYPE_PAGE}</label><br />
+		<label><input type="radio" name="rank_type" value="2" onChange="document.getElementById('forum').style.display = '';document.getElementById('other').style.display = 'none';" {S_TYPE_FORUM} />&nbsp;{L_TYPE_FORUM}</label><br />
+		<label><input type="radio" name="rank_type" value="3" onChange="document.getElementById('forum').style.display = 'none';document.getElementById('other').style.display = '';document.getElementById('special').style.display = 'none';" {S_TYPE_TEAM} />&nbsp;{L_TYPE_TEAM}</label>
 	</td> 
 </tr>
 <tbody id="forum" style="display:none;">
 <tr>
 	<td class="row1">{L_SPECIAL}:</td>
-	<td class="row2"><input type="radio" name="rank_special" value="1" onClick="this.form.rank_min.value=''; document.getElementById('special').style.display = 'none';" {S_SPECIAL_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="rank_special" value="0" onClick="document.getElementById('special').style.display = '';" {S_SPECIAL_NO} />&nbsp;{L_NO}</td>
+	<td class="row2"><input type="radio" name="rank_special" value="1" onClick="this.form.rank_min.value='';document.getElementById('special').style.display = 'none';" {S_SPECIAL_YES} />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" name="rank_special" value="0" onClick="document.getElementById('special').style.display = '';" {S_SPECIAL_NO} />&nbsp;{L_NO}</td>
 </tr>
 <tbody id="special" style="display:none;">
 <tr>

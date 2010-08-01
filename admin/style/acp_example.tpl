@@ -1,6 +1,6 @@
-<!-- BEGIN display -->
+<!-- BEGIN _display -->
 
-<!-- END display -->
+<!-- END _display -->
 
 <!-- BEGIN _edit -->
 

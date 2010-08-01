@@ -103,7 +103,7 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_PROFILE_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 

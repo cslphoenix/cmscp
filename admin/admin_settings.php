@@ -51,7 +51,7 @@ else
 
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	function _select_path($default = '')

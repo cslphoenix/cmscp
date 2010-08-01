@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -48,10 +48,10 @@ else
 	
 	if ( !$userauth['auth_games'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_match.php', true));
 	}
@@ -252,7 +252,7 @@ else
 					message(GENERAL_ERROR, 'Could not insert row in team table', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
+				log_add(LOG_ADMIN, LOG_SEK_SERVER, ACP_SERVER_ADD, $server_title);
 	
 				$message = $lang['team_create'] . sprintf($lang['click_return_team'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -283,7 +283,7 @@ else
 					message(GENERAL_ERROR, 'Could not update team information', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
+				log_add(LOG_ADMIN, LOG_SEK_SERVER, ACP_TEAM_EDIT, $log_data);
 				
 				$message = $lang['team_update'] . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -313,7 +313,7 @@ else
 						message(GENERAL_ERROR, 'Could not delete team', '', __LINE__, __FILE__, $sql);
 					}
 				
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
+					log_add(LOG_ADMIN, LOG_SEK_SERVER, ACP_SERVER_DELETE, $team_info['server_title']);
 					
 					$message = $lang['team_delete'] . sprintf($lang['click_return_server'], '<a href="' . append_sid('admin_server.php') . '">', '</a>');
 					message(GENERAL_MESSAGE, $message);
@@ -354,7 +354,7 @@ else
 		
 				renumber_server('server');
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_SERVER, 'ACP_SERVER_ORDER');
+				log_add(LOG_ADMIN, LOG_SEK_SERVER, 'ACP_SERVER_ORDER');
 				
 				$show_index = TRUE;
 	
@@ -362,7 +362,7 @@ else
 				
 			default:
 			
-				message(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['msg_no_module_select']);
 				
 				break;
 				break;
@@ -376,7 +376,7 @@ else
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_server.tpl'));
-	$template->assign_block_vars('display', array());
+	$template->assign_block_vars('_display', array());
 	
 	$template->assign_vars(array(
 		'L_SERVER_HEAD'		=> $lang['gs_head'],

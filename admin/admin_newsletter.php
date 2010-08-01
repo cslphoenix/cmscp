@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -47,10 +47,10 @@ else
 	
 	if ( !$userauth['auth_newsletter'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_newsletter.php', true));
 	}
@@ -107,7 +107,7 @@ else
 
 				$template->assign_vars(array(
 					'L_NL_HEAD'			=> $lang['newsletter_head'],
-					'L_NL_NEW_EDIT'		=> ($mode == 'add') ? $lang['newsletter_add'] : $lang['newsletter_edit'],
+					'L_NL_INPUT'		=> ($mode == 'add') ? $lang['newsletter_add'] : $lang['newsletter_edit'],
 					'L_REQUIRED'		=> $lang['required'],
 					
 					'L_NL_EMAIL'		=> $lang['newsletter_mail'],
@@ -145,7 +145,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWS, 'acp_newsletter_edit', $newsletter_mail);
+				log_add(LOG_ADMIN, LOG_SEK_NEWS, 'acp_newsletter_edit', $newsletter_mail);
 	
 				$message = $lang['create_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -168,7 +168,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
+				log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
 				
 				$message = $lang['update_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -189,7 +189,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
+					log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
 					
 					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
 					message(GENERAL_MESSAGE, $message);
@@ -232,7 +232,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
+					log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
 					
 					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
 					message(GENERAL_MESSAGE, $message);
@@ -264,7 +264,7 @@ else
 			
 			default:
 			
-				message(GENERAL_ERROR, $lang['no_select_module']);
+				message(GENERAL_ERROR, $lang['msg_no_module_select']);
 				
 				break;
 				break;
@@ -278,7 +278,7 @@ else
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_newsletter.tpl'));
-	$template->assign_block_vars('display', array());
+	$template->assign_block_vars('_display', array());
 			
 	$template->assign_vars(array(
 		'L_NL_TITLE'		=> $lang['newsletter_head'],
@@ -303,7 +303,7 @@ else
 	
 	if ( !$newsletter_data )
 	{
-		$template->assign_block_vars('display.no_entry', array());
+		$template->assign_block_vars('_display._no_entry', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else

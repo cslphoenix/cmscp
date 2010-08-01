@@ -66,12 +66,12 @@ else
 	
 	if ( $mode == 'user' && !$userauth['auth_user'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $mode != 'user' && !$userauth['auth_groups'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	//
@@ -1038,7 +1038,7 @@ else
 		{
 			$t_username = $ug_info[0]['username'];
 			$s_user_type = '<select name="userlevel">';
-			$s_user_type .= ($is_admin) ? '<option value="admin" selected="selected">' . $lang['auth_admin'] . '</option>' : '<option value="admin">' . $lang['auth_admin'] . '</option>'; 
+			$s_user_type .= ($is_admin) ? '<option value="admin" selected="selected">' . $lang['auth_admin'] . '</option>' : '<option value="admin">' . $lang['auth_admin'] . '</option>';
 			$s_user_type .= ($is_mod) ? '<option value="mod" selected="selected">' . $lang['auth_mod'] . '</option>' : '<option value="mod">' . $lang['auth_mod'] . '</option>';
 			$s_user_type .= ($is_member) ? '<option value="member" selected="selected">' . $lang['auth_member'] . '</option>' : '<option value="member">' . $lang['auth_member'] . '</option>';
 			$s_user_type .= ($is_trial) ? '<option value="trial" selected="selected">' . $lang['auth_trial'] . '</option>' : '<option value="trial">' . $lang['auth_trial'] . '</option>';

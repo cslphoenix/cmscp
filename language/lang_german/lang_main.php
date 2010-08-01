@@ -16,14 +16,16 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
 include('lang_head.php');
+
+$lang['user']			= 'Benutzer';
 
 $lang['Today_at'] = "Today at %s"; // %s is the time
 $lang['Yesterday_at'] = "Yesterday at %s"; // %s is the time
@@ -38,8 +40,7 @@ $lang['sprintf_subnavi_match_i']		= '<span style="font-style:italic;">vs. %s</sp
 $lang['sprintf_subnavi_match_result']	= '%s:%s';
 
 $lang['team_view']					= 'Team Übersicht';
-$lang['team_moderator']				= 'Teammoderator';
-$lang['team_member']				= 'Teammitglieder';
+
 
 
 $lang['msg_select_team']			= 'Team auswählen';
@@ -255,6 +256,11 @@ $lang['select_league_box']['8']['league_link']	= '';
 //
 $lang['no_entry']			= 'keine Einträge vorhanden';
 $lang['username']			= 'Benutzername';
+$lang['joined']				= 'beigetreten';
+$lang['rank_team']			= 'Rang im Team';
+$lang['rank_group']			= 'Rang in Gruppe';
+$lang['rank_site']			= 'Rang auf Seite';
+$lang['register']			= 'registiert';
 $lang['status']				= 'Status';
 
 $lang['items_required']			= 'Mit * markierte Felder sind erforderlich';
@@ -279,8 +285,8 @@ $lang['403'] = "403 - Access Denied";
 $lang['403_Description'] = "You don't have the proper rights to view this page.<br>You can browse the forum by following one of the links above."; 
 $lang['500'] = "500 - Internal Server Error"; 
 $lang['500_Description'] = "An Internal Server Error occurred.<br>If reloading the page doens't help, please contact the system administrator."; 
-//$lang['back']			= '<br><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zur&uuml;ck</a>';
-$lang['back']			= '%s&laquo; Zur&uuml;ck%s';
+//$lang['back']			= '<br><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zurück</a>';
+$lang['back']			= '%s&laquo; Zurück%s';
 
 //
 //	Log
@@ -319,7 +325,7 @@ $lang['ENCODING'] = 'iso-8859-1';
 $lang['DIRECTION'] = 'ltr';
 $lang['LEFT'] = 'left';
 $lang['RIGHT'] = 'right';
-$lang['DATE_FORMAT'] = 'd.m.Y'; // This should be changed to the default date format for your language, php date() format
+$lang['DATE_FORMAT'] = 'd.m.Y';// This should be changed to the default date format for your language, php date() format
 
 // This is optional, if you would like a _SHORT_ message output
 // along with our copyright message indicating you are the translator
@@ -385,20 +391,20 @@ $lang['IP_Address'] = 'IP-Adresse';
 $lang['Select_forum'] = 'Forum auswählen';
 $lang['View_latest_post'] = 'Letzten Beitrag anzeigen';
 $lang['View_newest_post'] = 'Neuesten Beitrag anzeigen';
-$lang['Page_of'] = 'Seite <b>%d</b> von <b>%d</b>'; // Replaces with: Page 1 of 2 for example
+$lang['Page_of'] = 'Seite <b>%d</b> von <b>%d</b>';// Replaces with: Page 1 of 2 for example
 
 $lang['ICQ'] = 'ICQ-Nummer';
 $lang['AIM'] = 'AIM-Name';
 $lang['MSNM'] = 'MSN Messenger';
 $lang['YIM'] = 'Yahoo Messenger';
 
-$lang['Forum_Index'] = '%s Foren-Übersicht'; // eg. page_name Forum Index, %s can be removed if you prefer
+$lang['Forum_Index'] = '%s Foren-Übersicht';// eg. page_name Forum Index, %s can be removed if you prefer
 
 $lang['Post_new_topic'] = 'Neues Thema eröffnen';
 $lang['Reply_to_topic'] = 'Neue Antwort erstellen';
 $lang['Reply_with_quote'] = 'Antworten mit Zitat';
 
-$lang['Click_return_topic'] = '%sHier klicken%s, um zum Thema zurückzukehren'; // %s's here are for uris, do not remove!
+$lang['Click_return_topic'] = '%sHier klicken%s, um zum Thema zurückzukehren';// %s's here are for uris, do not remove!
 $lang['Click_return_login'] = '%sHier klicken%s, um es noch einmal zu versuchen';
 $lang['Click_return_forum'] = '%sHier klicken%s, um zum Forum zurückzukehren';
 $lang['Click_view_message'] = '%sHier klicken%s, um deine Nachricht anzuzeigen';
@@ -427,7 +433,7 @@ $lang['hidden_user_total'] = 'ein versteckter und ';
 $lang['guest_users_zero_total'] = 'kein Gast.';
 $lang['guest_users_total'] = '%d Gäste.';
 $lang['guest_user_total'] = 'ein Gast.';
-$lang['Record_online_users'] = 'Der Rekord liegt bei <b>%s</b> Benutzern am %s.'; // first %s = number of users, second %s is the date.
+$lang['Record_online_users'] = 'Der Rekord liegt bei <b>%s</b> Benutzern am %s.';// first %s = number of users, second %s is the date.
 
 $lang['online_users_zero_total_h'] = '<b>0</b> Benutzer: ';
 $lang['online_users_total_h'] = '<b>%d</b> Benutzer: ';
@@ -458,8 +464,8 @@ $lang['n_guest_user_total'] = '1 Gast';
 $lang['Admin_online_color'] = '%sAdministrator%s';
 $lang['Mod_online_color'] = '%sModerator%s';
 
-$lang['You_last_visit'] = 'Dein letzter Besuch war am: %s'; // %s replaced by date/time
-$lang['Current_time'] = 'Aktuelles Datum und Uhrzeit: %s'; // %s replaced by time
+$lang['You_last_visit'] = 'Dein letzter Besuch war am: %s';// %s replaced by date/time
+$lang['Current_time'] = 'Aktuelles Datum und Uhrzeit: %s';// %s replaced by time
 
 $lang['Search_new'] = 'Beiträge seit dem letzten Besuch anzeigen';
 $lang['Search_your_posts'] = 'Eigene Beiträge anzeigen';
@@ -481,13 +487,13 @@ $lang['Moderators'] = '<b>Moderatoren</b>';
 //
 // Stats block text
 //
-$lang['Posted_articles_zero_total'] = 'Unsere Benutzer haben <b>noch keine</b> Beiträge geschrieben.'; // Number of posts
-$lang['Posted_articles_total'] = 'Unsere Benutzer haben insgesamt <b>%d</b> Beiträge geschrieben.'; // Number of posts
-$lang['Posted_article_total'] = 'Unsere Benutzer haben <b>einen</b> Beitrag geschrieben.'; // Number of posts
-$lang['Registered_users_zero_total'] = 'Wir haben <b>keine</b> registrierten Benutzer.'; // # registered users
-$lang['Registered_users_total'] = 'Wir haben <b>%d</b> registrierte Benutzer.'; // # registered users
-$lang['Registered_user_total'] = 'Wir haben <b>einen</b> registrierten Benutzer.'; // # registered users
-$lang['Newest_user'] = 'Der neueste Benutzer ist <b>%s%s%s</b>.'; // a href, username, /a
+$lang['Posted_articles_zero_total'] = 'Unsere Benutzer haben <b>noch keine</b> Beiträge geschrieben.';// Number of posts
+$lang['Posted_articles_total'] = 'Unsere Benutzer haben insgesamt <b>%d</b> Beiträge geschrieben.';// Number of posts
+$lang['Posted_article_total'] = 'Unsere Benutzer haben <b>einen</b> Beitrag geschrieben.';// Number of posts
+$lang['Registered_users_zero_total'] = 'Wir haben <b>keine</b> registrierten Benutzer.';// # registered users
+$lang['Registered_users_total'] = 'Wir haben <b>%d</b> registrierte Benutzer.';// # registered users
+$lang['Registered_user_total'] = 'Wir haben <b>einen</b> registrierten Benutzer.';// # registered users
+$lang['Newest_user'] = 'Der neueste Benutzer ist <b>%s%s%s</b>.';// a href, username, /a
 
 $lang['No_new_posts_last_visit'] = 'Keine neuen Beiträge seit deinem letzten Besuch';
 $lang['No_new_posts'] = 'Keine neuen Beiträge';
@@ -558,7 +564,7 @@ $lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum lös
 $lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum <b>nicht</b> löschen.';
 $lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen in diesem Forum teilnehmen.';
 $lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen in diesem Forum <b>nicht</b> teilnehmen.';
-$lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.'; // %s replaced by a href links, do not remove!
+$lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.';// %s replaced by a href links, do not remove!
 
 $lang['Rules_post_can'] = 'Du <b>kannst</b> Beiträge schreiben.';
 $lang['Rules_post_cannot'] = 'Du <b>kannst keine</b> Beiträge schreiben.';
@@ -570,7 +576,7 @@ $lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beiträge löschen.';
 $lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beiträge <b>nicht</b> löschen.';
 $lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen teilnehmen.';
 $lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen <b>nicht</b> teilnehmen.';
-$lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.'; // %s replaced by a href links, do not remove!
+$lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.';// %s replaced by a href links, do not remove!
 
 $lang['No_topics_post_one'] = 'In diesem Forum sind keine Beiträge vorhanden.<br>Klicke auf <b>Neues Thema</b>, um den ersten Beitrag zu erstellen.';
 
@@ -606,12 +612,12 @@ $lang['Edit_delete_post'] = 'Beitrag bearbeiten oder löschen';
 $lang['View_IP'] = 'IP-Adresse zeigen';
 $lang['Delete_post'] = 'Beitrag löschen';
 
-$lang['wrote'] = 'hat Folgendes geschrieben'; // proceeds the username and is followed by the quoted text
-$lang['Quote'] = 'Zitat'; // comes before bbcode quote output.
-$lang['Code'] = 'Code'; // comes before bbcode code output.
+$lang['wrote'] = 'hat Folgendes geschrieben';// proceeds the username and is followed by the quoted text
+$lang['Quote'] = 'Zitat';// comes before bbcode quote output.
+$lang['Code'] = 'Code';// comes before bbcode code output.
 
-$lang['Edited_time_total'] = 'Zuletzt bearbeitet von %s am %s, insgesamt einmal bearbeitet'; // Last edited by me on 12 Oct 2001, edited 1 time in total
-$lang['Edited_times_total'] = 'Zuletzt bearbeitet von %s am %s, insgesamt %d-mal bearbeitet'; // Last edited by me on 12 Oct 2001, edited 2 times in total
+$lang['Edited_time_total'] = 'Zuletzt bearbeitet von %s am %s, insgesamt einmal bearbeitet';// Last edited by me on 12 Oct 2001, edited 1 time in total
+$lang['Edited_times_total'] = 'Zuletzt bearbeitet von %s am %s, insgesamt %d-mal bearbeitet';// Last edited by me on 12 Oct 2001, edited 2 times in total
 
 $lang['Lock_topic'] = 'Thema sperren';
 $lang['Unlock_topic'] = 'Thema entsperren';
@@ -632,7 +638,7 @@ $lang['Total_votes'] = 'Stimmen insgesamt';
 $lang['Message_body'] = 'Nachrichtentext';
 $lang['Topic_review'] = 'Thema-Überblick';
 
-$lang['No_post_mode'] = 'Kein Eintrags-Modus ausgewählt'; // If posting.php is called without a mode (newtopic/reply/delete/etc, shouldn't be shown normaly)
+$lang['No_post_mode'] = 'Kein Eintrags-Modus ausgewählt';// If posting.php is called without a mode (newtopic/reply/delete/etc, shouldn't be shown normaly)
 
 $lang['Post_a_new_topic'] = 'Neues Thema schreiben';
 $lang['Post_a_reply'] = 'Antwort schreiben';
@@ -675,7 +681,7 @@ $lang['Add_option'] = 'Antwort hinzufügen';
 $lang['Update'] = 'Aktualisieren';
 $lang['Delete'] = 'Löschen';
 $lang['Poll_for'] = 'Dauer der Umfrage:';
-$lang['Days'] = 'Tage'; // This is used for the Run poll for ... Days + in admin_forums for pruning
+$lang['Days'] = 'Tage';// This is used for the Run poll for ... Days + in admin_forums for pruning
 $lang['Poll_for_explain'] = '[ Gib 0 ein oder lass dieses Feld leer, um die Umfrage auf unbeschränkte Zeit durchzuführen ]';
 $lang['Delete_poll'] = 'Umfrage löschen';
 
@@ -685,7 +691,7 @@ $lang['Disable_Smilies_post'] = 'Smilies in diesem Beitrag deaktivieren';
 
 $lang['HTML_is_ON'] = 'HTML ist <u>an</u>';
 $lang['HTML_is_OFF'] = 'HTML ist <u>aus</u>';
-$lang['BBCode_is_ON'] = '%sBBCode%s ist <u>an</u>'; // %s are replaced with URI pointing to FAQ
+$lang['BBCode_is_ON'] = '%sBBCode%s ist <u>an</u>';// %s are replaced with URI pointing to FAQ
 $lang['BBCode_is_OFF'] = '%sBBCode%s ist <u>aus</u>';
 $lang['Smilies_are_ON'] = 'Smilies sind <u>an</u>';
 $lang['Smilies_are_OFF'] = 'Smilies sind <u>aus</u>';
@@ -750,8 +756,8 @@ $lang['Styles_tip'] = 'Tipp: Styles können schnell zum markierten Text hinzugefü
 $lang['Private_Messaging'] = 'Private Nachrichten';
 
 $lang['Login_check_pm'] = 'Einloggen, um private Nachrichten zu lesen';
-$lang['New_pms'] = 'Du hast %d neue Nachrichten'; // You have 2 new messages
-$lang['New_pm'] = 'Du hast 1 neue Nachricht'; // You have 1 new message
+$lang['New_pms'] = 'Du hast %d neue Nachrichten';// You have 2 new messages
+$lang['New_pm'] = 'Du hast 1 neue Nachricht';// You have 1 new message
 $lang['No_new_pm'] = 'Du hast keine neuen Nachrichten';
 $lang['Unread_pms'] = 'Du hast %d ungelesene Nachrichten';
 $lang['Unread_pm'] = 'Du hast 1 ungelesene Nachricht';
@@ -787,7 +793,7 @@ $lang['Save_marked'] = 'Markierte speichern';
 $lang['Save_message'] = 'Nachricht speichern';
 $lang['Delete_message'] = 'Nachricht löschen';
 
-$lang['Display_messages'] = 'Nachrichten anzeigen der letzten'; // Followed by number of days/weeks/months
+$lang['Display_messages'] = 'Nachrichten anzeigen der letzten';// Followed by number of days/weeks/months
 $lang['All_Messages'] = 'Alle Nachrichten';
 
 $lang['No_messages_folder'] = 'Es sind keine weiteren Nachrichten in diesem Ordner.';
@@ -826,7 +832,7 @@ $lang['Unmark_all'] = 'Markierungen aufheben';
 $lang['Confirm_delete_pm'] = 'Diese Nachricht wirklich löschen?';
 $lang['Confirm_delete_pms'] = 'Diese Nachrichten wirklich löschen?';
 
-$lang['Inbox_size'] = 'Dein Posteingang ist zu %d%% voll'; // eg. Your Inbox is 50% full
+$lang['Inbox_size'] = 'Dein Posteingang ist zu %d%% voll';// eg. Your Inbox is 50% full
 $lang['Sentbox_size'] = 'Deine gesendeten Nachrichten sind zu %d%% voll';
 $lang['Savebox_size'] = 'Dein Archiv ist zu %d%% voll';
 
@@ -836,7 +842,7 @@ $lang['Click_view_privmsg'] = 'Klick %shier%s, um deinen Posteingang aufzurufen'
 //
 // Profiles/Registration
 //
-$lang['Viewing_user_profile'] = 'Profil anzeigen: %s'; // %s is username
+$lang['Viewing_user_profile'] = 'Profil anzeigen: %s';// %s is username
 $lang['About_user'] = 'Alles über %s';
 
 $lang['Preferences'] = 'Einstellungen';
@@ -858,9 +864,9 @@ $lang['Occupation'] = 'Beruf';
 $lang['Poster_rank'] = 'Rang';
 
 $lang['Total_posts'] = 'Beiträge insgesamt';
-$lang['User_post_pct_stats'] = '%.2f%% aller Beiträge'; // 1.25% of total
-$lang['User_post_day_stats'] = '%.2f Beiträge pro Tag'; // 1.5 posts per day
-$lang['Search_user_posts'] = 'Alle Beiträge von %s anzeigen'; // Find all posts by username
+$lang['User_post_pct_stats'] = '%.2f%% aller Beiträge';// 1.25% of total
+$lang['User_post_day_stats'] = '%.2f Beiträge pro Tag';// 1.5 posts per day
+$lang['Search_user_posts'] = 'Alle Beiträge von %s anzeigen';// Find all posts by username
 
 $lang['No_user_id_specified'] = 'Dieser Benutzer existiert nicht.';
 $lang['Wrong_Profile'] = 'Du kannst nur dein eigenes Profil bearbeiten.';
@@ -935,7 +941,7 @@ $lang['Email_invalid'] = 'Die angegebene Mailadresse ist ungültig.';
 $lang['Signature_too_long'] = 'Deine Signatur ist zu lang.';
 $lang['Fields_empty'] = 'Du musst alle benötigten Felder ausfüllen.';
 $lang['Avatar_filetype'] = 'Der Avatar muss im GIF-, JPG- oder PNG-Format sein.';
-$lang['Avatar_filesize'] = 'Die Dateigröße muss kleiner als %d KB sein.'; // followed by xx kB, xx being the size
+$lang['Avatar_filesize'] = 'Die Dateigröße muss kleiner als %d KB sein.';// followed by xx kB, xx being the size
 $lang['Avatar_imagesize'] = 'Der Avatar muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
 $lang['Welcome_subject'] = 'Willkommen auf %s';
@@ -1107,10 +1113,10 @@ $lang['Search_for_all'] = 'Nach allen Wörtern suchen';
 $lang['Search_title_msg'] = 'Titel und Text durchsuchen';
 $lang['Search_msg_only'] = 'Nur Nachrichtentext durchsuchen';
 
-$lang['Return_first'] = 'Die ersten '; // followed by xxx characters in a select box
+$lang['Return_first'] = 'Die ersten ';// followed by xxx characters in a select box
 $lang['characters_posts'] = 'Zeichen des Beitrags anzeigen';
 
-$lang['Search_previous'] = 'Durchsuchen'; // followed by days, weeks, months, year, all in a select box
+$lang['Search_previous'] = 'Durchsuchen';// followed by days, weeks, months, year, all in a select box
 
 $lang['Sort_by'] = 'Sortieren nach';
 $lang['Sort_Time'] = 'Zeit';
@@ -1124,8 +1130,8 @@ $lang['All_available'] = 'Alle';
 $lang['No_searchable_forums'] = 'Du hast nicht die Berechtigung, dieses Forum zu durchsuchen.';
 
 $lang['No_search_match'] = 'Keine Beiträge entsprechen deinen Kriterien.';
-$lang['Found_search_match'] = 'Die Suche hat %d Ergebnis ergeben.'; // eg. Search found 1 match
-$lang['Found_search_matches'] = 'Die Suche hat %d Ergebnisse ergeben.'; // eg. Search found 24 matches
+$lang['Found_search_match'] = 'Die Suche hat %d Ergebnis ergeben.';// eg. Search found 1 match
+$lang['Found_search_matches'] = 'Die Suche hat %d Ergebnisse ergeben.';// eg. Search found 24 matches
 $lang['Search_Flood_Error'] = 'Du kannst keine weitere Suche so schnell nach deiner letzten durchführen. Bitte versuche es in Kürze erneut.';
 
 $lang['Close_window'] = 'Fenster schließen';
@@ -1162,14 +1168,14 @@ $lang['You_been_banned'] = 'Du wurdest von diesem Forum verbannt.<br>Kontaktiere
 //
 // Viewonline
 //
-$lang['Reg_users_zero_online'] = 'Es sind kein registrierter und '; // There are 5 Registered and
+$lang['Reg_users_zero_online'] = 'Es sind kein registrierter und ';// There are 5 Registered and
 $lang['Reg_users_online'] = 'Es sind %d registrierte und ';
-$lang['Reg_user_online'] = 'Es ist ein registrierter und '; // There are 5 Registered and
-$lang['Hidden_users_zero_online'] = 'kein versteckter Benutzer online.'; // 6 Hidden users online
-$lang['Hidden_users_online'] = '%d versteckte Benutzer online.'; // 6 Hidden users online
-$lang['Hidden_user_online'] = 'ein versteckter Benutzer online.'; // 6 Hidden users online
+$lang['Reg_user_online'] = 'Es ist ein registrierter und ';// There are 5 Registered and
+$lang['Hidden_users_zero_online'] = 'kein versteckter Benutzer online.';// 6 Hidden users online
+$lang['Hidden_users_online'] = '%d versteckte Benutzer online.';// 6 Hidden users online
+$lang['Hidden_user_online'] = 'ein versteckter Benutzer online.';// 6 Hidden users online
 $lang['Guest_users_online'] = 'Es sind %d Gäste online.';
-$lang['Guest_users_zero_online'] = 'Es sind keine Gäste online.'; // There are 10 Guest users online
+$lang['Guest_users_zero_online'] = 'Es sind keine Gäste online.';// There are 10 Guest users online
 $lang['Guest_user_online'] = 'Es ist ein Gast online.';
 $lang['No_users_browsing'] = 'Im Moment sind keine Benutzer im Forum.';
 
@@ -1238,7 +1244,7 @@ $lang['Lookup_IP'] = 'IP nachschlagen';
 //
 // Timezones ... for display on each page
 //
-$lang['All_times'] = 'Alle Zeiten sind %s'; // eg. All times are GMT - 12 Hours (times from next block)
+$lang['All_times'] = 'Alle Zeiten sind %s';// eg. All times are GMT - 12 Hours (times from next block)
 
 $lang['-12'] = 'GMT - 12 Stunden';
 $lang['-11'] = 'GMT - 11 Stunden';
@@ -1423,8 +1429,8 @@ $lang['cash_interval']			= 'Zahlungsintervall';
 $lang['cash_interval_m']		= 'Monatlich';
 $lang['cash_interval_o']		= 'Einmalig';
 $lang['cash_interval_month']	= 'Monatlich';
-$lang['cash_interval_2weeks']	= 'alle 2 Wochen';
-$lang['cash_interval_week']		= 'Wöchentlich';
+$lang['cash_interval_weeks']	= 'alle 2 Wochen';
+$lang['cash_interval_weekly']		= 'Wöchentlich';
 $lang['cash_no_entry']			= 'kein Eintrag';
 $lang['interval_m']				= 'Monatlich ab: %s';
 $lang['interval_o']				= 'Einmalig für Monat: %s';
@@ -1444,7 +1450,7 @@ $lang['head_cash']		= 'Clankasse';
 $lang['month'] = array(
 	'01'	=> 'Januar',
 	'02'	=> 'Februar',
-	'03'	=> 'M&auml;rz',
+	'03'	=> 'März',
 	'04'	=> 'April',
 	'05'	=> 'Mai',
 	'06'	=> 'Juni',

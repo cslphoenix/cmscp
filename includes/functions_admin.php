@@ -120,7 +120,7 @@ function get_data($mode, $id, $type)
 			
 		case 'profile_category':
 			$table		= PROFILE_CATEGORY;
-			$idfield	= 'profile_category_id';
+			$idfield	= 'category_id';
 			break;
 			
 		case 'profile_data':

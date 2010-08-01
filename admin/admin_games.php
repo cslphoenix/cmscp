@@ -60,7 +60,7 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_GAME, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -104,7 +104,7 @@ else
 		
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
-					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['game'], $data['game_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['game'], $data['game_name']),
 					
 					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['game']),
 					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['game']),
@@ -244,7 +244,7 @@ else
 			
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
-		'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['game']),
+		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['game']),
 		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['game']),
 		
 		'L_EXPLAIN'	=> $lang['game_explain'],

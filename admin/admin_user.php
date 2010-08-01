@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -27,7 +27,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user'])
 	{
 		$module['_headmenu_users']['_submenu_settings'] = $filename;
 	}
@@ -39,8 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_header	= $cancel;
+	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_settings';
 	
 	require('./pagestart.php');
@@ -53,14 +52,15 @@ else
 	$data_id	= request(POST_USERS_URL, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
-#	$path_dir	= $root_path . $settings['path_games'] . '/';
+#	$path_dir	= $root_path . $settings['path_user'] . '/';
 	
-	if ( !$userauth['auth_user'] && $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_user'])
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		log_add(LOG_ADMIN, LOG_SEK_EVENT, 'auth_fail' . $current);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $cancel )
+	if ( $no_header )
 	{
 		redirect('admin/' . append_sid('admin_user.php', true));
 	}
@@ -70,13 +70,9 @@ else
 	
 	$auth_fields	= get_authlist();
 	$auth_levels	= array('disallowed', 'allowed', 'special', 'default');
-	$auth_const	= array(AUTH_DISALLOWED, AUTH_ALLOWED, AUTH_SPECIAL, AUTH_DEFAULT);
+	$auth_const		= array(AUTH_DISALLOWED, AUTH_ALLOWED, AUTH_SPECIAL, AUTH_DEFAULT);
 	
-	if ( $mode == '_create' )
-	{
-		$s_mode = '';
-	}
-	else
+	if ( $mode != '_create' )
 	{
 		$s_mode = '<select class="postselect" name="mode" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
 		foreach ( $lang['user_option'] as $key => $value )
@@ -123,7 +119,7 @@ else
 				
 				if ( $userdata['user_level'] < $data['user_level'] )
 				{
-					message(GENERAL_ERROR, $lang['auth_fail']);
+					message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 				}
 			}
 			else
@@ -155,7 +151,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['user'], $data['username']),
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['user'], $data['username']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['user']),
 				
 				'L_REGISTER'		=> $lang['user_register'],
@@ -221,7 +217,7 @@ else
 			$new_password			= ( isset($HTTP_POST_VARS['new_password']) )		? trim(htmlspecialchars($HTTP_POST_VARS['new_password'])) : '';
 			$password_confirm		= ( isset($HTTP_POST_VARS['password_confirm']) )	? trim(htmlspecialchars($HTTP_POST_VARS['password_confirm'])) : '';
 			
-			$error = ''; 
+			$error = '';
 			$error_msg = '';
 			
 			$username_sql = '';
@@ -381,7 +377,7 @@ else
 				$emailer->send();
 				$emailer->reset();
 				
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_add');
+				log_add(LOG_ADMIN, LOG_SEK_USER, 'acp_user_add');
 				
 			//	$oCache -> sCachePath = './../cache/';
 			//	$oCache -> deleteCache('display_subnavi_user');
@@ -498,7 +494,7 @@ else
 					WHERE user_id = $data_id";
 			$result = $db->sql_query($sql);
 			
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_user_regedit');
+			log_add(LOG_ADMIN, LOG_SEK_USER, 'acp_user_regedit');
 			
 			$oCache -> sCachePath = './../cache/';
 			$oCache -> deleteCache('display_subnavi_user');
@@ -541,7 +537,7 @@ else
 				
 				for ( $i = 0; $i < $total_categories; $i++ )
 				{
-					$cat_id = $category_rows[$i]['profile_category_id'];
+					$cat_id = $category_rows[$i]['category_id'];
 			
 					$template->assign_block_vars('user_fields.catrow', array( 
 						'CATEGORY_ID'			=> $cat_id,
@@ -580,7 +576,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['user_head'],
-				'L_NEW_EDIT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_regedit'],
+				'L_INPUT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_regedit'],
 				'L_GROUP'			=> $lang['user_group'],
 				'L_AUTHS'			=> $lang['user_auths'],
 				'L_REQUIRED'			=> $lang['required'],
@@ -653,7 +649,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['user_head'],
-				'L_NEW_EDIT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_regedit'],
+				'L_INPUT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_regedit'],
 				'L_GROUP'			=> $lang['user_group'],
 				'L_AUTHS'			=> $lang['user_auths'],
 				'L_REQUIRED'			=> $lang['required'],
@@ -700,10 +696,10 @@ else
 			
 				if ( $userdata['user_level'] < $data['user_level'] )
 				{
-					message(GENERAL_ERROR, $lang['auth_fail']);
+					message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 				}			
 
-				log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'ACP_USER_DELETE', $user_info['user_name']);
+				log_add(LOG_ADMIN, LOG_SEK_USER, 'ACP_USER_DELETE', $user_info['user_name']);
 				
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('display_subnavi_user');
@@ -744,7 +740,7 @@ else
 			
 			if ( $userdata['user_level'] < $data['user_level'] )
 			{
-				message(GENERAL_ERROR, $lang['auth_fail']);
+				message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 			}
 			
 			$sql = "SELECT group_id, group_name, group_type, group_access
@@ -1082,7 +1078,7 @@ else
 			}
 			*/
 			
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acpuser_groups');
+			log_add(LOG_ADMIN, LOG_SEK_USER, 'acpuser_groups');
 		
 			$message = $lang['user_change_groups']
 				. sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
@@ -1097,7 +1093,7 @@ else
 			
 			if ( $userdata['user_level'] < $data['user_level'] )
 			{
-				message(GENERAL_ERROR, $lang['auth_fail']);
+				message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 			}
 			
 			$sql = 'SELECT g.group_id, ' . implode(', ', $auth_fields) . '
@@ -1323,7 +1319,7 @@ else
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			log_add(LOG_ADMIN, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_USER, 'acp_auths_edit');
+			log_add(LOG_ADMIN, LOG_SEK_USER, 'acp_auths_edit');
 			
 			$message = $lang['user_change_auths']
 				. sprintf($lang['click_return_user'], '<a href="' . append_sid('admin_user.php') . '">', '</a>')
@@ -1342,7 +1338,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['user_head'],
-				'L_NEW_EDIT'		=> $lang['user_regedit'],
+				'L_INPUT'		=> $lang['user_regedit'],
 				'L_GROUP'			=> $lang['user_group'],
 				'L_AUTHS'			=> $lang['user_auths'],
 				
@@ -1373,67 +1369,34 @@ else
 			
 		default:
 		
-	#		$template->set_filenames(array('body' => 'style/acp_user.tpl'));
-	#		$template->assign_block_vars('display', array());
+			$template->set_filenames(array('body' => 'style/acp_user.tpl'));
+			$template->assign_block_vars('_display', array());
 			
 			$s_fields = '<input type="hidden" name="mode" value="_create" />';
-				
-			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['user']),
-				'L_NAME'	=> $lang['user'],
-				'L_EXPLAIN'	=> $lang['user_explain'],
-				
-				'S_FIELDS'	=> $s_fields,
-				'S_CREATE'	=> append_sid('admin_user.php?mode=_create'),
-				'S_ACTION'	=> append_sid('admin_user.php'),
-			));
+	
+			$data_user	= get_data_array(USERS, ' user_id <> ' . ANONYMOUS, 'user_id', 'DESC');
 			
-	//		$sql = 'SELECT *
-	//					FROM ' . USERS . '
-	//					WHERE user_id <> ' . ANONYMOUS . '
-	//				ORDER BY user_id DESC';
-	//		if ( !($result = $db->sql_query($sql)) )
-	//		{
-	//			message(GENERAL_ERROR, 'Could not obtain ranks data', '', __LINE__, __FILE__, $sql);
-	//		}
-	//		$user_list = $db->sql_fetchrowset($result);
-			
-			$users_data	= get_data_array(USERS, ' user_id <> ' . ANONYMOUS, 'user_id', 'DESC');
-			
-			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($users_data)); $i++ )
+			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_user)); $i++ )
 			{
-				switch ( $users_data[$i]['user_level'] )
+				switch ( $data_user[$i]['user_level'] )
 				{
-					case GUEST:
-						$user_level = $lang['auth_guest'];
-						break;
-					case USER:
-						$user_level = $lang['auth_user'];
-						break;
-					case TRIAL:
-						$user_level = $lang['auth_trial'];
-						break;
-					case MEMBER:
-						$user_level = $lang['auth_member'];
-						break;
-					case MOD:
-						$user_level = $lang['auth_mod'];
-						break;
-					case ADMIN:
-						$user_level = $lang['auth_admin'];
-						break;
+					case GUEST:		$user_level = $lang['auth_guest'];	break;
+					case USER:		$user_level = $lang['auth_user'];	break;
+					case TRIAL:		$user_level = $lang['auth_trial'];	break;
+					case MEMBER:	$user_level = $lang['auth_member'];	break;
+					case MOD:		$user_level = $lang['auth_mod'];	break;
+					case ADMIN:		$user_level = $lang['auth_admin'];	break;
 				}
 				
-				if ( $userdata['user_level'] > $users_data[$i]['user_level'] )
+				if ( $userdata['user_level'] > $data_user[$i]['user_level'] )
 				{
-					$link_edit		= '<a href="' . append_sid('admin_user.php?mode=_update&amp;' . POST_USERS_URL . '=' . $users_data[$i]['user_id']) . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
-					$link_delete	= '<a href="' . append_sid('admin_user.php?mode_=delete&amp;' . POST_USERS_URL . '=' . $users_data[$i]['user_id']) . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
+					$link_edit		= '<a href="' . append_sid('admin_user.php?mode=_update&amp;' . POST_USERS_URL . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
+					$link_delete	= '<a href="' . append_sid('admin_user.php?mode_=delete&amp;' . POST_USERS_URL . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
 				}
 				else if ( $userdata['user_level'] == ADMIN )
 				{
-					$link_edit		= '<a href="' . append_sid('admin_user.php?mode=_update&amp;' . POST_USERS_URL . '=' . $users_data[$i]['user_id']) . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
-					$link_delete	= '<a href="' . append_sid('admin_user.php?mode=_delete&amp;' . POST_USERS_URL . '=' . $users_data[$i]['user_id']) . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
+					$link_edit		= '<a href="' . append_sid('admin_user.php?mode=_update&amp;' . POST_USERS_URL . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
+					$link_delete	= '<a href="' . append_sid('admin_user.php?mode=_delete&amp;' . POST_USERS_URL . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
 				}
 				else
 				{
@@ -1441,24 +1404,31 @@ else
 					$link_delete	= $lang['common_delete'];
 				}
 				
-				$template->assign_block_vars('display.row_users', array(
+				$template->assign_block_vars('_display._user_row', array(
 					'USER_LEVEL'	=> $user_level,
-					'USERNAME'		=> $users_data[$i]['username'],
-					'JOINED'		=> create_date($userdata['user_dateformat'], $users_data[$i]['user_regdate'], $userdata['user_timezone']),
+					'USERNAME'		=> $data_user[$i]['username'],
+					'JOINED'		=> create_date($userdata['user_dateformat'], $data_user[$i]['user_regdate'], $userdata['user_timezone']),
 					
 					'EDIT'			=> $link_edit,
 					'DELETE'		=> $link_delete,
 				));
 			}
 			
-			$current_page = ( !count($users_data) ) ? 1 : ceil( count($users_data) / $settings['site_entry_per_page'] );
-		
+			$current_page = ( !count($data_user) ) ? 1 : ceil( count($data_user) / $settings['site_entry_per_page'] );
+			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination('admin_user.php?', count($users_data), $settings['site_entry_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
-		
-				'L_GOTO_PAGE' => $lang['Goto_page'])
-			);
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
+				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['user']),
+				'L_NAME'	=> $lang['user'],
+				'L_EXPLAIN'	=> $lang['user_explain'],
+				
+				'PAGE_NUMBER'	=> ( count($data_user) ) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
+				'PAGE_PAGING'	=> ( count($data_user) ) ? generate_pagination('admin_user.php?', count($data_user), $settings['site_entry_per_page'], $start ) : '',
+
+				'S_FIELDS'	=> $s_fields,
+				'S_CREATE'	=> append_sid('admin_user.php?mode=_create'),
+				'S_ACTION'	=> append_sid('admin_user.php'),
+			));
 		
 			break;
 	}

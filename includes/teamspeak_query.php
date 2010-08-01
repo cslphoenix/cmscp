@@ -13,7 +13,7 @@ function setUserStatus($img)
 		case '3': 
 		case '5': 
 		case '7': 
-			$img = '<img src="images/teamspeak/commander.gif" alt="">';
+			$img = '<img src="images/teamspeak/commander.gif" alt="" />';
 		break;		
 		case '8':
 		case '9': 
@@ -23,7 +23,7 @@ function setUserStatus($img)
 		case '13': 
 		case '14': 
 		case '15': 
-			$img = '<img src="images/teamspeak/away.gif" alt="">';
+			$img = '<img src="images/teamspeak/away.gif" alt="" />';
 		break;		
 		case '16':
 		case '17': 
@@ -33,7 +33,7 @@ function setUserStatus($img)
 		case '21': 
 		case '22': 
 		case '23': 
-			$img = '<img src="images/teamspeak/micro.gif" alt="">';
+			$img = '<img src="images/teamspeak/micro.gif" alt="" />';
 		break;		
 		case '24': 
 		case '25': 
@@ -43,7 +43,7 @@ function setUserStatus($img)
 		case '29': 
 		case '30': 
 		case '31': 
-			$img = '<img src="images/teamspeak/away.gif" alt="">';
+			$img = '<img src="images/teamspeak/away.gif" alt="" />';
 		break;		
 		case '32': 
 		case '33': 
@@ -53,7 +53,7 @@ function setUserStatus($img)
 		case '37': 
 		case '38': 
 		case '39': 
-			$img = '<img src="images/teamspeak/speakers.gif" alt="">';
+			$img = '<img src="images/teamspeak/speakers.gif" alt="" />';
 		break;		
 		case '40': 
 		case '41': 
@@ -63,7 +63,7 @@ function setUserStatus($img)
 		case '45': 
 		case '46': 
 		case '47': 
-			$img = '<img src="images/teamspeak/away.gif" alt="">';
+			$img = '<img src="images/teamspeak/away.gif" alt="" />';
 		break;		
 		case '48': 
 		case '49': 
@@ -75,19 +75,19 @@ function setUserStatus($img)
 		case '55': 
 		case '56': 
 		case '57': 
-			$img = '<img src="images/teamspeak/speakers.gif" alt="">';
+			$img = '<img src="images/teamspeak/speakers.gif" alt="" />';
 		break;		
 		case '58': 
 		case '59': 
 		case '60': 
 		case '61': 
-			$img = '<img src="images/teamspeak/away.gif" alt="">';
+			$img = '<img src="images/teamspeak/away.gif" alt="" />';
 		break;		
 		case '64': 
-			$img = '<img src="images/teamspeak/record.gif" alt="">';
+			$img = '<img src="images/teamspeak/record.gif" alt="" />';
 		break;		
 		default :
-   			$img = '<img src="images/teamspeak/player.gif" alt="">';
+   			$img = '<img src="images/teamspeak/player.gif" alt="" />';
 		break;		
 		
 	}			 

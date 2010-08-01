@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -29,7 +29,7 @@ function counter_update()
 	
 	// Prüfen, ob bereits ein Counter für den  
     // heutigen Tag erstellt wurde 
-    $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()'; 
+    $sql = 'SELECT counter_id FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -39,7 +39,7 @@ function counter_update()
     // wird ein neuer Tagescounter erstellt 
     if ( !$db->sql_numrows($result) )
 	{
-		$sql = 'INSERT INTO ' . COUNTER_COUNTER . ' SET counter_date = CURDATE()'; 
+		$sql = 'INSERT INTO ' . COUNTER_COUNTER . ' SET counter_date = CURDATE()';
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -48,7 +48,7 @@ function counter_update()
 	
 	// Alte (mehr als 1 Tag) IPs in 'Online' löschen 
 	// damit die Datenbank nicht überfüllt wird
-	$sql = 'DELETE FROM ' . COUNTER_ONLINE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_start'; 
+	$sql = 'DELETE FROM ' . COUNTER_ONLINE . ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > online_start';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -64,14 +64,14 @@ function counter_update()
 	// Falls nicht, wird sie gespeichert 
     if ( !$db->sql_numrows($result) )
 	{
-		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date, online_start) VALUES ("' . $userdata['session_ip'] . '", NOW(), NOW())'; 
+		$sql = 'INSERT INTO ' . COUNTER_ONLINE . ' (online_ip, online_date, online_start) VALUES ("' . $userdata['session_ip'] . '", NOW(), NOW())';
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		// ... und die Anzahl wird um 1 erhöht 
-		$sql = 'UPDATE ' . COUNTER_COUNTER . ' SET counter_entry = counter_entry + 1 WHERE counter_date = CURDATE()'; 
+		$sql = 'UPDATE ' . COUNTER_COUNTER . ' SET counter_entry = counter_entry + 1 WHERE counter_date = CURDATE()';
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -104,7 +104,7 @@ function counter_result()
 	$db->sql_freeresult($result);
 	
 	// User die 'gestern' auf der Seite waren 
-	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'; 
+	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

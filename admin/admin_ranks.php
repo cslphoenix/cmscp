@@ -61,7 +61,7 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_ranks'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_RANK, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -106,31 +106,24 @@ else
 					);
 				}
 
-				$s_fields	= '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $data_id . '" />';
-				$s_sprintf	= ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
+				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $data_id . '" />';
 
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['rank']),
-					'L_INPUT'	=> sprintf($lang[$s_sprintf], $lang['rank'], $data['rank_title']),
+					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['rank']),
+					'L_INPUT'			=> sprintf($lang['sprintf' . $mode], $lang['rank'], $data['rank_title']),
+					'L_TITLE'			=> sprintf($lang['sprintf_title'], $lang['rank']),
+					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['rank']),
+					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['rank']),
+					'L_TYPE_PAGE'		=> $lang['rank_page'],
+					'L_TYPE_FORUM'		=> $lang['rank_forum'],
+					'L_TYPE_TEAM'		=> $lang['rank_team'],
+					'L_SPECIAL'			=> $lang['rank_special'],
+					'L_MIN'				=> $lang['rank_min'],
+					'L_STANDARD'		=> $lang['rank_standard'],
 					
-					'L_NAME'	=> sprintf($lang['sprintf_title'], $lang['rank']),
-					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['rank']),
-					'L_TYPE'	=> sprintf($lang['sprintf_type'], $lang['rank']),
-					
-					'L_TYPE_PAGE'	=> $lang['rank_page'],
-					'L_TYPE_FORUM'	=> $lang['rank_forum'],
-					'L_TYPE_TEAM'	=> $lang['rank_team'],
-					'L_SPECIAL'		=> $lang['rank_special'],
-					'L_MIN'			=> $lang['rank_min'],
-					'L_STANDARD'	=> $lang['rank_standard'],
-					
-					'TITLE'			=> $data['rank_title'],
-					'MIN'			=> $data['rank_min'],
-					'IMAGE'			=> ( $data['rank_image'] ) ? $path_dir . $data['rank_image'] : $images['icon_acp_spacer'],
-					'IMAGE_LIST'	=> select_box_files('ranks', 'post', $path_dir, $data['rank_image']),
-					'IMAGE_PATH'	=> $path_dir,
-					'IMAGE_DEFAULT'	=> $images['icon_acp_spacer'],
-					
+					'TITLE'				=> $data['rank_title'],
+					'MIN'				=> $data['rank_min'],
+					'PIC'				=> ( $data['rank_image'] ) ? $path_dir . $data['rank_image'] : $images['icon_acp_spacer'],
 					
 					'S_TYPE_PAGE'		=> ( $data['rank_type'] == RANK_PAGE ) ? ' checked="checked"' : '',
 					'S_TYPE_FORUM'		=> ( $data['rank_type'] == RANK_FORUM ) ? ' checked="checked"' : '',
@@ -140,8 +133,11 @@ else
 					'S_STANDARD_YES'	=> ( $data['rank_standard'] ) ? ' checked="checked"' : '',
 					'S_STANDARD_NO'		=> ( !$data['rank_standard'] ) ? ' checked="checked"' : '',
 					
-					'S_FIELDS'	=> $s_fields,
-					'S_ACTION'	=> append_sid('admin_ranks.php'),
+					'S_PATH'			=> $path_dir,
+					'S_LIST'			=> select_box_files('ranks', 'post', $path_dir, $data['rank_image']),
+					
+					'S_FIELDS'			=> $s_fields,
+					'S_ACTION'			=> append_sid('admin_ranks.php'),
 				));
 				
 				if ( request('submit', 2) )
@@ -293,11 +289,11 @@ else
 	$s_fields = '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['rank']),
-		'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['rank']),
-		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['rank']),
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['rank']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['rank']),
+		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['rank']),
 		
-		'L_EXPLAIN'	=> $lang['rank_explain'],
+		'L_EXPLAIN'		=> $lang['rank_explain'],
 		
 		'L_PAGE'		=> $lang['rank_page'],
 		'L_FORUM'		=> $lang['rank_forum'],
@@ -306,9 +302,9 @@ else
 		'L_STANDARD'	=> $lang['rank_standard'],
 		'L_MIN'			=> $lang['rank_min'],
 		
-		'S_FIELDS'	=> $s_fields,
-		'S_CREATE'	=> append_sid('admin_ranks.php?mode=_create'),
-		'S_ACTION'	=> append_sid('admin_ranks.php'),
+		'S_FIELDS'		=> $s_fields,
+		'S_CREATE'		=> append_sid('admin_ranks.php?mode=_create'),
+		'S_ACTION'		=> append_sid('admin_ranks.php'),
 	));
 	
 	$max_forum	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_FORUM . ' AND rank_special = 1');

@@ -59,7 +59,7 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_navi'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_NAVI, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -130,7 +130,7 @@ else
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['navi_field'], $data['navi_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['navi_field'], $data['navi_name']),
 					'L_INFOS'		=> $lang['common_data_input'],
 					
 					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['navi_field']),
@@ -418,7 +418,7 @@ else
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
 		'L_HEAD_SET'	=> $lang['navi_settings'],
-		'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['navi_field']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['navi_field']),
 		'L_EXPLAIN'		=> $lang['navi_explain'],
 		
 		'L_MAIN'	=> $lang['navi_main'],

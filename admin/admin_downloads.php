@@ -27,7 +27,7 @@ if ( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
 	
-	if ( $userauth['auth_download'] || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_download'] )
 	{
 		$module['_headmenu_main']['_submenu_downloads'] = $filename;
 	}
@@ -45,7 +45,8 @@ else
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
-	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/downloads.php');
+	
+	load_lang('downloads');
 	
 	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
@@ -54,12 +55,13 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$path_dir	= '';	#$root_path . $settings['path_downloads'] . '/';
+	$path_dir	= $root_path . $settings['path_downloads'] . '/';
 	$show_index	= '';
 	
-	if ( !$userauth['auth_download'] && $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_download'] )
 	{
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD, 'auth_fail' . $current);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -67,6 +69,7 @@ else
 		redirect('admin/' . append_sid('admin_downloads.php', true));
 	}
 	
+	/*	was ein mist ....	*/
 	if ( isset($_POST['_create_file']) || isset($_POST['_create_file']) )
 	{
 		$mode = request('_create_file', 1);
@@ -82,7 +85,6 @@ else
 			//
 		#	$forumname = stripslashes($_POST['forumname'][$cat_id]);
 		}
-		
 	}
 
 	debug($mode);
@@ -123,23 +125,20 @@ else
 					);
 				}
 
-				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
 				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_DOWNLOAD_CAT_URL . '" value="' . $data_cat . '" />';
 
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['download_cat']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['download_cat'], $data['cat_title']),
-					'L_INFOS'		=> $lang['common_data_input'],
-					
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['download_cat']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['download_cat'], $data['cat_title']),
 					'L_TITLE'	=> sprintf($lang['sprintf_title'], $lang['cat']),
 					'L_DESC'	=> sprintf($lang['sprintf_desc'], $lang['cat']),
 					'L_ICON'	=> $lang['cat_icon'],
 					
-					'TITLE'			=> $data['cat_title'],
-					'DESC'			=> $data['cat_desc'],
+					'TITLE'		=> $data['cat_title'],
+					'DESC'		=> $data['cat_desc'],
 					
-					'S_FIELDS' => $s_fields,
-					'S_ACTION' => append_sid('admin_downloads.php'),
+					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid('admin_downloads.php'),
 				));
 				
 				if ( request('submit', 2) )
@@ -270,20 +269,18 @@ else
 			
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['download']),
-		'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['download_cat']),
-		'L_CREATE_FILE'	=> $lang['download_file'],
-		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['download']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['download_cat']),
+		'L_CREATE_FILE'	=> sprintf($lang['sprintf_new_create'], $lang['download']),
+		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['download_cat']),
 		'L_EXPLAIN'		=> $lang['download_explain'],
 		
-		'NO_ENTRY'		=> $lang['no_entry'],
-		
-		'S_FIELDS'	=> $s_fields,
-		'S_CREATE'	=> append_sid('admin_downloads.php?mode=_create'),
-		'S_ACTION'	=> append_sid('admin_downloads.php'),
+		'S_FIELDS'		=> $s_fields,
+		'S_CREATE'		=> append_sid('admin_downloads.php?mode=_create'),
+		'S_ACTION'		=> append_sid('admin_downloads.php'),
 	));
 	
+	$max	= get_data_max(DOWNLOAD_CAT, 'cat_order', '');
 	$data	= get_data_array(DOWNLOAD_CAT, '', 'cat_order', 'ASC');
-	$order	= get_data_max(DOWNLOAD_CAT, 'cat_order', '');
 	
 	if ( $data )
 	{
@@ -292,23 +289,20 @@ else
 			$cat_id = $data[$i]['cat_id'];
 				
 			$template->assign_block_vars('_display._dl_cat_row', array(
-				'ID'		=> $data[$i]['cat_id'],													   
+				'ID'		=> $cat_id,													   
 				'TITLE'		=> $data[$i]['cat_title'],
 				'FILES'		=> $data[$i]['cat_files'],
 				'DESC'		=> $data[$i]['cat_desc'],
 				
-				'MOVE_UP'	=> ( $data[$i]['cat_order'] != '10' )			? '<a href="' . append_sid('admin_downloads.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=-15&amp;' . POST_DOWNLOAD_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $data[$i]['cat_order'] != $order['max'] )	? '<a href="' . append_sid('admin_downloads.php?mode=_order&amp;type=' . RANK_FORUM . '&amp;move=15&amp;' . POST_DOWNLOAD_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $data[$i]['cat_order'] != '10' )			? '<a href="' . append_sid('admin_downloads.php?mode=_order&amp;move=-15&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data[$i]['cat_order'] != $max['max'] )	? '<a href="' . append_sid('admin_downloads.php?mode=_order&amp;move=15&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE' => append_sid('admin_downloads.php?mode=_update&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id),
 				'U_DELETE' => append_sid('admin_downloads.php?mode=_delete&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry', array()); }
 	
 	$template->pparse('body');
 			

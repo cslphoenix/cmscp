@@ -59,7 +59,7 @@ else
 	if ( $userdata['user_level'] != ADMIN && ( !$userauth['auth_news'] || !$userauth['auth_news_public'] ) )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_NEWS, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	if ( $no_header )
@@ -251,7 +251,7 @@ else
 				
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['news']),
-					'L_NEW_EDIT'	=> sprintf($lang[$ssprintf], $lang['news'], $data['news_title']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['news'], $data['news_title']),
 					
 					'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['news']),
 					'L_CAT'			=> sprintf($lang['sprintf_category'], $lang['news']),
@@ -517,7 +517,7 @@ else
 	
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['news']),
-		'L_CREATE'	=> sprintf($lang['sprintf_creates'], $lang['news']),
+		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['news']),
 		'L_NAME'	=> sprintf($lang['sprintf_title'], $lang['news']),
 		'L_EXPLAIN'	=> $lang['news_explain'],
 		

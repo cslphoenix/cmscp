@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -51,22 +51,22 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 		// Prüfen, ob Jahr, Monat und Tag ausgewählt wurden 
 		if (!isset($HTTP_POST_VARS['year']) || $HTTP_POST_VARS['year'] == '0')
 		{
-			$errors[] = "Sie haben kein Jahr ausgew&auml;hlt.";
+			$errors[] = "Sie haben kein Jahr ausgewählt.";
 		}
 		else if (!isset($HTTP_POST_VARS['month']) || $HTTP_POST_VARS['month'] == '0')
 		{
-			$errors[] = "Sie haben keinen Monat ausgew&auml;hlt.";
+			$errors[] = "Sie haben keinen Monat ausgewählt.";
 		}
 		else if (!isset($HTTP_POST_VARS['day']) || $HTTP_POST_VARS['day'] == '0')
 		{
-			$errors[] = "Sie haben keinen Tag ausgew&auml;hlt."; 
+			$errors[] = "Sie haben keinen Tag ausgewählt."; 
 		}
 		else
 		{
 			// Prüfen, ob ds Datum gültig ist
 			if (!checkdate($HTTP_POST_VARS['month'], $HTTP_POST_VARS['day'], $HTTP_POST_VARS['year']))
 			{
-				$errors[] = "Das Datum ist ung&uuml;ltig."; 
+				$errors[] = "Das Datum ist ungültig."; 
 			}
 			else
 			{
@@ -76,7 +76,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 							YEAR(counter_date)			= ' . ($HTTP_POST_VARS['year']) . ' AND 
 							MONTH(counter_date)			= ' . ($HTTP_POST_VARS['month']) . ' AND 
 							DAYOFMONTH(counter_date)	= ' . ($HTTP_POST_VARS['day']) . ' 
-						'; 
+						';
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -84,7 +84,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 				
 				if(!mysql_result($result, 0))
 				{
-					$errors[] = "Zu dem gew&auml;hlten Datum existieren keine Daten.";
+					$errors[] = "Zu dem gewählten Datum existieren keine Daten.";
 				}
 			}
 		}
@@ -105,7 +105,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	$Monatsnamen = array(
 		'1'		=> 'Januar',
 		'2'		=> 'Februar',
-		'3'		=> 'M&auml;rz',
+		'3'		=> 'März',
 		'4'		=> 'April',
 		'5'		=> 'Mai',
 		'6'		=> 'Juni',
@@ -118,7 +118,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	); 
 
 	$select_day = '<select class="postselect" name="day">';
-	$select_day .= '<option disabled value="0">' . $lang['day'] . '</option>'; 
+	$select_day .= '<option disabled value="0">' . $lang['day'] . '</option>';
 	for ($i=1; $i<=31; $i++)
 	{
 		if ($i < 10)
@@ -131,7 +131,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	$select_day .= '</select>';
 	
 	$select_month = '<select class="postselect" name="month">';
-	$select_month .= '<option disabled value="0">' . $lang['month'] . '</option>'; 
+	$select_month .= '<option disabled value="0">' . $lang['month'] . '</option>';
 	for ( $i=1; $i<=12; $i++ )
 	{
 		$selected = ( $i == $month ) ? ' selected="selected" ' : '';
@@ -140,7 +140,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	$select_month .= '</select>';
 	
 	$select_year = '<select class="postselect" name="year">';
-	$select_year .= '<option disabled value="0">' . $lang['year'] . '</option>'; 
+	$select_year .= '<option disabled value="0">' . $lang['year'] . '</option>';
 	for ( $i=2008; $i<$year+3; $i++ )
 	{
 		$selected = ( $i == $year ) ? ' selected="selected" ' : '';
@@ -161,7 +161,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 				FROM ' . COUNTER_COUNTER . '
 				WHERE 
 					YEAR(counter_date) = "'.$year.'" AND
-					MONTH(counter_date) = "'.$month.'"'; 
+					MONTH(counter_date) = "'.$month.'"';
 	$row_month = _cached($sql, 'counter_month_' . $day . $month . $year, 1);
 	$anzahl_monat = (int) $row_month['sum'];
 

@@ -42,7 +42,7 @@ else
 	
 	if ( !$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, $lang['auth_fail']);
+		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
 	//
@@ -195,7 +195,7 @@ else
 		// specified
 		//
 		$template->set_filenames(array('body' => 'style/acp_auth.tpl'));
-		$template->assign_block_vars('display', array());
+		$template->assign_block_vars('_display', array());
 //		$template->set_filenames(array(
 //			'body' => './../admin/style/auth_select_body.tpl')
 //		);

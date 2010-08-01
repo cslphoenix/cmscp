@@ -16,10 +16,10 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010
+ *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
 
@@ -279,11 +279,11 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 		'L_CONTACT_INFO'	=> $info,
 		'L_REQUIRED'		=> $lang['items_required'],
 		
-		'S_DAY'				=> select_date('day', 'day',		date('d', time())),
-		'S_MONTH'			=> select_date('month', 'month',	date('m', time())),
-		'S_YEAR'			=> select_date('year', 'year',		date('Y', time())),
-		'S_HOUR'			=> select_date('hour', 'hour',		date('H', time())),
-		'S_MIN'				=> select_date('min', 'min',		date('i', time())),
+		'S_DAY'				=> select_date('selectsmall', 'day', 'day',		date('d', time())),
+		'S_MONTH'			=> select_date('selectsmall', 'month', 'month',	date('m', time())),
+		'S_YEAR'			=> select_date('selectsmall', 'year', 'year',		date('Y', time())),
+		'S_HOUR'			=> select_date('selectsmall', 'hour', 'hour',		date('H', time())),
+		'S_MIN'				=> select_date('selectsmall', 'min', 'min',		date('i', time())),
 		
 		'S_TYPE'			=> _select_type($contact_wartype),
 //		'S_TEAM'			=> _select_team($team_id, $typ, 'post'),

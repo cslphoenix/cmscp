@@ -230,7 +230,7 @@ var jscolor = {
 
 		this.toString = function() {
 			var result = '';
-			if(this.scheme !== null) { result = result + this.scheme + ':'; }
+			if(this.scheme !== null) { result = result + this.scheme + ':';}
 			if(this.authority !== null) { result = result + '//' + this.authority; }
 			if(this.path !== null) { result = result + this.path; }
 			if(this.query !== null) { result = result + '?' + this.query; }
@@ -335,14 +335,14 @@ var jscolor = {
 		this.rgb = [1, 1, 1]; // read-only  0-1, 0-1, 0-1
 
 		this.pickerOnfocus = true; // display picker on focus?
-		this.pickerMode = 'HSV'; // HSV | HVS
-		this.pickerPosition = 'bottom'; // left | right | top | bottom
+		this.pickerMode = 'HSV';// HSV | HVS
+		this.pickerPosition = 'bottom';// left | right | top | bottom
 		this.pickerFace = 10; // px
-		this.pickerFaceColor = 'ThreeDFace'; // CSS color
+		this.pickerFaceColor = 'ThreeDFace';// CSS color
 		this.pickerBorder = 1; // px
-		this.pickerBorderColor = 'ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight'; // CSS color
+		this.pickerBorderColor = 'ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight';// CSS color
 		this.pickerInset = 1; // px
-		this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow'; // CSS color
+		this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow';// CSS color
 		this.pickerZIndex = 10000;
 
 
@@ -651,8 +651,8 @@ var jscolor = {
 
 			// load images in optimal order
 			switch(modeID) {
-				case 0: var padImg = './images/jscolor_hs.png'; break;
-				case 1: var padImg = './images/jscolor_hv.png'; break;
+				case 0: var padImg = './images/jscolor_hs.png';break;
+				case 1: var padImg = './images/jscolor_hv.png';break;
 			}
 			p.padM.style.background = "url('"+jscolor.getDir()+"./images/jscolor_cross.gif') no-repeat";
 			p.sldM.style.background = "url('"+jscolor.getDir()+"./images/jscolor_arrow.gif') no-repeat";

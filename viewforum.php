@@ -261,7 +261,7 @@ if( $total_topics )
 		}
 		else
 		{
-			$topic_type = '';		
+			$topic_type = '';
 		}
 
 		if( $topic_rowset[$i]['topic_vote'] )

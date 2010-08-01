@@ -17,7 +17,7 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" width="99%">{L_NAME}</td>
+	<td class="rowHead" width="99%">{L_TITLE}</td>
 	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _dl_cat_row -->
@@ -48,7 +48,7 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_NEW_EDIT}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
 

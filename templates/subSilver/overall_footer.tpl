@@ -87,7 +87,7 @@
 					<th>Newsletter</th>
 				</tr>
 				<tr>
-					<td><input type="text" class="post" name="mail"  maxlength="100" size="25" value="email@adresse" onblur="this.className='post'; if(this.value=='')this.value='email@adresse'" onfocus="this.className='post';if(this.value=='email@adresse') this.value='';" />  <input type="submit" name="submit" class="button3" value=""></td>
+					<td><input type="text" class="post" name="mail"  maxlength="100" size="25" value="email@adresse" onblur="this.className='post';if(this.value=='')this.value='email@adresse'" onfocus="this.className='post';if(this.value=='email@adresse') this.value='';" />  <input type="submit" name="submit" class="button3" value=""></td>
 				</tr>
 				<tr>
 					<td> <input type="checkbox" name="unsubscribe" /> Austragen</td>
