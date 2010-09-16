@@ -112,12 +112,12 @@ tinyMCE.init({
 	<td class="row1 top"><label>{L_AUTH}:</label></td>
 	<td class="row3">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN _auth_gallery -->
+		<!-- BEGIN _auth -->
 		<tr>
-			<td nowrap="nowrap">{_input._auth_gallery.S_SELECT}</td>
-			<td width="99%">&nbsp;<label for="{_input._auth_gallery.INFO}">{_input._auth_gallery.TITLE}</label></td>
+			<td nowrap="nowrap">{_input._auth.SELECT}</td>
+			<td width="99%">&nbsp;<label for="{_input._auth.INFO}">{_input._auth.TITLE}</label></td>
 		</tr>
-		<!-- END _auth_gallery -->
+		<!-- END _auth -->
 		</table>
 	</td>
 </tr>

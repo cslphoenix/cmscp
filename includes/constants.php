@@ -58,6 +58,7 @@ define('LOG_SEK_USER',			20);
 
 define('LOG_SEK_CASH',			21);
 define('LOG_SEK_GALLERY',		22);
+define('LOG_SEK_MAPS',			23);
 
 define('LOG_SEK_CHANGELOG',		98);
 define('LOG_SEK_BUGTRACKER',	99);
@@ -246,6 +247,9 @@ define('POST_CHANGELOG_URL',	'cl');
 define('POST_DOWNLOAD_URL',		'd');
 define('POST_DOWNLOAD_CAT_URL',	'cat');
 
+define('POST_MAPS_URL',			'm');
+define('POST_MAPS_CAT_URL',		'mc');
+
 //	Forum Status
 define('FORUM_UNLOCKED',	0);
 define('FORUM_LOCKED',		1);
@@ -363,5 +367,8 @@ define('CASH_USER',					$db_prefix . 'cash_user');
 define('DOWNLOAD',					$db_prefix . 'downloads');
 define('DOWNLOAD_CAT',				$db_prefix . 'downloads_cat');
 
+/*	Maps/Karten	*/
+define('MAPS',					$db_prefix . 'maps');
+define('MAPS_CAT',				$db_prefix . 'maps_cat');
 
 ?>

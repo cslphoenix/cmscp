@@ -64,10 +64,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_ranks.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_ranks.php', true)) : false;
 	
 	if ( !empty($mode) )
 	{
@@ -106,7 +103,8 @@ else
 					);
 				}
 
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_RANKS_URL . '" value="' . $data_id . '" />';
+				$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
+				$s_fields .= '<input type="hidden" name="' . POST_RANKS_URL . '" value="' . $data_id . '" />';
 
 				$template->assign_vars(array(
 					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['rank']),
@@ -149,7 +147,7 @@ else
 					$rank_special	= request('rank_special', 0);
 					$rank_standard	= request('rank_standard', 0);
 					
-					$error = ( !$rank_title ) ? $lang['msg_select_title'] : '';
+					$error .= ( !$rank_title ) ? $lang['msg_select_title'] : '';
 					
 					if ( !$error )
 					{

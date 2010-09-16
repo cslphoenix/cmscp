@@ -57,10 +57,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_teamspeak.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_teamspeak.php', true)) : false;
 	
 	function ts_time($time)
 	{

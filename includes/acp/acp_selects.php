@@ -133,7 +133,7 @@ function select_box_files($type, $class, $path, $default = '')
 	$path_files = scandir($path);
 				
 	$select = '<select class="' . $class . '" name="' . $type . '" id="' . $type . '" onchange="update_image(this.options[selectedIndex].value);">';
-	$select .= '<option value="spacer.gif">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
+	$select .= '<option value="./../spacer.gif">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
 	
 	foreach ( $path_files as $file )
 	{
@@ -513,5 +513,188 @@ function page_mode_select($default, $select_name = 'page_disable_mode')
 	return $disable_select;
 }
 
+/*
+ * @param	$class = CSS Style
+ * @param	$table = Datenbanktabelle
+ * @param	$field = ID Feld
+ * @param	$default = Vorgabe
+ * @return	Rückgabe von der Auswahl
+ */
+function select_cat($class, $table, $field, $default = '')
+{
+	global $db, $lang;
+	
+	$sql = "SELECT * FROM $table";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$select = '<select class="' . $class . '" name="' . $field . '_id" id="' . $field . '_id" >';
+#	$select .= '<option value="0">&raquo;&nbsp;' . $lang['msg_select_' . strtolower($table)] . '&nbsp;</option>';
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$mark = ( $row[$field . '_id'] == $default ) ? 'selected="selected"' : '';
+		$select .= '<option value="' . $row[$field . '_id'] . '" ' . $mark . ' >&raquo;&nbsp;' . $row[$field . '_name'] . '&nbsp;</option>';
+	}
+	$select .= '</select>';
+
+	return $select;
+}
+
+/*
+ */
+function select_order($class, $table, $type, $field, $cat, $default = '')
+{
+	global $db, $lang;
+	
+	$select = "";
+	
+	switch ( $table )
+	{
+		case GAMES:
+			
+			$fields	= 'game_name, game_order';
+			$where	= 'WHERE game_id != -1 ';
+			$order	= 'ORDER BY game_order ASC';
+			
+			break;
+			
+		case GROUPS:
+			
+			$fields	= 'group_name, group_order';
+			$where	= 'WHERE group_single_user = 0 ';
+			$order	= 'ORDER BY group_order ASC';
+			
+			break;
+		
+		default:
+		
+			message(GENERAL_ERROR, 'Error', '');
+			
+			break;
+	}
+	
+	$field	= explode(', ', $fields);
+	$fielda	= $field[0];
+	$fieldb	= $field[1];
+	
+	$sql = "SELECT $fields FROM $table $where $order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$data = $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
+	
+	$select .= "<select class=\"$class\" name=\"" . $fieldb . "_new\" id==\"$fieldb\" >";
+	$select .= "<option value=\"$default\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+	
+	for ( $i = 0; $i < count($data); $i++ )
+	{
+		$mark = ( $data[$i][$fieldb] == $default ) ? 'selected="selected" disabled' : '';
+		$select .= "<option value=\" . ($data[$i][$fieldb] + 5) \" $mark>" . sprintf($lang['sprintf_select_order'], $data[$i][$fielda]) . "</option>";
+	}
+	
+	$select .= "</select>";
+
+	return $select;
+}
+
+function select_lang($class, $field, $field_lang, $type, $data)
+{
+	global $db, $lang;
+	
+	#	$s_level = '';
+	#	$s_level .= '<select class="select" name="event_level" id="event_level">';
+	#	$s_level .= '<option value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_userlevel']) . '</option>';
+	#	foreach ( $lang['switch_level'] as $const => $name )
+	#	{
+	#		$selected = ( $data['event_level'] == $const ) ? ' selected="selected"' : '';			
+	#		$s_level .= "<option value=\"$const\" $selected>&raquo;&nbsp;$name&nbsp;</option>";
+	#	}
+	#	$s_level .= '</select>';
+	
+	$select = "";
+	$select .= "<select class=\"$class\" name=\"$field\" id=\"$field\">";
+	$select .= "<option value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $type]) . "</option>";
+	
+	foreach ( $lang[$field_lang] as $key_name => $value_name )
+	{
+		$mark = ( $data == $key_name ) ? " selected=\"selected\"" : "";			
+		$select .= "<option value=\"$key_name\" $mark>" . sprintf($lang['sprintf_select_format'], $value_name) . "</option>";
+	}
+	$select .= '</select>';
+	
+	return $select;
+}
+
+function img_num($table, $field, $name)
+{
+	global $db;
+	
+	$sql = "SELECT " . $field . "_id FROM $table WHERE " . $field . "_image = '$name'";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrow($result);
+	
+	$num = ( $row[$field . "_id"] ) ? $row[$field . "_id"] : '-1';
+	
+	return $num;
+}
+
+function img_name($table, $field, $num)
+{
+	global $db;
+	
+	$sql = "SELECT " . $field . "_image FROM $table WHERE " . $field . "_id = '$num'";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrow($result);
+	
+	$name = ( $row[$field . "_image"] ) ? $row[$field . "_image"] : '-1';
+	
+	return $name;
+}
+
+function select_maps($tag = '')
+{
+	global $db, $lang;
+	
+	$maps = data(MAPS, '', true, 0, 0);
+	$cats = data(MAPS_CAT, '', true, 0, 0);
+	
+	$select = "";
+	$select .= "<select class=\"selectsmall\" name=\"map_name[]\" id=\"map_name[]\">";
+	$select .= "<option value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_maps']) . "</option>";
+	
+	for ( $i = 0; $i < count($cats); $i++ )
+	{
+	#	if ( $cats[$i]['cat_tag'] == $tag )
+	#	{
+			$cat_id = $cats[$i]['cat_id'];
+			
+			$select .= "<optgroup label=\"" . sprintf($lang['sprintf_select_format'], $cats[$i]['cat_name'] . ' - ' . $cats[$i]['cat_tag']) . "\">";
+			
+			for ( $j = 0; $j < count($maps); $j++ )
+			{
+				$cat_map = $maps[$j]['cat_id'];
+				
+				if ( $cat_id == $cat_map )
+				{
+					$select .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $maps[$j]['map_name']) . "</option>";
+				}
+			}
+			$select .= "</optgroup>";
+	#	}
+	}
+	
+	return $select;
+}
 
 ?>

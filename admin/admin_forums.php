@@ -52,6 +52,8 @@ else
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	$show_index	= '';
+	$s_fields	= '';
+	$error		= '';
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum'] )
 	{
@@ -59,10 +61,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_forums.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_forums.php', true)) : false;
 	
 	//
 	// Start program - define vars
@@ -93,7 +92,19 @@ else
 		$lang['forms_admin'],
 	);
 	
-	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_globalannounce', 'auth_poll', 'auth_pollcreate');
+	$forum_auth_fields = array(
+		'auth_view',
+		'auth_read',
+		'auth_post',
+		'auth_reply',
+		'auth_edit',
+		'auth_delete',
+		'auth_sticky',
+		'auth_announce',
+		'auth_globalannounce',
+		'auth_poll',
+		'auth_pollcreate',
+	);
 	
 	$field_names = array(
 		'auth_view'				=> $lang['forms_view'],
@@ -106,7 +117,7 @@ else
 		'auth_announce'			=> $lang['forms_announce'],
 		'auth_globalannounce'	=> $lang['forms_globalannounce'],
 		'auth_poll'				=> $lang['forms_poll'],
-		'auth_pollcreate'		=> $lang['forms_pollcreate']
+		'auth_pollcreate'		=> $lang['forms_pollcreate'],
 	);
 	
 	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ACL', 'ADM');
@@ -123,15 +134,18 @@ else
 		{
 			$matched = 1;
 			$forum_auth_ary = $simple_auth_ary[$i];
-			for ($j = 0; $j < count($forum_auth_ary); $j++)
+			
+			for ( $j = 0; $j < count($forum_auth_ary); $j++ )
 			{
-				if ($forum_row[$forum_auth_fields[$j]] != $forum_auth_ary[$j])
+				if ( $forum_row[$forum_auth_fields[$j]] != $forum_auth_ary[$j] )
 				{
 					$matched = 0;
+					
 					break;
 				}
 			}
-			if ($matched)
+			
+			if ( $matched )
 			{
 				return $i;
 			}

@@ -120,6 +120,12 @@ td.row1, td.row1_1, td.row2, td.row3, td.row4 {
 	border-right:1px #FFF solid;
 }
 
+td.row5 {
+	vertical-align: middle;
+	border-left:1px #FFF solid;
+	border-right:1px #FFF solid;
+}
+
 td.row1 {
 	font-weight: bold;
 	font-size: 11px;
@@ -493,3 +499,5 @@ tr.wihte:hover {background-color:#efefef;}
 .win { color:#0C0; }
 .lose { color:#F00; }
 .draw { color:#FC0; }
+
+form {margin:0; padding:0}

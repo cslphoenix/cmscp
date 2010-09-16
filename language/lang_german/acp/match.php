@@ -35,38 +35,45 @@ $lang['match_details']			= 'Begegnung Details';
 $lang['match_explain']			= 'Hier können Wars verwaltet werden.';
 $lang['match_details_explain']	= 'Hier können die Details für die Begegnung eingetragen und verändert werden.';
 
-$lang['match_upcoming']			= 'Anstehende Matches';
-$lang['match_expired']			= 'Abgelaufen Matches';
+$lang['match_upcoming']			= 'Anstehende Begegnung';
+$lang['match_expired']			= 'Abgelaufen Begegnung';
 $lang['match_maps']				= 'Matchbilder Upload';
 $lang['match_infos']			= 'Matchinfos';
+
+$lang['info_standard']			= 'Standard Infos';
+$lang['info_rival']				= 'Gegner Infos';
+$lang['info_server']			= 'Server Infos';
+$lang['info_message']			= 'Bericht / Kommentar';
+$lang['info_training']			= 'Training Infos';
+$lang['info_team']				= 'Team';
+$lang['info_type']				= 'XonX';
+$lang['info_categorie']			= 'Match Art';
+$lang['info_league']			= 'Liga';
+$lang['info_league_url']		= 'Liga Website';
+$lang['info_league_match']		= 'Liga Matchlink';
+$lang['info_date']				= 'Match Datum';
+$lang['info_public']			= 'Match Öffentlich?';
+$lang['info_rival']				= 'Gegner Name';
+$lang['info_rival_tag']			= 'Gegner Clantag';
+$lang['info_rival_url']			= 'Gegner Homepage';
+$lang['info_rival_lineup']		= 'Gegner Lineup';
+$lang['info_server']			= 'Server';
+$lang['info_server_pw']			= 'Server PW';
+$lang['info_hltv']				= 'HLTV-Server';
+$lang['info_hltv_pw']			= 'HLTV-Server PW';
+
+$lang['training_date']			= 'Trainingstermin';
+$lang['training_maps']			= 'Trainingsmaps';
+$lang['training_text']			= 'Trainingsbericht';
 
 
 $lang['match_training_create']	= 'hinzufügen';
 $lang['match_training_update']	= 'Trainingsliste';
 
 
-$lang['match_info_a']			= 'Standard Infos';
-$lang['match_info_b']			= 'Gegner Infos';
-$lang['match_info_c']			= 'Server Infos';
-$lang['match_info_d']			= 'Bericht / Kommentar';
-$lang['match_info_e']			= 'Training Infos';
+
 #	Match	Text
-$lang['match_team']				= 'Wechles Team';
-$lang['match_type']				= 'XonX';
-$lang['match_categorie']		= 'Match Art';
-$lang['match_league']			= 'Liga';
-$lang['match_league_url']		= 'Liga Link';
-$lang['match_league_match']		= 'Ligamatchlink';
-$lang['match_date']				= 'Match Datum';
-$lang['match_public']			= 'Match Öffentlich?';
-$lang['match_comments']			= 'Kommentare erlauben?';
-$lang['match_rival']			= 'Gegner Name';
-$lang['match_rival_tag']		= 'Gegner Clantag';
-$lang['match_rival_url']		= 'Gegner Homepage';
-$lang['match_server']			= 'Server';
-$lang['match_serverpw']			= 'Server PW';
-$lang['match_hltv']				= 'HLTV-Server';
-$lang['match_hltvpw']			= 'HLTV-Server PW';
+
 $lang['match_text']				= 'Match Bericht';
 $lang['match_interest_reset']	= 'Teilnahme zurücksetzen?';
 
@@ -77,7 +84,7 @@ $lang['match_details_comment']	= 'Match Kommentar';
 $lang['match_lineup_add_yes']	= 'Spieler hinzugefügt';
 $lang['match_lineup_del_yes']	= 'Spieler gelöscht';
 
-$lang['match_rival_lineup']		= 'Gegner Lineup';
+
 
 
 $lang['match_lineup_no_users']	= 'Bitte Spieler auswählen die noch nicht eingetragen sind.';

@@ -17,12 +17,13 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" width="99%">{L_NAME}</td>
+	<td class="rowHead" width="99%" colspan="2">{L_NAME}</td>
 	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _game_row -->
 <tr>
-	<td class="row_class1" align="left">{_display._game_row.IMAGE} {_display._game_row.NAME}</td>
+	<td class="row_class1" align="left" width="1%">{_display._game_row.IMAGE}</td>
+	<td class="row_class1" align="left"><span style="float:right">{_display._game_row.TAG}</span>{_display._game_row.NAME}</td>
 	<td class="row_class2" align="center">{_display._game_row.MOVE_UP}{_display._game_row.MOVE_DOWN} <a href="{_display._game_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._game_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _game_row -->
@@ -36,7 +37,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="game_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -48,7 +49,7 @@
 // <![CDATA[
 	function update_image(newimage)
 	{
-		document.getElementById('image').src = (newimage) ? "{IMAGE_PATH}" + encodeURI(newimage) : "{IMAGE_DEFAULT}";
+		document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./images/spacer.gif";
 	}
 // ]]>
 </script>
@@ -81,16 +82,23 @@
 </tr>
 <tr>
 	<td class="row1"><label for="game_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="game_name" id="game_name" value="{TITLE}"></td>
+	<td class="row2"><input type="text" class="post" name="game_name" id="game_name" value="{NAME}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="game_tag">{L_TAG}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="game_tag" id="game_tag" value="{TAG}"></td>
 </tr>
 <tr>
 	<td class="row1 top">{L_IMAGE}:</td>
-	<td class="row2 top">{IMAGE_LIST}<br /><img src="{IMAGE}" id="image" alt="" />
-	</td>
+	<td class="row2 top">{S_IMAGE}<br /><img src="{IMAGE}" id="image" alt="" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="game_size">{L_SIZE}:</label></td>
 	<td class="row2"><input type="text" class="post" name="game_size" id="game_size" value="{SIZE}" size="2"></td>
+</tr>
+<tr>
+	<td class="row1 top"><label for="game_order">{L_ORDER}:</label></td>
+	<td class="row2 top">{S_ORDER}</td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>

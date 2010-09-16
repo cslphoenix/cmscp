@@ -72,7 +72,7 @@ function image_delete($image_current, $image_preview, $image_path, $mode_sql)
 	return ( count($sql) == '1' ) ? $sql[0] . " = ''" : $sql[0] . " = '', " . $sql[1] . " = ''";
 }
 
-function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_current, $image_preview, $image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, $error)
+function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_current, $image_preview, $image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, &$error)
 {
 	global $db, $lang, $settings, $error;
 	
@@ -254,10 +254,10 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 			}
 		}
 		
-		if ( $image_current )
-		{
-			image_delete($image_current, $image_preview, $image_path, $mode_sql);
-		}
+	#	if ( $image_current )
+	#	{
+	#		image_delete($image_current, $image_preview, $image_path, $mode_sql);
+	#	}
 		
 		$move_file = ( @$ini_val('open_basedir') != '' ) ? 'move_uploaded_file' : 'copy';
 		
@@ -281,7 +281,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	}
 	else
 	{
-		$error .= sprintf($lang['common_msg_imagesize'], $system_max_width, $system_max_height);
+		$error .= sprintf($lang['sprintf_imagesize'], $system_max_width, $system_max_height);
 		
 		return;
 	}
