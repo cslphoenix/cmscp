@@ -55,16 +55,15 @@ else
 	$log_id		= request(POST_LOG_URL, 0);
 	$mode		= request('mode', 1);
 	$confirm	= request('confirm', 1);
+	$s_fields	= '';
 	
-	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
+	if ( $userdata['user_level'] != ADMIN )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_LOG, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_logs.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_logs.php', true)) : false;
 	
 	switch ( $mode )
 	{

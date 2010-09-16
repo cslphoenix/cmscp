@@ -20,18 +20,26 @@
 	<td class="rowHead" width="100%">{L_LINK}</td>
 	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN link_row -->
+<!-- BEGIN _link_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display.link_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display.link_row.SHOW} {_display.link_row.MOVE_UP} {_display.link_row.MOVE_DOWN} <a href="{_display.link_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display.link_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{_display._link_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._link_row.SHOW} {_display._link_row.MOVE_UP} {_display._link_row.MOVE_DOWN} <a href="{_display._link_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._link_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
-<!-- END link_row -->
-<!-- BEGIN no_entry_link -->
+<!-- END _link_row -->
+<!-- BEGIN _no_entry_link -->
 <tr>
 	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
-<!-- END no_entry_link -->
+<!-- END _no_entry_link -->
 </table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="network_name"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE}"></td>
+</tr>
+</table>
+
 
 <br />
 
@@ -40,17 +48,24 @@
 	<td class="rowHead" width="100%">{L_PARTNER}</td>
 	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN partner_row -->
+<!-- BEGIN _partner_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display.partner_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display.partner_row.SHOW} {_display.partner_row.MOVE_UP} {_display.partner_row.MOVE_DOWN} <a href="{_display.partner_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display.partner_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{_display._partner_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._partner_row.SHOW} {_display._partner_row.MOVE_UP} {_display._partner_row.MOVE_DOWN} <a href="{_display._partner_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._partner_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
-<!-- END partner_row -->
-<!-- BEGIN no_entry_partner -->
+<!-- END _partner_row -->
+<!-- BEGIN _no_entry_partner -->
 <tr>
 	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
-<!-- END no_entry_partner -->
+<!-- END _no_entry_partner -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="network_name"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE}"></td>
+</tr>
 </table>
 	
 <br />
@@ -60,23 +75,23 @@
 	<td class="rowHead" width="100%">{L_SPONSOR}</td>
 	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN sponsor_row -->
+<!-- BEGIN _sponsor_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display.sponsor_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display.sponsor_row.SHOW} {_display.sponsor_row.MOVE_UP} {_display.sponsor_row.MOVE_DOWN} <a href="{_display.sponsor_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display.sponsor_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%">{_display._sponsor_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._sponsor_row.SHOW} {_display._sponsor_row.MOVE_UP} {_display._sponsor_row.MOVE_DOWN} <a href="{_display._sponsor_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._sponsor_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
-<!-- END sponsor_row -->
-<!-- BEGIN no_entry_sponsor -->
+<!-- END _sponsor_row -->
+<!-- BEGIN _no_entry_sponsor -->
 <tr>
 	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
-<!-- END no_entry_sponsor -->
+<!-- END _no_entry_sponsor -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="network_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -114,7 +129,7 @@
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
 			</ul>
 		</div>
 	</th>

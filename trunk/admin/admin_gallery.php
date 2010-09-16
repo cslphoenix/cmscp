@@ -59,10 +59,12 @@ else
 	$order		= request('order', 0);
 	$path_dir	= $root_path . $settings['path_gallery'] . '/';
 	$show_index	= '';
+	$s_fields	= '';
+	$error		= '';
 	
-	$auth_gallery_fields	= array('auth_view', 'auth_edit', 'auth_delete', 'auth_rate', 'auth_upload');
-	$auth_gallery_levels	= array('guest', 'user', 'trial', 'member', 'coleader', 'leader', 'upload');
-	$auth_gallery_const		= array(AUTH_GUEST, AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOAD);
+	$auth_fields	= array('auth_view', 'auth_edit', 'auth_delete', 'auth_rate', 'auth_upload');
+	$auth_levels	= array('guest', 'user', 'trial', 'member', 'coleader', 'leader', 'upload');
+	$auth_constants	= array(AUTH_GUEST, AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOAD);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_gallery'] )
 	{
@@ -70,10 +72,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_gallery.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_gallery.php', true)) : false;
 	
 	if ( !empty($mode) )
 	{
@@ -87,6 +86,8 @@ else
 				
 				if ( $mode == '_create' && !request('submit', 2) )
 				{
+					$max = get_data_max(GALLERY, 'gallery_order', '');
+					
 					$data = array(
 						'gallery_name'		=> request('gallery_name', 2),
 						'gallery_desc'		=> '',
@@ -105,17 +106,17 @@ else
 						'preview_list'		=> $gallery_settings['preview_list'],
 						'preview_widht'		=> $gallery_settings['preview_widht'],
 						'preview_height'	=> $gallery_settings['preview_height'],
+						'gallery_order'		=> $max['max'] + 10,
 					);
 				}
 				else if ( $mode == '_update' && !request('submit', 2) )
 				{
-					$data = get_data(GALLERY, $data_id, 1);
+					$data = data(GALLERY, $data_id, false, 1, 1);
 					
-					if ( $data['gallery_pics'] )
-					{
-						$template->assign_block_vars('_input._overview', array());
-					}
+					( $data['gallery_pics'] ) ? $template->assign_block_vars('_input._overview', array()) : false;
+					
 					$template->assign_block_vars('_input._upload', array());
+					
 				}
 				else
 				{
@@ -137,32 +138,34 @@ else
 						'preview_list'		=> ( request('preview_list', 0) )	? request('preview_list', 0) : $gallery_settings['preview_list'],
 						'preview_widht'		=> ( request('preview_widht', 0) )	? request('preview_widht', 0) : $gallery_settings['preview_widht'],
 						'preview_height'	=> ( request('preview_height', 0) )	? request('preview_height', 0) : $gallery_settings['preview_height'],
+						'gallery_order'		=> request('gallery_order', 0),
 					);
 				}
 				
-				for ( $j = 0; $j < count($auth_gallery_fields); $j++ )
+				for ( $j = 0; $j < count($auth_fields); $j++ )
 				{
-					$custom_auth[$j] = '<select class="selectsmall" name="' . $auth_gallery_fields[$j] . '" id="' . $auth_gallery_fields[$j] . '">';
+					$custom_auth[$j] = '<select class="selectsmall" name="' . $auth_fields[$j] . '" id="' . $auth_fields[$j] . '">';
 					
-					for ( $k = 0; $k < count($auth_gallery_levels); $k++ )
+					for ( $k = 0; $k < count($auth_levels); $k++ )
 					{
 						$disabled = ( $j == '4' && ( $k == '0' || $k == '6' ) ) ? ' disabled' : '';
-						$selected = ( $data[$auth_gallery_fields[$j]] == $auth_gallery_const[$k] ) ? ' selected="selected"' : '';
-						$custom_auth[$j] .= '<option value="' . $auth_gallery_const[$k] . '"' . $selected . $disabled . '>&raquo;&nbsp;' . $lang['auth_gallery_' . $auth_gallery_levels[$k]] . '&nbsp;</option>';
+						$selected = ( $data[$auth_fields[$j]] == $auth_constants[$k] ) ? ' selected="selected"' : '';
+						$custom_auth[$j] .= '<option value="' . $auth_constants[$k] . '"' . $selected . $disabled . '>' . sprintf($lang['sprintf_select_format'], $lang['auth_gallery_' . $auth_levels[$k]]) . '</option>';
 					}
 					$custom_auth[$j] .= '</select>';
 		
-					$cell_title = $lang['auth_gallery'][$auth_gallery_fields[$j]];
+				#	$cell_title = $lang['auth_gallery'][$auth_fields[$j]];
 			
-					$template->assign_block_vars('_input._auth_gallery', array(
-						'TITLE'	=> $cell_title,
-						'INFO'	=> $auth_gallery_fields[$j],
-						
-						'S_SELECT'	=> $custom_auth[$j],
+					$template->assign_block_vars('_input._auth', array(
+						'TITLE'		=> $lang['auth_gallery'][$auth_fields[$j]],
+						'INFO'		=> $auth_fields[$j],
+						'SELECT'	=> $custom_auth[$j],
 					));
 				}
 				
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_GALLERY_URL . '" value="' . $data_id . '" />';
+				$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
+				$s_fields .= '<input type="hidden" name="gallery_order" value="' . $data['gallery_order'] . '" />';
+				$s_fields .= '<input type="hidden" name="' . POST_GALLERY_URL . '" value="' . $data_id . '" />';
 				
 				$template->assign_vars(array(
 					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['gallery']),
@@ -190,7 +193,6 @@ else
 					
 					'NAME'				=> $data['gallery_name'],
 					'DESC'				=> $data['gallery_desc'],
-					
 					'PER_ROWS'			=> $data['per_rows'],
 					'PER_COLS'			=> $data['per_cols'],
 					'MAX_WIDTH'			=> $data['max_width'],
@@ -200,16 +202,17 @@ else
 					'PREVIEW_HEIGHT'	=> $data['preview_height'],
 					
 					'S_LIST_YES'		=> ( $data['preview_list'] ) ? ' checked="checked"' : '',
-					'S_LIST_NO'			=> ( !$data['preview_list'] ) ? ' checked="checked"' : '',
+					'S_LIST_NO'			=> (!$data['preview_list'] ) ? ' checked="checked"' : '',
 					'S_RATE_YES'		=> ( $data['gallery_rate'] ) ? ' checked="checked"' : '',
-					'S_RATE_NO'			=> ( !$data['gallery_rate'] ) ? ' checked="checked"' : '',
+					'S_RATE_NO'			=> (!$data['gallery_rate'] ) ? ' checked="checked"' : '',
 					'S_COMMENT_YES'		=> ( $data['gallery_comments'] ) ? ' checked="checked"' : '',
-					'S_COMMENT_NO'		=> ( !$data['gallery_comments'] ) ? ' checked="checked"' : '',
+					'S_COMMENT_NO'		=> (!$data['gallery_comments'] ) ? ' checked="checked"' : '',
 					
-					'S_FIELDS'			=> $s_fields,
-					'S_OVERVIEW'		=> append_sid('admin_gallery.php?mode=_overview&amp;' . POST_GALLERY_URL . '=' . $data_id),
 					'S_UPLOAD'			=> append_sid('admin_gallery.php?mode=_upload&amp;' . POST_GALLERY_URL . '=' . $data_id),
+					'S_OVERVIEW'		=> append_sid('admin_gallery.php?mode=_overview&amp;' . POST_GALLERY_URL . '=' . $data_id),
+					
 					'S_ACTION'			=> append_sid('admin_gallery.php'),
+					'S_FIELDS'			=> $s_fields,
 				));
 				
 				if ( request('submit', 2) )
@@ -223,6 +226,7 @@ else
 					$auth_delete		= request('auth_delete', 0);
 					$auth_rate			= request('auth_rate', 0);
 					$auth_upload		= request('auth_upload', 0);
+					$gallery_order		= request('gallery_order', 0);
 					
 					$per_rows			= ( request('per_rows', 0) )		? request('per_rows', 0) : $gallery_settings['per_rows'];
 					$per_cols			= ( request('per_cols', 0) )		? request('per_cols', 0) : $gallery_settings['per_cols'];
@@ -233,15 +237,13 @@ else
 					$preview_widht		= ( request('preview_widht', 0) )	? request('preview_widht', 0) : $gallery_settings['preview_widht'];
 					$preview_height		= ( request('preview_height', 0) )	? request('preview_height', 0) : $gallery_settings['preview_height'];
 					
-					$error = ( !$gallery_name ) ? $lang['msg_select_name'] : '';
-					$error .= ( !$gallery_desc ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_desc'] : '';
+					$error .= ( !$gallery_name ) ? ( $error ? '<br />' : '' ) . sprintf($lang['sprintf_msg_select'], sprintf($lang['sprintf_name'], $lang['gallery'])) : '';
+					$error .= ( !$gallery_desc ) ? ( $error ? '<br />' : '' ) . sprintf($lang['sprintf_msg_select'], sprintf($lang['sprintf_desc'], $lang['gallery'])) : '';
 					
 					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
-							$max = get_data_max(GALLERY, 'gallery_order', '');
-							
 							$folder	= uniqid('gallery_');
 							$path	= $path_dir . $folder;		
 							
@@ -321,30 +323,12 @@ else
 					log_add(LOG_ADMIN, LOG_SEK_GALLERY, '_order_pic');
 				}
 				
-				$data_gallery		= get_data(GALLERY, $data_id, 1);
+				$data_gallery	= get_data(GALLERY, $data_id, 1);
 				$max_order		= get_data_max(GALLERY_PIC, 'pic_order', '');
-				$data_pics	= get_data_array(GALLERY_PIC, 'gallery_id = ' . $data_id, 'pic_order', 'ASC');
+				$data_pics		= get_data_array(GALLERY_PIC, 'gallery_id = ' . $data_id, 'pic_order', 'ASC');
 				
-				$s_fields = '<input type="hidden" name="mode" value="_overview" /><input type="hidden" name="' . POST_GALLERY_URL . '" value="' . $data_id . '" />';
-				
-				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
-					'L_INPUT'		=> sprintf($lang['sprintf_update'], $lang['gallery'], $data_gallery['gallery_name']),
-					'L_UPLOAD'		=> $lang['common_upload'],
-					'L_OVERVIEW'	=> $lang['common_overview'],
-					
-					'L_WIDTH'		=> $lang['pic_widht'],
-					'L_HEIGHT'		=> $lang['pic_height'],
-					'L_SIZE'		=> $lang['pic_size'],
-					
-					'PICS_PER_LINE'	=> $data_gallery['per_rows'],
-					'PREVIEW_WIDHT'	=> $data_gallery['preview_widht'],
-					
-					'S_FIELDS'		=> $s_fields,
-					'S_UPDATE'		=> append_sid('admin_gallery.php?mode=_update&amp;' . POST_GALLERY_URL . '=' . $data_id),
-					'S_UPLOAD'		=> append_sid('admin_gallery.php?mode=_upload&amp;' . POST_GALLERY_URL . '=' . $data_id),
-					'S_ACTION'		=> append_sid('admin_gallery.php'),
-				));
+				$s_fields .= '<input type="hidden" name="mode" value="_overview" />';
+				$s_fields .= '<input type="hidden" name="' . POST_GALLERY_URL . '" value="' . $data_id . '" />';
 				
 				if ( $data_pics )
 				{
@@ -354,8 +338,6 @@ else
 						
 						for ( $i = $start; $i < min($data_gallery['per_cols'] + $start, count($data_pics)); $i++ )
 						{
-							debug($data_pics[$i]['pic_order']);
-						
 							$pic_id	= $data_pics[$i]['pic_id'];
 							$prev	= $path_dir . $data_gallery['gallery_path'] . '/' . $data_pics[$i]['pic_preview'];
 							$image	= $path_dir . $data_gallery['gallery_path'] . '/' . $data_pics[$i]['pic_filename'];
@@ -432,6 +414,25 @@ else
 				}
 				else { $template->assign_block_vars('_overview._no_entry', array()); }
 				
+				$template->assign_vars(array(
+					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
+					'L_INPUT'		=> sprintf($lang['sprintf_update'], $lang['gallery'], $data_gallery['gallery_name']),
+					'L_UPLOAD'		=> $lang['common_upload'],
+					'L_OVERVIEW'	=> $lang['common_overview'],
+					
+					'L_WIDTH'		=> $lang['pic_widht'],
+					'L_HEIGHT'		=> $lang['pic_height'],
+					'L_SIZE'		=> $lang['pic_size'],
+					
+					'PICS_PER_LINE'	=> $data_gallery['per_rows'],
+					'PREVIEW_WIDHT'	=> $data_gallery['preview_widht'],
+					
+					'S_UPDATE'		=> append_sid('admin_gallery.php?mode=_update&amp;' . POST_GALLERY_URL . '=' . $data_id),
+					'S_UPLOAD'		=> append_sid('admin_gallery.php?mode=_upload&amp;' . POST_GALLERY_URL . '=' . $data_id),
+					'S_ACTION'		=> append_sid('admin_gallery.php'),
+					'S_FIELDS'		=> $s_fields,
+				));
+				
 				if ( request('submit', 2) )
 				{
 					$data = get_data(GALLERY, $data_id, 1);
@@ -447,7 +448,7 @@ else
 							if ( $o_key == $t_key )
 							{						
 								$sql = "UPDATE " . GALLERY_PIC . " SET pic_title = '$t_value', pic_order = '$o_value'  WHERE pic_id = $o_key";
-								if ( !($result = $db->sql_query($sql)) )
+								if ( !$db->sql_query($sql) )
 								{
 									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 								}
@@ -677,19 +678,19 @@ else
 					);
 				}
 				
-				for ( $j = 0; $j < count($auth_gallery_fields); $j++ )
+				for ( $j = 0; $j < count($auth_fields); $j++ )
 				{
-					$select[$j] = '<select class="selectsmall" name="' . $auth_gallery_fields[$j] . '">';
+					$select[$j] = '<select class="selectsmall" name="' . $auth_fields[$j] . '">';
 					
-					for ( $k = 0; $k < count($auth_gallery_levels); $k++ )
+					for ( $k = 0; $k < count($auth_levels); $k++ )
 					{
 						$disabled = ( $j == '4' && ($k == '0' || $k == '6') ) ? ' disabled' : '';
-						$selected = ( $data[$auth_gallery_fields[$j]] == $auth_gallery_const[$k] ) ? ' selected="selected"' : '';
-						$select[$j] .= '<option value="' . $auth_gallery_const[$k] . '"' . $selected . $disabled . '>' . $lang['auth_gallery_' . $auth_gallery_levels[$k]] . '&nbsp;</option>';
+						$selected = ( $data[$auth_fields[$j]] == $auth_constants[$k] ) ? ' selected="selected"' : '';
+						$select[$j] .= '<option value="' . $auth_constants[$k] . '"' . $selected . $disabled . '>' . $lang['auth_gallery_' . $auth_levels[$k]] . '&nbsp;</option>';
 					}
 					$select[$j] .= '</select>';
 					
-					$title = $lang['auth_gallery'][$auth_gallery_fields[$j]];
+					$title = $lang['auth_gallery'][$auth_fields[$j]];
 			
 					$template->assign_block_vars('_default._auth_gallery', array(
 						'TITLE'		=> $title,
@@ -759,7 +760,7 @@ else
 							$sql = "UPDATE " . GALLERY_SETTINGS . " SET config_value = '" . $new[$config_name] . "' WHERE config_name = '$config_name'";
 							if ( !$db->sql_query($sql) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 						}
 					}
@@ -857,7 +858,7 @@ else
 	$template->set_filenames(array('body' => 'style/acp_gallery.tpl'));
 	$template->assign_block_vars('_display', array());
 	
-	$s_fields = '<input type="hidden" name="mode" value="_create" />';
+	$s_fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
@@ -869,10 +870,10 @@ else
 		'I_UPLOAD'		=> '<img src="' . $images['option_upload'] . '" title="' . $lang['common_upload'] . '" alt="" >',
 		'I_OVERVIEW'	=> '<img src="' . $images['option_overview'] . '" title="' . $lang['common_overview'] . '" alt="" >',
 
-		'S_FIELDS'	=> $s_fields,
 		'S_DEFAULT'	=> append_sid('admin_gallery.php?mode=_default'),
 		'S_CREATE'	=> append_sid('admin_gallery.php?mode=_create'),
 		'S_ACTION'	=> append_sid('admin_gallery.php'),
+		'S_FIELDS'	=> $s_fields,
 	));
 	
 	$gallery_max	= get_data_max(GALLERY, 'gallery_order', '');
@@ -882,29 +883,24 @@ else
 	{
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($gallery_data)); $i++ )
 		{
-			$gallery_id	= $gallery_data[$i]['gallery_id'];
-
 			$template->assign_block_vars('_display._gallery_row', array(
-				'NAME'		=> ( $gallery_data[$i]['gallery_pics'] ) ? '<a href="' . append_sid('admin_gallery.php?mode=_overview&amp;' . POST_GALLERY_URL . '=' . $gallery_id) . '">' . $gallery_data[$i]['gallery_name'] . '</a>' : $gallery_data[$i]['gallery_name'],
+				'NAME'		=> ( $gallery_data[$i]['gallery_pics'] ) ? '<a href="' . append_sid('admin_gallery.php?mode=_overview&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']) . '">' . $gallery_data[$i]['gallery_name'] . '</a>' : $gallery_data[$i]['gallery_name'],
 				'INFO'		=> sprintf($lang['sprintf_size-pic'], size_dir($root_path . $settings['path_gallery'] . '/' . $gallery_data[$i]['gallery_path'] . '/'), $gallery_data[$i]['gallery_pics']),
 				'DESC'		=> html_entity_decode($gallery_data[$i]['gallery_desc'], ENT_QUOTES),
-				'OVERVIEW'	=> ( $gallery_data[$i]['gallery_pics'] ) ? '<a href="' . append_sid('admin_gallery.php?mode=_overview&amp;' . POST_GALLERY_URL . '=' . $gallery_id) . '"><img src="' . $images['option_overview'] . '" title="' . $lang['common_overview'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_spacer'] . '" width="16" alt="" />',
+				'OVERVIEW'	=> ( $gallery_data[$i]['gallery_pics'] ) ? '<a href="' . append_sid('admin_gallery.php?mode=_overview&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']) . '"><img src="' . $images['option_overview'] . '" title="' . $lang['common_overview'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_spacer'] . '" width="16" alt="" />',
 				
-				'RESYNC'	=> '<a href="' . append_sid('admin_gallery.php?mode=_resync&amp;' . POST_GALLERY_URL . '=' . $gallery_id) . '"><img src="' . $images['refresh'] . '" title="" alt="" /></a>',
+				'RESYNC'	=> '<a href="' . append_sid('admin_gallery.php?mode=_resync&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']) . '"><img src="' . $images['refresh'] . '" title="" alt="" /></a>',
 				
-				'MOVE_UP'	=> ( $gallery_data[$i]['gallery_order'] != '10' )					? '<a href="' . append_sid('admin_gallery.php?mode=_order&amp;move=-15&amp;' . POST_GALLERY_URL . '=' . $gallery_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $gallery_data[$i]['gallery_order'] != $gallery_max['max'] )	? '<a href="' . append_sid('admin_gallery.php?mode=_order&amp;move=15&amp;' . POST_GALLERY_URL . '=' . $gallery_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $gallery_data[$i]['gallery_order'] != '10' )					? '<a href="' . append_sid('admin_gallery.php?mode=_order&amp;move=-15&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $gallery_data[$i]['gallery_order'] != $gallery_max['max'] )	? '<a href="' . append_sid('admin_gallery.php?mode=_order&amp;move=15&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPLOAD'	=> append_sid('admin_gallery.php?mode=_upload&amp;' . POST_GALLERY_URL . '=' . $gallery_id),
-				'U_UPDATE'	=> append_sid('admin_gallery.php?mode=_update&amp;' . POST_GALLERY_URL . '=' . $gallery_id),
-				'U_DELETE'	=> append_sid('admin_gallery.php?mode=_delete&amp;' . POST_GALLERY_URL . '=' . $gallery_id),
+				'U_UPLOAD'	=> append_sid('admin_gallery.php?mode=_upload&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']),
+				'U_UPDATE'	=> append_sid('admin_gallery.php?mode=_update&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']),
+				'U_DELETE'	=> append_sid('admin_gallery.php?mode=_delete&amp;' . POST_GALLERY_URL . '=' . $gallery_data[$i]['gallery_id']),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry', array()); }
 	
 	$template->pparse('body');
 

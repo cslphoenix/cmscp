@@ -48,23 +48,21 @@ else
 	$confirm		= request('confirm');
 	$mode			= request('mode');
 	
-	if ( $userdata['user_level'] != ADMIN )
+	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
+		log_add(LOG_ADMIN, LOG_SEK_CASH, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_authlist.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_changelog.php', true)) : false;
 
 	switch ( $mode )
 	{
 		case '_create':
 		case '_update':
 	
-			$template->set_filenames(array('body' => 'style/acp_authlist.tpl'));
-			$template->assign_block_vars('authlist_edit', array());
+			$template->set_filenames(array('body' => 'style/acp_changelog.tpl'));
+			$template->assign_block_vars('_input', array());
 			
 			if ( $mode == '_create' )
 			{
@@ -110,13 +108,13 @@ else
 			$sql = "INSERT INTO " . AUTHLIST . " (authlist_name) VALUES ('auth_" . $authlist_name . "')";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			$sql = "ALTER TABLE " . GROUPS . " ADD auth_" . $authlist_name . " TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			$oCache -> sCachePath = './../cache/';
@@ -141,13 +139,13 @@ else
 			$sql = "UPDATE " . AUTHLIST . " SET authlist_name = 'auth_" . $authlist_name . "' WHERE authlist_id = $authlist_id";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			$sql = "ALTER TABLE " . GROUPS . " CHANGE '" . $authlist['authlist_name'] . "' 'auth_" . $authlist_name . "' TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
-				message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			$oCache -> sCachePath = './../cache/';
@@ -170,13 +168,13 @@ else
 				$sql = "DELETE FROM " . AUTHLIST . " WHERE authlist_id = $authlist_id";
 				if ( !($result = $db->sql_query($sql, BEGIN_TRANSACTION)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$sql = "ALTER TABLE " . GROUPS . " DROP " . $authlist['authlist_name'];
 				if ( !($result = $db->sql_query($sql, END_TRANSACTION)) )
 				{
-					message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$oCache -> sCachePath = './../cache/';

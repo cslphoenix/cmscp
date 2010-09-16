@@ -62,10 +62,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_news.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_news.php', true)) : false;
 	
 	function select_newscat_name($image_id)
 	{
@@ -462,7 +459,7 @@ else
 					$sql = "DELETE FROM " . NEWS . " WHERE news_id = $data_id";
 					if ( !($result = $db->sql_query($sql, BEGIN_TRANSACTION)) )
 					{
-						message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
 					$oCache -> sCachePath = './../cache/';

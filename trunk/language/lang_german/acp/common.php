@@ -34,6 +34,7 @@ $lang['_headmenu_news']			= 'News';
 $lang['_headmenu_server']		= 'Server';
 $lang['_headmenu_teams']		= 'Teams';
 $lang['_headmenu_users']		= 'Benutzer';
+$lang['_headmenu_games']		= 'Spiele';
 
 /*	Submenü	*/
 $lang['_submenu_auth']			= 'Berechtigung';
@@ -63,6 +64,7 @@ $lang['_submenu_teams']			= 'Teams';
 $lang['_submenu_teamspeak']		= 'Teamspeak';
 $lang['_submenu_training']		= 'Training';
 $lang['_submenu_users']			= 'Benutzer';
+$lang['_submenu_maps']			= 'Karten';
 
 /*	Allgemein:	"sprintf"	*/
 $lang['sprintf_auth']			= '%sberechtigung';
@@ -96,6 +98,10 @@ $lang['sprintf_update_user']	= '%s bearbeiten: %s';
 $lang['sprintf_upload']			= '%s Upload';
 $lang['sprintf_upload_info']	= '%s x %s / %s KB\'s';		
 $lang['sprintf_voting']			= '%sbewertung erlauben?';
+$lang['sprintf_tag']			= '%s Tag';
+$lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
+$lang['sprintf_select_order']	= '&raquo;&nbsp;nach:&nbsp;%s&nbsp;';
+$lang['sprintf_imagesize']		= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
 /*	Allgemein:	Sprachdateien	*/
 $lang['common_add']				= 'Hinzufügen';
@@ -137,32 +143,47 @@ $lang['common_view']			= 'Anzeigen';
 $lang['common_visible']			= 'Sichtbar?';
 $lang['common_yes']				= 'Ja';
 
+$lang['common_order']			= 'Reihenfolge';
+
 /*	Fehlermeldungen	*/
 $lang['msg_sprintf_auth_fail']		= 'Keine Berechtiung für dieses Modul: <b>%s</b>';
 
-$lang['msg_select_title']			= 'Bitte ein Titel eintragen';
-$lang['msg_select_name']			= 'Bitte ein Namen eintragen';
- 
+$lang['sprintf_msg_select']			= 'Bitte ein(e) <b>%s</b> eintragen!';
+
+$lang['msg_select_title']			= 'Bitte ein Titel eintragen!';
+$lang['msg_select_name']			= 'Bitte ein Namen eintragen!';
+$lang['msg_select_url']				= 'Bitte ein Link eintragen!';
+$lang['msg_select_user']			= 'Bitte einen Benutzer auswählen!';
+$lang['msg_select_team']			= 'Bitte ein Team auswählen!';
+$lang['msg_select_type']			= 'Bitte ein Type / Art auswählen!';
+$lang['msg_select_cat']				= 'Bitte ein Match Art auswählen!';
+
+
+
+$lang['msg_select_order']			= 'Bitte Reihenfolge auswählen';
+$lang['msg_select_order_end']		= 'am Ende sortieren';
+
+
+$lang['msg_select_dir']				= 'Bitte ein Verzeichnis auswählen!';
 $lang['msg_select_desc']			= 'Bitte eine Beschreibung eintragen';
 $lang['msg_select_date']			= 'Bitte ein Gültiges Datum auswählen';
 $lang['msg_select_past']			= 'Bitte kein verganges Datum auswählen';
 $lang['msg_select_rival']			= 'Bitte ein Gegnernamen eintragen';
 $lang['msg_select_rival_tag']		= 'Bitte ein Gegnerclantag eintragen';
 $lang['msg_select_server']			= 'Bitte ein Gameserver eintragen';
-$lang['msg_select_team']			= 'Bitte ein Team auswählen';
+
 $lang['msg_select_duration']		= 'Bitte eine Zeitdauer auswählen';
-$lang['msg_select_type']			= 'Bitte ein Type / Art auswählen';
+
 $lang['msg_select_cat']				= 'Bitte ein Match Art auswählen';
 $lang['msg_select_league']			= 'Bitte eine Liga auswählen';
 $lang['msg_select_map']				= 'Bitte eine Map eintragen';
+$lang['msg_select_maps']			= 'Bitte eine Map Auswählen!';
 $lang['msg_select_match']			= 'Bitte eine Begegnung auswählen';
 $lang['msg_select_game']			= 'Bitte ein Spiel auswählen!';
 $lang['msg_select_game_image']		= 'Bitte ein Spielbild auswählen!';
 $lang['msg_select_newscat_image']	= 'Bitte ein Newsbild auswählen!';
 $lang['msg_select_ranks']			= 'Bitte einen Rang auswählen!';
-$lang['msg_select_url']				= 'Bitte Link eintragen';
 $lang['msg_select_amount']			= 'Bitte einen Betrag eintragen';
-$lang['msg_select_user']			= 'Bitte einen Benutzer auswählen';
 $lang['msg_select_pics']			= 'Bitte ein oder mehrere Bilder auswählen, zum löschen.';
 $lang['msg_select_cat']				= 'Bitte eine Kategorie auswählen';
 $lang['msg_select_newscat']			= 'Bitte eine Newskategorie auswählen';
@@ -177,7 +198,9 @@ $lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
 $lang['select_rank']				= 'Rang setzen:';
 $lang['msg_select_rank_set']		= 'Status %s setzen';
 
-$lang['msg_must_select_authlist']		= 'Wähle ein Authfeld aus';
+$lang['sprintf_must_select']		= 'Es muss ein %s ausgewählt werden!';
+
+$lang['msg_must_select_authlist']		= 'Es muss ein Wähle ein Authfeld aus';
 $lang['msg_must_select_game']			= 'Wähle ein Spiel aus';
 
 $lang['msg_sprintf_noentry']		= 'Es sind keine %s eingetragen';
@@ -259,6 +282,7 @@ $lang['delete_confirm_rank']		= 'dass dieser Rang:';
 $lang['delete_confirm_team']		= 'dass dieses Team:';
 $lang['delete_confirm_team_user']	= 'dass dieser Spiele(r): %s vom Team:';
 $lang['delete_confirm_training']	= 'dass das Training gegen:';
+$lang['delete_confirm_maps']		= 'dass diese Karte:';
 
 $lang['delete_confirm_bankdata']	= 'Bist du sicher, das die Bankdaten gelöscht werden soll?';
 
@@ -383,6 +407,7 @@ $lang['auth_user']			= 'Benutzer';
 $lang['auth_user_perm']		= 'Benutzer Befugnisse';
 $lang['auth_download']		= 'Downloads';
 $lang['auth_download_cat']	= 'Downloadkategorien';
+$lang['auth_maps']			= 'Karten';
 
 $lang['auths'] = array(
 	'auth_cash'				=> $lang['auth_cash'],
@@ -412,6 +437,7 @@ $lang['auths'] = array(
 	'auth_user_perm'		=> $lang['auth_user_perm'],
 	'auth_download'			=> $lang['auth_download'],
 	'auth_download_cat'		=> $lang['auth_download_cat'],
+	'auth_maps'				=> $lang['auth_maps'],
 );
 
 /*	Forum: Befugnisse	*/

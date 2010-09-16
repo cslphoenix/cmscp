@@ -64,10 +64,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_downloads.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_downloads.php', true)) : false;
 	
 	/*	was ein mist ....	*/
 	if ( isset($_POST['_create_file']) || isset($_POST['_create_file']) )

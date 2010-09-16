@@ -24,7 +24,7 @@
 <tr>
 	<td class="row_class1" align="center">{_display._match_new_row.GAME}</td>
 	<td class="row_class1" align="left" width="100%"><span style="float: right;">{_display._match_new_row.DATE}</span>{_display._match_new_row.NAME}</td>
-	<td class="row_class1" align="center">&nbsp;<a href="{_display._match_new_row.U_TRAINING}">{_display._match_new_row.L_TRAINING}</a>&nbsp;</td>
+	<td class="row_class1" align="center">&nbsp;<a href="{_display._match_new_row.U_TRAIN}">{_display._match_new_row.L_TRAIN}</a>&nbsp;</td>
 	<td class="row_class2" align="center"><a href="{_display._match_new_row.U_DETAIL}">{I_DETAILS}</a> <a href="{_display._match_new_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._match_new_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _match_new_row -->
@@ -80,14 +80,35 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
+<script type="text/javascript" language="JavaScript">
+<!--
+
+	function toggleMe(a)
+	{
+		var e = document.getElementById(a);
+		if (!e) return true;
+		
+		if ( e.style.display == "none" )
+		{
+			e.style.display = "block"
+		}
+		else
+		{
+			e.style.display = "none"
+		}
+		return true;
+	}
+
+//-->
+</script>
 <form action="{S_ACTION}" method="post" name="form">
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_TITLE}</a></li>
 	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	<!-- BEGIN edit_match -->
-	<li><a href="{S_DETAILS}">{L_DETAILS}</a></li>
-	<!-- END edit_match -->
+	<!-- BEGIN _update -->
+	<li><a href="{S_DETAIL}">{L_DETAIL}</a></li>
+	<!-- END _update -->
 </ul>
 </div>
 
@@ -101,67 +122,70 @@
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td colspan="2">
+	<th colspan="2">
 		<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_INFO_A}</a></li>
-		</ul>
+			<ul id="navlist">
+				<li id="active"><a onclick="return toggleMe('standard')" href="javascript:void(0)" id="current">{L_INFO_STANDARD}</a></li>
+			</ul>
 		</div>
-		<table class="edit">
-		<tr>
-			<td class="row1" width="155"><label for="team_id">{L_TEAM}: *</label></td>
-			<td class="row2">{S_TEAMS}</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_type">{L_TYPE}: *</label></td>
-			<td class="row2">{S_TYPE}</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_categorie">{L_CATEGORIE}: *</label></td>
-			<td class="row2">{S_CATEGORIE}</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_league">{L_LEAGUE}: *</label></td>
-			<td class="row2">{S_LEAGUE}</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_league_url">{L_LEAGUE_URL}:</label></td>
-			<td class="row2"><input type="text" class="post" name="match_league_url" id="match_league_url" value="{MATCH_LEAGUE_URL}"></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_league_match">{L_LEAGUE_MATCH}:</label></td>
-			<td class="row2"><input type="text" class="post" name="match_league_match" id="match_league_match" value="{MATCH_LEAGUE_MATCH}"></td>
-		</tr>
-		<tr>
-			<td class="row1"><label>{L_DATE}:</label></td>
-			<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}
-				<!-- BEGIN reset_match -->
-				<input type="checkbox" name="listdel" /> {L_RESET_LIST}
-				<!-- END reset_match -->
-			</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_public">{L_PUBLIC}:</label></td>
-			<td class="row2"><label><input type="radio" name="match_public" id="match_public" value="1" {S_PUBLIC_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="match_public" value="0" {S_PUBLIC_NO} />&nbsp;{L_NO}</label></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="match_comments">{L_COMMENTS}:</label></td>
-			<td class="row2"><label><input type="radio" name="match_comments" id="match_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="match_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
-		</tr>
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		</table>
+	</th>
+</tr>
+<tbody id="standard" style="display:">
+<tr>
+	<td class="row1"><label for="team_id">{L_TEAM}: *</label></td>
+	<td class="row2">{S_TEAMS}</td>
+</tr>
+<tr>
+	<td class="row1"><label for="match_type">{L_TYPE}: *</label></td>
+	<td class="row2">{S_TYPE}</td>
+</tr>
+<tr>
+	<td class="row1"><label for="match_categorie">{L_CATEGORIE}: *</label></td>
+	<td class="row2">{S_CATEGORIE}</td>
+</tr>
+<tr>
+	<td class="row1"><label for="match_league">{L_LEAGUE}: *</label></td>
+	<td class="row2">{S_LEAGUE}</td>
+</tr>
+<tr>
+	<td class="row1"><label for="match_league_url">{L_LEAGUE_URL}:</label></td>
+	<td class="row2"><input type="text" class="post" name="match_league_url" id="match_league_url" value="{MATCH_LEAGUE_URL}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="match_league_match">{L_LEAGUE_MATCH}:</label></td>
+	<td class="row2"><input type="text" class="post" name="match_league_match" id="match_league_match" value="{MATCH_LEAGUE_MATCH}"></td>
+</tr>
+<tr>
+	<td class="row1"><label>{L_DATE}:</label></td>
+	<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}
+		<!-- BEGIN _reset -->
+		<input type="checkbox" name="listdel" /> {L_RESET_LIST}
+		<!-- END _reset -->
 	</td>
 </tr>
 <tr>
-	<td colspan="2">
+	<td class="row1"><label for="match_public">{L_PUBLIC}:</label></td>
+	<td class="row2"><label><input type="radio" name="match_public" id="match_public" value="1" {S_PUBLIC_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="match_public" value="0" {S_PUBLIC_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr>
+	<td class="row1"><label for="match_comments">{L_COMMENTS}:</label></td>
+	<td class="row2"><label><input type="radio" name="match_comments" id="match_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="match_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+</tbody>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+
+<table class="update" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<th colspan="2">
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_INFO_B} / {L_INFO_C}</a></li>
+			<li id="active"><a href="#" id="current">{L_INFO_RIVAL} / {L_INFO_SERVER}</a></li>
 		</ul>
 		</div>
-	</td>
+	</th>
 </tr>
 <tr>
 	<td class="top">
@@ -213,7 +237,7 @@
 	<td colspan="2">
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_INFO_D}</a></li>
+			<li id="active"><a href="#" id="current">{L_INFO_MESSAGE}</a></li>
 		</ul>
 		</div>
 		<table class="edit">
@@ -231,12 +255,12 @@
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
-<!-- BEGIN new_match -->
+<!-- BEGIN _create -->
 <tr>
 	<td colspan="2">
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_INFO_E}</a></li>
+			<li id="active"><a href="#" id="current">{L_INFO_TRAINING}</a></li>
 		</ul>
 		</div>
 		
@@ -265,7 +289,7 @@
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
-<!-- END new_match -->
+<!-- END _create -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
@@ -277,7 +301,7 @@
 </form>
 <!-- END _input -->
 
-<!-- BEGIN match_details -->
+<!-- BEGIN _detail -->
 <script type="text/JavaScript">
 // <![CDATA[
 function clone(objButton)
@@ -306,13 +330,14 @@ function clone(objButton)
 		objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
 	}
 }
+
 // ]]>
 </script>
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_EDIT}">{L_EDIT}</a></li>
-	<li id="active"><a href="#" id="current">{L_DETAILS}</a></li>
+	<li><a href="{S_INPUT}">{L_INPUT}</a></li>
+	<li id="active"><a href="#" id="current">{L_DETAIL}</a></li>
 </ul>
 </div>
 
@@ -326,14 +351,18 @@ function clone(objButton)
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="50%" class="row2 top">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{L_LINEUP}</a></li>
-		</ul>
-		</div>
+	<td width="49%" class="row5 top">
 		<form action="{S_ACTION}" method="post" name="post">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th colspan="2">
+				<div id="navcontainer">
+				<ul id="navlist">
+					<li id="active"><a href="#" id="current">{L_LINEUP}</a></li>
+				</ul>
+				</div>
+			</th>
+		</tr>
 		<tr>
 			<td class="row1" width="46%"><label for="player_status">{L_LINEUP_STATUS}:</label></td>
 			<td class="row2"><label><input type="radio" name="status" value="0" id="player_status" checked="checked">&nbsp;{L_LINEUP_PLAYER}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="1">&nbsp;{L_LINEUP_REPLACE}</label></td>
@@ -347,33 +376,34 @@ function clone(objButton)
 		{S_FIELDS}
 		</form>
 	</td>
-	<td>&nbsp;</td>
-	<td width="50%" class="row2 top">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="#" id="right">{L_LINEUP_PLAYER}</a></li>
-		</ul>
-		</div>
+	<td width="2%"></td>
+	<td width="49%" class="row5 top">
 		<form action="{S_ACTION}" method="post" id="list">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td class="row2" align="left" width="100%"><b>{L_LINEUP_USERNAME}</b></td>
-			<td class="row2" align="center"><b>{L_LINEUP_STATUS}</b></td>
-			<td class="row2" align="center"><b>#</b></td>
+			<th colspan="3">
+				<div id="navcontainer">
+				<ul id="navlist">
+					<li><a href="#" id="right">#</a></li>
+					<li><a href="#" id="right">{L_LINEUP_STATUS}</a></li>
+					<li><a href="#" id="current">{L_LINEUP_USERNAME}</a></li>
+				</ul>
+				</div>
+			</th>
 		</tr>
-		<!-- BEGIN row_members -->
-		<tr class="wihte">
-			<td align="left">{match_details.row_members.USERNAME}</td>
-			<td align="center">{match_details.row_members.STATUS}</td>
-			<td align="center"><input type="checkbox" name="members[]" value="{match_details.row_members.USER_ID}"></td>
+		<!-- BEGIN _member_row -->
+		<tr>
+			<td align="left" style="padding: 0px 0px 0px 5px;">{_detail._member_row.USERNAME}</td>
+			<td align="center">{_detail._member_row.STATUS}</td>
+			<td align="center"><input type="checkbox" name="members[]" value="{_detail._member_row.USER_ID}"></td>
 		</tr>
-		<!-- END row_members -->
-		<!-- BEGIN no_row_members -->
+		<!-- END _member_row -->
+		<!-- BEGIN _no_member -->
 		<tr>
 			<td class="row_noentry1" align="center" colspan="3">{NO_MEMBER}</td>
 		</tr>
-		<!-- END no_row_members -->
-		<!-- BEGIN option -->
+		<!-- END _no_member -->
+		<!-- BEGIN _option -->
 		<tr>
 			<td align="center" colspan="3">&nbsp;</td>
 		</tr>
@@ -383,7 +413,7 @@ function clone(objButton)
 		<tr>
 			<td colspan="3" align="right"><a class="small" href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a class="small" href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
 		</tr>
-		<!-- END option -->
+		<!-- END _option -->
 		</table>
 		{S_FIELDS}
 		</form>
@@ -407,20 +437,20 @@ function clone(objButton)
 	<td>
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td class="row1" width="28%"><input type="hidden" name="id[]" value="{match_details.maps.info_row.INFO_MAP_ID}">{L_DETAIL_MAP}:</td>
-			<td class="row3" width="28%"><input type="text" class="post" name="map_name[]" value="{match_details.maps.info_row.INFO_MAP_NAME}"></td>
+			<td class="row1" width="28%"><input type="hidden" name="id[]" value="{_detail.maps.info_row.INFO_MAP_ID}">{L_DETAIL_MAP}:</td>
+			<td class="row3" width="28%"><input type="text" class="post" name="map_name[]" value="{_detail.maps.info_row.INFO_MAP_NAME}"></td>
 			<td class="row3" rowspan="3" width="43%" align="center">
-				{match_details.maps.info_row.INFO_PIC_URL}
+				{_detail.maps.info_row.INFO_PIC_URL}
 				<!-- BEGIN delete -->
-				<br /><input type="checkbox" name="mappic_delete[]" value="{match_details.maps.info_row.INFO_MAP_ID}">&nbsp;{L_IMAGE_DELETE}
+				<br /><input type="checkbox" name="mappic_delete[]" value="{_detail.maps.info_row.INFO_MAP_ID}">&nbsp;{L_IMAGE_DELETE}
 				<!-- END delete -->
 			</td>
-			<td class="row3" rowspan="3" width="43%" align="center" nowrap="nowrap">{match_details.maps.info_row.MOVE_UP}{match_details.maps.info_row.MOVE_DOWN}</td>
-			<td class="row3" rowspan="3" width="1%"><input type="checkbox" name="delete[]" title="{L_DELETE}" value="{match_details.maps.info_row.INFO_MAP_ID}"></td>
+			<td class="row3" rowspan="3" width="43%" align="center" nowrap="nowrap">{_detail.maps.info_row.MOVE_UP}{_detail.maps.info_row.MOVE_DOWN}</td>
+			<td class="row3" rowspan="3" width="1%"><input type="checkbox" name="delete[]" title="{L_DELETE}" value="{_detail.maps.info_row.INFO_MAP_ID}"></td>
 		</tr>
 		<tr>
 			<td class="row1">{L_DETAIL_POINTS}:</td>
-			<td class="row2"><input type="text" class="post" name="map_points_home[]" value="{match_details.maps.info_row.INFO_MAP_HOME}" size="2">&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" class="post" name="map_points_rival[]" value="{match_details.maps.info_row.INFO_MAP_RIVAL}" size="2"></td>
+			<td class="row2"><input type="text" class="post" name="map_points_home[]" value="{_detail.maps.info_row.INFO_MAP_HOME}" size="2">&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" class="post" name="map_points_rival[]" value="{_detail.maps.info_row.INFO_MAP_RIVAL}" size="2"></td>
 		</tr>
 		<tr>
 			<td class="row1">{L_DETAIL_MAPPIC}:</td>
@@ -451,7 +481,7 @@ function clone(objButton)
 <table class="edit" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="row1 top" width="28%">{L_DETAIL_MAP}&nbsp;/&nbsp;{L_DETAIL_POINTS}&nbsp;:&nbsp;{L_DETAIL_POINTS}:</td>
-	<td class="row2"><div><div><input type="text" class="post" name="map_name[]" id="map_name[]" size="12">&nbsp;&nbsp;<input type="text" class="post" name="map_points_home[]" id="map_points_home[]" size="2">&nbsp;&nbsp;<input type="text" class="post" name="map_points_rival[]" id="map_points_rival[]" size="2">&nbsp;<input type="button" class="button2" value="{L_MORE}" onclick="clone(this)"></div></div></td>
+	<td class="row2"><div><div>{S_MAP}&nbsp;&nbsp;<input type="text" class="post" name="map_points_home[]" id="map_points_home[]" size="2">&nbsp;&nbsp;<input type="text" class="post" name="map_points_rival[]" id="map_points_rival[]" size="2">&nbsp;<input type="button" class="button2" value="{L_MORE}" onclick="clone(this)"></div></div></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
@@ -485,4 +515,4 @@ function clone(objButton)
 </table>
 {S_FIELDS}
 </form>
-<!-- END match_details -->
+<!-- END _detail -->

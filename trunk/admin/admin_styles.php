@@ -52,10 +52,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_styles.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_styles.php', true)) : false;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{

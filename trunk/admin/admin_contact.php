@@ -60,10 +60,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_contact.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_contact.php', true)) : false;
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;

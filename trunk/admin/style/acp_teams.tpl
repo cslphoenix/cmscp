@@ -17,15 +17,13 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" width="99%" colspan="2">{L_NAME}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_MEMBERCOUNT}</td>
+	<td class="rowHead" width="99%" colspan="2"><span style="float:right;">{L_MEMBERCOUNT}</span>{L_NAME}</td>
 	<td class="rowHead" align="center" nowrap="nowrap" colspan="4">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _team_row -->
 <tr>
 	<td class="row_class1" align="center" width="1%">{_display._team_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%">{_display._team_row.NAME}</td>
-	<td class="row_class1" align="center" width="1%">{_display._team_row.MEMBER_COUNT}</td>
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._team_row.COUNT}&nbsp;</span>{_display._team_row.NAME}</td>
 	<td class="row_class2" align="center">{_display._team_row.MOVE_UP}{_display._team_row.MOVE_DOWN} <a href="{_display._team_row.U_MEMBER}">{I_MEMBER}</a> <a href="{_display._team_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._team_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _team_row -->
@@ -92,11 +90,11 @@
 	<td class="row2"><input type="text" class="post" name="team_name" id="team_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1">{L_GAME}: *</td>
-	<td class="row2">{S_GAME}&nbsp;<img src="{GAME_IMAGE}" id="image" alt="" width="{GAME_SIZE}" height="{GAME_SIZE}"></td>
+	<td class="row1"><span style="float:right;"><img src="{GAME_IMAGE}" id="image" width="{GAME_SIZE}" height="{GAME_SIZE}" alt="" /></span><label for="game_image">{L_GAME}: *</label></td>
+	<td class="row2">{S_GAME}</td>
 </tr>
 <tr>
-	<td class="row1 top">{L_DESC}: *</td>
+	<td class="row1 top"><label for="team_desc">{L_DESC}: *</label></td>
 	<td class="row2"><textarea class="textarea" name="team_desc" rows="5" cols="40">{DESC}</textarea></td>
 </tr>
 <tr>
@@ -195,7 +193,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}">&nbsp;<input type="reset" class="button" name="reset" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -204,6 +202,7 @@
 
 <!-- BEGIN _member -->
 <form action="{S_ACTION}" method="post" id="list" name="list">
+
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>

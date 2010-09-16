@@ -63,10 +63,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header )
-	{
-		redirect('admin/' . append_sid('admin_profile.php', true));
-	}
+	( $no_header ) ? redirect('admin/' . append_sid('admin_profile.php', true)) : false;
 	
 	if ( request('add_profile', 2) || request('addcategory', 2) )
 	{
@@ -236,13 +233,13 @@ else
 							$sql = "UPDATE " . AUTHLIST . " SET authlist_name = 'auth_" . $authlist_name . "' WHERE authlist_id = $data_id";
 							if ( !$db->sql_query($sql) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
 							$sql = "ALTER TABLE " . GROUPS . " CHANGE '" . $data['authlist_name'] . "' 'auth_" . $authlist_name . "' TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 							if ( !$db->sql_query($sql) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
 							$message = $lang['update_authlist']
@@ -489,7 +486,7 @@ else
 							$sql = "INSERT INTO " . PROFILE_CATEGORY . " (category_name, category_order) VALUES ('$category_name', '$next')";
 							if ( !$db->sql_query($sql) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
 							$message = $lang['create_profile_cat'] . sprintf($lang['click_return_profile'], '<a href="' . append_sid('admin_profile.php') . '">', '</a>');
@@ -499,7 +496,7 @@ else
 							$sql = "UPDATE " . PROFILE_CATEGORY . " SET category_name = '$category_name' WHERE category_id = $data_cat";
 							if ( !$db->sql_query($sql) )
 							{
-								message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
 							$message = $lang['update_profile_cat']

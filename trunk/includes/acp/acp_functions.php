@@ -22,6 +22,181 @@
  *	@code:	Sebastian Frickel © 2009, 2010
  *
  */
+#$data = data(AUTHLIST, $data_id, '', 1, 1);
+function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
+{
+	global $db, $lang;
+	
+	switch ( $s_table )
+	{
+		case AUTHLIST:
+		
+			$f_id	= 'authlist_id';
+			
+			break;
+			
+		case CASH:
+		
+			$f_id	= 'cash_id';
+			$f_ord	= 'cash_id ASC';
+			
+			break;
+		
+		case CASH_BANK:
+		
+			$field_id		= '';
+			
+			break;
+			
+		case EVENT:
+			
+			$f_id	= 'event_id';
+			$f_ord	= 'event_date DESC';
+			
+			break;
+			
+		case GAMES:
+			
+			$f_id	= 'game_id';
+			$f_whe	= 'game_id != -1';
+			$f_ord	= 'game_order ASC';
+			
+			break;
+		
+		case TEAMS:
+			
+			$f_id	= 'team_id';
+			$f_con	= 'team_game';
+			$f_ord	= 'team_order ASC';
+			$f_tab	= GAMES;
+			$f_id2	= 'game_id';
+			
+			break;
+		
+		case GALLERY:
+		
+			$f_id	= 'gallery_id';
+			
+			break;
+			
+		case TRAINING:
+			
+			$field_id		= 'training_id';
+			$field_order	= 'team_order';
+			
+			break;
+		
+		case MAPS:
+		
+			$f_id	= 'map_id';
+			$f_ord	= 'map_order ASC';
+			
+			break;
+			
+		case MAPS_CAT:
+		
+			$f_id	= 'cat_id';
+			$f_ord	= 'cat_order ASC';
+			
+			break;
+			
+		case MATCH:
+		
+			$f_id	= 'match_id';
+			
+			break;
+		
+		case GROUPS:			$idfield = 'group_id';			break;
+		
+		case NAVIGATION;		$idfield = 'navi_id';			break;
+		case NETWORK:			$idfield = 'network_id';		break;
+		case NEWSCAT:			$idfield = 'newscat_id';		break;
+		case NEWSLETTER:		$idfield = 'newsletter_id';		break;
+		case PROFILE:			$idfield = 'profile_id';		break;
+		case PROFILE_CATEGORY:	$idfield = 'category_id';		break;
+		case PROFILE_DATA:		$idfield = 'user_id';			break;
+		case RANKS:				$idfield = 'rank_id';			break;		
+		case SERVER:			$idfield = 'server_id';			break;
+		case THEMES:			$idfield = 'themes_id';			break;
+		case TEAMSPEAK:			$idfield = 'teamspeak_id';		break;
+		
+		case USERS:				$idfield = 'user_id';			break;
+		
+		
+		case NEWS:
+			$idfield	= 'news_id';
+			$connection	= 'news_category';
+			$table2		= NEWSCAT;
+			$idfield2	= 'newscat_id';
+			break;
+			
+		
+			
+		case CASH_USER:
+			$idfield	= 'cash_user_id';
+			$connection	= 'user_id';
+			$table2		= USERS;
+			$idfield2	= 'user_id';
+			break;
+
+		default:
+		
+			message(GENERAL_ERROR, 'Error Data Mode ' . $s_table . $lang['back']);
+			
+			break;
+	}
+	
+	$where = ( $s_where ) ? "WHERE $f_id = $s_where" : '';
+	$order = ( $s_order ) ? "ORDER BY $s_order" : '';
+	
+	switch( $s_sql )
+	{
+		case 0:
+			
+			$sql = "SELECT * FROM $s_table $order";
+			
+			break;
+		
+		case 1:
+			
+			$sql = "SELECT * FROM $s_table $where $order";
+			
+			break;
+			
+		case 2:
+			
+			$sql = "SELECT  t1.*, t2.*
+						FROM $s_table t1, $table2 t2
+					WHERE t1.$f_id = $s_id AND t1.$f_con = t2.$f_id2";
+			
+			break;
+			
+		case 3:
+		
+			$sql = "SELECT  t1.*, t2.*
+						FROM $s_table t1
+							LEFT JOIN $table2 t2 ON t1.$f_con = $f_id2
+					WHERE $f_id = $s_id";
+			
+			break;
+			
+		default:
+			
+			message(GENERAL_ERROR, 'Wrong mode for data', '', __LINE__, __FILE__);
+			
+			break;
+	}
+	
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+
+	$return = ( $s_fetch ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
+	
+	return $return;
+}
 
 function load_lang($file)
 {
@@ -58,7 +233,9 @@ function get_data($mode, $id, $type)
 		case TEAMSPEAK:			$idfield = 'teamspeak_id';		break;
 		case TRAINING:			$idfield = 'training_id';		break;
 		case USERS:				$idfield = 'user_id';			break;
-			
+		case MAPS:				$idfield = 'map_id';			break;	
+		case MAPS_CAT:			$idfield = 'cat_id';			break;
+		
 		case NEWS:
 			$idfield	= 'news_id';
 			$connection	= 'news_category';
@@ -191,7 +368,8 @@ function orders($mode, $type = '')
 				$idfield	= 'game_id';
 				$orderfield	= 'game_order';
 			break;
-			
+		
+		case MAPS_CAT:			$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
 		case GALLERY:			$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
 		case NEWSCAT:			$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
 		case MATCH_MAPS:		$idfield = 'map_id';		$orderfield = 'map_order';		break;
@@ -224,9 +402,8 @@ function orders($mode, $type = '')
 			$orderfield = 'pic_order';
 			$typefield	= 'gallery_id';
 			break;
-		
-		
-		
+			
+
 		case 'server':
 			$table		= SERVER;
 			$idfield	= 'server_id';

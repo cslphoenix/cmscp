@@ -137,7 +137,7 @@ $lang['common_desc']			= 'Beschreibung';
 $lang['common_message']			= 'Nachricht';
 $lang['common_intern']			= 'Intern?';
 
-$lang['common_msg_imagesize']	= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
+
 
 /*
  *	Profilefelder

@@ -46,7 +46,7 @@
 </form>
 <!-- END _display -->
 
-<!-- BEGIN _update -->
+<!-- BEGIN _input -->
 <script type="text/javascript" src="./../admin/style/jscolor.js"></script>
 
 <script type="text/javascript">
@@ -54,9 +54,9 @@
 	
 	function activated()
 	{
-		<!-- BEGIN group_auth_data -->
-		document.getElementById("{group_auth_data.NAME}").checked = true;
-		<!-- END group_auth_data -->
+		<!-- BEGIN _auth -->
+		document.getElementById("{_auth.FIELDS}").checked = true;
+		<!-- END _auth -->
 	}
 	
 	function deactivated()
@@ -76,9 +76,9 @@
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	<!-- BEGIN _update -->
+	<!-- BEGIN _input -->
 	<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
-	<!-- END _update -->
+	<!-- END _input -->
 </ul>
 </div>
 
@@ -139,6 +139,10 @@
 			<td class="row2">{S_RANK}</td>
 		</tr>
 		<tr>
+			<td class="row1"><label for="rank_id">{L_ORDER}:</label></td>
+			<td class="row2">{S_ORDER}</td>
+		</tr>
+		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<tr>
@@ -158,18 +162,18 @@
 		<!-- END _image -->
 		<tr>
 			<td class="row1"><label for="ufile">{L_IMAGE_UPLOAD}:</label></td>
-			<td class="row2"><input type="file" class="post" name="group_image" /></td>
+			<td class="row2"><input type="file" class="post" name="group_img" /></td>
 		</tr>		
 		</table>
 	</td>
 	<td valign="top" align="right">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN group_auth_data -->
+		<!-- BEGIN _auth -->
 		<tr>
-			<td class="row1"><label for="{_update.group_auth_data.NAME}">{_update.group_auth_data.TITLE}</label></td>
-			<td class="row2">{_update.group_auth_data.S_SELECT}</td>
+			<td class="row1"><label for="{_input._auth.FIELDS}">{_input._auth.TITLE}</label></td>
+			<td class="row2">{_input._auth.SELECT}</td>
 		</tr>
-		<!-- END group_auth_data -->
+		<!-- END _auth -->
 		<tr>
 			<td class="row3" colspan="2" align="right"><a class="small" href="#" onclick="activated();">{L_MARK_YES}</a>&nbsp;&bull;&nbsp;<a class="small" href="#" onclick="deactivated();">{L_MARK_NO}</a></td>
 		</tr>
@@ -185,14 +189,14 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END _update -->
+<!-- END _input -->
 
 <!-- BEGIN _member -->
 <form action="{S_ACTION}" method="post" name="post" id="list">
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_EDIT}">{L_EDIT}</a></li>
+	<li><a href="{S_EDIT}">{L_INPUT}</a></li>
 	<li id="active"><a href="#" id="current">{L_MEMBER}</a></li>
 </ul>
 </div>
@@ -216,18 +220,18 @@
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
-<!-- BEGIN mods_row -->
+<!-- BEGIN _mods_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_member.mods_row.USERNAME}</td>
-	<td class="row_class1" align="center" nowrap="nowrap">{_member.mods_row.REGISTER}</td>
-	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member.mods_row.USER_ID}"></td>
+	<td class="row_class1" align="left" width="100%">{_member._mods_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{_member._mods_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member._mods_row.USER_ID}"></td>
 </tr>
-<!-- END mods_row -->
-<!-- BEGIN switch_no_moderators -->
+<!-- END _mods_row -->
+<!-- BEGIN _no_moderators -->
 <tr>
 	<td class="row_noentry" colspan="3" align="center">{L_NO_MODERATORS}</td>
 </tr>
-<!-- END switch_no_moderators -->
+<!-- END _no_moderators -->
 </table>
 
 <br />
@@ -243,18 +247,18 @@
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
-<!-- BEGIN nomods_row -->
+<!-- BEGIN _nomods_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_member.nomods_row.USERNAME}</td>
-	<td class="row_class1" align="center" nowrap="nowrap">{_member.nomods_row.REGISTER}</td>
-	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member.nomods_row.USER_ID}"></td>
+	<td class="row_class1" align="left" width="100%">{_member._nomods_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{_member._nomods_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member._nomods_row.USER_ID}"></td>
 </tr>
-<!-- END nomods_row -->
-<!-- BEGIN switch_no_members -->
+<!-- END _nomods_row -->
+<!-- BEGIN _no_members -->
 <tr>
 	<td class="row_noentry" colspan="3" align="center">{L_NO_MEMBERS}</td>
 </tr>
-<!-- END switch_no_members -->
+<!-- END _no_members -->
 </table>
 
 <!-- BEGIN pending -->
@@ -289,6 +293,7 @@
 	<td colspan="2" align="right"><a href="#" onclick="marklist('list', 'member', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
 </tr>
 </table>
+<input type="hidden" name="rank_id" value="" />
 {S_FIELDS}
 </form>
 
@@ -320,11 +325,12 @@
 	<td class="row2" colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}"></td>
 </tr>
 </table>
-{S_HIDDEN_FIELDS2}
+<input type="hidden" name="mode" value="_user_add" />
+{S_FIELDS}
 </form>
 <!-- END team_member -->
 
-<!-- BEGIN groups_list -->
+<!-- BEGIN _overview -->
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
@@ -346,14 +352,14 @@
 	<td>
 		<div id="navcontainer">
 		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{groups_list.groups_data.NAME}</a></li>
+			<li id="active"><a href="#" id="current">{_overview.groups_data.NAME}</a></li>
 		</ul>
 		</div>
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN groups_auth -->
 		<tr>
-			{groups_list.groups_data.groups_auth.TITLE}
-			<td class="row2">{groups_list.groups_data.groups_auth.SELECT}</td>
+			{_overview.groups_data.groups_auth.TITLE}
+			<td class="row2">{_overview.groups_data.groups_auth.SELECT}</td>
 		</tr>
 		<!-- END groups_auth -->
 		</table>
@@ -368,4 +374,4 @@
 	<td width="50%" align="right">{PAGINATION}</td>
 </tr>
 </table>
-<!-- END groups_list -->
+<!-- END _overview -->
