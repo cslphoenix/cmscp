@@ -1,8 +1,6 @@
 <?php
 
 /*
- *
- *
  *							___.          
  *	  ____   _____   ______ \_ |__ ___.__.
  *	_/ ___\ /     \ /  ___/  | __ <   |  |
@@ -18,10 +16,38 @@
  *
  *	Content-Management-System by Phoenix
  *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
+ *	@autor:	Sebastian Frickel © 2009, 2010, 2011
+ *	@code:	Sebastian Frickel © 2009, 2010, 2011
  *
  */
+//
+// DB Utils
+//
+$lang['Database_Utilities'] = 'Database Utilities';
+
+$lang['Restore'] = 'Restore';
+$lang['Backup'] = 'Backup';
+$lang['Restore_explain'] = 'This will perform a full restore of all phpBB tables from a saved file. If your server supports it, you may upload a gzip-compressed text file and it will automatically be decompressed. <b>WARNING</b>: This will overwrite any existing data. The restore may take a long time to process, so please do not move from this page until it is complete.';
+$lang['Backup_explain'] = 'Here you can back up all your phpBB-related data. If you have any additional custom tables in the same database with phpBB that you would like to back up as well, please enter their names, separated by commas, in the Additional Tables textbox below. If your server supports it you may also gzip-compress the file to reduce its size before download.';
+
+$lang['Backup_options'] = 'Backup options';
+$lang['Start_backup'] = 'Start Backup';
+$lang['Full_backup'] = 'Full backup';
+$lang['Structure_backup'] = 'Structure-Only backup';
+$lang['Data_backup'] = 'Data only backup';
+$lang['Additional_tables'] = 'Additional tables';
+$lang['Gzip_compress'] = 'Gzip compress file';
+$lang['Select_file'] = 'Select a file';
+$lang['Start_Restore'] = 'Start Restore';
+
+$lang['Restore_success'] = 'The Database has been successfully restored.<br /><br />Your board should be back to the state it was when the backup was made.';
+$lang['Backup_download'] = 'Your download will start shortly; please wait until it begins.';
+$lang['Backups_not_supported'] = 'Sorry, but database backups are not currently supported for your database system.';
+
+$lang['Restore_Error_uploading'] = 'Error in uploading the backup file';
+$lang['Restore_Error_filename'] = 'Filename problem; please try an alternative file';
+$lang['Restore_Error_decompress'] = 'Cannot decompress a gzip file; please upload a plain text version';
+$lang['Restore_Error_no_file'] = 'No file was uploaded';
 
 
 /*	Hauptmenü	*/
@@ -35,6 +61,7 @@ $lang['_headmenu_server']		= 'Server';
 $lang['_headmenu_teams']		= 'Teams';
 $lang['_headmenu_users']		= 'Benutzer';
 $lang['_headmenu_games']		= 'Spiele';
+$lang['_headmenu_database']		= 'Datenbank';
 
 /*	Submenü	*/
 $lang['_submenu_auth']			= 'Berechtigung';
@@ -65,6 +92,11 @@ $lang['_submenu_teamspeak']		= 'Teamspeak';
 $lang['_submenu_training']		= 'Training';
 $lang['_submenu_users']			= 'Benutzer';
 $lang['_submenu_maps']			= 'Karten';
+
+$lang['_submenu_database']		= 'Datenbank';
+$lang['_submenu_backup']		= 'Backup';
+$lang['_submenu_restore']		= 'Wiederherstellen';
+$lang['_submenu_optimize']		= 'Optimieren';
 
 /*	Allgemein:	"sprintf"	*/
 $lang['sprintf_auth']			= '%sberechtigung';
@@ -100,8 +132,11 @@ $lang['sprintf_upload_info']	= '%s x %s / %s KB\'s';
 $lang['sprintf_voting']			= '%sbewertung erlauben?';
 $lang['sprintf_tag']			= '%s Tag';
 $lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
+$lang['sprintf_select_format2']	= '&raquo;&nbsp;%s&nbsp;::&nbsp;%s';
 $lang['sprintf_select_order']	= '&raquo;&nbsp;nach:&nbsp;%s&nbsp;';
+$lang['sprintf_select_before']	= '&raquo;&nbsp;vor:&nbsp;%s&nbsp;';
 $lang['sprintf_imagesize']		= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
+$lang['sprintf_size']			= '%sgröße';
 
 /*	Allgemein:	Sprachdateien	*/
 $lang['common_add']				= 'Hinzufügen';
@@ -157,6 +192,8 @@ $lang['msg_select_user']			= 'Bitte einen Benutzer auswählen!';
 $lang['msg_select_team']			= 'Bitte ein Team auswählen!';
 $lang['msg_select_type']			= 'Bitte ein Type / Art auswählen!';
 $lang['msg_select_cat']				= 'Bitte ein Match Art auswählen!';
+$lang['msg_select_tag']				= 'Bitte ein Tag eingeben!';
+
 
 
 
@@ -193,6 +230,8 @@ $lang['msg_select_no_members']		= 'Keine Member ausgewählt.';
 $lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
 $lang['msg_select_profilefield']	= 'Bitte Profilefeld eintragen!';
 $lang['msg_select_userlevel']		= 'Bitte ein Benutzerlevel auswählen!';
+$lang['msg_select_map_file']		= 'Bitte ein Bild auswählen!';
+
 
 $lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
 $lang['select_rank']				= 'Rang setzen:';
@@ -232,6 +271,10 @@ $lang['create_teamspeak']			= 'Neuen Teamspeak Server hinzugefügt.';
 $lang['create_training']			= 'Neues Training hinzugefügt.';
 $lang['create_user']				= 'Neuen Benutzer hinzugefügt.';
 
+$lang['create_map']					= 'Karte hinzugefügt';
+$lang['create_map_cat']				= 'Kartenkategorie hinzugefügt';
+
+
 $lang['update_authlist']			= 'Berechtigungsfelddaten erfolgreich geändert';
 $lang['update_cash']				= 'Daten erfolgreich geändert';
 $lang['update_cash_bankdata']		= 'Bankdaten erfolgreich geändert';		
@@ -264,6 +307,9 @@ $lang['update_training']			= 'Trainingsdaten erfolgreich geändert';
 $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
 $lang['upload_match']				= 'Bild/Bilder für das Match wurden hochgeladen!';
 
+$lang['update_map']					= 'Karteninformation erfolgreich geändert';
+$lang['update_map_cat']				= 'Kartenkategorie erfolgreich geändert';
+
 $lang['sprintf_delete_confirm']		= 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?';
 
 $lang['delete_confirm_authlist']	= 'dass dieses Berechtigunsfeld:';
@@ -282,7 +328,8 @@ $lang['delete_confirm_rank']		= 'dass dieser Rang:';
 $lang['delete_confirm_team']		= 'dass dieses Team:';
 $lang['delete_confirm_team_user']	= 'dass dieser Spiele(r): %s vom Team:';
 $lang['delete_confirm_training']	= 'dass das Training gegen:';
-$lang['delete_confirm_maps']		= 'dass diese Karte:';
+$lang['delete_confirm_map']			= 'dass diese Karte:';
+$lang['delete_confirm_map_cat']		= 'dass diese Kartenkategorie:';
 
 $lang['delete_confirm_bankdata']	= 'Bist du sicher, das die Bankdaten gelöscht werden soll?';
 
@@ -313,6 +360,8 @@ $lang['delete_team_user']			= 'Der Spieler wurde aus dem Team gelöscht!';
 $lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht!';
 $lang['delete_training']			= 'Das Training wurde gelöscht!';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht!';
+$lang['delete_map']					= 'Die Karte wurde gelöscht!';
+$lang['delete_map_cat']				= 'Die Kartenkategorie, samt Inahlt wurde gelöscht!';
 
 $lang['click_return_update']			= '<br><br><strong>%s&laquo; zurück%s</strong>';
 
@@ -343,8 +392,10 @@ $lang['click_return_team_member']		= '<br><br><strong>%s&laquo; Teammember Admin
 $lang['click_return_teamspeak']			= '<br><br><strong>%s&laquo; Teamspeak Administration%s</strong>';
 $lang['click_return_training']			= '<br><br><strong>%s&laquo; Trainings Administration%s</strong>';
 $lang['click_return_user']				= '<br><br><strong>%s&laquo; Benutzer Administration%s</strong>';
-$lang['click_return_user_auths']		= '<br><br><strong>%s&laquo; Benutzer (Seitenberechtigung) Administration%s</strong>';		
-$lang['click_return_user_groups']		= '<br><br><strong>%s&laquo; Benutzer (Benutzergruppen & Teams) Administration%s</strong>';		
+$lang['click_return_user_auths']		= '<br><br><strong>%s&laquo; Benutzer (Seitenberechtigung) Administration%s</strong>';
+$lang['click_return_user_groups']		= '<br><br><strong>%s&laquo; Benutzer (Benutzergruppen & Teams) Administration%s</strong>';
+
+$lang['click_return_map']				= '<br><br><strong>%s&laquo; Karten/Map Administration%s</strong>';
 
 /*	Hauptinformationen	*/
 $lang['index_header']		= 'Adminbereich von: %s :: %s';
@@ -438,6 +489,7 @@ $lang['auths'] = array(
 	'auth_download'			=> $lang['auth_download'],
 	'auth_download_cat'		=> $lang['auth_download_cat'],
 	'auth_maps'				=> $lang['auth_maps'],
+	'auth_download'			=> $lang['auth_download'],
 );
 
 /*	Forum: Befugnisse	*/
@@ -461,5 +513,13 @@ $lang['forms_announce']			= 'Ankündigung';
 $lang['forms_globalannounce']	= 'Globaleankündigung';
 $lang['forms_poll']				= 'Umfrage';
 $lang['forms_pollcreate']		= 'Umfrage erstellen';
+
+$lang['empty_site'] = "<html>
+<head>
+	<title></title>
+	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
+</head>
+<body bgcolor=\"#FFFFFF\" text=\"#000000\"></body>
+</html>";
 
 ?>

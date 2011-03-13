@@ -84,12 +84,4 @@ $lang['auth_gallery'] = array(
 	'auth_upload'	=> $lang['auth_gallery_upload'],
 );
 
-$lang['empty_site'] = "<html>
-<head>
-	<title></title>
-	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-</head>
-<body bgcolor=\"#FFFFFF\" text=\"#000000\"></body>
-</html>";
-
 ?>

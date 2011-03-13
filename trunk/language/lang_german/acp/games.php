@@ -1,8 +1,6 @@
 <?php
 
 /*
- *
- *
  *							___.          
  *	  ____   _____   ______ \_ |__ ___.__.
  *	_/ ___\ /     \ /  ___/  | __ <   |  |
@@ -16,12 +14,12 @@
  *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
  *				   \/            \/     \/         \/ 
  *
- *	- Content-Management-System by Phoenix
+ *	Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
+ *	@autor:	Sebastian Frickel © 2009, 2010, 2011
+ *	@code:	Sebastian Frickel © 2009, 2010, 2011
  *
- *	Spiele (Games)
+ *	games - Spiele
  *
  */
 
@@ -30,9 +28,7 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-$lang['game']				= 'Spiel';
-$lang['game_explain']		= 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.';
-
-$lang['game_size']			= 'Bildgrö&szlig;e';
+$lang['game']		= 'Spiel';
+$lang['explain']	= 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.';
 
 ?>

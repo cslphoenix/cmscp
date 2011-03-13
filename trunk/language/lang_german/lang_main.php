@@ -1028,7 +1028,7 @@ $lang['Group_member_join'] = 'Gruppe beitreten';
 
 $lang['Group_Information'] = 'Information';
 $lang['Group_name'] = 'Name';
-$lang['Group_description'] = 'Beschreibung';
+$lang['group_desc'] = 'Beschreibung';
 $lang['Group_membership'] = 'Gruppen-Mitgliedschaft';
 $lang['Group_Members'] = 'Gruppen-Mitglieder';
 $lang['Group_Moderator'] = 'Gruppen-Moderatoren';

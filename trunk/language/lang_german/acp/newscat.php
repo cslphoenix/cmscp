@@ -28,7 +28,7 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-$lang['newscat']			= 'Newskategorie';
-$lang['newscat_explain']	= 'Hier kannst du die Newskategorien Verwalten';
+$lang['newscat']	= 'Newskategorie';
+$lang['explain']	= 'Hier kannst du die Newskategorien Verwalten';
 
 ?>

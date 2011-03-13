@@ -18,8 +18,8 @@
  *
  *	- Content-Management-System by Phoenix
  *
- *	- @autor:	Sebastian Frickel Â© 2009
- *	- @code:	Sebastian Frickel Â© 2009
+ *	- @autor:	Sebastian Frickel © 2009
+ *	- @code:	Sebastian Frickel © 2009
  *
  *	Teams
  *
@@ -36,13 +36,13 @@ $lang['user_pass_random']	= 'Beispiel: %s';
 //	Benutzer
 //
 $lang['user']					= 'Benutzer';
-$lang['user_explain']			= 'Hier kannst du die Daten und Optionen eines Nutzers Ã¤ndern. Um die Befugnisse eines Benutzers zu Ã¤ndern, benutze bitte die Benutzer- und Gruppenkontrolle.';
+$lang['user_explain']			= 'Hier kannst du die Benutzer verwalten und organisieren.';
 
 $lang['user_default']			= '&Uuml;bersicht';
 $lang['user_regedit']			= 'Erforderliche Daten';
 $lang['user_regedit_explain']	= 'alle wichtigen Einstellungen die die Seite betreffen.';
 $lang['user_groups']			= 'Uploadverzeichnisse';
-$lang['user_groups_explain']	= 'GrÃ¼ne oder Rote Symbole kennzeichnen, ob ein Verzeichnis Vorhanden ist oder ob Schreibrecht vorliegen.';
+$lang['user_groups_explain']	= 'Grüne oder Rote Symbole kennzeichnen, ob ein Verzeichnis Vorhanden ist oder ob Schreibrecht vorliegen.';
 
 $lang['user_groups']			= 'Benutzergruppen & Teams';
 $lang['user_auth']				= 'Benutzerberechtigungen';
@@ -54,7 +54,7 @@ $lang['user_teams']				= 'Teams';
 
 $lang['user_register']			= 'Angemeldet seit';
 $lang['user_lastlogin']			= 'Letzter Login';
-$lang['user_founder']			= 'GrÃ¼nder';
+$lang['user_founder']			= 'Gründer';
 $lang['user_email']				= 'E-Mail-Adresse';
 $lang['user_email_confirm']		= 'E-Mail-Adresse wiederholen';
 $lang['user_password']			= 'Passwort';
@@ -71,7 +71,7 @@ $lang['user_settings']				= 'Einstellungen';
 $lang['user_images']				= 'Bilder';
 
 $lang['user_groupmod']			= 'Moderatorstatus';
-$lang['user_look_up']			= 'Benutzer auswÃ¤hlen';
+$lang['user_look_up']			= 'Benutzer auswählen';
 
 $lang['password_register']		= 'Passwort eintragen';
 $lang['password_generate']		= 'Passwort generieren';
