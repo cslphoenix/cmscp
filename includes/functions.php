@@ -354,7 +354,7 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 
 	if ( !empty($row['user_viewemail']) || $group_mod )
 	{
-		$email_uri = ( $config['page_email_form'] ) ? append_sid('profile.php?mode=email&amp;' . POST_USERS_URL .'=' . $row['user_id']) : 'mailto:' . $row['user_email'];
+		$email_uri = ( $config['page_email_form'] ) ? append_sid('profile.php?mode=email&amp;' . POST_USER_URL .'=' . $row['user_id']) : 'mailto:' . $row['user_email'];
 
 		$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
 		$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
@@ -365,11 +365,11 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 		$email = '&nbsp;';
 	}
 
-	$temp_url = append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $row['user_id']);
+	$temp_url = append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $row['user_id']);
 	$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
 	$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
 
-	$temp_url = append_sid('privmsg.php?mode=post&amp;' . POST_USERS_URL . '=' . $row['user_id']);
+	$temp_url = append_sid('privmsg.php?mode=post&amp;' . POST_USER_URL . '=' . $row['user_id']);
 	$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
 	$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
 

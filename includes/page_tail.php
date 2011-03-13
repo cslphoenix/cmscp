@@ -14,7 +14,6 @@ $debug = (defined('DEBUG')) ? '[ Debug: On ]' : '[ Debug: Off ]';
 $cache = (defined('CACHE')) ? '[ Cache: On ]' : '[ Cache: Off ]';
 
 $template->assign_vars(array(
-	
 	'DEBUG'			=> $debug,
 	'CACHE'			=> $cache,
 ));

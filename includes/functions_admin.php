@@ -138,7 +138,7 @@ function get_data($mode, $id, $type)
 			break;
 	}
 	
-	switch($type)
+	switch ( $type )
 	{
 		case '0':
 			$sql = "SELECT * FROM $table WHERE $idfield = $id"; 

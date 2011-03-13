@@ -29,6 +29,10 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 	
 	switch ( $s_table )
 	{
+		case NEWSCAT:
+			$f_id	= 'newscat_id';
+			break;
+		
 		case AUTHLIST:
 		
 			$f_id	= 'authlist_id';
@@ -110,7 +114,7 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 		
 		case NAVIGATION;		$idfield = 'navi_id';			break;
 		case NETWORK:			$idfield = 'network_id';		break;
-		case NEWSCAT:			$idfield = 'newscat_id';		break;
+		
 		case NEWSLETTER:		$idfield = 'newsletter_id';		break;
 		case PROFILE:			$idfield = 'profile_id';		break;
 		case PROFILE_CATEGORY:	$idfield = 'category_id';		break;
@@ -149,7 +153,7 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 	$where = ( $s_where ) ? "WHERE $f_id = $s_where" : '';
 	$order = ( $s_order ) ? "ORDER BY $s_order" : '';
 	
-	switch( $s_sql )
+	switch ( $s_sql )
 	{
 		case 0:
 			
@@ -260,7 +264,7 @@ function get_data($mode, $id, $type)
 		default:	message(GENERAL_ERROR, 'Error Data Mode ' . $mode . $lang['back']);		break;
 	}
 	
-	switch( $type )
+	switch ( $type )
 	{
 		case '0':	$sql = "SELECT * FROM $mode";											break;
 		case '1':	$sql = "SELECT * FROM $mode WHERE $idfield = $id";						break;
@@ -368,15 +372,25 @@ function orders($mode, $type = '')
 				$idfield	= 'game_id';
 				$orderfield	= 'game_order';
 			break;
+			
+		case MAPS:
+				$idfield	= 'map_id';
+				$orderfield	= 'map_order';
+				$typefield	= 'cat_id';
+			break;
 		
-		case MAPS_CAT:			$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
+		case MAPS_CAT:
+				$idfield	= 'cat_id';
+				$orderfield	= 'cat_order';
+			break;
+			
 		case GALLERY:			$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
 		case NEWSCAT:			$idfield = 'newscat_id';	$orderfield = 'newscat_order';	break;
 		case MATCH_MAPS:		$idfield = 'map_id';		$orderfield = 'map_order';		break;
-		case RANKS:				$idfield = 'rank_id';		$orderfield = 'rank_order';	$typefield = 'rank_type';		break;
+		case RANKS:				$idfield = 'rank_id';		$orderfield = 'rank_order';		$typefield = 'rank_type';		break;
 		case CATEGORIES:		$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
 		
-		case PROFILE;			$idfield = 'profile_id';$orderfield = 'profile_order';$typefield = 'profile_category';break;
+		case PROFILE;			$idfield = 'profile_id';	$orderfield = 'profile_order';	$typefield = 'profile_category';break;
 		case PROFILE_CATEGORY:	$idfield = 'category_id';$orderfield = 'category_order';break;
 		
 		case NAVIGATION:

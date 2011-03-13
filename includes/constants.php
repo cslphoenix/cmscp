@@ -38,8 +38,8 @@ define('LOG_SEK_AUTHLIST',		0);
 define('LOG_SEK_COMMENT',		1);
 define('LOG_SEK_EVENT',			2);
 define('LOG_SEK_FORUM',			3);
-define('LOG_SEK_GAME',			4);
-define('LOG_SEK_GAMESERVER',	5);
+define('LOG_SEK_GAMES',			4);
+define('LOG_SEK_GAMESSERVER',	5);
 define('LOG_SEK_GROUPS',		6);
 define('LOG_SEK_LOG',			7);
 define('LOG_SEK_LOGIN',			8);
@@ -236,7 +236,7 @@ define('POST_TEAMS_URL',		't');
 define('POST_TEAMSPEAK_URL',	't');
 define('POST_TOPIC_URL',		't');
 define('POST_TRAINING_URL',		'tr');
-define('POST_USERS_URL',		'u');
+define('POST_USER_URL',			'u');
 define('POST_EVENT_URL',		'e');
 define('POST_CASH_URL',			'c');
 define('POST_CASH_USER_URL',	'cu');
@@ -370,5 +370,7 @@ define('DOWNLOAD_CAT',				$db_prefix . 'downloads_cat');
 /*	Maps/Karten	*/
 define('MAPS',					$db_prefix . 'maps');
 define('MAPS_CAT',				$db_prefix . 'maps_cat');
+
+define('OPTIMIZE',		$db_prefix . 'database');
 
 ?>
