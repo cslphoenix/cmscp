@@ -135,13 +135,25 @@ function select_box_files($type, $class, $path, $default = '')
 	$select = '<select class="' . $class . '" name="' . $type . '" id="' . $type . '" onchange="update_image(this.options[selectedIndex].value);">';
 	$select .= '<option value="./../spacer.gif">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
 	
-	foreach ( $path_files as $file )
+	$endung = array('png', 'jpg', 'jpeg', 'gif');
+	
+	foreach ( $path_files as $files )
 	{
-		if ( $file != '.' && $file != '..' && $file != 'index.htm' && $file != '.svn' )
+		if ( $files != '.' && $files != '..' && $files != 'index.htm' && $files != '.svn' )
 		{
-			$marked = ( $file == $default ) ? ' selected="selected"' : '';
-			$select .= '<option value="' . $file . '" ' . $marked . '>' . $file . '&nbsp;</option>';
+			if ( in_array(substr($files, -3), $endung) )
+			{
+				$file[] = $files;
+			}
 		}
+	}
+	
+	foreach ( $file as $files )
+	{
+		$filter = str_replace(substr($files, strrpos($files, '.')), "", $files);
+
+		$marked = ( $files == $default ) ? ' selected="selected"' : '';
+		$select .= '<option value="' . $files . '" ' . $marked . '>' . $filter . '&nbsp;</option>';
 	}
 	$select .= '</select>';
 	
@@ -543,16 +555,115 @@ function select_cat($class, $table, $field, $default = '')
 	return $select;
 }
 
-/*
- */
-function select_order($class, $table, $type, $field, $cat, $default = '')
+function select_order_cat($class, $table, $id, $order)
 {
 	global $db, $lang;
 	
-	$select = "";
+	switch ( $table )
+	{
+		case MAPS:
+		
+			$fields = 'map_id, map_name, map_file, map_order';
+			$table1 = MAPS_CAT;
+			$order1 = 'cat_order';
+			$table2 = MAPS;
+			$order2 = 'map_order';
+			
+			break;
+			
+		default:
+		
+			message(GENERAL_ERROR, 'Error', '');
+			
+			break;
+	}
+	
+	$field	= explode(', ', $fields);
+	$fielda	= $field[0];
+	$fieldb	= $field[1];
+	$fieldc	= $field[2];
+	$fieldd = $field[3];
+	
+	$sql = "SELECT * FROM $table1 ORDER BY $order1 ASC";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$cats = $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
+	
+	$select = '';
+	
+	if ( $cats )
+	{
+		$sql = "SELECT * FROM $table2 ORDER BY $order2 ASC";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$maps = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+		
+		$select	.= "<select class=\"$class\" name=\"fieldd_new\" id=\"\">";
+		$select .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+		
+		for ( $i = 0; $i < count($cats); $i++ )
+		{
+			$map = '';
+			
+			for ( $j = 0; $j < count($maps); $j++ )
+			{
+				if ( $cats[$i]['cat_id'] == $maps[$j]['cat_id'] )
+				{
+					$mark = ( $fieldd == $order && $fielda == $id ) ? ' disabled' : '';
+					$map .= ( $fieldd == 10 ) ? "<option value=\"5\"$mark>" . sprintf($lang['sprintf_select_before'], $fieldb . " :: " . $fieldc) . "</option>" : '';
+					$map .= "<option value=\"" . ($fieldc + 5) . "\"$mark>" . sprintf($lang['sprintf_select_order'], $fieldb . " :: " . $fieldc) . "</option>";
+				}
+			}
+			
+			if ( $map != '' )
+			{
+				$select .= '<optgroup label="' . $cats[$i]['cat_name'] . '">';
+				$select .= $map;
+				$select .= '</optgroup>';
+			}
+		}
+		$select .= '</select>';
+	}
+	
+	return $select;
+}
+
+function select_order($class, $table, $cat, $default = '')
+{
+	global $db, $lang;
+	
+	$select = '';
 	
 	switch ( $table )
 	{
+		case NEWSCAT:
+			$fields	= 'newscat_title, newscat_order';
+			$where	= '';
+			$order	= 'ORDER BY newscat_order ASC';
+			break;
+			
+		case MAPS:
+			
+			$fields	= 'map_name, map_order';
+			$where	= 'WHERE cat_id = ' . $cat;
+			$order	= 'ORDER BY map_order ASC';
+			
+			break;
+			
+		case MAPS_CAT:
+			
+			$fields	= 'cat_name, cat_order';
+			$where	= '';
+			$order	= 'ORDER BY cat_order ASC';
+			
+			break;
+		
 		case GAMES:
 			
 			$fields	= 'game_name, game_order';
@@ -588,18 +699,35 @@ function select_order($class, $table, $type, $field, $cat, $default = '')
 	$data = $db->sql_fetchrowset($result);
 	$db->sql_freeresult($result);
 	
-	$select .= "<select class=\"$class\" name=\"" . $fieldb . "_new\" id==\"$fieldb\" >";
+	$marked = ( $default == $data[0][$fieldb]-5 ) ? ' selected="selected"' : '';
+	
+	$select .= "<select class=\"$class\" name=\"" . $fieldb . "_new\" id=\"$fieldb\">";
 	$select .= "<option value=\"$default\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+	$select .= "<option value=\"" . ($data[0][$fieldb] - 5) . "\"$marked>" . sprintf($lang['sprintf_select_before'], $data[0][$fielda]) . "</option>";
 	
 	for ( $i = 0; $i < count($data); $i++ )
 	{
-		$mark = ( $data[$i][$fieldb] == $default ) ? 'selected="selected" disabled' : '';
-		$select .= "<option value=\" . ($data[$i][$fieldb] + 5) \" $mark>" . sprintf($lang['sprintf_select_order'], $data[$i][$fielda]) . "</option>";
+		$marked = ( $default == $data[$i][$fieldb]+5 ) ? ' selected="selected"' : '';
+		$disable = ( $data[$i][$fieldb] == $default ) ? ' disabled' : '';
+		$select .= "<option value=\"" . ($data[$i][$fieldb] + 5) . "\"$marked$disable>" . sprintf($lang['sprintf_select_order'], $data[$i][$fielda]) . "</option>";
 	}
 	
 	$select .= "</select>";
-
+	
 	return $select;
+	
+	/*
+		<select>
+			<optgroup label="Swedish Cars">
+				<option value="volvo">Volvo</option>
+				<option value="saab">Saab</option>
+			</optgroup>
+			<optgroup label="German Cars">
+				<option value="mercedes">Mercedes</option>
+				<option value="audi">Audi</option>
+			</optgroup>
+		</select>
+	*/
 }
 
 function select_lang($class, $field, $field_lang, $type, $data)
@@ -675,8 +803,8 @@ function select_maps($tag = '')
 	
 	for ( $i = 0; $i < count($cats); $i++ )
 	{
-	#	if ( $cats[$i]['cat_tag'] == $tag )
-	#	{
+		if ( $cats[$i]['cat_tag'] == $tag )
+		{
 			$cat_id = $cats[$i]['cat_id'];
 			
 			$select .= "<optgroup label=\"" . sprintf($lang['sprintf_select_format'], $cats[$i]['cat_name'] . ' - ' . $cats[$i]['cat_tag']) . "\">";
@@ -687,12 +815,15 @@ function select_maps($tag = '')
 				
 				if ( $cat_id == $cat_map )
 				{
-					$select .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $maps[$j]['map_name']) . "</option>";
+					$values = explode ('.', $maps[$j]['map_file']);
+					$select .= "<option value=\"" . $values[0] . "\">" . sprintf($lang['sprintf_select_format2'], $maps[$j]['map_name'] . $values[0]) . "</option>";
 				}
 			}
 			$select .= "</optgroup>";
-	#	}
+		}
 	}
+	
+	$select .= '</select>';
 	
 	return $select;
 }

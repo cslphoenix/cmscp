@@ -322,7 +322,7 @@ function display_navi_newusers()
 		{
 			$template->assign_block_vars('subnavi_newusers.user_row', array(
 				'L_USERNAME'	=> '<b>' . cut_string($users[$i]['username'], $settings['subnavi_newusers_length']) . '</b>',
-				'U_USERNAME'	=> append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $users[$i]['user_id']),
+				'U_USERNAME'	=> append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $users[$i]['user_id']),
 				'C_USERNAME'	=> 'style="color:' . $users[$i]['user_color'] . '"',
 			));
 		}
