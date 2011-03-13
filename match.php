@@ -592,7 +592,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				}
 				else
 				{
-					$comment_user	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $comment_entry[$i]['poster_id']) . '">' . $comment_entry[$i]['username'] . '</a>';
+					$comment_user	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $comment_entry[$i]['poster_id']) . '">' . $comment_entry[$i]['username'] . '</a>';
 				}
 				
 				if ( $config['time_today'] < $comment_entry[$i]['time_create'] )
