@@ -218,7 +218,7 @@ else if ( isset($HTTP_POST_VARS['unsub']) || isset($HTTP_POST_VARS['unsubpending
 			'L_YES' => $lang['Yes'],
 			'L_NO' => $lang['No'],
 			'S_CONFIRM_ACTION' => append_sid('groups.php'),
-			'S_HIDDEN_FIELDS' => $s_hidden_fields)
+			'S_FIELDS' => $s_hidden_fields)
 		);
 
 		$template->pparse('confirm');
@@ -662,8 +662,6 @@ else if ( $group_id )
 	$select_options .= '<option value="change_level">&raquo; Gruppenrechte geben/nehmen</option>';
 	$select_options .= '</select>';
 	
-	
-
 	$groups_mods = $groups_nomods = array();
 	
 	if ( $group_members )
@@ -723,7 +721,7 @@ else if ( $group_id )
 					'EMAIL_IMG' => $email_img,
 					'EMAIL' => $email,
 					
-					'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id))
+					'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id))
 				);
 	
 				if ( $userdata['user_level'] == ADMIN && $group_info['group_type'] != GROUP_SYSTEM )
@@ -741,7 +739,8 @@ else if ( $group_id )
 
 	if ( $groups_nomods )
 	{
-		if ( $is_moderator && $group_info['group_type'] != GROUP_SYSTEM )
+//		if ( $is_moderator && $group_info['group_type'] != GROUP_SYSTEM )
+		if ( $is_moderator && $userdata['user_level'] != ADMIN && $group_info['group_type'] != GROUP_SYSTEM )
 		{
 			$template->assign_block_vars('details.switch_h_mod_option', array());
 		}
@@ -787,7 +786,7 @@ else if ( $group_id )
 					'YIM_IMG' => $yim_img,
 					'YIM' => $yim,
 					
-					'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id))
+					'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id))
 				);
 				
 				if ( $is_moderator || $userdata['user_level'] == ADMIN && $group_info['group_type'] != GROUP_SYSTEM )
@@ -865,7 +864,7 @@ else if ( $group_id )
 					'YIM_IMG' => $yim_img,
 					'YIM' => $yim,
 					
-					'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id))
+					'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id))
 				);
 			}
 
@@ -888,7 +887,7 @@ else if ( $group_id )
 	$template->assign_vars(array(
 		'L_GROUP_INFORMATION' => $lang['Group_Information'],
 		'L_GROUP_NAME' => $lang['Group_name'],
-		'L_GROUP_DESC' => $lang['Group_description'],
+		'L_GROUP_DESC' => $lang['group_desc'],
 		'L_GROUP_TYPE' => $lang['Group_type'],
 		'L_GROUP_MEMBERSHIP' => $lang['Group_membership'],
 		'L_SUBSCRIBE' => $lang['Subscribe'],
@@ -924,14 +923,14 @@ else if ( $group_id )
 		'L_JOINED'	=> $lang['Joined'],
 
 		'GROUP_NAME' => $group_info['group_name'],
-		'GROUP_DESC' => $group_info['group_description'],
+		'GROUP_DESC' => $group_info['group_desc'],
 		'GROUP_DETAILS' => $group_details,
 		
 		
-		'COLSPAN'		=> $colspan,
+		'COLSPAN'	=> $colspan,
 
 
-		'S_HIDDEN_FIELDS' => $s_hidden_fields, 
+		'S_FIELDS' => $s_hidden_fields, 
 //		'S_MODE_SELECT' => $select_sort_mode,
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
@@ -952,7 +951,7 @@ else
 
 	if ( $userdata['session_logged_in'] )
 	{
-		$sql = 'SELECT g.group_id, g.group_name, g.group_type, g.group_description, gu.user_pending
+		$sql = 'SELECT g.group_id, g.group_name, g.group_type, g.group_desc, gu.user_pending
 					FROM ' . GROUPS . ' g, ' . GROUPS_USERS . ' gu
 					WHERE gu.user_id = ' . $userdata['user_id'] . '
 						AND gu.group_id = g.group_id
@@ -1016,7 +1015,7 @@ else
 					$template->assign_block_vars('select.joined.member.grouprow', array(
 						'U_GROUP' => append_sid('groups.php?' . POST_GROUPS_URL . '=' . $groups_member[$i]['group_id']),
 						'GROUP_NAME' => $groups_member[$i]['group_name'],
-						'GROUP_DESC' => $groups_member[$i]['group_description'],
+						'GROUP_DESC' => $groups_member[$i]['group_desc'],
 						'GROUP_TYPE' => $group_type,
 					));
 				}
@@ -1054,7 +1053,7 @@ else
 					$template->assign_block_vars('select.joined.pending.grouprow', array(
 						'U_GROUP' => append_sid('groups.php?' . POST_GROUPS_URL . '=' . $groups_pending[$i]['group_id']),
 						'GROUP_NAME' => $groups_pending[$i]['group_name'],
-						'GROUP_DESC' => $groups_pending[$i]['group_description'],
+						'GROUP_DESC' => $groups_pending[$i]['group_desc'],
 						'GROUP_TYPE' => $group_type,
 					));
 				}
@@ -1063,7 +1062,7 @@ else
 	}
 
 	$ignore_group_sql = isset($in_group) ? ( count($in_group) ) ? 'AND group_id NOT IN (' . implode(', ', $in_group) . ')' : '' : '';
-	$sql = 'SELECT group_id, group_name, group_type, group_description
+	$sql = 'SELECT group_id, group_name, group_type, group_desc
 				FROM ' . GROUPS . ' g
 				WHERE group_single_user <> ' . TRUE . "
 					$ignore_group_sql
@@ -1114,7 +1113,7 @@ else
 			$template->assign_block_vars('select.remaining.grouprow', array(
 				'U_GROUP' => append_sid('groups.php?' . POST_GROUPS_URL . '=' . $groups_out[$i]['group_id']),
 				'GROUP_NAME' => $groups_out[$i]['group_name'],
-				'GROUP_DESC' => $groups_out[$i]['group_description'],
+				'GROUP_DESC' => $groups_out[$i]['group_desc'],
 				'GROUP_TYPE' => $group_type,
 			));
 		}

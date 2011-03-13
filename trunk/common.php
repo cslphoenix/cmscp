@@ -319,4 +319,6 @@ if ( file_exists('install') || file_exists('contrib') )
 	message(GENERAL_MESSAGE, 'Please_remove_install_contrib');
 }
 
+include($root_path . 'includes/optimize_database_cron.php');
+
 ?>

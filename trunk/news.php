@@ -127,7 +127,7 @@ if ( $mode == '' )
 				'NEWS_TITLE'		=> $news_data[$i]['news_title'],
 				'NEWS_TEXT'			=> html_entity_decode($news_data[$i]['news_text'], ENT_QUOTES),
 				'NEWS_COMMENTS'		=> $news_data[$i]['news_comment'],
-				'NEWS_AUTHOR'		=> '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $news_data[$i]['user_id']) . '" style="color:' . $news_data[$i]['user_color'] . '"><b>' . $news_data[$i]['username'] . '</b></a>',
+				'NEWS_AUTHOR'		=> '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $news_data[$i]['user_id']) . '" style="color:' . $news_data[$i]['user_color'] . '"><b>' . $news_data[$i]['username'] . '</b></a>',
 				'NEWS_PUBLIC_TIME'	=> $news_date,
 				
 				

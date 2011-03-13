@@ -151,8 +151,8 @@ if ( $mode == 'list' )
 			{ 
 				$time = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $bugtracker_data[$i]['bugtracker_create'], $userdata['user_timezone'])); 
 			}
-			$user	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['username1'] . '</a>';
-			$user2	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USERS_URL . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['username2'] . '</a>';
+			$user	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['username1'] . '</a>';
+			$user2	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['username2'] . '</a>';
 			
 			foreach ( $lang['bt_error'] as $key_t => $value_t )
 			{
@@ -448,7 +448,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			}
 
 			$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
-			$userurl = '<a href="' . append_sid('profile.php?mode=details&amp;' . POST_USERS_URL . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['username'] . '</a>';
+			$userurl = '<a href="' . append_sid('profile.php?mode=details&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['username'] . '</a>';
 
 			$template->assign_block_vars('details.bt_comment.row', array(
 				'CLASS' 		=> $class,

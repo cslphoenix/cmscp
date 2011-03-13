@@ -63,6 +63,8 @@ $start		= ( $start < 0 ) ? 0 : $start;
 
 $is_moderator = FALSE;
 
+debug($_POST);
+
 //if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
 if ( $team_id )
 {
@@ -413,7 +415,7 @@ if ( $team_id )
 				'EMAIL_IMG' => $email_img,
 				'EMAIL' => $email,
 				
-				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id)
+				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -467,7 +469,7 @@ if ( $team_id )
 				'YIM_IMG' => $yim_img,
 				'YIM' => $yim,
 				
-				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $user_id)
+				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -541,7 +543,7 @@ if ( $team_id )
 								 
 		'L_GROUP_INFORMATION' => $lang['Group_Information'],
 		'L_GROUP_NAME' => $lang['Group_name'],
-		'L_GROUP_DESC' => $lang['Group_description'],
+		'L_GROUP_DESC' => $lang['group_desc'],
 		'L_GROUP_TYPE' => $lang['Group_type'],
 		'L_GROUP_MEMBERSHIP' => $lang['Group_membership'],
 		'L_SUBSCRIBE' => $lang['Subscribe'],
