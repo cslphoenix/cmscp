@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userauth['auth_teamspeak'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_server']['_submenu_teamspeak'] = $filename;
+		$module['_headmenu_server']['_submenu_teamspeak'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_authlist';
 	
 	include('./pagestart.php');
@@ -50,14 +50,14 @@ else
 	$data_id	= request(POST_TEAMSPEAK_URL, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
-	$show_index	= '';
+	$s_index	= '';
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_teamspeak.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_teamspeak.php', true)) : false;
 	
 	function ts_time($time)
 	{
@@ -258,7 +258,7 @@ else
 							$message = $lang['update_teamspeak']
 								. sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>')
 								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $data_id) . '">', '</a>');
-							log_add(LOG_ADMIN, LOG_SEK_GAME, 'update_teamspeak');
+							log_add(LOG_ADMIN, LOG_SEK_GAMES, 'update_teamspeak');
 						}
 						
 						$oCache -> sCachePath = './../cache/';
@@ -394,7 +394,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

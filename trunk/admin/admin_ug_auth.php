@@ -22,15 +22,15 @@
 
 if( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	if ( $userauth['auth_user_perm'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['users']['permissions'] = $filename . "?mode=user";
+		$module['users']['permissions'] = $root_file . "?mode=user";
 	}
 	
 	if ( $userauth['auth_groups_perm'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_groups']['_submenu_auth'] = $filename . "?mode=group";
+		$module['_headmenu_groups']['_submenu_auth'] = $root_file . "?mode=group";
 	}
 
 	return;
@@ -45,7 +45,7 @@ else
 	$root_path = './../';
 	require('./pagestart.php');
 	
-	$params = array('mode' => 'mode', 'user_id' => POST_USERS_URL, 'group_id' => POST_GROUPS_URL, 'adv' => 'adv');
+	$params = array('mode' => 'mode', 'user_id' => POST_USER_URL, 'group_id' => POST_GROUPS_URL, 'adv' => 'adv');
 	
 	while( list($var, $param) = @each($params) )
 	{
@@ -1066,7 +1066,7 @@ else
 		{
 			for($i = 0; $i < count($ug_info); $i++)
 			{
-				$ug = ( $mode == 'user' ) ? 'group&amp;' . POST_GROUPS_URL : 'user&amp;' . POST_USERS_URL;
+				$ug = ( $mode == 'user' ) ? 'group&amp;' . POST_GROUPS_URL : 'user&amp;' . POST_USER_URL;
 	
 				if (!$ug_info[$i]['user_pending'])
 				{
@@ -1112,13 +1112,13 @@ else
 		);
 	
 		$adv_switch = ( empty($adv) ) ? 1 : 0;
-		$u_ug_switch = ( $mode == 'user' ) ? POST_USERS_URL . "=" . $user_id : POST_GROUPS_URL . "=" . $group_id;
+		$u_ug_switch = ( $mode == 'user' ) ? POST_USER_URL . "=" . $user_id : POST_GROUPS_URL . "=" . $group_id;
 		$switch_mode = append_sid("admin_ug_auth.php?mode=$mode&amp;" . $u_ug_switch . "&amp;adv=$adv_switch");
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
 		$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="adv" value="' . $adv . '" />';
-		$s_fields .= ( $mode == 'user' ) ? '<input type="hidden" name="' . POST_USERS_URL . '" value="' . $user_id . '" />' : '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
+		$s_fields .= ( $mode == 'user' ) ? '<input type="hidden" name="' . POST_USER_URL . '" value="' . $user_id . '" />' : '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
 	
 		if ( $mode == 'user' )
 		{
@@ -1184,7 +1184,7 @@ else
 			
 			if ( $row = $db->sql_fetchrow($result) )
 			{
-				$u_select_list = '<select class="select" name="' . POST_USERS_URL . '">';
+				$u_select_list = '<select class="select" name="' . POST_USER_URL . '">';
 				do
 				{
 					$u_select_list .= '<option value="' . $row['user_id'] . '">' . $row['username'] . '</option>';

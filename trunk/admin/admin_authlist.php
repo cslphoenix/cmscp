@@ -16,19 +16,20 @@
  *
  *	Content-Management-System by Phoenix
  *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
+ *	@autor:	Sebastian Frickel © 2009, 2010, 2011
+ *	@code:	Sebastian Frickel © 2009, 2010, 2011
  *
  *	Berechtigungsfelder
+ *
  */
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['_headmenu_main']['_submenu_authlist'] = $filename;
+		$module['_headmenu_main']['_submenu_authlist'] = $root_file;
 	}
 	
 	return;
@@ -38,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_authlist';
 	
 	include('./pagestart.php');
@@ -49,16 +50,22 @@ else
 	$data_id	= request(POST_AUTHLIST_URL, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
-	$s_fields	= '';
+	$root_file	= basename(__FILE__);
+	
 	$error		= '';
+	$s_index	= '';
+	$s_fields	= '';
+	
+	$p_url		= POST_AUTHLIST_URL;
+	$l_sec	= LOG_SEK_AUTHLIST;
 	
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $l_sec, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_authlist.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid($root_file, true)) : false;
 	
 	switch ( $mode )
 	{
@@ -68,11 +75,11 @@ else
 			$template->set_filenames(array('body' => 'style/acp_authlist.tpl'));
 			$template->assign_block_vars('_input', array());
 			
-			if ( $mode == '_create' && !(request('submit', 2)) )
+			if ( $mode == '_create' && !request('submit', 2) )
 			{
 				$data = array('authlist_name' => request('authlist_name', 2));
 			}
-			else if ( $mode == '_update' && !(request('submit', 2)) )
+			else if ( $mode == '_update' && !request('submit', 2) )
 			{
 				$data = data(AUTHLIST, $data_id, '', 1, 1);
 			}
@@ -82,16 +89,16 @@ else
 			}
 			
 			$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
-			$s_fields .= '<input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
+			$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_INPUT'	=> sprintf($lang['sprintf'.$mode], $lang['authlist_field'], $data['authlist_name']),
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['authlist_field'], $data['authlist_name']),
 				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
 				'NAME'		=> str_replace('auth_', '', $data['authlist_name']),
 				
-				'S_ACTION'	=> append_sid('admin_authlist.php'),
+				'S_ACTION'	=> append_sid($root_file),
 				'S_FIELDS'	=> $s_fields,
 			));
 			
@@ -105,8 +112,7 @@ else
 				{
 					if ( $mode == '_create' )
 					{
-						$sql = "INSERT INTO " . AUTHLIST . " (authlist_name)
-									VALUES ('auth_" . $authlist_name . "')";
+						$sql = "INSERT INTO " . AUTHLIST . " (authlist_name) VALUES ('auth_" . $authlist_name . "')";
 						if ( !$db->sql_query($sql) )
 						{
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -118,13 +124,11 @@ else
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+						$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid($root_file) . '">', '</a>');
 					}
 					else
 					{
-						$sql = "UPDATE " . AUTHLIST . " SET
-									authlist_name = 'auth_" . $authlist_name . "'
-								WHERE authlist_id = $data_id";
+						$sql = "UPDATE " . AUTHLIST . " SET authlist_name = 'auth_" . $authlist_name . "' WHERE authlist_id = $data_id";
 						if ( !$db->sql_query($sql) )
 						{
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -137,18 +141,20 @@ else
 						}
 						
 						$message = $lang['update_authlist']
-							. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
-							. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $data_id) . '">', '</a>');
+							. sprintf($lang['click_return_authlist'], '<a href="' . append_sid($root_file) . '">', '</a>')
+							. sprintf($lang['click_return_update'], '<a href="' . append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_id) . '">', '</a>');
 					}
 					
 					$oCache -> sCachePath = './../cache/';
 					$oCache -> deleteCache('authlist');
 					
-					log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode, $authlist_name);
+					log_add(LOG_ADMIN, $l_sec, $mode, $authlist_name);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else
 				{
+					log_add(LOG_ADMIN, $l_sec, $mode, $error);
+					
 					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
@@ -178,9 +184,9 @@ else
 				$oCache -> sCachePath = './../cache/';
 				$oCache -> deleteCache('authlist');
 				
-				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid($root_file) . '">', '</a>');
 				
-				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, $mode, $data['authlist_name']);
+				log_add(LOG_ADMIN, $l_sec, $mode, $data['authlist_name']);
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_id && !$confirm )
@@ -188,13 +194,13 @@ else
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 
 				$s_fields .= '<input type="hidden" name="mode" value="_delete" />';
-				$s_fields .= '<input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $data_id . '" />';
+				$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
 				
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
 					'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_authlist'], $data['authlist_name']),
 					
-					'S_ACTION'	=> append_sid('admin_authlist.php'),
+					'S_ACTION'	=> append_sid($root_file),
 					'S_FIELDS'	=> $s_fields,
 				));
 			}
@@ -219,8 +225,8 @@ else
 				$template->assign_block_vars('_display._authlist_row', array(
 					'NAME'		=> $authlist[$i]['authlist_name'],
 					
-					'U_UPDATE'	=> append_sid('admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id),
-					'U_DELETE'	=> append_sid('admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id),
+					'U_UPDATE'	=> append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $authlist_id),
+					'U_DELETE'	=> append_sid($root_file . '?mode=_delete&amp;' . $p_url . '=' . $authlist_id),
 				));
 			}
 			
@@ -232,8 +238,8 @@ else
 				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				'L_EXPLAIN'	=> $lang['authlist_explain'],
 				
-				'S_CREATE'	=> append_sid('admin_authlist.php?mode=_create'),
-				'S_ACTION'	=> append_sid('admin_authlist.php'),
+				'S_CREATE'	=> append_sid($root_file . '?mode=_create'),
+				'S_ACTION'	=> append_sid($root_file),
 				'S_FIELDS'	=> $s_fields,
 			));
 			

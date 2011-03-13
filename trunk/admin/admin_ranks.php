@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_ranks'] )
 	{
-		$module['_headmenu_main']['_submenu_ranks'] = $filename;
+		$module['_headmenu_main']['_submenu_ranks'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_ranks';
 	
 	include('./pagestart.php');
@@ -56,7 +56,7 @@ else
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	$path_dir	= $root_path . $settings['path_ranks'] . '/';
-	$show_index	= '';
+	$s_index	= '';
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_ranks'] )
 	{
@@ -64,7 +64,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_ranks.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_ranks.php', true)) : false;
 	
 	if ( !empty($mode) )
 	{
@@ -216,7 +216,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_RANK, $mode);
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 				
 				break;
 				
@@ -274,7 +274,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

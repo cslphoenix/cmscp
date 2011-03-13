@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['_headmenu_development']['_submenu_changelog'] = $filename;
+		$module['_headmenu_development']['_submenu_changelog'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
@@ -54,7 +54,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_changelog.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_changelog.php', true)) : false;
 
 	switch ( $mode )
 	{

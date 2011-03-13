@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_download'] )
 	{
-		$module['_headmenu_main']['_submenu_downloads'] = $filename;
+		$module['_headmenu_main']['_submenu_downloads'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_downloads';
 	
 	include('./pagestart.php');
@@ -56,7 +56,7 @@ else
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	$path_dir	= $root_path . $settings['path_downloads'] . '/';
-	$show_index	= '';
+	$s_index	= '';
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_download'] )
 	{
@@ -64,7 +64,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_downloads.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_downloads.php', true)) : false;
 	
 	/*	was ein mist ....	*/
 	if ( isset($_POST['_create_file']) || isset($_POST['_create_file']) )
@@ -202,7 +202,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'acp_download_cat_order');
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 				
 				break;
 				
@@ -252,7 +252,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

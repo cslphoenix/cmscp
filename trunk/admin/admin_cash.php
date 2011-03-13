@@ -24,11 +24,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_cash'] )
 	{
-		$module['_headmenu_main']['_submenu_cash'] = $filename;
+		$module['_headmenu_main']['_submenu_cash'] = $root_file;
 	}
 	
 	return;
@@ -38,7 +38,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_cash';
 	
 	include('./pagestart.php');
@@ -61,7 +61,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_cash.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_cash.php', true)) : false;
 	
 	switch ( $mode )
 	{
@@ -252,7 +252,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['cash']),
-				'L_INPUT'			=> sprintf($lang['sprintf' . str_replace('_user', '', $mode])], $lang['user'], $data['user_id']),
+				'L_INPUT'			=> sprintf($lang['sprintf' . str_replace('_user', '', $mode)], $lang['user'], $data['user_id']),
 				'L_USER'			=> $lang['user'],
 				'L_USER_AMOUNT'		=> $lang['cash_amount'],
 				'L_USER_MONTH'		=> $lang['cash_user_month'],

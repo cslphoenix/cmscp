@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_teams'] )
 	{
-		$module['_headmenu_teams']['_submenu_settings'] = $filename;
+		$module['_headmenu_teams']['_submenu_settings'] = $root_file;
 	}
 	
 	return;
@@ -59,7 +59,7 @@ else
 	$move		= request('move', 1);
 	$path_teams	= $root_path . $settings['path_teams'] . '/';
 	$path_games	= $root_path . $settings['path_games'] . '/';
-	$show_index	= '';
+	$s_index	= '';
 	$s_fields	= '';
 	$error		= '';
 	
@@ -370,7 +370,7 @@ else
 			#	$oCache -> deleteCache('list_teams');
 			#	$oCache -> deleteCache('subnavi_list_teams');
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 	
 				break;
 	
@@ -912,7 +912,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

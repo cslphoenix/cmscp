@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_main']['_submenu_profile'] = $filename;
+		$module['_headmenu_main']['_submenu_profile'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_profile';
 	
 	include('./pagestart.php');
@@ -55,7 +55,7 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$show_index	= '';
+	$s_index	= '';
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
@@ -63,11 +63,11 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_profile.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_profile.php', true)) : false;
 	
-	if ( request('add_profile', 2) || request('addcategory', 2) )
+	if ( request('add_profile', 1) || request('addcategory', 1) )
 	{
-		$mode = ( request('add_profile', 2) ) ? '_create' : '_create_cat';
+		$mode = ( request('add_profile', 1) ) ? '_create' : '_create_cat';
 	
 		if ( $mode == '_create' )
 		{
@@ -432,7 +432,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_PROFILE, $mode);
 				
-				$show_index = TRUE;
+				$s_index = true;
 				
 				break;
 				
@@ -526,7 +526,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_PROFILE, $mode);
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 				
 				break;
 				
@@ -537,7 +537,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

@@ -24,14 +24,14 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['template']['Add_new']	= "$filename?mode=addnew";
-		$module['template']['Create_new']	= "$filename?mode=create";
-		$module['template']['Manage']		= $filename;
-		$module['template']['Export']		= "$filename?mode=export";
+		$module['template']['Add_new']	= "$root_file?mode=addnew";
+		$module['template']['Create_new']	= "$root_file?mode=create";
+		$module['template']['Manage']		= $root_file;
+		$module['template']['Export']		= "$root_file?mode=export";
 	}
 	
 	return;
@@ -52,7 +52,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_styles.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_styles.php', true)) : false;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{

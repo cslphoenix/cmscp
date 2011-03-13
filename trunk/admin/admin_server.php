@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userauth['auth_server'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['server']['gameserver'] = $filename;
+		$module['server']['gameserver'] = $root_file;
 	}
 	
 	return;
@@ -51,7 +51,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_match.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_match.php', true)) : false;
 	
 	if ( isset($HTTP_POST_VARS[POST_GAMESERVER_URL]) || isset($HTTP_GET_VARS[POST_GAMESERVER_URL]) )
 	{
@@ -132,7 +132,7 @@ else
 		return $select_game;	
 	}
 	
-	$show_index = '';
+	$s_index = '';
 	
 	if ( !empty($mode) )
 	{
@@ -353,7 +353,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_SERVER, 'ACP_SERVER_ORDER');
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 	
 				break;
 				
@@ -365,7 +365,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

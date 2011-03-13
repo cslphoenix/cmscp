@@ -25,25 +25,25 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	if ( $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact_over'] = $filename;
+		$module['contact']['contact_over'] = $root_file;
 	}
 	
 	if ( $userauth['auth_contact'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact'] = $filename . "?mode=contact";
+		$module['contact']['contact'] = $root_file . "?mode=contact";
 	}
 	
 	if ( $userauth['auth_joinus'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact_joinus'] = $filename . "?mode=joinus";
+		$module['contact']['contact_joinus'] = $root_file . "?mode=joinus";
 	}
 	
 	if ( $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact_fightus'] = $filename . "?mode=fightus";
+		$module['contact']['contact_fightus'] = $root_file . "?mode=fightus";
 	}
 
 	return;
@@ -60,7 +60,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_contact.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_contact.php', true)) : false;
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
@@ -98,7 +98,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	$show_index = '';
+	$s_index = '';
 	
 	if ( !empty($mode) )
 	{
@@ -234,12 +234,12 @@ else
 			break;
 			
 			default:
-				$show_index = TRUE;
+				$s_index = TRUE;
 				message(GENERAL_ERROR, $lang['no_mode']);
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

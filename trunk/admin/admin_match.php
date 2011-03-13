@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] )
 	{
-		$module['_headmenu_teams']['_submenu_match'] = $filename;
+		$module['_headmenu_teams']['_submenu_match'] = $root_file;
 	}
 
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_match';
 	
 	include('./pagestart.php');
@@ -61,7 +61,7 @@ else
 	$smode		= request('smode', 1);
 	$index		= request('index', 1);
 	$path_dir	= $root_path . $settings['path_matchs'] . '/';
-	$show_index	= '';
+	$s_index	= '';
 	$s_fields	= '';
 	$error		= '';
 	
@@ -71,12 +71,12 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	if ( $no_header && !$index )
+	if ( $s_header && !$index )
 	{
 		redirect('admin/' . append_sid('admin_match.php', true));
 	}
 	
-	if ( $no_header && $index == '1' )
+	if ( $s_header && $index == '1' )
 	{
 		redirect('admin/' . append_sid('index.php', true));
 	}
@@ -1055,7 +1055,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != true )
+		if ( $s_index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;

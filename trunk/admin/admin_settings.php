@@ -25,11 +25,11 @@
 
 if( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_main']['_submenu_settings'] = $filename;
+		$module['_headmenu_main']['_submenu_settings'] = $root_file;
 	}
 	
 	return;

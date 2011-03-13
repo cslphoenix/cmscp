@@ -25,15 +25,15 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_development']['_submenu_logs']		= $filename;
-		$module['_headmenu_development']['_submenu_logs_error']	= $filename . "?mode=error";
-	//	$module['logs']['logs_admin']	= $filename . "?mode=admin";
-	//	$module['logs']['logs_member']	= $filename . "?mode=member";
-	//	$module['logs']['logs_user']	= $filename . "?mode=user";
+		$module['_headmenu_development']['_submenu_logs']		= $root_file;
+		$module['_headmenu_development']['_submenu_logs_error']	= $root_file . "?mode=error";
+	//	$module['logs']['logs_admin']	= $root_file . "?mode=admin";
+	//	$module['logs']['logs_member']	= $root_file . "?mode=member";
+	//	$module['logs']['logs_user']	= $root_file . "?mode=user";
 	}
 
 	return;
@@ -43,10 +43,11 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_logs';
 	
 	include('./pagestart.php');
+	include($root_path . 'includes/acp/acp_functions.php');
 
 	load_lang('logs');
 	
@@ -63,7 +64,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_logs.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_logs.php', true)) : false;
 	
 	switch ( $mode )
 	{

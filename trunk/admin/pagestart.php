@@ -6,6 +6,7 @@ if ( !defined('IN_CMS') )
 }
 
 define('IN_ADMIN', true);
+
 include($root_path . 'common.php');
 
 $userdata = session_pagestart($user_ip, PAGE_ADMIN);
@@ -32,7 +33,7 @@ if ( !$userdata['session_admin'] )
 	redirect(append_sid("login.php?redirect=admin/$url&admin=1", true));
 }
 
-if ( empty($no_header) )
+if ( empty($s_header) )
 {
 	include('./page_header_admin.php');
 }

@@ -153,8 +153,8 @@ $template->set_filenames(array('body' => 'style/acp_index.tpl'));
 			
 			if ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN )
 			{
-				$link_update = '<a href="' . append_sid('admin_user.php?mode=_update&amp;' . POST_USERS_URL . '=' . $user_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
-				$link_delete = '<a href="' . append_sid('admin_user.php?mode=_delete&amp;' . POST_USERS_URL . '=' . $user_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
+				$link_update = '<a href="' . append_sid('admin_user.php?mode=_update&amp;' . POST_USER_URL . '=' . $user_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
+				$link_delete = '<a href="' . append_sid('admin_user.php?mode=_delete&amp;' . POST_USER_URL . '=' . $user_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
 			}
 			else
 			{

@@ -18,12 +18,12 @@
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="rowHead" width="99%">{L_TITLE}</td>
-	<td class="rowHead"align="center">{L_SETTINGS}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _newscat_row -->
 <tr>
 	<td class="row_class1" align="left">{_display._newscat_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._newscat_row.MOVE_UP} {_display._newscat_row.MOVE_DOWN} <a href="{_display._newscat_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._newscat_row.U_DELETE}">{I_DELETE}</a></td>		
+	<td class="row_class2" align="center">{_display._newscat_row.MOVE_UP}{_display._newscat_row.MOVE_DOWN} <a href="{_display._newscat_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._newscat_row.U_DELETE}">{I_DELETE}</a></td>		
 </tr>
 <!-- END _newscat_row -->
 <!-- BEGIN _no_entry -->
@@ -36,7 +36,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="newscat_title"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -74,7 +74,7 @@
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -85,7 +85,11 @@
 </tr>
 <tr>
 	<td class="row1 top"><label for="newscat_image">{L_IMAGE}:</label></td>
-	<td class="row2">{IMAGE_LIST}<br><img src="{IMAGE}" id="image" alt=""></td>
+	<td class="row2">{S_IMAGE}<br><img src="{IMAGE}" id="image" alt=""></td>
+</tr>
+<tr>
+	<td class="row1 top"><label for="game_order">{L_ORDER}:</label></td>
+	<td class="row2 top">{S_ORDER}</td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>

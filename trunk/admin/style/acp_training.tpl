@@ -37,7 +37,7 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" width="99%" colspan="2">{L_UPCOMING}</td>
+	<td class="rowHead" width="99%" colspan="2">{L_EXPIRED}</td>
 	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _training_old_row -->
@@ -77,6 +77,57 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
+
+<script type="text/javascript" src="./../includes/scripts/jquery-1.2.1.pack.js"></script>
+<script type="text/JavaScript">
+function lookup(inputString)
+{
+	if ( inputString.length == 0 )
+	{
+		// Hide the suggestion box.
+		$('#suggestions').hide();
+	}
+	else
+	{
+		$.post("./../ajax/ajax_maps.php", {queryString: ""+inputString+""}, function(data) {
+				if ( data.length > 0 )
+				{
+					$('#suggestions').show();
+					$('#autoSuggestionsList').html(data);
+				}
+			}
+		);
+	}
+}
+</script>
+
+<script type="text/JavaScript">
+// <![CDATA[
+function clone(objButton)
+{
+	if ( objButton.parentNode )
+	{
+		tmpNode		= objButton.parentNode.cloneNode(true);
+		target		= objButton.parentNode.parentNode;
+		arrInput	= tmpNode.getElementsByTagName("input");
+		
+		for ( var i = 0; i < arrInput.length; i++ )
+		{
+			if ( arrInput[i].type == 'text' )
+			{
+				arrInput[i].value = '';
+			}
+		}
+		
+		target.appendChild(tmpNode);
+		objButton.value="{L_REMOVE}";
+		objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
+	}
+}
+
+// ]]>
+</script>
+
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -84,7 +135,6 @@
 	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 </ul>
 </div>
-
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row4 small">{L_REQUIRED}</td>
@@ -124,8 +174,12 @@
 	<td class="row2">{S_DURATION}</td>
 </tr>
 <tr>
-	<td class="row1"><label for="training_maps">{L_MAPS}: *</label></td>
-	<td class="row2"><input class="post" type="text" name="training_maps" id="training_maps" value="{MAPS}"></td>
+	<td class="row1 top"><label for="training_maps">{L_MAPS}: *</label></td>
+	<td class="row2">
+		<div id="suggestions" style="display: none;">
+			<div id="autoSuggestionsList"><div><div><input type="button" class="button2" value="{L_MORE}" onclick="clone(this)"></div></div></div>
+		</div>
+	</td>
 </tr>
 <tr>
 	<td class="row1 top"><label for="training_text">{L_TEXT}:</label></td>
