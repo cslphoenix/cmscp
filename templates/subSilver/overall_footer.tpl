@@ -125,6 +125,7 @@
 					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap">FAQ</td>
 					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
 					<td style="padding:10px 5px 0px 5px;" nowrap="nowrap"><a href="rss/news.php">RSS-Feed</a></td>
+					<td width="4" height="46"><img src="templates/subSilver/images/page_/democms1.2_39.png" alt=""></td>
 				</tr>
 				<tr>
 					<td colspan="10">
