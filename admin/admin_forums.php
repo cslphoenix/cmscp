@@ -24,11 +24,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum'] )
 	{
-		$module['_headmenu_forum']['_submenu_set'] = $filename;
+		$module['_headmenu_forum']['_submenu_set'] = $root_file;
 	}
 
 	return;
@@ -38,7 +38,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_forum';
 	
 	include('./pagestart.php');
@@ -51,7 +51,7 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$show_index	= '';
+	$s_index	= '';
 	$s_fields	= '';
 	$error		= '';
 	
@@ -61,7 +61,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_forums.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_forums.php', true)) : false;
 	
 	//
 	// Start program - define vars
@@ -892,7 +892,7 @@ else
 				}
 	
 				orders('forum', $forum_info['cat_id']);
-				$show_index = TRUE;
+				$s_index = TRUE;
 	
 				break;
 				
@@ -901,13 +901,13 @@ else
 				update(CATEGORIES, 'cat', $move, $data_cat);
 				orders(CATEGORIES, -1);
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 	
 				break;
 	
 			case 'forum_sync':
 				sync('forum', intval($HTTP_GET_VARS[POST_FORUM_URL]));
-				$show_index = TRUE;
+				$s_index = TRUE;
 	
 				break;
 	
@@ -916,7 +916,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

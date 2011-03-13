@@ -7,6 +7,39 @@ if ( !defined('IN_CMS') )
 
 define('HEADER_INC', true);
 
+//
+// gzip_compression
+//
+$do_gzip_compress = FALSE;
+if ( $config['gzip_compress'] )
+{
+	$phpver = phpversion();
+
+	$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT');
+
+	if ( $phpver >= '4.0.4pl1' && ( strstr($useragent,'compatible') || strstr($useragent,'Gecko') ) )
+	{
+		if ( extension_loaded('zlib') )
+		{
+			ob_start('ob_gzhandler');
+		}
+	}
+	else if ( $phpver > '4.0' )
+	{
+		if ( strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') )
+		{
+			if ( extension_loaded('zlib') )
+			{
+				$do_gzip_compress = TRUE;
+				ob_start();
+				ob_implicit_flush(0);
+
+				header('Content-Encoding: gzip');
+			}
+		}
+	}
+}
+
 $template->set_filenames(array('header' => 'style/page_header.tpl'));
 
 // Format Timezone. We are unable to use array_pop here, because of PHP3 compatibility

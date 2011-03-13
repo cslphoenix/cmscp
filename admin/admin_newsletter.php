@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userauth['auth_newsletter'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['news']['newsletter'] = $filename;
+		$module['news']['newsletter'] = $root_file;
 	}
 	
 	return;
@@ -50,7 +50,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_newsletter.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_newsletter.php', true)) : false;
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
@@ -73,7 +73,7 @@ else
 		$mode = '';
 	}
 	
-	$show_index = '';
+	$s_index = '';
 	
 	if ( !empty($mode) )
 	{
@@ -267,7 +267,7 @@ else
 				break;
 		}
 	
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;

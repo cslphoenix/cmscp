@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_development']['_submenu_bugtracker'] = $filename;
+		$module['_headmenu_development']['_submenu_bugtracker'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-		$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+		$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_functions.php');
@@ -51,14 +51,14 @@ else
 	$mode			= request('mode');
 	$move			= request('move');
 	$confirm		= request('confirm');
-	$show_index		= '';
+	$s_index		= '';
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_match.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_match.php', true)) : false;
 	
 	if ( isset($HTTP_POST_VARS['order']) )
 	{

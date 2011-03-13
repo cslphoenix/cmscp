@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] )
 	{
-		$module['_headmenu_teams']['_submenu_training'] = $filename;
+		$module['_headmenu_teams']['_submenu_training'] = $root_file;
 	}
 
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_training';
 	
 	include('./pagestart.php');
@@ -64,12 +64,15 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 
-	( $no_header ) ? redirect('admin/' . append_sid('admin_training.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_training.php', true)) : false;
 	
 	switch ( $mode )
 	{
 		case '_create':
 		case '_update':
+		
+		#	debug($_GET);
+		#	debug($_POST);
 		
 			$template->set_filenames(array('body' => 'style/acp_training.tpl'));
 			$template->assign_block_vars('_input', array());
@@ -100,7 +103,7 @@ else
 					'training_vs'		=> request('training_vs', 2),
 					'team_id'			=> request('team_id', 0),
 					'match_id'			=> request('match_id', 0),
-					'training_maps'		=> request('training_maps', 2),
+					'training_maps'		=> request('training_maps', 4),
 					'training_text'		=> request('training_text', 2),
 					'training_date'		=> $training_date,
 					'training_duration'	=> ( $training_dura - $training_date ) / 60,
@@ -111,6 +114,48 @@ else
 			$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
 			$s_fields .= '<input type="hidden" name="training_create" value="' . $data['training_create'] . '" />';
 			$s_fields .= '<input type="hidden" name="' . POST_TRAINING_URL . '" value="' . $data_id . '" />';
+			
+			/*
+			if ( $data['team_id'] )
+			{
+				$sql_select = 'SELECT g.game_tag FROM ' . GAMES . ' g, ' . TEAMS . ' t WHERE g.game_id = t.team_game AND t.team_id = ' . $data['team_id'];
+				if ( !($result = $db->sql_query($sql_select)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql_select);
+				}
+				$select = $db->sql_fetchrow($result);
+				
+				$s_select = $select['game_tag'];
+			}
+			else
+			{
+				$s_select = '*';
+			}
+			*/
+			
+			$sql = 'SELECT team_id, team_name FROM ' . TEAMS . ' ORDER BY team_order';
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$teams = $db->sql_fetchrowset($result);
+			
+			debug($data);
+			
+			$select = '';
+				
+			if ( $teams )
+			{	
+				$select .= '<select class="select" name="team_id" id="inputString" onkeyup="lookup(this.value);" onchange="lookup(this.value);">';	
+				$select .= '<option value="-1">Auswahl</option>';
+				
+				foreach ( $teams as $info => $value )
+				{
+					$selected = ( $data['team_id'] == $value['team_id'] ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"" . $value['team_id'] . "\" $selected>&raquo;&nbsp;" . $value['team_name'] . "&nbsp;</option>";
+				}
+				$select .= '</select>';
+			}
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
@@ -127,7 +172,11 @@ else
 				'MAPS'			=> $data['training_maps'],
 				'TEXT'			=> $data['training_text'],
 				
-				'S_TEAMS'		=> select_box('team',	'select', $data['team_id']),
+			#	'S_MAPS'		=> select_maps($s_select),
+			
+				'S_TEAMS'		=> $select,
+				
+			#	'S_TEAMS'		=> select_box('team',	'select', $data['team_id']),
 				'S_MATCH'		=> select_box('match',	'select', $data['match_id']),
 				'S_DAY'			=> select_date('selectsmall', 'day',		'day',		date('d', $data['training_date']), $data['training_create']),
 				'S_MONTH'		=> select_date('selectsmall', 'month',		'month',	date('m', $data['training_date']), $data['training_create']),
@@ -277,7 +326,7 @@ else
 			$s_action = '<select class="selectsmall" name="' . POST_TEAMS_URL . '" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
 			$s_action .= '<option value="0">&raquo;&nbsp;' . $lang['msg_select_team'] . '&nbsp;</option>';
 			
-			foreach ( $data as $info => $value )
+			foreach ( $teams as $info => $value )
 			{
 				$selected = ( $value['team_id'] == $team_id ) ? 'selected="selected"' : '';
 				$s_action .= '<option value="' . $value['team_id'] . '" ' . $selected . '>' . sprintf($lang['sprintf_select_format'], $value['team_name']) . '</option>';

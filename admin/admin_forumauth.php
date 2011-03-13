@@ -22,10 +22,10 @@
 
 if( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	if ( $userauth['auth_forum_auth'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['forums']['permissions'] = $filename;
+		$module['forums']['permissions'] = $root_file;
 	}
 
 	return;

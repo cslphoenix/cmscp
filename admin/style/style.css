@@ -10,8 +10,8 @@ body {
 	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 	color: #536482;
-/*	background-color: #ACA8A1;*/
-	background-color: #6699cc;
+	background-color: #aca8a1;
+/*	background-color: #6699cc;*/
 	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
 	font-size: 11px;
 	margin: 0;
@@ -501,3 +501,7 @@ tr.wihte:hover {background-color:#efefef;}
 .draw { color:#FC0; }
 
 form {margin:0; padding:0}
+
+optgroup {
+    background-color: #CCCCCC;
+}

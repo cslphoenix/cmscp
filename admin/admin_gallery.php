@@ -25,11 +25,11 @@
 
 if ( !empty($setmodules) )
 {
-	$filename = basename(__FILE__);
+	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_gallery'] )
 	{
-		$module['_headmenu_main']['_submenu_gallery'] = $filename;
+		$module['_headmenu_main']['_submenu_gallery'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +39,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$no_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_gallery';
 	
 	include('./pagestart.php');
@@ -58,7 +58,7 @@ else
 	$move		= request('move', 1);
 	$order		= request('order', 0);
 	$path_dir	= $root_path . $settings['path_gallery'] . '/';
-	$show_index	= '';
+	$s_index	= '';
 	$s_fields	= '';
 	$error		= '';
 	
@@ -72,7 +72,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $no_header ) ? redirect('admin/' . append_sid('admin_gallery.php', true)) : false;
+	( $s_header ) ? redirect('admin/' . append_sid('admin_gallery.php', true)) : false;
 	
 	if ( !empty($mode) )
 	{
@@ -785,7 +785,7 @@ else
 					
 				log_add(LOG_ADMIN, LOG_SEK_GALLERY, 'acp_pic_order');
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 				
 				break;
 				
@@ -796,7 +796,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_GALLERY, 'acp_gallery_order');
 				
-				$show_index = TRUE;
+				$s_index = TRUE;
 				
 				break;
 				
@@ -848,7 +848,7 @@ else
 				break;
 		}
 		
-		if ( $show_index != TRUE )
+		if ( $s_index != TRUE )
 		{
 			include('./page_footer_admin.php');
 			exit;
