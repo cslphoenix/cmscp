@@ -1,102 +1,68 @@
 <?php
 
-/*
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010, 2011
- *	@code:	Sebastian Frickel © 2009, 2010, 2011
- *
- */
-//
-// DB Utils
-//
-$lang['Database_Utilities'] = 'Database Utilities';
-
-$lang['Restore'] = 'Restore';
-$lang['Backup'] = 'Backup';
-$lang['Restore_explain'] = 'This will perform a full restore of all phpBB tables from a saved file. If your server supports it, you may upload a gzip-compressed text file and it will automatically be decompressed. <b>WARNING</b>: This will overwrite any existing data. The restore may take a long time to process, so please do not move from this page until it is complete.';
-$lang['Backup_explain'] = 'Here you can back up all your phpBB-related data. If you have any additional custom tables in the same database with phpBB that you would like to back up as well, please enter their names, separated by commas, in the Additional Tables textbox below. If your server supports it you may also gzip-compress the file to reduce its size before download.';
-
-$lang['Backup_options'] = 'Backup options';
-$lang['Start_backup'] = 'Start Backup';
-$lang['Full_backup'] = 'Full backup';
-$lang['Structure_backup'] = 'Structure-Only backup';
-$lang['Data_backup'] = 'Data only backup';
-$lang['Additional_tables'] = 'Additional tables';
-$lang['Gzip_compress'] = 'Gzip compress file';
-$lang['Select_file'] = 'Select a file';
-$lang['Start_Restore'] = 'Start Restore';
-
-$lang['Restore_success'] = 'The Database has been successfully restored.<br /><br />Your board should be back to the state it was when the backup was made.';
-$lang['Backup_download'] = 'Your download will start shortly; please wait until it begins.';
-$lang['Backups_not_supported'] = 'Sorry, but database backups are not currently supported for your database system.';
-
-$lang['Restore_Error_uploading'] = 'Error in uploading the backup file';
-$lang['Restore_Error_filename'] = 'Filename problem; please try an alternative file';
-$lang['Restore_Error_decompress'] = 'Cannot decompress a gzip file; please upload a plain text version';
-$lang['Restore_Error_no_file'] = 'No file was uploaded';
-
+if ( !defined('IN_CMS') )
+{
+	exit;
+}
 
 /*	Hauptmenü	*/
-$lang['_headmenu_development']	= 'Entwicklung';		
-$lang['_headmenu_forum']		= 'Forum';
-$lang['_headmenu_group']		= 'Gruppe';
-$lang['_headmenu_groups']		= 'Gruppen';
-$lang['_headmenu_main']			= 'Allgemein';
-$lang['_headmenu_news']			= 'News';
-$lang['_headmenu_server']		= 'Server';
-$lang['_headmenu_teams']		= 'Teams';
-$lang['_headmenu_users']		= 'Benutzer';
-$lang['_headmenu_games']		= 'Spiele';
-$lang['_headmenu_database']		= 'Datenbank';
+$lang['_headmenu_01_main']			= 'Allgemein';
+$lang['_headmenu_02_forum']			= 'Forum';
+$lang['_headmenu_03_news']			= 'News';
+$lang['_headmenu_04_users']			= 'Benutzer';
+$lang['_headmenu_05_teams']			= 'Teams';
+$lang['_headmenu_06_groups']		= 'Gruppen';
+$lang['_headmenu_07_development']	= 'Entwicklung';		
+$lang['_headmenu_08_games']			= 'Spiele';
+$lang['_headmenu_09_server']		= 'Server';
+$lang['_headmenu_10_contact']		= 'Kontakt';
+$lang['_headmenu_11_database']		= 'Datenbank';
+$lang['_headmenu_12_template']		= 'Themes/Template';
 
 /*	Submenü	*/
-$lang['_submenu_auth']			= 'Berechtigung';
 $lang['_submenu_authlist']		= 'Berechtigungsfelder';
-$lang['_submenu_bugtracker']	= 'Bugtracker';		
+$lang['_submenu_bugtracker']	= 'Bugtracker';
 $lang['_submenu_cash']			= 'Clankasse';
 $lang['_submenu_changelog']		= 'Changelog';
 $lang['_submenu_downloads']		= 'Downloads';
-$lang['_submenu_event']			= 'Events';
-$lang['_submenu_forum']			= 'Forum';
-$lang['_submenu_gallery']		= 'Galerie';
-$lang['_submenu_games']			= 'Spiele';
-$lang['_submenu_index']			= 'Übersicht';
-$lang['_submenu_logs']			= 'Protokoll';
-$lang['_submenu_logs_error']	= 'Fehlerprotokoll';		
-$lang['_submenu_match']			= 'Begegnungen';
-$lang['_submenu_navi']			= 'Navigation';
-$lang['_submenu_network']		= 'Netzwerk';
-$lang['_submenu_news']			= 'News';
-$lang['_submenu_newscat']		= 'Newskategorie';
-$lang['_submenu_newsletter']	= 'Newsletter';		
-$lang['_submenu_profile']		= 'Profilefelder';
-$lang['_submenu_ranks']			= 'Ränge';
-$lang['_submenu_settings']		= 'Einstellungen';
-$lang['_submenu_settings']		= 'Einstellungen';
-$lang['_submenu_teams']			= 'Teams';
-$lang['_submenu_teamspeak']		= 'Teamspeak';
-$lang['_submenu_training']		= 'Training';
-$lang['_submenu_users']			= 'Benutzer';
-$lang['_submenu_maps']			= 'Karten';
-
+$lang['_submenu_overview']		= 'Übersicht';
+$lang['_submenu_fightus']		= 'Fight us';
+$lang['_submenu_joinus']		= 'Join us';
+$lang['_submenu_contact']		= 'Kontakt';
 $lang['_submenu_database']		= 'Datenbank';
 $lang['_submenu_backup']		= 'Backup';
 $lang['_submenu_restore']		= 'Wiederherstellen';
 $lang['_submenu_optimize']		= 'Optimieren';
+$lang['_submenu_event']			= 'Ereignisse';
+$lang['_submenu_perm']			= 'Berechtigung';
+$lang['_submenu_perm_list']		= 'Berechtigungsliste';
+$lang['_submenu_logs']			= 'Protokoll';
+$lang['_submenu_logs_error']	= 'Fehlerprotokoll';		
+$lang['_submenu_maps']			= 'Karten';
+$lang['_submenu_match']			= 'Begegnungen';
+$lang['_submenu_navi']			= 'Navigation';
+$lang['_submenu_news']			= 'News';
+$lang['_submenu_newscat']		= 'Kategorie';
+$lang['_submenu_network']		= 'Netzwerk';
+$lang['_submenu_newsletter']	= 'Newsletter';		
+$lang['_submenu_profile']		= 'Profilefelder';
+$lang['_submenu_ranks']			= 'Ränge';
+$lang['_submenu_teamspeak']		= 'Teamspeak';
+$lang['_submenu_gameserver']	= 'Gameserver';
+$lang['_submenu_add_new']		= 'add new';
+$lang['_submenu_create']		= 'create';
+$lang['_submenu_manage']		= 'manage';
+$lang['_submenu_export']		= 'export';
+$lang['_submenu_settings']		= 'Einstellungen';
+$lang['_submenu_games']			= 'Spiele';
+$lang['_submenu_gallery']		= 'Galerie';
+$lang['_submenu_training']		= 'Training';
+$lang['_submenu_group']			= 'Gruppe';
+$lang['_submenu_forum']			= 'Forum';
+$lang['_submenu_index']			= 'Übersicht';
+$lang['_submenu_users']			= 'Benutzer';
+$lang['_submenu_group']			= 'Gruppe';
+$lang['_submenu_teams']			= 'Teams';
 
 /*	Allgemein:	"sprintf"	*/
 $lang['sprintf_auth']			= '%sberechtigung';
@@ -113,7 +79,9 @@ $lang['sprintf_list']			= '%sliste';
 $lang['sprintf_match_intern']	= '<span style="font-style:italic;">vs. %s</span>';		
 $lang['sprintf_match_name']		= 'vs. %s';
 $lang['sprintf_message']		= '%s Nachricht';
-$lang['sprintf_name']			= '%s Name';
+$lang['sprintf_name']			= '%sname';
+$lang['sprintf_title']			= '%stitel';
+$lang['sprintf_text']			= '%stext';
 $lang['sprintf_new_create']		= 'Neue %s erstellen';
 $lang['sprintf_new_createn']	= 'Neuen %s erstellen';		
 $lang['sprintf_new_creates']	= 'Neues %s erstellen';		
@@ -123,13 +91,12 @@ $lang['sprintf_overview']		= '%s Übersicht';
 $lang['sprintf_processing']		= '%s Bearbeitung';
 $lang['sprintf_rating']			= '%sbewertung';
 $lang['sprintf_right_overview']	= '%s Rechteübersicht';		
-$lang['sprintf_title']			= '%s Titel';
+
 $lang['sprintf_type']			= '%s Type';
 $lang['sprintf_update']			= '%s bearbeiten: %s';
 $lang['sprintf_update_user']	= '%s bearbeiten: %s';		
 $lang['sprintf_upload']			= '%s Upload';
 $lang['sprintf_upload_info']	= '%s x %s / %s KB\'s';		
-$lang['sprintf_voting']			= '%sbewertung erlauben?';
 $lang['sprintf_tag']			= '%s Tag';
 $lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
 $lang['sprintf_select_format2']	= '&raquo;&nbsp;%s&nbsp;::&nbsp;%s';
@@ -143,9 +110,9 @@ $lang['common_add']				= 'Hinzufügen';
 $lang['common_auth']			= 'Berechtigung';
 $lang['common_category']		= 'Kategorie';		
 $lang['common_comment']			= 'Kommentar';
-$lang['common_comments']		= 'Kommentare?';		
+$lang['common_comments']		= 'Kommentare';		
 $lang['common_confirm']			= 'Bestätigen';
-$lang['common_data_input']		= 'Daten eingeben';		
+$lang['common_input_data']		= 'Daten eingeben';		
 $lang['common_date']			= 'Datum';
 $lang['common_default']			= 'Standarteinstellungen';
 $lang['common_default']			= 'Standarteinstellungen';
@@ -155,8 +122,8 @@ $lang['common_details']			= 'Details';
 $lang['common_duration']		= 'Dauer';		
 $lang['common_image']			= 'Bild';
 $lang['common_image_delete']	= 'Bild löschen';			
-$lang['common_intern']			= 'Intern?';
-$lang['common_language']		= 'Sprachdatei?';		
+$lang['common_intern']			= 'Intern';
+$lang['common_language']		= 'Sprachdatei';		
 $lang['common_member']			= 'Mitglied';
 $lang['common_members']			= 'Mitglieder';
 $lang['common_message']			= 'Nachricht';
@@ -175,29 +142,62 @@ $lang['common_update']			= 'Bearbeiten';
 $lang['common_upload']			= 'Upload';
 $lang['common_userlevel']		= 'Benutzerlevel';		
 $lang['common_view']			= 'Anzeigen';
-$lang['common_visible']			= 'Sichtbar?';
+$lang['common_visible']			= 'Sichtbar';
 $lang['common_yes']				= 'Ja';
 
 $lang['common_order']			= 'Reihenfolge';
 
-/*	Fehlermeldungen	*/
-$lang['msg_sprintf_auth_fail']		= 'Keine Berechtiung für dieses Modul: <b>%s</b>';
 
-$lang['sprintf_msg_select']			= 'Bitte ein(e) <b>%s</b> eintragen!';
+/*
+	Karten
+*/
+$lang['select_msg_map_file'] = 'Bitte ein Bild auswählen!';
 
-$lang['msg_select_title']			= 'Bitte ein Titel eintragen!';
-$lang['msg_select_name']			= 'Bitte ein Namen eintragen!';
+
+
+/*
+	Forum
+*/
+$lang['msg_select_forms'] = 'Bitte ein Forum auswählen!';
+$lang['msg_select_forum'] = 'Bitte ein Hauptforum auswählen!';
+
+
+
+#	Meldungen: keine Rechte
+$lang['msg_sprintf_auth_fail'] = 'Keine Berechtiung für dieses Modul: <b>%s</b>';
+$lang['msg_no_module_select'] = 'Keine Funktion ausgewählt!';
+
+$lang['msg_select_order'] = 'Bitte Reihenfolge auswählen!';
+$lang['msg_empty_title'] = 'Bitte ein Titel eintragen!';
+$lang['msg_empty_name'] = 'Bitte ein Namen eintragen!';
+$lang['msg_empty_text'] = 'Bitte einen Text eintragen!';
+$lang['msg_empty_type'] = 'Bitte ein Type auswählen!';
+$lang['msg_select_forum'] = 'Bitte ein Hauptforum auswählen!';
+$lang['msg_empty_url'] = 'Bitte eine URL eintragen!';
+$lang['msg_empty_tag'] = 'Bitte ein Tag eintragen!';
+$lang['msg_select_type'] = 'Bitte ein Type auswählen!';
+$lang['select_msg_ranks'] = 'Bitte einen Rang auswählen!';
+$lang['select_msg_game_image'] = 'Bitte ein Spielbild auswählen!';
+$lang['msg_select_newscat'] = 'Bitte eine Newskategorie auswählen!';
+$lang['select_msg_cat_image'] = 'Bitte ein Kategoriebild auswählen!';
+$lang['sprintf_msg_select']	= 'Bitte ein(e) <b>%s</b> eintragen!';
+$lang['msg_select_user']	= 'Bitte einen Benutzer auswählen!';
+$lang['msg_select_amount']	= 'Bitte einen Betrag eintragen!';
+
+$lang['msg_select_file'] = 'Bitte eine Datei auswählen!';
+
+$lang['select_msg_forum_icon'] = 'Bitte ein Forumicon auswählen!';
+
+
+
 $lang['msg_select_url']				= 'Bitte ein Link eintragen!';
 $lang['msg_select_user']			= 'Bitte einen Benutzer auswählen!';
 $lang['msg_select_team']			= 'Bitte ein Team auswählen!';
+$lang['msg_select_sort_team']		= 'Team fürs sortieren wählen!';
 $lang['msg_select_type']			= 'Bitte ein Type / Art auswählen!';
 $lang['msg_select_cat']				= 'Bitte ein Match Art auswählen!';
-$lang['msg_select_tag']				= 'Bitte ein Tag eingeben!';
 
 
-
-
-$lang['msg_select_order']			= 'Bitte Reihenfolge auswählen';
 $lang['msg_select_order_end']		= 'am Ende sortieren';
 
 
@@ -209,6 +209,11 @@ $lang['msg_select_rival']			= 'Bitte ein Gegnernamen eintragen';
 $lang['msg_select_rival_tag']		= 'Bitte ein Gegnerclantag eintragen';
 $lang['msg_select_server']			= 'Bitte ein Gameserver eintragen';
 
+$lang['msg_select_ip']		= 'Bitte IP-Adresse vom Server eingeben!';
+$lang['msg_select_port']	= 'Bitte Port vom Server eingeben!';
+$lang['msg_select_qport']	= 'Bitte QPort vom Server eingeben!';
+
+
 $lang['msg_select_duration']		= 'Bitte eine Zeitdauer auswählen';
 
 $lang['msg_select_cat']				= 'Bitte ein Match Art auswählen';
@@ -219,18 +224,18 @@ $lang['msg_select_match']			= 'Bitte eine Begegnung auswählen';
 $lang['msg_select_game']			= 'Bitte ein Spiel auswählen!';
 $lang['msg_select_game_image']		= 'Bitte ein Spielbild auswählen!';
 $lang['msg_select_newscat_image']	= 'Bitte ein Newsbild auswählen!';
-$lang['msg_select_ranks']			= 'Bitte einen Rang auswählen!';
-$lang['msg_select_amount']			= 'Bitte einen Betrag eintragen';
+
+
 $lang['msg_select_pics']			= 'Bitte ein oder mehrere Bilder auswählen, zum löschen.';
 $lang['msg_select_cat']				= 'Bitte eine Kategorie auswählen';
-$lang['msg_select_newscat']			= 'Bitte eine Newskategorie auswählen';
-$lang['msg_select_text']			= 'Bitte einen Text eingeben';
+
+
 $lang['msg_select_no_users']		= 'Keine Benutzer ausgewählt.';
 $lang['msg_select_no_members']		= 'Keine Member ausgewählt.';
 $lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
 $lang['msg_select_profilefield']	= 'Bitte Profilefeld eintragen!';
 $lang['msg_select_userlevel']		= 'Bitte ein Benutzerlevel auswählen!';
-$lang['msg_select_map_file']		= 'Bitte ein Bild auswählen!';
+
 
 
 $lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
@@ -243,159 +248,51 @@ $lang['msg_must_select_authlist']		= 'Es muss ein Wähle ein Authfeld aus';
 $lang['msg_must_select_game']			= 'Wähle ein Spiel aus';
 
 $lang['msg_sprintf_noentry']		= 'Es sind keine %s eingetragen';
-$lang['msg_no_module_select']		= 'Keine Funktion ausgewählt!';
+
 
 
 /*	Erstellen / Erneuern / Löschen / Bestätigen zum Löschen / Klicks	*/	
-$lang['create_authlist']			= 'Neues Berechtigungsfeld hinzugefügt.';
-$lang['create_cash']				= 'Neuen Betrag hinzugefügt.';
-$lang['create_cash_user']			= 'Neuen Benutzer zu Liste hinzugefügt.';
-$lang['create_event']				= 'Neues Event hinzugefügt.';
 $lang['create_forum']				= 'Neues Forum hinzugefügt.';
-$lang['create_gallery']				= 'Neue Galerie hinzugefügt.';
-$lang['create_game']				= 'Neues Spiel hinzugefügt.';
-$lang['create_group']				= 'Neue Gruppe hinzugefügt.';
 $lang['create_match']				= 'Neues Match hinzugefügt.';
 $lang['create_match_user']			= 'Neuen Benutzer zum Lineup hinzugefügt.';
-$lang['create_navigation']			= 'Neuen Link hinzugefügt.';
-$lang['create_network']				= 'Neuen %s hinzugefügt.';
-$lang['create_news']				= 'Neue News hinzugefügt.';
-$lang['create_newscat']				= 'Neue Newskategorie hinzugefügt.';
-$lang['create_newsletter']			= 'Neue eMailadresse hinzugefügt.';
-$lang['create_profile']				= 'Neues Profilefeld hinzugefügt.';
-$lang['create_profile_cat']			= 'Neues Profilekategorie hinzugefügt.';
-$lang['create_rank']				= 'Neuer Rang hinzugefügt.';
-$lang['create_team']				= 'Neues Team hinzugefügt.';
-$lang['create_team_user']			= 'Neuen Spieler hinzugefügt.';
-$lang['create_teamspeak']			= 'Neuen Teamspeak Server hinzugefügt.';
-$lang['create_training']			= 'Neues Training hinzugefügt.';
-$lang['create_user']				= 'Neuen Benutzer hinzugefügt.';
 
+$lang['create_newsletter']			= 'Neue eMailadresse hinzugefügt.';
+$lang['create_teamspeak']			= 'Neuen Teamspeak Server hinzugefügt.';
+$lang['create_user']				= 'Neuen Benutzer hinzugefügt.';
 $lang['create_map']					= 'Karte hinzugefügt';
 $lang['create_map_cat']				= 'Kartenkategorie hinzugefügt';
 
-
-$lang['update_authlist']			= 'Berechtigungsfelddaten erfolgreich geändert';
-$lang['update_cash']				= 'Daten erfolgreich geändert';
-$lang['update_cash_bankdata']		= 'Bankdaten erfolgreich geändert';		
-$lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
-$lang['update_event']				= 'Eventdaten erfolgreich geändert';
 $lang['update_forum']				= 'Forumdaten erfolgreich geändert';
-$lang['update_gallery']				= 'Galerie erfolgreich geändert';
-$lang['update_gallery_default']		= 'Galerie Standardeinstellungen geändert!';		
-$lang['update_gallery_pic']			= 'Galeriebilder erfolgreich geändert';
-$lang['update_gallery_upload']		= 'Bild oder Bilder hochgeladen.';		
-$lang['update_game']				= 'Spieldaten erfolgreich geändert';
-$lang['update_group']				= 'Gruppendaten erfolgreich geändert';
 $lang['update_match']				= 'Matchdaten erfolgreich geändert';
 $lang['update_match_maps']			= 'Details erfolgreich geändert';
 $lang['update_match_user']			= 'Match Lineup geändert';
-$lang['update_navigation']			= 'Link erfolgreich geändert';
-$lang['update_navigation_set']		= 'Subnavigation erfolgreich geändert';		
-$lang['update_network']				= '%sdaten erfolgreich geändert';
-$lang['update_news']				= 'Newsdaten erfolgreich geändert';
-$lang['update_newscat']				= 'Newskategoriedaten erfolgreich geändert';
+
 $lang['update_newsletter']			= 'eMailadresse erfolgreich geändert';
-$lang['update_profile']				= 'Profilefeld erfolgreich geändert';
-$lang['update_profile_cat']			= 'Profilekategorie erfolgreich geändert';
-$lang['update_rank']				= 'Rangdaten erfolgreich geändert';
-$lang['update_team']				= 'Teamdaten erfolgreich geändert';
-$lang['update_team_level']			= 'Spielerrechte geändert';
-$lang['update_team_rank']			= 'Spielerränge geändert';
 $lang['update_teamspeak']			= 'Teamspeakdaten erfolgreich geändert';
-$lang['update_training']			= 'Trainingsdaten erfolgreich geändert';
 $lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
 $lang['upload_match']				= 'Bild/Bilder für das Match wurden hochgeladen!';
-
 $lang['update_map']					= 'Karteninformation erfolgreich geändert';
 $lang['update_map_cat']				= 'Kartenkategorie erfolgreich geändert';
 
 $lang['sprintf_delete_confirm']		= 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?';
 
-$lang['delete_confirm_authlist']	= 'dass dieses Berechtigunsfeld:';
-$lang['delete_confirm_cash']		= 'das der Eintrag:';
-$lang['delete_confirm_cash_user']	= 'das der Benutzer:';
-$lang['delete_confirm_event']		= 'dass dieses Event:';
-$lang['delete_confirm_gallery']		= 'dass diese Galerie:';
-$lang['delete_confirm_game']		= 'dass dieses Spiel:';
-$lang['delete_confirm_group']		= 'das diese Gruppe:';
 $lang['delete_confirm_match']		= 'dass dieses Begegnung:';
-$lang['delete_confirm_navigation']	= 'das der Link:';
-$lang['delete_confirm_network']		= 'das der %s:';
-$lang['delete_confirm_news']		= 'das diese News:';
-$lang['delete_confirm_newscat']		= 'das diese Newskategorie:';
-$lang['delete_confirm_rank']		= 'dass dieser Rang:';
-$lang['delete_confirm_team']		= 'dass dieses Team:';
-$lang['delete_confirm_team_user']	= 'dass dieser Spiele(r): %s vom Team:';
-$lang['delete_confirm_training']	= 'dass das Training gegen:';
 $lang['delete_confirm_map']			= 'dass diese Karte:';
 $lang['delete_confirm_map_cat']		= 'dass diese Kartenkategorie:';
 
-$lang['delete_confirm_bankdata']	= 'Bist du sicher, das die Bankdaten gelöscht werden soll?';
-
-$lang['delete_authlist']			= 'Das Berechtigungsfeld wurde gelöscht!';
-$lang['delete_cash']				= 'Der Eintrag wurde gelöscht!';
-$lang['delete_cash_bankdata']		= 'Die Bankdaten wurden gelöscht!';
-$lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht!';
-$lang['delete_event']				= 'Das Event wurde gelöscht!';
-$lang['delete_gallery']				= 'Die Galerie wurde gelöscht!';
-$lang['delete_gallery_pic']			= 'Das Bilder oder die Bilder wurden gelöscht!';		
-$lang['delete_game']				= 'Das Spiel wurde gelöscht!';
-$lang['delete_group']				= 'Die Gruppe wurde gelöscht!';
 $lang['delete_log']					= 'Der oder die Logeinträge wurde gelöscht';
 $lang['delete_log_all']				= 'Alle Logeinträge wurde gelöscht!';
 $lang['delete_log_error']			= 'Der oder die Fehlermeldungen wurde gelöscht!';
 $lang['delete_match']				= 'Die Begegnung wurde gelöscht!';
 $lang['delete_match_user']			= 'Die Benutzer wurden aus der Begegnung gelöscht!';
-$lang['delete_navigation']			= 'Der Link wurde gelöscht!';
-$lang['delete_network']				= 'Den %s wurde gelöscht!';
-$lang['delete_news']				= 'Die News wurde gelöscht!';
-$lang['delete_newscat']				= 'Der Newskategorie wurde gelöscht!';
 $lang['delete_newsletter']			= 'Die eMailadresse wurde gelöscht!';
-$lang['delete_profile']				= 'Das Profilefeld wurde gelöscht!';
-$lang['delete_profile_cat']			= 'Die Profilekategorie wurde gelöscht!';
-$lang['delete_rank']				= 'Der Rang wurde gelöscht!';
-$lang['delete_team']				= 'Das Team wurde gelöscht!';
-$lang['delete_team_user']			= 'Der Spieler wurde aus dem Team gelöscht!';		
 $lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht!';
-$lang['delete_training']			= 'Das Training wurde gelöscht!';
 $lang['delete_user']				= 'Der Benutzer wurde gelöscht!';
 $lang['delete_map']					= 'Die Karte wurde gelöscht!';
 $lang['delete_map_cat']				= 'Die Kartenkategorie, samt Inahlt wurde gelöscht!';
 
-$lang['click_return_update']			= '<br><br><strong>%s&laquo; zurück%s</strong>';
-
-$lang['click_return_authlist']			= '<br><br><strong>%s&laquo; Berechtigungsfelder Administration%s</strong>';
-$lang['click_return_cash']				= '<br><br><strong>%s&laquo; Clankassen Administration%s</strong>';
-$lang['click_return_event']				= '<br><br><strong>%s&laquo; Event Administration%s</strong>';
-$lang['click_return_forum']				= '<br><br><strong>%s&laquo; Forum Administration%s</strong>';
-$lang['click_return_gallery']			= '<br><br><strong>%s&laquo; Galerie Administration%s</strong>';
-$lang['click_return_gallery_pic']		= '<br><br><strong>%s&laquo; Galerie Übersicht%s</strong>';		
-$lang['click_return_game']				= '<br><br><strong>%s&laquo; Spiel Administration%s</strong>';
-$lang['click_return_group']				= '<br><br><strong>%s&laquo; Gruppen Administration%s</strong>';
-$lang['click_return_group_member']		= '<br><br><strong>%s&laquo; Gruppenmitglieder Administration%s</strong>';		
-$lang['click_return_log']				= '<br><br><strong>%s&laquo; Log Administration%s</strong>';
-$lang['click_return_log_error']			= '<br><br><strong>%s&laquo; Log (Fehlermeldungen) Administration%s</strong>';
-$lang['click_return_match']				= '<br><br><strong>%s&laquo; Match Administration%s</strong>';
-$lang['click_return_match_details']		= '<br><br><strong>%s&laquo; Matchdeatils Administration%s</strong>';		
-$lang['click_return_navigation']		= '<br><br><strong>%s&laquo; Navigations Administration%s</strong>';		
-$lang['click_return_navigation_set']	= '<br><br><strong>%s&laquo; Subnavigations Administration%s</strong>';			
-$lang['click_return_network']			= '<br><br><strong>%s&laquo; Network Administration%s</strong>';
-$lang['click_return_news']				= '<br><br><strong>%s&laquo; News Administration%s</strong>';
-$lang['click_return_newscat']			= '<br><br><strong>%s&laquo; Newskategorie Administration%s</strong>';
-$lang['click_return_newsletter']		= '<br><br><strong>%s&laquo; Newsletter Administration%s</strong>';		
-$lang['click_return_profile']			= '<br><br><strong>%s&laquo; Profilefelder Administration%s</strong>';
-$lang['click_return_rank']				= '<br><br><strong>%s&laquo; Rang Administration%s</strong>';
-$lang['click_return_set']				= '<br><br><strong>%s&laquo; Einstelluns Administration%s</strong>';
-$lang['click_return_team']				= '<br><br><strong>%s&laquo; Team Administration%s</strong>';
-$lang['click_return_team_member']		= '<br><br><strong>%s&laquo; Teammember Administration%s</strong>';		
-$lang['click_return_teamspeak']			= '<br><br><strong>%s&laquo; Teamspeak Administration%s</strong>';
-$lang['click_return_training']			= '<br><br><strong>%s&laquo; Trainings Administration%s</strong>';
-$lang['click_return_user']				= '<br><br><strong>%s&laquo; Benutzer Administration%s</strong>';
-$lang['click_return_user_auths']		= '<br><br><strong>%s&laquo; Benutzer (Seitenberechtigung) Administration%s</strong>';
-$lang['click_return_user_groups']		= '<br><br><strong>%s&laquo; Benutzer (Benutzergruppen & Teams) Administration%s</strong>';
-
-$lang['click_return_map']				= '<br><br><strong>%s&laquo; Karten/Map Administration%s</strong>';
+$lang['return']					= '<br /><br /><strong>%s&laquo; %s%s</strong>';
+$lang['return_update']			= '<br /><br /><strong>%s&laquo; zurück%s</strong>';
 
 /*	Hauptinformationen	*/
 $lang['index_header']		= 'Adminbereich von: %s :: %s';
@@ -492,27 +389,58 @@ $lang['auths'] = array(
 	'auth_download'			=> $lang['auth_download'],
 );
 
-/*	Forum: Befugnisse	*/
-$lang['forms_public']			= 'Öffentlich';
-$lang['forms_register']			= 'Registriert';
-$lang['forms_trial']			= 'Trial';
-$lang['forms_member']			= 'Mitglieder';
-$lang['forms_mod']				= 'Moderatoren';
-$lang['forms_privat']			= 'Privat';
-$lang['forms_admin']			= 'Administrator';
-$lang['forms_hidden']			= '%s [ Versteckt ]';
+/*
+	alter kram ;)
+*/
+$lang['Look_up_Forum'] = 'Forum auswählen';
+$lang['Simple_mode'] = 'Einfache Methode';
+$lang['Advanced_mode'] = 'Fortgeschrittene Methode';
+$lang['Auth_Control_Forum'] = 'Forenzugangskontrolle';
+$lang['Forum_auth_explain'] = 'Du kannst hier die Zugangsebenen für jedes Forum bestimmen. Es gibt eine einfache und eine fortgeschrittene Methode, dies zu tun. Bei der fortgeschrittenen Methode hast du eine bessere Kontrolle über jedes Forum. Bedenke, dass das Ändern der Zugangsebene beeinflusst, welche Benutzer welche Aktionen im Forum durchführen können.';
 
-$lang['forms_view']				= 'Ansicht';
-$lang['forms_read']				= 'Lesen';
-$lang['forms_post']				= 'Posten';
-$lang['forms_reply']			= 'Antworten';
-$lang['forms_edit']				= 'Editieren';
-$lang['forms_delete']			= 'Löschen';
-$lang['forms_sticky']			= 'Wichtig';
-$lang['forms_announce']			= 'Ankündigung';
-$lang['forms_globalannounce']	= 'Globaleankündigung';
-$lang['forms_poll']				= 'Umfrage';
-$lang['forms_pollcreate']		= 'Umfrage erstellen';
+
+$lang['Forum_auth_list_explain_ALL'] = 'All users';
+$lang['Forum_auth_list_explain_REG'] = 'All registered users';
+$lang['Forum_auth_list_explain_PRIVATE'] = 'Only users granted special permission';
+$lang['Forum_auth_list_explain_MOD'] = 'Only moderators of this forum';
+$lang['Forum_auth_list_explain_ADMIN'] = 'Only administrators';
+
+$lang['Forum_auth_list_explain_auth_view'] = '%s can view this forum';
+$lang['Forum_auth_list_explain_auth_read'] = '%s can read posts in this forum';
+$lang['Forum_auth_list_explain_auth_post'] = '%s can post in this forum';
+$lang['Forum_auth_list_explain_auth_reply'] = '%s can reply to posts this forum';
+$lang['Forum_auth_list_explain_auth_edit'] = '%s can edit posts in this forum';
+$lang['Forum_auth_list_explain_auth_delete'] = '%s can delete posts in this forum';
+$lang['Forum_auth_list_explain_auth_sticky'] = '%s can post sticky topics in this forum';
+$lang['Forum_auth_list_explain_auth_announce'] = '%s can post announcements in this forum';
+$lang['Forum_auth_list_explain_auth_vote'] = '%s can vote in polls in this forum';
+$lang['Forum_auth_list_explain_auth_pollcreate'] = '%s can create polls in this forum';
+
+$lang['auth_forum_explain_all'] = 'All users';
+$lang['auth_forum_explain_register'] = 'All registered users';
+$lang['auth_forum_explain_private'] = 'Only users granted special permission';
+$lang['auth_forum_explain_moderator'] = 'Only moderators of this forum';
+$lang['auth_forum_explain_admin'] = 'Only administrators';
+$lang['auth_forum_explain_trial'] = 'Only trials';
+$lang['auth_forum_explain_member'] = 'Only member';
+
+
+$lang['auth_forum_explain_auth_view'] = '%s can view this forum';
+$lang['auth_forum_explain_auth_read'] = '%s can read posts in this forum';
+$lang['auth_forum_explain_auth_post'] = '%s can post in this forum';
+$lang['auth_forum_explain_auth_reply'] = '%s can reply to posts this forum';
+$lang['auth_forum_explain_auth_edit'] = '%s can edit posts in this forum';
+$lang['auth_forum_explain_auth_delete'] = '%s can delete posts in this forum';
+$lang['auth_forum_explain_auth_sticky'] = '%s can post sticky topics in this forum';
+$lang['auth_forum_explain_auth_announce'] = '%s can post announcements in this forum';
+$lang['auth_forum_explain_auth_globalannounce'] = '%s can post globalannouncements in this forum';
+$lang['auth_forum_explain_auth_poll'] = '%s can vote in polls in this forum';
+$lang['auth_forum_explain_auth_pollcreate'] = '%s can create polls in this forum';
+
+$lang['Permissions_List'] = 'Permissions List';// Added by Permissions List MOD
+$lang['Forum_auth_list_explain'] = 'This provides a summary of the authorisation levels of each forum. You can edit these permissions, using either a simple or advanced method by clicking on the forum name. Remember that changing the permission level of forums will affect which users can carry out the various operations within them.';// Added by Permissions List MOD
+$lang['Cat_auth_list_explain'] = 'This provides a summary of the authorisation levels of each forum within this category. You can edit the permissions of individual forums, using either a simple or advanced method by clicking on the forum name. Alternatively, you can set the permissions for all the forums in this category by using the drop-down menus at the bottom of the page. Remember that changing the permission level of forums will affect which users can carry out the various operations within them.';// Added by Permissions List MOD
+$lang['Forum_name'] = 'Forumsname';
 
 $lang['empty_site'] = "<html>
 <head>

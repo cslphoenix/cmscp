@@ -1,30 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	- Content-Management-System by Phoenix
- *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
- *
- *	Teams
- *
- */
-
 if ( !defined('IN_CMS') )
 {
 	exit;
@@ -58,11 +33,7 @@ $lang['disable_page_explain']	= 'Hiermit sperrst du die Seite für alle Benutzer.
 $lang['disable_page_reason']	= 'Deaktivierungsgrund';
 $lang['disable_page_mode']		= 'für Benutzerlevel';
 
-$lang['settings_option'] = array(
-	'_default'	=> $lang['site_default'],
-	'_upload'	=> $lang['site_upload'],
-	'_session'	=> $lang['site_session'],
-);
+
 
 $lang['path_games']				= 'Spiele';
 $lang['path_games_explain']		= 'Der Pfad in deinem CMS-Verzeichnis, in dem die Spieleicons liegen (z. B. images/games)';
@@ -85,5 +56,39 @@ $lang['path_users_explain']		= 'Der Pfad in deinem CMS-Verzeichnis, in dem die N
 $lang['settings_team_logo']			= 'Team Logo Upload';
 $lang['settings_team_logo_explain']	= 'Hier können spezielle Parameter für den Upload von Teamlogos bestimmt werden.';
 
+$lang['site_display']			= 'Anzeigeneinstellungen';
+$lang['site_display_explain']	= 'Hier werden alle Einstellung für die Hauptseite eingestellt.';
 
+#news_limit
+#news_length
+#match_limit
+#match_length
+
+$lang['news_limit']			= 'Anzahl der News';
+$lang['news_length']		= 'Länge der Newstitel';
+$lang['match_limit']		= 'Anzahl der Matchs';
+$lang['match_length']		= 'Länge der Matchnamen';
+$lang['forum_limit']		= 'Anzahl der Forenbeiträge';
+$lang['forum_length']		= 'Länge der Forentitel';
+$lang['download_limit']		= 'Anzahl der Downloads';
+$lang['download_length']	= 'Länge der Downloadnamen';
+$lang['newusers']			= 'Neuste Benutzer Anzeigen';
+$lang['newusers_cache']		= 'Cache länge';
+$lang['newusers_limit']		= 'Anzahl der Benutzer';
+$lang['newusers_length']	= 'Benutzernamen länge';
+$lang['teams']				= 'Teams anzeigen';
+$lang['teams_limit']		= 'Anzahl der Teams';
+$lang['links']				= 'Links anzeigen';
+$lang['partner']			= 'Partner anzeigen';
+$lang['sponsor']			= 'Sponsoren anzeigen';
+$lang['minical']			= 'Minikalender anzeigen';
+$lang['match_next']			= 'Next Match anzeigen';
+$lang['training']			= 'Training anzeigen';
+
+$lang['settings_option'] = array(
+	'_default'	=> $lang['site_default'],
+	'_upload'	=> $lang['site_upload'],
+	'_session'	=> $lang['site_session'],
+	'_display'	=> $lang['site_display'],
+);
 ?>

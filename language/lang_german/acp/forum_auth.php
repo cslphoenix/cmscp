@@ -7,33 +7,18 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'forum'		=> 'Forum',
-	'forum_c'	=> 'Kategorie',
-	'explain'	=> 'Hier kann man die Kategorien, Foren und Subforen alle samt Verwalten.',
+#	'game'		=> 'Spiel',
+#	'explain'	=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
 
-	'create'	=> 'Neues Forum hinzugefügt.',
-	'update'	=> 'Forumdaten erfolgreich geändert.',
-	'delete'	=> 'Das Forum wurde gelöscht!',
-	'confirm'	=> 'dass dieses Forum:',
+#	'create'	=> 'Neues Spiel hinzugefügt.',
+#	'update'	=> 'Spieldaten erfolgreich geändert.',
+#	'delete'	=> 'Das Spiel wurde gelöscht!',
+#	'confirm'	=> 'dass dieses Spiel:',
 
-	'create_c'	=> 'Neue Kategorie hinzugefügt.',
-	'update_c'	=> 'Kategoriedaten erfolgreich geändert.',
-	'delete_c'	=> 'Die Kategorie wurde gelöscht!',
-	'confirm_c'	=> 'dass diese Kategorie:',
-	
-	'icon'		=> 'Forumicon',
-	'sub'		=> 'Subforum',
-	'main'		=> 'Hauptforum',
-	'copy'		=> 'Rechtekopieren',
-	
-	'locked'	=> 'Gesperrt',
-	'unlocked'	=> 'Offen',
-	
-	'legend'	=> 'Auflisten',
-	'legend_ex'	=> 'Wurde \'Ja\' aktiviert, werden die Unterforen in der Legende angezeigt.',
+	'legende'			=> 'Bildlegende',
 	
 	'auth_all'			=> 'Öffentlich',
-	'auth_reg'			=> 'Registriert',
+	'auth_register'		=> 'Registriert',
 	'auth_trial'		=> 'Trial',
 	'auth_member'		=> 'Mitglieder',
 	'auth_moderator'	=> 'Moderatoren',
@@ -44,7 +29,7 @@ $lang = array_merge($lang, array(
 	'forms_register'	=> 'Registriert',
 	'forms_trial'		=> 'Trial',
 	'forms_member'		=> 'Mitglieder',
-	'forms_mod'			=> 'Moderatoren',
+	'forms_moderator'	=> 'Moderatoren',
 	'forms_privat'		=> 'Privat',
 	'forms_admin'		=> 'Administrator',
 	'forms_special'		=> 'Individuell',
@@ -75,15 +60,6 @@ $lang = array_merge($lang, array(
 		'auth_poll'				=> 'Umfrage',
 		'auth_pollcreate'		=> 'Umfrage erstellen',
 	),
-	
-	'auth_simple'	=> 'Normal',
-	'auth_extended'	=> 'Individuell',
-	
-#	$lang['Forum_ALL'] = 'Alle';
-#	$lang['Forum_REG'] = 'Reg';
-#	$lang['Forum_PRIVATE'] = 'Privat';
-#	$lang['Forum_MOD'] = 'Mods';
-#	$lang['Forum_ADMIN'] = 'Admin';
 
 ));
 

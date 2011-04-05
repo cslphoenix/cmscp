@@ -1,35 +1,32 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	- Content-Management-System by Phoenix
- *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
- *
- *	Teams
- *
- */
-
 if ( !defined('IN_CMS') )
 {
 	exit;
 }
 
+$lang = array_merge($lang, array(
+	
+	'team'		=> 'Team',
+	'explain'	=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
+
+	'create'	=> 'Neues Team hinzugefügt.',
+	'update'	=> 'Spieldaten erfolgreich geändert.',
+	'delete'	=> 'Das Team wurde gelöscht!',
+	'confirm'	=> 'dass dieses Team:',
+	
+	'create_u'	=> 'Teamdaten erfolgreich geändert.',
+	'update_l'	=> 'Spielerrechte erfolgreich geändert.',
+	'update_r'	=> 'Spielerränge erfolgreich geändert.',
+	'delete_u'	=> 'Der Spieler wurde aus dem Team gelöscht!',
+	'confirm_u'	=> 'dass dieser Spiele(r): %s vom Team:',
+	
+	'count'		=> 'Anzahl',
+	'members'	=> 'Mitglieder',
+
+));
+
+/*
 $lang['team']				= 'Team';
 $lang['members']			= 'Teammitglieder';
 
@@ -67,5 +64,6 @@ $lang['team_set_rank']		= 'Teamrang';
 $lang['team_set_moderator']	= 'Moderatorenstatus';
 
 $lang['team_membercount'] = 'Mitgliederanzahl';
+*/
 
 ?>
