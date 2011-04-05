@@ -1,35 +1,70 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	- Content-Management-System by Phoenix
- *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
- *
- *	Galerie
- *
- */
-
 if ( !defined('IN_CMS') )
 {
 	exit;
 }
 
+$lang = array_merge($lang, array(
+	
+	'gallery'	=> 'Galerie',
+	'explain'	=> 'Hier kannst Du Galerien verwalten.',
+	'explain_d'	=> 'Standarteinstellungen für Galerien, es kann aber jede Galerie selbst anders eingestellt werden.',
+	
+	'create'	=> 'Neue Galerie hinzugefügt.',
+	'update'	=> 'Galerie erfolgreich geändert.',
+	'delete'	=> 'Die Galerie wurde gelöscht!',
+	'confirm'	=> 'dass diese Galerie:',
+	
+	'sprintf_size-pic'	=> '%s / %s Bilder',
+	
+	
+#	$lang['create_gallery']				= 'Neue Galerie hinzugefügt.';
+#	$lang['update_gallery']				= 'Galerie erfolgreich geändert';
+#	$lang['update_gallery_default']		= 'Galerie Standardeinstellungen geändert!';		
+#	$lang['update_gallery_pic']			= 'Galeriebilder erfolgreich geändert';
+#	$lang['update_gallery_upload']		= 'Bild oder Bilder hochgeladen.';		
+#	$lang['delete_confirm_gallery']		= 'dass diese Galerie:';
+#	$lang['delete_gallery']				= 'Die Galerie wurde gelöscht!';
+#	$lang['delete_gallery_pic']			= 'Das Bilder oder die Bilder wurden gelöscht!';		
+
+	'auth_gallery_guest'	=> 'Gast',
+	'auth_gallery_user'		=> 'Benutzer',
+	'auth_gallery_trial'	=> 'Trialmember',
+	'auth_gallery_member'	=> 'Member',
+	'auth_gallery_coleader'	=> 'Squadleader',
+	'auth_gallery_leader'	=> 'Leader',
+	'auth_gallery_uploader'	=> 'Uploader',
+	
+	'auth_gallery_view'		=> 'Betrachten',
+	'auth_gallery_edit'		=> 'Bearbeiten',
+	'auth_gallery_delete'	=> 'Löschen',
+	'auth_gallery_rate'		=> 'Bewertung',
+	'auth_gallery_upload'	=> 'Upload',
+
+	'auth_gallery' => array(
+		'auth_view'		=> 'Bild betrachten',
+		'auth_edit'		=> 'Bild bearbeiten',
+		'auth_delete'	=> 'Bild löschen',
+		'auth_rate'		=> 'Bild bewerten',
+		'auth_upload'	=> 'Bild uploaden',
+	),
+	
+	'per_rows'			=> 'Bilder pro Zeile',
+	'per_cols'			=> 'Bilder pro Seite',
+	'max_width'			=> 'Maximale Breite',
+	'max_height'		=> 'Maximale Höhe',
+	'max_filesize'		=> 'Maximale Größe',
+	'preview_list'		=> 'Adminvorschau',
+	'preview_widht'		=> 'Vorschaubreite',
+	'preview_height'	=> 'Vorschauhöhe',
+
+	'list'		=> 'als Liste',
+	'preview'	=> 'nach Vorgabe der Einstellungen',
+
+));
+
+/*
 $lang['gallery']				= 'Galerie';
 $lang['gallery_explain']		= 'Hier kannst Du Galerien verwalten.';
 
@@ -83,5 +118,5 @@ $lang['auth_gallery'] = array(
 	'auth_rate'		=> $lang['auth_gallery_rate'],
 	'auth_upload'	=> $lang['auth_gallery_upload'],
 );
-
+*/
 ?>

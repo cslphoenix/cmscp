@@ -1,35 +1,29 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	- Content-Management-System by Phoenix
- *
- *	- @autor:	Sebastian Frickel Â© 2009
- *	- @code:	Sebastian Frickel Â© 2009
- *
- *	Protokoll (Logs)
- *
- */
-
 if ( !defined('IN_CMS') )
 {
 	exit;
 }
 
-$lang['rank']				= 'Rang';
+$lang = array_merge($lang, array(
+	
+	'rank'		=> 'Rang',
+	'explain'	=> 'Verwalten von Rängen.',
+
+	'create'	=> 'Neuer Rang hinzugefügt.',
+	'update'	=> 'Rangdaten erfolgreich geändert.',
+	'delete'	=> 'Der Rang wurde gelöscht!',
+	'confirm'	=> 'dass dieser Rang:',
+	
+	'page'		=> 'Seitenrang',
+	'forum'		=> 'Forumrang',
+	'team'		=> 'Teamrang',
+	'special'	=> 'Spezial Rang',
+	'min'		=> 'Beiträge',
+	'image'		=> 'Rangbild',
+	'type'		=> 'Rangtype',
+	'standard'	=> 'Standardrang',
+
+));
 
 ?>

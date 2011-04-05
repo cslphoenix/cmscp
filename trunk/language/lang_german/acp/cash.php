@@ -1,31 +1,98 @@
 <?php
 
-/*
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- *	Clankasse
- */
-
 if ( !defined('IN_CMS') )
 {
 	exit;
 }
+
+$lang = array_merge($lang, array(
+	
+	'cash'		=> 'Clankasse',
+	'explain'	=> 'Clankassen verwaltung!',
+	
+	'cash_bank'		=> 'Bank',
+	'cash_reason'	=> 'Kosten',
+	'cash_user'		=> 'Benutzer',
+	
+	'bank_holder'	=> 'Inhaber',
+	'bank_name'		=> 'Bankname',
+	'bank_blz'		=> 'Bankleitzahl',
+	'bank_number'	=> 'Kontonummer',
+	'bank_reason'	=> 'Verwendungszweck',
+	'bank_delete'	=> 'Bankdaten löschen',
+	
+	'msg_select_holder'	=> 'Bitte Inhaber des Kontos eintragen!',
+	'msg_select_name'	=> 'Bitte Bankname eintragen!',
+	'msg_select_blz'	=> 'Bitte Bankleitzahl eintragen!',
+	'msg_select_number'	=> 'Bitte Kontonummer eintragen!',
+	'msg_select_reason'	=> 'Bitte Verwendungszweck eintragen!',
+	
+	'create_bank'		=> 'Bankdaten erfolgreich eingetragen.',
+	'update_bank'		=> 'Bankdaten erfolgreich geändert.',
+	'delete_bank'		=> 'Die Bankdaten wurden gelöscht!',
+	'confirm'			=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
+	
+	
+	'create_user'	=> 'Neuen Benutzereintrag hinzugefügt.',
+	'update_user'	=> 'Benutzereintrag erfolgreich geändert.',
+	'delete_user'	=> 'Der Benutzereintrag wurde gelöscht!',
+	'confirm_user'	=> 'das der Benutzereintrag:',
+	
+	'user'		=> 'Benutzer',
+	
+	
+	'amount'	=> 'Betrag',
+	'month'		=> 'Monat',
+	
+	'interval'			=> 'Zahlungsintervall',
+	'interval_only'		=> 'Einmalig',
+	'interval_month'	=> 'Monatlich',
+	'interval_weeks'	=> 'alle 2 Wochen',
+	'interval_weekly'	=> 'Wöchentlich',
+	
+	'type_game'		=> 'Gameserver',
+	'type_voice'	=> 'Voiceserver',
+	'type_other'	=> 'sonstiges',
+	
+	'postage' => 'Gesammtbetrag',
+	
+));
+
+/*
+
+//
+//	Clankasse (Cash)
+//
+$lang['cash_amount']			= 'Betrag';
+$lang['cash_name']				= 'Beitragsname';
+$lang['cash_interval']			= 'Zahlungsintervall';
+$lang['cash_interval_m']		= 'Monatlich';
+$lang['cash_interval_o']		= 'Einmalig';
+$lang['cash_interval_month']	= 'Monatlich';
+$lang['cash_interval_weeks']	= 'alle 2 Wochen';
+$lang['cash_interval_weekly']		= 'Wöchentlich';
+$lang['cash_no_entry']			= 'kein Eintrag';
+$lang['interval_m']				= 'Monatlich ab: %s';
+$lang['interval_o']				= 'Einmalig für Monat: %s';
+
+
+
+$lang['create_cash']				= 'Neuen Betrag hinzugefügt.';
+$lang['create_cash_user']			= 'Neuen Benutzer zu Liste hinzugefügt.';
+
+$lang['update_cash']				= 'Daten erfolgreich geändert';
+$lang['update_cash_bankdata']		= 'Bankdaten erfolgreich geändert';		
+$lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
+
+$lang['delete_confirm_cash']		= 'das der Eintrag:';
+$lang['delete_confirm_cash_user']	= 'das der Benutzer:';
+
+$lang['delete_cash']				= 'Der Eintrag wurde gelöscht!';
+$lang['delete_cash_bankdata']		= 'Die Bankdaten wurden gelöscht!';
+$lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht!';
+
+$lang['delete_confirm_bankdata']	= 'Bist du sicher, das die Bankdaten gelöscht werden soll?';
+
 
 $lang['cash']			= 'Clankasse';
 $lang['cash_user']		= 'Benutzereintrag';
@@ -53,13 +120,7 @@ $lang['cash_interval_month']	= 'Monatlich';
 $lang['cash_interval_weeks']	= 'alle 2 Wochen';
 $lang['cash_interval_weekly']	= 'Wöchentlich';
 
-$lang['bankdata']			= 'Bankdaten';
-$lang['bankdata_bank']		= 'Kreditinstitut';
-$lang['bankdata_number']	= 'Kontonummer';
-$lang['bankdata_blz']		= 'Bankleitzahl';
-$lang['bankdata_name']		= 'Inhaber';
-$lang['bankdata_reason']	= 'Verwendungszweck';
-$lang['bankdata_delete']	= 'Bankdaten löschen';
+
 
 $lang['msg_select_name']	= 'Bitte Inhaber des Kontos eintragen';
 $lang['msg_select_bank']	= 'Bitte Bankname eintragen';
@@ -67,5 +128,5 @@ $lang['msg_select_blz']		= 'Bitte Bankleitzahl eintragen';
 $lang['msg_select_number']	= 'Bitte Kontonummer eintragen';
 $lang['msg_select_reason']	= 'Bitte Verwendungszweck eintragen';
 
-
+*/
 ?>

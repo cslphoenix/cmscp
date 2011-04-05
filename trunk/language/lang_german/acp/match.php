@@ -1,30 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	- Content-Management-System by Phoenix
- *
- *	- @autor:	Sebastian Frickel © 2009
- *	- @code:	Sebastian Frickel © 2009
- *
- *	Teams
- *
- */
-
 if ( !defined('IN_CMS') )
 {
 	exit;
@@ -109,6 +84,22 @@ $lang['select_type3']		= '3on3';
 $lang['select_type4']		= '4on4';
 $lang['select_type5']		= '5on5';
 $lang['select_type6']		= '6on6';
+
+$lang['match_type'] = array(
+	'type_unknown'	=> 'unbekannt',
+	'type_two'		=> '2 on 2',
+	'type_three'	=> '3 on 3',
+	'type_four'		=> '4 on 4',
+	'type_five'		=> '5 on 5',
+	'type_six'		=> '6 on 6',
+);
+
+$lang['match_category'] = array(
+	'war_fun'		=> 'Fun War',
+	'war_training'	=> 'Training War',
+	'war_clan'		=> 'Clan War',
+	'war_league'	=> 'Liga War',
+);
 
 $lang['select_league']		= 'Liga auswählen';
 $lang['select_league1']		= 'ESL';
