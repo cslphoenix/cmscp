@@ -12,7 +12,7 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_ADMIN);
 init_userprefs($userdata);
 
-$oCache -> sCachePath = './../cache/';
+#$oCache -> sCachePath = './../cache/';
 
 $userauth = auth_acp_check($userdata['user_id']);
 
@@ -33,7 +33,7 @@ if ( !$userdata['session_admin'] )
 	redirect(append_sid("login.php?redirect=admin/$url&admin=1", true));
 }
 
-if ( empty($s_header) )
+if ( empty($header) )
 {
 	include('./page_header_admin.php');
 }

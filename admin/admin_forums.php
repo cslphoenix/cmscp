@@ -1,26 +1,4 @@
 <?php
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
 
 if ( !empty($setmodules) )
 {
@@ -28,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum'] )
 	{
-		$module['_headmenu_forum']['_submenu_set'] = $root_file;
+		$module['_headmenu_02_forum']['_submenu_settings'] = $root_file;
 	}
 
 	return;
@@ -38,30 +16,44 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_forum';
 	
 	include('./pagestart.php');
+	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
-
+	
 	load_lang('forums');
 	
-	$data_id	= request(POST_AUTHLIST_URL, 0);
-	$data_cat	= request(POST_CATEGORY_URL, 0);
+	$error	= '';
+	$index	= '';
+	$fields	= '';
+	
+	$log	= LOG_SEK_FORUM;
+	$url	= POST_FORUM_URL;
+	$url_c	= POST_CATEGORY_URL;
+	$file	= basename(__FILE__);
+	
+	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( $start < 0 ) ? 0 : $start;
+	
+	$data_id	= request($url, 0);
+	$data_cat	= request($url_c, 0);
+	$data_type	= request('cat_type', 0);
+	$data_form	= request('cat_form', 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$s_index	= '';
-	$s_fields	= '';
-	$error		= '';
+	
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['forum']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_EVENT, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_forums.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
 	
 	//
 	// Start program - define vars
@@ -78,8 +70,8 @@ else
 		7	=> array(AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren
 		8	=> array(AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren versteckt
 		9	=> array(AUTH_REG, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat
-		10	=> array(AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat versteckt
-		11	=> array(AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_MOD, AUTH_ADM, AUTH_ADM),	//	Administrator
+		10	=> array(AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL),	//	Privat versteckt
+		11	=> array(AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM),	//	Administrator
 	);
 	
 	$simple_auth_types = array(
@@ -90,21 +82,10 @@ else
 		$lang['forms_mod'],			sprintf($lang['forms_hidden'], $lang['forms_mod']),
 		$lang['forms_privat'],		sprintf($lang['forms_hidden'], $lang['forms_privat']),
 		$lang['forms_admin'],
+		$lang['forms_special'],
 	);
 	
-	$forum_auth_fields = array(
-		'auth_view',
-		'auth_read',
-		'auth_post',
-		'auth_reply',
-		'auth_edit',
-		'auth_delete',
-		'auth_sticky',
-		'auth_announce',
-		'auth_globalannounce',
-		'auth_poll',
-		'auth_pollcreate',
-	);
+	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_globalannounce', 'auth_poll', 'auth_pollcreate');
 	
 	$field_names = array(
 		'auth_view'				=> $lang['forms_view'],
@@ -120,12 +101,9 @@ else
 		'auth_pollcreate'		=> $lang['forms_pollcreate'],
 	);
 	
-	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ACL', 'ADM');
+	$forum_auth_levels	= array('all', 'reg', 'trial', 'member', 'moderator', 'private', 'admin');
 	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
 	
-	// ------------------
-	// Begin function block
-	//
 	function simple_auth($forum_row)
 	{
 		global $simple_auth_ary, $forum_auth_fields, $lang;
@@ -153,6 +131,8 @@ else
 		return $i;
 	}
 	
+	
+	/*
 	function get_info($mode, $id)
 	{
 		global $db;
@@ -160,13 +140,13 @@ else
 		switch ( $mode )
 		{
 			case 'category':
-				$table = CATEGORIES;
+				$table = FORUM_CAT;
 				$idfield = 'cat_id';
 				$namefield = 'cat_title';
 				break;
 	
 			case 'forum':
-				$table = FORUMS;
+				$table = FORUM;
 				$idfield = 'forum_id';
 				$namefield = 'forum_name';
 				break;
@@ -210,13 +190,13 @@ else
 		switch ( $mode )
 		{
 			case 'category':
-				$table = CATEGORIES;
+				$table = FORUM_CAT;
 				$idfield = 'cat_id';
 				$namefield = 'cat_title';
 				break;
 	
 			case 'forum':
-				$table = FORUMS;
+				$table = FORUM;
 				$idfield = 'forum_id';
 				$namefield = 'forum_name';
 				break;
@@ -248,811 +228,936 @@ else
 	
 		return($catlist);
 	}
+	*/
 	//
 	// End function block
 	// ------------------
 	
-	//
-	// Begin program proper
-	//
-	if ( isset($HTTP_POST_VARS['addforum']) || isset($HTTP_POST_VARS['addcategory']) )
+	if ( request('add_forum', 1) || request('add_cat', 1) )
 	{
-		$mode = ( isset($HTTP_POST_VARS['addforum']) ) ? "addforum" : "addcat";
+		$mode = ( request('add_forum', 1) ) ? '_create' : '_create_cat';
 	
-		if( $mode == "addforum" )
+		if ( $mode == '_create' )
 		{
-			list($cat_id) = each($HTTP_POST_VARS['addforum']);
+			list($cat_id) = each($_POST['add_forum']);
 			$cat_id = intval($cat_id);
-			// 
-			// stripslashes needs to be run on this because slashes are added when the forum name is posted
-			//
-			$forumname = stripslashes($HTTP_POST_VARS['forumname'][$cat_id]);
+			
+			$name = trim(htmlentities(str_replace("\'", "'", $_POST['forum_name'][$cat_id]), ENT_COMPAT));
 		}
 	}
-	
+		
 	if ( !empty($mode) )
 	{
 		switch ( $mode )
 		{
-			case 'addforum':
-			case 'editforum':
+			case '_create':
+			case '_update':
 			
-				//
-				// Show form to create/modify a forum
-				//
-				if ( $mode == 'editforum' )
-				{
-					$l_title = $lang['Edit_forum'];
-					$newmode = 'modforum';
-					$buttonvalue = $lang['Update'];
-	
-					$forum_id = intval($HTTP_GET_VARS[POST_FORUM_URL]);
-	
-					$row = get_info('forum', $forum_id);
-	
-					$cat_id = $row['cat_id'];
-					$forumname = $row['forum_name'];
-					$forumdesc = $row['forum_desc'];
-					$forumstatus = $row['forum_status'];
-					$s_simple_auth = simple_auth($row);
-				}
-				else if ( $mode == 'addforum' )
-				{
-					$l_title = $lang['Create_forum'];
-					$newmode = 'createforum';
-					$buttonvalue = $lang['Create_forum'];
-	
-					$forumdesc = '';
-					$forumstatus = FORUM_UNLOCKED;
-					$forum_id = '';
-					$s_simple_auth = 0;
-				}
-	
-				$catlist = get_list('category', $cat_id, TRUE);
-	
-				$status = ( $forumstatus ) ? 'selected="selected"' : '';
-				
-				// These two options ($lang['Status_unlocked'] and $lang['Status_locked']) seem to be missing from
-				// the language files.
-				$lang['Status_unlocked'] = isset($lang['Status_unlocked']) ? $lang['Status_unlocked'] : 'Unlocked';
-				$lang['Status_locked'] = isset($lang['Status_locked']) ? $lang['Status_locked'] : 'Locked';
-				
-				$statuslist = '<select name="forum_status" class="post">';
-				$statuslist .= '<option value="' . FORUM_UNLOCKED . '" ' . $status . '>' . $lang['Status_unlocked'] . '</option>';
-				$statuslist .= '<option value="' . FORUM_LOCKED . '" ' . $status . '>' . $lang['Status_locked'] . '</option>';
-				$statuslist .= '</select>';
-				
-				$simple_auth = '<select name="simpleauth" class="post">';
-
-				$matched = 0;
-				for($j = 0; $j < count($simple_auth_types); $j++)
-				{
-					if ($j < count($simple_auth_types)  || !$matched)
-					{
-						$selected = ( $s_simple_auth == $j ) ? ' selected="selected"' : '';
-						$simple_auth .= '<option value="' . $j . '"' . $selected . '>' . $simple_auth_types[$j] . '</option>';
-					}
-					if ($s_simple_auth == $j)
-					{
-						$matched = 1;
-					}
-				}
-				
 				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
-				$template->assign_block_vars('forum_edit', array());
+				$template->assign_block_vars('_input', array());
 				
-				$s_fields = '<input type="hidden" name="mode" value="' . $newmode .'" /><input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '" />';
-	
-				$template->assign_vars(array(
-					'S_FORUM_ACTION' => append_sid('admin_forums.php'),
-					'L_FORUM_HEAD' => $lang['Forum_admin'], 
-					'S_FIELDS' => $s_fields,
-					'S_SUBMIT_VALUE' => $buttonvalue, 
-					'S_CAT_LIST' => $catlist,
-					'S_AUTH_LEVELS_SELECT' => $simple_auth,
-					'S_STATUS_LIST' => $statuslist,
-	
-					'L_FORUM_TITLE' => $l_title, 
-					'L_FORUM_EXPLAIN' => $lang['Forum_edit_delete_explain'], 
-					'L_FORUM_SETTINGS' => $lang['Forum_settings'], 
-					'L_FORUM_NAME' => $lang['Forum_name'], 
-					'L_PERMISSIONS' => $lang['Permissions'],
-					'L_CATEGORY' => $lang['Category'], 
-					'L_FORUM_DESCRIPTION' => $lang['Forum_desc'],
-					'L_FORUM_STATUS' => $lang['Forum_status'],
-					'L_AUTO_PRUNE' => $lang['Forum_pruning'],
-					'L_ENABLED' => $lang['Enabled'],
-					'L_PRUNE_DAYS' => $lang['prune_days'],
-					'L_PRUNE_FREQ' => $lang['prune_freq'],
-					'L_DAYS' => $lang['Days'],
-	
-					'PRUNE_DAYS' => ( isset($pr_row['prune_days']) ) ? $pr_row['prune_days'] : 7,
-					'PRUNE_FREQ' => ( isset($pr_row['prune_freq']) ) ? $pr_row['prune_freq'] : 1,
-					'FORUM_NAME' => $forumname,
-					'DESCRIPTION' => $forumdesc)
-				);
-				$template->pparse('body');
-				break;
-	
-			case 'createforum':
-				//
-				// Create a forum in the DB
-				//
-				if( trim($HTTP_POST_VARS['forum_name']) == '' )
-				{
-					message(GENERAL_ERROR, $lang['empty_name'] . $lang['back']);
-				}
-	
-				$sql = 'SELECT MAX(forum_order) AS max_order
-							FROM ' . FORUMS . '
-							WHERE cat_id = ' . intval($HTTP_POST_VARS[POST_CATEGORY_URL]);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$row = $db->sql_fetchrow($result);
-	
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
+				$template->set_filenames(array('tiny' => 'style/tinymce_news.tpl'));
+				$template->assign_var_from_handle('TINYMCE', 'tiny');
 				
-				$sql = 'SELECT MAX(forum_id) AS max_id
-							FROM ' . FORUMS;
-				if ( !($result = $db->sql_query($sql)) )
+				if ( $mode == '_create' && !(request('submit', 1)) )
 				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					$data = array(
+								'forum_name'			=> (isset($name))	? $name : '',
+								'cat_id'				=> (isset($cat_id))	? $cat_id : '',
+								'forum_sub'				=> '0',
+								'forum_desc'			=> '',
+								'forum_icon'			=> '',
+								'forum_status'			=> '0',
+								'forum_legend'			=> '1',
+								'forum_auth'			=> '0',
+								'forum_order'			=> '',
+								'auth_view'				=> AUTH_ALL,
+								'auth_read'				=> AUTH_ALL,
+								'auth_post'				=> AUTH_ALL,
+								'auth_reply'			=> AUTH_ALL,
+								'auth_edit'				=> AUTH_REG,
+								'auth_delete'			=> AUTH_REG,
+								'auth_sticky'			=> AUTH_MOD,
+								'auth_announce'			=> AUTH_MOD,
+								'auth_globalannounce'	=> AUTH_MOD,
+								'auth_poll'				=> AUTH_REG,
+								'auth_pollcreate'		=> AUTH_REG,
+							);
 				}
-				$row = $db->sql_fetchrow($result);
-	
-				$max_id = $row['max_id'];
-				$next_id = $max_id + 1;
-				
-				$forum_auth_ary = $simple_auth_ary[intval($HTTP_POST_VARS['simpleauth'])];
-	
-				$field_sql = '';
-				$value_sql = '';
-				for( $i = 0; $i < count($forum_auth_ary); $i++ )
+				else if ( $mode == '_update' && !(request('submit', 1)) )
 				{
-					$field_sql .= ', ' . $forum_auth_fields[$i];
-					$value_sql .= ', ' . $forum_auth_ary[$i];
-				}
-	
-				$sql = "INSERT INTO " . FORUMS . " (forum_id, forum_name, cat_id, forum_desc, forum_order, forum_status " . $field_sql . ")
-					VALUES ('" . $next_id . "', '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_name']) . "', " . intval($HTTP_POST_VARS[POST_CATEGORY_URL]) . ", '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_desc']) . "', $next_order, " . intval($HTTP_POST_VARS['forum_status']) . $value_sql . ")";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, "Couldn't insert row in forums table", "", __LINE__, __FILE__, $sql);
-				}
-				
-				log_add(LOG_ADMIN, LOG_SEK_FORUM, 'acp_forum_add');
-	
-				$message = $lang['create_forum'] . sprintf($lang['click_return_forum'], '<a href="' . append_sid('admin_forums.php') . '">', '</a>');
-	
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-	
-			case 'modforum':
-			
-				$forum_id	= intval($HTTP_POST_VARS[POST_FORUM_URL]);
-				$get_cat_id	= intval($HTTP_POST_VARS[POST_CATEGORY_URL]);
-				$row		= get_info('forum', $forum_id);
-				$cat_id		= $row['cat_id'];
-				
-				$sql_order = '';
-				if ( $get_cat_id != $cat_id )
-				{
-					$sql = 'SELECT MAX(forum_order) AS max_order
-								FROM ' . FORUMS . '
-								WHERE cat_id = ' . intval($HTTP_POST_VARS[POST_CATEGORY_URL]);
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					$row = $db->sql_fetchrow($result);
-		
-					$max_order = $row['max_order'];
-					$next_order = $max_order + 10;
-					
-					$sql_order .= ', forum_order = ' . $next_order;
-				}
-				
-				$sql_auth = '';
-				if( intval($HTTP_POST_VARS['simpleauth']) < count($simple_auth_types) - 1 )
-				{
-					$simple_ary = $simple_auth_ary[intval($HTTP_POST_VARS['simpleauth'])];
-	
-					for($i = 0; $i < count($simple_ary); $i++)
-					{
-						$sql_auth .= ', ' . $forum_auth_fields[$i] . ' = ' . $simple_ary[$i];
-					}
-				}
-	
-				$sql = "UPDATE " . FORUMS . "
-							SET
-								forum_name = '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_name']) . "',
-								cat_id = " . intval($HTTP_POST_VARS[POST_CATEGORY_URL]) . ",
-								forum_desc = '" . str_replace("\'", "''", $HTTP_POST_VARS['forum_desc']) . "',
-								forum_status = " . intval($HTTP_POST_VARS['forum_status']) . "
-								$sql_order $sql_auth
-							WHERE forum_id = " . intval($HTTP_POST_VARS[POST_FORUM_URL]);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				log_add(LOG_ADMIN, LOG_SEK_FORUM, 'acp_forum_add');
-	
-				$message = $lang['update_forum'] . sprintf($lang['click_return_forum'], '<a href="' . append_sid('admin_forums.php') . '">', '</a>');
-	
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-				
-			case 'addcat':
-				// Create a category in the DB
-				if( trim($HTTP_POST_VARS['categoryname']) == '')
-				{
-					message(GENERAL_ERROR, "Can't create a category without a name");
-				}
-	
-				$sql = "SELECT MAX(cat_order) AS max_order
-					FROM " . CATEGORIES;
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, "Couldn't get order number from categories table", "", __LINE__, __FILE__, $sql);
-				}
-				$row = $db->sql_fetchrow($result);
-	
-				$max_order = $row['max_order'];
-				$next_order = $max_order + 10;
-	
-				//
-				// There is no problem having duplicate forum names so we won't check for it.
-				//
-				$sql = "INSERT INTO " . CATEGORIES . " (cat_title, cat_order)
-					VALUES ('" . str_replace("\'", "''", $HTTP_POST_VARS['categoryname']) . "', $next_order)";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, "Couldn't insert row in categories table", "", __LINE__, __FILE__, $sql);
-				}
-	
-				$message = $lang['Forums_updated'] . "<br><br>" . sprintf($lang['Click_return_forumadmin'], '<a href="' . append_sid('admin_forums.php') . "\">", "</a>") . "<br><br>" . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . "\">", "</a>");
-	
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-				
-			case 'editcat':
-				//
-				// Show form to edit a category
-				//
-				$newmode = 'modcat';
-				$buttonvalue = $lang['Update'];
-	
-				$cat_id = intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
-	
-				$row = get_info('category', $cat_id);
-				$cat_title = $row['cat_title'];
-	
-				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
-				$template->assign_block_vars('category_edit', array());
-	
-				$s_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '" />';
-	
-				$template->assign_vars(array(
-					'CAT_TITLE' => $cat_title,
-	
-					'L_EDIT_CATEGORY' => $lang['Edit_Category'], 
-					'L_EDIT_CATEGORY_EXPLAIN' => $lang['Edit_Category_explain'], 
-					'L_CATEGORY' => $lang['Category'], 
-					'L_FORUM_HEAD' => $lang['Forum_admin'], 
-	
-					'S_FIELDS' => $s_fields, 
-					'S_SUBMIT_VALUE' => $buttonvalue, 
-					'S_FORUM_ACTION' => append_sid('admin_forums.php'),
-				));
-				
-				$template->pparse('body');
-	
-				break;
-	
-			case 'modcat':
-				// Modify a category in the DB
-				$sql = "UPDATE " . CATEGORIES . "
-					SET cat_title = '" . str_replace("\'", "''", $HTTP_POST_VARS['cat_title']) . "'
-					WHERE cat_id = " . intval($HTTP_POST_VARS[POST_CATEGORY_URL]);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-	
-		//		$message = $lang['Forums_updated'] . "<br><br>" . sprintf($lang['Click_return_forumadmin'], '<a href="' . append_sid("admin_forums.php') . "\">", "</a>") . "<br><br>" . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . "\">", "</a>");
-	
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-				
-			case 'deleteforum':
-				// Show form to delete a forum
-				$forum_id = intval($HTTP_GET_VARS[POST_FORUM_URL]);
-	
-				$select_to = '<select name="to_id">';
-				$select_to .= "<option value=\"-1\"$s>" . $lang['Delete_all_posts'] . "</option>\n";
-				$select_to .= get_list('forum', $forum_id, 0);
-				$select_to .= '</select>';
-	
-				$buttonvalue = $lang['Move_and_Delete'];
-	
-				$newmode = 'movedelforum';
-	
-				$foruminfo = get_info('forum', $forum_id);
-				$name = $foruminfo['forum_name'];
-	
-				$template->set_filenames(array(
-					'body' => "admin/forum_delete_body.tpl")
-				);
-	
-				$s_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $forum_id . '" />';
-	
-				$template->assign_vars(array(
-					'NAME' => $name, 
-	
-					'L_FORUM_DELETE' => $lang['Forum_delete'], 
-					'L_FORUM_DELETE_EXPLAIN' => $lang['Forum_delete_explain'], 
-					'L_MOVE_CONTENTS' => $lang['Move_contents'], 
-					'L_FORUM_NAME' => $lang['Forum_name'], 
-	
-					"S_HIDDEN_FIELDS" => $s_fields,
-					'S_FORUM_ACTION' => append_sid('admin_forums.php'), 
-					'S_SELECT_TO' => $select_to,
-					'S_SUBMIT_VALUE' => $buttonvalue)
-				);
-	
-				$template->pparse('body');
-				break;
-	
-			case 'movedelforum':
-				//
-				// Move or delete a forum in the DB
-				//
-				$from_id = intval($HTTP_POST_VARS['from_id']);
-				$to_id = intval($HTTP_POST_VARS['to_id']);
-				$delete_old = intval($HTTP_POST_VARS['delete_old']);
-	
-				// Either delete or move all posts in a forum
-				if($to_id == -1)
-				{
-					// Delete polls in this forum
-					$sql = "SELECT v.vote_id 
-						FROM " . VOTE_DESC . " v, " . TOPICS . " t 
-						WHERE t.forum_id = $from_id 
-							AND v.topic_id = t.topic_id";
-					if (!($result = $db->sql_query($sql)))
-					{
-						message(GENERAL_ERROR, "Couldn't obtain list of vote ids", "", __LINE__, __FILE__, $sql);
-					}
-	
-					if ($row = $db->sql_fetchrow($result))
-					{
-						$vote_ids = '';
-						do
-						{
-							$vote_ids .= (($vote_ids != '') ? ', ' : '') . $row['vote_id'];
-						}
-						while ($row = $db->sql_fetchrow($result));
-	
-						$sql = "DELETE FROM " . VOTE_DESC . " 
-							WHERE vote_id IN ($vote_ids)";
-						$db->sql_query($sql);
-	
-						$sql = "DELETE FROM " . VOTE_RESULTS . " 
-							WHERE vote_id IN ($vote_ids)";
-						$db->sql_query($sql);
-	
-						$sql = "DELETE FROM " . VOTE_USERS . " 
-							WHERE vote_id IN ($vote_ids)";
-						$db->sql_query($sql);
-					}
-					$db->sql_freeresult($result);
-					
-					include($root_path . 'includes/prune.php');
-					prune($from_id, 0, true); // Delete everything from forum
+					$data = data(FORUM, $data_id, false, 1, 1);
 				}
 				else
 				{
-					$sql = "SELECT *
-						FROM " . FORUMS . "
-						WHERE forum_id IN ($from_id, $to_id)";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, "Couldn't verify existence of forums", "", __LINE__, __FILE__, $sql);
-					}
-	
-					if($db->sql_numrows($result) != 2)
-					{
-						message(GENERAL_ERROR, "Ambiguous forum ID's", "", __LINE__, __FILE__);
-					}
-					$sql = "UPDATE " . TOPICS . "
-						SET forum_id = $to_id
-						WHERE forum_id = $from_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, "Couldn't move topics to other forum", "", __LINE__, __FILE__, $sql);
-					}
-					$sql = "UPDATE " . POSTS . "
-						SET	forum_id = $to_id
-						WHERE forum_id = $from_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, "Couldn't move posts to other forum", "", __LINE__, __FILE__, $sql);
-					}
-					sync('forum', $to_id);
+					$data = array(
+								'sub'					=> request('sub'),
+								'forum_name'			=> request('forum_name', 2),
+								'cat_id'				=> request('cat_id', 0),
+								'forum_sub'				=> request('forum_sub', 0),
+								'forum_desc'			=> request('forum_desc', 2),
+								'forum_icon'			=> request('forum_icon', 2),
+								'forum_status'			=> request('forum_status', 1),
+								'forum_legend'			=> request('forum_legend', 1),
+								'forum_auth'			=> request('forum_auth', 1),
+								'forum_order'			=> request('forum_order', 0) ? request('forum_order', 0) : request('forum_order_new', 0),
+								'auth_view'				=> request('auth_view', 1),
+								'auth_read'				=> request('auth_read', 1),
+								'auth_post'				=> request('auth_post', 1),
+								'auth_reply'			=> request('auth_reply', 1),
+								'auth_edit'				=> request('auth_edit', 1),
+								'auth_delete'			=> request('auth_delete', 1),
+								'auth_sticky'			=> request('auth_sticky', 1),
+								'auth_announce'			=> request('auth_announce', 1),
+								'auth_globalannounce'	=> request('auth_globalannounce', 1),
+								'auth_poll'				=> request('auth_poll', 1),
+								'auth_pollcreate'		=> request('auth_pollcreate', 1),
+							);
 				}
-	
-				// Alter Mod level if appropriate - 2.0.4
-				$sql = "SELECT ug.user_id 
-					FROM " . AUTH_ACCESS . " a, " . USER_GROUP . " ug 
-					WHERE a.forum_id <> $from_id 
-						AND a.auth_mod = 1
-						AND ug.group_id = a.group_id";
-				if ( !($result = $db->sql_query($sql)) )
+				
+				for ( $j = 0; $j < count($forum_auth_fields); $j++ )
 				{
-					message(GENERAL_ERROR, "Couldn't obtain moderator list", "", __LINE__, __FILE__, $sql);
+					$custom_auth[$j] = '<select class="selectsmall" name="' . $forum_auth_fields[$j] . '" id="' . $forum_auth_fields[$j] . '">';
+					
+					for ( $k = 0; $k < count($forum_auth_levels); $k++ )
+					{
+						$selected = ( $data[$forum_auth_fields[$j]] == $forum_auth_const[$k] ) ? ' selected="selected"' : '';
+						$custom_auth[$j] .= "<option value=\"" . $forum_auth_const[$k] . "\"$selected>" . sprintf($lang['sprintf_select_format'], $lang['auth_' . $forum_auth_levels[$k]]) . "</option>";
+					}
+					
+					$custom_auth[$j] .= '</select>';
+		
+					$template->assign_block_vars('_input._auth', array(
+						'TITLE'		=> $lang['auth_forum'][$forum_auth_fields[$j]],
+						'INFO'		=> $forum_auth_fields[$j],
+						'SELECT'	=> $custom_auth[$j],
+					));
 				}
-	
-				if ($row = $db->sql_fetchrow($result))
+
+				@reset($simple_auth_ary);
+				while ( list($key, $auth_levels) = each($simple_auth_ary) )
 				{
-					$user_ids = '';
-					do
+					$matched = 1;
+					for ( $k = 0; $k < count($auth_levels); $k++ )
 					{
-						$user_ids .= (($user_ids != '') ? ', ' : '' ) . $row['user_id'];
-					}
-					while ($row = $db->sql_fetchrow($result));
-	
-					$sql = "SELECT ug.user_id 
-						FROM " . AUTH_ACCESS . " a, " . USER_GROUP . " ug 
-						WHERE a.forum_id = $from_id 
-							AND a.auth_mod = 1 
-							AND ug.group_id = a.group_id
-							AND ug.user_id NOT IN ($user_ids)";
-					if( !$result2 = $db->sql_query($sql) )
-					{
-						message(GENERAL_ERROR, "Couldn't obtain moderator list", "", __LINE__, __FILE__, $sql);
-					}
-						
-					if ($row = $db->sql_fetchrow($result2))
-					{
-						$user_ids = '';
-						do
+						$matched_type = $key;
+			
+						if ( $data[$forum_auth_fields[$k]] != $auth_levels[$k] )
 						{
-							$user_ids .= (($user_ids != '') ? ', ' : '' ) . $row['user_id'];
+							$matched = 0;
 						}
-						while ($row = $db->sql_fetchrow($result2));
-	
-						$sql = "UPDATE " . USERS . " 
-							SET user_level = " . USER . " 
-							WHERE user_id IN ($user_ids) 
-								AND user_level <> " . ADMIN;
-						$db->sql_query($sql);
 					}
-					$db->sql_freeresult($result);
-	
-				}
-				$db->sql_freeresult($result2);
-	
-				$sql = "DELETE FROM " . FORUMS . "
-					WHERE forum_id = $from_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, "Couldn't delete forum", "", __LINE__, __FILE__, $sql);
-				}
-				
-				$sql = "DELETE FROM " . AUTH_ACCESS . "
-					WHERE forum_id = $from_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, "Couldn't delete forum", "", __LINE__, __FILE__, $sql);
-				}
-				
-				$sql = "DELETE FROM " . PRUNE . "
-					WHERE forum_id = $from_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, "Couldn't delete forum prune information!", "", __LINE__, __FILE__, $sql);
-				}
-	
-		//		$message = $lang['Forums_updated'] . "<br><br>" . sprintf($lang['Click_return_forumadmin'], '<a href="' . append_sid('admin_forums.php') . "\">", "</a>") . "<br><br>" . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid('index.php?pane=right") . "\">", "</a>");
-	
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-				
-			case 'deletecat':
-				//
-				// Show form to delete a category
-				//
-				$cat_id = intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
-	
-				$buttonvalue = $lang['Move_and_Delete'];
-				$newmode = 'movedelcat';
-				$catinfo = get_info('category', $cat_id);
-				$name = $catinfo['cat_title'];
-	
-				if ($catinfo['number'] == 1)
-				{
-					$sql = "SELECT count(*) as total
-						FROM ". FORUMS;
-					if ( !($result = $db->sql_query($sql)) )
+			
+					if ( $matched )
 					{
-						message(GENERAL_ERROR, "Couldn't get Forum count", "", __LINE__, __FILE__, $sql);
+						break;
 					}
-					$count = $db->sql_fetchrow($result);
-					$count = $count['total'];
-	
-					if ($count > 0)
+				}
+					
+				$simple_auth = '<select class="selectsmall" name="simpleauth" id="simpleauth">';
+
+				for ( $j = 0; $j < count($simple_auth_types)-1; $j++ )
+				{
+					$selected = ( $matched_type == $j ) ? ' selected="selected"' : '';
+					$simple_auth .= '<option value="' . $j . '"' . $selected . '>' . $simple_auth_types[$j] . '</option>';
+				}
+				
+				$simple_auth .= '</select>';
+				
+				$auth = '';
+				$teste = array();
+				
+				for ( $j = 0; $j < count($simple_auth_types)-1; $j++ )
+				{
+					foreach ( $simple_auth_ary[$j] as $key_s => $value_s )
 					{
-						message(GENERAL_ERROR, $lang['Must_delete_forums']);
+						foreach ( $forum_auth_fields as $key_f => $value_f )
+						{
+							if ( $key_s == $key_f )
+							{
+								$new[$j][$value_f] = $value_s;
+							}
+						}
+					}
+				
+					foreach ( $new[$j] as $key_n => $value_n )
+					{
+						$set_right[$j][] = "set_right('$key_n', '$value_n')";
+						
+					}
+					
+					$set_right[$j] = implode('; ', $set_right[$j]);
+					
+					$auth[] = '<a style="cursor:pointer" onclick="' . $set_right[$j] . '; set_right(\'simpleauth\', \'' . $j . '\')">' . $simple_auth_types[$j] . '</a>';
+				}
+				
+				$auth = implode('<br />', $auth);
+				
+				$template->assign_block_vars('_input._auth_simple', array(
+					'SELECT'	=> $auth,
+					'S_SELECT'	=> $simple_auth,
+				));
+							
+				$data_cat = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
+				
+				if ( $data_cat )
+				{
+					$template->assign_block_vars('_input._cats', array());
+					
+					for ( $j = 0; $j < count($data_cat); $j++ )
+					{
+						$template->assign_block_vars('_input._cats._cat', array(
+							'CAT_ID'	=> $data_cat[$j]['cat_id'],
+							'CAT_NAME'	=> $data_cat[$j]['cat_name'],
+							
+							'S_MARK'	=> ( $data['cat_id'] == $data_cat[$j]['cat_id'] ) ? 'checked="checked"' : '',
+						));
+					}
+				}
+				
+				$where_cat	= ( $data['cat_id'] ) ? "cat_id = " . $data['cat_id'] : false;
+				$where_form	= ( $data['forum_sub'] ) ? "forum_sub = " . $data['forum_sub'] : false;
+				
+				$s_order = '';
+							
+				if ( !$where_cat )
+				{
+					$s_order .= $lang['no_entry'];
+				}
+				else
+				{
+					$cats	= data(FORUM_CAT, $where_cat, 'cat_order ASC', 1, false);
+					$forms	= data(FORUM, $where_cat, 'forum_order ASC', 1, false);
+					
+					$s_order .= "<select class=\"select\" name=\"forum_order_new\" id=\"forum_order\">";
+					$s_order .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+					
+					if ( $forms )
+					{
+						for ( $i = 0; $i < count($cats); $i++ )
+						{
+							$s_forms	= '';
+							$cat_id		= $cats[$i]['cat_id'];
+							$cat_name	= $cats[$i]['cat_name'];
+							
+							for ( $j = 0; $j < count($forms); $j++ )
+							{
+								$forum_cat_id	= $forms[$j]['cat_id'];
+								$forum_id		= $forms[$j]['forum_id'];
+								$forum_name		= $forms[$j]['forum_name'];
+								$forum_order	= $forms[$j]['forum_order'];
+									
+								if ( $cat_id == $forum_cat_id )
+								{
+									$s_forms .= ( $forum_order == 10 ) ? '<option value="5">' . sprintf($lang['sprintf_select_before'], $forum_name) . '</option>' : '';
+									$s_forms .= '<option value="' . ( $forum_order + 5 ) . '">' . sprintf($lang['sprintf_select_order'], $forum_name) . '</option>';
+									
+									$subs = data(FORUM, "forum_sub = $forum_id", 'forum_order ASC', 1, false);
+									
+									for ( $k = 0; $k < count($subs); $k++ )
+									{
+										$forum_sub_id	= $subs[$k]['forum_id'];
+										$forum_subname	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
+										
+										if ( $forum_id == $subs[$k]['forum_sub'] )
+										{
+											$s_forms .= "<option value=\"$forum_sub_id\" disabled=\"disabled\">" . sprintf($lang['sprintf_select_format'], $forum_subname) . "</option>";
+										}
+									}
+								}
+							}
+							
+							if ( $s_forms != '' )
+							{
+								$s_order .= "<optgroup label=\"$cat_name\">";
+								$s_order .= $s_forms;
+								$s_order .= "</optgroup>";
+							}
+						}
+						
+						$s_order .= '</select>';
 					}
 					else
 					{
-						$select_to = $lang['Nowhere_to_move'];
+						$s_order = $lang['no_entry'];
+					}
+				}
+				
+				if ( $where_form )
+				{
+					$order_tmp = data(FORUM, $where_form, 'forum_order ASC', 1, false);
+					
+					$s_sorder = '';
+					
+					if ( $order_tmp )
+					{
+						$s_sorder .= "<select class=\"select\" name=\"forum_suborder\" id=\"forum_suborder\">";
+						$s_sorder .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+					
+						for ( $j = 0; $j < count($order_tmp); $j++ )
+						{
+							$forum_name	= $order_tmp[$j]['forum_name'];
+							$forum_order	= $order_tmp[$j]['forum_order'];
+							
+							$s_sorder .= ( $forum_order == 10 ) ? "<option value=\"5\">" . sprintf($lang['sprintf_select_before'], $forum_name) . "</option>" : '';
+							$s_sorder .= "<option value=\"" . ( $forum_order + 5 ) . "\">" . sprintf($lang['sprintf_select_order'], $forum_name) . "</option>";
+						}
+						
+						$s_sorder .= "</select>";
+					}
+					else
+					{
+						$s_sorder = $lang['no_entry'];
 					}
 				}
 				else
 				{
-					$select_to = '<select name="to_id">';
-					$select_to .= get_list('category', $cat_id, 0);
-					$select_to .= '</select>';
+					$s_sorder = $lang['no_entry'];
 				}
-	
-				$template->set_filenames(array(
-					'body' => "admin/forum_delete_body.tpl")
-				);
-	
-				$s_fields = '<input type="hidden" name="mode" value="' . $newmode . '" /><input type="hidden" name="from_id" value="' . $cat_id . '" />';
-	
+				
+				$list_tmp = data(FORUM, false, 'forum_order ASC', 1, false);
+				$list_cat = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
+				
+				$s_forms = '';
+					
+				if ( $list_cat || $list_tmp )
+				{
+					$s_forms .= "<select class=\"select\" name=\"forum_sub\" id=\"forum_sub\" onchange=\"setRequest2(this.options[selectedIndex].value);\">";
+					$s_forms .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_forum']) . "</option>";
+					
+					for ( $i = 0; $i < count($list_cat); $i++ )
+					{
+						$tmp = '';
+						
+						for ( $j = 0; $j < count($list_tmp); $j++ )
+						{
+							$subs = data(FORUM, 'forum_sub = ' . $list_tmp[$j]['forum_id'], 'forum_order ASC', 1, false);
+							
+							if ( $list_cat[$i]['cat_id'] == $list_tmp[$j]['cat_id'] )
+							{
+								$id		= $list_tmp[$j]['forum_id'];
+								$name	= $list_tmp[$j]['forum_name'];
+								$marked	= ( $id== $data['forum_sub'] ) ? 'selected="selected"' : '';
+								
+								$tmp .= "<option value=\"$id\" $marked>" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+							
+								for ( $k = 0; $k < count($subs); $k++ )
+								{
+									$sub_id = $subs[$k]['forum_id'];
+									$name	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
+									
+									if ( $list_tmp[$j]['forum_id'] ==  $subs[$k]['forum_sub'] )
+									{
+										$tmp .= "<option value=\"$sub_id\" disabled=\"disabled\">" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+									}
+								}
+							}
+						}
+						
+						if ( $tmp != '' )
+						{
+							$s_forms .= '<optgroup label="' . $list_cat[$i]['cat_name'] . '">';
+							$s_forms .= $tmp;
+							$s_forms .= '</optgroup>';
+						}
+					}
+					
+					$s_forms .= '</select>';
+				}
+				
+				$s_copy = '';
+					
+				if ( !$list_tmp )
+				{
+					$s_copy = $lang['no_entry'];
+				}
+				else
+				{
+					$s_copy .= "<select class=\"selectsmall\" name=\"auth_copy\" id=\"auth_copy\">";
+					$s_copy .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_forms']) . "</option>";
+					
+					for ( $i = 0; $i < count($list_cat); $i++ )
+					{
+						$tmp = '';
+						
+						for ( $j = 0; $j < count($list_tmp); $j++ )
+						{
+							$subs = data(FORUM, 'forum_sub = ' . $list_tmp[$j]['forum_id'], 'forum_order ASC', 1, false);
+							
+							if ( $list_cat[$i]['cat_id'] == $list_tmp[$j]['cat_id'] )
+							{
+								$id		= $list_tmp[$j]['forum_id'];
+								$name	= $list_tmp[$j]['forum_name'];
+								
+								$tmp .= "<option value=\"$id\">" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+							
+								for ( $k = 0; $k < count($subs); $k++ )
+								{
+									$id		= $subs[$k]['forum_id'];
+									$name	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
+									
+									if ( $list_tmp[$j]['forum_id'] ==  $subs[$k]['forum_sub'] )
+									{
+										$tmp .= "<option value=\"$id\">" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+									}
+								}
+							}
+						}
+						
+						if ( $tmp != '' )
+						{
+							$s_copy .= '<optgroup label="' . $list_cat[$i]['cat_name'] . '">';
+							$s_copy .= $tmp;
+							$s_copy .= '</optgroup>';
+						}
+					}
+					
+					$s_copy .= '</select>';
+				}
+								
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= '<input type="hidden" name="forum_order" value="' . $data['forum_order'] . '" />';
+				
 				$template->assign_vars(array(
-					'NAME' => $name, 
-	
-					'L_FORUM_DELETE' => $lang['Forum_delete'], 
-					'L_FORUM_DELETE_EXPLAIN' => $lang['Forum_delete_explain'], 
-					'L_MOVE_CONTENTS' => $lang['Move_contents'], 
-					'L_FORUM_NAME' => $lang['Forum_name'], 
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['forum']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['forum'], $data['forum_name']),
+				
+					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['forum']),
+					'L_CAT'			=> $lang['common_category'],
+					'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['forum']),
 					
-					'S_FIELDS' => $s_fields,
-					'S_FORUM_ACTION' => append_sid('admin_forums.php'), 
-					'S_SELECT_TO' => $select_to,
-					'S_SUBMIT_VALUE' => $buttonvalue)
-				);
-	
+					'L_SUB'			=> $lang['sub'],
+					'L_MAIN'		=> $lang['main'],
+					'L_ICON'		=> $lang['icon'],
+					'L_COPY'		=> $lang['copy'],
+					
+					'L_STATUS'		=> $lang['status'],
+					'L_LOCKED'		=> $lang['locked'],
+					'L_UNLOCKED'	=> $lang['unlocked'],
+					
+					'L_LEGEND'		=> $lang['legend'],
+					'L_LEGEND_EX'	=> $lang['legend_ex'],
+					
+					'L_AUTH'		=> sprintf($lang['sprintf_auth'], $lang['forum']),
+					'L_SIMPLE'		=> $lang['auth_simple'],
+					'L_EXPAND'		=> $lang['auth_extended'],
+					
+					'NAME'			=> $data['forum_name'],
+					'DESC'			=> $data['forum_desc'],
+				#	'FIELD'			=> str_replace('profile_', '', $data['profile_field']),
+					
+					'PATH'			=> $root_path . 'images/forum/icon/',
+					'IMAGE'			=> ( $data['forum_icon'] ) ? $root_path . 'images/forum/icon/' . $data['forum_icon'] : $images['icon_acp_spacer'],
+					
+					'S_SUB_NO'		=> (!$data['forum_sub'] ) ? 'checked="checked"' : '',
+					'S_SUB_YES'		=> ( $data['forum_sub'] ) ? 'checked="checked"' : '',
+					'S_AUTH_SIMPLE'	=> (!$data['forum_auth'] ) ? 'checked="checked"' : '',
+					'S_AUTH_EXPAND'	=> ( $data['forum_auth'] ) ? 'checked="checked"' : '',
+					'S_UNLOCKED'	=> (!$data['forum_status'] ) ? 'checked="checked"' : '',
+					'S_LOCKED'		=> ( $data['forum_status'] ) ? 'checked="checked"' : '',
+					'S_LEGEND_NO'	=> (!$data['forum_legend'] ) ? 'checked="checked"' : '',
+					'S_LEGEND_YES'	=> ( $data['forum_legend'] ) ? 'checked="checked"' : '',
+					
+					'S_SUB'		=> ( $data['forum_sub'] ) ? '' : 'none',
+					'S_MAIN'	=> ( $data['forum_sub'] ) ? 'none' : '',
+					'S_SIMPLE'	=> ( $data['forum_auth'] ) ? 'none' : '',
+					'S_EXPAND'	=> ( $data['forum_auth'] ) ? '' : 'none',
+					
+					'S_COPY'	=> $s_copy,
+					'S_FORMS'	=> $s_forms,
+					'S_ORDER'	=> $s_order,
+					'S_SORDER'	=> $s_sorder,
+					
+					'S_IMAGE'	=> select_box_files('post', 'forum_icon', $root_path . 'images/forum/icon/', $data['forum_icon']),
+						
+					'S_ACTION'	=> append_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+				
+				if ( request('submit', 1) )
+				{
+					$data = array(
+								'forum_name'			=> request('forum_name', 2),
+								'cat_id'				=> request('cat_id', 0),
+								'forum_sub'				=> request('forum_sub', 0),
+								'forum_desc'			=> request('forum_desc', 2),
+								'forum_icon'			=> request('forum_icon', 2),
+								'forum_status'			=> request('forum_status', 1),
+								'forum_legend'			=> request('forum_legend', 1),
+								'forum_order'			=> ( request('forum_order_new', 0) ) ? request('forum_order_new', 0) : request('forum_order', 0),
+								'forum_auth'			=> request('forum_auth', 1),
+								'auth_view'				=> request('auth_view', 1),
+								'auth_read'				=> request('auth_read', 1),
+								'auth_post'				=> request('auth_post', 1),
+								'auth_reply'			=> request('auth_reply', 1),
+								'auth_edit'				=> request('auth_edit', 1),
+								'auth_delete'			=> request('auth_delete', 1),
+								'auth_sticky'			=> request('auth_sticky', 1),
+								'auth_announce'			=> request('auth_announce', 1),
+								'auth_globalannounce'	=> request('auth_globalannounce', 1),
+								'auth_poll'				=> request('auth_poll', 1),
+								'auth_pollcreate'		=> request('auth_pollcreate', 1),
+							);
+							
+					$auth_copy = request('auth_copy', 1);
+					
+					$type = ( request('sub', 1) ) ? 'sub' : 'forum';
+					$t_id = ( request('sub', 1) ) ? $data['forum_sub'] : $data['cat_id'];
+					
+					if ( request('sub', 1) )
+					{
+						$data['cat_id']			= '0';
+						$data['forum_order']	= request('forum_suborder', 0);
+						$data['forum_legend']	= '0';
+					}
+					else
+					{
+						$data['forum_sub'] = '0';
+					}
+					
+					if ( $data['forum_order'] == '0' )
+					{
+						$order = ( request('sub', 1) ) ? 'forum_sub = ' . $data['forum_sub'] : 'cat_id = ' . $data['cat_id'];
+						
+						$data['forum_order'] = dmax(FORUM, 'forum_order', $order);
+					}
+					
+					if ( $data['forum_auth'] == '0' || $auth_copy )
+					{
+						if ( !$auth_copy )
+						{
+							$simple = request('simpleauth', 0);
+							
+							foreach ( $simple_auth_ary[$simple] as $key_s => $value_s )
+							{
+								foreach ( $forum_auth_fields as $key_f => $value_f )
+								{
+									if ( $key_s == $key_f )
+									{
+										$data[$value_f] = $value_s;
+									}
+								}
+							}
+						}
+						else
+						{
+							$auth = data(FORUM, $auth_copy, false, 1, 1);
+
+							foreach ( $auth as $key_s => $value_s )
+							{
+								foreach ( $forum_auth_fields as $key_f => $value_f )
+								{
+									if ( $key_s == $value_f )
+									{
+										$data[$value_f] = $value_s;
+									}
+								}
+							}
+						}
+					}
+					
+					$error .= ( !$data['forum_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+				#	$error .= ( !$data['forum_desc'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_profilefield'] : '';
+					
+					if ( !$error )
+					{
+						if ( $mode == '_create' )
+						{
+							sql(FORUM, 'insert', $data);
+							
+							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+						}
+						else
+						{
+							sql(FORUM, 'update', $data, 'forum_id', $data_id);
+							
+							 $message = $lang['update']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
+								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+						}
+						
+						#$oCache -> sCachePath = './../cache/';
+						#$oCache -> deleteCache('authlist');
+						
+						orders_new(FORUM, $type, $t_id);
+						
+						log_add(LOG_ADMIN, $log, $mode, $data['forum_name']);
+						message(GENERAL_MESSAGE, $message);
+					}
+					else
+					{
+						log_add(LOG_ADMIN, $log, $mode, $error);
+						
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+					}
+				}
+				
 				$template->pparse('body');
+				
 				break;
-	
-			case 'movedelcat':
-				//
-				// Move or delete a category in the DB
-				//
-				$from_id = intval($HTTP_POST_VARS['from_id']);
-				$to_id = intval($HTTP_POST_VARS['to_id']);
-	
-				if (!empty($to_id))
+				
+			case '_order':
+				
+				update(FORUM, 'forum', $move, $data_id);
+				orders(FORUM, $data_type);
+				
+				log_add(LOG_ADMIN, $log, $mode);
+				
+				$index = true;
+				
+				break;
+				
+			case '_order_sub':
+				
+				update(FORUM, 'forum', $move, $data_id);
+				orders_new(FORUM, 'sub', $data_form);
+				
+				log_add(LOG_ADMIN, $log, $mode);
+				
+				$index = true;
+				
+				break;
+				
+			case '_delete':
+			
+				$data = data(FORUM, $data_id, false, 1, 1);
+			
+				if ( $data_id && $confirm )
 				{
-					$sql = "SELECT *
-						FROM " . CATEGORIES . "
-						WHERE cat_id IN ($from_id, $to_id)";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, "Couldn't verify existence of categories", "", __LINE__, __FILE__, $sql);
-					}
-					if($db->sql_numrows($result) != 2)
-					{
-						message(GENERAL_ERROR, "Ambiguous category ID's", "", __LINE__, __FILE__);
-					}
-	
-					$sql = "UPDATE " . FORUMS . "
-						SET cat_id = $to_id
-						WHERE cat_id = $from_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, "Couldn't move forums to other category", "", __LINE__, __FILE__, $sql);
-					}
-				}
-	
-				$sql = "DELETE FROM " . CATEGORIES ."
-					WHERE cat_id = $from_id";
+					$type = ( $data['forum_sub'] ) ? 'sub' : 'forum';
+					$t_id = ( $data['forum_sub'] ) ? $data['forum_sub'] : $data['cat_id'];
 					
+				#	sql(GAMES, 'delete', false, 'game_id', $data_id);
+					$sql = "DELETE FROM " . FORUM . " WHERE forum_id = $data_id";
+					if ( !$db->sql_query($sql) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					
+					orders_new(FORUM, $type, $t_id);
+					
+					log_add(LOG_ADMIN, $log, $mode, $data['forum_name']);
+					message(GENERAL_MESSAGE, $message);
+				}
+				else if ( $data_id && !$confirm )
+				{
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
+		
+					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+		
+					$template->assign_vars(array(
+						'M_TITLE'	=> $lang['common_confirm'],
+						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['forum_name']),
+
+						'S_ACTION'	=> append_sid($file),
+						'S_FIELDS'	=> $fields,
+					));
+				}
+				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['forum'])); }
+				
+				$template->pparse('body');
+				
+				break;
+			
+			case '_create_cat':
+			case '_update_cat':
+			
+				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
+				$template->assign_block_vars('_input_cat', array());
+				
+				if ( $mode == '_create_cat' && !(request('submit', 1)) )
+				{
+					$data = array(
+								'cat_name'	=> request('cat_name', 2),
+								'cat_order'	=> '',
+							);
+				}
+				else if ( $mode == '_update_cat' && !(request('submit', 1)) )
+				{
+					$data = data(FORUM_CAT, $data_cat, false, 1, 1);
+				}
+				else
+				{
+					$data = array(
+								'cat_name'	=> request('cat_name', 2),
+								'cat_order'	=> ( request('cat_order_new', 0) ) ? request('cat_order_new', 0) : request('cat_order', 0),
+							);
+				}
+				
+				$sql = "SELECT * FROM " . FORUM_CAT . " ORDER BY cat_order ASC";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message(GENERAL_ERROR, "Couldn't delete category", "", __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-	
-			//	$message = $lang['Forums_updated'] . "<br><br>" . sprintf($lang['Click_return_forumadmin'], '<a href="' . append_sid('admin_forums.php') . "\">", "</a>") . "<br><br>" . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid('index.php?pane=right") . "\">", "</a>");
-	
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-	
-			case 'forum_order':
-				//
-				// Change order of forums in the DB
-				//
-				$move = intval($HTTP_GET_VARS['move']);
-				$forum_id = intval($HTTP_GET_VARS[POST_FORUM_URL]);
-	
-				$forum_info = get_info('forum', $forum_id);
-	
-				$cat_id = $forum_info['cat_id'];
-	
-				$sql = "UPDATE " . FORUMS . "
-					SET forum_order = forum_order + $move
-					WHERE forum_id = $forum_id";
-				if ( !($result = $db->sql_query($sql)) )
+				$cats = $db->sql_fetchrowset($result);
+				
+				$s_order = '';
+				
+				if ( $cats )
 				{
-					message(GENERAL_ERROR, "Couldn't change category order", "", __LINE__, __FILE__, $sql);
+					$s_order .= "<select class=\"select\" name=\"cat_order_new\" id=\"cat_order\">";
+					$s_order .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+					
+					for ( $i = 0; $i < count($cats); $i++ )
+					{
+						$cat_name	= $cats[$i]['cat_name'];
+						$cat_order	= $cats[$i]['cat_order'];
+						
+						$disabled	= ( $cat_order == $data['cat_order'] ) ? ' disabled="disabled"' : '';
+						
+						$s_order .= ( $cat_order == 10 ) ? "<option value=\"5\"$disabled>" . sprintf($lang['sprintf_select_before'], $cat_name) . "</option>" : '';
+						$s_order .= "<option value=\"" . ( $cat_order + 5 ) . "\"$disabled>" . sprintf($lang['sprintf_select_order'], $cat_name) . "</option>";
+					}
+					
+					$s_order .= '</select>';
 				}
-	
-				orders('forum', $forum_info['cat_id']);
-				$s_index = TRUE;
-	
+				else
+				{
+					$s_order .= $lang['no_entry'];
+				}
+				
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
+				$fields .= "<input type=\"hidden\" name=\"cat_order\" value=\"" . $data['cat_order'] . "\" />";
+				
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['forum']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode)], $lang['forum_c'], $data['cat_name']),
+					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['forum']),
+					
+					'NAME'		=> $data['cat_name'],
+					
+					'S_ORDER'	=> $s_order,
+					
+					'S_ACTION'	=> append_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+				
+				if ( request('submit', 1) )
+				{
+					$data = array(
+								'cat_name'	=> request('cat_name', 2),
+								'cat_order'	=> ( request('cat_order_new', 0) ) ? request('cat_order_new', 0) : request('cat_order', 0),
+							);
+							
+					$error .= ( !$data['cat_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					
+					$data['cat_order'] = ( !$data['cat_order'] ) ? dmax(FORUM_CAT, 'cat_order', '') : $data['cat_order'];
+					
+					if ( !$error )
+					{
+						if ( $mode == '_create_cat' )
+						{
+							sql(FORUM_CAT, 'insert', $data);
+							
+							$message = $lang['create_c'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+						}
+						else
+						{
+							sql(FORUM_CAT, 'update', $data, 'cat_id', $data_cat);
+							
+							$message = $lang['update_c']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
+								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url_c=$data_cat") . '">', '</a>');
+						}
+						
+						orders(FORUM_CAT);
+						
+						log_add(LOG_ADMIN, $log, $mode, $data['cat_name']);
+						message(GENERAL_MESSAGE, $message);
+					}
+					else
+					{
+						log_add(LOG_ADMIN, $log, $mode, $error);
+						
+						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+					}
+				}
+				
+				$template->pparse('body');
+			
 				break;
 				
-			case 'cat_order':
+			case '_order_cat':
 				
-				update(CATEGORIES, 'cat', $move, $data_cat);
-				orders(CATEGORIES, -1);
+				update(FORUM_CAT, 'cat', $move, $data_cat);
+				orders(FORUM_CAT);
 				
-				$s_index = TRUE;
-	
+				log_add(LOG_ADMIN, $log, $mode);
+				
+				$index = true;
+				
 				break;
-	
-			case 'forum_sync':
-				sync('forum', intval($HTTP_GET_VARS[POST_FORUM_URL]));
-				$s_index = TRUE;
-	
+				
+			case '_delete_cat':
+			
+				$data = data(FORUM_CAT, $data_cat, false, 1, 1);
+			
+				if ( $data_cat && $confirm )
+				{
+					sql(FORUM_CAT, 'delete', false, 'cat_id', $data_cat);
+					
+					$message = $lang['delete_c'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					
+				#	$oCache -> sCachePath = './../cache/';
+				#	$oCache -> deleteCache('_display_navi_news');
+					
+					orders(PROFILE_CAT);
+					
+					log_add(LOG_ADMIN, $log, $mode, $data['cat_name']);
+					message(GENERAL_MESSAGE, $message);
+				}
+				else if ( $data_cat && !$confirm )
+				{
+					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
+		
+					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+					$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
+		
+					$template->assign_vars(array(
+						'M_TITLE'	=> $lang['common_confirm'],
+						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm_c'], $data['cat_name']),
+
+						'S_ACTION'	=> append_sid($file),
+						'S_FIELDS'	=> $fields,
+					));
+				}
+				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['forum_cat'])); }
+				
+				$template->pparse('body');
+				
 				break;
-	
-			default:
-				message(GENERAL_MESSAGE, $lang['No_mode']);
-				break;
+				
+			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;
 		}
 	}
 	
-	//
-	// Start page proper
-	//
 	$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
 	$template->assign_block_vars('_display', array());
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['forum']),
-		
+		'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['forum']),
 		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['forum']),
-		'L_CREATE_CATEGORY'	=> sprintf($lang['sprintf_new_create'], $lang['category']),
-				
-	#	'L_FORUM_TITLE'		=> $lang['Forum_admin'], 
-	#	'L_FORUM_EXPLAIN'	=> $lang['Forum_admin_explain'], 
-	#	'L_CREATE_FORUM'	=> $lang['Create_forum'], 
-	#	'L_CREATE_CATEGORY'	=> $lang['Create_category'], 
-	#	'L_EDIT'			=> $lang['Edit'], 
-	#	'L_DELETE'			=> $lang['Delete'], 
-	#	'L_MOVE_UP'			=> $lang['move_up'], 
-	#	'L_MOVE_DOWN'		=> $lang['move_down'], 
-	#	'L_RESYNC'			=> $lang['Resync'],
+		'L_CREATE_CAT'		=> sprintf($lang['sprintf_new_create'], $lang['forum_c']),
 		
-		'S_ACTION'	=> append_sid('admin_forums.php'),
+		'L_AUTH'			=> sprintf($lang['sprintf_auth'], $lang['forum']),
+		
+		'S_CREATE_CAT'		=> append_sid("$file?mode=_create_cat"),
+		'S_CREATE_FORUM'	=> append_sid("$file?mode=_create"),
+		
 	));
 	
-	$sql = 'SELECT MAX(cat_order) AS max FROM ' . CATEGORIES;
-	$result = $db->sql_query($sql);
-	$max_cat = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
+	$max = get_data_max(FORUM_CAT, 'cat_order', '');
+	$tmp = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
+#	$tmp = get_data_array(FORUM_CAT, '', 'cat_order', 'ASC');
 	
-	$sql = 'SELECT cat_id, cat_title, cat_order
-				FROM ' . CATEGORIES . '
-				ORDER BY cat_order';
-	if( !$q_categories = $db->sql_query($sql) )
+	if ( $tmp )
 	{
-		message(GENERAL_ERROR, "Could not query categories list", "", __LINE__, __FILE__, $sql);
-	}
-	
-	if( $total_categories = $db->sql_numrows($q_categories) )
-	{
-		$category_rows = $db->sql_fetchrowset($q_categories);
-		
-		$sql = "SELECT *
-			FROM " . FORUMS . "
-			ORDER BY cat_id, forum_order";
-		if(!$q_forums = $db->sql_query($sql))
+		for ( $i = 0; $i < count($tmp); $i++ )
 		{
-			message(GENERAL_ERROR, "Could not query forums information", "", __LINE__, __FILE__, $sql);
-		}
-	
-		if( $total_forums = $db->sql_numrows($q_forums) )
-		{
-			$forum_rows = $db->sql_fetchrowset($q_forums);
-		}
-		
-		//
-		// Okay, let's build the index
-		//
-		$gen_cat = array();
-	
-		for($i = 0; $i < $total_categories; $i++)
-		{
-			$cat_id = $category_rows[$i]['cat_id'];
+			$cat_id = $tmp[$i]['cat_id'];
 			
-			$sql = "SELECT MAX(forum_order) AS max$cat_id FROM " . FORUMS . " WHERE cat_id = $cat_id";
-			$result = $db->sql_query($sql);
-			$max_forum = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
+			$forms = data(FORUM, 'cat_id = ' . $cat_id, 'cat_id, forum_order ASC', 1, false);
 			
-		#	'MOVE_UP'	=> ( $data[$i]['game_order'] != '10' )			? '<a href="' . append_sid('admin_games.php?mode=_order&amp;move=-15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-		#	'MOVE_DOWN'	=> ( $data[$i]['game_order'] != $maxo['max'] )	? '<a href="' . append_sid('admin_games.php?mode=_order&amp;move=15&amp;' . POST_GAMES_URL . '=' . $game_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
-	
-			$template->assign_block_vars('_display._cat_row', array( 
-				'S_ADD_FORUM_SUBMIT'	=> "addforum[$cat_id]",
-				'S_ADD_FORUM_NAME'		=> "forumname[$cat_id]",
-				
-				'CAT_ID'				=> $cat_id,
-				'CAT_DESC'				=> $category_rows[$i]['cat_title'],
-				
-				'MOVE_UP'				=> ( $category_rows[$i]['cat_order'] != '10' )				? '<a href="' . append_sid('admin_forums.php?mode=cat_order&amp;move=-15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'				=> ( $category_rows[$i]['cat_order'] != $max_cat['max'] )	? '<a href="' . append_sid('admin_forums.php?mode=cat_order&amp;move=15&amp;' . POST_CATEGORY_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
-				
-				'U_CAT_UPDATE'			=> append_sid("admin_forums.php?mode=_updatecat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-				'U_CAT_DELETE'			=> append_sid("admin_forums.php?mode=_deletecat&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-				
-				'U_CAT_MOVE_UP'			=> append_sid("admin_forums.php?mode=cat_order&amp;move=-15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-				'U_CAT_MOVE_DOWN'		=> append_sid("admin_forums.php?mode=cat_order&amp;move=15&amp;" . POST_CATEGORY_URL . "=$cat_id"),
-				'U_VIEWCAT'				=> append_sid($root_path."forum.php?" . POST_CATEGORY_URL . "=$cat_id"))
-			);
-	
-			for($j = 0; $j < $total_forums; $j++)
+			$sql = "SELECT MAX(forum_order) AS max$cat_id FROM " . FORUM . " WHERE cat_id = $cat_id";
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				$class = ($j % 2) ? 'row_class1' : 'row_class2';
-				$forum_id = $forum_rows[$j]['forum_id'];
-
-				if ( $forum_rows[$j]['cat_id'] == $cat_id )
-				{
-					$icon_up	= ( $forum_rows[$j]['forum_order'] != '10' ) ? $lang['move_up'] : '';
-					$icon_down	= ( $forum_rows[$j]['forum_order'] != $max_forum['max'.$cat_id] ) ? $lang['move_down'] : '';
-					$simple_auth = $simple_auth_types[simple_auth($forum_rows[$j])];
-			
-					$template->assign_block_vars('_display._cat_row._forum_row',	array(
-						'CLASS'			=> $class,
-						'FORUM_NAME' => $forum_rows[$j]['forum_name'],
-						'FORUM_DESC' => $forum_rows[$j]['forum_desc'],
-						'ROW_COLOR' => $row_color,
-						'NUM_TOPICS' => $forum_rows[$j]['forum_topics'],
-						'NUM_POSTS' => $forum_rows[$j]['forum_posts'],
-						
-						'L_MOVE_UP'		=> $icon_up,
-						'L_MOVE_DOWN'		=> $icon_down,
-						
-						'PERMISSIONS' => $simple_auth,
-						'U_FORUM_PERMISSIONS' => append_sid('admin_forumauth.php?" . POST_FORUM_URL . "=$forum_id&amp;adv=1'),
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$max_forum = $db->sql_fetchrow($result);
 	
-						'U_VIEWFORUM' => append_sid($root_path."viewforum.php?" . POST_FORUM_URL . "=$forum_id'),
-						'U_FORUM_EDIT' => append_sid('admin_forums.php?mode=editforum&amp;" . POST_FORUM_URL . "=$forum_id'),
-						'U_FORUM_DELETE' => append_sid('admin_forums.php?mode=deleteforum&amp;" . POST_FORUM_URL . "=$forum_id'),
-						'U_FORUM_MOVE_UP' => append_sid('admin_forums.php?mode=forum_order&amp;move=-15&amp;" . POST_FORUM_URL . "=$forum_id'),
-						'U_FORUM_MOVE_DOWN' => append_sid('admin_forums.php?mode=forum_order&amp;move=15&amp;" . POST_FORUM_URL . "=$forum_id'),
-						'U_FORUM_RESYNC' => append_sid('admin_forums.php?mode=forum_sync&amp;" . POST_FORUM_URL . "=$forum_id"))
-					);
-	
-				}// if ... forumid == catid
+			$template->assign_block_vars('_display._cat_row', array(
+				'NAME'		=> $tmp[$i]['cat_name'],
 				
-			} // for ... forums
-	
-		} // for ... categories
-	
-	}// if ... total_categories
+				'MOVE_UP'	=> ( $tmp[$i]['cat_order'] != '10' )		? '<a id="right" href="' . append_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" /></a>',
+				'MOVE_DOWN'	=> ( $tmp[$i]['cat_order'] != $max['max'] )	? '<a id="right" href="' . append_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" /></a>',
+				
+				'U_UPDATE'	=> append_sid("$file?mode=_update_cat&amp;$url_c=$cat_id"),
+				'U_DELETE'	=> append_sid("$file?mode=_delete_cat&amp;$url_c=$cat_id"),
+			
+				'S_SUBMIT'	=> "add_forum[$cat_id]",
+				'S_NAME'	=> "forum_name[$cat_id]",
+			));
+			
+			if ( $forms )
+			{
+				for ( $j = 0; $j < count($forms); $j++ )
+				{
+					$forum_id = $forms[$j]['forum_id'];
+					
+					$subs = data(FORUM, 'forum_sub = ' . $forum_id, 'forum_order ASC', 1, false);
+					
+					$sql = "SELECT MAX(forum_order) AS max$forum_id FROM " . FORUM . " WHERE forum_sub = $forum_id";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$max_sub = $db->sql_fetchrow($result);
+						
+					if ( $forms[$j]['cat_id'] == $cat_id )
+					{
+						$simple_auth = $simple_auth_types[simple_auth($forms[$j])];
+						
+						$template->assign_block_vars('_display._cat_row._forum_row', array(
+							'NAME'		=> $forms[$j]['forum_name'],
+							'DESC'		=> $forms[$j]['forum_desc'],
+							'POSTS'		=> $forms[$j]['forum_posts'],
+							'TOPICS'	=> $forms[$j]['forum_topics'],
+							
+							'AUTH'		=> $simple_auth,
+							
+							'MOVE_UP'	=> ( $forms[$j]['forum_order'] != '10' )						? '<a href="' . append_sid("$file?mode=_order&amp;cat_type=$cat_id&amp;move=-15&amp;$url=$forum_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+							'MOVE_DOWN'	=> ( $forms[$j]['forum_order'] != $max_forum['max' . $cat_id] )	? '<a href="' . append_sid("$file?mode=_order&amp;cat_type=$cat_id&amp;move=+15&amp;$url=$forum_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+							
+							'U_RESYNC' => append_sid("$file?mode=_resync&amp;$url=$forum_id"),
+							'U_UPDATE' => append_sid("$file?mode=_update&amp;$url=$forum_id"),						
+							'U_DELETE' => append_sid("$file?mode=_delete&amp;$url=$forum_id"),
+						));
+					}
+					
+					for ( $k = 0; $k < count($subs); $k++ )
+					{
+						$sub_id = $subs[$k]['forum_id'];
+						
+						$simple_auth_sub = $simple_auth_types[simple_auth($subs[$k])];
+						
+						if ( $forum_id == $subs[$k]['forum_sub'] )
+						{
+							$template->assign_block_vars('_display._cat_row._forum_row._sub_row', array(
+								'NAME'		=> $subs[$k]['forum_name'],
+								'POSTS'		=> $subs[$k]['forum_posts'],
+								'TOPICS'	=> $subs[$k]['forum_topics'],
+								
+								'AUTH'		=> $simple_auth_sub,
+								
+								'MOVE_UP'	=> ( $subs[$k]['forum_order'] != '10' )							? '<a href="' . append_sid("$file?mode=_order_sub&amp;cat_form=$forum_id&amp;move=-15&amp;$url=$sub_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+								'MOVE_DOWN'	=> ( $subs[$k]['forum_order'] != $max_sub['max' . $forum_id] )	? '<a href="' . append_sid("$file?mode=_order_sub&amp;cat_form=$forum_id&amp;move=+15&amp;$url=$sub_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+								
+								'U_RESYNC' => append_sid("$file?mode=_resync&amp;$url=$sub_id"),
+								'U_UPDATE' => append_sid("$file?mode=_update&amp;$url=$sub_id"),						
+								'U_DELETE' => append_sid("$file?mode=_delete&amp;$url=$sub_id"),
+							));
+						}
+					}					
+				}
+			}
+			else { $template->assign_block_vars('_display._cat_row._no_entry', array()); }
+		}	
+	}
 }
 
 $template->pparse('body');

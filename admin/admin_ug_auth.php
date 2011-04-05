@@ -1,36 +1,16 @@
 <?php
-/***************************************************************************
- *                            admin_ug_auth.php
- *                            -------------------
- *   begin                : Saturday, Feb 13, 2001
- *   copyright            : (C) 2001 The phpBB Group
- *   email                : support@phpbb.com
- *
- *   $Id: admin_ug_auth.php 8378 2008-02-10 17:18:29Z acydburn $
- *
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
 
 if( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	if ( $userauth['auth_user_perm'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['users']['permissions'] = $root_file . "?mode=user";
+		$module['_headmenu_04_users']['_submenu_perm'] = $root_file . "?mode=user";
 	}
 	
 	if ( $userauth['auth_groups_perm'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_groups']['_submenu_auth'] = $root_file . "?mode=group";
+		$module['_headmenu_06_groups']['_submenu_perm'] = $root_file . "?mode=group";
 	}
 
 	return;
@@ -451,7 +431,7 @@ else
 				if ( empty($adv) )
 				{
 					$sql = "SELECT f.* 
-						FROM " . FORUMS . " f, " . CATEGORIES . " c
+						FROM " . FORUM . " f, " . FORUM_CAT . " c
 						WHERE f.cat_id = c.cat_id
 						ORDER BY c.cat_order, f.forum_order ASC";
 					if ( !($result = $db->sql_query($sql)) )
@@ -502,7 +482,7 @@ else
 				}
 	
 				$sql = 'SELECT f.* 
-					FROM ' . FORUMS . ' f, ' . CATEGORIES . ' c
+					FROM ' . FORUM . ' f, ' . FORUM_CAT . ' c
 					WHERE f.cat_id = c.cat_id
 					ORDER BY c.cat_order, f.forum_order';
 				if ( !($result = $db->sql_query($sql)) )
@@ -788,7 +768,7 @@ else
 		// Front end
 		//
 		$sql = "SELECT f.* 
-			FROM " . FORUMS . " f, " . CATEGORIES . " c
+			FROM " . FORUM . " f, " . FORUM_CAT . " c
 			WHERE f.cat_id = c.cat_id
 			ORDER BY c.cat_order, f.forum_order ASC";
 		if ( !($result = $db->sql_query($sql)) )
@@ -1117,8 +1097,8 @@ else
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
-		$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="adv" value="' . $adv . '" />';
-		$s_fields .= ( $mode == 'user' ) ? '<input type="hidden" name="' . POST_USER_URL . '" value="' . $user_id . '" />' : '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
+		$fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="adv" value="' . $adv . '" />';
+		$fields .= ( $mode == 'user' ) ? '<input type="hidden" name="' . POST_USER_URL . '" value="' . $user_id . '" />' : '<input type="hidden" name="' . POST_GROUPS_URL . '" value="' . $group_id . '" />';
 	
 		if ( $mode == 'user' )
 		{
@@ -1156,7 +1136,7 @@ else
 	
 			'S_COLUMN_SPAN' => $s_column_span,
 			'S_AUTH_ACTION' => append_sid('admin_ug_auth.php'), 
-			'S_FIELDS' => $s_fields)
+			'S_FIELDS' => $fields)
 		);
 	}
 	else
@@ -1223,7 +1203,7 @@ else
 			));
 		}
 	
-		$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" />';
+		$fields = "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 	
 		$l_type = ( $mode == 'user' ) ? 'USER' : 'GROUP';
 	
@@ -1233,7 +1213,7 @@ else
 			'L_' . $l_type . '_SELECT' => ( $mode == 'user' ) ? $lang['Select_a_User'] : $lang['Select_a_Group'],
 			'L_LOOK_UP' => ( $mode == 'user' ) ? $lang['Look_up_User'] : $lang['Look_up_Group'],
 	
-			'S_FIELDS' => $s_fields, 
+			'S_FIELDS' => $fields, 
 			'S_' . $l_type . '_ACTION' => append_sid('admin_ug_auth.php'))
 		);
 	

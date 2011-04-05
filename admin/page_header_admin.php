@@ -51,7 +51,8 @@ $current_page = ( isset($current) ) ? $lang[$current] : 'info';
 $template->assign_vars(array(
 							 
 	'L_HEADER'		=> sprintf($lang['index_header'], $config['page_name'], $current_page),
-	'L_DATA_INPUT'	=> $lang['common_data_input'],
+	'L_INPUT_DATA'	=> $lang['common_input_data'],
+	'L_ORDER'		=> $lang['common_order'],
 	
 	'NO_ENTRY'		=> $lang['no_entry'],
 							 
@@ -166,7 +167,7 @@ while( list($cat, $action_array) = each($module) )
 
 	$row_count = 0;
 	
-	while( list($action, $file)	= each($action_array) )
+	while ( list($action, $file)	= each($action_array) )
 	{
 		$row_color = ( !($row_count%2) ) ? $theme['td_color1'] : $theme['td_color2'];
 		$row_class = ( !($row_count%2) ) ? $theme['td_class1'] : $theme['td_class2'];

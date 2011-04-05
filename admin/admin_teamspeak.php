@@ -1,35 +1,12 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userauth['auth_teamspeak'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_server']['_submenu_teamspeak'] = $root_file;
+		$module['_headmenu_09_server']['_submenu_teamspeak'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +16,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_authlist';
 	
 	include('./pagestart.php');
@@ -57,7 +34,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_teamspeak.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid('admin_teamspeak.php', true)) : false;
 	
 	function ts_time($time)
 	{
@@ -83,7 +60,7 @@ else
 				$template->set_filenames(array('body' => 'style/acp_teamspeak.tpl'));
 				$template->assign_block_vars('_input', array());
 				
-				if ( $mode == '_create' && !(request('submit', 2)) )
+				if ( $mode == '_create' && !(request('submit', 1)) )
 				{
 					$data = array (
 						'teamspeak_name'		=> request('authlist_name', 2),
@@ -101,7 +78,7 @@ else
 						'teamspeak_show'		=> '0',
 					);
 				}
-				else if ( $mode == '_update' && !(request('submit', 2)) )
+				else if ( $mode == '_update' && !(request('submit', 1)) )
 				{
 					$data = get_data(TEAMSPEAK, $data_id, 0);
 				}
@@ -130,7 +107,7 @@ else
 				}
 				*/
 				$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $data_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $data_id . '" />';
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['teamspeak']),
@@ -173,12 +150,12 @@ else
 					'S_VIEWER_YES'	=> ( $data['teamspeak_show'] ) ? ' checked="checked"' : '',
 					'S_VIEWER_NO'	=> ( !$data['teamspeak_show'] ) ? ' checked="checked"' : '',
 
-					'S_FIELDS'	=> $s_fields,
+					'S_FIELDS'	=> $fields,
 					'S_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member'),
 					'S_ACTION'	=> append_sid('admin_teamspeak.php'),
 				));
 				
-				if ( request('submit', 2) )
+				if ( request('submit', 1) )
 				{
 					$teamspeak_ip			= request('teamspeak_ip', 2);
 					$teamspeak_port			= request('teamspeak_port', 2);
@@ -257,12 +234,12 @@ else
 							
 							$message = $lang['update_teamspeak']
 								. sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>')
-								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $data_id) . '">', '</a>');
+								. sprintf($lang['return_update'], '<a href="' . append_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $data_id) . '">', '</a>');
 							log_add(LOG_ADMIN, LOG_SEK_GAMES, 'update_teamspeak');
 						}
 						
-						$oCache -> sCachePath = './../cache/';
-						$oCache -> deleteCache('teamspeak_data');
+						#$oCache -> sCachePath = './../cache/';
+						#$oCache -> deleteCache('teamspeak_data');
 						
 						message(GENERAL_MESSAGE, $message);
 					}
@@ -368,13 +345,13 @@ else
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $data_id . '" />';
+					$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $data_id . '" />';
 					
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
 						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_teamspeak'], $data['teamspeak_name']),
 						
-						'S_FIELDS'		=> $s_fields,
+						'S_FIELDS'		=> $fields,
 						'S_ACTION'		=> append_sid('admin_teamspeak.php'),
 					));
 				}
@@ -387,14 +364,10 @@ else
 				
 				break;
 			
-			default:
-			
-				message(GENERAL_ERROR, $lang['msg_no_module_select']);
-				
-				break;
+			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -416,7 +389,7 @@ else
 	}
 	$teamspeak = $db->sql_fetchrow($result);
 	
-	$s_fields = '<input type="hidden" name="mode" value="_create" />';
+	$fields = '<input type="hidden" name="mode" value="_create" />';
 					
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['teamspeak']),
@@ -424,7 +397,7 @@ else
 		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['teamspeak']),
 		'L_EXPLAIN'		=> $lang['teamspeak_explain'],
 		
-		'S_FIELDS'		=> $s_fields,
+		'S_FIELDS'		=> $fields,
 		'S_MEMBER'		=> append_sid('admin_teamspeak.php?mode=_member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_CREATE'		=> append_sid('admin_teamspeak.php?mode=_create'),
 		'S_ACTION'		=> append_sid('admin_teamspeak.php'),
@@ -477,8 +450,8 @@ else
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	
-	$s_fields = '<input type="hidden" name="mode" value="edit" />';
-	$s_fields .= '<input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak['teamspeak_id'] . '" />';
+	$fields = '<input type="hidden" name="mode" value="edit" />';
+	$fields .= '<input type="hidden" name="' . POST_TEAMSPEAK_URL . '" value="' . $teamspeak['teamspeak_id'] . '" />';
 	
 	$template->assign_vars(array(
 		'L_TITLE'		=> $lang['teamspeak_head'],
@@ -495,7 +468,7 @@ else
 		'L_SETTINGS'			=> $lang['settings'],
 		'L_DELETE'				=> $lang['common_delete'],
 		
-		'S_FIELDS'		=> $s_fields,
+		'S_FIELDS'		=> $fields,
 		'S_TEAMSPEAK_EDIT'		=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_TEAMSPEAK_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
 		'S_TEAMSPEAK_ACTION'	=> append_sid('admin_teamspeak.php'),

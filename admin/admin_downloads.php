@@ -1,35 +1,12 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_download'] )
 	{
-		$module['_headmenu_main']['_submenu_downloads'] = $root_file;
+		$module['_headmenu_01_main']['_submenu_downloads'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +16,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_downloads';
 	
 	include('./pagestart.php');
@@ -48,23 +25,31 @@ else
 	
 	load_lang('downloads');
 	
-	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
-	$data_id	= request(POST_DOWNLOAD_URL, 0);
-	$data_cat	= request(POST_DOWNLOAD_CAT_URL, 0);
+	$error	= '';
+	$index	= '';
+	$log	= LOG_SEK_GAMES;
+	$url	= POST_DOWNLOAD_URL;
+	$url_c	= POST_DOWNLOAD_CAT_URL;
+	$file	= basename(__FILE__);
+	
+	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( $start < 0 ) ? 0 : $start;
+	
+	$data_id	= request($url, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	$path_dir	= $root_path . $settings['path_downloads'] . '/';
-	$s_index	= '';
-	
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['download']);
+	$fields	= '';
+
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_download'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_downloads.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
 	
 	/*	was ein mist ....	*/
 	if ( isset($_POST['_create_file']) || isset($_POST['_create_file']) )
@@ -99,7 +84,7 @@ else
 				$template->set_filenames(array('body' => 'style/acp_downloads.tpl'));
 				$template->assign_block_vars('_input', array());
 				
-				if ( $mode == '_create' && !request('submit', 2) )
+				if ( $mode == '_create' && !request('submit', 1) )
 				{
 					$data = array(
 						'cat_title'	=> request('cat_title', 2),
@@ -108,7 +93,7 @@ else
 						'cat_order'	=> '',
 					);
 				}
-				else if ( $mode == '_update' && !request('submit', 2) )
+				else if ( $mode == '_update' && !request('submit', 1) )
 				{
 					$data = get_data(DOWNLOAD_CAT, $data_cat, 1);
 				}
@@ -122,7 +107,7 @@ else
 					);
 				}
 
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . POST_DOWNLOAD_CAT_URL . '" value="' . $data_cat . '" />';
+				$fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . $url_c . '" value="' . $data_cat . '" />';
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['download_cat']),
@@ -134,17 +119,17 @@ else
 					'TITLE'		=> $data['cat_title'],
 					'DESC'		=> $data['cat_desc'],
 					
-					'S_FIELDS'	=> $s_fields,
-					'S_ACTION'	=> append_sid('admin_downloads.php'),
+					'S_FIELDS'	=> $fields,
+					'S_ACTION'	=> append_sid($file),
 				));
 				
-				if ( request('submit', 2) )
+				if ( request('submit', 1) )
 				{
 					$cat_title		= request('cat_title', 2);
 					$cat_desc		= request('cat_desc', 3);
 					$cat_icon		= request('cat_icon', 0);
 					
-					$error = ( !$cat_title ) ? $lang['msg_select_title'] : '';
+					$error = ( !$cat_title ) ? $lang['msg_empty_title'] : '';
 					
 					if ( !$error )
 					{
@@ -160,7 +145,7 @@ else
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$message = $lang['create_download_cat'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid('admin_downloads.php') . '">', '</a>');
+							$message = $lang['create_download_cat'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid($file) . '">', '</a>');
 							log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'create_download_cat');
 						}
 						else
@@ -177,8 +162,8 @@ else
 							}
 							
 							$message = $lang['update_download_cat']
-								. sprintf($lang['click_return_download_cat'], '<a href="' . append_sid('admin_downloads.php') . '">', '</a>')
-								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_downloads.php?mode=_update&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $data_cat) . '">', '</a>');
+								. sprintf($lang['return_sub'], '<a href="' . append_sid($file) . '">', '</a>')
+								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=_update&amp;$url_c=$data_cat") . '">', '</a>');
 							log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'update_download_cat');
 						}
 						message(GENERAL_MESSAGE, $message);
@@ -202,7 +187,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'acp_download_cat_order');
 				
-				$s_index = TRUE;
+				$index = true;
 				
 				break;
 				
@@ -218,7 +203,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					$message = $lang['delete_download_cat'] . sprintf($lang['click_return_download_cat'], '<a href="' . append_sid('admin_downloads.php') . '">', '</a>');
+					$message = $lang['delete_download_cat'] . sprintf($lang['click_return_download_cat'], '<a href="' . append_sid($file) . '">', '</a>');
 					log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'delete_download_cat');
 					message(GENERAL_MESSAGE, $message);
 				}
@@ -226,14 +211,14 @@ else
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 			
-					$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_DOWNLOAD_CAT_URL . '" value="' . $data_cat . '" />';
+					$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . $url_c . '" value="' . $data_cat . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
 						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_download_cat'], $data['cat_title']),
 						
-						'S_FIELDS'		=> $s_fields,
-						'S_ACTION'		=> append_sid('admin_downloads.php'),
+						'S_FIELDS'		=> $fields,
+						'S_ACTION'		=> append_sid($file),
 					));
 				}
 				else
@@ -245,14 +230,10 @@ else
 				
 				break;
 	
-			default:
-			
-				message(GENERAL_ERROR, $lang['msg_no_module_select']);
-				
-				break;
+			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -262,18 +243,18 @@ else
 	$template->set_filenames(array('body' => 'style/acp_downloads.tpl'));
 	$template->assign_block_vars('_display', array());
 	
-	$s_fields = '<input type="hidden" name="mode" value="_create" />';
+	$fields = '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['download']),
+		'L_HEAD'		=> $acp_title,
 		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['download_cat']),
 		'L_CREATE_FILE'	=> sprintf($lang['sprintf_new_create'], $lang['download']),
 		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['download_cat']),
 		'L_EXPLAIN'		=> $lang['download_explain'],
 		
-		'S_FIELDS'		=> $s_fields,
-		'S_CREATE'		=> append_sid('admin_downloads.php?mode=_create'),
-		'S_ACTION'		=> append_sid('admin_downloads.php'),
+		'S_CREATE'		=> append_sid("$file?mode=_create"),
+		'S_ACTION'		=> append_sid($file),
+		'S_FIELDS'		=> $fields,
 	));
 	
 	$max	= get_data_max(DOWNLOAD_CAT, 'cat_order', '');
@@ -291,11 +272,11 @@ else
 				'FILES'		=> $data[$i]['cat_files'],
 				'DESC'		=> $data[$i]['cat_desc'],
 				
-				'MOVE_UP'	=> ( $data[$i]['cat_order'] != '10' )			? '<a href="' . append_sid('admin_downloads.php?mode=_order&amp;move=-15&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $data[$i]['cat_order'] != $max['max'] )	? '<a href="' . append_sid('admin_downloads.php?mode=_order&amp;move=15&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $data[$i]['cat_order'] != '10' )			? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data[$i]['cat_order'] != $max['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE' => append_sid('admin_downloads.php?mode=_update&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id),
-				'U_DELETE' => append_sid('admin_downloads.php?mode=_delete&amp;' . POST_DOWNLOAD_CAT_URL . '=' . $cat_id),
+				'U_UPDATE' => append_sid("$file?mode=_update&amp;$url_c=$cat_id"),
+				'U_DELETE' => append_sid("$file?mode=_delete&amp;$url_c=$cat_id"),
 			));
 		}
 	}

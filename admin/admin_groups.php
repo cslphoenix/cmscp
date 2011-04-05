@@ -1,35 +1,12 @@
 <?php
 
-/*
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010, 2011
- *	@code:	Sebastian Frickel © 2009, 2010, 2011
- *
- *	Gruppen
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_groups'] )
 	{
-		$module['_headmenu_groups']['_submenu_settings'] = $root_file;
+		$module['_headmenu_06_groups']['_submenu_settings'] = $root_file;
 	}
 	
 	return;
@@ -39,8 +16,8 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_headmenu_group';
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
+	$current	= '_submenu_group';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_upload.php');
@@ -49,34 +26,34 @@ else
 	
 	load_lang('groups');
 	
-	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
+	$error	= '';
+	$index	= '';
+	$log	= LOG_SEK_GROUPS;
+	$url	= POST_GROUPS_URL;
+	$file	= basename(__FILE__);
 	
-	$data_id	= request(POST_GROUPS_URL, 0);
+	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( $start < 0 ) ? 0 : $start;
+	
+	$data_id	= request($url, 0);
+	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$confirm	= request('confirm', 1);
-	$root_file	= basename(__FILE__);
-	
-	$error		= '';
-	$s_index	= '';
-	$s_fields	= '';
 	$path_dir	= $root_path . $settings['path_groups'] . '/';
-	
-	$p_url	= POST_GROUPS_URL;
-	$l_sec	= LOG_SEK_GROUPS;
-	
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['groups']);
+	$fields	= '';
+
 	$auth_fields	= get_authlist();
 	$auth_levels	= array('allowed', 'disallowed');
 	$auth_const		= array(AUTH_ALLOWED, AUTH_DISALLOWED);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_groups'] )
 	{
-		log_add(LOG_ADMIN, $l_sec, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $cancel ) ? redirect('admin/' . append_sid($root_file, true)) : false;
+	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
 	
 	if ( !empty($mode) )
 	{
@@ -89,7 +66,7 @@ else
 				$template->assign_block_vars('_input', array());
 				$template->assign_block_vars('_input.' . $mode, array());
 				
-				if ( $mode == '_create' && !request('submit', 2) )
+				if ( $mode == '_create' && !request('submit', 1) )
 				{
 					$max	= get_data_max(GROUPS, 'group_order', 'group_single_user = 0');
 					$data	= array(
@@ -110,9 +87,9 @@ else
 						$data[$auth_fields[$i]] = '0';
 					}
 				}
-				else if ( $mode == '_update' && !request('submit', 2) )
+				else if ( $mode == '_update' && !request('submit', 1) )
 				{
-					$data = get_data(GROUPS, $data_id, 1);
+					$data = data(GROUPS, $data_id, false, 1, 1);
 				}
 				else
 				{
@@ -143,7 +120,7 @@ else
 				{
 					$selected	= ( $data['group_access'] == $option ) ? "selected=\"selected\"" : "";
 					$protect	= ( $data['group_type'] == GROUP_SYSTEM ) ? "disabled" : "";
-					$s_access	.= "<option value=\"$option\" $selected $protect>" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
+					$s_access	.= "<option value=\"$option\" $selected $protect>" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
 				}
 				$s_access .= "</select>";
 				
@@ -152,7 +129,7 @@ else
 				{
 					$selected	= ( $data['group_type'] == $option ) ? "selected=\"selected\"" : "";
 					$protect	= ( $data['group_type'] == GROUP_SYSTEM || $option == GROUP_SYSTEM ) ? "disabled" : "";
-					$s_type		.= "<option value=\"$option\" $selected $protect>" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
+					$s_type		.= "<option value=\"$option\" $selected $protect>" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
 				}
 				$s_type .= "</select>";
 				
@@ -169,8 +146,7 @@ else
 						$selected_no	= ( $data[$auth_fields[$j]] == $auth_const[1] ) ? 'checked="checked" disabled' : 'disabled';
 					}
 					
-					$select[$j] = "";
-					$select[$j] .= "<label><input type=\"radio\" name=\"" . $auth_fields[$j] . "\" id=\"" . $auth_fields[$j] . "\" value=\"1\" $selected_yes>&nbsp;" . $lang['group_' . $auth_levels[0]] . "</label><span style=\"padding:4px;\"></span>";
+					$select[$j] = "<label><input type=\"radio\" name=\"" . $auth_fields[$j] . "\" id=\"" . $auth_fields[$j] . "\" value=\"1\" $selected_yes>&nbsp;" . $lang['group_' . $auth_levels[0]] . "</label><span style=\"padding:4px;\"></span>";
 					$select[$j] .= "<label><input type=\"radio\" name=\"" . $auth_fields[$j] . "\" id=\"deactivated\" value=\"0\" $selected_no>&nbsp;" . $lang['group_' . $auth_levels[1]] . "</label>";
 					
 					$template->assign_block_vars('_input._auth', array(
@@ -182,29 +158,31 @@ else
 					$template->assign_block_vars('_auth', array('FIELDS' => $auth_fields[$j]));
 				}
 				
-				$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
-				$s_fields .= '<input type="hidden" name="group_image" value="' . $data['group_image'] . '" />';
-				$s_fields .= '<input type="hidden" name="group_order" value="' . $data['group_order'] . '" />';
-				$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= '<input type="hidden" name="group_image" value="' . $data['group_image'] . '" />';
+				$fields .= '<input type="hidden" name="group_order" value="' . $data['group_order'] . '" />';
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['groups']),
+					'L_HEAD'		=> $acp_title,
 					'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['group'], $data['group_name']),
-					'L_MEMBER'		=> $lang['group_view_member'],
+					'L_MEMBER'		=> $lang['member'],
 					'L_OVERVIEW'	=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
-					'L_AUTH'		=> $lang['group_auth'],
-					'L_DATA'		=> $lang['group_data'],
-					'L_IMAGE'		=> $lang['group_image'],
+					
+					'L_AUTH'		=> $lang['auth'],
+					'L_DATA'		=> $lang['data'],
+					'L_IMAGE'		=> $lang['image'],
 					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['groups']),
 					'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['groups']),
-					'L_MOD'			=> $lang['group_mod'],
-					'L_ACCESS'		=> $lang['group_access'],
-					'L_TYPE'		=> $lang['group_type'],
-					'L_LEGEND'		=> $lang['group_legend'],
-					'L_COLOR'		=> $lang['group_color'],
-					'L_RANK'		=> $lang['group_rank'],
-					'L_IMAGE_UPLOAD'	=> $lang['group_image_upload'],
-					'L_IMAGE_CURRENT'	=> $lang['group_image_current'],
+					'L_MOD'			=> $lang['mod'],
+					'L_ACCESS'		=> $lang['access'],
+					'L_TYPE'		=> $lang['type'],
+					'L_LEGEND'		=> $lang['legend'],
+					'L_COLOR'		=> $lang['color'],
+					'L_RANK'		=> $lang['rank'],
+					'L_ORDER'		=> $lang['common_order'],
+					'L_IMAGE_UPLOAD'	=> $lang['upload'],
+					'L_IMAGE_CURRENT'	=> $lang['current'],
 					'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
 					
 					'NAME'			=> $data['group_name'],
@@ -221,13 +199,13 @@ else
 					'S_MOD'			=> ( $mode == '_create' ) ? select_box('user', 'select', $data['group_mod']) : '',
 					'S_ORDER'		=> select_order('select', GROUPS, 'group', '', '', $data['group_order']),
 					
-					'S_OVERVIEW'	=> append_sid($root_file . '?mode=_overview'),
-					'S_MEMBER'		=> append_sid($root_file . '?mode=_member&amp;' . $p_url . '=' . $data_id),
-					'S_FIELDS'		=> $s_fields,
-					'S_ACTION'		=> append_sid($root_file),
+					'S_OVERVIEW'	=> append_sid("$file?mode=_overview"),
+					'S_MEMBER'		=> append_sid("$file?mode=_member&amp;$url=$data_id"),
+					'S_ACTION'		=> append_sid($file),
+					'S_FIELDS'		=> $fields,
 				));
 				
-				if ( request('submit', 2) )
+				if ( request('submit', 1) )
 				{
 					$group_name		= request('group_name', 2);
 					$group_mod		= request('user_id', 0);
@@ -252,8 +230,8 @@ else
 						$sql_pic = '';
 					}
 					
-					$error .= ( !$group_name ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_name'] : '';
-					$error .= ( $mode == '_create' && $group_mod == '-1' ) ? ( $error ? '<br>' : '' ) . $lang['msg_select_user'] : '';
+					$error .= ( !$group_name ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
+					$error .= ( $mode == '_create' && $group_mod == '-1' ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_user'] : '';
 					
 					if ( !$error )
 					{
@@ -287,7 +265,7 @@ else
 							group_set_auth($group_mod, $group_id);
 							debug(group_set_auth($group_mod, $group_id));
 							
-							$message = $lang['create_group'] . sprintf($lang['click_return_group'], '<a href="' . append_sid($root_file) . '">', '</a>');
+							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 						}
 						else
 						{
@@ -372,15 +350,17 @@ else
 							}
 							
 							$message = $lang['create_group']
-								. sprintf($lang['click_return_groups'], '<a href="' . append_sid($root_file) . '">', '</a>')
-								. sprintf($lang['click_return_update'], '<a href="' . append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_id) . '">', '</a>');
+								. sprintf($lang['click_return_groups'], '<a href="' . append_sid($file) . '">', '</a>')
+								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
 						}
 						
-						log_add(LOG_ADMIN, $l_sec, $mode, $group_name);
+						log_add(LOG_ADMIN, $log, $mode, $group_name);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
 					{
+						log_add(LOG_ADMIN, $log, $mode, $error);
+						
 						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
@@ -432,16 +412,16 @@ else
 				$current_page = ( !count($groups_data) ) ? 1 : ceil( count($groups_data) / 5 );
 				
 				$template->assign_vars(array(
-					'L_HEAD'				=> sprintf($lang['sprintf_head'], $lang['groups']),
+					'L_HEAD'				=> $acp_title,
 					'L_OVERVIEW'			=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
-					'L_OVERVIEW_EXPLAIN'	=> $lang['group_overview_explain'],
+					'L_OVERVIEW_EXPLAIN'	=> $lang['overview_explain'],
 					
 					'L_GOTO_PAGE'				=> $lang['Goto_page'],
 					
-					'PAGINATION'				=> generate_pagination($root_file . '?mode=_list', count($groups_data), 5, $start),
+					'PAGINATION'				=> generate_pagination("$file?mode=_list", count($groups_data), 5, $start),
 					'PAGE_NUMBER'				=> sprintf($lang['Page_of'], ( floor( $start / 5 ) + 1 ), $current_page ), 
 		
-					'S_ACTION'			=> append_sid($root_file),
+					'S_ACTION'			=> append_sid($file),
 				));
 				
 				$template->pparse('body');
@@ -453,9 +433,9 @@ else
 				update(GROUPS, 'group', $move, $data_id);
 				orders(GROUPS, '0');
 				
-				log_add(LOG_ADMIN, $l_sec, $mode);
+				log_add(LOG_ADMIN, $log, $mode);
 				
-				$s_index = TRUE;
+				$index = true;
 
 				break;
 				
@@ -477,22 +457,22 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					$message = $lang['delete_group'] . sprintf($lang['click_return_group'], '<a href="' . append_sid($root_file) . '">', '</a>');
-					log_add(LOG_ADMIN, $l_sec, 'delete_group');
+					$message = $lang['delete_group'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					log_add(LOG_ADMIN, $log, 'delete_group');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$s_fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+					$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
 						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_group'], $data['group_name']),
 						
-						'S_FIELDS'		=> $s_fields,
-						'S_ACTION'		=> append_sid($root_file),
+						'S_FIELDS'		=> $fields,
+						'S_ACTION'		=> append_sid($file),
 					));
 				}
 				else
@@ -619,10 +599,10 @@ else
 				$s_action_options .= '<option value="deluser">&raquo; ' . $lang['common_delete'] . '</option>';
 				$s_action_options .= '</select>';
 				
-				$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 	
 				$template->assign_vars(array(
-					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['groups']),
+					'L_HEAD'			=> $acp_title,
 					'L_INPUT'			=> sprintf($lang['sprintf_update'], $lang['group'], $data['group_name']),
 					'L_MEMBER'			=> sprintf($lang['sprintf_overview'], $lang['common_members']),
 					'L_OVERVIEW'		=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
@@ -636,10 +616,10 @@ else
 					'L_PENDING_MEMBER'		=> $lang['pending_members'],
 					
 					
-					'L_ADD_MEMBER'	=> $lang['group_add_member'],
+					'L_ADD_MEMBER'	=> $lang['add_member'],
 					
-					'L_ADD'			=> $lang['group_add_member'],
-					'L_ADD_MEMBER_EX'	=> $lang['group_add_member_ex'],
+					'L_ADD'			=> $lang['add_member'],
+					'L_ADD_MEMBER_EX'	=> $lang['add_member_ex'],
 					
 					
 					
@@ -656,10 +636,10 @@ else
 					'S_ACTION_ADDUSERS'		=> $s_addusers_select,
 					'S_ACTION_OPTIONS'		=> $s_action_options,
 					
-					'S_OVERVIEW'		=> append_sid($root_file . '?mode=_overview'),
-					'S_EDIT'			=> append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_id),
-					'S_ACTION'		=> append_sid($root_file),
-					'S_FIELDS'		=> $s_fields,
+					'S_OVERVIEW'		=> append_sid("$file?mode=_overview"),
+					'S_EDIT'			=> append_sid("$file?mode=_update&amp;$url=$data_id"),
+					'S_ACTION'		=> append_sid($file),
+					'S_FIELDS'		=> $fields,
 				));
 				
 				$template->pparse('body');
@@ -754,13 +734,13 @@ else
 #						'NAME' => $group_name,
 #						'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['board_email_sig']) : '', 
 #
-#						'U_GROUPCP' => $server_url . '?' . $p_url . "=$data_id")
+#						'U_GROUPCP' => $server_url . '?' . $url . "=$data_id")
 #					);
 #					$emailer->send();
 #					$emailer->reset();
 #				}
 				
-				$s_index = TRUE;
+				$index = true;
 			
 				break;
 				
@@ -822,8 +802,8 @@ else
 					}
 
 					$message = $lang['group_set_mod']
-						. sprintf($lang['click_return_group'], '<a href="' . append_sid($root_file) . '">', '</a>')
-						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid($root_file . '?mode=_member&' . $p_url . '=' . $data_id) . '">', '</a>');
+						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
+						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid("$file?mode=_member&$url=$data_id") . '">', '</a>');
 					message(GENERAL_MESSAGE, $message);
 				}
 			
@@ -955,11 +935,11 @@ else
 						}
 					}
 
-					log_add(LOG_ADMIN, $l_sec, 'acp_group_add_member');
+					log_add(LOG_ADMIN, $log, 'acp_group_add_member');
 			
 					$message = $lang['msg_group_add_member']
-						. sprintf($lang['click_return_group'], '<a href="' . append_sid($root_file) . '">', '</a>')
-						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid($root_file . '?mode=member&' . $p_url . '=' . $data_id) . '">', '</a>');
+						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
+						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid("$file?mode=member&$url=$data_id") . '">', '</a>');
 					message(GENERAL_MESSAGE, $message);
 				}
 				
@@ -983,21 +963,17 @@ else
 #				}
 #				
 #				$message = $lang['msg_group_del_member']
-#					. sprintf($lang['click_return_group'], '<a href="' . append_sid($root_file) . '">', '</a>')
-#					. sprintf($lang['click_return_group_member'], '<a href="' . append_sid($root_file . '?mode=member&' . $p_url . '=' . $data_id) . '">', '</a>');
-#				log_add(LOG_ADMIN, $l_sec, 'msg_group_del_member');
+#					. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
+#					. sprintf($lang['click_return_group_member'], '<a href="' . append_sid("$file?mode=member&$url=$data_id") . '">', '</a>');
+#				log_add(LOG_ADMIN, $log, 'msg_group_del_member');
 #				message(GENERAL_MESSAGE, $message);
 #			
 #				break;
 			
-			default:
-				
-				message(GENERAL_ERROR, $lang['msg_no_module_select']);
-				
-				break;
+			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -1007,22 +983,22 @@ else
 	$template->set_filenames(array('body' => 'style/acp_groups.tpl'));
 	$template->assign_block_vars('_display', array());
 	
-	$s_fields .= '<input type="hidden" name="mode" value="_create" />';
+	$fields .= '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['groups']),
+		'L_HEAD'		=> $acp_title,
 		'L_OVERVIEW'	=> sprintf($lang['sprintf_right_overview'], $lang['groups']),
 		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['group']),
 		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['groups']),
-		'L_EXPLAIN'		=> $lang['group_explain'],
+		'L_EXPLAIN'		=> $lang['explain'],
 		
 		'L_MEMBER'		=> $lang['common_members'],
-		'L_MEMBERCOUNT'	=> $lang['group_membercount'],
+		'L_COUNT'		=> $lang['count'],
 		
-		'S_ACTION'		=> append_sid($root_file),
-		'S_CREATE'		=> append_sid($root_file . '?mode=_create'),
-		'S_OVERVIEW'	=> append_sid($root_file . '?mode=_overview'),
-		'S_FIELDS'		=> $s_fields,
+		'S_OVERVIEW'	=> append_sid("$file?mode=_overview"),
+		'S_CREATE'		=> append_sid("$file?mode=_create"),
+		'S_ACTION'		=> append_sid($file),
+		'S_FIELDS'		=> $fields,
 	));
 	
 	$max = get_data_max(GROUPS, 'group_order', 'group_single_user = 0');
@@ -1068,13 +1044,13 @@ else
 				'NAME'		=> $row['group_name'],
 				'COUNT'		=> $row['total_members'],
 			
-				'MOVE_UP'	=> ( $row['group_order'] != '10' )			? '<a href="' . append_sid($root_file . '?mode=_order&amp;move=-15&amp;' . $p_url . '=' . $group_id) . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $row['group_order'] != $max['max'] )	? '<a href="' . append_sid($root_file . '?mode=_order&amp;move=+15&amp;' . $p_url . '=' . $group_id) . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $row['group_order'] != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$group_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $row['group_order'] != $max['max'] ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$group_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'DELETE'	=> ( $row['group_type'] != GROUP_SYSTEM ) ? '<a href="' . append_sid($root_file . '?mode=_delete&amp;' . $p_url . '=' . $group_id) . '"><img src="' . $images['option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_spacer'] . '" width="16" alt="" />',
+				'DELETE'	=> ( $row['group_type'] != GROUP_SYSTEM ) ? '<a href="' . append_sid("$file?mode=_delete&amp;$url=$group_id") . '"><img src="' . $images['option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_spacer'] . '" width="16" alt="" />',
 							
-				'U_MEMBER'	=> append_sid($root_file . '?mode=_member&amp;' . $p_url . '=' . $group_id),
-				'U_UPDATE'	=> append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $group_id),
+				'U_MEMBER'	=> append_sid("$file?mode=_member&amp;$url=$group_id"),
+				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$group_id"),
 			));
 		}
 	}

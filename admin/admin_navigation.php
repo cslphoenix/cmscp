@@ -1,35 +1,12 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_navi'] )
 	{
-		$module['_headmenu_main']['_submenu_navi'] = $root_file;
+		$module['_headmenu_01_main']['_submenu_navi'] = $root_file;
 	}
 	
 	return;
@@ -39,7 +16,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_navi';
 
 	include('./pagestart.php');
@@ -47,24 +24,33 @@ else
 	
 	load_lang('navi');
 	
-	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
-	$data_id	= request(POST_NAVIGATION_URL, 0);
+	$error	= '';
+	$index	= '';
+	$fields	= '';
+	
+	$log	= LOG_SEK_NAVI;
+	$url	= POST_NAVIGATION_URL;
+	$file	= basename(__FILE__);
+	
+	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( $start < 0 ) ? 0 : $start;
+	
+	$data_id	= request($url, 0);
 	$data_type	= request('type');
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$s_index	= '';
-	$s_fields	= '';
-	$error		= '';
+	
+	$path_dir	= $root_path . $settings['path_games'] . '/';
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['navi']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_navi'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_NAVI, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_navigation.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
 	
 	if ( !empty($mode) )
 	{
@@ -76,33 +62,38 @@ else
 				$template->set_filenames(array('body' => 'style/acp_navigation.tpl'));
 				$template->assign_block_vars('_input', array());
 				
-				if ( $mode == '_create' && !request('submit', 2) )
+				if ( $mode == '_create' && !request('submit', 1) )
 				{
+					list($type) = ( isset($_POST['navi_type']) ) ? each($_POST['navi_type']) : '';
+					$name		= ( isset($_POST['navi_name']) ) ? str_replace("\'", "'", $_POST['navi_name'][$type]) : '';
+					
 					$data = array(
-						'navi_name'		=> request('navi_name', 2),
-						'navi_type'		=> '1',
-						'navi_url'		=> '',
-						'navi_lang'		=> '1',
-						'navi_show'		=> '1',
-						'navi_target'	=> '0',
-						'navi_intern'	=> '0',
-					);
+								'navi_name'		=> $name,
+								'navi_type'		=> $type,
+								'navi_url'		=> '',
+								'navi_lang'		=> '0',
+								'navi_show'		=> '1',
+								'navi_target'	=> '0',
+								'navi_intern'	=> '0',
+								'navi_order'	=> '',
+							);
 				}
-				else if ( $mode == '_update' && !request('submit', 2) )
+				else if ( $mode == '_update' && !request('submit', 1) )
 				{
 					$data = data(NAVIGATION, $data_id, false, 1, 1);
 				}
 				else
 				{
 					$data = array(
-						'navi_name'		=> request('navi_name', 2),
-						'navi_type'		=> request('navi_type', 0),
-						'navi_url'		=> request('navi_url', 2),
-						'navi_lang'		=> request('navi_lang', 0),
-						'navi_show'		=> request('navi_show', 0),
-						'navi_target'	=> request('navi_target', 0),
-						'navi_intern'	=> request('navi_intern', 0),
-					);
+								'navi_name'		=> request('navi_name', 2),
+								'navi_type'		=> request('navi_type', 0),
+								'navi_url'		=> request('navi_url', 2),
+								'navi_lang'		=> request('navi_lang', 0),
+								'navi_show'		=> request('navi_show', 0),
+								'navi_target'	=> request('navi_target', 0),
+								'navi_intern'	=> request('navi_intern', 0),
+								'navi_order'	=> ( request('navi_order_new', 0) ) ? request('navi_order_new', 0) : request('navi_order', 0),
+							);
 				}
 				
 				$navi_url = str_replace('./', '', $data['navi_url']);
@@ -110,123 +101,204 @@ else
 				$folder = $root_path;
 				$files = scandir($folder);
 				
-				$s_list = '';
-				$s_list .= '<select class="selectsmall" name="navi_url" id="navi_url" onchange="select.value = this.value;">';
-				$s_list .= '<option value="">----------</option>';
+				$s_list = '<select class="selectsmall" name="navi_url" id="navi_url" onchange="select.value = this.value;">';
+				$s_list .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . "</option>";
 				
-				foreach ( $files as $file )
+				foreach ( $files as $sfile )
 				{
-					if ( strstr($file, '.php') )
+					if ( strstr($sfile, '.php') )
 					{
-						$selected = ( $file == $navi_url ) ? ' selected="selected"' : '';
-						$s_list .= "<option value=\"$file\" $selected>&raquo;&nbsp;$file&nbsp;</option>";
+						$selected = ( $sfile == $navi_url ) ? 'selected="selected"' : '';
+						$s_list .= "<option value=\"$sfile\" $selected>" . sprintf($lang['sprintf_select_format'], $sfile) . "</option>";
 					}
 				}
 				$s_list .= '</select>';
 				
-				$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
-				$s_fields .= '<input type="hidden" name="' . POST_NAVIGATION_URL . '" value="' . $data_id . '" />';
+				$head = array(
+							'0' => array('navi_type' => NAVI_MAIN, 'navi_name' => $lang['main']),
+							'1' => array('navi_type' => NAVI_CLAN, 'navi_name' => $lang['clan']),
+							'2' => array('navi_type' => NAVI_COM, 'navi_name' => $lang['com']),
+							'3' => array('navi_type' => NAVI_MISC, 'navi_name' => $lang['misc']),
+							'4' => array('navi_type' => NAVI_USER, 'navi_name' => $lang['user']),
+						);
+				
+				$type = ( $data['navi_type'] ) ? " WHERE navi_type = " . $data['navi_type'] : false;
+				
+				$sql = "SELECT * FROM " . NAVIGATION . "$type ORDER BY navi_type, navi_order ASC";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$entrys = $db->sql_fetchrowset($result);
+				
+				$s_order = "<select class=\"select\" name=\"navi_order_new\" id=\"navi_order\">";
+				$s_order .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+				
+				for ( $i = 0; $i < count($head); $i++ )
+				{
+					$entry = '';
+
+					for ( $j = 0; $j < count($entrys); $j++ )
+					{
+						if ( $head[$i]['navi_type'] == $entrys[$j]['navi_type'] )
+						{
+							$navi_lang = ( $entrys[$j]['navi_lang'] ) ? $lang[$entrys[$j]['navi_name']] : $entrys[$j]['navi_name'];
+							
+							$entry .= ( $entrys[$j]['navi_order'] == 10 ) ? "<option value=\"5\">" . sprintf($lang['sprintf_select_before'], $navi_lang) . "</option>" : '';
+							$entry .= "<option value=\"" . ( $entrys[$j]['navi_order'] + 5 ) . "\">" . sprintf($lang['sprintf_select_order'], $navi_lang) . "</option>";
+						}
+					}
+					
+					if ( $entry != '' )
+					{
+						$s_order .= '<optgroup label="' . $head[$i]['navi_name'] . '">';
+						$s_order .= $entry;
+						$s_order .= '</optgroup>';
+					}
+				}
+				
+				$s_order .= '</select>';
+				
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"navi_order\" value=" . $data['navi_order'] . " />";
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
-					'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['navi_field'], $data['navi_name']),
-					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['navi_field']),
-					'L_SET'			=> $lang['navi_settings'],
-					'L_URL'			=> $lang['navi_url'],
-					'L_TYPE'		=> sprintf($lang['sprintf_type'], $lang['navi_field']),
+					'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['field'], $data['navi_name']),
+					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['field']),
+					'L_SET'			=> $lang['navi_s'],
+					'L_URL'			=> $lang['url'],
+					'L_TYPE'		=> sprintf($lang['sprintf_type'], $lang['field']),
 					'L_LANGUAGE'	=> $lang['common_language'],
 					'L_SHOW'		=> $lang['common_visible'],
 					'L_INTERN'		=> $lang['common_intern'],
-					'L_TARGET'		=> $lang['navi_target'],
-					'L_TARGET_NEW'	=> $lang['navi_target_new'],
-					'L_TARGET_SELF'	=> $lang['navi_target_self'],
-					'L_TYPE_MAIN'	=> $lang['navi_main'],
-					'L_TYPE_CLAN'	=> $lang['navi_clan'],
-					'L_TYPE_COM'	=> $lang['navi_com'],
-					'L_TYPE_MISC'	=> $lang['navi_misc'],
-					'L_TYPE_USER'	=> $lang['navi_user'],
+					
+					'L_TARGET'		=> $lang['target'],
+					'L_TARGET_NEW'	=> $lang['target_new'],
+					'L_TARGET_SELF'	=> $lang['target_self'],
+					'L_TYPE_MAIN'	=> $lang['main'],
+					'L_TYPE_CLAN'	=> $lang['clan'],
+					'L_TYPE_COM'	=> $lang['com'],
+					'L_TYPE_MISC'	=> $lang['misc'],
+					'L_TYPE_USER'	=> $lang['user'],
 					
 					'NAME'			=> $data['navi_name'],
 					'URL'			=> $navi_url,
 					
 					'S_LIST'		=> $s_list,
-					'S_LANG_YES'	=> ( $data['navi_lang'] ) ? ' checked="checked"' : '',
-					'S_LANG_NO'		=> (!$data['navi_lang'] ) ? ' checked="checked"' : '',
-					'S_SHOW_YES'	=> ( $data['navi_show'] ) ? ' checked="checked"' : '',
-					'S_SHOW_NO'		=> (!$data['navi_show'] ) ? ' checked="checked"' : '',
-					'S_INTERN_YES'	=> ( $data['navi_intern'] ) ? ' checked="checked"' : '',
-					'S_INTERN_NO'	=> (!$data['navi_intern'] ) ? ' checked="checked"' : '',
-					'S_TARGET_NEW'	=> ( $data['navi_target'] ) ? ' checked="checked"' : '',
-					'S_TARGET_SELF'	=> (!$data['navi_target'] ) ? ' checked="checked"' : '',
-					'S_TYPE_MAIN'	=> ( $data['navi_type'] == NAVI_MAIN ) ? ' checked="checked"' : '',
-					'S_TYPE_CLAN'	=> ( $data['navi_type'] == NAVI_CLAN ) ? ' checked="checked"' : '',
-					'S_TYPE_COM'	=> ( $data['navi_type'] == NAVI_COM ) ? ' checked="checked"' : '',
-					'S_TYPE_MISC'	=> ( $data['navi_type'] == NAVI_MISC ) ? ' checked="checked"' : '',
-					'S_TYPE_USER'	=> ( $data['navi_type'] == NAVI_USER ) ? ' checked="checked"' : '',
+					'S_LANG_YES'	=> ( $data['navi_lang'] ) ? 'checked="checked"' : '',
+					'S_LANG_NO'		=> (!$data['navi_lang'] ) ? 'checked="checked"' : '',
+					'S_SHOW_YES'	=> ( $data['navi_show'] ) ? 'checked="checked"' : '',
+					'S_SHOW_NO'		=> (!$data['navi_show'] ) ? 'checked="checked"' : '',
+					'S_INTERN_YES'	=> ( $data['navi_intern'] ) ? 'checked="checked"' : '',
+					'S_INTERN_NO'	=> (!$data['navi_intern'] ) ? 'checked="checked"' : '',
+					'S_TARGET_NEW'	=> ( $data['navi_target'] ) ? 'checked="checked"' : '',
+					'S_TARGET_SELF'	=> (!$data['navi_target'] ) ? 'checked="checked"' : '',
+					'S_TYPE_MAIN'	=> ( $data['navi_type'] == NAVI_MAIN ) ? 'checked="checked"' : '',
+					'S_TYPE_CLAN'	=> ( $data['navi_type'] == NAVI_CLAN ) ? 'checked="checked"' : '',
+					'S_TYPE_COM'	=> ( $data['navi_type'] == NAVI_COM ) ? 'checked="checked"' : '',
+					'S_TYPE_MISC'	=> ( $data['navi_type'] == NAVI_MISC ) ? 'checked="checked"' : '',
+					'S_TYPE_USER'	=> ( $data['navi_type'] == NAVI_USER ) ? 'checked="checked"' : '',
 					
-					'S_SET'			=> append_sid('admin_navigation.php?mode=_settings'),
-					'S_ACTION'		=> append_sid('admin_navigation.php'),
-					'S_FIELDS'		=> $s_fields,
+					'S_ORDER'		=> $s_order,
+					
+					'S_SET'			=> append_sid("$file?mode=_settings"),
+					'S_ACTION'		=> append_sid($file),
+					'S_FIELDS'		=> $fields,
 				));
 				
-				if ( request('submit', 2) )
+				if ( request('submit', 1) )
 				{
-					$navi_name		= request('navi_name', 2);
-					$navi_type		= request('navi_type', 0);
-					$navi_url		= request('navi_url', 2);
-					$navi_lang		= request('navi_lang', 0);
-					$navi_show		= request('navi_show', 0);
-					$navi_target	= request('navi_target', 0);
-					$navi_intern	= request('navi_intern', 0);
+				#	$navi_name		= request('navi_name', 2);
+				#	$navi_type		= request('navi_type', 0);
+				#	$navi_url		= request('navi_url', 2);
+				#	$navi_lang		= request('navi_lang', 0);
+				#	$navi_show		= request('navi_show', 0);
+				#	$navi_target	= request('navi_target', 0);
+				#	$navi_intern	= request('navi_intern', 0);
 					
-					$error .= ( !$navi_name ) ? $lang['msg_select_name'] : '';
+				#	$error .= ( !$navi_name ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
+				#	$error .= ( !$navi_type ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
+				
+					$data = array(
+								'navi_name'		=> request('navi_name', 2),
+								'navi_type'		=> request('navi_type', 0),
+								'navi_url'		=> ( request('navi_url', 2) ) ? ( request('navi_target', 0) ) ? set_http(request('navi_url', 2)) : './' . request('navi_url', 2) : '',
+								'navi_lang'		=> request('navi_lang', 0),
+								'navi_show'		=> request('navi_show', 0),
+								'navi_target'	=> request('navi_target', 0),
+								'navi_intern'	=> request('navi_intern', 0),
+								'navi_order'	=> ( request('navi_order_new', 0) ) ? request('navi_order_new', 0) : request('navi_order', 0),
+							);
+					
+					$error .= ( !$data['navi_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error .= ( !$data['navi_url'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_url'] : '';
+					$error .= ( !$data['navi_type'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_type'] : '';
 					
 					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
-							$max	= get_data_max(NAVIGATION, 'navi_order', '');
-							$next	= $max['max'] + 10;
+							foreach ( $data as $key => $var )
+							{
+								$keys[] = $key;
+								$vars[] = $var;
+							}
 							
-							$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
+							$sql = 'INSERT INTO ' . NAVIGATION . ' (' . implode(', ', $keys) . ') VALUES (\'' . implode('\', \'', $vars) . '\')';
+						#	$max	= get_data_max(NAVIGATION, 'navi_order', '');
+						#	$next	= $max['max'] + 10;
 							
-							$sql = "INSERT INTO " . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
-										VALUES ('$navi_name', '$navi_type', '$navi_url', '$navi_lang', '$navi_show', '$navi_url', '$navi_intern', '$next')";
+						#	$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
+							
+						#	$sql = "INSERT INTO " . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
+						#				VALUES ('$navi_name', '$navi_type', '$navi_url', '$navi_lang', '$navi_show', '$navi_url', '$navi_intern', '$next')";
 							if ( !$db->sql_query($sql) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$message = $lang['create_navigation'] . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
+							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 						}
 						else
 						{
-							$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
+							foreach ( $data as $key => $var )
+							{
+								$input[] = "$key = '$var'";
+							}
 							
-							$sql = "UPDATE " . NAVIGATION . " SET
-										navi_name		= '$navi_name',
-										navi_type		= '$navi_type',
-										navi_url		= '$navi_url',
-										navi_lang		= '$navi_lang',
-										navi_show		= '$navi_show',
-										navi_target		= '$navi_target',
-										navi_intern		= '$navi_intern'
-									WHERE navi_id = $data_id";
+							$sql = "UPDATE " . NAVIGATION . " SET " . implode(', ', $input) . " WHERE navi_id = $data_id";
+						#	$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
+						#	
+						#	$sql = "UPDATE " . NAVIGATION . " SET
+						#				navi_name		= '$navi_name',
+						#				navi_type		= '$navi_type',
+						#				navi_url		= '$navi_url',
+						#				navi_lang		= '$navi_lang',
+						#				navi_show		= '$navi_show',
+						#				navi_target		= '$navi_target',
+						#				navi_intern		= '$navi_intern'
+						#			WHERE navi_id = $data_id";
 							if ( !$db->sql_query($sql) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$message = $lang['update_navigation']
-								. sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>')
-								. sprintf($lang['click_return_update'], '<a href="' . append_sid('admin_navigation.php?mode=_update&' . POST_NAVIGATION_URL . '=' . $data_id) . '">', '</a>');
+							$message = $lang['update']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
+								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&$url=$data_id") . '">', '</a>');
 						}
 						
-						log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode, $navi_name);
+						orders(NAVIGATION, $data['navi_type']);
+						
+						log_add(LOG_ADMIN, $log, $mode, $data['navi_name']);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
 					{
+						log_add(LOG_ADMIN, $log, $mode, $error);
+						
 						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
@@ -242,9 +314,9 @@ else
 				update(NAVIGATION, 'navi', $move, $data_id);
 				orders(NAVIGATION, $data_type);
 				
-				log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode);
+				log_add(LOG_ADMIN, $log, $mode);
 				
-				$s_index = TRUE;
+				$index = true;
 	
 				break;
 				
@@ -260,9 +332,9 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					$message = $lang['delete_navigation'] . sprintf($lang['click_return_navigation'], '<a href="' . append_sid('admin_navigation.php') . '">', '</a>');
+					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 					
-					log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode, $data['navi_name']);
+					log_add(LOG_ADMIN, $log, $mode, $data['navi_name']);
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -270,18 +342,18 @@ else
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$s_fields .= '<input type="hidden" name="mode" value="_delete" />';
-					$s_fields .= '<input type="hidden" name="' . POST_NAVIGATION_URL . '" value="' . $data_id . '" />';
+					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_navigation'], $data['navi_name']),
+						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['navi_name']),
 						
-						'S_ACTION'	=> append_sid('admin_navigation.php'),
-						'S_FIELDS'	=> $s_fields,
+						'S_ACTION'	=> append_sid($file),
+						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['navi_field'])); }
+				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['field'])); }
 				
 				$template->pparse('body');
 				
@@ -292,43 +364,43 @@ else
 				$template->set_filenames(array('body' => 'style/acp_navigation.tpl'));
 				$template->assign_block_vars('_settings', array());
 				
-				$s_fields .= '<input type="hidden" name="mode" value="_settings" />';
+				$fields .= '<input type="hidden" name="mode" value="_settings" />';
 				
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
-					'L_SET'			=> $lang['navi_settings'],
+					'L_SET'			=> $lang['settings'],
 					
-					'L_NEWS'		=> $lang['last_news'],
-					'L_MATCH'		=> $lang['last_match'],
-					'L_NEWUSERS'	=> $lang['last_users'],
-					'L_TOPICS'		=> $lang['last_topics'],
-					'L_DOWNLOADS'	=> $lang['last_downloads'],
-					'L_TEAMS'		=> $lang['subnavi_teams'],
+					'L_NEWS'		=> $lang['subnavi_news'],
+					'L_MATCH'		=> $lang['subnavi_match'],
+					'L_NEWUSERS'	=> sprintf($lang['newest_users'], $settings['subnavi_newusers_limit']),
+					'L_TOPICS'		=> $lang['subnavi_topics'],
+					'L_DOWNLOADS'	=> $lang['subnavi_downloads'],
+					'L_TEAMS'		=> $lang['teams'],
 					
-					'L_NEWS_LIMIT'				=> $lang['subnavi_news_limit'],
-					'L_NEWS_LIMIT_EXPLAIN'		=> $lang['subnavi_news_limit_explain'],
-					'L_NEWS_LENGTH'				=> $lang['subnavi_news_length'],
-					'L_NEWS_LENGTH_EXPLAIN'		=> $lang['subnavi_news_length_explain'],
-					'L_MATCH_LIMIT'				=> $lang['subnavi_match_limit'],
-					'L_MATCH_LIMIT_EXPLAIN'		=> $lang['subnavi_match_limit_explain'],
-					'L_MATCH_LENGTH'			=> $lang['subnavi_match_length'],
-					'L_MATCH_LENGTH_EXPLAIN'	=> $lang['subnavi_match_length_explain'],
+					'L_NEWS_LIMIT'				=> $lang['news_limit'],
+					'L_NEWS_LIMIT_EXPLAIN'		=> $lang['news_limit_explain'],
+					'L_NEWS_LENGTH'				=> $lang['news_length'],
+					'L_NEWS_LENGTH_EXPLAIN'		=> $lang['news_length_explain'],
+					'L_MATCH_LIMIT'				=> $lang['match_limit'],
+					'L_MATCH_LIMIT_EXPLAIN'		=> $lang['match_limit_explain'],
+					'L_MATCH_LENGTH'			=> $lang['match_length'],
+					'L_MATCH_LENGTH_EXPLAIN'	=> $lang['match_length_explain'],
 					
-					'L_NEWUSERS_SHOW'			=> $lang['subnavi_newusers_show'],
-					'L_NEWUSERS_SHOW_EXPLAIN'	=> $lang['subnavi_newusers_show_explain'],
-					'L_NEWUSERS_CACHE'			=> $lang['subnavi_newusers_cache'],
-					'L_NEWUSERS_CACHE_EXPLAIN'	=> $lang['subnavi_newusers_cache_explain'],
-					'L_NEWUSERS_LIMIT'			=> $lang['subnavi_newusers_limit'],
-					'L_NEWUSERS_LIMIT_EXPLAIN'	=> $lang['subnavi_newusers_limit_explain'],
-					'L_NEWUSERS_LENGTH'			=> $lang['subnavi_newusers_length'],
-					'L_NEWUSERS_LENGTH_EXPLAIN'	=> $lang['subnavi_newusers_length_explain'],
+					'L_NEWUSERS_SHOW'			=> $lang['newusers_show'],
+					'L_NEWUSERS_SHOW_EXPLAIN'	=> $lang['newusers_show_explain'],
+					'L_NEWUSERS_CACHE'			=> $lang['newusers_cache'],
+					'L_NEWUSERS_CACHE_EXPLAIN'	=> $lang['newusers_cache_explain'],
+					'L_NEWUSERS_LIMIT'			=> $lang['newusers_limit'],
+					'L_NEWUSERS_LIMIT_EXPLAIN'	=> $lang['newusers_limit_explain'],
+					'L_NEWUSERS_LENGTH'			=> $lang['newusers_length'],
+					'L_NEWUSERS_LENGTH_EXPLAIN'	=> $lang['newusers_length_explain'],
 					
-					'L_TEAMS_SHOW'				=> $lang['subnavi_teams_show'],
-					'L_TEAMS_SHOW_EXPLAIN'		=> $lang['subnavi_teams_show_explain'],
-					'L_TEAMS_LIMIT'				=> $lang['subnavi_teams_limit'],
-					'L_TEAMS_LIMIT_EXPLAIN'		=> $lang['subnavi_teams_limit_explain'],
-					'L_TEAMS_LENGTH'			=> $lang['subnavi_teams_length'],
-					'L_TEAMS_LENGTH_EXPLAIN'	=> $lang['subnavi_teams_length_explain'],
+					'L_TEAMS_SHOW'				=> $lang['teams_show'],
+					'L_TEAMS_SHOW_EXPLAIN'		=> $lang['teams_show_explain'],
+					'L_TEAMS_LIMIT'				=> $lang['teams_limit'],
+					'L_TEAMS_LIMIT_EXPLAIN'		=> $lang['teams_limit_explain'],
+					'L_TEAMS_LENGTH'			=> $lang['teams_length'],
+					'L_TEAMS_LENGTH_EXPLAIN'	=> $lang['teams_length_explain'],
 
 					'NEWS_LENGTH'		=> $settings['subnavi_news_length'],
 					'NEWS_LIMIT'		=> $settings['subnavi_news_limit'],
@@ -340,16 +412,16 @@ else
 					'TEAMS_LIMIT'		=> $settings['subnavi_teams_limit'],
 					'TEAMS_LENGTH'		=> $settings['subnavi_teams_length'],
 					
-					'NEWUSERS_ON'		=> ( $settings['subnavi_newusers'] ) ? ' checked="checked"' : '',
-					'NEWUSERS_OFF'		=> ( !$settings['subnavi_newusers'] ) ? ' checked="checked"' : '',
-					'TEAMS_ON'			=> ( $settings['subnavi_teams'] ) ? ' checked="checked"' : '',
-					'TEAMS_OFF'			=> ( !$settings['subnavi_teams'] ) ? ' checked="checked"' : '',
+					'NEWUSERS_NO'		=> (!$settings['subnavi_newusers'] ) ? 'checked="checked"' : '',
+					'NEWUSERS_YES'		=> ( $settings['subnavi_newusers'] ) ? 'checked="checked"' : '',
+					'TEAMS_NO'			=> (!$settings['subnavi_teams'] ) ? 'checked="checked"' : '',
+					'TEAMS_YES'			=> ( $settings['subnavi_teams'] ) ? 'checked="checked"' : '',
 					
-					'S_ACTION'	=> append_sid('admin_navigation.php'),
-					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid($file),
+					'S_FIELDS'	=> $fields,
 				));
 				
-				if ( request('submit', 2) )
+				if ( request('submit', 1) )
 				{
 					$sql = "SELECT * FROM " . SETTINGS;
 					if ( !($result = $db->sql_query($sql)) )
@@ -374,12 +446,12 @@ else
 						}
 					}					
 					
-					$oCache -> sCachePath = './../cache/';
-					$oCache -> deleteCache('settings');
+					#$oCache -> sCachePath = './../cache/';
+					#$oCache -> deleteCache('settings');
 									
-					$message = $lang['update_navigation_set'] . sprintf($lang['click_return_navigation_set'], '<a href="' . append_sid('admin_navigation.php?mode=_settings') . '">', '</a>');
+					$message = $lang['update_navigation_set'] . sprintf($lang['click_return_navigation_set'], '<a href="' . append_sid("$file?mode=_settings") . '">', '</a>');
 					
-					log_add(LOG_ADMIN, LOG_SEK_NAVI, $mode);
+					log_add(LOG_ADMIN, $log, $mode);
 					message(GENERAL_MESSAGE, $message);
 				}
 			
@@ -387,14 +459,10 @@ else
 				
 				break;
 				
-			default:
-			
-				message(GENERAL_ERROR, $lang['msg_no_module_select']);
-				
-				break;
+			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;
@@ -404,23 +472,23 @@ else
 	$template->set_filenames(array('body' => 'style/acp_navigation.tpl'));
 	$template->assign_block_vars('_display', array());
 	
-	$s_fields .= '<input type="hidden" name="mode" value="_create" />';
+	$fields .= '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['navi']),
-		'L_SET'		=> $lang['navi_settings'],
-		'L_CREATE'	=> sprintf($lang['sprintf_new_create'], $lang['navi_field']),
-		'L_EXPLAIN'	=> $lang['navi_explain'],
-		'L_MAIN'	=> $lang['navi_main'],
-		'L_CLAN'	=> $lang['navi_clan'],
-		'L_COM'		=> $lang['navi_com'],
-		'L_MISC'	=> $lang['navi_misc'],
-		'L_USER'	=> $lang['navi_user'],
+		'L_SET'		=> $lang['settings'],
+		'L_CREATE'	=> sprintf($lang['sprintf_new_create'], $lang['field']),
+		'L_EXPLAIN'	=> $lang['explain'],
+		'L_MAIN'	=> $lang['main'],
+		'L_CLAN'	=> $lang['clan'],
+		'L_COM'		=> $lang['com'],
+		'L_MISC'	=> $lang['misc'],
+		'L_USER'	=> $lang['user'],
 		
-		'S_SET'		=> append_sid('admin_navigation.php?mode=_settings'),
-		'S_CREATE'	=> append_sid('admin_navigation.php?mode=_create'),
-		'S_ACTION'	=> append_sid('admin_navigation.php'),
-		'S_FIELDS'	=> $s_fields,
+		'S_SET'		=> append_sid("$file?mode=_settings"),
+		'S_CREATE'	=> append_sid("$file?mode=_create"),
+		'S_ACTION'	=> append_sid($file),
+		'S_FIELDS'	=> $fields,
 	));
 	
 	$max_main	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_MAIN);
@@ -429,141 +497,132 @@ else
 	$max_misc	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_MISC);
 	$max_user	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_USER);
 	
-	$data_main	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_MAIN, 'navi_order', 'ASC');
-	$data_clan	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_CLAN, 'navi_order', 'ASC');
-	$data_com	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_COM, 'navi_order', 'ASC');
-	$data_misc	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_MISC, 'navi_order', 'ASC');
-	$data_user	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_USER, 'navi_order', 'ASC');
+	$tmp_main	= data(NAVIGATION, 'navi_type = ' . NAVI_MAIN, 'navi_order ASC', 1, false);
+	$tmp_clan	= data(NAVIGATION, 'navi_type = ' . NAVI_CLAN, 'navi_order ASC', 1, false);
+	$tmp_com	= data(NAVIGATION, 'navi_type = ' . NAVI_COM, 'navi_order ASC', 1, false);
+	$tmp_misc	= data(NAVIGATION, 'navi_type = ' . NAVI_MISC, 'navi_order ASC', 1, false);
+	$tmp_user	= data(NAVIGATION, 'navi_type = ' . NAVI_USER, 'navi_order ASC', 1, false);
 	
-	if ( $data_main )
+#	$tmp_main	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_MAIN, 'navi_order', 'ASC');
+#	$tmp_clan	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_CLAN, 'navi_order', 'ASC');
+#	$tmp_com	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_COM, 'navi_order', 'ASC');
+#	$tmp_misc	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_MISC, 'navi_order', 'ASC');
+#	$tmp_user	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_USER, 'navi_order', 'ASC');
+	
+	if ( $tmp_main )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_main)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp_main)); $i++ )
 		{
-			$navi_id	= $data_main[$i]['navi_id'];
-			$navi_order	= $data_main[$i]['navi_order'];
-			$navi_lang	= ( $data_main[$i]['navi_lang'] ) ? $lang[$data_main[$i]['navi_name']] : $data_main[$i]['navi_name'];
+			$navi_id	= $tmp_main[$i]['navi_id'];
+			$navi_order	= $tmp_main[$i]['navi_order'];
+			$navi_lang	= ( $tmp_main[$i]['navi_lang'] ) ? $lang[$tmp_main[$i]['navi_name']] : $tmp_main[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._main_row', array(
-				'TITLE'		=> ( $data_main[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_main[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $data_main[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> ( $tmp_main[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> ( $tmp_main[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $tmp_main[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MAIN . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_main['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MAIN . '&amp;move=+15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MAIN . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_main['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MAIN . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
-				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
+				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry_main', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry_main', array()); }
 	
-	if ( $data_clan )
+	if ( $tmp_clan )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_clan)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp_clan)); $i++ )
 		{
-			$navi_id	= $data_clan[$i]['navi_id'];
-			$navi_order	= $data_clan[$i]['navi_order'];
-			$navi_lang	= ( $data_clan[$i]['navi_lang'] ) ? $lang[$data_clan[$i]['navi_name']] : $data_clan[$i]['navi_name'];
+			$navi_id	= $tmp_clan[$i]['navi_id'];
+			$navi_order	= $tmp_clan[$i]['navi_order'];
+			$navi_lang	= ( $tmp_clan[$i]['navi_lang'] ) ? $lang[$tmp_clan[$i]['navi_name']] : $tmp_clan[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._clan_row', array(
-				'TITLE'		=> ( $data_clan[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_clan[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $data_clan[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> ( $tmp_clan[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> ( $tmp_clan[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $tmp_clan[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_clan['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=+15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_clan['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
-				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
+				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry_clan', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry_clan', array()); }
 	
-	if ( $data_com )
+	if ( $tmp_com )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_com)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp_com)); $i++ )
 		{
-			$navi_id	= $data_com[$i]['navi_id'];
-			$navi_order	= $data_com[$i]['navi_order'];
-			$navi_lang	= ( $data_com[$i]['navi_lang'] ) ? $lang[$data_com[$i]['navi_name']] : $data_com[$i]['navi_name'];
+			$navi_id	= $tmp_com[$i]['navi_id'];
+			$navi_order	= $tmp_com[$i]['navi_order'];
+			$navi_lang	= ( $tmp_com[$i]['navi_lang'] ) ? $lang[$tmp_com[$i]['navi_name']] : $tmp_com[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._com_row', array(
-				'TITLE'		=> ( $data_com[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_com[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $data_com[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> ( $tmp_com[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> ( $tmp_com[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $tmp_com[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_COM . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_com['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_COM . '&amp;move=+15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_COM . '&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_com['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_COM . '&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
-				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
+				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry_com', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry_com', array()); }
 	
-	if ( $data_misc )
+	if ( $tmp_misc )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_misc)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp_misc)); $i++ )
 		{
-			$navi_id	= $data_misc[$i]['navi_id'];
-			$navi_order	= $data_misc[$i]['navi_order'];
-			$navi_lang	= ( $data_misc[$i]['navi_lang'] ) ? $lang[$data_misc[$i]['navi_name']] : $data_misc[$i]['navi_name'];
+			$navi_id	= $tmp_misc[$i]['navi_id'];
+			$navi_order	= $tmp_misc[$i]['navi_order'];
+			$navi_lang	= ( $tmp_misc[$i]['navi_lang'] ) ? $lang[$tmp_misc[$i]['navi_name']] : $tmp_misc[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._misc_row', array(
-				'TITLE'		=> ( $data_misc[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_misc[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $data_misc[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> ( $tmp_misc[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> ( $tmp_misc[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $tmp_misc[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MISC . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_misc['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_MISC . '&amp;move=+15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MISC . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_misc['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MISC . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
-				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
+				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry_misc', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry_misc', array()); }
 	
-	if ( $data_user )
+	if ( $tmp_user )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_user)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp_user)); $i++ )
 		{
-			$navi_id	= $data_user[$i]['navi_id'];
-            $navi_order	= $data_user[$i]['navi_order'];
-			$navi_lang	= ( $data_user[$i]['navi_lang'] ) ? $lang[$data_user[$i]['navi_name']] : $data_user[$i]['navi_name'];
+			$navi_id	= $tmp_user[$i]['navi_id'];
+            $navi_order	= $tmp_user[$i]['navi_order'];
+			$navi_lang	= ( $tmp_user[$i]['navi_lang'] ) ? $lang[$tmp_user[$i]['navi_name']] : $tmp_user[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._user_row', array(
-				'TITLE'		=> ( $data_user[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $data_user[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $data_user[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> ( $tmp_user[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> ( $tmp_user[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> ( $tmp_user[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_USER . '&amp;move=-15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_user['max'] )	? '<a href="' . append_sid('admin_navigation.php?mode=_order&amp;type=' . NAVI_USER . '&amp;move=+15&amp;' . POST_NAVIGATION_URL . '=' . $navi_id) .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_USER . '&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_user['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_USER . '&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
-				'U_UPDATE'	=> append_sid('admin_navigation.php?mode=_update&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
-				'U_DELETE'	=> append_sid('admin_navigation.php?mode=_delete&amp;' . POST_NAVIGATION_URL . '=' . $navi_id),
+				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
+				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._no_entry_user', array());
-	}
+	else { $template->assign_block_vars('_display._no_entry_user', array()); }
 
 	$template->pparse('body');
 			

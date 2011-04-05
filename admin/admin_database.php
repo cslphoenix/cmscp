@@ -6,25 +6,28 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_database']['_submenu_backup'] = $root_file . '?mode=_backup';
+		$module['_headmenu_11_database']['_submenu_backup'] = "$root_file?mode=_backup";
 		
 		$file_uploads = (@phpversion() >= '4.0.0') ? @ini_get('file_uploads') : @get_cfg_var('file_uploads');
 
 		if ( (empty($file_uploads) || $file_uploads != 0) && (strtolower($file_uploads) != 'off') && (@phpversion() != '4.0.4pl1') )
 		{
-			$module['_headmenu_database']['_submenu_restore'] = $root_file . '?mode=_restore';
+			$module['_headmenu_11_database']['_submenu_restore'] = "$root_file?mode=_restore";
 		}
-		$module['_headmenu_database']['_submenu_optimize'] = $root_file . '?mode=_optimize';
+		$module['_headmenu_11_database']['_submenu_optimize'] = "$root_file?mode=_optimize";
 	}
 	
 	return;
 }
 else
 {
+#	show_begin_for
+#	show_not_optimized
+	
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$s_header	= true;
+	$header	= true;
 	$current	= '_submenu_database';
 	
 	include('./pagestart.php');
@@ -34,8 +37,8 @@ else
 	load_lang('database');
 	
 	$mode		= request('mode', 1);
-	$r_file		= basename(__FILE__);
-	$s_fields	= '';
+	$file		= basename(__FILE__);
+	$fields	= '';
 	
 	
 	define("VERBOSE", 0);
@@ -327,7 +330,7 @@ else
 		
 		if ( !$result )
 		{
-			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $key_query);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $key_query);
 		}
 	
 		while ( $row = $db->sql_fetchrow($result) )
@@ -570,14 +573,14 @@ else
 		{
 			case '_backup':
 			
-				if ( !(request('submit', 2)) )
+				if ( !(request('submit', 1)) )
 				{
 					include('./page_header_admin.php');
 					
 					$template->set_filenames(array('body' => 'style/acp_database.tpl'));
 					$template->assign_block_vars('_database_backup', array());
 					
-					$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
+					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 	
 					$template->assign_vars(array(
 						'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['database']),
@@ -604,10 +607,10 @@ else
 						'L_DL_BOTH'		=> $lang['dl_both'],
 						'L_DL_SERV'		=> $lang['dl_serv'],
 						
-						'S_OPTIMIZE'	=> append_sid($r_file . '?mode=_optimize'),
-						'S_RESTORE'		=> append_sid($r_file . '?mode=_restore'),
-						'S_ACTION'		=> append_sid($r_file),
-						'S_FIELDS'		=> $s_fields,
+						'S_OPTIMIZE'	=> append_sid("$file?mode=_optimize"),
+						'S_RESTORE'		=> append_sid("$file?mode=_restore"),
+						'S_ACTION'		=> append_sid($file),
+						'S_FIELDS'		=> $fields,
 					));
 					
 					$template->pparse('body');
@@ -761,7 +764,7 @@ else
 								'news_comments_read',
 								'privmsgs',
 								'profile',
-								'profile_category',
+								'profile_cat',
 								'profile_data',
 								'ranks',
 								'rate',
@@ -808,7 +811,7 @@ else
 								'news', 'newscategory', 'news_comments', 'news_comments_read',
 								'newsletter',
 								'privmsgs',
-								'profile', 'profile_category', 'profile_data',
+								'profile', 'profile_cat', 'profile_data',
 								'ranks',
 								'rate',
 								'server',
@@ -912,7 +915,147 @@ else
 
 		case '_restore':
 				
-			echo 'test';
+			if(!isset($HTTP_POST_VARS['restore_start']))
+			{
+				//
+				// Define Template files...
+				//
+				include('./page_header_admin.'.$phpEx);
+
+				$template->set_filenames(array(
+					"body" => "admin/db_utils_restore_body.tpl")
+				);
+
+				$s_hidden_fields = "<input type=\"hidden\" name=\"perform\" value=\"restore\" /><input type=\"hidden\" name=\"perform\" value=\"$perform\" />";
+
+				$template->assign_vars(array(
+					"L_DATABASE_RESTORE" => $lang['Database_Utilities'] . " : " . $lang['Restore'],
+					"L_RESTORE_EXPLAIN" => $lang['Restore_explain'],
+					"L_SELECT_FILE" => $lang['Select_file'],
+					"L_START_RESTORE" => $lang['Start_Restore'],
+
+					"S_DBUTILS_ACTION" => append_sid("admin_db_utilities.$phpEx"),
+					"S_HIDDEN_FIELDS" => $s_hidden_fields)
+				);
+				$template->pparse("body");
+
+				break;
+
+			}
+			else
+			{
+				//
+				// Handle the file upload ....
+				// If no file was uploaded report an error...
+				//
+				$backup_file_name = (!empty($HTTP_POST_FILES['backup_file']['name'])) ? $HTTP_POST_FILES['backup_file']['name'] : "";
+				$backup_file_tmpname = ($HTTP_POST_FILES['backup_file']['tmp_name'] != "none") ? $HTTP_POST_FILES['backup_file']['tmp_name'] : "";
+				$backup_file_type = (!empty($HTTP_POST_FILES['backup_file']['type'])) ? $HTTP_POST_FILES['backup_file']['type'] : "";
+
+				if($backup_file_tmpname == "" || $backup_file_name == "")
+				{
+					message_die(GENERAL_MESSAGE, $lang['Restore_Error_no_file']);
+				}
+				//
+				// If I file was actually uploaded, check to make sure that we
+				// are actually passed the name of an uploaded file, and not
+				// a hackers attempt at getting us to process a local system
+				// file.
+				//
+				if( file_exists(phpbb_realpath($backup_file_tmpname)) )
+				{
+					if( preg_match("/^(text\/[a-zA-Z]+)|(application\/(x\-)?gzip(\-compressed)?)|(application\/octet-stream)$/is", $backup_file_type) )
+					{
+						if( preg_match("/\.gz$/is",$backup_file_name) )
+						{
+							$do_gzip_compress = FALSE;
+							$phpver = phpversion();
+							if($phpver >= "4.0")
+							{
+								if(extension_loaded("zlib"))
+								{
+									$do_gzip_compress = TRUE;
+								}
+							}
+
+							if($do_gzip_compress)
+							{
+								$gz_ptr = gzopen($backup_file_tmpname, 'rb');
+								$sql_query = "";
+								while( !gzeof($gz_ptr) )
+								{
+									$sql_query .= gzgets($gz_ptr, 100000);
+								}
+							}
+							else
+							{
+								message_die(GENERAL_ERROR, $lang['Restore_Error_decompress']);
+							}
+						}
+						else
+						{
+							$sql_query = fread(fopen($backup_file_tmpname, 'r'), filesize($backup_file_tmpname));
+						}
+						//
+						// Comment this line out to see if this fixes the stuff...
+						//
+						//$sql_query = stripslashes($sql_query);
+					}
+					else
+					{
+						message_die(GENERAL_ERROR, $lang['Restore_Error_filename'] ." $backup_file_type $backup_file_name");
+					}
+				}
+				else
+				{
+					message_die(GENERAL_ERROR, $lang['Restore_Error_uploading']);
+				}
+
+				if($sql_query != "")
+				{
+					// Strip out sql comments...
+					$sql_query = remove_remarks($sql_query);
+					$pieces = split_sql_file($sql_query, ";");
+
+					$sql_count = count($pieces);
+					for($i = 0; $i < $sql_count; $i++)
+					{
+						$sql = trim($pieces[$i]);
+
+						if(!empty($sql) and $sql[0] != "#")
+						{
+							if(VERBOSE == 1)
+							{
+								echo "Executing: $sql\n<br>";
+								flush();
+							}
+
+							$result = $db->sql_query($sql);
+
+							if(!$result && ( !(SQL_LAYER == 'postgresql' && eregi("drop table", $sql) ) ) )
+							{
+								message_die(GENERAL_ERROR, "Error importing backup file", "", __LINE__, __FILE__, $sql);
+							}
+						}
+					}
+				}
+
+				include('./page_header_admin.'.$phpEx);
+
+				$template->set_filenames(array(
+					"body" => "admin/admin_message_body.tpl")
+				);
+
+				$message = $lang['Restore_success'];
+
+				$template->assign_vars(array(
+					"MESSAGE_TITLE" => $lang['Database_Utilities'] . " : " . $lang['Restore'],
+					"MESSAGE_TEXT" => $message)
+				);
+
+				$template->pparse("body");
+				break;
+			}
 				
 			break;
 				
@@ -930,10 +1073,10 @@ else
 			//
 			if ( isset( $_POST['reset'] ) )
 			{
-				$sql = "UPDATE " . OPTIMIZE . " SET cron_enable = '0', cron_every = '86400', cron_next ='0', cron_count='0', cron_lock = '1', show_begin_for = '',  show_not_optimized = '0' LIMIT 1 ";
-				if( !($result = $db->sql_query($sql)) )
+				$sql = "UPDATE " . OPTIMIZE . " SET show_begin_for = '', show_not_optimized = '0'";
+				if ( !($result = $db->sql_query($sql)) )
 				{
-					message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			}
 		
@@ -945,7 +1088,7 @@ else
 				$sql = "UPDATE " . OPTIMIZE . " SET show_begin_for = '" . $_POST['show_begin_for'] . "'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
-					message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			
 				if ( isset( $_POST['configure'] ) )
@@ -953,10 +1096,10 @@ else
 					//
 					// Update optimize database cronfiguration
 					//
-					$sql = "UPDATE " . OPTIMIZE . " SET cron_every = " . $_POST['cron_every'] . ", cron_enable = '"  . $_POST['enable_optimize_cron'] . "', cron_next = " . ( $current_time + $_POST['cron_every'] ) . ", show_begin_for = '" . $_POST['show_begin_for'] . "', show_not_optimized = '" . $_POST['show_not_optimized'] . "' ";
+					$sql = "UPDATE " . OPTIMIZE . " SET show_begin_for = '" . $_POST['show_begin_for'] . "', show_not_optimized = '" . $_POST['show_not_optimized'] . "' ";
 					if ( !($result = $db->sql_query($sql)) )
 					{
-						message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				}
 			}
@@ -968,7 +1111,7 @@ else
 			$opt_conf_result = $db->sql_query($sql_opt);
 			if ( !( $opt_conf = $db->sql_fetchrow($opt_conf_result) ) )
 			{
-				message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 
 			//
@@ -980,7 +1123,7 @@ else
 				$result = $db->sql_query($sql);
 				if ( !$result )
 				{
-					message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
 				$i = $total_rec = $total_size = $total_stats = 0;
@@ -1013,7 +1156,7 @@ else
 						}
 						
 						$check		= ( $opt['Data_free'] != 0 ) ? "checked" : "";
-						$data_free	= ( $opt['Data_free'] != 0 ) ? "No OK" : "OK";
+						$data_free	= ( $opt['Data_free'] != 0 ) ? "not Optimize" : "Optimize";
 			
 						//
 						// Make list tables of database
@@ -1034,9 +1177,9 @@ else
 						$total_rec = $total_rec + $opt['Rows']; 
 						$total_size = $total_size + $opt['Data_length'] + $opt['Index_length']; 
 						
-						if ( $data_free == 'No OK' )
+						if ( $data_free == 'not Optimize' )
 						{
-							$total_stats = 'No OK';
+							$total_stats = 'not Optimize';
 						}
 					}
 					else
@@ -1052,7 +1195,7 @@ else
 
 			#	$template->set_filenames(array('body' => 'style/db_utils_optimize_body.tpl'));
 
-				$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" />';
+				$fields = "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 
 				//
 				// Enable the select tables script 
@@ -1102,56 +1245,6 @@ else
 						</script>
 					";
 				}
-				
-				switch ( $opt_conf['cron_every'] )
-				{
-					case 2592000:	$month = "selected";		break;
-					case 1296000:	$weeks2 = "selected";		break;
-					case 604800:	$week = "selected";			break;
-					case 259200:	$days3 = "selected";		break;
-					case 86400:		$day = "selected";			break;
-					case 21600:		$hours6 = "selected";		break;
-					case 3600:		$hour = "selected";			break;
-					case 1800:		$minutes30 = "selected";	break;
-					case 20:		$seconds20 = "selected";	break;
-					default:		$day = "selected";			break;
-				}
-				
-				//
-				// Select a cron every
-				//
-				$template->assign_block_vars('_database_optimize._cron_every', array(
-					"MONTH" => $month,
-					"2WEEKS" => $weeks2,
-					"WEEK" => $week,
-					"3DAYS" => $days3,
-					"DAY" => $day,
-					"6HOURS" => $hours6,
-					"HOUR" => $hour,
-					"30MINUTES" => $minutes30,
-					"20SECONDS" => $seconds20,
-			
-					"L_MONTH" => $lang['Optimize_month'],
-					"L_2WEEKS" => $lang['Optimize_2weeks'],
-					"L_WEEK" => $lang['Optimize_week'],
-					"L_3DAYS" => $lang['Optimize_3days'],
-					"L_DAY" => $lang['Optimize_day'],
-					"L_6HOURS" => $lang['Optimize_6hours'],
-					"L_HOUR" => $lang['Optimize_hour'],
-					"L_30MINUTES" => $lang['Optimize_30minutes'],
-					"L_20SECONDS" => $lang['Optimize_20seconds']
-				));
-
-				if ( $opt_conf['cron_enable'] != '1' || $opt_conf['cron_next'] == 0 )
-				{
-					$next_cron = ' - - ';
-					$perf_cron = ' - - ';
-				}
-				else 
-				{
-					$next_cron = create_date($userdata['user_dateformat'], $opt_conf['cron_next'], $userdata['user_timezone']);
-					$perf_cron = $opt_conf['cron_count'];
-				}
 		
 				//
 				// Make the template
@@ -1167,9 +1260,9 @@ else
 					"TOT_RECORD" => $total_rec,
 					"TOT_SIZE" => $total_size,
 					"TOT_STATUS" => $total_stat,
-					"NEXT_CRON" => $next_cron,
+					
 					"CURRENT_TIME" => create_date($userdata['user_dateformat'], $current_time, $userdata['user_timezone']),
-					"PERFORMED_CRON" => $perf_cron,
+					
 					"L_ENABLE_CRON" => $lang['Optimize_Enable_cron'],
 					"L_YES" => $lang['Yes'],
 					"L_NO" => $lang['No'],
@@ -1195,17 +1288,13 @@ else
 					"L_INVERTCHECKED" => $lang['Optimize_InvertChecked'],
 					"L_START_OPTIMIZE" => $lang['Optimize'],
 					
-					'S_ENABLE_CRON_YES'				=> ( $opt_conf['cron_enable'] )	? ' checked="checked"' : '',
-					'S_ENABLE_CRON_NO'				=> (!$opt_conf['cron_enable'] )	? ' checked="checked"' : '',
-					
 					'S_ENABLE_NOT_OPTIMIZED_YES'	=> ( $opt_conf['show_not_optimized'] )	? ' checked="checked"' : '',
 					'S_ENABLE_NOT_OPTIMIZED_NO'		=> (!$opt_conf['show_not_optimized'] )	? ' checked="checked"' : '',
 					
-					
 					"S_SHOW_BEGIN_FOR" => $opt_conf['show_begin_for'],
 					
-					'S_ACTION'	=> append_sid($r_file),
-					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid($file),
+					'S_FIELDS'	=> $fields,
 				));
 
 				$template->pparse('body');
