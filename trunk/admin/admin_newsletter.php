@@ -1,35 +1,12 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userauth['auth_newsletter'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['news']['newsletter'] = $root_file;
+		$module['_headmenu_03_news']['_submenu_newsletter'] = $root_file;
 	}
 	
 	return;
@@ -50,7 +27,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_newsletter.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid('admin_newsletter.php', true)) : false;
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
@@ -99,8 +76,8 @@ else
 				$template->set_filenames(array('body' => 'style/acp_newsletter.tpl'));
 				$template->assign_block_vars('newsletter_edit', array());
 				
-				$s_fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$s_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
+				$fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
 
 				$template->assign_vars(array(
 					'L_NL_HEAD'			=> $lang['newsletter_head'],
@@ -118,7 +95,7 @@ else
 					
 					'NL_MAIL'			=> $newsletter['newsletter_mail'],
 					
-					'S_FIELDS'	=> $s_fields,
+					'S_FIELDS'	=> $fields,
 					'S_NL_ACTION'		=> append_sid('admin_newsletter.php'),
 				));
 			
@@ -142,7 +119,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, LOG_SEK_NEWS, 'acp_newsletter_edit', $newsletter_mail);
+				log_add(LOG_ADMIN, $log, 'acp_newsletter_edit', $newsletter_mail);
 	
 				$message = $lang['create_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -196,8 +173,8 @@ else
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$s_fields = '<input type="hidden" name="mode" value="delete" />';
-					$s_fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
+					$fields = '<input type="hidden" name="mode" value="delete" />';
+					$fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -205,7 +182,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 						'S_ACTION'	=> append_sid('admin_newsletter.php'),
-						'S_FIELDS'	=> $s_fields,
+						'S_FIELDS'	=> $fields,
 					));
 				}
 				else
@@ -239,7 +216,7 @@ else
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
-					$s_fields = '<input type="hidden" name="mode" value="alldelete" />';
+					$fields = '<input type="hidden" name="mode" value="alldelete" />';
 					
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -247,7 +224,7 @@ else
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
 						'S_ACTION'	=> append_sid('admin_newsletter.php'),
-						'S_FIELDS'	=> $s_fields,
+						'S_FIELDS'	=> $fields,
 					));
 				}
 				else
@@ -259,15 +236,11 @@ else
 				
 				break;
 			
-			default:
-			
-				message(GENERAL_ERROR, $lang['msg_no_module_select']);
-				
-				break;
+			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
 				break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;

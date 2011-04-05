@@ -1,32 +1,12 @@
 <?php
-/***************************************************************************
- * Filename:          admin_forumauth_list.php
- * Description:       Summary listing of the advanced permissions of all forums
- *                    with integrated editing
- * Author:            Graham Eames (phpbb@grahameames.co.uk)
- * Last Modified:     26-Mar-2004
- * File Version:      1.2
- *
- * Acknowlegments:    This file uses some features adapted from those
- *                    provided in admin_forumauth.php from the base distribution.
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
 
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
-	if ( $userauth['auth_forum_auth'] || $userdata['user_level'] == ADMIN )
+	
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_auth'] )
 	{
-		$module['forums']['permissions_list'] = $root_file;
+		$module['_headmenu_02_forum']['_submenu_perm_list'] = $root_file;
 	}
 
 	return;
@@ -34,80 +14,111 @@ if ( !empty($setmodules) )
 else
 {
 	define('IN_CMS', true);
-
-	$root_path = './../';
-	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$no_page_header = $cancel;
-	require('./pagestart.php');
 	
-	if ( !$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
+	$root_path	= './../';
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
+	$current	= '_submenu_perm_list';
+	
+	include('./pagestart.php');
+	include($root_path . 'includes/acp/acp_functions.php');
+	
+	load_lang('forum_auth');
+	
+	$error	= '';
+	$index	= '';
+	$fields	= '';
+	
+	$log	= LOG_SEK_GAMES;
+	$url	= POST_FORUM_URL;
+	$url_c	= POST_CATEGORY_URL;
+	$file	= basename(__FILE__);
+	
+	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( $start < 0 ) ? 0 : $start;
+	
+	$data_id	= request($url, 0);
+	$data_cat	= request($url_c, 0);
+	$confirm	= request('confirm', 1);
+	$mode		= request('mode', 1);
+	$move		= request('move', 1);
+	
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['forum']);
+	
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum_auth'] )
 	{
+		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
-
+	
+	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	
 	//
 	// Start program - define vars
 	//
-	//                View      Read      Post      Reply     Edit     Delete    Sticky   Announce    Poll   Pollcreate
+	//                View       Read      Post      Reply     Edit     Delete    Sticky   Announce Globalannounce Poll Pollcreate
 	$simple_auth_ary = array(
-		0  => array(AUTH_ALL, AUTH_ALL, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_MOD),	//	Benutzer
-		1  => array(AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_MOD),	//	Benutzer versteckt
-		2  => array(AUTH_REG, AUTH_REG, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail
-		3  => array(AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail versteckt
-		4  => array(AUTH_REG, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member
-		5  => array(AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM),	//	Member versteckt		
-		6  => array(AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren
-		7  => array(AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren versteckt
-		8  => array(AUTH_REG, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat
-		9  => array(AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat versteckt
+		0	=> array(AUTH_ALL, AUTH_ALL, AUTH_ALL, AUTH_ALL, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_REG),	//	Öffentlich
+		1	=> array(AUTH_ALL, AUTH_ALL, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_MOD),	//	Benutzer
+		2	=> array(AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_REG, AUTH_MOD),	//	Benutzer versteckt
+		3	=> array(AUTH_REG, AUTH_REG, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail
+		4	=> array(AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_TRI, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_TRI, AUTH_MOD),	//	Trail versteckt
+		5	=> array(AUTH_REG, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MOD, AUTH_MEM, AUTH_MEM),	//	Member
+		6	=> array(AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MEM, AUTH_MOD, AUTH_MEM, AUTH_MEM),	//	Member versteckt		
+		7	=> array(AUTH_REG, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren
+		8	=> array(AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD, AUTH_MOD),	//	Moderatoren versteckt
+		9	=> array(AUTH_REG, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_MOD, AUTH_MOD, AUTH_ACL, AUTH_ACL),	//	Privat
+		10	=> array(AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL, AUTH_ACL),	//	Privat versteckt
+		11	=> array(AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM, AUTH_ADM),	//	Administrator
 	);
 	
 	$simple_auth_types = array(
-		$lang['Registered'],	$lang['Registered'] . ' [' . $lang['Hidden'] . ']',
-		$lang['Trial'],			$lang['Trial'] . ' [' . $lang['Hidden'] . ']',
-		$lang['Member'],		$lang['Member'] . ' [' . $lang['Hidden'] . ']',
-		$lang['Moderators'],	$lang['Moderators'] . ' [' . $lang['Hidden'] . ']',
-		$lang['Private'],		$lang['Private'] . ' [' . $lang['Hidden'] . ']');
-	
-	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_poll', 'auth_pollcreate');
-	
-	$field_names = array(
-		'auth_view'			=> $lang['View'],
-		'auth_read'			=> $lang['Read'],
-		'auth_post'			=> $lang['Post'],
-		'auth_reply'		=> $lang['Reply'],
-		'auth_edit'			=> $lang['Edit'],
-		'auth_delete'		=> $lang['Delete'],
-		'auth_sticky'		=> $lang['Sticky'],
-		'auth_announce'		=> $lang['Announce'], 
-		'auth_poll'			=> $lang['Poll'], 
-		'auth_pollcreate'	=> $lang['Pollcreate']
+		$lang['forms_public'],
+		$lang['forms_register'],	sprintf($lang['forms_hidden'], $lang['forms_register']),
+		$lang['forms_trial'],		sprintf($lang['forms_hidden'], $lang['forms_trial']),
+		$lang['forms_member'],		sprintf($lang['forms_hidden'], $lang['forms_member']),
+		$lang['forms_moderator'],	sprintf($lang['forms_hidden'], $lang['forms_moderator']),
+		$lang['forms_privat'],		sprintf($lang['forms_hidden'], $lang['forms_privat']),
+		$lang['forms_admin'],
+		$lang['forms_special'],
 	);
 	
-	$forum_auth_levels	= array('ALL', 'REG', 'TRI', 'MEM', 'MOD', 'ACL', 'ADM');
+	$forum_auth_fields = array('auth_view', 'auth_read', 'auth_post', 'auth_reply', 'auth_edit', 'auth_delete', 'auth_sticky', 'auth_announce', 'auth_globalannounce', 'auth_poll', 'auth_pollcreate');
+	
+	$field_names = array(
+		'auth_view'				=> $lang['forms_view'],
+		'auth_read'				=> $lang['forms_read'],
+		'auth_post'				=> $lang['forms_post'],
+		'auth_reply'			=> $lang['forms_reply'],
+		'auth_edit'				=> $lang['forms_edit'],
+		'auth_delete'			=> $lang['forms_delete'],
+		'auth_sticky'			=> $lang['forms_sticky'],
+		'auth_announce'			=> $lang['forms_announce'],
+		'auth_globalannounce'	=> $lang['forms_globalannounce'],
+		'auth_poll'				=> $lang['forms_poll'],
+		'auth_pollcreate'		=> $lang['forms_pollcreate'],
+	);
+	
+	$field_images = array(
+		'auth_view'				=> $images['forms_view'],
+		'auth_read'				=> $images['forms_read'],
+		'auth_post'				=> $images['forms_post'],
+		'auth_reply'			=> $images['forms_reply'],
+		'auth_edit'				=> $images['forms_edit'],
+		'auth_delete'			=> $images['forms_delete'],
+		'auth_sticky'			=> $images['forms_sticky'],
+		'auth_announce'			=> $images['forms_announce'],
+		'auth_globalannounce'	=> $images['forms_globalannounce'],
+		'auth_poll'				=> $images['forms_poll'],
+		'auth_pollcreate'		=> $images['forms_pollcreate'],
+	);
+	
+	$forum_auth_levels	= array('all', 'register', 'trial', 'member', 'moderator', 'private', 'admin');
 	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
-
-	if (isset($HTTP_GET_VARS[POST_FORUM_URL]) || isset($HTTP_POST_VARS[POST_FORUM_URL]) )
-	{
-		$forum_id = (isset($HTTP_POST_VARS[POST_FORUM_URL])) ? intval($HTTP_POST_VARS[POST_FORUM_URL]) : intval($HTTP_GET_VARS[POST_FORUM_URL]);
-		$forum_sql = "AND forum_id = $forum_id";
-	}
-	else
-	{
-		unset($forum_id);
-		$forum_sql = '';
-	}
-
-	if(isset($HTTP_GET_VARS[POST_CATEGORY_URL]) || isset($HTTP_POST_VARS[POST_CATEGORY_URL]))
-	{
-		$cat_id = (isset($HTTP_POST_VARS[POST_CATEGORY_URL])) ? intval($HTTP_POST_VARS[POST_CATEGORY_URL]) : intval($HTTP_GET_VARS[POST_CATEGORY_URL]);
-		$cat_sql = "AND c.cat_id = $cat_id";
-	}
-	else
-	{
-		unset($cat_id);
-		$cat_sql = '';
-	}
+	
+	$cat_id		= ( $data_cat )	? $data_cat : '';
+	$cat_sql	= ( $data_cat )	? "AND c.cat_id = $data_cat" : '';
+	$forum_id	= ( $data_id )	? $data_id : '';
+	$forum_sql	= ( $data_id )	? "AND forum_id = $data_id" : '';
 	
 	if( isset($HTTP_GET_VARS['adv']) )
 	{
@@ -121,11 +132,11 @@ else
 	//
 	// Start program proper
 	//
-	if( isset($HTTP_POST_VARS['submit']) )
+	if ( isset($HTTP_POST_VARS['submit']) )
 	{
 		$sql = '';
 	
-		if(!empty($forum_id))
+		if ( !empty($forum_id) )
 		{
 			if(isset($HTTP_POST_VARS['simpleauth']))
 			{
@@ -138,7 +149,7 @@ else
 	
 				if (is_array($simple_ary))
 				{
-					$sql = "UPDATE " . FORUMS . " SET $sql WHERE forum_id = $forum_id";
+					$sql = "UPDATE " . FORUM . " SET $sql WHERE forum_id = $forum_id";
 				}
 			}
 			else
@@ -158,9 +169,12 @@ else
 					$sql .= ( ( $sql != '' ) ? ', ' : '' ) .$forum_auth_fields[$i] . ' = ' . $value;
 				}
 	
-				$sql = "UPDATE " . FORUMS . " SET $sql WHERE forum_id = $forum_id";
+				$sql = "UPDATE " . FORUM . " SET $sql WHERE forum_id = $forum_id";
 			}
-	
+			
+					
+			debug($sql);
+
 			if ( $sql != '' )
 			{
 				if ( !($result = $db->sql_query($sql)) )
@@ -189,7 +203,7 @@ else
 				$sql .= ( ( $sql != '' ) ? ', ' : '' ) .$forum_auth_fields[$i] . ' = ' . $value;
 			}
 	
-			$sql = "UPDATE " . FORUMS . " SET $sql WHERE cat_id = $cat_id";
+			$sql = "UPDATE " . FORUM . " SET $sql WHERE cat_id = $cat_id";
 	
 			if ( $sql != '' )
 			{
@@ -201,81 +215,98 @@ else
 	
 			$cat_sql = '';
 		}
-	
-		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('admin_forumauth_list.php') . '">'));
-		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid('admin_forumauth_list.php') . '">', "</a>");
+		
+		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid($file) . '">'));
+		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid($file) . '">', "</a>");
 		message(GENERAL_MESSAGE, $message);
 	
 	} // End of submit
 	
-	//
-	// Get required information, either all forums if
-	// no id was specified or just the requsted forum
-	// or category if it was
-	//
-	$sql = "SELECT f.*
-		FROM " . FORUMS . " f, " . CATEGORIES . " c
-		WHERE c.cat_id = f.cat_id
-		$forum_sql $cat_sql
-		ORDER BY c.cat_order ASC, f.forum_order ASC";
+	$sql = "SELECT f.* FROM " . FORUM . " f, " . FORUM_CAT . " c WHERE c.cat_id = f.cat_id $forum_sql $cat_sql ORDER BY c.cat_order ASC, f.forum_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, "Couldn't obtain forum list", "", __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
-	
 	$forum_rows = $db->sql_fetchrowset($result);
-	$db->sql_freeresult($result);
 	
 	if ( empty($forum_id) && empty($cat_id) )
 	{
-		//
-		// Output the summary list if no forum id was
-		// specified
-		//
-		$template->set_filenames(array('body' => './../admin/style/auth_forum_list_body.tpl'));
+		$template->set_filenames(array('body' => 'style/acp_forum_auth.tpl'));
+		$template->assign_block_vars('_auth_list', array());
 	
 		$template->assign_vars(array(
+			
+			'L_LEGEND'	=> $lang['legende'],
+		
 			'L_AUTH_TITLE' => $lang['Permissions_List'],
 			'L_AUTH_EXPLAIN' => $lang['Forum_auth_list_explain'],
 			'L_FORUM_NAME' => $lang['Forum_name'],
-			'S_COLUMN_SPAN' => count($forum_auth_fields)+1)
-		);
-	
-		for ($i=0; $i<count($forum_auth_fields); $i++)
+			'S_COLUMN_SPAN' => count($forum_auth_fields)+1,
+		));
+		
+		/*	Legende	*/
+		for ( $i = 0; $i < count($forum_auth_fields); $i++ )
 		{
-			$template->assign_block_vars('forum_auth_titles', array(
-				'CELL_TITLE' => $field_names[$forum_auth_fields[$i]]
+			$template->assign_block_vars('_auth_list._title', array(
+				'TITLE' => $field_names[$forum_auth_fields[$i]],
+				'IMAGE' => $field_images[$forum_auth_fields[$i]],
+			));
+			
+			if ( $i == 6 )
+			{
+				break;
+			}
+		}
+		
+		for ( $i = 7; $i < count($forum_auth_fields); $i++ )
+		{
+			$template->assign_block_vars('_auth_list._title2', array(
+				'TITLE' => $field_names[$forum_auth_fields[$i]],
+				'IMAGE' => $field_images[$forum_auth_fields[$i]],
 			));
 		}
-	
-		// Obtain the category list
-		$sql = "SELECT c.cat_id, c.cat_title, c.cat_order
-			FROM " . CATEGORIES . " c 
-			ORDER BY c.cat_order";
+		
+		for ( $i = 0; $i < count($forum_auth_levels); $i++ )
+		{
+			$template->assign_block_vars('_auth_list._auth', array(
+				'TITLE' => $lang['auth_' . $forum_auth_levels[$i]],
+				'IMAGE' => $images['auth_' . $forum_auth_levels[$i]],
+			));
+		}
+		/*	Legende	*/
+		
+		for ( $i = 0; $i < count($forum_auth_fields); $i++ )
+		{
+			$template->assign_block_vars('_auth_list._titles', array(
+				'TITLE' => $field_names[$forum_auth_fields[$i]],
+				'IMAGE' => $field_images[$forum_auth_fields[$i]],
+			));
+		}
+		
+		$sql = "SELECT * FROM " . FORUM_CAT . " ORDER BY cat_order";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'Could not query categories list', '', __LINE__, __FILE__, $sql);
 		}
+		$cats = $db->sql_fetchrowset($result);
 	
-		$category_rows = $db->sql_fetchrowset($result);
-		$cat_count = count($category_rows);
-	
-		for ($i=0; $i<$cat_count; $i++)
+		for ( $i = 0; $i < count($cats); $i++ )
 		{
-			$cat_id = $category_rows[$i]['cat_id'];
+			$cat_id = $cats[$i]['cat_id'];
 	
-			$template->assign_block_vars('cat_row', array(
-				'CAT_NAME' => $category_rows[$i]['cat_title'],
-				'CAT_URL' => append_sid('admin_forumauth_list.php?'.POST_CATEGORY_URL.'='.$category_rows[$i]['cat_id']))
-			);
+			$template->assign_block_vars('_auth_list.cat_row', array(
+				'CAT_NAME'	=> $cats[$i]['cat_name'],
+				'CAT_URL'	=> append_sid("$file?$url_c=$cat_id"),
+			));
 	
-			for ($j=0; $j<count($forum_rows); $j++)
+			for ( $j = 0; $j < count($forum_rows); $j++ )
 			{
 				if ( $cat_id == $forum_rows[$j]['cat_id'] )
 				{
-					$template->assign_block_vars('cat_row.forum_row', array(
+					$template->assign_block_vars('_auth_list.cat_row.forum_row', array(
 						'CLASS' => ( !($j % 2) ) ? 'class_row1' : 'class_row2',
-						'FORUM_NAME' => '<a href="'.append_sid('admin_forumauth_list.php?'.POST_FORUM_URL.'='.$forum_rows[$j]['forum_id']).'">'.$forum_rows[$j]['forum_name'].'</a>')
+						'ROW_CLASS' => ( !($j % 2) ) ? 'row_class1' : 'row_class2',
+						'FORUM_NAME' => '<a href="'.append_sid('admin_forumauth_list.php?'.$url.'='.$forum_rows[$j]['forum_id']).'">'.$forum_rows[$j]['forum_name'].'</a>')
 					);
 	
 					for ($k=0; $k<count($forum_auth_fields); $k++)
@@ -289,8 +320,8 @@ else
 								break;
 							}
 						}
-						$template->assign_block_vars('cat_row.forum_row.forum_auth_data', array(
-							'CELL_VALUE' => $lang['Forum_' . $item_auth_level],
+						$template->assign_block_vars('_auth_list.cat_row.forum_row.forum_auth_data', array(
+							'CELL_VALUE' => $images['auth_' . $item_auth_level],
 							'AUTH_EXPLAIN' => sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$k]], $lang['auth_forum_explain_' . $item_auth_level]))
 						);
 					}
@@ -305,7 +336,7 @@ else
 		// specified
 		//
 		$template->set_filenames(array(
-			'body' => './../admin/style/auth_forum_body.tpl')
+			'body' => 'style/auth_forum_body.tpl')
 		);
 	
 		$forum_name = $forum_rows[0]['forum_name'];
@@ -375,7 +406,7 @@ else
 				for($k = 0; $k < count($forum_auth_levels); $k++)
 				{
 					$selected = ( $forum_rows[0][$forum_auth_fields[$j]] == $forum_auth_const[$k] ) ? ' selected="selected"' : '';
-					$custom_auth[$j] .= '<option value="' . $forum_auth_const[$k] . '"' . $selected . '>' . $lang['Forum_' . $forum_auth_levels[$k]] . '</option>';
+					$custom_auth[$j] .= '<option value="' . $forum_auth_const[$k] . '"' . $selected . '>' . $lang['auth_' . $forum_auth_levels[$k]] . '</option>';
 				}
 				$custom_auth[$j] .= '</select>&nbsp;';
 	
@@ -393,14 +424,17 @@ else
 		}
 	
 		$adv_mode = ( empty($adv) ) ? '1' : '0';
-		$switch_mode = append_sid('admin_forumauth_list.php?' . POST_FORUM_URL . '=' . $forum_id . "&adv=". $adv_mode);
+		$switch_mode = append_sid('admin_forumauth_list.php?' . $url . '=' . $forum_id . "&adv=". $adv_mode);
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
-		$s_fields = '<input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '">';
+		$fields = '<input type="hidden" name="' . $url . '" value="' . $forum_id . '">';
 	
 		$template->assign_vars(array(
-			'FORUM_NAME' => $forum_name,
+		
+			
+		
+		'FORUM_NAME' => $forum_name,
 	
 			'L_FORUM' => $lang['Forum'], 
 			'L_AUTH_TITLE' => $lang['Auth_Control_Forum'],
@@ -410,25 +444,25 @@ else
 	
 			'U_SWITCH_MODE' => $u_switch_mode,
 	
-			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
+			'S_FORUMAUTH_ACTION' => append_sid($file),
 			'S_COLUMN_SPAN' => $s_column_span,
-			'S_FIELDS' => $s_fields)
+			'S_FIELDS' => $fields)
 		);
 	
 	}
 	else
 	{
-		$template->set_filenames(array('body' => './../admin/style/auth_cat_body.tpl'));
-
-		for ( $i=0; $i < count($forum_auth_fields); $i++ )
+		$template->set_filenames(array('body' => 'style/auth_cat_body.tpl'));
+		
+		for ( $i = 0; $i < count($forum_auth_fields); $i++ )
 		{
 			$template->assign_block_vars('forum_auth_titles', array(
 				'CELL_TITLE' => $field_names[$forum_auth_fields[$i]]
 			));
 		}
 	
-		$sql = 'SELECT c.cat_id, c.cat_title, c.cat_order
-					FROM ' . CATEGORIES . ' c
+		$sql = 'SELECT c.cat_id, c.cat_name, c.cat_order
+					FROM ' . FORUM_CAT . ' c
 					WHERE c.cat_id = ' . $cat_id . '
 				ORDER BY c.cat_order';
 		if ( !($result = $db->sql_query($sql)) )
@@ -438,11 +472,11 @@ else
 		$category_rows = $db->sql_fetchrowset($result);
 	
 		$cat_id = $category_rows[0]['cat_id'];
-		$cat_name = $category_rows[0]['cat_title'];
+		$cat_name = $category_rows[0]['cat_name'];
 		
 		$template->assign_block_vars('cat_row', array(
 			'CAT_NAME'	=> $cat_name,
-			'CAT_URL'	=> append_sid('admin_forumauth_list.php?' . POST_CATEGORY_URL . '=' .$cat_id)
+			'CAT_URL'	=> append_sid('admin_forumauth_list.php?' . $url_c . '=' .$cat_id)
 		));
 	
 		for ( $j=0; $j < count($forum_rows); $j++ )
@@ -453,7 +487,7 @@ else
 				$forum_name	= $forum_rows[$j]['forum_name'];
 				
 				$template->assign_block_vars('cat_row.forum_row', array(
-					'FORUM_NAME' => '<a href="' . append_sid('admin_forumauth_list.php?' . POST_FORUM_URL . '=' . $forum_id) . '">' . $forum_name . '</a>'
+					'FORUM_NAME' => '<a href="' . append_sid('admin_forumauth_list.php?' . $url . '=' . $forum_id) . '">' . $forum_name . '</a>'
 				));
 				
 				for ( $k=0; $k < count($forum_auth_fields); $k++ )
@@ -469,7 +503,7 @@ else
 						}
 					}
 					$template->assign_block_vars('cat_row.forum_row.forum_auth_data', array(
-						'CELL_VALUE'	=> $lang['Forum_' . $item_auth_level],
+						'CELL_VALUE'	=> $lang['auth_' . $item_auth_level],
 						'AUTH_EXPLAIN'	=> sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$k]], $lang['auth_forum_explain_' . $item_auth_level])
 					));
 				}
@@ -487,7 +521,7 @@ else
 			for($k = 0; $k < count($forum_auth_levels); $k++)
 			{
 				$selected = ( $forum_rows[0][$forum_auth_fields[$j]] == $forum_auth_const[$k] ) ? ' selected="selected"' : '';
-				$custom_auth[$j] .= '<option value="' . $forum_auth_const[$k] . '"' . $selected . '>' . $lang['Forum_' . $forum_auth_levels[$k]] . '</option>';
+				$custom_auth[$j] .= '<option value="' . $forum_auth_const[$k] . '"' . $selected . '>' . $lang['auth_' . $forum_auth_levels[$k]] . '</option>';
 			}
 			$custom_auth[$j] .= '</select>&nbsp;';
 	
@@ -499,9 +533,12 @@ else
 		//
 		// Finally pass any remaining items to the template
 		//
-		$s_fields = '<input type="hidden" name="' . POST_CATEGORY_URL . '" value="' . $cat_id . '">';
+		$fields = '<input type="hidden" name="' . $url_c . '" value="' . $cat_id . '">';
 	
 		$template->assign_vars(array(
+		
+			
+			
 			'CAT_NAME' => $cat_name,
 	
 			'L_AUTH_TITLE' => $lang['Auth_Control_Category'],
@@ -511,9 +548,9 @@ else
 			'L_SUBMIT' => $lang['Submit'],
 			'L_RESET' => $lang['Reset'],
 	
-			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth_list.php'),
+			'S_FORUMAUTH_ACTION' => append_sid($file),
 			'S_COLUMN_SPAN' => count($forum_auth_fields)+1,
-			'S_FIELDS' => $s_fields)
+			'S_FIELDS' => $fields)
 		);
 	
 	

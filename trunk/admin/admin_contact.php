@@ -1,49 +1,27 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
+	
 	if ( $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact_over'] = $root_file;
+		$module['_headmenu_10_contact']['_submenu_overview'] = $root_file;
 	}
 	
 	if ( $userauth['auth_contact'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact'] = $root_file . "?mode=contact";
+		$module['_headmenu_10_contact']['_submenu_contact'] = $root_file . "?mode=contact";
 	}
 	
 	if ( $userauth['auth_joinus'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact_joinus'] = $root_file . "?mode=joinus";
+		$module['_headmenu_10_contact']['_submenu_joinus'] = $root_file . "?mode=joinus";
 	}
 	
 	if ( $userauth['auth_fightus'] || $userdata['user_level'] == ADMIN )
 	{
-		$module['contact']['contact_fightus'] = $root_file . "?mode=fightus";
+		$module['_headmenu_10_contact']['_submenu_fightus'] = $root_file . "?mode=fightus";
 	}
 
 	return;
@@ -60,7 +38,7 @@ else
 	include($root_path . 'includes/functions_admin.php');
 	include($root_path . 'includes/functions_selects.php');
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_contact.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid('admin_contact.php', true)) : false;
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
@@ -234,12 +212,12 @@ else
 			break;
 			
 			default:
-				$s_index = TRUE;
+				$index = true;
 				message(GENERAL_ERROR, $lang['no_mode']);
 				break;
 		}
 	
-		if ( $s_index != TRUE )
+		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
 			exit;

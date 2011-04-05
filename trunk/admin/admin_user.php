@@ -1,35 +1,12 @@
 <?php
 
-/*
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010, 2011
- *	@code:	Sebastian Frickel © 2009, 2010, 2011
- *
- *	Benutzer
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user'])
 	{
-		$module['_headmenu_users']['_submenu_settings'] = $root_file;
+		$module['_headmenu_04_users']['_submenu_settings'] = $root_file;
 	}
 	
 	return;
@@ -41,7 +18,7 @@ else
 	$root_path	= './../';
 	$root_file	= basename(__FILE__);
 	
-	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_settings';
 	
 	require('./pagestart.php');
@@ -57,19 +34,19 @@ else
 	$confirm	= request('confirm', 1);
 	
 	$error		= '';
-	$s_fields	= '';
+	$fields	= '';
 	
-	$p_url	= POST_USER_URL;
-	$l_sec	= LOG_SEK_USER;
+	$url	= POST_USER_URL;
+	$log	= LOG_SEK_USER;
 
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_user'])
 	{
-		log_add(LOG_ADMIN, $l_sec, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid($root_file, true)) : false;
+	( $header ) ? redirect('admin/' . append_sid($root_file, true)) : false;
 
 #	debug($_GET);
 #	debug($_POST);
@@ -87,7 +64,7 @@ else
 			$s_mode .= '<option value="' . $key . '"' . $selected . '>&raquo;&nbsp;' . $value . '&nbsp;</option>';
 		}
 		$s_mode .= '</select>';
-		$s_mode .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+		$s_mode .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 	}
 	
 	$temp = ( $mode == '_create' || $mode == '_update' ) ? 'user_regedit' : ( !$mode ? 'display' : $mode);
@@ -103,7 +80,7 @@ else
 		case '_create':
 		case '_update':
 		
-			if ( $mode == '_create' && !request('submit', 2) )
+			if ( $mode == '_create' && !request('submit', 1) )
 			{
 				$data = array(
 					'username'				=> request('username', 2),
@@ -117,7 +94,7 @@ else
 				
 				$template->assign_block_vars('adduser', array());
 			}
-			else if ( $mode == '_update' && !request('submit', 2) )
+			else if ( $mode == '_update' && !request('submit', 1) )
 			{
 				$data = get_data(USERS, $data_id, 1);
 				
@@ -153,7 +130,7 @@ else
 			}
 			
 			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-			$s_fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="' . $mode . '" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -199,16 +176,16 @@ else
 				
 				'S_MODE'		=> $s_mode,
 				
-			#	'S_REGISTER'		=> append_sid($root_file . '?mode=register&amp;' . $p_url . '=' . $data_id),
-			#	'S_FIELDS'			=> append_sid($root_file . '?mode=fields&amp;' . $p_url . '=' . $data_id),
-			#	'S_SETTINGS'		=> append_sid($root_file . '?mode=settings&amp;' . $p_url . '=' . $data_id),
-			#	'S_IMAGES'			=> append_sid($root_file . '?mode=images&amp;' . $p_url . '=' . $data_id),
+			#	'S_REGISTER'		=> append_sid("$file?mode=register&amp;$url=$data_id"),
+			#	'S_FIELDS'			=> append_sid("$file?mode=fields&amp;$url=$data_id"),
+			#	'S_SETTINGS'		=> append_sid("$file?mode=settings&amp;$url=$data_id"),
+			#	'S_IMAGES'			=> append_sid("$file?mode=images&amp;$url=$data_id"),
 				
-			#	'S_EDIT'		=> append_sid($root_file . '?mode=edit&amp;' . $p_url . '=' . $data_id),
-			#	'S_GROUP'		=> append_sid($root_file . '?mode=groups&amp;' . $p_url . '=' . $data_id),
-			#	'S_AUTHS'		=> append_sid($root_file . '?mode=auths&amp;' . $p_url . '=' . $data_id),
+			#	'S_EDIT'		=> append_sid("$file?mode=edit&amp;$url=$data_id"),
+			#	'S_GROUP'		=> append_sid("$file?mode=groups&amp;$url=$data_id"),
+			#	'S_AUTHS'		=> append_sid("$file?mode=auths&amp;$url=$data_id"),
 				'S_ACTION'		=> append_sid($root_file),
-				'S_FIELDS'		=> $s_fields,
+				'S_FIELDS'		=> $fields,
 			));
 		
 		break;
@@ -383,10 +360,10 @@ else
 				$emailer->send();
 				$emailer->reset();
 				
-				log_add(LOG_ADMIN, $l_sec, 'acp_user_add');
+				log_add(LOG_ADMIN, $log, 'acp_user_add');
 				
-			//	$oCache -> sCachePath = './../cache/';
-			//	$oCache -> deleteCache('display_subnavi_user');
+			//	#$oCache -> sCachePath = './../cache/';
+			//	#$oCache -> deleteCache('display_subnavi_user');
 	
 				$message = $lang['create_user'] . sprintf($lang['click_return_user'], '<a href="' . append_sid($root_file) . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -500,10 +477,10 @@ else
 					WHERE user_id = $data_id";
 			$result = $db->sql_query($sql);
 			
-			log_add(LOG_ADMIN, $l_sec, 'acp_user_regedit');
+			log_add(LOG_ADMIN, $log, 'acp_user_regedit');
 			
-			$oCache -> sCachePath = './../cache/';
-			$oCache -> deleteCache('display_subnavi_user');
+			#$oCache -> sCachePath = './../cache/';
+			#$oCache -> deleteCache('display_subnavi_user');
 			
 			$message = $lang['user_update'] . sprintf($lang['click_return_user'], '<a href="' . append_sid($root_file) . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
@@ -518,7 +495,7 @@ else
 			$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 			$template->assign_block_vars('user_fields', array());
 			
-			$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+			$sql = 'SELECT * FROM ' . PROFILE_CAT . ' ORDER BY cat_order';
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -530,7 +507,7 @@ else
 				
 				$sql = 'SELECT *
 							FROM ' . PROFILE . '
-							ORDER BY profile_category, profile_order';
+							ORDER BY profile_cat, profile_order';
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -543,7 +520,7 @@ else
 				
 				for ( $i = 0; $i < $total_categories; $i++ )
 				{
-					$cat_id = $category_rows[$i]['category_id'];
+					$cat_id = $category_rows[$i]['cat_id'];
 			
 					$template->assign_block_vars('user_fields.catrow', array( 
 						'CATEGORY_ID'			=> $cat_id,
@@ -554,7 +531,7 @@ else
 					{
 						$profile_id = $profile_rows[$j]['profile_id'];
 						
-						if ( $profile_rows[$j]['profile_category'] == $cat_id )
+						if ( $profile_rows[$j]['profile_cat'] == $cat_id )
 						{
 							$value = $user_data[$profile_rows[$j]['profile_field']];
 							
@@ -577,8 +554,8 @@ else
 				}
 			}
 			
-			$s_fields = '<input type="hidden" name="mode" value="update_fields" />';
-			$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="update_fields" />';
+			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['user_head'],
@@ -597,16 +574,16 @@ else
 				'L_YES'					=> $lang['common_yes'],
 				'L_NO'					=> $lang['common_no'],
 				
-				'S_FIELDS'			=> append_sid($root_file . '?mode=fields&amp;' . $p_url . '=' . $data_id),
-				'S_SETTINGS'		=> append_sid($root_file . '?mode=settings&amp;' . $p_url . '=' . $data_id),
-				'S_IMAGES'			=> append_sid($root_file . '?mode=images&amp;' . $p_url . '=' . $data_id),
+				'S_FIELDS'			=> append_sid("$file?mode=fields&amp;$url=$data_id"),
+				'S_SETTINGS'		=> append_sid("$file?mode=settings&amp;$url=$data_id"),
+				'S_IMAGES'			=> append_sid("$file?mode=images&amp;$url=$data_id"),
 				
 				
-				'S_EDIT'			=> append_sid($root_file . '?mode=edit&amp;' . $p_url . '=' . $data_id),
-				'S_GROUP'			=> append_sid($root_file . '?mode=groups&amp;' . $p_url . '=' . $data_id),
-				'S_AUTHS'			=> append_sid($root_file . '?mode=auths&amp;' . $p_url . '=' . $data_id),
+				'S_EDIT'			=> append_sid("$file?mode=edit&amp;$url=$data_id"),
+				'S_GROUP'			=> append_sid("$file?mode=groups&amp;$url=$data_id"),
+				'S_AUTHS'			=> append_sid("$file?mode=auths&amp;$url=$data_id"),
 				'S_ACTION'			=> append_sid($root_file),
-				'S_FIELDS'		=> $s_fields
+				'S_FIELDS'		=> $fields
 			));
 		
 			$template->pparse('body');
@@ -650,8 +627,8 @@ else
 			
 			$user_rank				= $data['user_rank'];
 			
-			$s_fields = '<input type="hidden" name="mode" value="update_settings" />';
-			$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="update_settings" />';
+			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['user_head'],
@@ -670,16 +647,16 @@ else
 				'L_YES'					=> $lang['common_yes'],
 				'L_NO'					=> $lang['common_no'],
 				
-				'S_FIELDS'			=> append_sid($root_file . '?mode=fields&amp;' . $p_url . '=' . $data_id),
-				'S_SETTINGS'		=> append_sid($root_file . '?mode=settings&amp;' . $p_url . '=' . $data_id),
-				'S_IMAGES'			=> append_sid($root_file . '?mode=images&amp;' . $p_url . '=' . $data_id),
+				'S_FIELDS'			=> append_sid("$file?mode=fields&amp;$url=$data_id"),
+				'S_SETTINGS'		=> append_sid("$file?mode=settings&amp;$url=$data_id"),
+				'S_IMAGES'			=> append_sid("$file?mode=images&amp;$url=$data_id"),
 				
 				
-				'S_EDIT'			=> append_sid($root_file . '?mode=edit&amp;' . $p_url . '=' . $data_id),
-				'S_GROUP'			=> append_sid($root_file . '?mode=groups&amp;' . $p_url . '=' . $data_id),
-				'S_AUTHS'			=> append_sid($root_file . '?mode=auths&amp;' . $p_url . '=' . $data_id),
+				'S_EDIT'			=> append_sid("$file?mode=edit&amp;$url=$data_id"),
+				'S_GROUP'			=> append_sid("$file?mode=groups&amp;$url=$data_id"),
+				'S_AUTHS'			=> append_sid("$file?mode=auths&amp;$url=$data_id"),
 				'S_ACTION'			=> append_sid($root_file),
-				'S_FIELDS'		=> $s_fields
+				'S_FIELDS'		=> $fields
 			));
 		
 			$template->pparse('body');
@@ -705,10 +682,10 @@ else
 					message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 				}			
 
-				log_add(LOG_ADMIN, $l_sec, 'ACP_USER_DELETE', $user_info['user_name']);
+				log_add(LOG_ADMIN, $log, 'ACP_USER_DELETE', $user_info['user_name']);
 				
-				$oCache -> sCachePath = './../cache/';
-				$oCache -> deleteCache('display_subnavi_user');
+				#$oCache -> sCachePath = './../cache/';
+				#$oCache -> deleteCache('display_subnavi_user');
 				
 				$message = $lang['delete_user'] . sprintf($lang['click_return_user'], '<a href="' . append_sid($root_file) . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -718,7 +695,7 @@ else
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$s_fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -728,7 +705,7 @@ else
 					'L_NO'				=> $lang['common_no'],
 	
 					'S_ACTION'	=> append_sid($root_file),
-					'S_FIELDS'	=> $s_fields,
+					'S_FIELDS'	=> $fields,
 				));
 			}
 			else
@@ -858,7 +835,7 @@ else
 			}
 			$db->sql_freeresult($result);
 	
-			$s_fields = '<input type="hidden" name="mode" value="editgroups" /><input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="editgroups" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -872,13 +849,13 @@ else
 				
 
 				
-				'S_GROUP'			=> append_sid($root_file . '?mode=groups&amp;' . $p_url . '=' . $data_id),
-				'S_AUTHS'			=> append_sid($root_file . '?mode=auths&amp;' . $p_url . '=' . $data_id),
+				'S_GROUP'			=> append_sid("$file?mode=groups&amp;$url=$data_id"),
+				'S_AUTHS'			=> append_sid("$file?mode=auths&amp;$url=$data_id"),
 				
 				'S_MODE'			=> $s_mode,
-				'S_EDIT'			=> append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_id),
+				'S_EDIT'			=> append_sid("$file?mode=_update&amp;$url=$data_id"),
 				'S_ACTION'			=> append_sid($root_file),
-				'S_FIELDS'		=> $s_fields,
+				'S_FIELDS'		=> $fields,
 			));
 		
 		break;
@@ -1084,11 +1061,11 @@ else
 			}
 			*/
 			
-			log_add(LOG_ADMIN, $l_sec, 'acpuser_groups');
+			log_add(LOG_ADMIN, $log, 'acpuser_groups');
 		
 			$message = $lang['user_change_groups']
 				. sprintf($lang['click_return_user'], '<a href="' . append_sid($root_file) . '">', '</a>')
-				. sprintf($lang['click_return_user_groups'], '<a href="' . append_sid($root_file . '?mode=user_groups&' . $p_url . '=' . $data_id) . '">', '</a>');				
+				. sprintf($lang['click_return_user_groups'], '<a href="' . append_sid("$file?mode=user_groups&$url=$data_id") . '">', '</a>');				
 			message(GENERAL_MESSAGE, $message);
 			
 		break;
@@ -1273,7 +1250,7 @@ else
 				));
 			}
 			
-			$s_fields = '<input type="hidden" name="mode" value="editauths" /><input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="editauths" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -1288,9 +1265,9 @@ else
 				'L_DEFAULT'		=> $lang['all_default'],
 
 				'S_MODE'		=> $s_mode,
-				'S_EDIT'		=> append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_id),
+				'S_EDIT'		=> append_sid("$file?mode=_update&amp;$url=$data_id"),
 				'S_ACTION'		=> append_sid($root_file),
-				'S_FIELDS'		=> $s_fields,
+				'S_FIELDS'		=> $fields,
 			));
 		
 		break;
@@ -1325,11 +1302,11 @@ else
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			log_add(LOG_ADMIN, $l_sec, 'acp_auths_edit');
+			log_add(LOG_ADMIN, $log, 'acp_auths_edit');
 			
 			$message = $lang['user_change_auths']
 				. sprintf($lang['click_return_user'], '<a href="' . append_sid($root_file) . '">', '</a>')
-				. sprintf($lang['click_return_user_auths'], '<a href="' . append_sid($root_file . '?mode=user_auth&' . $p_url . '=' . $data_id) . '">', '</a>');				
+				. sprintf($lang['click_return_user_auths'], '<a href="' . append_sid("$file?mode=user_auth&$url=$data_id") . '">', '</a>');				
 			message(GENERAL_MESSAGE, $message);
 		
 		break;
@@ -1339,8 +1316,8 @@ else
 			$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 			$template->assign_block_vars('user_auths', array());
 			
-			$s_fields = '<input type="hidden" name="mode" value="editsettings" />';
-			$s_fields .= '<input type="hidden" name="' . $p_url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="editsettings" />';
+			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> $lang['user_head'],
@@ -1356,11 +1333,11 @@ else
 				'L_GROUPS'			=> $lang['user_groups'],
 				'L_TEAMS'			=> $lang['user_teams'],
 
-				'S_EDIT'			=> append_sid($root_file . '?mode=edit&amp;' . $p_url . '=' . $data_id),
-				'S_GROUP'			=> append_sid($root_file . '?mode=groups&amp;' . $p_url . '=' . $data_id),
-				'S_AUTHS'			=> append_sid($root_file . '?mode=auths&amp;' . $p_url . '=' . $data_id),
+				'S_EDIT'			=> append_sid("$file?mode=edit&amp;$url=$data_id"),
+				'S_GROUP'			=> append_sid("$file?mode=groups&amp;$url=$data_id"),
+				'S_AUTHS'			=> append_sid("$file?mode=auths&amp;$url=$data_id"),
 				'S_ACTION'			=> append_sid($root_file),
-				'S_FIELDS'		=> $s_fields,
+				'S_FIELDS'		=> $fields,
 			));
 		
 			$template->pparse('body');
@@ -1378,7 +1355,7 @@ else
 			$template->set_filenames(array('body' => 'style/acp_user.tpl'));
 			$template->assign_block_vars('_display', array());
 			
-			$s_fields = '<input type="hidden" name="mode" value="_create" />';
+			$fields = '<input type="hidden" name="mode" value="_create" />';
 	
 			$data_user	= get_data_array(USERS, ' user_id <> ' . ANONYMOUS, 'user_id', 'DESC');
 			
@@ -1394,15 +1371,17 @@ else
 					case ADMIN:		$user_level = $lang['auth_admin'];	break;
 				}
 				
+				$user_id = $data_user[$i]['user_id'];
+				
 				if ( $userdata['user_level'] > $data_user[$i]['user_level'] )
 				{
-					$link_edit		= '<a href="' . append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
-					$link_delete	= '<a href="' . append_sid($root_file . '?mode_=delete&amp;' . $p_url . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
+					$link_edit		= '<a href="' . append_sid("$file?mode=_update&amp;$url=$user_id") . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
+					$link_delete	= '<a href="' . append_sid("$file?mode_=delete&amp;$url=$user_id") . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
 				}
 				else if ( $userdata['user_level'] == ADMIN )
 				{
-					$link_edit		= '<a href="' . append_sid($root_file . '?mode=_update&amp;' . $p_url . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
-					$link_delete	= '<a href="' . append_sid($root_file . '?mode=_delete&amp;' . $p_url . '=' . $data_user[$i]['user_id']) . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
+					$link_edit		= '<a href="' . append_sid("$file?mode=_update&amp;$url=$user_id") . '" ><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" ></a>';
+					$link_delete	= '<a href="' . append_sid("$file?mode=_delete&amp;$url=$user_id") . '" ><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" ></a>';
 				}
 				else
 				{
@@ -1431,8 +1410,8 @@ else
 				'PAGE_NUMBER'	=> ( count($data_user) ) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
 				'PAGE_PAGING'	=> ( count($data_user) ) ? generate_pagination($root_file . '?', count($data_user), $settings['site_entry_per_page'], $start ) : '',
 
-				'S_FIELDS'	=> $s_fields,
-				'S_CREATE'	=> append_sid($root_file . '?mode=_create'),
+				'S_FIELDS'	=> $fields,
+				'S_CREATE'	=> append_sid("$file?mode=_create"),
 				'S_ACTION'	=> append_sid($root_file),
 			));
 		

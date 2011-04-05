@@ -1,37 +1,15 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	© 2001 The phpBB Group
-
-***/
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['template']['Add_new']	= "$root_file?mode=addnew";
-		$module['template']['Create_new']	= "$root_file?mode=create";
-		$module['template']['Manage']		= $root_file;
-		$module['template']['Export']		= "$root_file?mode=export";
+		$module['_headmenu_12_template']['_submenu_add_new']	= "$root_file?mode=addnew";
+		$module['_headmenu_12_template']['_submenu_create']	= "$root_file?mode=create";
+		$module['_headmenu_12_template']['_submenu_manage']		= $root_file;
+		$module['_headmenu_12_template']['_submenu_export']		= "$root_file?mode=export";
 	}
 	
 	return;
@@ -52,7 +30,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_styles.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid('admin_styles.php', true)) : false;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
@@ -531,7 +509,7 @@ else
 						}
 					}
 	
-					$s_fields = '<input type="hidden" name="style_id" value="' . $style_id . '" />';
+					$fields = '<input type="hidden" name="style_id" value="' . $style_id . '" />';
 				}
 				else
 				{
@@ -567,7 +545,7 @@ else
 					message(GENERAL_MESSAGE, $lang['No_template_dir']);
 				}
 	
-				$s_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 	
 				$template->assign_vars(array(
 					"L_THEMES_TITLE" => $themes_title,
@@ -691,7 +669,7 @@ else
 					
 					"S_THEME_ACTION" => append_sid('admin_styles.php'),
 					"S_TEMPLATE_SELECT" => $s_template_select,
-					"S_HIDDEN_FIELDS" => $s_fields)
+					"S_HIDDEN_FIELDS" => $fields)
 				);
 				
 				$template->pparse("body");
@@ -745,10 +723,10 @@ else
 					// Unable to open the file writeable do something here as an attempt
 					// to get around that...
 					//
-					$s_fields = '<input type="hidden" name="theme_info" value="' . htmlspecialchars($theme_data) . '" />';
-					$s_fields .= '<input type="hidden" name="send_file" value="1" /><input type="hidden" name="mode" value="export" />';
+					$fields = '<input type="hidden" name="theme_info" value="' . htmlspecialchars($theme_data) . '" />';
+					$fields .= '<input type="hidden" name="send_file" value="1" /><input type="hidden" name="mode" value="export" />';
 					
-					$download_form = '<form action="' . append_sid('admin_styles.php') . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $s_fields;
+					$download_form = '<form action="' . append_sid('admin_styles.php') . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $fields;
 	
 					$template->set_filenames(array(
 						"body" => "message_body.tpl")
@@ -827,7 +805,7 @@ else
 					message(GENERAL_MESSAGE, $lang['Cannot_remove_style']);
 				}
 				
-				$s_fields = '<input type="hidden" name="mode" value="'.$mode.'" /><input type="hidden" name="style_id" value="'.$style_id.'" />';
+				$fields = '<input type="hidden" name="mode" value="'.$mode.'" /><input type="hidden" name="style_id" value="'.$style_id.'" />';
 				
 				//
 				// Set template files
@@ -844,7 +822,7 @@ else
 					"L_NO" => $lang['No'],
 	
 					"S_CONFIRM_ACTION" => append_sid('admin_styles.php'),
-					"S_HIDDEN_FIELDS" => $s_fields)
+					"S_HIDDEN_FIELDS" => $fields)
 				);
 	
 				$template->pparse("confirm");

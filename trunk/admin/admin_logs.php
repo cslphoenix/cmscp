@@ -1,36 +1,13 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_development']['_submenu_logs']		= $root_file;
-		$module['_headmenu_development']['_submenu_logs_error']	= $root_file . "?mode=error";
+		$module['_headmenu_07_development']['_submenu_logs']		= $root_file;
+		$module['_headmenu_07_development']['_submenu_logs_error']	= $root_file . "?mode=error";
 	//	$module['logs']['logs_admin']	= $root_file . "?mode=admin";
 	//	$module['logs']['logs_member']	= $root_file . "?mode=member";
 	//	$module['logs']['logs_user']	= $root_file . "?mode=user";
@@ -43,7 +20,7 @@ else
 	define('IN_CMS', true);
 	
 	$root_path	= './../';
-	$s_header	= ( isset($_POST['cancel']) ) ? true : false;
+	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= '_submenu_logs';
 	
 	include('./pagestart.php');
@@ -53,18 +30,23 @@ else
 	
 	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
+	
 	$log_id		= request(POST_LOG_URL, 0);
 	$mode		= request('mode', 1);
 	$confirm	= request('confirm', 1);
-	$s_fields	= '';
+	
+	$fields	= '';
+	$file		= basename(__FILE__);
+	
+	$log	= LOG_SEK_LOG;
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_LOG, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
 	}
 	
-	( $s_header ) ? redirect('admin/' . append_sid('admin_logs.php', true)) : false;
+	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
 	
 	switch ( $mode )
 	{
@@ -136,7 +118,7 @@ else
 				'PAGE_NUMBER'		=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 				
 				'S_LOG_ERROR'		=> append_sid('admin_logs.php?mode=error'),
-				'S_LOG_ACTION'		=> append_sid('admin_logs.php'),
+				'S_LOG_ACTION'		=> append_sid($file),
 			));
 			
 			$template->pparse('body');
@@ -157,7 +139,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, LOG_SEK_LOG, 'acp_log_delete_error');
+				log_add(LOG_ADMIN, $log, 'acp_log_delete_error');
 				
 				$message = $lang['delete_log_error'] . sprintf($lang['click_return_log_error'], '<a href="' . append_sid('admin_logs.php?mode=error') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -167,8 +149,8 @@ else
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$s_fields = '<input type="hidden" name="mode" value="deleteerror" />';
-				$s_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="deleteerror" />';
+				$fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -178,7 +160,7 @@ else
 					'L_NO'				=> $lang['common_no'],
 	
 					'S_ACTION'	=> append_sid('admin_logs.php?mode=error'),
-					'S_FIELDS'	=> $s_fields,
+					'S_FIELDS'	=> $fields,
 				));
 			}
 			else
@@ -202,9 +184,9 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, LOG_SEK_LOG, 'acp_log_delete_all');
+				log_add(LOG_ADMIN, $log, 'acp_log_delete_all');
 				
-				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
+				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . append_sid($file) . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 	
 			}
@@ -212,7 +194,7 @@ else
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$s_fields = '<input type="hidden" name="mode" value="delete_all" />';
+				$fields = '<input type="hidden" name="mode" value="delete_all" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -221,8 +203,8 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_ACTION'	=> append_sid('admin_logs.php'),
-					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid($file),
+					'S_FIELDS'	=> $fields,
 				));
 			}
 			else
@@ -248,9 +230,9 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, LOG_SEK_LOG, 'acp_log_delete');
+				log_add(LOG_ADMIN, $log, 'acp_log_delete');
 				
-				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . append_sid('admin_logs.php') . '">', '</a>');
+				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . append_sid($file) . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 	
 			}
@@ -258,8 +240,8 @@ else
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$s_fields = '<input type="hidden" name="mode" value="delete" />';
-				$s_fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="delete" />';
+				$fields .= '<input type="hidden" name="log_ids" value="' . $log_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -268,8 +250,8 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_ACTION'	=> append_sid('admin_logs.php'),
-					'S_FIELDS'	=> $s_fields,
+					'S_ACTION'	=> append_sid($file),
+					'S_FIELDS'	=> $fields,
 				));
 			}
 			else
@@ -303,7 +285,7 @@ else
 				'L_DELETE'			=> $lang['common_delete'],
 		
 				'S_LOG_ERROR'		=> append_sid('admin_logs.php?mode=error'),
-				'S_LOG_ACTION'		=> append_sid('admin_logs.php'),
+				'S_LOG_ACTION'		=> append_sid($file),
 			));
 			
 			$sql = 'SELECT l.*, u.username
@@ -348,7 +330,7 @@ else
 							break;
 					}
 			
-					$template->assign_block_vars('display.logs_row', array(
+					$template->assign_block_vars('_display._logs_row', array(
 						'CLASS'		=> $class,
 						
 						'LOG_ID'	=> $log_entry[$i]['log_id'],
@@ -376,6 +358,8 @@ else
 			
 			break;
 	}
+	
 	include('./page_footer_admin.php');
 }
+
 ?>

@@ -1,35 +1,12 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
-if( !empty($setmodules) )
+if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_main']['_submenu_settings'] = $root_file;
+		$module['_headmenu_01_main']['_submenu_settings'] = $root_file;
 	}
 	
 	return;
@@ -41,7 +18,7 @@ else
 	$root_path	= './../';
 	$current	= '_submenu_settings';
 	
-	require('./pagestart.php');
+	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 	
@@ -80,11 +57,13 @@ else
 	}
 	
 	$s_sort = '<select class="postselect" name="sort" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
+	
 	foreach ( $lang['settings_option'] as $key => $value )
 	{
 		$selected = ( $sort == $key ) ? ' selected="selected"' : '';
 		$s_sort .= '<option value="' . $key . '"' . $selected . '>&raquo;&nbsp;' . $value . '&nbsp;</option>';
 	}
+	
 	$s_sort .= '</select>';
 	
 	$template->set_filenames(array('body' => 'style/acp_settings.tpl'));
@@ -132,20 +111,11 @@ else
 				}
 				
 				$sql = "UPDATE " . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new[$config_name]) . "' WHERE config_name = '$config_name'";
-				if( !$db->sql_query($sql) )
+				if ( !$db->sql_query($sql) )
 				{
 					message(GENERAL_ERROR, 'SQL Error: ' . $config_name, '', __LINE__, __FILE__, $sql);
 				}
 			}
-		}
-		
-		if ( isset($_POST['submit']) )
-		{
-			$oCache -> sCachePath = './../cache/';
-			$oCache -> deleteCache('config');
-	
-			$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
-			message(GENERAL_MESSAGE, $message);
 		}
 	}
 	
@@ -166,22 +136,23 @@ else
 
 			if ( isset($_POST['submit']) )
 			{
-				$sql = "UPDATE " . CONFIG . " SET settings_value = '" . str_replace("\'", "''", $new[$settings_name]) . "' WHERE settings_name = '$settings_name'";
-				if( !$db->sql_query($sql) )
+				$sql = "UPDATE " . SETTINGS . " SET settings_value = '" . str_replace("\'", "''", $new[$settings_name]) . "' WHERE settings_name = '$settings_name'";
+				if ( !$db->sql_query($sql) )
 				{
 					message(GENERAL_ERROR, 'SQL Error: ' . $settings_name, '', __LINE__, __FILE__, $sql);
 				}
 			}
 		}
-		
-		if ( isset($_POST['submit']) )
-		{
-			$oCache -> sCachePath = './../cache/';
-			$oCache -> deleteCache('settings');
+	}
 	
-			$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
-			message(GENERAL_MESSAGE, $message);
-		}
+	if ( isset($_POST['submit']) )
+	{
+		#$oCache -> sCachePath = './../cache/';
+		#$oCache -> deleteCache('config');
+		#$oCache -> deleteCache('settings');
+
+		$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
+		message(GENERAL_MESSAGE, $message);
 	}
 	
 //	$style_select = style_select($new['default_style'], 'default_style', "../templates");
@@ -280,7 +251,7 @@ else
 		'L_PATH_RANKS'				=> $lang['path_ranks'],
 		'L_PATH_RANKS_EXPLAIN'		=> $lang['path_ranks_explain'],
 		'L_PATH_NEWSCAT'			=> $lang['path_newscat'],
-		'L_PATH_NEWSCAT_EXPLAIN'	=> $lang['path_newscat_explain'],
+		'L_PATH_NEWSCAT_EXPLAIN'	=> $lang['path_cat_explain'],
 		'L_PATH_GALLERY'			=> $lang['path_gallery'],
 		'L_PATH_GALLERY_EXPLAIN'	=> $lang['path_gallery_explain'],
 		'L_PATH_GROUPS'				=> $lang['path_groups'],
@@ -321,10 +292,63 @@ else
 		'PATH_USERS'				=> $settings['path_users'],
 		'PATH_USERS_CHECKED'		=> ( is_writable($root_path . $settings['path_users']) ) ? '<img src="' . $images['icon_acp_yes'] . '" alt="" >' : '<img src="' . $images['icon_acp_no'] . '" alt="" >',
 		
+
+		'L_DISPLAY'				=> $lang['site_display'],
+		'L_DISPLAY_EXPLAIN'		=> $lang['site_display_explain'],
 		
+		'L_NEWS_LIMIT'			=> $lang['news_limit'],
+		'L_NEWS_LENGTH'			=> $lang['news_length'],
 		
+		'L_MATCH_LIMIT'			=> $lang['match_limit'],
+		'L_MATCH_LENGTH'		=> $lang['match_length'],
+		'L_FORUM_LIMIT'			=> $lang['forum_limit'],
+		'L_FORUM_LENGTH'		=> $lang['forum_length'],
+		'L_DOWNLOAD_LIMIT'		=> $lang['download_limit'],
+		'L_DOWNLOAD_LENGTH'		=> $lang['download_length'],
+		'L_NEWUSERS'			=> $lang['newusers'],
+		'L_NEWUSERS_CACHE'		=> $lang['newusers_cache'],
+		'L_NEWUSERS_LIMIT'		=> $lang['newusers_limit'],
+		'L_NEWUSERS_LENGTH'		=> $lang['newusers_length'],
+		'L_TEAMS'				=> $lang['teams'],
+		'L_TEAMS_LIMIT'			=> $lang['teams_limit'],
+		'L_LINKS'				=> $lang['links'],
+		'L_PARTNER'				=> $lang['partner'],
+		'L_SPONSOR'				=> $lang['sponsor'],
+		'L_MINICAL'				=> $lang['minical'],
+		'L_MATCH_NEXT'			=> $lang['match_next'],
+		'L_MATCH_NEXT'			=> $lang['training'],
 		
-	
+		'NEWS_LIMIT'			=> $settings['subnavi_news_limit'],
+		'NEWS_LENGTH'			=> $settings['subnavi_news_length'],
+		'MATCH_LIMIT'			=> $settings['subnavi_match_limit'],
+		'MATCH_LENGTH'			=> $settings['subnavi_match_length'],
+		'FORUM_LIMIT'			=> $settings['subnavi_forum_limit'],
+		'FORUM_LENGTH'			=> $settings['subnavi_forum_length'],
+		'DOWNLOAD_LIMIT'		=> $settings['subnavi_download_limit'],
+		'DOWNLOAD_LENGTH'		=> $settings['subnavi_download_length'],
+		
+		'S_NEWUSERS_NO'			=> (!$settings['subnavi_newusers'] ) ? 'checked="checked"' : '',
+		'S_NEWUSERS_YES'		=> ( $settings['subnavi_newusers'] ) ? 'checked="checked"' : '',
+		'NEWUSERS_CACHE'		=> $settings['subnavi_newusers_cache'],
+		'NEWUSERS_LIMIT'		=> $settings['subnavi_newusers_limit'],
+		'NEWUSERS_LENGTH'		=> $settings['subnavi_newusers_length'],
+		
+		'S_TEAMS_NO'			=> (!$settings['subnavi_teams'] ) ? 'checked="checked"' : '',
+		'S_TEAMS_YES'			=> ( $settings['subnavi_teams'] ) ? 'checked="checked"' : '',
+		'TEAMS_LIMIT'			=> $settings['subnavi_teams_limit'],
+		
+		'S_LINKS_NO'			=> (!$settings['subnavi_links'] ) ? 'checked="checked"' : '',
+		'S_LINKS_YES'			=> ( $settings['subnavi_links'] ) ? 'checked="checked"' : '',
+		'S_PARTNER_NO'			=> (!$settings['subnavi_partner'] ) ? 'checked="checked"' : '',
+		'S_PARTNER_YES'			=> ( $settings['subnavi_partner'] ) ? 'checked="checked"' : '',
+		'S_SPONSOR_NO'			=> (!$settings['subnavi_sponsor'] ) ? 'checked="checked"' : '',
+		'S_SPONSOR_YES'			=> ( $settings['subnavi_sponsor'] ) ? 'checked="checked"' : '',
+		'S_MINICAL_NO'			=> (!$settings['subnavi_minical'] ) ? 'checked="checked"' : '',
+		'S_MINICAL_YES'			=> ( $settings['subnavi_minical'] ) ? 'checked="checked"' : '',
+		'S_MATCH_NO'			=> (!$settings['subnavi_match_next'] ) ? 'checked="checked"' : '',
+		'S_MATCH_YES'			=> ( $settings['subnavi_match_next'] ) ? 'checked="checked"' : '',
+		'S_TRAINING_NO'			=> (!$settings['subnavi_training'] ) ? 'checked="checked"' : '',
+		'S_TRAINING_YES'		=> ( $settings['subnavi_training'] ) ? 'checked="checked"' : '',
 		
 #		'L_EMAIL_ON-OFF'			=> $lang['email_enabled'],
 #		'L_EMAIL_ON-OFF_EXPLAIN'	=> $lang['email_enabled_explain'],

@@ -7,9 +7,6 @@ if ( !defined('IN_CMS') )
 
 global $do_gzip_compress;
 
-//
-// Show the overall footer.
-//
 $template->set_filenames(array('page_footer' => 'style/page_footer.tpl'));
 $template->assign_vars(array('CMS_VERSION' => $config['page_version']));
 
@@ -21,15 +18,8 @@ if ( defined('DEBUG_SQL_ADMIN') )
 
 $template->pparse('page_footer');
 
-//
-// Close our DB connection.
-//
 $db->sql_close();
 
-//
-// Compress buffered output if required
-// and send to browser
-//
 if( $do_gzip_compress )
 {
 	//
