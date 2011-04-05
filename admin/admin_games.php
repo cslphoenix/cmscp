@@ -121,7 +121,7 @@ else
 								'game_tag'		=> request('game_tag', 2),
 								'game_image'	=> request('game_image', 2),
 								'game_size'		=> request('game_size', 0),
-								'game_order'	=> ( request('game_order_new', 0) ) ? request('game_order_new', 0) : request('game_order', 0),
+								'game_order'	=> request('game_order', 0) ? request('game_order', 0) : request('game_order_new', 0),
 							);
 							
 					$error .= ( !$data['game_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
