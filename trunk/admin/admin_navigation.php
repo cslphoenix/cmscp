@@ -92,7 +92,7 @@ else
 								'navi_show'		=> request('navi_show', 0),
 								'navi_target'	=> request('navi_target', 0),
 								'navi_intern'	=> request('navi_intern', 0),
-								'navi_order'	=> ( request('navi_order_new', 0) ) ? request('navi_order_new', 0) : request('navi_order', 0),
+								'navi_order'	=> request('navi_order', 0) ? request('navi_order', 0) : request('navi_order_new', 0),
 							);
 				}
 				
@@ -114,7 +114,7 @@ else
 				}
 				$s_list .= '</select>';
 				
-				$head = array(
+				$cats = array(
 							'0' => array('navi_type' => NAVI_MAIN, 'navi_name' => $lang['main']),
 							'1' => array('navi_type' => NAVI_CLAN, 'navi_name' => $lang['clan']),
 							'2' => array('navi_type' => NAVI_COM, 'navi_name' => $lang['com']),
@@ -134,13 +134,13 @@ else
 				$s_order = "<select class=\"select\" name=\"navi_order_new\" id=\"navi_order\">";
 				$s_order .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
 				
-				for ( $i = 0; $i < count($head); $i++ )
+				for ( $i = 0; $i < count($cats); $i++ )
 				{
 					$entry = '';
 
 					for ( $j = 0; $j < count($entrys); $j++ )
 					{
-						if ( $head[$i]['navi_type'] == $entrys[$j]['navi_type'] )
+						if ( $cats[$i]['navi_type'] == $entrys[$j]['navi_type'] )
 						{
 							$navi_lang = ( $entrys[$j]['navi_lang'] ) ? $lang[$entrys[$j]['navi_name']] : $entrys[$j]['navi_name'];
 							
@@ -151,7 +151,7 @@ else
 					
 					if ( $entry != '' )
 					{
-						$s_order .= '<optgroup label="' . $head[$i]['navi_name'] . '">';
+						$s_order .= '<optgroup label="' . $cats[$i]['navi_name'] . '">';
 						$s_order .= $entry;
 						$s_order .= '</optgroup>';
 					}
@@ -161,7 +161,7 @@ else
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= "<input type=\"hidden\" name=\"navi_order\" value=" . $data['navi_order'] . " />";
+				$fields .= "<input type=\"hidden\" name=\"navi_order\" value=\"" . $data['navi_order'] . "\" />";
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
@@ -173,7 +173,7 @@ else
 					'L_LANGUAGE'	=> $lang['common_language'],
 					'L_SHOW'		=> $lang['common_visible'],
 					'L_INTERN'		=> $lang['common_intern'],
-					
+
 					'L_TARGET'		=> $lang['target'],
 					'L_TARGET_NEW'	=> $lang['target_new'],
 					'L_TARGET_SELF'	=> $lang['target_self'],
@@ -182,10 +182,10 @@ else
 					'L_TYPE_COM'	=> $lang['com'],
 					'L_TYPE_MISC'	=> $lang['misc'],
 					'L_TYPE_USER'	=> $lang['user'],
-					
+
 					'NAME'			=> $data['navi_name'],
 					'URL'			=> $navi_url,
-					
+
 					'S_LIST'		=> $s_list,
 					'S_LANG_YES'	=> ( $data['navi_lang'] ) ? 'checked="checked"' : '',
 					'S_LANG_NO'		=> (!$data['navi_lang'] ) ? 'checked="checked"' : '',
@@ -200,14 +200,14 @@ else
 					'S_TYPE_COM'	=> ( $data['navi_type'] == NAVI_COM ) ? 'checked="checked"' : '',
 					'S_TYPE_MISC'	=> ( $data['navi_type'] == NAVI_MISC ) ? 'checked="checked"' : '',
 					'S_TYPE_USER'	=> ( $data['navi_type'] == NAVI_USER ) ? 'checked="checked"' : '',
-					
+
 					'S_ORDER'		=> $s_order,
-					
+
 					'S_SET'			=> append_sid("$file?mode=_settings"),
 					'S_ACTION'		=> append_sid($file),
 					'S_FIELDS'		=> $fields,
 				));
-				
+
 				if ( request('submit', 1) )
 				{
 				#	$navi_name		= request('navi_name', 2);
@@ -217,25 +217,29 @@ else
 				#	$navi_show		= request('navi_show', 0);
 				#	$navi_target	= request('navi_target', 0);
 				#	$navi_intern	= request('navi_intern', 0);
-					
+
 				#	$error .= ( !$navi_name ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
 				#	$error .= ( !$navi_type ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
-				
+
 					$data = array(
 								'navi_name'		=> request('navi_name', 2),
 								'navi_type'		=> request('navi_type', 0),
-								'navi_url'		=> ( request('navi_url', 2) ) ? ( request('navi_target', 0) ) ? set_http(request('navi_url', 2)) : './' . request('navi_url', 2) : '',
+								'navi_url'		=> request('navi_url', 2) ? request('navi_target', 0) ? set_http(request('navi_url', 2)) : './' . request('navi_url', 2) : '',
 								'navi_lang'		=> request('navi_lang', 0),
 								'navi_show'		=> request('navi_show', 0),
 								'navi_target'	=> request('navi_target', 0),
 								'navi_intern'	=> request('navi_intern', 0),
-								'navi_order'	=> ( request('navi_order_new', 0) ) ? request('navi_order_new', 0) : request('navi_order', 0),
+								'navi_order'	=> request('navi_order', 0) ? request('navi_order', 0) : request('navi_order_new', 0),
 							);
 					
+					$data['navi_order'] = ( !$data['navi_order'] ) ? dmax(FORUM, 'navi_order', 'navi_type = '. $data['navi_type']) : $data['navi_order'];
+
 					$error .= ( !$data['navi_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					$error .= ( !$data['navi_url'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_url'] : '';
 					$error .= ( !$data['navi_type'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_type'] : '';
 					
+					debuge($data);
+
 					if ( !$error )
 					{
 						if ( $mode == '_create' )

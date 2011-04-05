@@ -91,11 +91,11 @@ else
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-			$fields .= "<input type=\"hidden\" name=\"game_order\" value=" . $data['event_create'] . " />";
-			
+			$fields .= "<input type=\"hidden\" name=\"game_order\" value=\"" . $data['event_create'] . "\" />";
+
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['event']),
-				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['event'], $data['event_title']),	
+				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['event'], $data['event_title']),
 				'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['event']),
 				'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['event']),
 				'L_DATE'		=> $lang['common_date'],
@@ -156,42 +156,13 @@ else
 				{
 					if ( $mode == '_create' )
 					{
-						foreach ( $data as $key => $var )
-						{
-							$keys[] = $key;
-							$vars[] = $var;
-						}
-						
-						$sql = 'INSERT INTO ' . EVENT . ' (' . implode(', ', $keys) . ') VALUES (\'' . implode('\', \'', $vars) . '\')';
-					#	$sql = "INSERT INTO " . EVENT . " (event_title, event_desc, event_level, event_date, event_duration, event_comments, event_create) VALUES ('$event_title', '$event_desc', '$event_level', '$event_date', '$event_dura', '$event_comments', '$event_create')";
-						if ( !$db->sql_query($sql) )
-						{
-							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-						}
+						sql(EVENT, 'insert', $data);
 						
 						$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 					}
 					else
 					{
-						foreach ( $data as $key => $var )
-						{
-							$input[] = "$key = '$var'";
-						}
-						
-						$sql = "UPDATE " . EVENT . " SET " . implode(', ', $input) . " WHERE event_id = $data_id";
-					#	$sql = "UPDATE " . EVENT . " SET
-					#				event_title		= '$event_title',
-					#				event_desc		= '$event_desc',
-					#				event_level		= '$event_level',
-					#				event_date		= '$event_date',
-					#				event_duration	= '$event_dura',
-					#				event_comments	= '$event_comments',
-					#				event_update	= '" . time() . "'
-					#			WHERE event_id = $data_id";
-						if ( !$db->sql_query($sql) )
-						{
-							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-						}
+						sql(EVENT, 'update', $data, 'event_id', $data_id);
 						
 						$message = $lang['update']
 							. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
@@ -209,7 +180,7 @@ else
 				else
 				{
 					log_add(LOG_ADMIN, $log, $mode, $error);
-					
+
 					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
