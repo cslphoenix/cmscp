@@ -87,7 +87,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					{
 //						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['username'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
-						log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'UCP_ACP_LOGIN');
+						log_add(LOG_USERS, LOG_SEK_LOGIN, 'ucp_acp_login');
 					}
 
 					if( $session_id )

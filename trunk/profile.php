@@ -1,34 +1,13 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
 
 $userdata = session_pagestart($user_ip, PAGE_PROFILE);
 init_userprefs($userdata);
+
+include($root_path . 'includes/page_header.php');
 
 if (!empty($HTTP_POST_VARS['sid']) || !empty($HTTP_GET_VARS['sid']))
 {
@@ -72,7 +51,7 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 			message(GENERAL_MESSAGE, $lang['No_user_id_specified']);
 		}
 		
-		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+		$sql = 'SELECT * FROM ' . PROFILE_CAT . ' ORDER BY cat_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -84,7 +63,7 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 			
 			$sql = 'SELECT *
 						FROM ' . PROFILE . '
-						ORDER BY profile_category, profile_order';
+						ORDER BY profile_cat, profile_order';
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -97,18 +76,18 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 			
 			for ( $i = 0; $i < $total_categories; $i++ )
 			{
-				$cat_id = $category_rows[$i]['category_id'];
+				$cat_id = $category_rows[$i]['cat_id'];
 		
 				$template->assign_block_vars('details.info_cat', array( 
 					'CATEGORY_ID'			=> $cat_id,
-					'CATEGORY_NAME'			=> $category_rows[$i]['category_name'],
+					'CATEGORY_NAME'			=> $category_rows[$i]['cat_name'],
 				));
 				
 				for ($j = 0; $j < $total_profile; $j++ )
 				{
 					$profile_id = $profile_rows[$j]['profile_id'];
 					
-					if ( $profile_rows[$j]['profile_category'] == $cat_id )
+					if ( $profile_rows[$j]['profile_cat'] == $cat_id )
 					{
 						$value = $user_info[$profile_rows[$j]['profile_field']];
 						
@@ -140,7 +119,7 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 		
 	}
 	
-	include($root_path . 'includes/page_header.php');
+	
 	
 	$template->pparse('body');
 	

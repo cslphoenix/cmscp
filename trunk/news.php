@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -63,16 +40,16 @@ if ( $mode == '' )
 	//
 	//	List News
 	//
-	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] >= TRIAL )
 	{
-		$sql = 'SELECT n.*, nc.newscat_title, nc.newscat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT n.*, nc.cat_title, nc.cat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS . ' n
 						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWSCAT . ' nc ON n.news_category = nc.newscat_id
+						LEFT JOIN ' . NEWS_CAT . ' nc ON n.news_cat = nc.cat_id
 					WHERE n.news_time_public < ' . time() . ' AND news_public = 1
 				ORDER BY n.news_time_public DESC, n.news_id DESC';
 		if ( !($result = $db->sql_query($sql)) )
@@ -84,14 +61,14 @@ if ( $mode == '' )
 	}
 	else
 	{
-		$sql = 'SELECT n.*, nc.newscat_title, nc.newscat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT n.*, nc.cat_title, nc.cat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 					FROM ' . NEWS . ' n
 						LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 						LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 						LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-						LEFT JOIN ' . NEWSCAT . ' nc ON n.news_category = nc.newscat_id
+						LEFT JOIN ' . NEWS_CAT . ' nc ON n.news_cat = nc.cat_id
 					WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 				ORDER BY n.news_time_public DESC, n.news_id DESC';
 		if ( !($result = $db->sql_query($sql)) )
@@ -109,7 +86,7 @@ if ( $mode == '' )
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['news_limit'] + $start, count($news_data)); $i++)
+		for ( $i = $start; $i < min($settings['news_limit'] + $start, count($news_data)); $i++ )
 		{
 			$news_date = create_date($userdata['user_dateformat'], $news_data[$i]['news_time_public'], $userdata['user_timezone']); 
 			
@@ -131,8 +108,8 @@ if ( $mode == '' )
 				'NEWS_PUBLIC_TIME'	=> $news_date,
 				
 				
-				'NEWSCAT_TITLE'		=> ( $news_data[$i]['newscat_title'] ) ? $news_data[$i]['newscat_title'] : '',
-				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['newscat_image'] ) ? $root_path . $settings['path_newscat'] . '/' . $news_data[$i]['newscat_image'] : '',
+				'NEWSCAT_TITLE'		=> ( $news_data[$i]['cat_title'] ) ? $news_data[$i]['cat_title'] : '',
+				'NEWSCAT_IMAGE'		=> ( $news_data[$i]['cat_image'] ) ? $root_path . $settings['path_newscat'] . '/' . $news_data[$i]['cat_image'] : '',
 				
 				'U_NEWS'			=> append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']),
 				
@@ -156,7 +133,7 @@ if ( $mode == '' )
 				}
 				
 				$links = implode(', ', $links);
-					
+				
 				$template->assign_block_vars('show.news_row.links', array(
 					'L_LINK'	=> ( count($news_url) > 1 ) ? $lang['news_info_urls'] : $lang['news_info_url'],
 					'NEWS_LINK'	=> $links,
@@ -191,7 +168,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 	$template->set_filenames(array('body' => 'body_news.tpl'));
 	$template->assign_block_vars('details', array());
 	
-	if ( $userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] >= TRIAL )
 	{
 		$sql = 'SELECT n.*, u.username, u.user_color
 					FROM ' . NEWS . ' n
@@ -242,7 +219,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 	{
 		$template->assign_block_vars('details.news_comments', array());
 		
-		$sql = 'SELECT mc.*, u.username, u.user_email
+		$sql = 'SELECT mc.*, u.user_id, u.username, u.user_color, u.user_email
 					FROM ' . NEWS_COMMENTS . ' mc
 						LEFT JOIN ' . USERS . ' u ON mc.poster_id = u.user_id
 					WHERE news_id = ' . $news_id . ' ORDER BY time_create DESC';
@@ -318,12 +295,15 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				}
 				
 				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
+				
+				$user_id = $comment_entry[$i]['user_id'];
 	
 				$template->assign_block_vars('details.news_comments.comments', array(
 					'CLASS' 		=> $class,
 					'ID' 			=> $comment_entry[$i]['news_comments_id'],
+					'COLOR'			=> ( $comment_entry[$i]['user_color'] ) ? 'style="color:' . $comment_entry[$i]['user_color'] . '"' : '',
 					'L_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_nick'] : $comment_entry[$i]['username'],
-	//				'U_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_email'] : $comment_entry[$i]['user_email'],	Profil-Link und Mail schreiben an Gast
+					'U_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_email'] : append_sid("profile.php?mode=view&u=$user_id"),
 					'MESSAGE'		=> $comment,
 					'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
 					
@@ -446,7 +426,7 @@ else if ( $mode == 'view' && isset($HTTP_GET_VARS[POST_NEWS_URL]))
 				else
 				{				
 					$sql = 'INSERT INTO ' . NEWS_COMMENTS_READ . ' (news_id, user_id, read_time)
-						VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
+								VALUES (' . $news_id . ', ' . $userdata['user_id'] . ', ' . time() . ')';
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -71,14 +48,14 @@ $template->assign_vars(array(
 // END Assign static variabless to template
 //
 
-$sql = 'SELECT n.*, nc.newscat_title, nc.newscat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+$sql = 'SELECT n.*, nc.cat_title, nc.cat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
 			FROM ' . NEWS . ' n
 				LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 				LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 				LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-				LEFT JOIN ' . NEWSCAT . ' nc ON n.news_category = nc.newscat_id
+				LEFT JOIN ' . NEWS_CAT . ' nc ON n.news_cat = nc.cat_id
 			WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 		ORDER BY n.news_time_public DESC, n.news_id DESC';
 if ( !($result = $db->sql_query($sql)) )

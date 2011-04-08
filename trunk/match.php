@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -290,9 +267,9 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	
 	foreach ( $lang['select_categorie_box'] as $key_s => $value_s )
 	{
-		if ( $key_s == $match_details['match_categorie'] )
+		if ( $key_s == $match_details['match_category'] )
 		{
-			$match_categorie = $value_s;
+			$match_category = $value_s;
 		}
 	}
 	
@@ -759,13 +736,13 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		'MATCH_RIVAL_TAG'		=> $match_details['match_rival_tag'],
 		
 	
-		'MATCH_CATEGORIE'		=> $match_categorie,
+		'MATCH_CATEGORIE'		=> $match_category,
 		'MATCH_TYPE'			=> $match_type,
 		'MATCH_LEAGUE_INFO'		=> $match_league,
 		'SERVER'				=> ($match_details['server']) ? '<a href="hlsw://' . $match_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'SERVER_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN ) ? $match_details['server_pw'] : '',
+		'SERVER_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $match_details['server_pw'] : '',
 		'HLTV'					=> ($match_details['server']) ? '<a href="hlsw://' . $match_details['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'HLTV_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN ) ? $match_details['server_hltv_pw'] : '',
+		'HLTV_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $match_details['server_hltv_pw'] : '',
 		
 		'MAPC'					=> ($match_details['details_mapc']) ? '' : 'none',
 		'MAPD'					=> ($match_details['details_mapd']) ? '' : 'none',
@@ -870,7 +847,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	//
 	//	List Matches von Team
 	//
-	if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] >= TRIAL )
 	{
 		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH . ' m

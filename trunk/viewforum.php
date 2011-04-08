@@ -23,7 +23,7 @@ $start = ( $start < 0 ) ? 0 : $start;
 if ( !empty($forum_id) )
 {
 	$sql = "SELECT *
-		FROM " . FORUMS . "
+		FROM " . FORUM . "
 		WHERE forum_id = $forum_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -51,7 +51,7 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 	if ( !$userdata['session_logged_in'] )
 	{
 		$redirect = POST_FORUM_URL . "=$forum_id" . ( ( isset($start) ) ? "&start=$start" : '' );
-		redirect(append_sid('login.$phpEx?redirect=viewforum.$phpEx&$redirect", true));
+		redirect(append_sid("login.$phpEx?redirect=viewforum.$phpEx&$redirect", true));
 	}
 	//
 	// The user is not authed to read this forum ...
@@ -233,7 +233,7 @@ $template->assign_vars(array(
 
 	'U_VIEW_FORUM' => append_sid('viewforum.php?" . POST_FORUM_URL ."=$forum_id'),
 
-	'U_MARK_READ' => append_sid('viewforum.php?" . POST_FORUM_URL . "=$forum_id&amp;mark=topics"))
+	'U_MARK_READ' => append_sid('viewforum.php?" . POST_FORUM_URL . "=$forum_id&amp;mark=topics'))
 );
 
 //
@@ -347,7 +347,7 @@ if( $total_topics )
 							$folder_image = $folder_new;
 							$folder_alt = $lang['New_posts'];
 
-							$newest_post_img = '<a href="' . append_sid('viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
+							$newest_post_img = '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
 						}
 						else
 						{
@@ -362,7 +362,7 @@ if( $total_topics )
 						$folder_image = $folder_new;
 						$folder_alt = ( $topic_rowset[$i]['topic_status'] == TOPIC_LOCKED ) ? $lang['Topic_locked'] : $lang['New_posts'];
 
-						$newest_post_img = '<a href="' . append_sid('viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
+						$newest_post_img = '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
 					}
 				}
 				else 
@@ -390,7 +390,7 @@ if( $total_topics )
 			$times = 1;
 			for($j = 0; $j < $replies + 1; $j += $board_config['posts_per_page'])
 			{
-				$goto_page .= '<a href="' . append_sid('viewtopic.$phpEx?" . POST_TOPIC_URL . "=" . $topic_id . "&amp;start=$j") . '">' . $times . '</a>';
+				$goto_page .= '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=" . $topic_id . "&amp;start=$j") . '">' . $times . '</a>';
 				if( $times == 1 && $total_pages > 4 )
 				{
 					$goto_page .= ' ... ';
@@ -410,9 +410,9 @@ if( $total_topics )
 			$goto_page = '';
 		}
 		
-		$view_topic_url = append_sid('viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id");
+		$view_topic_url = append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id");
 
-		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . append_sid('profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
+		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? $topic_rowset[$i]['username'] : ( ( $topic_rowset[$i]['post_username'] != '' ) ? $topic_rowset[$i]['post_username'] : $lang['Guest'] );
 
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
@@ -421,9 +421,9 @@ if( $total_topics )
 
 		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['page_timezone']);
 
-		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_username2'] != '' ) ? $topic_rowset[$i]['post_username2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid('profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
+		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_username2'] != '' ) ? $topic_rowset[$i]['post_username2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
 
-		$last_post_url = '<a href="' . append_sid('viewtopic.$phpEx?"  . POST_POST_URL . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
+		$last_post_url = '<a href="' . append_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
 
 		$views = $topic_rowset[$i]['topic_views'];
 		
@@ -457,7 +457,7 @@ if( $total_topics )
 	$topics_count -= $total_announcements;
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination('viewforum.$phpEx?" . POST_FORUM_URL . "=$forum_id&amp;topicdays=$topic_days", $topics_count, $board_config['topics_per_page'], $start),
+		'PAGINATION' => generate_pagination("viewforum.$phpEx?" . POST_FORUM_URL . "=$forum_id&amp;topicdays=$topic_days", $topics_count, $board_config['topics_per_page'], $start),
 		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $board_config['topics_per_page'] ) + 1 ), ceil( $topics_count / $board_config['topics_per_page'] )), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])

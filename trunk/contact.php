@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -287,7 +264,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 		
 		'S_TYPE'			=> _select_type($contact_wartype),
 //		'S_TEAM'			=> _select_team($team_id, $typ, 'post'),
-		'S_TEAM'			=> select_box('team', 'select', 'team_id', 'team_name', $team_id),
+		'S_TEAM'			=> select_box('team', 'select', 'team_id', 'team_name', $team_id"),
 		'S_CATEGORIE'		=> _select_categorie($contact_categorie),
 		'S_HIDDEN_FIELD'	=> $s_hidden_field,
 		'S_CONTACT_ACTION'	=> append_sid('contact.php?mode=$mode'),

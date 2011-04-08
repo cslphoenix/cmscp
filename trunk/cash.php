@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -81,11 +58,11 @@ if ( $mode == '' )
 		'L_BD_NUMBER'	=> $lang['cash_bd_number'],
 		'L_BD_REASON'	=> $lang['cash_bd_reason'],
 		
-		'BD_NAME'		=> $cash_bankdata['bankdata_name'],
-		'BD_BANK'		=> $cash_bankdata['bankdata_bank'],
-		'BD_BLZ'		=> $cash_bankdata['bankdata_blz'],
-		'BD_NUMBER'		=> $cash_bankdata['bankdata_number'],
-		'BD_REASON'		=> $cash_bankdata['bankdata_reason'],
+		'BD_NAME'		=> $cash_bankdata['bank_name'],
+		'BD_BANK'		=> $cash_bankdata['bank_bank'],
+		'BD_BLZ'		=> $cash_bankdata['bank_blz'],
+		'BD_NUMBER'		=> $cash_bankdata['bank_number'],
+		'BD_REASON'		=> $cash_bankdata['bank_reason'],
 	));
 	
 	//

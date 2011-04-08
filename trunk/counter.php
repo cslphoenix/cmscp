@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -214,7 +191,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 						DAYOFMONTH(counter_date) = " . $i."";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
         $row = $db->sql_fetchrow($result);
 		
@@ -243,7 +220,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 						MONTH(counter_date) = '" . $i."'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$row = $db->sql_fetchrow($result);
 		$diagramme['Monat']['Werte'][] = (int) $row['sum'];
@@ -270,7 +247,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
                      YEAR(counter_date) = "'.$i.'"';
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(GENERAL_ERROR, '', '', __LINE__, __FILE__, $sql);
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$row = $db->sql_fetchrow($result);
         $diagramme['Jahr']['Werte'][] = (int) $row['sum'];
