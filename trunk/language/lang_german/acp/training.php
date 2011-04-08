@@ -6,6 +6,7 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
+	
 	'training'	=> 'Training',
 	'explain'	=> 'Hier kannst du Trainings der Teams Verwalten.',
 
@@ -14,19 +15,16 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Das Training wurde gelöscht!',
 	'confirm'	=> 'dass das Training gegen:',
 	
-	'return'	=> '<br /><br /><strong>%s&laquo; Trainings Administration%s</strong>',
-
 	'upcoming'	=> 'Anstehende Trainings',
 	'expired'	=> 'Abgelaufen Trainings',
 	
 	'vs'		=> 'Training gegen',
 	'date'		=> 'Trainingstermin',
+	'maps'		=> 'Trainingsmaps',
+	'text'		=> 'Trainingsbericht',
+	'team'		=> 'Trainingsteam',
+	'duration'	=> 'Trainingsdauer',
 	
 ));
-
-$lang['training_vs']		= 'Training gegen';
-$lang['training_date']			= 'Trainingstermin';
-$lang['training_maps']			= 'Trainingsmaps';
-$lang['training_text']			= 'Trainingsbericht';
 
 ?>

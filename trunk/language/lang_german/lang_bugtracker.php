@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 $lang['bugtracker']					= 'BugTracker';
 $lang['bugtracker_explain']			= 'Hier sind alle Bugeinträge aufgelistet';
 $lang['bugtracker_field']			= 'BugTracker Eintrag';
@@ -85,7 +62,8 @@ $lang['bugtracker_sql']			= 'SQL Version';
 
 
 
-$lang['msg_select_title']		= 'Bitte ein Titel eingeben!';
+$lang['msg_empty_title']		= 'Bitte ein Titel eingeben!';
+
 $lang['msg_select_type']		= 'Bitte eine Art des Fehlers auswählen!';
 $lang['msg_select_version']		= 'Bitte eine Script Version auswählen!';
 $lang['msg_select_desc']		= 'Bitte eine kurze Beschreibung abgeben!';
