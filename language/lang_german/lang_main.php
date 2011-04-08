@@ -1,29 +1,29 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 include('lang_head.php');
+
+$lang = array_merge($lang, array(
+
+	'main'	=> 'Main Navi',
+	'clan'	=> 'Clan Navi',
+	'com'	=> 'Community Navi',
+	'misc'	=> 'Misc Navi',
+	'user'	=> 'Benutzer Navi',
+	
+	'link'		=> 'Link',
+	'partner'	=> 'Partner',
+	'sponsor'	=> 'Sponsor',
+	
+));
+
+$lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
+$lang['msg_select_order']		= 'Bitte Reihenfolge ausw&auml;hlen';
+
+$lang['sprintf_select_order']	= '&raquo;&nbsp;nach:&nbsp;%s&nbsp;';
+$lang['sprintf_select_before']	= '&raquo;&nbsp;vor:&nbsp;%s&nbsp;';
+
+$lang['common_more']	= 'Erweitern';
+$lang['cal_legend']		= '<b>Legende:</b> <span class="today">Heute</span>, <span class="birthday">Geburtstage</span>, <span class="events">Ereignisse</span>, <span class="wars">Wars</span>, <span class="trains">Trainings</span>, <span class="more">mehrere Ereignisse an einem Tag</span>';
 
 $lang['user']			= 'Benutzer';
 
@@ -44,6 +44,8 @@ $lang['team_view']					= 'Team Übersicht';
 
 
 $lang['msg_select_team']			= 'Team auswählen';
+$lang['msg_select_sort_team']		= 'Team fürs sortieren wählen';
+
 
 $lang['common_comment']				= 'Kommentar';
 $lang['common_comments']			= 'Kommentare';
@@ -189,7 +191,7 @@ $lang['match_expired']		= 'Abgelaufen Wars';
 $lang['training']			= 'Trainings';
 $lang['training_upcoming']	= 'Anstehende Trainings';
 $lang['training_expired']	= 'Abgelaufen Trainings';
-$lang['training_vs']		= 'Training gegen: ';
+$lang['training_vs']		= 'Training gegen';
 
 
 $lang['edit_match']			= 'War bearbeiten';
@@ -1420,27 +1422,7 @@ $lang['required']		= 'Mit * markierte Felder sind erforderlich';
 
 $lang['access_denied']	= 'Keine Berechtigung für diese Seite.';
 
-//
-//	Clankasse (Cash)
-//
-$lang['cash_amount']			= 'Betrag';
-$lang['cash_name']				= 'Beitragsname';
-$lang['cash_interval']			= 'Zahlungsintervall';
-$lang['cash_interval_m']		= 'Monatlich';
-$lang['cash_interval_o']		= 'Einmalig';
-$lang['cash_interval_month']	= 'Monatlich';
-$lang['cash_interval_weeks']	= 'alle 2 Wochen';
-$lang['cash_interval_weekly']		= 'Wöchentlich';
-$lang['cash_no_entry']			= 'kein Eintrag';
-$lang['interval_m']				= 'Monatlich ab: %s';
-$lang['interval_o']				= 'Einmalig für Monat: %s';
 
-$lang['cash_bankdata']		= 'Bankdaten';
-$lang['cash_bd_bank']		= 'Kreditinstitut';
-$lang['cash_bd_number']		= 'Kontonummer';
-$lang['cash_bd_blz']		= 'Bankleitzahl';
-$lang['cash_bd_name']		= 'Inhaber';
-$lang['cash_bd_reason']		= 'Verwendungszweck';
 
 //
 //	Header Title

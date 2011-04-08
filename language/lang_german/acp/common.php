@@ -96,7 +96,7 @@ $lang['sprintf_type']			= '%s Type';
 $lang['sprintf_update']			= '%s bearbeiten: %s';
 $lang['sprintf_update_user']	= '%s bearbeiten: %s';		
 $lang['sprintf_upload']			= '%s Upload';
-$lang['sprintf_upload_info']	= '%s x %s / %s KB\'s';		
+$lang['sprintf_upload_info']	= 'Abmessung: %s x %s / Größe: %s KB\'s';
 $lang['sprintf_tag']			= '%s Tag';
 $lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
 $lang['sprintf_select_format2']	= '&raquo;&nbsp;%s&nbsp;::&nbsp;%s';
@@ -105,6 +105,10 @@ $lang['sprintf_select_before']	= '&raquo;&nbsp;vor:&nbsp;%s&nbsp;';
 $lang['sprintf_imagesize']		= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 $lang['sprintf_size']			= '%sgröße';
 
+$lang['sprintf_db_create'] = '|%s| geändert in: %s';
+$lang['sprintf_db_delete'] = '|%s| gelöscht: %s';
+$lang['sprintf_db_change'] = '|%s| von: %s auf: %s geändert.';
+
 /*	Allgemein:	Sprachdateien	*/
 $lang['common_add']				= 'Hinzufügen';
 $lang['common_auth']			= 'Berechtigung';
@@ -112,7 +116,9 @@ $lang['common_category']		= 'Kategorie';
 $lang['common_comment']			= 'Kommentar';
 $lang['common_comments']		= 'Kommentare';		
 $lang['common_confirm']			= 'Bestätigen';
-$lang['common_input_data']		= 'Daten eingeben';		
+$lang['common_input_data']		= 'Daten eingeben';
+$lang['common_input_option']	= 'Option';
+$lang['common_input_upload']	= 'Upload';
 $lang['common_date']			= 'Datum';
 $lang['common_default']			= 'Standarteinstellungen';
 $lang['common_default']			= 'Standarteinstellungen';
@@ -147,19 +153,42 @@ $lang['common_yes']				= 'Ja';
 
 $lang['common_order']			= 'Reihenfolge';
 
+/*	Ajax	*/
+$lang['msg_empty_maps'] = 'Keine Maps vorhanden/eingetragen.';
+$lang['msg_empty_ranks'] = 'Keine Ränge vorhanden/eingetragen.';
 
-/*
-	Karten
-*/
+/*	Allgemein	*/
+$lang['msg_empty_name'] = 'Bitte ein Namen eintragen!';
+$lang['msg_empty_desc'] = 'Bitte eine Beschreibung eintragen!';
+$lang['msg_empty_title'] = 'Bitte ein Titel eintragen!';
+
+$lang['msg_select_game'] = 'Bitte ein Spiel auswählen!';
+$lang['msg_select_ranks'] = 'Bitte einen Rang auswählen!';
+$lang['msg_select_team'] = 'Bitte ein Team auswählen!';
+$lang['msg_select_map'] = 'Bitte eine Map auswählen!';
+$lang['msg_select_team_first'] = 'Bitte ein Team zuerst auswählen!';
+
+
+/*	Teams	*/
+$lang['msg_select_nomembers'] = 'Keine Teammitglieder ausgewählt oder eingetragen.';
+
+/*	Event	*/
+$lang['msg_select_past'] = 'Bitte ein Datum/Zeit in der Zukunft auswählen!';
+$lang['msg_select_date'] = 'Bitte ein Gültiges Datum auswählen!';
+
+/*	Karten	*/
 $lang['select_msg_map_file'] = 'Bitte ein Bild auswählen!';
 
-
-
-/*
-	Forum
-*/
+/*	Forum	*/
 $lang['msg_select_forms'] = 'Bitte ein Forum auswählen!';
 $lang['msg_select_forum'] = 'Bitte ein Hauptforum auswählen!';
+
+/*	Maps	*/
+
+$lang['msg_empty_map'] = 'Bitte eine Map eintragen!';
+
+
+/*	Training	*/
 
 
 
@@ -168,15 +197,13 @@ $lang['msg_sprintf_auth_fail'] = 'Keine Berechtiung für dieses Modul: <b>%s</b>'
 $lang['msg_no_module_select'] = 'Keine Funktion ausgewählt!';
 
 $lang['msg_select_order'] = 'Bitte Reihenfolge auswählen!';
-$lang['msg_empty_title'] = 'Bitte ein Titel eintragen!';
-$lang['msg_empty_name'] = 'Bitte ein Namen eintragen!';
 $lang['msg_empty_text'] = 'Bitte einen Text eintragen!';
 $lang['msg_empty_type'] = 'Bitte ein Type auswählen!';
 $lang['msg_select_forum'] = 'Bitte ein Hauptforum auswählen!';
 $lang['msg_empty_url'] = 'Bitte eine URL eintragen!';
 $lang['msg_empty_tag'] = 'Bitte ein Tag eintragen!';
 $lang['msg_select_type'] = 'Bitte ein Type auswählen!';
-$lang['select_msg_ranks'] = 'Bitte einen Rang auswählen!';
+
 $lang['select_msg_game_image'] = 'Bitte ein Spielbild auswählen!';
 $lang['msg_select_newscat'] = 'Bitte eine Newskategorie auswählen!';
 $lang['select_msg_cat_image'] = 'Bitte ein Kategoriebild auswählen!';
@@ -203,8 +230,7 @@ $lang['msg_select_order_end']		= 'am Ende sortieren';
 
 $lang['msg_select_dir']				= 'Bitte ein Verzeichnis auswählen!';
 $lang['msg_select_desc']			= 'Bitte eine Beschreibung eintragen';
-$lang['msg_select_date']			= 'Bitte ein Gültiges Datum auswählen';
-$lang['msg_select_past']			= 'Bitte kein verganges Datum auswählen';
+
 $lang['msg_select_rival']			= 'Bitte ein Gegnernamen eintragen';
 $lang['msg_select_rival_tag']		= 'Bitte ein Gegnerclantag eintragen';
 $lang['msg_select_server']			= 'Bitte ein Gameserver eintragen';
@@ -218,10 +244,8 @@ $lang['msg_select_duration']		= 'Bitte eine Zeitdauer auswählen';
 
 $lang['msg_select_cat']				= 'Bitte ein Match Art auswählen';
 $lang['msg_select_league']			= 'Bitte eine Liga auswählen';
-$lang['msg_select_map']				= 'Bitte eine Map eintragen';
 $lang['msg_select_maps']			= 'Bitte eine Map Auswählen!';
 $lang['msg_select_match']			= 'Bitte eine Begegnung auswählen';
-$lang['msg_select_game']			= 'Bitte ein Spiel auswählen!';
 $lang['msg_select_game_image']		= 'Bitte ein Spielbild auswählen!';
 $lang['msg_select_newscat_image']	= 'Bitte ein Newsbild auswählen!';
 
@@ -231,7 +255,7 @@ $lang['msg_select_cat']				= 'Bitte eine Kategorie auswählen';
 
 
 $lang['msg_select_no_users']		= 'Keine Benutzer ausgewählt.';
-$lang['msg_select_no_members']		= 'Keine Member ausgewählt.';
+
 $lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
 $lang['msg_select_profilefield']	= 'Bitte Profilefeld eintragen!';
 $lang['msg_select_userlevel']		= 'Bitte ein Benutzerlevel auswählen!';
@@ -239,7 +263,7 @@ $lang['msg_select_userlevel']		= 'Bitte ein Benutzerlevel auswählen!';
 
 
 $lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
-$lang['select_rank']				= 'Rang setzen:';
+$lang['select_rank']				= 'Rang setzen &raquo;';
 $lang['msg_select_rank_set']		= 'Status %s setzen';
 
 $lang['sprintf_must_select']		= 'Es muss ein %s ausgewählt werden!';
@@ -388,6 +412,9 @@ $lang['auths'] = array(
 	'auth_maps'				=> $lang['auth_maps'],
 	'auth_download'			=> $lang['auth_download'],
 );
+
+$lang['image_filesize'] = 'Die Dateigröße muss kleiner als %d KB sein.';
+$lang['image_imagesize'] = 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
 /*
 	alter kram ;)

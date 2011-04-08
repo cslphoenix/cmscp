@@ -11,19 +11,53 @@ $lang = array_merge($lang, array(
 	'explain'	=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
 
 	'create'	=> 'Neues Team hinzugefügt.',
-	'update'	=> 'Spieldaten erfolgreich geändert.',
+	'update'	=> 'Teamdaten erfolgreich geändert.',
 	'delete'	=> 'Das Team wurde gelöscht!',
 	'confirm'	=> 'dass dieses Team:',
 	
-	'create_u'	=> 'Teamdaten erfolgreich geändert.',
-	'update_l'	=> 'Spielerrechte erfolgreich geändert.',
-	'update_r'	=> 'Spielerränge erfolgreich geändert.',
-	'delete_u'	=> 'Der Spieler wurde aus dem Team gelöscht!',
-	'confirm_u'	=> 'dass dieser Spiele(r): %s vom Team:',
-	
 	'count'		=> 'Anzahl',
 	'members'	=> 'Mitglieder',
-
+	
+	'game'		=> 'Teamspiel',
+	'navi'		=> 'in Navigation',
+	'awards'	=> 'Awards zeigen',
+	'fights'	=> 'Begegnungen zeigen',
+	
+	'list_fight'	=> 'Auflisten bei FightUs',
+	'list_join'		=> 'Auflisten bei JoinUs',
+	'list_teams'	=> 'Auflisten bei Teams',
+	
+	'expand'	=> 'Aufgeklappt',
+	
+	'logo_upload'	=> 'Logo hochladen',
+	'logo_current'	=> 'Aktuelles Logo',
+	'flag_upload'	=> 'Banner hochladen',
+	'flag_current'	=> 'Aktuelles Banner',
+	
+	'no_members'	=> 'Keine Mitglieder eingetragen.',
+	'no_moderators'	=> 'Keine Moderatoren eingetragen.',
+	
+	'member'		=> 'Teammitglied',
+	'members'		=> 'Teammitglieder',
+	'moderator'		=> 'Teammoderator',
+	'moderators'	=> 'Teammoderatoren',
+	
+	'create_team_user'	=> 'Neuen Spieler hinzugefügt.',
+	'update_team_rank'	=> 'Spielerränge geändert',
+	'update_team_level'	=> 'Spielerrechte geändert',
+	
+	'create_user'		=> 'Neuen Spieler hinzugefügt.',
+	'create_users'		=> 'Neue Spieler hinzugefügt.',
+	'delete_user'		=> 'Der Spieler wurde gelöscht!',
+	'delete_users'		=> 'Die Spieler wurden gelöscht!',
+	'confirm_user'		=> 'das der Spieler:',
+	'confirm_users'		=> 'das diese Spieler:',
+	
+	'update_rank'	=> 'Rang des Spielers erfolgreich geändert.',
+	'update_ranks'	=> 'Ränge der Spieler erfolgreich geändert.',
+	'update_right'	=> 'Rechte des Spielers erfolgreich geändert.',
+	'update_rights'	=> 'Rechte der Spieler erfolgreich geändert.',
+	
 ));
 
 /*
