@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -464,13 +441,13 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		'TRAINING_RIVAL_TAG'	=> $row_details['training_rival_tag'],
 		
 	
-		'TRAINING_CATEGORIE'	=> $match_categorie,
+		'TRAINING_CATEGORIE'	=> $match_category,
 		'TRAINING_TYPE'			=> $match_type,
 		'TRAINING_LEAGUE_INFO'	=> $match_league,
 		'SERVER'				=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'SERVER_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN ) ? $row_details['server_pw'] : '',
+		'SERVER_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $row_details['server_pw'] : '',
 		'HLTV'					=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
-		'HLTV_PW'				=> ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN ) ? $row_details['server_hltv_pw'] : '',
+		'HLTV_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $row_details['server_hltv_pw'] : '',
 		
 		'MAPC'					=> ($row_details['details_mapc']) ? '' : 'none',
 		'MAPD'					=> ($row_details['details_mapd']) ? '' : 'none',

@@ -1,29 +1,5 @@
 <?php
 
-/***
-
-							___.          
-	  ____   _____   ______ \_ |__ ___.__.
-	_/ ___\ /     \ /  ___/  | __ <   |  |
-	\  \___|  Y Y  \\___ \   | \_\ \___  |
-	 \___  >__|_|  /____  >  |___  / ____|
-		 \/      \/     \/       \/\/     
-	__________.__                         .__        
-	\______   \  |__   ____   ____   ____ |__|__  ___
-	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
-	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
-	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
-				   \/            \/     \/         \/
-
-	* Content-Management-System by Phoenix
-
-	* @autor:	Sebastian Frickel © 2009
-	* @code:	Sebastian Frickel © 2009
-	
-	* 12.05.2009 Verbesserung der Abfragen sowie Code einsparung durch andere Erweiterungen
-
-***/
-
 define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
@@ -471,7 +447,7 @@ if ( $userdata['session_logged_in'] )
 		}
 		$user_data = $db->sql_fetchrow($result);
 
-		$sql = 'SELECT * FROM ' . PROFILE_CATEGORY . ' ORDER BY category_order';
+		$sql = 'SELECT * FROM ' . PROFILE_CAT . ' ORDER BY cat_order';
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -483,7 +459,7 @@ if ( $userdata['session_logged_in'] )
 			
 			$sql = 'SELECT *
 						FROM ' . PROFILE . '
-						ORDER BY profile_category, profile_order';
+						ORDER BY profile_cat, profile_order';
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -496,7 +472,7 @@ if ( $userdata['session_logged_in'] )
 			
 			for ( $i = 0; $i < $total_categories; $i++ )
 			{
-				$cat_id = $category_rows[$i]['category_id'];
+				$cat_id = $category_rows[$i]['cat_id'];
 		
 				$template->assign_block_vars('profile_edit.catrow', array( 
 					'CATEGORY_ID'			=> $cat_id,
@@ -507,7 +483,7 @@ if ( $userdata['session_logged_in'] )
 				{
 					$profile_id = $profile_rows[$j]['profile_id'];
 					
-					if ( $profile_rows[$j]['profile_category'] == $cat_id )
+					if ( $profile_rows[$j]['profile_cat'] == $cat_id )
 					{
 						$value = $user_data[$profile_rows[$j]['profile_field']];
 						
