@@ -1,5 +1,5 @@
 <!-- BEGIN _display -->
-<form action="{S_AUTH_ACTION}" method="get">
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 	<ul id="navlist">
 		<li id="active"><a href="#" id="current">{L_AUTH_TITLE}</a></li>
@@ -18,7 +18,7 @@
 	<td class="rowHead">{L_AUTH_SELECT}</td>
 </tr>
 <tr>
-	<td class="row2">{S_FIELDS}{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
+	<td class="row2">{S_FIELDS}{S_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
 </tr>
 </table>
 </form>

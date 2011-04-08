@@ -35,11 +35,10 @@
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td align="right"><input type="text" class="post" name="network_name"></td>
+	<td align="right"><input type="text" class="post" name="network_name[1]"></td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE}"></td>
 </tr>
 </table>
-
 
 <br />
 
@@ -63,7 +62,7 @@
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td align="right"><input type="text" class="post" name="network_name"></td>
+	<td align="right"><input type="text" class="post" name="network_name[2]"></td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE}"></td>
 </tr>
 </table>
@@ -90,7 +89,7 @@
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td align="right"><input type="text" class="post" name="network_name"></td>
+	<td align="right"><input type="text" class="post" name="network_name[3]"></td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE}"></td>
 </tr>
 </table>
@@ -100,12 +99,68 @@
 
 <!-- BEGIN _input -->
 <script type="text/javascript">
-// <![CDATA[
+	
 	function update_image(newimage)
 	{
 		document.getElementById('image').src = (newimage) ? "{NETWORKS_PATH}/" + encodeURI(newimage) : "./../images/spacer.gif";
 	}
-// ]]>
+
+	var request = false;
+
+	// Request senden
+	function setRequest(value)
+	{
+		// Request erzeugen
+		if (window.XMLHttpRequest)
+		{// code for IE7+, Firefox, Chrome, Opera, Safari
+			request=new XMLHttpRequest();
+		}
+		else
+		{// code for IE6, IE5
+			request=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+		// überprüfen, ob Request erzeugt wurde
+		if (!request)
+		{
+			alert("Kann keine XMLHTTP-Instanz erzeugen");
+			return false;
+		}
+		else
+		{
+			var url = "ajax/ajax_network.php";
+			// Request öffnen
+			request.open('post', url, true);
+			// Requestheader senden
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			// Request senden
+			request.send('name='+value);
+		//	request.send("name="+value+"&option="+option);
+			// Request auswerten
+			request.onreadystatechange = interpretRequest;
+		}
+	}
+
+	// Request auswerten
+	function interpretRequest() {
+		switch (request.readyState) {
+			// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
+			case 4:
+				if (request.status != 200) {
+					alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
+				} else {
+					var content = request.responseText;
+					// den Inhalt des Requests in das <div> schreiben
+					document.getElementById('content').innerHTML = content;
+				}
+				break;
+			
+			default:
+					document.getElementById('close').style.display = "none";
+				break;
+		}
+	}
+
 </script>
 
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
@@ -129,11 +184,12 @@
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
-</tr><tr>
+</tr>
+<tr>
 	<td class="row1" width="155"><label for="network_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="network_name" id="network_name" value="{NAME}"></td>
 </tr>
@@ -151,12 +207,20 @@
 	</td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_TYPE}:</label></td>
-	<td class="row2"><label><input type="radio" name="network_type" value="1" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br /><label><input type="radio" name="network_type" value="2" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br /><label><input type="radio" name="network_type" value="3" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label></td> 
+	<td class="row1"><label>{L_TYPE}: *</label></td>
+	<td class="row2">
+		<label><input type="radio" name="network_type" value="1" onclick="setRequest('1')" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br />
+		<label><input type="radio" name="network_type" value="2" onclick="setRequest('2')" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br />
+		<label><input type="radio" name="network_type" value="3" onclick="setRequest('3')" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label>
+	</td> 
 </tr>
 <tr>
 	<td class="row1"><label for="network_view">{L_VIEW}:</label></td>
 	<td class="row2"><label><input type="radio" name="network_view" id="network_view" value="1" {S_VIEW_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="network_view" value="0" {S_VIEW_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr>
+	<td class="row1"><label for="network_order">{L_ORDER}:</label></td>
+	<td class="row2"><div id="close">{S_ORDER}</div><div id="content"></div></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>

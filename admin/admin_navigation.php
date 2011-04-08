@@ -115,11 +115,11 @@ else
 				$s_list .= '</select>';
 				
 				$cats = array(
-							'0' => array('navi_type' => NAVI_MAIN, 'navi_name' => $lang['main']),
-							'1' => array('navi_type' => NAVI_CLAN, 'navi_name' => $lang['clan']),
-							'2' => array('navi_type' => NAVI_COM, 'navi_name' => $lang['com']),
-							'3' => array('navi_type' => NAVI_MISC, 'navi_name' => $lang['misc']),
-							'4' => array('navi_type' => NAVI_USER, 'navi_name' => $lang['user']),
+							'0' => array('navi_type' => NAVI_MAIN, 'cat_name' => $lang['main']),
+							'1' => array('navi_type' => NAVI_CLAN, 'cat_name' => $lang['clan']),
+							'2' => array('navi_type' => NAVI_COM, 'cat_name' => $lang['com']),
+							'3' => array('navi_type' => NAVI_MISC, 'cat_name' => $lang['misc']),
+							'4' => array('navi_type' => NAVI_USER, 'cat_name' => $lang['user']),
 						);
 				
 				$type = ( $data['navi_type'] ) ? " WHERE navi_type = " . $data['navi_type'] : false;
@@ -129,7 +129,7 @@ else
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-				$entrys = $db->sql_fetchrowset($result);
+				$entries = $db->sql_fetchrowset($result);
 				
 				$s_order = "<select class=\"select\" name=\"navi_order_new\" id=\"navi_order\">";
 				$s_order .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
@@ -137,31 +137,35 @@ else
 				for ( $i = 0; $i < count($cats); $i++ )
 				{
 					$entry = '';
-
-					for ( $j = 0; $j < count($entrys); $j++ )
+					
+					$cat_name = $cats[$i]['cat_name'];
+					
+					for ( $j = 0; $j < count($entries); $j++ )
 					{
-						if ( $cats[$i]['navi_type'] == $entrys[$j]['navi_type'] )
+						$navi_name = $entries[$j]['navi_name'];
+						$navi_order = $entries[$j]['navi_order'];
+						
+						if ( $cats[$i]['navi_type'] == $entries[$j]['navi_type'] )
 						{
-							$navi_lang = ( $entrys[$j]['navi_lang'] ) ? $lang[$entrys[$j]['navi_name']] : $entrys[$j]['navi_name'];
+							$navi_name = ( $entries[$j]['navi_lang'] ) ? $lang[$navi_name] : $navi_name;
 							
-							$entry .= ( $entrys[$j]['navi_order'] == 10 ) ? "<option value=\"5\">" . sprintf($lang['sprintf_select_before'], $navi_lang) . "</option>" : '';
-							$entry .= "<option value=\"" . ( $entrys[$j]['navi_order'] + 5 ) . "\">" . sprintf($lang['sprintf_select_order'], $navi_lang) . "</option>";
+							$entry .= ( $navi_order == 10 ) ? "<option value=\"5\">" . sprintf($lang['sprintf_select_before'], $navi_name) . "</option>" : '';
+							$entry .= "<option value=\"" . ( $navi_order + 5 ) . "\">" . sprintf($lang['sprintf_select_order'], $navi_name) . "</option>";
 						}
 					}
 					
 					if ( $entry != '' )
 					{
-						$s_order .= '<optgroup label="' . $cats[$i]['navi_name'] . '">';
+						$s_order .= "<optgroup label=\"$cat_name\">";
 						$s_order .= $entry;
-						$s_order .= '</optgroup>';
+						$s_order .= "</optgroup>";
 					}
 				}
 				
-				$s_order .= '</select>';
+				$s_order .= "</select>";
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= "<input type=\"hidden\" name=\"navi_order\" value=\"" . $data['navi_order'] . "\" />";
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
@@ -210,17 +214,6 @@ else
 
 				if ( request('submit', 1) )
 				{
-				#	$navi_name		= request('navi_name', 2);
-				#	$navi_type		= request('navi_type', 0);
-				#	$navi_url		= request('navi_url', 2);
-				#	$navi_lang		= request('navi_lang', 0);
-				#	$navi_show		= request('navi_show', 0);
-				#	$navi_target	= request('navi_target', 0);
-				#	$navi_intern	= request('navi_intern', 0);
-
-				#	$error .= ( !$navi_name ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
-				#	$error .= ( !$navi_type ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
-
 					$data = array(
 								'navi_name'		=> request('navi_name', 2),
 								'navi_type'		=> request('navi_type', 0),
@@ -232,62 +225,24 @@ else
 								'navi_order'	=> request('navi_order', 0) ? request('navi_order', 0) : request('navi_order_new', 0),
 							);
 					
-					$data['navi_order'] = ( !$data['navi_order'] ) ? dmax(FORUM, 'navi_order', 'navi_type = '. $data['navi_type']) : $data['navi_order'];
+					$data['navi_order'] = ( !$data['navi_order'] ) ? maxa(NAVIGATION, 'navi_order', 'navi_type = ' . $data['navi_type']) : $data['navi_order'];
 
 					$error .= ( !$data['navi_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					$error .= ( !$data['navi_url'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_url'] : '';
 					$error .= ( !$data['navi_type'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_type'] : '';
 					
-					debuge($data);
-
 					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
-							foreach ( $data as $key => $var )
-							{
-								$keys[] = $key;
-								$vars[] = $var;
-							}
+							$db_data = sql(NAVIGATION, $mode, $data);
 							
-							$sql = 'INSERT INTO ' . NAVIGATION . ' (' . implode(', ', $keys) . ') VALUES (\'' . implode('\', \'', $vars) . '\')';
-						#	$max	= get_data_max(NAVIGATION, 'navi_order', '');
-						#	$next	= $max['max'] + 10;
-							
-						#	$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
-							
-						#	$sql = "INSERT INTO " . NAVIGATION . " (navi_name, navi_type, navi_url, navi_lang, navi_show, navi_target, navi_intern, navi_order)
-						#				VALUES ('$navi_name', '$navi_type', '$navi_url', '$navi_lang', '$navi_show', '$navi_url', '$navi_intern', '$next')";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							
-							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$message = $lang['create']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 						}
 						else
 						{
-							foreach ( $data as $key => $var )
-							{
-								$input[] = "$key = '$var'";
-							}
-							
-							$sql = "UPDATE " . NAVIGATION . " SET " . implode(', ', $input) . " WHERE navi_id = $data_id";
-						#	$navi_url = ( !$navi_target ) ? './' . $navi_url : set_http($navi_url);
-						#	
-						#	$sql = "UPDATE " . NAVIGATION . " SET
-						#				navi_name		= '$navi_name',
-						#				navi_type		= '$navi_type',
-						#				navi_url		= '$navi_url',
-						#				navi_lang		= '$navi_lang',
-						#				navi_show		= '$navi_show',
-						#				navi_target		= '$navi_target',
-						#				navi_intern		= '$navi_intern'
-						#			WHERE navi_id = $data_id";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+							$db_data = sql(NAVIGATION, $mode, $data, 'navi_id', $data_id);
 							
 							$message = $lang['update']
 								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
@@ -296,7 +251,7 @@ else
 						
 						orders(NAVIGATION, $data['navi_type']);
 						
-						log_add(LOG_ADMIN, $log, $mode, $data['navi_name']);
+						log_add(LOG_ADMIN, $log, $mode, $db_data);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -330,15 +285,12 @@ else
 			
 				if ( $data_id && $confirm )
 				{
-					$sql = "DELETE FROM " . NAVIGATION . " WHERE navi_id = $data_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				
-					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$db_data = sql(NAVIGATION, $mode, $data, 'navi_id', $data_id);
 					
-					log_add(LOG_ADMIN, $log, $mode, $data['navi_name']);
+					$message = $lang['delete']
+						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					
+					log_add(LOG_ADMIN, $log, $mode, $db_data);
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -495,11 +447,11 @@ else
 		'S_FIELDS'	=> $fields,
 	));
 	
-	$max_main	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_MAIN);
-	$max_clan	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_CLAN);
-	$max_com	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_COM);
-	$max_misc	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_MISC);
-	$max_user	= get_data_max(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_USER);
+	$max_main	= maxi(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_MAIN);
+	$max_clan	= maxi(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_CLAN);
+	$max_com	= maxi(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_COM);
+	$max_misc	= maxi(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_MISC);
+	$max_user	= maxi(NAVIGATION, 'navi_order', 'navi_type = ' . NAVI_USER);
 	
 	$tmp_main	= data(NAVIGATION, 'navi_type = ' . NAVI_MAIN, 'navi_order ASC', 1, false);
 	$tmp_clan	= data(NAVIGATION, 'navi_type = ' . NAVI_CLAN, 'navi_order ASC', 1, false);
@@ -507,27 +459,21 @@ else
 	$tmp_misc	= data(NAVIGATION, 'navi_type = ' . NAVI_MISC, 'navi_order ASC', 1, false);
 	$tmp_user	= data(NAVIGATION, 'navi_type = ' . NAVI_USER, 'navi_order ASC', 1, false);
 	
-#	$tmp_main	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_MAIN, 'navi_order', 'ASC');
-#	$tmp_clan	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_CLAN, 'navi_order', 'ASC');
-#	$tmp_com	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_COM, 'navi_order', 'ASC');
-#	$tmp_misc	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_MISC, 'navi_order', 'ASC');
-#	$tmp_user	= get_data_array(NAVIGATION, 'navi_type = ' . NAVI_USER, 'navi_order', 'ASC');
-	
 	if ( $tmp_main )
 	{
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp_main)); $i++ )
 		{
 			$navi_id	= $tmp_main[$i]['navi_id'];
 			$navi_order	= $tmp_main[$i]['navi_order'];
-			$navi_lang	= ( $tmp_main[$i]['navi_lang'] ) ? $lang[$tmp_main[$i]['navi_name']] : $tmp_main[$i]['navi_name'];
+			$navi_lang	= $tmp_main[$i]['navi_lang'] ? $lang[$tmp_main[$i]['navi_name']] : $tmp_main[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._main_row', array(
-				'NAME'		=> ( $tmp_main[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $tmp_main[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $tmp_main[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> $tmp_main[$i]['navi_intern'] ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> $tmp_main[$i]['navi_lang'] ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> $tmp_main[$i]['navi_show'] ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MAIN . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_main['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MAIN . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MAIN . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_main )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MAIN . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
@@ -542,15 +488,15 @@ else
 		{
 			$navi_id	= $tmp_clan[$i]['navi_id'];
 			$navi_order	= $tmp_clan[$i]['navi_order'];
-			$navi_lang	= ( $tmp_clan[$i]['navi_lang'] ) ? $lang[$tmp_clan[$i]['navi_name']] : $tmp_clan[$i]['navi_name'];
+			$navi_lang	= $tmp_clan[$i]['navi_lang'] ? $lang[$tmp_clan[$i]['navi_name']] : $tmp_clan[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._clan_row', array(
-				'NAME'		=> ( $tmp_clan[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $tmp_clan[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $tmp_clan[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> $tmp_clan[$i]['navi_intern'] ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> $tmp_clan[$i]['navi_lang'] ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> $tmp_clan[$i]['navi_show'] ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_clan['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_CLAN . '&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_CLAN . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_clan )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_CLAN . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
@@ -565,15 +511,15 @@ else
 		{
 			$navi_id	= $tmp_com[$i]['navi_id'];
 			$navi_order	= $tmp_com[$i]['navi_order'];
-			$navi_lang	= ( $tmp_com[$i]['navi_lang'] ) ? $lang[$tmp_com[$i]['navi_name']] : $tmp_com[$i]['navi_name'];
+			$navi_lang	= $tmp_com[$i]['navi_lang'] ? $lang[$tmp_com[$i]['navi_name']] : $tmp_com[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._com_row', array(
-				'NAME'		=> ( $tmp_com[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $tmp_com[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $tmp_com[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> $tmp_com[$i]['navi_intern'] ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> $tmp_com[$i]['navi_lang'] ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> $tmp_com[$i]['navi_show'] ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_COM . '&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_com['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_COM . '&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_COM . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_com )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_COM . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
@@ -588,15 +534,15 @@ else
 		{
 			$navi_id	= $tmp_misc[$i]['navi_id'];
 			$navi_order	= $tmp_misc[$i]['navi_order'];
-			$navi_lang	= ( $tmp_misc[$i]['navi_lang'] ) ? $lang[$tmp_misc[$i]['navi_name']] : $tmp_misc[$i]['navi_name'];
+			$navi_lang	= $tmp_misc[$i]['navi_lang'] ? $lang[$tmp_misc[$i]['navi_name']] : $tmp_misc[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._misc_row', array(
-				'NAME'		=> ( $tmp_misc[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $tmp_misc[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $tmp_misc[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> $tmp_misc[$i]['navi_intern'] ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> $tmp_misc[$i]['navi_lang'] ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> $tmp_misc[$i]['navi_show'] ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MISC . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_misc['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MISC . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MISC . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_misc )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_MISC . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),
@@ -611,15 +557,15 @@ else
 		{
 			$navi_id	= $tmp_user[$i]['navi_id'];
             $navi_order	= $tmp_user[$i]['navi_order'];
-			$navi_lang	= ( $tmp_user[$i]['navi_lang'] ) ? $lang[$tmp_user[$i]['navi_name']] : $tmp_user[$i]['navi_name'];
+			$navi_lang	= $tmp_user[$i]['navi_lang'] ? $lang[$tmp_user[$i]['navi_name']] : $tmp_user[$i]['navi_name'];
 				
 			$template->assign_block_vars('_display._user_row', array(
-				'NAME'		=> ( $tmp_user[$i]['navi_intern']) ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
-				'LANG'		=> ( $tmp_user[$i]['navi_lang'] ) ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
-				'SHOW'		=> ( $tmp_user[$i]['navi_show'] ) ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
+				'NAME'		=> $tmp_user[$i]['navi_intern'] ? sprintf($lang['sprintf_intern'], $navi_lang) : $navi_lang,
+				'LANG'		=> $tmp_user[$i]['navi_lang'] ? '<img src="' . $images['icon_option_lang'] . '" alt="" />' : '<img src="' . $images['icon_option_lang2'] . '" alt="" />',
+				'SHOW'		=> $tmp_user[$i]['navi_show'] ? '<img src="' . $images['icon_option_show'] . '" alt="" />' : '<img src="' . $images['icon_option_show2'] . '" alt="" />',
 				
-				'MOVE_UP'	=> ( $navi_order != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_USER . '&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $navi_order != $max_user['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=' . NAVI_USER . '&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $navi_order != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_USER . "&amp;move=-15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $navi_order != $max_user )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . NAVI_USER . "&amp;move=+15&amp;$url=$navi_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$navi_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$navi_id"),

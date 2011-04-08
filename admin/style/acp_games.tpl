@@ -29,7 +29,7 @@
 <!-- END _game_row -->
 <!-- BEGIN _no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_noentry" align="center" colspan="3">{NO_ENTRY}</td>
 </tr>
 <!-- END _no_entry -->
 </table>
@@ -75,7 +75,7 @@
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>

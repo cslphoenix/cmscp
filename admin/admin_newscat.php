@@ -64,11 +64,10 @@ else
 				
 				if ( $mode == '_create' && !(request('submit', 1)) )
 				{
-					$max = get_data_max(NEWS_CAT, 'cat_order', '');
 					$data = array(
 								'cat_title'	=> ( request('cat_title', 2) ) ? request('cat_title', 2) : '',
 								'cat_image'	=> '',
-								'cat_order'	=> $max['max'] + 10,
+								'cat_order'	=> '',
 							);
 				}
 				else if ( $mode == '_update' && !(request('submit', 1)) )
@@ -80,13 +79,12 @@ else
 					$data = array(
 								'cat_title'	=> request('cat_title', 2),
 								'cat_image'	=> request('cat_image', 2),
-								'cat_order'	=> ( request('cat_order_new', 0) ) ? request('cat_order_new', 0) : request('cat_order', 0),
+								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
 							);
 				}
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= '<input type="hidden" name="cat_order" value="' . $data['cat_order'] . '" />';
 				
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['newscat']),
@@ -109,17 +107,13 @@ else
 				
 				if ( request('submit', 1) )
 				{
-				#	$cat_title	= request('cat_title', 2);
-				#	$cat_image	= request('cat_image', 2);
-				#	$cat_order	= ( request('cat_order_new', 0) ) ? request('cat_order_new', 0) : request('cat_order', 0);
-				
-				#	$error .= ( !$cat_title ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_title'] : '';
-					
 					$data = array(
 								'cat_title'	=> request('cat_title', 2),
 								'cat_image'	=> request('cat_image', 2),
-								'cat_order'	=> ( request('cat_order_new', 0) ) ? request('cat_order_new', 0) : request('cat_order', 0),
+								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
 							);
+							
+					$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(NEWS_CAT, 'cat_order', false) : $data['cat_order'];
 							
 					$error .= ( !$data['cat_title'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_title'] : '';
 					
@@ -127,39 +121,14 @@ else
 					{
 						if ( $mode == '_create' )
 						{
-							foreach ( $data as $key => $var )
-							{
-								$keys[] = $key;
-								$vars[] = $var;
-							}
+							$db_data = sql(NEWS_CAT, $mode, $data);
 							
-							$sql = 'INSERT INTO ' . NEWS_CAT . ' (' . implode(', ', $keys) . ') VALUES (\'' . implode('\', \'', $vars) . '\')';
-						#	$sql = "INSERT INTO " . NEWS_CAT . " (cat_title, cat_image, cat_order)
-						#				VALUES ('$cat_title', '$cat_image', '$cat_order')";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							
-							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$message = $lang['create']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 						}
 						else
 						{
-							foreach ( $data as $key => $var )
-							{
-								$input[] = "$key = '$var'";
-							}
-							
-							$sql = "UPDATE " . NEWS_CAT . " SET " . implode(', ', $input) . " WHERE game_id = $data_id";
-						#	$sql = "UPDATE " . NEWS_CAT . " SET
-						#				cat_title = '$cat_title',
-						#				cat_image = '$cat_image',
-						#				cat_order = '$cat_order'
-						#			WHERE cat_id = $data_id";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+							$db_data = sql(NEWS_CAT, $mode, $data, 'cat_id', $data_id);
 							
 							$message = $lang['update']
 								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
@@ -168,7 +137,7 @@ else
 						
 						orders(NEWS_CAT);
 						
-						log_add(LOG_ADMIN, $log, $mode, $data['cat_title']);						
+						log_add(LOG_ADMIN, $log, $mode, $db_data);						
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -198,8 +167,6 @@ else
 			
 			case '_delete':
 			
-				global $data;
-				
 				$data = data(NEWS_CAT, $data_id, false, 1, 1);
 			
 				if ( $data_id && $confirm )
@@ -210,15 +177,12 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					$sql = "DELETE FROM " . NEWS_CAT . " WHERE cat_id = $data_id";
-					if ( !$db->sql_query($sql) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				
-					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$db_data = sql(NEWS_CAT, $mode, $data, 'cat_id', $data_id);
 					
-					log_add(LOG_ADMIN, $log, $mode, $data['cat_title']);
+					$message = $lang['delete']
+						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					
+					log_add(LOG_ADMIN, $log, $mode, $db_data);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
@@ -269,8 +233,7 @@ else
 		'S_FIELDS'	=> $fields,
 	));
 	
-	$max = get_data_max(NEWS_CAT, 'cat_order', '');
-#	$tmp = get_data_array(NEWS_CAT, '', 'cat_order', 'ASC');
+	$max = maxi(NEWS_CAT, 'cat_order', '');
 	$tmp = data(NEWS_CAT, false, 'cat_order ASC', 1, false);
 	
 	if ( $tmp )
@@ -278,12 +241,14 @@ else
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp)); $i++ )
 		{
 			$cat_id = $tmp[$i]['cat_id'];
+			$cat_title = $tmp[$i]['cat_title'];
+			$cat_order = $tmp[$i]['cat_order'];
 
 			$template->assign_block_vars('_display._cat_row', array(
-				'TITLE'		=> $tmp[$i]['cat_title'],
+				'TITLE'		=> $cat_title,
 				
-				'MOVE_UP'	=> ( $tmp[$i]['cat_order'] != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $tmp[$i]['cat_order'] != $max['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $cat_order != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $cat_order != $max ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$cat_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$cat_id"),

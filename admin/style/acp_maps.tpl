@@ -34,6 +34,12 @@ function clip(id)
 	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
+<table border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td align="right"><input type="text" class="post" name="cat_name" /></td>
+	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
+</tr>
+</table>
 
 <br />
 
@@ -61,14 +67,7 @@ function clip(id)
 </table>
 
 <br />
-
 <!-- END _cat_row -->
-<table border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td align="right"><input type="text" class="post" name="cat_name" /></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
-</tr>
-</table>
 </form>
 <!-- END _display -->
 
@@ -94,7 +93,7 @@ function clip(id)
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -122,14 +121,132 @@ function clip(id)
 </form>
 <!-- END _input_cat -->
 
-<!-- BEGIN _input_map -->
+<!-- BEGIN _input -->
 <script type="text/javascript">
-// <![CDATA[
-	function update_image(newimage)
-	{
-		document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./images/spacer.gif";
+
+var request = false;
+
+// Request senden
+function setRequest(value)
+{
+	// Request erzeugen
+	if ( window.XMLHttpRequest )
+	{// code for IE7+, Firefox, Chrome, Opera, Safari
+		request = new XMLHttpRequest();
 	}
-// ]]>
+	else
+	{// code for IE6, IE5
+		request = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	// überprüfen, ob Request erzeugt wurde
+	if ( !request )
+	{
+		alert("Kann keine XMLHTTP-Instanz erzeugen");
+		return false;
+	}
+	else
+	{
+		var url = "./ajax/ajax_maps.php";
+		// Request öffnen
+		request.open('post', url, true);
+		// Requestheader senden
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		// Request senden
+		request.send('name='+value);
+	//	request.send("name="+value+"&option="+option);
+		// Request auswerten
+		request.onreadystatechange = interpretRequest;
+	}
+}
+
+// Request auswerten
+function interpretRequest()
+{
+	switch (request.readyState)
+	{
+		// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
+		case 4:
+			
+			if (request.status != 200)
+			{
+				alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
+			}
+			else
+				{
+				var content = request.responseText;
+				// den Inhalt des Requests in das <div> schreiben
+				document.getElementById('content').innerHTML = content;
+			}
+			break;
+			
+		default: document.getElementById('close').style.display = "none"; break;
+	}
+}
+
+// Request senden
+function setRequest2(value)
+{
+	// Request erzeugen
+	if ( window.XMLHttpRequest )
+	{// code for IE7+, Firefox, Chrome, Opera, Safari
+		request = new XMLHttpRequest();
+	}
+	else
+	{// code for IE6, IE5
+		request = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	// überprüfen, ob Request erzeugt wurde
+	if ( !request )
+	{
+		alert("Kann keine XMLHTTP-Instanz erzeugen");
+		return false;
+	}
+	else
+	{
+		var url = "./ajax/ajax_subforum.php";
+		// Request öffnen
+		request.open('post', url, true);
+		// Requestheader senden
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		// Request senden
+		request.send('name='+value);
+	//	request.send("name="+value+"&option="+option);
+		// Request auswerten
+		request.onreadystatechange = interpretRequest2;
+	}
+}
+
+// Request auswerten
+function interpretRequest2()
+{
+	switch (request.readyState)
+	{
+		// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
+		case 4:
+			
+			if (request.status != 200)
+			{
+				alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
+			}
+			else
+				{
+				var content = request.responseText;
+				// den Inhalt des Requests in das <div> schreiben
+				document.getElementById('content2').innerHTML = content;
+			}
+			break;
+			
+		default: document.getElementById('close2').style.display = "none"; break;
+	}
+}
+
+function update_image(newimage)
+{
+	document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./images/spacer.gif";
+}
+
 </script>
 
 <form action="{S_ACTION}" method="post">
@@ -153,7 +270,7 @@ function clip(id)
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -163,11 +280,11 @@ function clip(id)
 	<td class="row2"><input type="text" class="post" name="map_name" id="map_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="map_type">{L_CAT}</label></td>
+	<td class="row1 top"><label>{L_CAT}</label></td>
 	<td class="row2">
-		<!-- BEGIN _input_cat -->
-		<input type="radio" name="cat_id" value="{_input_map._input_cat.CAT_ID}" disabled="disabled" {_input_map._input_cat.S_MARK} />&nbsp;{_input_map._input_cat.CAT_NAME}<br />
-		<!-- END _input_cat -->
+		<!-- BEGIN _cat -->
+		<label><input type="radio" name="cat_id" value="{_input._cat.CAT_ID}" disabled="disabled" {_input._cat.S_MARK} />&nbsp;{_input._cat.CAT_NAME}</label><br />
+		<!-- END _cat -->
 	</td>
 </tr>
 <tr>
@@ -191,4 +308,4 @@ function clip(id)
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input_map -->
+<!-- END _input -->

@@ -1,5 +1,9 @@
 <?php
 
+global $data;
+
+debug($data);
+
 if ( !defined('IN_CMS') )
 {
 	die('Hacking attempt');

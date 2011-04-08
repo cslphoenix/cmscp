@@ -80,6 +80,34 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
+<script type="text/javascript" src="./../includes/js/jquery-1.2.1.pack.js"></script>
+<script type="text/JavaScript">
+function lookup(inputString)
+{
+	if ( inputString.length == 0 )
+	{
+		// Hide the suggestion box.
+		$('#suggestions').hide();
+	}
+	else
+	{
+		$.post("./../includes/ajax/ajax_gameserver.php", {queryString: ""+inputString+""}, function(data) {
+				if ( data.length > 0 )
+				{
+					$('#suggestions').show();
+					$('#autoSuggestionsList').html(data);
+				}
+			}
+		);
+	}
+}
+
+function fill(thisValue)
+{
+	$('#inputString').val(thisValue);
+	setTimeout("$('#suggestions').hide();", 200);
+}
+</script>
 <script type="text/javascript" language="JavaScript">
 <!--
 
@@ -137,11 +165,19 @@
 </tr>
 <tr>
 	<td class="row1"><label for="match_type">{L_TYPE}: *</label></td>
-	<td class="row2">{S_TYPE}</td>
+	<td class="row2">
+		<!-- BEGIN _type -->
+		<label><input type="radio" name="match_type" value="{_input._type.TYPE}" {_input._type.MARK} />&nbsp;{_input._type.NAME}</label><br />
+		<!-- END _type -->
+	</td>
 </tr>
 <tr>
-	<td class="row1"><label for="match_categorie">{L_CATEGORIE}: *</label></td>
-	<td class="row2">{S_CATEGORIE}</td>
+	<td class="row1"><label for="match_category">{L_CATEGORY}: *</label></td>
+	<td class="row2">
+		<!-- BEGIN _cat -->
+		<label><input type="radio" name="match_category" value="{_input._cat.TYPE}" {_input._cat.MARK} />&nbsp;{_input._cat.NAME}</label><br />
+		<!-- END _cat -->
+	</td>
 </tr>
 <tr>
 	<td class="row1"><label for="match_league">{L_LEAGUE}: *</label></td>
@@ -211,8 +247,16 @@
 	<td class="top">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td class="row1" width="46%"><label for="server_ip">{L_SERVER_IP}: *</label></td>
-			<td class="row2"><input type="text" class="post" name="server_ip" id="server_ip" value="{SERVER_IP}"></td>
+			<td class="row1 top" width="46%"><label for="inputString">{L_SERVER_IP}: *</label></td>
+			<td class="row2">
+				<input type="text" class="post" name="server_ip" id="inputString" value="{SERVER_IP}" onkeyup="lookup(this.value);" onblur="fill();" size="23">
+				<div class="suggestionsBox" id="suggestions" style="display: none;">
+					<img src="style/images/upArrow.png" style="position: relative; top: -12px; left: 30px;" alt="upArrow" />
+					<div class="suggestionList" id="autoSuggestionsList">
+						&nbsp;
+					</div>
+				</div>
+			</td>
 		</tr>
 		<tr>
 			<td class="row1"><label for="server_pw">{L_SERVER_PW}:</label></td>
@@ -220,7 +264,7 @@
 		</tr>
 		<tr>
 			<td class="row1"><label for="server_hltv">{L_HLTV}:</label></td>
-			<td class="row2"><input type="text" class="post" name="server_hltv" id="server_hltv" value="{SERVER_HLTV}"></td>
+			<td class="row2"><input type="text" class="post" name="server_hltv" id="server_hltv" value="{SERVER_HLTV}" size="23"></td>
 		</tr>
 		<tr>
 			<td class="row1"><label for="server_hltv_pw">{L_HLTV_PW}:</label></td>

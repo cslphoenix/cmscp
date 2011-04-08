@@ -79,12 +79,12 @@ function clip(id)
 {
 	if ( document.getElementById("tbody_" + id).style.display == 'none' )
 	{
-		document.getElementById("img_" + id).src = "style/collapse.gif";
+		document.getElementById("img_" + id).src = "style/images/collapse.gif";
 		document.getElementById("tbody_" + id).style.display = "";
 	}
 	else
 	{
-		document.getElementById("img_" + id).src = "style/expand.gif";
+		document.getElementById("img_" + id).src = "style/images/expand.gif";
 		document.getElementById("tbody_" + id).style.display = "none";
 	}
 }
@@ -111,7 +111,7 @@ function clip(id)
 		<li><a href="{S_BACKUP}">{L_BACKUP}</a></li>
 		<li id="active"><a href="#" id="current">{L_OPTIMIZE}</a></li>
 		<li><a href="{S_RESTORE}">{L_RESTORE}</a></li>
-		<li id="active"><a href="#" onclick="clip('settings')" id="right"><img src="style/expand.gif" id="img_settings" width="9" height="9" border="0" /> {L_SETTINGS}</a></li>
+		<li id="active"><a href="#" onclick="clip('settings')" id="right"><img src="style/images/expand.gif" id="img_settings" width="9" height="9" border="0" /> {L_SETTINGS}</a></li>
 	</ul>
 </div>
 
@@ -126,44 +126,9 @@ function clip(id)
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tbody id="tbody_settings" style="display:none">
 <tr>
-	<td class="row1">{L_ENABLE_CRON}:</td>
-	<td class="row2"><input type="radio" name="enable_optimize_cron" value="1" {S_ENABLE_CRON_YES} /> {L_YES}&nbsp;&nbsp;<input type="radio" name="enable_optimize_cron" value="0" {S_ENABLE_CRON_NO} /> {L_NO}</td>
-</tr>
-<tr>
-	<td class="row1">{L_CRON_EVERY}:</td>
-	<td class="row2">
-		<!-- BEGIN _cron_every -->
-		<select name="cron_every">
-			<option value="2592000" {_database_optimize._cron_every.MONTH}>{_database_optimize._cron_every.L_MONTH}</option>
-			<option value="1296000" {_database_optimize._cron_every.2WEEKS}>{_database_optimize._cron_every.L_2WEEKS}</option>
-			<option value="604800" {_database_optimize._cron_every.WEEK}>{_database_optimize._cron_every.L_WEEK}</option>
-			<option value="259200" {_database_optimize._cron_every.3DAYS}>{_database_optimize._cron_every.L_3DAYS}</option>
-			<option value="86400" {_database_optimize._cron_every.DAY}>{_database_optimize._cron_every.L_DAY}</option>
-			<option value="21600" {_database_optimize._cron_every.6HOURS}>{_database_optimize._cron_every.L_6HOURS}</option>
-			<option value="3600" {_database_optimize._cron_every.HOUR}>{_database_optimize._cron_every.L_HOUR}</option>
-			<option value="1800" {_database_optimize._cron_every.30MINUTES}>{_database_optimize._cron_every.L_30MINUTES}</option>
-			<option value="20" {_database_optimize._cron_every.20SECONDS}>{_database_optimize._cron_every.L_20SECONDS}</option>
-		</select>
-		<!-- END _cron_every -->
-	</td>
-</tr>
-<tr>
-	<td class="row1" valign="top">
-		{L_CURRENT_TIME}:<br />
-		{L_NEXT_CRON_ACTION}:<br />
-		{L_PERFORMED_CRON}:
-	</td>
-	<td class="row2" valign="top">
-		{CURRENT_TIME}<br />
-		{NEXT_CRON}<br />
-		{PERFORMED_CRON}
-	</td>
-</tr>
-
 	<td class="row1">{L_SHOW_NOT_OPTIMIZED}:</td>
 	<td class="row2"><input type="radio" name="show_not_optimized" value="1" {S_ENABLE_NOT_OPTIMIZED_YES}/> {L_YES}&nbsp;&nbsp;<input type="radio" name="show_not_optimized" value="0" {S_ENABLE_NOT_OPTIMIZED_NO} /> {L_NO}</td>
 </tr>
-
 <tr>
 	<td class="row1">{L_SHOW_BEGIN_FOR}:</td>
 	<td class="row2"><input class="post" type="text" maxlength="255" name="show_begin_for" value="{S_SHOW_BEGIN_FOR}" /></td>
@@ -269,7 +234,7 @@ function clip(id)
 </tr>
 </table>
 
-<br>
+<br />
 
 <table class="out" cellspacing="0">
 <!-- BEGIN forum_auth_data -->

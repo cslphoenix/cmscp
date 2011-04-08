@@ -4,7 +4,7 @@
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="setting" href="{S_SET}">{L_HEAD_SET}</a></li>
+	<li><a id="setting" href="{S_SET}">{L_SET}</a></li>
 </ul>
 </div>
 
@@ -16,138 +16,203 @@
 
 <br />
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td>
-		<table class="info" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="rowHead" width="100%">{L_MAIN}</td>
-			<td class="rowHead" align="center">{L_SETTINGS}</td>
-		</tr>
-		<!-- BEGIN _main_row -->
-		<tr>
-			<td class="row_class1" align="left" width="100%">{_display._main_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{_display._main_row.LANG} {_display._main_row.SHOW} {_display._main_row.MOVE_UP} {_display._main_row.MOVE_DOWN} <a href="{_display._main_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._main_row.U_DELETE}">{I_DELETE}</a></td>
-		</tr>
-		<!-- END _main_row -->
-		<!-- BEGIN _no_entry_main -->
-		<tr>
-			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
-		</tr>
-		<!-- END _no_entry_main -->
-		</table>
-	</td>
+	<td class="rowHead" width="100%">{L_MAIN}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
 </tr>
+<!-- BEGIN _main_row -->
 <tr>
-	<td>&nbsp;</td>
+	<td class="row_class1" align="left" width="100%">{_display._main_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._main_row.LANG} {_display._main_row.SHOW} {_display._main_row.MOVE_UP} {_display._main_row.MOVE_DOWN} <a href="{_display._main_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._main_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
+<!-- END _main_row -->
+<!-- BEGIN _no_entry_main -->
 <tr>
-	<td>
-		<table class="info" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="rowHead" width="100%">{L_CLAN}</td>
-			<td class="rowHead" align="center">{L_SETTINGS}</td>
-		</tr>
-		<!-- BEGIN _clan_row -->
-		<tr>
-			<td class="row_class1" align="left" width="100%">{_display._clan_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{_display._clan_row.LANG} {_display._clan_row.SHOW} {_display._clan_row.MOVE_UP} {_display._clan_row.MOVE_DOWN} <a href="{_display._clan_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._clan_row.U_DELETE}">{I_DELETE}</a></td>
-		</tr>
-		<!-- END _clan_row -->
-		<!-- BEGIN _no_entry_clan -->
-		<tr>
-			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
-		</tr>
-		<!-- END _no_entry_clan -->
-		</table>
-	</td>
+	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
 </tr>
-<tr>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>
-		<table class="info" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="rowHead" width="100%">{L_COM}</td>
-			<td class="rowHead" align="center">{L_SETTINGS}</td>
-		</tr>
-		<!-- BEGIN _com_row -->
-		<tr>
-			<td class="row_class1" align="left" width="100%">{_display._com_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{_display._com_row.LANG} {_display._com_row.SHOW} {_display._com_row.MOVE_UP} {_display._com_row.MOVE_DOWN} <a href="{_display._com_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._com_row.U_DELETE}">{I_DELETE}</a></td>
-		</tr>
-		<!-- END _com_row -->
-		<!-- BEGIN _no_entry_com -->
-		<tr>
-			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
-		</tr>
-		<!-- END _no_entry_com -->
-		</table>
-	</td>
-</tr>
+<!-- END _no_entry_main -->
+</table>
 
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>
-		<table class="info" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="rowHead" width="100%">{L_MISC}</td>
-			<td class="rowHead" align="center">{L_SETTINGS}</td>
-		</tr>
-		<!-- BEGIN _misc_row -->
-		<tr>
-			<td class="row_class1" align="left" width="100%">{_display._misc_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{_display._misc_row.LANG} {_display._misc_row.SHOW} {_display._misc_row.MOVE_UP} {_display._misc_row.MOVE_DOWN} <a href="{_display._misc_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._misc_row.U_DELETE}">{I_DELETE}</a></td>
-		</tr>
-		<!-- END _misc_row -->
-		<!-- BEGIN _no_entry_misc -->
-		<tr>
-			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
-		</tr>
-		<!-- END _no_entry_misc -->
-		</table>
-	</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>
-		<table class="info" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="rowHead" width="100%">{L_USER}</td>
-			<td class="rowHead" align="center">{L_SETTINGS}</td>
-		</tr>
-		<!-- BEGIN _user_row -->
-		<tr>
-			<td class="row_class1" align="left" width="100%">{_display._user_row.TITLE}</td>
-			<td class="row_class2" align="center" nowrap="nowrap">{_display._user_row.LANG} {_display._user_row.SHOW} {_display._user_row.MOVE_UP} {_display._user_row.MOVE_DOWN} <a href="{_display._user_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._user_row.U_DELETE}">{I_DELETE}</a></td>
-		</tr>
-		<!-- END _user_row -->
-		<!-- BEGIN _no_entry_user -->
-		<tr>
-			<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
-		</tr>
-		<!-- END _no_entry_user -->
-		</table>
-	</td>
+	<td align="right"><input type="text" class="post" name="navi_name[1]"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[1]" value="{L_CREATE}"></td>
 </tr>
 </table>
 
-<table cellspacing="2">
+<br />
+
+<table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td width="100%" align="right"><input class="post" name="navi_name" type="text" value=""></td>
-	<td class="top"><input class="button" type="submit" value="{L_CREATE}"></td>
+	<td class="rowHead" width="100%">{L_CLAN}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
+</tr>
+<!-- BEGIN _clan_row -->
+<tr>
+	<td class="row_class1" align="left" width="100%">{_display._clan_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._clan_row.LANG} {_display._clan_row.SHOW} {_display._clan_row.MOVE_UP} {_display._clan_row.MOVE_DOWN} <a href="{_display._clan_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._clan_row.U_DELETE}">{I_DELETE}</a></td>
+</tr>
+<!-- END _clan_row -->
+<!-- BEGIN _no_entry_clan -->
+<tr>
+	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+</tr>
+<!-- END _no_entry_clan -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="navi_name[2]"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[2]" value="{L_CREATE}"></td>
 </tr>
 </table>
+
+<br />
+	
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="rowHead" width="100%">{L_COM}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
+</tr>
+<!-- BEGIN _com_row -->
+<tr>
+	<td class="row_class1" align="left" width="100%">{_display._com_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._com_row.LANG} {_display._com_row.SHOW} {_display._com_row.MOVE_UP} {_display._com_row.MOVE_DOWN} <a href="{_display._com_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._com_row.U_DELETE}">{I_DELETE}</a></td>
+</tr>
+<!-- END _com_row -->
+<!-- BEGIN _no_entry_com -->
+<tr>
+	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+</tr>
+<!-- END _no_entry_com -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="navi_name[3]"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[3]" value="{L_CREATE}"></td>
+</tr>
+</table>
+
+<br />
+
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="rowHead" width="100%">{L_MISC}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
+</tr>
+<!-- BEGIN _misc_row -->
+<tr>
+	<td class="row_class1" align="left" width="100%">{_display._misc_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._misc_row.LANG} {_display._misc_row.SHOW} {_display._misc_row.MOVE_UP} {_display._misc_row.MOVE_DOWN} <a href="{_display._misc_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._misc_row.U_DELETE}">{I_DELETE}</a></td>
+</tr>
+<!-- END _misc_row -->
+<!-- BEGIN _no_entry_misc -->
+<tr>
+	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+</tr>
+<!-- END _no_entry_misc -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="navi_name[4]"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[4]" value="{L_CREATE}"></td>
+</tr>
+</table>
+
+<br />
+
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="rowHead" width="100%">{L_USER}</td>
+	<td class="rowHead" align="center">{L_SETTINGS}</td>
+</tr>
+<!-- BEGIN _user_row -->
+<tr>
+	<td class="row_class1" align="left" width="100%">{_display._user_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._user_row.LANG} {_display._user_row.SHOW} {_display._user_row.MOVE_UP} {_display._user_row.MOVE_DOWN} <a href="{_display._user_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._user_row.U_DELETE}">{I_DELETE}</a></td>
+</tr>
+<!-- END _user_row -->
+<!-- BEGIN _no_entry_user -->
+<tr>
+	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+</tr>
+<!-- END _no_entry_user -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="navi_name[5]"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[5]" value="{L_CREATE}"></td>
+</tr>
+</table>
+
+<br />
 {S_FIELDS}
 </form>
 <!-- END _display -->
 
 <!-- BEGIN _input -->
+<script type="text/javascript">
+	var request = false;
+
+	// Request senden
+	function setRequest(value)
+	{
+		// Request erzeugen
+		if (window.XMLHttpRequest)
+		{// code for IE7+, Firefox, Chrome, Opera, Safari
+			request=new XMLHttpRequest();
+		}
+		else
+		{// code for IE6, IE5
+			request=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+		// überprüfen, ob Request erzeugt wurde
+		if (!request)
+		{
+			alert("Kann keine XMLHTTP-Instanz erzeugen");
+			return false;
+		}
+		else
+		{
+			var url = "./../includes/ajax/ajax_navi.php";
+			// Request öffnen
+			request.open('post', url, true);
+			// Requestheader senden
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			// Request senden
+			request.send('name='+value);
+		//	request.send("name="+value+"&option="+option);
+			// Request auswerten
+			request.onreadystatechange = interpretRequest;
+		}
+	}
+
+	// Request auswerten
+	function interpretRequest() {
+		switch (request.readyState) {
+			// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
+			case 4:
+				if (request.status != 200) {
+					alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
+				} else {
+					var content = request.responseText;
+					// den Inhalt des Requests in das <div> schreiben
+					document.getElementById('content').innerHTML = content;
+				}
+				break;
+			
+			default:
+					document.getElementById('close').style.display = "none";
+				break;
+		}
+	}
+
+</script>
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -170,7 +235,7 @@
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INFOS}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -180,34 +245,41 @@
 	<td class="row2"><input type="text" class="post" name="navi_name" id="navi_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="navi_url">{L_URL}:</label></td>
+	<td class="row1"><label for="navi_url">{L_URL}: *</label></td>
 	<td class="row2">{S_LIST} <input type="text" class="post" name="navi_url" value="{URL}" id="select"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_TYPE}:</label></td>
-	<td class="row3">
-		<label><input type="radio" name="navi_type" value="1" {S_TYPE_MAIN} />&nbsp;{L_TYPE_MAIN}</label><br />
-		<label><input type="radio" name="navi_type" value="2" {S_TYPE_CLAN} />&nbsp;{L_TYPE_CLAN}</label><br />
-		<label><input type="radio" name="navi_type" value="3" {S_TYPE_COM} />&nbsp;{L_TYPE_COM}</label><br />
-		<label><input type="radio" name="navi_type" value="4" {S_TYPE_MISC} />&nbsp;{L_TYPE_MISC}</label><br />
-		<label><input type="radio" name="navi_type" value="5" {S_TYPE_USER} />&nbsp;{L_TYPE_USER}</label>
+	<td class="row1 top"><label>{L_TYPE}: *</label></td>
+	<td class="row2">
+		<label><input type="radio" name="navi_type" value="1" onclick="setRequest('1')" {S_TYPE_MAIN} />&nbsp;{L_TYPE_MAIN}</label><br />
+		<label><input type="radio" name="navi_type" value="2" onclick="setRequest('2')" {S_TYPE_CLAN} />&nbsp;{L_TYPE_CLAN}</label><br />
+		<label><input type="radio" name="navi_type" value="3" onclick="setRequest('3')" {S_TYPE_COM} />&nbsp;{L_TYPE_COM}</label><br />
+		<label><input type="radio" name="navi_type" value="4" onclick="setRequest('4')" {S_TYPE_MISC} />&nbsp;{L_TYPE_MISC}</label><br />
+		<label><input type="radio" name="navi_type" value="5" onclick="setRequest('5')" {S_TYPE_USER} />&nbsp;{L_TYPE_USER}</label>
 	</td> 
 </tr>
 <tr>
-	<td class="row1"><label>{L_LANGUAGE}:</label></td>
-	<td class="row2"><label><input type="radio" name="navi_lang" value="1" {S_LANG_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_lang" value="0" {S_LANG_NO} />&nbsp;{L_NO}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label>{L_SHOW}:</label></td>
-	<td class="row2"><label><input type="radio" name="navi_show" value="1" {S_SHOW_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_show" value="0" {S_SHOW_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row1"><label>{L_TARGET}:</label></td>
+	<td class="row2">
+		<label><input type="radio" name="navi_target" value="0" {S_TARGET_SELF} />&nbsp;{L_TARGET_SELF}</label><br />
+		<label><input type="radio" name="navi_target" value="1" {S_TARGET_NEW} />&nbsp;{L_TARGET_NEW}</label>
+	</td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_INTERN}:</label></td>
 	<td class="row2"><label><input type="radio" name="navi_intern" value="1" {S_INTERN_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_intern" value="0" {S_INTERN_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td class="row1"><label>{L_TARGET}:</label></td>
-	<td class="row2"><label><input type="radio" name="navi_target" value="0" {S_TARGET_SELF} />&nbsp;{L_TARGET_SELF}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_target" value="1" {S_TARGET_NEW} />&nbsp;{L_TARGET_NEW}</label></td>
+	<td class="row1"><label>{L_SHOW}:</label></td>
+	<td class="row2"><label><input type="radio" name="navi_show" value="1" {S_SHOW_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_show" value="0" {S_SHOW_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr>
+	<td class="row1"><label>{L_LANGUAGE}:</label></td>
+	<td class="row2"><label><input type="radio" name="navi_lang" value="1" {S_LANG_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_lang" value="0" {S_LANG_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr>
+	<td class="row1 top"><label for="navi_order">{L_ORDER}:</label></td>
+	<td class="row2 top"><div id="close">{S_ORDER}</div><div id="content"></div></td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
@@ -243,7 +315,7 @@
 	</th>
 </tr>
 <tr>
-	<td class="row1" width="46%"><label for="subnavi_news_limit" title="{L_NEWS_LIMIT_EXPLAIN}">{L_NEWS_LIMIT}:</label></td>
+	<td class="row1_1" nowrap="nowrap"><label for="subnavi_news_limit" title="{L_NEWS_LIMIT_EXPLAIN}">{L_NEWS_LIMIT}:</label></td>
 	<td class="row2"><input class="post" type="text" name="subnavi_news_limit" id="subnavi_news_limit" value="{NEWS_LIMIT}" size="2"></td>
 </tr>
 <tr>
@@ -285,7 +357,7 @@
 	</th>
 </tr>
 <tr>
-	<td class="row1"><label for="subnavi_newusers_show" title="{L_NEWUSERS_SHOW_EXPLAIN}">{L_NEWUSERS_SHOW}:</label></td>
+	<td class="row1_1" nowrap="nowrap"><label for="subnavi_newusers_show" title="{L_NEWUSERS_SHOW_EXPLAIN}">{L_NEWUSERS_SHOW}:</label></td>
 	<td class="row2"><label><input type="radio" name="subnavi_newusers_show" id="subnavi_newusers_show" value="1" {NEWUSERS_ON} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_newusers_show" value="0" {NEWUSERS_OFF} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
