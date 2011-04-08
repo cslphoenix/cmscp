@@ -1,42 +1,67 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
+function select_box_image($class, $table, $field, $default = '')
+{
+	#params $class		> css
+	#params $table		> table
+	#params $field		> field
+	#params $default	> vorgabe
 
-/*
- *	@param string $type			enthält den Titel
- *
- *	$type = art
- *	$class = cssstyle
- *	$field_id = user_id/group_id
- *	$field_name = username/group_name
- *	$default = startauswahl
- *	$switch = team_join/team_fight
- *
- */
+	global $db, $lang;	
+	
+	switch ( $table )
+	{
+		case NEWS_CAT:
+			$lang_field = 'news' . $field;
+			break;
+			
+		default:
+			$lang_field = $field;
+			break;
+	}
+	
+	$sql = "SELECT " . $field . "_id, " . $field . "_title, " . $field . "_image FROM $table ORDER BY " . $field . "_order ASC";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$data = $db->sql_fetchrowset($result);
+	
+	$field_id		= $field . '_id';
+	$field_title	= $field . '_title';
+	$field_image	= $field . '_image';
+	$field_order	= $field . '_order';
+	
+	$select = '';
+	
+	$select .= "<select class=\"$class\" name=\"$field_image\" id=\"$field_image\" onchange=\"update_image(this.options[selectedIndex].value);\">";
+	$select .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $lang_field ]) . "</option>";
+	
+	foreach ( $data as $info => $value )
+	{
+		$marked = ( $value[$field_id] == $default ) ? ' selected="selected"' : '';
+		$select .= "<option value=\"" . $value[$field_image] . "\"$marked>" . sprintf($lang['sprintf_select_format'], $value[$field_title]) . "</option>";
+	}
+	
+	$select .= "</select>";
+	
+	return $select;
+}
 
 function select_box($type, $class, $default = '', $switch = '')
 {
+	/*
+	 *	@param string $type			enthält den Titel
+	 *
+	 *	$type = art
+	 *	$class = css
+	 *	$field_id = user_id/group_id
+	 *	$field_name = username/group_name
+	 *	$default = startauswahl
+	 *	$switch = team_join/team_fight
+	 *
+	 */
+	
 	global $db, $lang;
 	
 	switch ( $type )
@@ -50,10 +75,10 @@ function select_box($type, $class, $default = '', $switch = '')
 			break;
 
 		case 'newscat':
-			$table	= NEWSCAT;
-			$fields	= 'newscat_id, newscat_title, newscat_image';
+			$table	= NEWS_CAT;
+			$fields	= 'cat_id, cat_title, cat_image';
 			$where	= '';
-			$order	= ' ORDER BY newscat_order ASC';
+			$order	= ' ORDER BY cat_order ASC';
 			$selct	= true;
 			break;
 
@@ -90,7 +115,7 @@ function select_box($type, $class, $default = '', $switch = '')
 			break;
 		
 		default:
-			message(GENERAL_ERROR, 'Error', '');
+			message(GENERAL_ERROR, 'SQL Error', '');
 			break;
 	}
 	
@@ -126,34 +151,34 @@ function select_box($type, $class, $default = '', $switch = '')
 	return $select;
 }
 
-function select_box_files($type, $class, $path, $default = '')
+function select_box_files($class, $type, $path, $default = '')
 {
-	global $db, $lang;
+	global $db, $lang, $images;
 	
 	$path_files = scandir($path);
 				
 	$select = '<select class="' . $class . '" name="' . $type . '" id="' . $type . '" onchange="update_image(this.options[selectedIndex].value);">';
-	$select .= '<option value="./../spacer.gif">&raquo;&nbsp;' . $lang['msg_select_' . $type ] . '&nbsp;</option>';
+	$select .= '<option value="spacer.gif">' . sprintf($lang['sprintf_select_format'], $lang['select_msg_' . $type ]) . '</option>';
 	
 	$endung = array('png', 'jpg', 'jpeg', 'gif');
 	
 	foreach ( $path_files as $files )
 	{
-		if ( $files != '.' && $files != '..' && $files != 'index.htm' && $files != '.svn' )
+		if ( $files != '.' && $files != '..' && $files != 'index.htm' && $files != '.svn' && $files != 'spacer.gif' )
 		{
 			if ( in_array(substr($files, -3), $endung) )
 			{
-				$file[] = $files;
+				$clear_files[] = $files;
 			}
 		}
 	}
 	
-	foreach ( $file as $files )
+	foreach ( $clear_files as $files )
 	{
 		$filter = str_replace(substr($files, strrpos($files, '.')), "", $files);
 
 		$marked = ( $files == $default ) ? ' selected="selected"' : '';
-		$select .= '<option value="' . $files . '" ' . $marked . '>' . $filter . '&nbsp;</option>';
+		$select .= '<option value="' . $files . '" ' . $marked . '>' . sprintf($lang['sprintf_select_format'], $filter) . '</option>';
 	}
 	$select .= '</select>';
 	
@@ -214,19 +239,19 @@ function select_newscategory($default)
 {
 	global $db, $lang;
 		
-	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY newscat_order";
+	$sql = 'SELECT * FROM ' . NEWS_CAT . " ORDER BY cat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select name="news_category" class="post" onchange="update_image(this.options[selectedIndex].value);">';
-	$func_select .= '<option value="0">' . $lang['newscat_select'] . '</option>';
+	$func_select = '<select name="news_cat" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select .= '<option value="0">' . $lang['cat_select'] . '</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['newscat_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['newscat_image'] . '"' . $selected . '>&raquo;&nbsp;' . $row['newscat_title'] . '&nbsp;</option>';
+		$selected = ( $row['cat_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['cat_image'] . '"' . $selected . '>&raquo;&nbsp;' . $row['cat_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -296,210 +321,6 @@ function _select_match($default, $type, $class)
 	$func_select .= '</select>';
 
 	return $func_select;
-}
-
-//
-//	Date Select
-//
-//	default:	day/month/year/hour/min
-//	value:		select Wert
-//
-function select_date($class, $default, $var, $value, $create = '')
-{
-	global $lang;
-	
-	switch ( $default )
-	{
-		case 'day':
-		
-			if ( $create <= ( time()- 86400 ) )
-			{
-				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
-			}
-			else
-			{
-				$select = "<select class=\"$class\" name=\"$var\">";
-				for ( $i = 1; $i < 32; $i++ )
-				{
-					if ( $i < 10 )
-					{
-						$i = '0' . $i;
-					}
-					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
-					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-				}
-				$select .= "</select>";
-			}
-			
-			break;
-		
-		case 'month':
-		
-			if ( $create <= ( time()- 86400 ) )
-			{
-				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
-			}
-			else
-			{
-				$select = "<select class=\"$class\" name=\"$var\">";
-				for ( $i = 1; $i < 13; $i++ )
-				{
-					if ( $i < 10 )
-					{
-						$i = '0' . $i;
-					}
-					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
-					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-				}
-				$select .= '</select>';
-			}
-			
-			break;
-		
-		case 'monthn':
-		
-			$monate = array(
-				'01'	=> $lang['datetime']['month_01'],
-				'02'	=> $lang['datetime']['month_02'],
-				'03'	=> $lang['datetime']['month_03'],
-				'04'	=> $lang['datetime']['month_04'],
-				'05'	=> $lang['datetime']['month_05'],
-				'06'	=> $lang['datetime']['month_06'],
-				'07'	=> $lang['datetime']['month_07'],
-				'08'	=> $lang['datetime']['month_08'],
-				'09'	=> $lang['datetime']['month_09'],
-				'10'	=> $lang['datetime']['month_10'],
-				'11'	=> $lang['datetime']['month_11'],
-				'12'	=> $lang['datetime']['month_12'],
-			);
-			
-			if ( $create <= ( time()- 86400 ) )
-			{
-				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
-			}
-			else
-			{
-				$select = "<select class=\"$class\" name=\"$var\">";
-				for ( $i = 1; $i < 13; $i++ )
-				{
-					if ( $i < 10 )
-					{
-						$i = '0' . $i;
-					}
-					$mark = ( $i == $value ) ? 'selected="selected"' : '';
-					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-				}
-				$select .= '</select>';
-			}
-			
-			break;
-		
-		case 'monthm':
-		
-			$monate = array(
-				'01'	=> $lang['datetime']['month_01'],
-				'02'	=> $lang['datetime']['month_02'],
-				'03'	=> $lang['datetime']['month_03'],
-				'04'	=> $lang['datetime']['month_04'],
-				'05'	=> $lang['datetime']['month_05'],
-				'06'	=> $lang['datetime']['month_06'],
-				'07'	=> $lang['datetime']['month_07'],
-				'08'	=> $lang['datetime']['month_08'],
-				'09'	=> $lang['datetime']['month_09'],
-				'10'	=> $lang['datetime']['month_10'],
-				'11'	=> $lang['datetime']['month_11'],
-				'12'	=> $lang['datetime']['month_12'],
-			);
-			
-			if ( !is_array($value) )
-			{
-				$value = explode(',', $value);
-			}
-		
-			$select = "<select class=\"$class\" name=\"" . $var . "[]\" multiple=\"multiple\" rows=\"12\" size=\"12\">";
-			
-			foreach ( $monate as $const => $name )
-			{
-				$mark = ( in_array($const, $value) ) ? ' selected="selected"' : '';
-			#	$select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
-				
-				$select .= "<option value=\"$const\" $mark>&raquo;&nbsp;$name&nbsp;</option>";
-			}
-			$select .= '</select>';
-			
-			break;
-		
-		case 'year':
-		
-			if ( $create <= ( time()- 86400 ) )
-			{
-				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
-			}
-			else
-			{
-				$select = "<select class=\"$class\" name=\"$var\">";
-				for ( $i = $value; $i < $value + 2; $i++ )
-				{
-					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
-					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-				}
-				$select .= '</select>';
-			}
-		
-			break;
-		
-		case 'hour':
-		
-			if ( $create <= ( time()- 86400 ) )
-			{
-				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
-			}
-			else
-			{
-				$select = "<select class=\"$class\" name=\"$var\">";
-				for ( $i = 0; $i < 24; $i++ )
-				{
-					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
-					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-				}
-				$select .= '</select>';
-			}
-			
-			break;
-		
-		case 'min':
-		
-			if ( $create <= ( time()- 86400 ) )
-			{
-				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
-			}
-			else
-			{
-				$select = "<select class=\"$class\" name=\"$var\">";
-				for ( $i = '00';$i < 60; $i = $i + 15 )
-				{
-					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
-					$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-				}
-				$select .= '</select>';
-			}
-			
-			break;
-		
-		case 'duration':
-		
-			$select = "<select class=\"$class\" name=\"$var\" id=\"duration\">";
-			for ( $i='00';$i < 260; $i = $i + 30 )
-			{
-				$mark	= ( $i == $value ) ? 'selected="selected"' : '';
-				$select .= "<option value=\"$i\" $mark>&raquo;&nbsp;$i&nbsp;</option>";
-			}
-			$select .= '</select>';
-			
-			break;
-	}
-	
-	return $select;
 }
 
 //
@@ -642,10 +463,16 @@ function select_order($class, $table, $cat, $default = '')
 	
 	switch ( $table )
 	{
-		case NEWSCAT:
-			$fields	= 'newscat_title, newscat_order';
+		case SERVER:
+			$fields	= 'server_name, server_order';
 			$where	= '';
-			$order	= 'ORDER BY newscat_order ASC';
+			$order	= 'ORDER BY server_order ASC';
+			break;
+			
+		case NEWS_CAT:
+			$fields	= 'cat_title, cat_order';
+			$where	= '';
+			$order	= 'ORDER BY cat_order ASC';
 			break;
 			
 		case MAPS:
@@ -672,6 +499,14 @@ function select_order($class, $table, $cat, $default = '')
 			
 			break;
 			
+		case TEAMS:
+			
+			$fields	= 'team_name, team_order';
+			$where	= '';
+			$order	= 'ORDER BY team_order ASC';
+			
+			break;
+			
 		case GROUPS:
 			
 			$fields	= 'group_name, group_order';
@@ -682,7 +517,7 @@ function select_order($class, $table, $cat, $default = '')
 		
 		default:
 		
-			message(GENERAL_ERROR, 'Error', '');
+			message(GENERAL_ERROR, 'SQL order error', '');
 			
 			break;
 	}
@@ -824,6 +659,225 @@ function select_maps($tag = '')
 	}
 	
 	$select .= '</select>';
+	
+	return $select;
+}
+
+//
+//	Date Select
+//
+//	default:	day/month/year/hour/min
+//	value:		select Wert
+//
+function select_date($class, $default, $var, $value, $create = '')
+{
+	#	$class		> css
+	#	$default	>
+	#	$var		>
+	#	$value		>
+	#	$create		>
+	
+	global $lang;
+	
+	switch ( $default )
+	{
+		case 'day':
+		
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				
+				for ( $i = 1; $i < 32; $i++ )
+				{
+					$i = ( $i < 10 ) ? '0' . $i : $i;
+					
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+				}
+				
+				$select .= "</select>";
+			}
+			
+			break;
+		
+		case 'month':
+		
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				
+				for ( $i = 1; $i < 13; $i++ )
+				{
+					$i = ( $i < 10 ) ? '0' . $i : $i;
+					
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+				}
+				
+				$select .= '</select>';
+			}
+			
+			break;
+		
+		case 'monthn':
+		
+			$monate = array(
+				'01'	=> $lang['datetime']['month_01'],
+				'02'	=> $lang['datetime']['month_02'],
+				'03'	=> $lang['datetime']['month_03'],
+				'04'	=> $lang['datetime']['month_04'],
+				'05'	=> $lang['datetime']['month_05'],
+				'06'	=> $lang['datetime']['month_06'],
+				'07'	=> $lang['datetime']['month_07'],
+				'08'	=> $lang['datetime']['month_08'],
+				'09'	=> $lang['datetime']['month_09'],
+				'10'	=> $lang['datetime']['month_10'],
+				'11'	=> $lang['datetime']['month_11'],
+				'12'	=> $lang['datetime']['month_12'],
+			);
+			
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				
+				for ( $i = 1; $i < 13; $i++ )
+				{
+					$i = ( $i < 10 ) ? '0' . $i : $i;
+					
+					$mark = ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+				}
+				
+				$select .= '</select>';
+			}
+			
+			break;
+		
+		case 'monthm':
+		
+			$monate = array(
+				'01'	=> $lang['datetime']['month_01'],
+				'02'	=> $lang['datetime']['month_02'],
+				'03'	=> $lang['datetime']['month_03'],
+				'04'	=> $lang['datetime']['month_04'],
+				'05'	=> $lang['datetime']['month_05'],
+				'06'	=> $lang['datetime']['month_06'],
+				'07'	=> $lang['datetime']['month_07'],
+				'08'	=> $lang['datetime']['month_08'],
+				'09'	=> $lang['datetime']['month_09'],
+				'10'	=> $lang['datetime']['month_10'],
+				'11'	=> $lang['datetime']['month_11'],
+				'12'	=> $lang['datetime']['month_12'],
+			);
+			
+			if ( !is_array($value) )
+			{
+				$value = explode(',', $value);
+			}
+		
+			$select = "<select class=\"$class\" name=\"" . $var . "[]\" multiple=\"multiple\" rows=\"12\" size=\"12\">";
+			
+			foreach ( $monate as $const => $name )
+			{
+				$mark = ( in_array($const, $value) ) ? 'selected="selected"' : '';
+			#	$select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
+			#	$select .= "<option value=\"$const\" $mark>&raquo;&nbsp;$name&nbsp;</option>";
+				$select .= "<option value=\"$const\" $mark>" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+			}
+			
+			$select .= '</select>';
+			
+			break;
+		
+		case 'year':
+		
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				
+				for ( $i = $value; $i < $value + 2; $i++ )
+				{
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+				}
+				
+				$select .= '</select>';
+			}
+		
+			break;
+		
+		case 'hour':
+		
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				
+				for ( $i = 0; $i < 24; $i++ )
+				{
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+				}
+				
+				$select .= '</select>';
+			}
+			
+			break;
+		
+		case 'min':
+		
+			if ( $create <= ( time()- 86400 ) )
+			{
+				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
+			}
+			else
+			{
+				$select = "<select class=\"$class\" name=\"$var\">";
+				
+				for ( $i = '00'; $i < 60; $i = $i + 15 )
+				{
+					$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+					$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+				}
+				
+				$select .= '</select>';
+			}
+			
+			break;
+		
+		case 'duration':
+		
+			$select = "<select class=\"$class\" name=\"$var\" id=\"duration\">";
+			
+			for ( $i='00'; $i < 260; $i = $i + 30 )
+			{
+				$mark	= ( $i == $value ) ? 'selected="selected"' : '';
+				$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], $i) . "</option>";
+			}
+			
+			$select .= '</select>';
+			
+			break;
+	}
 	
 	return $select;
 }
