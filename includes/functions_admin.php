@@ -66,8 +66,8 @@ function get_data($mode, $id, $type)
 		break;
 		
 		case 'newscat':
-			$table		= NEWSCAT;
-			$idfield	= 'newscat_id';
+			$table		= NEWS_CAT;
+			$idfield	= 'cat_id';
 		break;
 		
 		case 'newsletter':
@@ -108,9 +108,9 @@ function get_data($mode, $id, $type)
 		case 'news_newscat':
 			$table		= NEWS;
 			$idfield	= 'news_id';
-			$connection	= 'news_category';
-			$table2		= NEWSCAT;
-			$idfield2	= 'newscat_id';
+			$connection	= 'news_cat';
+			$table2		= NEWS_CAT;
+			$idfield2	= 'cat_id';
 		break;
 		
 		case 'profile':
@@ -118,9 +118,9 @@ function get_data($mode, $id, $type)
 			$idfield	= 'profile_id';
 			break;
 			
-		case 'profile_category':
-			$table		= PROFILE_CATEGORY;
-			$idfield	= 'category_id';
+		case 'profile_cat':
+			$table		= PROFILE_CAT;
+			$idfield	= 'cat_id';
 			break;
 			
 		case 'profile_data':
@@ -205,9 +205,9 @@ function orders($mode, $type = '')
 		break;
 		
 		case 'newscat':
-			$table		= NEWSCAT;
-			$idfield	= 'newscat_id';
-			$orderfield	= 'newscat_order';
+			$table		= NEWS_CAT;
+			$idfield	= 'cat_id';
+			$orderfield	= 'cat_order';
 		break;
 		
 		case 'server':
@@ -239,13 +239,13 @@ function orders($mode, $type = '')
 			break;
 			
 		case 'category':
-			$table = CATEGORIES;
+			$table = FORUM_CAT;
 			$idfield = 'cat_id';
 			$orderfield = 'cat_order';
 			break;
 
 		case 'forum':
-			$table = FORUMS;
+			$table = FORUM;
 			$idfield = 'forum_id';
 			$orderfield = 'forum_order';
 			$typefield = 'cat_id';

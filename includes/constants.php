@@ -47,7 +47,7 @@ define('LOG_SEK_MATCH',			9);
 define('LOG_SEK_NAVI',			10);
 define('LOG_SEK_NETWORK',		11);
 define('LOG_SEK_NEWS',			12);
-define('LOG_SEK_NEWSCAT',		13);
+define('LOG_SEK_NEWS_CAT',		13);
 define('LOG_SEK_NEWSLETTER',	14);
 define('LOG_SEK_PROFILE',		15);
 define('LOG_SEK_RANK',			16);
@@ -59,6 +59,7 @@ define('LOG_SEK_USER',			20);
 define('LOG_SEK_CASH',			21);
 define('LOG_SEK_GALLERY',		22);
 define('LOG_SEK_MAPS',			23);
+define('LOG_SEK_SERVER',		24);
 
 define('LOG_SEK_CHANGELOG',		98);
 define('LOG_SEK_BUGTRACKER',	99);
@@ -134,7 +135,7 @@ define('AUTH_TRIAL',		2);//	Trialmember
 define('AUTH_MEMBER',		3);//	Member
 define('AUTH_COLEADER',		4);//	Squadleader
 define('AUTH_LEADER',		5);//	Leader
-define('AUTH_UPLOAD',		6);//	Uploader
+define('AUTH_UPLOADER',		6);//	Uploader
 
 define('URL',	'url');
 
@@ -217,7 +218,7 @@ define('POST_CATEGORY_URL',		'c');
 define('POST_CONTACT_URL',		'c');
 define('POST_FORUM_URL',		'f');
 define('POST_GAMES_URL',		'g');
-define('POST_GAMESERVER_URL',	'gs');
+define('POST_SERVER_URL',		's');
 define('POST_GROUPS_URL',		'g');
 define('POST_GALLERY_URL',		'g');
 define('POST_GALLERY_PIC_URL',	'gp');
@@ -227,7 +228,7 @@ define('POST_MATCH_PIC_URL',	'mp');
 define('POST_NAVIGATION_URL',	'n');
 define('POST_NETWORK_URL',		'n');
 define('POST_NEWS_URL',			'n');
-define('POST_NEWSCAT_URL',		'nc');
+define('POST_NEWS_CAT_URL',		'nc');
 define('POST_NEWSLETTER_URL',	'nl');
 define('POST_POST_URL',			'p');
 define('POST_PROFILE_URL',		'p');
@@ -300,12 +301,12 @@ define('GROUPS_USERS',				$db_prefix . 'groups_users');
 
 //	Profilefelder
 define('PROFILE',					$db_prefix . 'profile');
-define('PROFILE_CATEGORY',			$db_prefix . 'profile_category');
+define('PROFILE_CAT',			$db_prefix . 'profile_cat');
 define('PROFILE_DATA',				$db_prefix . 'profile_data');
 
 //	News
 define('NEWS',						$db_prefix . 'news');
-define('NEWSCAT',					$db_prefix . 'newscategory');
+define('NEWS_CAT',					$db_prefix . 'news_cat');
 define('NEWS_COMMENTS',				$db_prefix . 'news_comments');
 define('NEWS_COMMENTS_READ',		$db_prefix . 'news_comments_read');
 
@@ -320,8 +321,8 @@ define('ERROR',						$db_prefix . 'log_error');
 
 //	Forum
 define('AUTH_ACCESS',				$db_prefix . 'forum_auth_access');
-define('CATEGORIES',				$db_prefix . 'forum_cat');
-define('FORUMS',					$db_prefix . 'forum_forums');
+define('FORUM_CAT',					$db_prefix . 'forum_cat');
+define('FORUM',						$db_prefix . 'forum_forums');
 define('POSTS',						$db_prefix . 'forum_posts');
 define('TOPICS',					$db_prefix . 'forum_topics');
 define('TOPICS_READ',				$db_prefix . 'forum_topics_read');
@@ -361,7 +362,7 @@ define('TRAINING_USERS',			$db_prefix . 'training_users');
 
 define('CASH',						$db_prefix . 'cash');
 define('CASH_BANK',					$db_prefix . 'cash_bank');
-define('CASH_USER',					$db_prefix . 'cash_user');
+define('CASH_USER',					$db_prefix . 'cash_users');
 
 /*	Downloads	*/
 define('DOWNLOAD',					$db_prefix . 'downloads');

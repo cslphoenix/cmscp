@@ -117,7 +117,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 		$forum_match_sql = ( $forum_id != AUTH_LIST_ALL ) ? "WHERE a.forum_id = $forum_id" : '';
 
 		$sql = "SELECT a.forum_id, $a_sql
-			FROM " . FORUMS . " a
+			FROM " . FORUM . " a
 			$forum_match_sql";
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -279,7 +279,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 
 					case AUTH_ADM:
 						$auth_user[$f_forum_id][$key] = $is_admin;
-						$auth_user[$f_forum_id][$key . '_type'] = $lang['Auth_Administrators'];
+						$auth_user[$f_forum_id][$key . '_type'] = $lang['auth_administrators'];
 						break;
 
 					default:

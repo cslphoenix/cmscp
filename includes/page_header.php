@@ -356,13 +356,13 @@ if ( $settings['subnavi_links'] )		{ display_navi_network('links'); }
 if ( $settings['subnavi_partner'] )		{ display_navi_network('partner'); }
 if ( $settings['subnavi_sponsor'] )		{ display_navi_network('sponsor'); }
 
-if ($userdata['user_level'] == TRIAL || $userdata['user_level'] == MEMBER || $userdata['user_level'] == ADMIN )
+if ( $userdata['user_level'] >= TRIAL )
 {
-	if ( $settings['subnavi_training'] )	{ display_navitrain(); }
+	if ( $settings['subnavi_training'] )	{ display_next_training(); }
 }
 
 
-if ( $settings['subnavi_matches'] )			{ display_navimatch(); }
+if ( $settings['subnavi_match_next'] )			{ display_next_match(); }
 
 if ( $settings['subnavi_statsonline'] )
 {
@@ -427,6 +427,16 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 // in a template.
 //
 $template->assign_vars(array(
+
+	'NO_ENTRY' => $lang['no_entry'],
+	'L_SUBNAVI_NEWS'	=> $lang['subnavi_news'],
+	'L_SUBNAVI_MATCH'	=> $lang['subnavi_match'],
+	'L_SUBNAVI_TEAMS'	=> $lang['subnavi_teams'],
+	
+	'L_NETWORK_LINKS'		=> $lang['network_link'],
+	'L_NETWORK_PARTNER'		=> $lang['network_partner'],
+	'L_NETWORK_SPONSOR'		=> $lang['network_sponsor'],
+
 	'VERSION'		=> $config['page_version'],
 #	'CMS_VERSION'	=> $changelog['changelog_number'],
 							 

@@ -1,29 +1,6 @@
 <?php
 
 /*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
-/*
  *	@param string $type			enthält den Titel
  *
  *	$type = art
@@ -116,19 +93,19 @@ function _select_newscat($default)
 {
 	global $db;
 		
-	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY newscat_order";
+	$sql = 'SELECT * FROM ' . NEWS_CAT . " ORDER BY cat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	$func_select = '<select name="newscat_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
+	$func_select = '<select name="cat_image" class="post" onchange="update_image(this.options[selectedIndex].value);">';
 	$func_select .= '<option value="0">----------</option>';
 	
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['newscat_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['newscat_image'] . '"' . $selected . '>' . $row['newscat_title'] . '&nbsp;</option>';
+		$selected = ( $row['cat_id'] == $default ) ? ' selected="selected"' : '';
+		$func_select .= '<option value="' . $row['cat_image'] . '"' . $selected . '>' . $row['cat_title'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 

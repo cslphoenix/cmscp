@@ -1,29 +1,6 @@
 <?php
 
 /*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
-/*
  * Idee von phpBB3
  */
 
@@ -91,7 +68,7 @@ function request($request_var, $request_type = '', $filter = '')
 							$_var = trim(htmlentities(str_replace("'", "\'", $_v), ENT_COMPAT));
 						}
 						
-						$var[$_k] = $_var;
+						$var[$_k] = $_v;
 					}
 					else
 					{
@@ -1043,7 +1020,7 @@ function get_db_stat($mode)
 		case 'postcount':
 		case 'topiccount':
 			$sql = "SELECT SUM(forum_topics) AS topic_total, SUM(forum_posts) AS post_total
-				FROM " . FORUMS;
+				FROM " . FORUM;
 			break;
 	}
 
@@ -1206,7 +1183,7 @@ function get_userdata($user, $force_str = false)
 function init_userprefs($userdata)
 {
 	global $config, $theme, $images;
-	global $template, $lang, $phpEx, $root_path, $db;
+	global $template, $lang, $root_path, $db;
 	global $nav_links;
 	
 	if ( $userdata['user_id'] != ANONYMOUS )
@@ -1282,11 +1259,11 @@ function init_userprefs($userdata)
 	$config['default_lang'] = $default_lang;
 
 	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_main.php');
-	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_newsletter.php');
+#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_newsletter.php');
 #	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_teamspeak.php');
-	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
-	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_ucp.php');
-	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_imprint.php');
+#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_contact.php');
+#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_ucp.php');
+#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_imprint.php');
 	
 	if ( file_exists($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php') )
 	{
@@ -1295,15 +1272,15 @@ function init_userprefs($userdata)
 	
 	if ( defined('IN_ADMIN') )
 	{
-		if ( !file_exists(@cms_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php')) )
+		if ( !file_exists(@cms_realpath($root_path . 'language/lang_' . $config['default_lang'] . '/acp/common.php')) )
 		{
-			$config['default_lang'] = 'english';
+			$config['default_lang'] = 'german';
 		}
 		
-		if ( file_exists($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php') )
-		{
-			include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php');
-		}
+	#	if ( file_exists($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php') )
+	#	{
+	#		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_bugtracker.php');
+	#	}
 		
 	#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_admin.php');
 	#	include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_adm.php');

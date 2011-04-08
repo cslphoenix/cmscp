@@ -1,28 +1,5 @@
 <?php
 
-/*
- *
- *
- *							___.          
- *	  ____   _____   ______ \_ |__ ___.__.
- *	_/ ___\ /     \ /  ___/  | __ <   |  |
- *	\  \___|  Y Y  \\___ \   | \_\ \___  |
- *	 \___  >__|_|  /____  >  |___  / ____|
- *		 \/      \/     \/       \/\/     
- *	__________.__                         .__        
- *	\______   \  |__   ____   ____   ____ |__|__  ___
- *	 |     ___/  |  \ /  _ \_/ __ \ /    \|  \  \/  /
- *	 |    |   |   Y  (  <_> )  ___/|   |  \  |>    < 
- *	 |____|   |___|  /\____/ \___  >___|  /__/__/\_ \
- *				   \/            \/     \/         \/ 
- *
- *	Content-Management-System by Phoenix
- *
- *	@autor:	Sebastian Frickel © 2009, 2010
- *	@code:	Sebastian Frickel © 2009, 2010
- *
- */
-
 //function check_image_type(&$type)
 function image_check_type($type, $error)
 {
@@ -69,14 +46,21 @@ function image_delete($image_current, $image_preview, $image_path, $mode_sql)
 	
 	$sql = explode(', ', $mode_sql);
 	
-	return ( count($sql) == '1' ) ? $sql[0] . " = ''" : $sql[0] . " = '', " . $sql[1] . " = ''";
+	if ( !strstr($mode_sql, 'team') )
+	{
+		$return = ( count($sql) == '1' ) ? $sql[0] . " = ''" : $sql[0] . " = '', " . $sql[1] . " = ''";
+	}
+	else
+	{
+		$return = '';
+	}
+	
+	return $return;
 }
 
 function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_current, $image_preview, $image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, &$error)
 {
 	global $db, $lang, $settings, $error;
-	
-	$error = '';
 	
 	switch ( $mode_category )
 	{
@@ -254,10 +238,10 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 			}
 		}
 		
-	#	if ( $image_current )
-	#	{
-	#		image_delete($image_current, $image_preview, $image_path, $mode_sql);
-	#	}
+		if ( $image_current )
+		{
+			image_delete($image_current, $image_preview, $image_path, $mode_sql);
+		}
 		
 		$move_file = ( @$ini_val('open_basedir') != '' ) ? 'move_uploaded_file' : 'copy';
 		
@@ -266,12 +250,22 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 		}
 		
+		if ( $error )
+		{
+			@unlink($tmp_filename);
+			return false;
+		}
+		
 		$move_file($image_filename, $image_path . "/$new_filename");
 		@chmod($image_path . "/$new_filename", 0644);
 		
 		if ( $mode )
 		{
+			/*
 			$sql_pic = ( $mode == '_update' ) ?  "$mode_sql = '$new_filename'," : $new_filename;
+			geändert zwecks umstellung der speichermechanismus der daten im acp
+			*/
+			$sql_pic = $new_filename;
 		}
 		else
 		{
