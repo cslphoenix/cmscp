@@ -23,7 +23,7 @@ else
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 
-	include($root_path . 'includes/server_query.php');
+#	include($root_path . 'includes/server_query.php');
 #	include($root_path . 'includes/teamspeak_query.php');
 	
 	load_lang('server');
@@ -149,7 +149,7 @@ else
 								'server_list'	=> request('server_list', 2),
 								'server_show'	=> request('server_show', 2),
 								'server_own'	=> request('server_own', 0),
-								'server_order'	=> ( request('server_order_new', 0) ) ? request('server_order_new', 0) : request('server_order', 0),
+								'server_order'	=> request('server_order', 0) ? request('server_order', 0) : request('server_order_new', 0),
 							);
 				}
 				
@@ -194,55 +194,39 @@ else
 			
 				if ( request('submit', 1) )
 				{
-					$server_name	= request('server_name', 2);
-					$server_game	= request('server_game', 2);
-					$server_ip		= request('server_ip', 2);
-					$server_port	= request('server_port', 2);
-					$server_qport	= request('server_qport', 2);
-					$server_live	= request('server_live', 2);
-					$server_pw		= request('server_pw', 2);
-					$server_list	= request('server_list', 2);
-					$server_show	= request('server_show', 2);
-					$server_own		= request('server_own', 2);
-					$server_order	= ( request('server_order_new', 0) ) ? request('server_order_new', 0) : request('server_order', 0);
+					$data = array(
+								'server_name'	=> request('server_name', 2),
+								'server_game'	=> request('server_game', 2),
+								'server_ip'		=> request('server_ip', 2),
+								'server_port'	=> request('server_port', 2),
+								'server_qport'	=> request('server_qport', 2),
+								'server_pw'		=> request('server_pw', 2),
+								'server_live'	=> request('server_live', 2),
+								'server_list'	=> request('server_list', 2),
+								'server_show'	=> request('server_show', 2),
+								'server_own'	=> request('server_own', 0),
+								'server_order'	=> request('server_order', 0) ? request('server_order', 0) : request('server_order_new', 0),
+							);
 					
-					$error .= ( !$server_name ) 	? ( $error ? '<br />' : '' ) . sprintf($lang['sprintf_msg_select'], sprintf($lang['sprintf_name'], $lang['server'])) : '';
-					$error .= ( !$server_ip )		? ( $error ? '<br />' : '' ) . $lang['msg_select_ip'] : '';
-					$error .= ( !$server_port )		? ( $error ? '<br />' : '' ) . $lang['msg_select_port'] : '';
-					$error .= ( !$server_qport )	? ( $error ? '<br />' : '' ) . $lang['msg_select_qport'] : '';
+					$data['server_order'] = ( !$data['server_order'] ) ? maxa(SERVER, 'server_order', false) : $data['server_order'];
+					
+					$error .= ( !$data['server_name'] )		? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error .= ( !$data['server_ip'] )		? ( $error ? '<br />' : '' ) . $lang['msg_empty_ip'] : '';
+					$error .= ( !$data['server_port'] )		? ( $error ? '<br />' : '' ) . $lang['msg_empty_port'] : '';
+					$error .= ( !$data['server_qport'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_qport'] : '';
 					
 					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
-							$sql = "INSERT INTO " . SERVER . " (server_name, server_game, server_ip, server_port, server_qport, server_live, server_pw, server_list, server_show, server_own, server_order) VALUES ('$server_name', '$server_game', '$server_ip', '$server_port', '$server_qport', '$server_live', '$server_pw', '$server_list', '$server_show', '$server_own', '$server_order')";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+							$db_data = sql(SERVER, $mode, $data);
 							
-							$data_id = $db->sql_nextid();
-							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$message = $lang['create']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 						}
 						else
 						{
-							$sql = "UPDATE " . SERVER . " SET
-										server_name		= '$server_name',
-										server_game		= '$server_game',
-										server_ip		= '$server_ip',
-										server_port		= '$server_port',
-										server_qport	= '$server_qport',
-										server_live		= '$server_live',
-										server_pw		= '$server_pw',
-										server_list		= '$server_list',
-										server_show		= '$server_show',
-										server_own		= '$server_own',
-										server_order	= '$server_order'
-									WHERE server_id = $data_id";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+							$db_data = sql(SERVER, $mode, $data, 'server_id', $data_id);
 							
 							$message = $lang['update']
 								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
@@ -251,7 +235,7 @@ else
 						
 						orders(SERVER);
 						
-						log_add(LOG_ADMIN, $log, $mode, $server_name);
+						log_add(LOG_ADMIN, $log, $mode, $db_data);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -285,17 +269,14 @@ else
 			
 				if ( $data_id && $confirm )
 				{
-					$sql = "DELETE FROM " . SERVER . " WHERE server_id = $data_id";
-					if ( !$db->sql_query($sql) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
+					$db_data = sql(SERVER, $mode, $data, 'server_id', $data_id);
 					
-					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$message = $lang['delete']
+						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 					
 					orders(SERVER);
 					
-					log_add(LOG_ADMIN, $log, $mode, $data['server_name']);
+					log_add(LOG_ADMIN, $log, $mode, $db_data);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
@@ -335,60 +316,32 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> $acp_title,
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['server']),
 		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['server']),
 		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['server']),
 		
 		'L_EXPLAIN'	=> $lang['explain'],
-		
-#		'L_SERVER_HEAD'		=> $lang['gs_head'],
-#		'L_SERVER_EXPLAIN'	=> $lang['gs_explain'],
-#		'L_SERVER_EMAIL'	=> $lang['gs_name'],
-#		'L_SERVER_ADD'		=> $lang['gs_add'],
-		
-#		'L_SETTINGS'		=> $lang['common_settings'],
-#		'L_EDIT'			=> $lang['common_update'],
-#		'L_DELETE'			=> $lang['common_delete'],
-		
-#		'L_MOVE_UP'			=> $lang['move_up'], 
-#		'L_MOVE_DOWN'		=> $lang['move_down'], 
 		
 		'S_CREATE'	=> append_sid("$file?mode=_create"),
 		'S_ACTION'	=> append_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
 	
-	$max	= get_data_max(SERVER, 'server_order', '');
-	$server	= get_data_array(SERVER, '', 'server_order', 'ASC');
+	$max = maxi(SERVER, 'server_order', '');
+	$tmp = data(SERVER, false, 'server_order ASC', 1, false);
 	
-	if ( $server )
+	if ( $tmp )
 	{
-		/*
-		$template->assign_block_vars('display.server_row', array(
-			'CLASS' 		=> $class,
-			'SERVER_NAME'	=> $row['server_name'],
-
-			'U_DELETE'		=> append_sid('admin_server.php?mode=delete&amp;$url= $row['server_id']),
-			'U_EDIT'		=> append_sid('admin_server.php?mode=edit&amp;$url= $row['server_id']),
-			'U_MOVE_UP'		=> append_sid('admin_server.php?mode=order_page&amp;move=-15&amp;$url= $row['server_id']),
-			'U_MOVE_DOWN'	=> append_sid('admin_server.php?mode=order_page&amp;move=15&amp;$url= $row['server_id']),
-		));
-		*/
-		
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($server)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp)); $i++ )
 		{
-			$server_id		= $server[$i]['server_id'];
-			$server_order	= $server[$i]['server_order'];
-		#	$game_size	= $server[$i]['game_size'];
-		#	$game_image	= ( $server[$i]['game_image'] ) ? $path_dir . $server[$i]['game_image'] : $images['icon_acp_spacer'];
+			$server_id		= $tmp[$i]['server_id'];
+			$server_order	= $tmp[$i]['server_order'];
 			
 			$template->assign_block_vars('_display._server_row', array(
-				'NAME'		=> $server[$i]['server_name'],
-		#		'TAG'		=> $server[$i]['game_tag'],
-		#		'IMAGE'		=> '<img src="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" alt="" />',
+				'NAME'		=> $tmp[$i]['server_name'],
 				
 				'MOVE_UP'	=> ( $server_order != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $server_order != $max['max'] ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $server_order != $max ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$server_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$server_id"),

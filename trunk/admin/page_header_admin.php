@@ -51,7 +51,11 @@ $current_page = ( isset($current) ) ? $lang[$current] : 'info';
 $template->assign_vars(array(
 							 
 	'L_HEADER'		=> sprintf($lang['index_header'], $config['page_name'], $current_page),
-	'L_INPUT_DATA'	=> $lang['common_input_data'],
+	
+	'L_INPUT_DATA'		=> $lang['common_input_data'],
+	'L_INPUT_OPTION'	=> $lang['common_input_option'],
+	'L_INPUT_UPLOAD'	=> $lang['common_input_upload'],
+	
 	'L_ORDER'		=> $lang['common_order'],
 	
 	'NO_ENTRY'		=> $lang['no_entry'],

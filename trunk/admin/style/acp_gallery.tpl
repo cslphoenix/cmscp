@@ -99,7 +99,7 @@ tinyMCE.init({
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -226,7 +226,7 @@ function clone(objButton)
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -444,7 +444,7 @@ function clone(objButton)
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>

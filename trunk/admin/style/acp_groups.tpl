@@ -19,7 +19,7 @@
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="rowHead" width="99%">{L_NAME}</td>
-	<td class="rowHead">{L_MEMBERCOUNT}</td>
+	<td class="rowHead">{L_COUNT}</td>
 	<td class="rowHead" colspan="4" align="center">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _row_groups -->
@@ -48,26 +48,25 @@
 
 <!-- BEGIN _input -->
 <script type="text/javascript" src="./../admin/style/jscolor.js"></script>
-
 <script type="text/javascript">
 // <![CDATA[
 	
-	function activated()
-	{
-		<!-- BEGIN _auth -->
-		document.getElementById("{_auth.FIELDS}").checked = true;
-		<!-- END _auth -->
-	}
+function activated()
+{
+	<!-- BEGIN _auth -->
+	document.getElementById("{_auth.FIELDS}").checked = true;
+	<!-- END _auth -->
+}
+
+function deactivated()
+{
+	var radios = document.forms["post"].elements["deactivated"];
 	
-	function deactivated()
+	for ( var i = 0; i < radios.length; i++ )
 	{
-		var radios = document.forms["post"].elements["deactivated"];
-		
-		for ( var i = 0; i < radios.length; i++ )
-		{
-			radios[i].checked = true;
-		}
+		radios[i].checked = true;
 	}
+}
 
 // ]]>
 </script>
@@ -76,9 +75,9 @@
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	<!-- BEGIN _input -->
+	<!-- BEGIN _update -->
 	<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
-	<!-- END _input -->
+	<!-- END _update -->
 </ul>
 </div>
 
@@ -139,7 +138,7 @@
 			<td class="row2">{S_RANK}</td>
 		</tr>
 		<tr>
-			<td class="row1"><label for="rank_id">{L_ORDER}:</label></td>
+			<td class="row1"><label for="group_order">{L_ORDER}:</label></td>
 			<td class="row2">{S_ORDER}</td>
 		</tr>
 		<tr>

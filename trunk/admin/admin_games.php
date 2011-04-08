@@ -64,13 +64,12 @@ else
 				
 				if ( $mode == '_create' && !request('submit', 1) )
 				{
-					$max = get_data_max(GAMES, 'game_order', '');
 					$data = array(
 								'game_name'		=> request('game_name', 2),
 								'game_tag'		=> '',
 								'game_image'	=> '',
 								'game_size'		=> '16',
-								'game_order'	=> $max['max'] + 10,
+								'game_order'	=> '',
 							);
 				}
 				else if ( $mode == '_update' && !request('submit', 1) )
@@ -84,13 +83,12 @@ else
 								'game_tag'		=> request('game_tag', 2),
 								'game_image'	=> request('game_image', 2),
 								'game_size'		=> request('game_size', 0),
-								'game_order'	=> ( request('game_order_new', 0) ) ? request('game_order_new', 0) : request('game_order', 0),
+								'game_order'	=> request('game_order', 0) ? request('game_order', 0) : request('game_order_new', 0),
 							);
 				}
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= "<input type=\"hidden\" name=\"game_order\" value=" . $data['game_order'] . " />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
@@ -124,6 +122,8 @@ else
 								'game_order'	=> request('game_order', 0) ? request('game_order', 0) : request('game_order_new', 0),
 							);
 							
+					$data['game_order'] = ( !$data['game_order'] ) ? maxa(GAMES, 'game_order', 'game_id != -1') : $data['game_order'];
+					
 					$error .= ( !$data['game_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					$error .= ( !$data['game_tag'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_tag'] : '';
 					
@@ -131,13 +131,14 @@ else
 					{
 						if ( $mode == '_create' )
 						{
-							sql(GAMES, 'insert', $data);
+							$db_data = sql(GAMES, $mode, $data);
 							
-							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$message = $lang['create']
+								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 						}
 						else
 						{
-							sql(GAMES, 'update', $data, 'game_id', $data_id);
+							$db_data = sql(GAMES, $mode, $data, 'game_id', $data_id);
 							
 							$message = $lang['update']
 								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
@@ -146,7 +147,7 @@ else
 						
 						orders(GAMES, -1);
 						
-						log_add(LOG_ADMIN, $log, $mode, $data['game_name']);
+						log_add(LOG_ADMIN, $log, $mode, $db_data);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -180,18 +181,14 @@ else
 			
 				if ( $data_id && $confirm )
 				{
-				#	sql(GAMES, 'delete', false, 'game_id', $data_id);
-					$sql = "DELETE FROM " . GAMES . " WHERE game_id = $data_id";
-					if ( !$db->sql_query($sql) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
+					$db_data = sql(GAMES, $mode, $data, 'game_id', $data_id);
 					
-					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$message = $lang['delete']
+						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
 					
 					orders(GAMES, '-1');
 					
-					log_add(LOG_ADMIN, $log, $mode, $data['game_name']);
+					log_add(LOG_ADMIN, $log, $mode, $db_data);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
@@ -242,8 +239,7 @@ else
 		'S_FIELDS'	=> $fields,
 	));
 	
-	$max = get_data_max(GAMES, 'game_order', '');
-#	$tmp = get_data_array(GAMES, 'game_id != -1', 'game_order', 'ASC');
+	$max = maxi(GAMES, 'game_order', '');
 	$tmp = data(GAMES, '-1', 'game_order ASC', 1, false);
 	
 	if ( $tmp )
@@ -253,15 +249,15 @@ else
 			$game_id	= $tmp[$i]['game_id'];
 			$game_size	= $tmp[$i]['game_size'];
 			$game_order	= $tmp[$i]['game_order'];
-			$game_image	= ( $tmp[$i]['game_image'] ) ? $path_dir . $tmp[$i]['game_image'] : $images['icon_acp_spacer'];
+			$game_image	= $tmp[$i]['game_image'] ? $path_dir . $tmp[$i]['game_image'] : $images['icon_acp_spacer'];
 			
 			$template->assign_block_vars('_display._game_row', array(
 				'NAME'		=> $tmp[$i]['game_name'],
 				'TAG'		=> $tmp[$i]['game_tag'],
-				'IMAGE'		=> '<img src="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" alt="" />',
+				'IMAGE'		=> "<img src=\"$game_image\" width=\"$game_size\" height=\"$game_size\" alt=\"\" />",
 				
-				'MOVE_UP'	=> ( $game_order != '10' )			? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $game_order != $max['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $game_order != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $game_order != $max ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$game_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$game_id"),

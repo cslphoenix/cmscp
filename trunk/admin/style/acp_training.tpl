@@ -77,26 +77,75 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-
-<script type="text/javascript" src="./../includes/scripts/jquery-1.2.1.pack.js"></script>
+{TINYMCE}
 <script type="text/JavaScript">
-function lookup(inputString)
+
+var request = false;
+
+// Request senden
+function setRequest(value)
 {
-	if ( inputString.length == 0 )
+	// Request erzeugen
+	if ( window.XMLHttpRequest )
+	{// code for IE7+, Firefox, Chrome, Opera, Safari
+		request = new XMLHttpRequest();
+	}
+	else
+	{// code for IE6, IE5
+		request = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	// überprüfen, ob Request erzeugt wurde
+	if ( !request )
 	{
-		// Hide the suggestion box.
-		$('#suggestions').hide();
+		alert("Kann keine XMLHTTP-Instanz erzeugen");
+		return false;
 	}
 	else
 	{
-		$.post("./../ajax/ajax_maps.php", {queryString: ""+inputString+""}, function(data) {
-				if ( data.length > 0 )
-				{
-					$('#suggestions').show();
-					$('#autoSuggestionsList').html(data);
-				}
+		var url = "./ajax/ajax_listmaps.php";
+		// Request öffnen
+		request.open('post', url, true);
+		// Requestheader senden
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		// Request senden
+		request.send('name='+value);
+	//	request.send("name="+value+"&option="+option);
+		// Request auswerten
+		request.onreadystatechange = interpretRequest;
+	}
+}
+
+// Request auswerten
+function interpretRequest()
+{
+	switch (request.readyState)
+	{
+		// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
+		case 4:
+			
+			if (request.status != 200)
+			{
+				alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
 			}
-		);
+			else
+			{
+				var content = request.responseText;
+				// den Inhalt des Requests in das <div> schreiben
+				document.getElementById('content').innerHTML = content;
+			}
+			break;
+			
+		default:
+			
+			document.getElementById('close').style.display = "none";
+		/*	
+			for ( var i = 0; i < training_maps.length; i++ )
+			{
+				training_maps[i].value = '';
+			}
+		*/
+			break;
 	}
 }
 </script>
@@ -127,7 +176,6 @@ function clone(objButton)
 
 // ]]>
 </script>
-
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -148,7 +196,7 @@ function clone(objButton)
 	<th colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA_INPUT}</a></li>
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
 	</th>
@@ -174,11 +222,25 @@ function clone(objButton)
 	<td class="row2">{S_DURATION}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="training_maps">{L_MAPS}: *</label></td>
+	<td class="row1 top"><label>{L_MAPS}: *</label></td>
 	<td class="row2">
-		<div id="suggestions" style="display: none;">
-			<div id="autoSuggestionsList"><div><div><input type="button" class="button2" value="{L_MORE}" onclick="clone(this)"></div></div></div>
-		</div>
+		<div id="close">
+		<table border="0" cellspacing="0" cellpadding="0">
+		
+		<!-- BEGIN _map_row -->
+		<!--
+		<tr>
+			<td><input type="text" class="post" name="training_maps[]" id="training_maps" value="{_input._map_row.MAP}"> <input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
+		</tr>
+		-->
+		<!-- END _map_row -->
+		<!-- BEGIN _maps_row -->
+		<tr>
+			<td>{_input._maps_row.MAPS}<input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
+		</tr>
+		<!-- END _maps_row -->
+		</table>
+		{S_MAPS}</div><div id="content"></div>
 	</td>
 </tr>
 <tr>

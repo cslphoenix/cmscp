@@ -90,7 +90,7 @@ else
 								'rank_image'	=> request('rank_image', 2),
 								'rank_special'	=> request('rank_special', 0),						
 								'rank_standard'	=> request('rank_standard', 0),
-								'rank_order'	=> ( request('rank_order_new', 0) ) ? request('rank_order_new', 0) : request('rank_order', 0),
+								'rank_order'	=> request('rank_order', 0) ? request('rank_order', 0) : request('rank_order_new', 0),
 							);
 				}
 				
@@ -137,10 +137,9 @@ else
 
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= "<input type=\"hidden\" name=\"rank_order\" value=" . $data['rank_order'] . " />";
 
 				$template->assign_vars(array(
-					'L_HEAD'			=> $acp_title,
+					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['rank']),
 					'L_INPUT'			=> sprintf($lang['sprintf' . $mode], $lang['rank'], $data['rank_title']),
 					'L_TITLE'			=> sprintf($lang['sprintf_title'], $lang['rank']),
 					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['rank']),
@@ -318,7 +317,7 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> $acp_title,
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['rank']),
 		'L_CREATE'		=> sprintf($lang['sprintf_new_createn'], $lang['rank']),
 		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['rank']),
 		
@@ -331,21 +330,18 @@ else
 		'L_STANDARD'	=> $lang['standard'],
 		'L_MIN'			=> $lang['min'],
 		
-		'S_FIELDS'		=> $fields,
 		'S_CREATE'		=> append_sid("$file?mode=_create"),
 		'S_ACTION'		=> append_sid($file),
+		'S_FIELDS'		=> $fields,
 	));
 	
-	$max_forum	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_FORUM . ' AND rank_special = 1');
-	$max_page	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_PAGE);
-	$max_team	= get_data_max(RANKS, 'rank_order', 'rank_type = ' . RANK_TEAM);
+	$max_forum	= maxi(RANKS, 'rank_order', 'rank_type = ' . RANK_FORUM . ' AND rank_special = 1');
+	$max_page	= maxi(RANKS, 'rank_order', 'rank_type = ' . RANK_PAGE);
+	$max_team	= maxi(RANKS, 'rank_order', 'rank_type = ' . RANK_TEAM);
 	
 	$tmp_forum	= data(RANKS, 'rank_type = ' . RANK_FORUM, 'rank_special DESC, rank_order ASC', 1, false);
 	$tmp_page	= data(RANKS, 'rank_type = ' . RANK_PAGE, 'rank_special DESC, rank_order ASC', 1, false);
 	$tmp_team	= data(RANKS, 'rank_type = ' . RANK_TEAM, 'rank_special DESC, rank_order ASC', 1, false);
-#	$tmp_forum	= get_data_array(RANKS, 'rank_type = ' . RANK_FORUM, 'rank_special DESC, rank_order', 'ASC');
-#	$tmp_page	= get_data_array(RANKS, 'rank_type = ' . RANK_PAGE, 'rank_special DESC, rank_order', 'ASC');
-#	$tmp_team	= get_data_array(RANKS, 'rank_type = ' . RANK_TEAM, 'rank_special DESC, rank_order', 'ASC');
 
 	if ( $tmp_forum )
 	{
@@ -358,8 +354,8 @@ else
 				'MIN'		=> ( $tmp_forum[$i]['rank_special'] == '0' ) ? $tmp_forum[$i]['rank_min'] : ' - ',
 				'SPECIAL'	=> ( $tmp_forum[$i]['rank_special'] == '1' ) ? $lang['common_yes'] : $lang['common_no'],
 				
-				'MOVE_UP'	=> ( $tmp_forum[$i]['rank_order'] != '10' && $tmp_forum[$i]['rank_special'] )					? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_FORUM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $tmp_forum[$i]['rank_order'] != $max_forum['max'] && $tmp_forum[$i]['rank_special'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_FORUM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $tmp_forum[$i]['rank_special'] && $tmp_forum[$i]['rank_order'] != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_FORUM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $tmp_forum[$i]['rank_special'] && $tmp_forum[$i]['rank_order'] != $max_forum )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_FORUM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$rank_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$rank_id"),
@@ -376,10 +372,10 @@ else
 				
 			$template->assign_block_vars('_display._page_row', array(
 				'TITLE'		=> $tmp_page[$i]['rank_title'],
-				'STANDARD'	=> ( $tmp_page[$i]['rank_standard'] ) ? $lang['standard'] : '',
+				'STANDARD'	=> $tmp_page[$i]['rank_standard'] ? $lang['standard'] : '',
 				
-				'MOVE_UP'	=> ( $tmp_page[$i]['rank_order'] != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $tmp_page[$i]['rank_order'] != $max_page['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $tmp_page[$i]['rank_order'] != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $tmp_page[$i]['rank_order'] != $max_page )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$rank_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$rank_id"),
@@ -396,10 +392,10 @@ else
 				
 			$template->assign_block_vars('_display._team_row', array(
 				'TITLE'		=> $tmp_team[$i]['rank_title'],
-				'STANDARD'	=> ( $tmp_team[$i]['rank_standard'] ) ? $lang['standard'] : '',
+				'STANDARD'	=> $tmp_team[$i]['rank_standard'] ? $lang['standard'] : '',
 				
-				'MOVE_UP'	=> ( $tmp_team[$i]['rank_order'] != '10' )				? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=-15&amp;$url=$rank_id") .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $tmp_team[$i]['rank_order'] != $max_team['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=+15&amp;$url=$rank_id") .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $tmp_team[$i]['rank_order'] != '10' )		? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $tmp_team[$i]['rank_order'] != $max_team )	? '<a href="' . append_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
 				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$rank_id"),
 				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$rank_id"),

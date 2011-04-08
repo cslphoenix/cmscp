@@ -301,10 +301,13 @@ else
 	
 			for ( $j = 0; $j < count($forum_rows); $j++ )
 			{
+				$forum_id = $forum_rows[$j]['forum_id'];
+				
+				$subs = data(FORUM, 'forum_sub = ' . $forum_id, 'forum_order ASC', 1, false);
+				
 				if ( $cat_id == $forum_rows[$j]['cat_id'] )
 				{
 					$template->assign_block_vars('_auth_list.cat_row.forum_row', array(
-						'CLASS' => ( !($j % 2) ) ? 'class_row1' : 'class_row2',
 						'ROW_CLASS' => ( !($j % 2) ) ? 'row_class1' : 'row_class2',
 						'FORUM_NAME' => '<a href="'.append_sid('admin_forumauth_list.php?'.$url.'='.$forum_rows[$j]['forum_id']).'">'.$forum_rows[$j]['forum_name'].'</a>')
 					);
@@ -324,6 +327,36 @@ else
 							'CELL_VALUE' => $images['auth_' . $item_auth_level],
 							'AUTH_EXPLAIN' => sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$k]], $lang['auth_forum_explain_' . $item_auth_level]))
 						);
+					}
+					
+					for ( $l = 0; $l < count($subs); $l++ )
+					{
+						$sub_id = $subs[$l]['forum_id'];
+						
+						if ( $forum_id == $subs[$l]['forum_sub'] )
+						{
+							$template->assign_block_vars('_auth_list.cat_row.forum_row._sub_row', array(
+								'ROW'	=> ( !($l % 2) ) ? 'row_class2' : 'row_class1',
+								'NAME'	=> '&nbsp;&not;&nbsp;' . $subs[$l]['forum_name'],
+							));
+							
+							for ( $m=0; $m<count($forum_auth_fields); $m++)
+							{
+								$item_auth_value = $subs[$j][$forum_auth_fields[$m]];
+								for ($n=0; $n<count($forum_auth_const); $n++)
+								{
+									if ($item_auth_value == $forum_auth_const[$n])
+									{
+										$item_auth_level = $forum_auth_levels[$n];
+										break;
+									}
+								}
+								$template->assign_block_vars('_auth_list.cat_row.forum_row._sub_row._auth_sub', array(
+									'CELL_VALUE' => $images['auth_' . $item_auth_level],
+									'AUTH_EXPLAIN' => sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$m]], $lang['auth_forum_explain_' . $item_auth_level]))
+								);
+							}
+						}
 					}
 				}
 			}
@@ -457,7 +490,8 @@ else
 		for ( $i = 0; $i < count($forum_auth_fields); $i++ )
 		{
 			$template->assign_block_vars('forum_auth_titles', array(
-				'CELL_TITLE' => $field_names[$forum_auth_fields[$i]]
+				'CELL_TITLE' => $field_names[$forum_auth_fields[$i]],
+				'CELL_IMAGE' => $field_images[$forum_auth_fields[$i]],
 			));
 		}
 	
@@ -514,20 +548,36 @@ else
 		// Next generate the information to allow the permissions to be changed
 		// Note: We always read from the first forum in the category
 		//
+		/*
 		for($j = 0; $j < count($forum_auth_fields); $j++)
 		{
-			$custom_auth[$j] = '&nbsp;<select name="' . $forum_auth_fields[$j] . '">';
+			$custom_auth[$j] = '&nbsp;<select class="selectsmall" name="' . $forum_auth_fields[$j] . '">';
 	
 			for($k = 0; $k < count($forum_auth_levels); $k++)
 			{
 				$selected = ( $forum_rows[0][$forum_auth_fields[$j]] == $forum_auth_const[$k] ) ? ' selected="selected"' : '';
-				$custom_auth[$j] .= '<option value="' . $forum_auth_const[$k] . '"' . $selected . '>' . $lang['auth_' . $forum_auth_levels[$k]] . '</option>';
+				$custom_auth[$j] .= '<option value="' . $forum_auth_const[$k] . '"' . $selected . '>' . $lang['auth_small_' . $forum_auth_levels[$k]] . '</option>';
 			}
 			$custom_auth[$j] .= '</select>&nbsp;';
 	
 			$template->assign_block_vars('forum_auth_data', array(
-				'S_AUTH_LEVELS_SELECT' => $custom_auth[$j])
-			);
+				'S_AUTH_LEVELS_SELECT' => $custom_auth[$j]
+			));
+		}
+		*/
+		for ( $j = 0; $j < count($forum_auth_fields); $j++ )
+		{
+			$custom_auth[$j] = '';
+			
+			for ( $k = 0; $k < count($forum_auth_levels); $k++ )
+			{
+				$checked = ( $forum_rows[0][$forum_auth_fields[$j]] == $forum_auth_const[$k] ) ? ' checked="checked"' : '';
+				$custom_auth[$j] .= "<label><input type=\"radio\" value=\"" . $forum_auth_const[$k] . "\" name=\"" . $forum_auth_fields[$j] . "\"$checked> <img src=" . $images['auth_' . $forum_auth_levels[$k]] . " alt=\"\" /></label><br />";
+			}
+			
+			$template->assign_block_vars('_auth', array(
+				'AUTH'	=> $custom_auth[$j],
+			));
 		}
 		
 		//

@@ -1,4 +1,3 @@
-<form action="{S_ACTION}" method="post" name="sort" id="sort">
 <div id="navcontainer">
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
@@ -10,11 +9,10 @@
 	<td class="row4 small">{L_EXPLAIN}</td>
 </tr>
 </table>
-
+<form action="{S_ACTION}" method="post" name="sort" id="sort">
 <div align="right">{S_SORT}</div>
 </form>
 <form action="{S_ACTION}" method="post">
-
 <!-- BEGIN _default -->
 <div id="navcontainer">
 <ul id="navlist">
@@ -164,6 +162,75 @@
 </tr>
 </table>
 <!-- END _session -->
+
+<!-- BEGIN _display -->
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_DISPLAY}</a></li>
+</ul>
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="row4 small">{L_DISPLAY_EXPLAIN}</td>
+</tr>
+</table>
+
+<br />
+
+<table class="update" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="row1"><label for="subnavi_news_limit">{L_NEWS_LIMIT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_news_limit" id="subnavi_news_limit" value="{NEWS_LIMIT}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_news_length">{L_NEWS_LENGTH}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_news_length" id="subnavi_news_length" value="{NEWS_LENGTH}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_match_limit">{L_MATCH_LIMIT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_match_limit" id="subnavi_match_limit" value="{MATCH_LIMIT}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_match_length">{L_MATCH_LENGTH}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_match_length" id="subnavi_match_length" value="{MATCH_LENGTH}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1_1" nowrap="nowrap"><label for="subnavi_forum_limit">{L_FORUM_LIMIT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_forum_limit" id="subnavi_forum_limit" value="{FORUM_LIMIT}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_forum_length">{L_FORUM_LENGTH}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_forum_length" id="subnavi_forum_length" value="{FORUM_LENGTH}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_download_limit">{L_DOWNLOAD_LIMIT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_download_limit" id="subnavi_download_limit" value="{DOWNLOAD_LIMIT}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1_1" nowrap="nowrap"><label for="subnavi_download_length">{L_DOWNLOAD_LENGTH}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_download_length" id="subnavi_download_length" value="{DOWNLOAD_LENGTH}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1_1" nowrap="nowrap"><label for="subnavi_newusers">{L_NEWUSERS}:</label></td>
+	<td class="row2"><label><input type="radio" name="subnavi_newusers" id="subnavi_newusers" value="1" {S_NEWUSERS_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_newusers" value="0" {S_NEWUSERS_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_newusers_cache">{L_NEWUSERS_CACHE}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_newusers_cache" id="subnavi_newusers_cache" value="{NEWUSERS_CACHE}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_newusers_limit">{L_NEWUSERS_LIMIT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_newusers_limit" id="subnavi_newusers_limit" value="{NEWUSERS_LIMIT}" size="5" /></td>
+</tr>
+<tr>
+	<td class="row1"><label for="subnavi_newusers_length">{L_NEWUSERS_LENGTH}:</label></td>
+	<td class="row2"><input type="text" class="post" name="subnavi_newusers_length" id="subnavi_newusers_length" value="{NEWUSERS_LENGTH}" size="5" /></td>
+</tr>
+
+</table>
+<!-- END _display -->
+
 <table class="update" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td colspan="2">&nbsp;</td>

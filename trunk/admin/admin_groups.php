@@ -28,6 +28,8 @@ else
 	
 	$error	= '';
 	$index	= '';
+	$fields	= '';
+	
 	$log	= LOG_SEK_GROUPS;
 	$url	= POST_GROUPS_URL;
 	$file	= basename(__FILE__);
@@ -39,9 +41,9 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
+	
 	$path_dir	= $root_path . $settings['path_groups'] . '/';
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['groups']);
-	$fields	= '';
 
 	$auth_fields	= get_authlist();
 	$auth_levels	= array('allowed', 'disallowed');
@@ -54,6 +56,8 @@ else
 	}
 	
 	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	
+	debug($_POST);
 	
 	if ( !empty($mode) )
 	{
@@ -490,7 +494,7 @@ else
 				$template->assign_block_vars('_member', array());
 				
 				/*	SQL:	Gruppen Informationen	*/
-				$data = get_data(GROUPS, $data_id, 1);
+				$data = data(GROUPS, $data_id, false, 1, 1);
 				
 				debug($data);
 				
@@ -650,7 +654,8 @@ else
 			case '_user_deny':
 			case '_user_remove':
 				
-				$group_info = get_data(GROUPS, $data_id, 1);
+			#	$group_info = get_data(GROUPS, $data_id, 1);
+				$group_info = data(GROUPS, $data_id, false, 1, 1);
 				
 			#	$script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['page_path']));
 			#	$script_name = ( $script_name != '' ) ? $script_name . '/groups.php' : 'groups.php';
@@ -745,8 +750,10 @@ else
 				break;
 				
 			case '_user_change':
+			
+				debug($_POST);
 				
-				$members		= request('members');
+				$members		= request('members', 4);
 				$members_select	= array();
 
 				for ( $i = 0; $i < count($members); $i++ )
@@ -756,6 +763,8 @@ else
 						$members_select[] = (int) $members[$i];
 					}
 				}
+				
+				debug($members_select);
 				
 				if ( count($members_select) > 0 )
 				{
@@ -804,6 +813,7 @@ else
 					$message = $lang['group_set_mod']
 						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
 						. sprintf($lang['click_return_group_member'], '<a href="' . append_sid("$file?mode=_member&$url=$data_id") . '">', '</a>');
+						
 					message(GENERAL_MESSAGE, $message);
 				}
 			
@@ -855,7 +865,6 @@ else
 							$db->sql_freeresult($result);
 							message(GENERAL_MESSAGE, $lang['team_no_new'], '');
 						}
-						
 						do
 						{
 							$username_ary[$row['user_id']] = $row['username'];

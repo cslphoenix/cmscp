@@ -25,18 +25,18 @@
 	<td class="rowHead" align="center">{L_LOG_CHANGE}</td>
 	<td class="rowHead" align="center">{L_DELETE}</td>
 </tr>
-<!-- BEGIN logs_row -->
+<!-- BEGIN _logs_row -->
 <tr>
-	<td class="{_display.logs_row.CLASS}" align="left">{_display.logs_row.USERNAME}</td>
-	<td class="{_display.logs_row.CLASS}" align="center">{_display.logs_row.IP}</td>
-	<td class="{_display.logs_row.CLASS}" align="center">{_display.logs_row.DATE}</td>
+	<td class="{_display._logs_row.CLASS}" align="left">{_display._logs_row.USERNAME}</td>
+	<td class="{_display._logs_row.CLASS}" align="center">{_display._logs_row.IP}</td>
+	<td class="{_display._logs_row.CLASS}" align="center">{_display._logs_row.DATE}</td>
 
-	<td class="{_display.logs_row.CLASS}" align="center">{_display.logs_row.SEKTION}</td>
-	<td class="{_display.logs_row.CLASS}" align="center">{_display.logs_row.MESSAGE}</td>
-	<td class="{_display.logs_row.CLASS}" align="center"><span class="small">{_display.logs_row.DATA}</span></td>
-	<td class="{_display.logs_row.CLASS}" align="center" width="1%"><input type="checkbox" name="log_id[]" value="{_display.logs_row.LOG_ID}"></td>
+	<td class="{_display._logs_row.CLASS}" align="center">{_display._logs_row.SEKTION}</td>
+	<td class="{_display._logs_row.CLASS}" align="center">{_display._logs_row.MESSAGE}</td>
+	<td class="{_display._logs_row.CLASS}" align="center"><span class="small">{_display._logs_row.DATA}</span></td>
+	<td class="{_display._logs_row.CLASS}" align="center" width="1%"><input type="checkbox" name="log_id[]" value="{_display._logs_row.LOG_ID}"></td>
 </tr>
-<!-- END logs_row -->
+<!-- END _logs_row -->
 <!-- BEGIN no_entry -->
 <tr>
 	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>

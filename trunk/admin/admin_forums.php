@@ -456,23 +456,18 @@ else
 									
 									for ( $k = 0; $k < count($subs); $k++ )
 									{
-										$forum_sub_id	= $subs[$k]['forum_id'];
-										$forum_subname	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
+										$sub_id	= $subs[$k]['forum_id'];
+										$sub_name = '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
 										
 										if ( $forum_id == $subs[$k]['forum_sub'] )
 										{
-											$s_forms .= "<option value=\"$forum_sub_id\" disabled=\"disabled\">" . sprintf($lang['sprintf_select_format'], $forum_subname) . "</option>";
+											$s_forms .= "<option value=\"$sub_id\" disabled=\"disabled\">" . sprintf($lang['sprintf_select_format'], $sub_name) . "</option>";
 										}
 									}
 								}
 							}
 							
-							if ( $s_forms != '' )
-							{
-								$s_order .= "<optgroup label=\"$cat_name\">";
-								$s_order .= $s_forms;
-								$s_order .= "</optgroup>";
-							}
+							$s_order .= ( $s_forms != '' ) ? "<optgroup label=\"$cat_name\">$s_forms</optgroup>" : '';
 						}
 						
 						$s_order .= '</select>';
@@ -528,6 +523,7 @@ else
 					for ( $i = 0; $i < count($list_cat); $i++ )
 					{
 						$tmp = '';
+						$cat_name = $list_cat[$i]['cat_name'];
 						
 						for ( $j = 0; $j < count($list_tmp); $j++ )
 						{
@@ -544,22 +540,17 @@ else
 								for ( $k = 0; $k < count($subs); $k++ )
 								{
 									$sub_id = $subs[$k]['forum_id'];
-									$name	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
+									$sub_name = '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
 									
 									if ( $list_tmp[$j]['forum_id'] ==  $subs[$k]['forum_sub'] )
 									{
-										$tmp .= "<option value=\"$sub_id\" disabled=\"disabled\">" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+										$tmp .= "<option value=\"$sub_id\" disabled=\"disabled\">" . sprintf($lang['sprintf_select_format'], $sub_name) . "</option>";
 									}
 								}
 							}
 						}
 						
-						if ( $tmp != '' )
-						{
-							$s_forms .= '<optgroup label="' . $list_cat[$i]['cat_name'] . '">';
-							$s_forms .= $tmp;
-							$s_forms .= '</optgroup>';
-						}
+						$s_forms .= ( $tmp != '' ) ? "<optgroup label=\"$cat_name\">$tmp</optgroup>" : '';
 					}
 					
 					$s_forms .= '</select>';
@@ -578,38 +569,35 @@ else
 					
 					for ( $i = 0; $i < count($list_cat); $i++ )
 					{
-						$tmp = '';
+						$auth = '';
+						$cat_id = $list_cat[$i]['cat_id'];
+						$cat_name = $list_cat[$i]['cat_name'];
 						
 						for ( $j = 0; $j < count($list_tmp); $j++ )
 						{
 							$subs = data(FORUM, 'forum_sub = ' . $list_tmp[$j]['forum_id'], 'forum_order ASC', 1, false);
 							
-							if ( $list_cat[$i]['cat_id'] == $list_tmp[$j]['cat_id'] )
+							if ( $cat_id == $list_tmp[$j]['cat_id'] )
 							{
-								$id		= $list_tmp[$j]['forum_id'];
-								$name	= $list_tmp[$j]['forum_name'];
+								$forum_id	= $list_tmp[$j]['forum_id'];
+								$forum_name	= $list_tmp[$j]['forum_name'];
 								
-								$tmp .= "<option value=\"$id\">" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+								$auth .= "<option value=\"$forum_id\">" . sprintf($lang['sprintf_select_format'], $forum_name) . "</option>";
 							
 								for ( $k = 0; $k < count($subs); $k++ )
 								{
-									$id		= $subs[$k]['forum_id'];
-									$name	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
+									$sub_id		= $subs[$k]['forum_id'];
+									$forum_name	= '&nbsp;&not;&nbsp;' . $subs[$k]['forum_name'];
 									
 									if ( $list_tmp[$j]['forum_id'] ==  $subs[$k]['forum_sub'] )
 									{
-										$tmp .= "<option value=\"$id\">" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+										$auth .= "<option value=\"$sub_id\">" . sprintf($lang['sprintf_select_format'], $forum_name) . "</option>";
 									}
 								}
 							}
 						}
 						
-						if ( $tmp != '' )
-						{
-							$s_copy .= '<optgroup label="' . $list_cat[$i]['cat_name'] . '">';
-							$s_copy .= $tmp;
-							$s_copy .= '</optgroup>';
-						}
+						$s_copy .= ( $auth != '' ) ? "<optgroup label=\"$cat_name\">$auth</optgroup>" : '';
 					}
 					
 					$s_copy .= '</select>';
@@ -720,7 +708,7 @@ else
 					{
 						$order = ( request('sub', 1) ) ? 'forum_sub = ' . $data['forum_sub'] : 'cat_id = ' . $data['cat_id'];
 						
-						$data['forum_order'] = dmax(FORUM, 'forum_order', $order);
+						$data['forum_order'] = maxi(FORUM, 'forum_order', $order);
 					}
 					
 					if ( $data['forum_auth'] == '0' || $auth_copy )
@@ -948,7 +936,7 @@ else
 							
 					$error .= ( !$data['cat_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					
-					$data['cat_order'] = ( !$data['cat_order'] ) ? dmax(FORUM_CAT, 'cat_order', '') : $data['cat_order'];
+					$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(FORUM_CAT, 'cat_order', '') : $data['cat_order'];
 					
 					if ( !$error )
 					{
@@ -1152,7 +1140,7 @@ else
 								'U_DELETE' => append_sid("$file?mode=_delete&amp;$url=$sub_id"),
 							));
 						}
-					}					
+					}
 				}
 			}
 			else { $template->assign_block_vars('_display._cat_row._no_entry', array()); }

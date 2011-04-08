@@ -292,9 +292,10 @@ row1 e9e9e9
 row2 FFF
 */
 
-.big										{ font-size : 12px; }
-.middle										{ font-size : 11px; }
-.small										{ font-size : 10px; }
+.big	{ font-size: 12px; }
+.middle	{ font-size: 11px; }
+.small	{ font-size: 10px; }
+.tiny	{ font-size:  9px; }
 /*.big,.middle,.small							{ color: #536482; }*/
 
 a.big,a.middle,a.small						{ color: #03C; text-decoration: none; }
@@ -504,4 +505,32 @@ form {margin:0; padding:0}
 
 optgroup {
     background-color: #CCCCCC;
+}
+
+.suggestionsBox {
+	position: relative;
+	left: 3px;
+	margin: 10px 0px 0px 0px;
+	width: 200px;
+	background-color: #212427;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border: 2px solid #000;	
+	color: #fff;
+}
+
+.suggestionList {
+	margin: 0px;
+	padding: 0px;
+}
+
+.suggestionList li {
+	
+	margin: 0px 0px 3px 0px;
+	padding: 3px;
+	cursor: pointer;
+}
+
+.suggestionList li:hover {
+	background-color: #659CD8;
 }
