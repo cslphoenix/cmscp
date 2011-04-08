@@ -1,22 +1,22 @@
 <!-- BEGIN show -->
 <table class="out" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head" colspan="3">News-&Uuml;bersicht</td>
+	<td class="info_head" colspan="4">News-&Uuml;bersicht</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td>&nbsp;</td>
+	<td colspan="2">&nbsp;</td>
 	<td>&nbsp;</td>
 </tr>
 <!-- BEGIN news_row -->
 <tr>
 	<td width="2%">&nbsp;</td>
-	<td width="96%" align="center"><img src="{show.news_row.NEWSCAT_IMAGE}" alt="{show.news_row.NEWSCAT_TITLE}" title="{show.news_row.NEWSCAT_TITLE}"></td>
+	<td width="96%" colspan="2" align="center"><img src="{show.news_row.NEWSCAT_IMAGE}" alt="{show.news_row.NEWSCAT_TITLE}" title="{show.news_row.NEWSCAT_TITLE}"></td>
 	<td width="2%">&nbsp;</td>
 </tr>
 <tr>
 	<td width="2%">&nbsp;</td>
-	<td width="96%" align="left">
+	<td width="96%" colspan="2" align="left">
 		<a href="{show.news_row.U_NEWS}"><b>{show.news_row.NEWS_TITLE}</b></a>
 		Kommentare: {show.news_row.NEWS_COMMENTS}
 	</td>
@@ -24,35 +24,33 @@
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td>{show.news_row.NEWS_TEXT}</td>
+	<td colspan="2">{show.news_row.NEWS_TEXT}</td>
 	<td>&nbsp;</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><span style="float: right;">{show.news_row.NEWS_AUTHOR}, {show.news_row.NEWS_PUBLIC_TIME}</span></td>
+	<td>
+		<!-- BEGIN links -->
+		{show.news_row.links.L_LINK}{show.news_row.links.NEWS_LINK}
+		<!-- END links -->
+	</td>
+	<td align="right" nowrap="nowrap">{show.news_row.NEWS_AUTHOR}, {show.news_row.NEWS_PUBLIC_TIME}&nbsp;</td>
 	<td>&nbsp;</td>
 </tr>
-<!-- BEGIN links -->
 <tr>
 	<td>&nbsp;</td>
-	<td>{show.news_row.links.L_LINK}{show.news_row.links.NEWS_LINK}</td>
-	<td>&nbsp;</td>
-</tr>
-<!-- END links -->
-<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
+	<td colspan="2">&nbsp;</td>
 	<td>&nbsp;</td>
 </tr>
 <!-- END news_row -->
 <tr>
 	<td>&nbsp;</td>
-	<td><span style="float:right;">{PAGE_NUMBER}</span>{PAGINATION}</td>
+	<td colspan="2"><span style="float:right;">{PAGE_NUMBER}</span>{PAGINATION}</td>
 	<td>&nbsp;</td>
 </tr>
 <!-- BEGIN no_entry -->
 <tr>
-	<td colspan="3" align="center">{NO_ENTRY}</td>
+	<td colspan="4" align="center">{NO_ENTRY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -153,7 +151,7 @@
 					<td width="75%" align="right">{details.news_comments.comments.IP}{details.news_comments.comments.EDIT}{details.news_comments.comments.DELETE}{details.news_comments.comments.ID} <img src="{details.news_comments.comments.ICON}" alt=""></td>
 				</tr>
 				<tr>
-					<td valign="top"><a href="{details.news_comments.comments.U_USERNAME}">{details.news_comments.comments.L_USERNAME}</a></td>
+					<td valign="top"><a {details.news_comments.comments.COLOR} href="{details.news_comments.comments.U_USERNAME}">{details.news_comments.comments.L_USERNAME}</a></td>
 					<td valign="top">{details.news_comments.comments.MESSAGE}</td>
 				</tr>
 				
