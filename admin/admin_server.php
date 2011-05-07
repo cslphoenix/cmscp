@@ -20,16 +20,13 @@ else
 	$current	= '_submenu_gameserver';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
-
-#	include($root_path . 'includes/server_query.php');
-#	include($root_path . 'includes/teamspeak_query.php');
 	
 	load_lang('server');
 	
 	$error	= '';
 	$index	= '';
+	$fields	= '';
+	
 	$log	= LOG_SEK_SERVER;
 	$url	= POST_SERVER_URL;
 	$file	= basename(__FILE__);
@@ -41,17 +38,24 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
+	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['server']);
-	$fields	= '';
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_server'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_server.tpl',
+		'error'		=> 'style/info_error.tpl',
+		'confirm'	=> 'style/info_confirm.tpl',
+	));
+	
+	/*
 	function _select_game($default)
 	{
 		global $lang;
@@ -104,23 +108,24 @@ else
 		
 		return $select_game;	
 	}
+	*/
 	
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
 			case '_create':
 			case '_update':
 			
-				$template->set_filenames(array('body' => 'style/acp_server.tpl'));
 				$template->assign_block_vars('_input', array());
 				
 				if ( $mode == '_create' && !request('submit', 1) )
 				{
-					$max	= get_data_max(SERVER, 'server_order', '');
-					$data	= array(
+					$data = array(
 								'server_name'	=> request('server_name', 2),
+								'server_search'	=> '',
 								'server_game'	=> '',
+							#	'server_type'	=> '',
 								'server_ip'		=> '',
 								'server_port'	=> '',
 								'server_qport'	=> '',
@@ -129,7 +134,7 @@ else
 								'server_list'	=> '1',
 								'server_show'	=> '1',
 								'server_own'	=> '1',
-								'server_order'	=> $max['max'] + 10,
+								'server_order'	=> '',
 							);
 				}
 				else if ( $mode == '_update' && !request('submit', 1) )
@@ -140,6 +145,8 @@ else
 				{
 					$data = array(
 								'server_name'	=> request('server_name', 2),
+								'server_search'	=> strtolower(request('server_search', 2)),
+							#	'server_type'	=> request('server_type', 0),
 								'server_game'	=> request('server_game', 2),
 								'server_ip'		=> request('server_ip', 2),
 								'server_port'	=> request('server_port', 2),
@@ -155,59 +162,45 @@ else
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= '<input type="hidden" name="server_order" value="' . $data['server_order'] . '" />';
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> $acp_title,
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['server']),
 					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['server'], $data['server_name']),
 					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['server']),
-					'L_IP'		=> $lang['ip'],
-					'L_PORT'	=> $lang['port'],
-					'L_QPORT'	=> $lang['qport'],
-					'L_PW'		=> $lang['pw'],
+					
+					'L_IP'		=> $lang['server_ip'],
+					'L_PORT'	=> $lang['server_port'],
+					'L_QPORT'	=> $lang['server_qport'],
+					'L_PW'		=> $lang['server_pw'],
 					'L_LIST'	=> $lang['list'],
 					'L_SHOW'	=> $lang['show'],
 					'L_OWN'		=> $lang['own'],
-					'L_ORDER'	=> $lang['common_order'],
 					
-					'NAME'	=> $data['server_name'],
-					'IP'	=> $data['server_ip'],
-					'PORT'	=> $data['server_port'],
-					'QPORT'	=> $data['server_qport'],
-					'PW'	=> $data['server_pw'],
+					'NAME'		=> $data['server_name'],
+					'IP'		=> $data['server_ip'],
+					'PORT'		=> $data['server_port'],
+					'QPORT'		=> $data['server_qport'],
+					'PW'		=> $data['server_pw'],
 					
-					'S_LIVE_NO'		=> (!$data['server_live']) ? 'checked="checked"' : '',
-					'S_LIVE_YES'	=> ( $data['server_live']) ? 'checked="checked"' : '',
-					'S_LIST_NO'		=> (!$data['server_list']) ? 'checked="checked"' : '',
-					'S_LIST_YES'	=> ( $data['server_list']) ? 'checked="checked"' : '',
-					'S_SHOW_NO'		=> (!$data['server_show']) ? 'checked="checked"' : '',
-					'S_SHOW_YES'	=> ( $data['server_show']) ? 'checked="checked"' : '',
-					'S_OWN_NO'		=> (!$data['server_own']) ? 'checked="checked"' : '',
-					'S_OWN_YES'		=> ( $data['server_own']) ? 'checked="checked"' : '',
+					'S_LIVE_NO'		=> (!$data['server_live'] ) ? 'checked="checked"' : '',
+					'S_LIVE_YES'	=> ( $data['server_live'] ) ? 'checked="checked"' : '',
+					'S_LIST_NO'		=> (!$data['server_list'] ) ? 'checked="checked"' : '',
+					'S_LIST_YES'	=> ( $data['server_list'] ) ? 'checked="checked"' : '',
+					'S_SHOW_NO'		=> (!$data['server_show'] ) ? 'checked="checked"' : '',
+					'S_SHOW_YES'	=> ( $data['server_show'] ) ? 'checked="checked"' : '',
+					'S_OWN_NO'		=> (!$data['server_own'] ) ? 'checked="checked"' : '',
+					'S_OWN_YES'		=> ( $data['server_own'] ) ? 'checked="checked"' : '',
 
-					'S_LIVE'	=> _select_game($data['server_game']),
+				#	'S_LIVE'	=> _select_game($data['server_game']),
 					'S_ORDER'	=> select_order('select', SERVER, 'server', $data['server_order']),
 					
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			
 				if ( request('submit', 1) )
 				{
-					$data = array(
-								'server_name'	=> request('server_name', 2),
-								'server_game'	=> request('server_game', 2),
-								'server_ip'		=> request('server_ip', 2),
-								'server_port'	=> request('server_port', 2),
-								'server_qport'	=> request('server_qport', 2),
-								'server_pw'		=> request('server_pw', 2),
-								'server_live'	=> request('server_live', 2),
-								'server_list'	=> request('server_list', 2),
-								'server_show'	=> request('server_show', 2),
-								'server_own'	=> request('server_own', 0),
-								'server_order'	=> request('server_order', 0) ? request('server_order', 0) : request('server_order_new', 0),
-							);
-					
+				#	$data['server_order'] = ( !$data['server_order'] ) ? maxa(SERVER, 'server_order', 'server_type = ' . $data['server_type']) : $data['server_order'];
 					$data['server_order'] = ( !$data['server_order'] ) ? maxa(SERVER, 'server_order', false) : $data['server_order'];
 					
 					$error .= ( !$data['server_name'] )		? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
@@ -222,15 +215,13 @@ else
 							$db_data = sql(SERVER, $mode, $data);
 							
 							$message = $lang['create']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+								. sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							$db_data = sql(SERVER, $mode, $data, 'server_id', $data_id);
 							
-							$message = $lang['update']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
 						orders(SERVER);
@@ -242,9 +233,8 @@ else
 					{
 						log_add(LOG_ADMIN, $log, $mode, $error);
 						
-						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+						$template->assign_var_from_handle('ERROR_BOX', 'error');
 					}
 				}
 				
@@ -272,7 +262,7 @@ else
 					$db_data = sql(SERVER, $mode, $data, 'server_id', $data_id);
 					
 					$message = $lang['delete']
-						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+						. sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					orders(SERVER);
 					
@@ -281,26 +271,24 @@ else
 				}
 				else if ( $data_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
-		
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['server_name']),
+						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['server_name']),
 
-						'S_ACTION'	=> append_sid($file),
+						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['server'])); }
+				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['server'])); }
 				
-				$template->pparse('body');
+				$template->pparse('confirm');
 				
 				break;
 			
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -322,8 +310,8 @@ else
 		
 		'L_EXPLAIN'	=> $lang['explain'],
 		
-		'S_CREATE'	=> append_sid("$file?mode=_create"),
-		'S_ACTION'	=> append_sid($file),
+		'S_CREATE'	=> check_sid("$file?mode=_create"),
+		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
 	
@@ -340,15 +328,18 @@ else
 			$template->assign_block_vars('_display._server_row', array(
 				'NAME'		=> $tmp[$i]['server_name'],
 				
-				'MOVE_UP'	=> ( $server_order != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $server_order != $max ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $server_order != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $server_order != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url=$server_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$server_id"),
-				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$server_id"),
+				'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$server_id"),
+				'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$server_id"),
 			));
 		}
 	}
-	else { $template->assign_block_vars('_display._no_entry', array()); }
+	else
+	{
+		$template->assign_block_vars('_display._no_entry', array());
+	}
 	
 	$template->pparse('body');
 

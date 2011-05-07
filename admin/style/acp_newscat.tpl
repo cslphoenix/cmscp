@@ -17,20 +17,20 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" width="99%">{L_TITLE}</td>
+	<td class="rowHead" width="99%">{L_NAME}</td>
 	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _cat_row -->
 <tr>
-	<td class="row_class1" align="left">{_display._cat_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._cat_row.MOVE_UP}{_display._cat_row.MOVE_DOWN} <a href="{_display._cat_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._cat_row.U_DELETE}">{I_DELETE}</a></td>		
+	<td class="row_class1" align="left">{_display._cat_row.NAME}</td>
+	<td class="row_class2" align="center">{_display._cat_row.MOVE_UP}{_display._cat_row.MOVE_DOWN} {_display._cat_row.UPDATE} {_display._cat_row.DELETE}</td>		
 </tr>
 <!-- END _cat_row -->
-<!-- BEGIN _no_entry -->
+<!-- BEGIN _entry_empty -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{L_NOENTRY}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
-<!-- END _no_entry -->
+<!-- END _entry_empty -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
@@ -44,15 +44,7 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript">
-// <![CDATA[
-	function update_image(newimage)
-	{
-		document.getElementById('image').src = (newimage) ? "{IMAGE_PATH}" + encodeURI(newimage) : "{IMAGE_DEFAULT}";
-	}
-// ]]>
-</script>
-
+{UIMG}
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -80,16 +72,16 @@
 	</th>
 </tr>
 <tr>
-	<td class="row1" width="155"><label for="cat_title">{L_TITLE}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="cat_title" id="cat_title" value="{TITLE}"></td>
+	<td class="row1" width="155"><label for="cat_name">{L_NAME}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="cat_name" id="cat_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="cat_image">{L_IMAGE}:</label></td>
+	<td class="row1"><label for="cat_image">{L_IMAGE}:</label></td>
 	<td class="row2">{S_IMAGE}<br><img src="{IMAGE}" id="image" alt=""></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="cat_order">{L_ORDER}:</label></td>
-	<td class="row2 top">{S_ORDER}</td>
+	<td class="row1"><label for="cat_order">{L_ORDER}:</label></td>
+	<td class="row2">{S_ORDER}</td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>

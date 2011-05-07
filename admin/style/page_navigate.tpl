@@ -3,17 +3,17 @@
 		<li id="active"><a href="#" id="current">Navigation</a></li>
 	</ul>
 	</div>
-	<table border="0" cellspacing="0" cellpadding="0">
-	<!-- BEGIN catrownav -->
+	<table border="0" cellspacing="0" cellpadding="0" id="hover">
+	<!-- BEGIN _cat_row -->
 	<tr>
-		<td class="navi">{catrownav.ADMIN_CATEGORY}</td>
+		<td class="navi">{_cat_row.L_NAME}</td>
 	</tr>
-	<!-- BEGIN modulerow -->
+	<!-- BEGIN _mod_row -->
 	<tr>
-		<td><a href="{catrownav.modulerow.U_MODULE}">&raquo;&nbsp;{catrownav.modulerow.L_MODULE}</a></td>
+		<td><a class="acp_menu" href="{_cat_row._mod_row.U_MODULE}">{_cat_row._mod_row.L_MODULE}</a></td>
 	</tr>
-	<!-- END modulerow -->
-	<!-- END catrownav -->
+	<!-- END _mod_row -->
+	<!-- END _cat_row -->
 	</table>
 </td>
 <td valign="top">

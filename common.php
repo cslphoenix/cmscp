@@ -200,7 +200,7 @@ if ( !defined('IN_ADMIN') )
 			$sql = 'SELECT * FROM ' . CONFIG;
 			if (!($result = $db->sql_query($sql)))
 			{
-				message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			while ( $row = $db->sql_fetchrow($result) )
@@ -226,7 +226,7 @@ if ( !defined('IN_ADMIN') )
 			$oCache -> writeCache($sCacheNameb, $settings);
 		}
 		
-		$sCacheNameb = 'gallery_settings';
+		$sCacheNameb = 'gallery';
 		if ( ($gallery_settings = $oCache -> readCache($sCacheNameb)) === false)
 		{
 			$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
@@ -247,7 +247,7 @@ if ( !defined('IN_ADMIN') )
 		$sql = 'SELECT * FROM ' . CONFIG;
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
 		while ( $row = $db->sql_fetchrow($result) )
@@ -283,7 +283,7 @@ else
 	$sql = 'SELECT * FROM ' . CONFIG;
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
+		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
 	while ( $row = $db->sql_fetchrow($result) )

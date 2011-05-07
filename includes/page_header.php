@@ -70,7 +70,7 @@ $template->set_filenames(array('overall_header' => ( empty($gen_simple_header) )
 if ( $userdata['session_logged_in'] )
 {
 	$u_login_logout = 'login.php?logout=true&amp;sid=' . $userdata['session_id'];
-//	$l_login_logout = $lang['Logout'] . ' [ ' . $userdata['username'] . ' ]';
+//	$l_login_logout = $lang['Logout'] . ' [ ' . $userdata['user_name'] . ' ]';
 	$l_login_logout = $lang['Logout'];
 }
 else
@@ -130,7 +130,7 @@ if ( $groups_data )
 		$groups_name	= $groups_data[$i]['group_name'];
 		$groups_style	= $groups_data[$i]['group_color'];
 		
-		$groups_list[] = '<a href="' . append_sid('groups.php?mode=view&amp;' . POST_GROUPS_URL . '=' . $groups_id) . '" style="color:#' . $groups_style . '"><b>' . $groups_name . '</b></a>';
+		$groups_list[] = '<a href="' . check_sid('groups.php?mode=view&amp;' . POST_GROUPS_URL . '=' . $groups_id) . '" style="color:#' . $groups_style . '"><b>' . $groups_name . '</b></a>';
 	}
 	
 	$groups_list = implode(', ', $groups_list);
@@ -141,7 +141,7 @@ else
 }
 			
 //
-// Get basic (usernames + totals) online
+// Get basic (user_names + totals) online
 // situation
 //
 $logged_visible_online = 0;
@@ -152,12 +152,12 @@ $l_online_users = '';
 $l_online_users_head = '';
 
 $user_forum_sql = ( !empty($forum_id) ) ? "AND s.session_page = " . intval($forum_id) : '';
-$sql = "SELECT u.username, u.user_id, u.user_allow_viewonline, u.user_level, u.user_color, s.session_logged_in, s.session_ip
+$sql = "SELECT u.user_name, u.user_id, u.user_allow_viewonline, u.user_level, u.user_color, s.session_logged_in, s.session_ip
 	FROM ".USERS." u, ".SESSIONS." s
 	WHERE u.user_id = s.session_user_id
 		AND s.session_time >= ".( time() - 300 ) . "
 		$user_forum_sql
-	ORDER BY u.username ASC, s.session_ip ASC";
+	ORDER BY u.user_name ASC, s.session_ip ASC";
 if ( !($result = $db->sql_query($sql)) )
 {
 	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -179,17 +179,17 @@ while( $row = $db->sql_fetchrow($result) )
 		{
 			$style_color = '';
 			
-			$row['username'] = '<b>' . $row['username'] . '</b>';
+			$row['user_name'] = '<b>' . $row['user_name'] . '</b>';
 			$style_color = 'style="color:' . $row['user_color'] . '"';
 
 			if ( $row['user_allow_viewonline'] )
 			{
-				$user_online_link = '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['username'] . '</a>';
+				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
 				$logged_visible_online++;
 			}
 			else
 			{
-				$user_online_link = '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['username'] . '</i></a>';
+				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
 				$logged_hidden_online++;
 			}
 
@@ -332,7 +332,7 @@ while( list($nav_item, $nav_array) = @each($nav_links) )
 {
 	if ( !empty($nav_array['url']) )
 	{
-		$nav_links_html .= sprintf($nav_link_proto, $nav_item, append_sid($nav_array['url']), $nav_array['title']);
+		$nav_links_html .= sprintf($nav_link_proto, $nav_item, check_sid($nav_array['url']), $nav_array['title']);
 	}
 	else
 	{
@@ -448,7 +448,7 @@ $template->assign_vars(array(
 	'PAGE_TITLE' => $page_title,
 	
 	'L_FORUM'	=> $lang['forum_index'],
-	'U_FORUM'	=> append_sid('forum.php'),
+	'U_FORUM'	=> check_sid('forum.php'),
 	
 	'LAST_VISIT_DATE' => sprintf($lang['You_last_visit'], $s_last_visit),
 	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['page_timezone'])),
@@ -483,28 +483,28 @@ $template->assign_vars(array(
 	'L_WHOSONLINE_ADMIN' => sprintf($lang['Admin_online_color'], '<span style="color:#' . $theme['fontcolor3'] . '">', '</span>'),
 	'L_WHOSONLINE_MOD' => sprintf($lang['Mod_online_color'], '<span style="color:#' . $theme['fontcolor2'] . '">', '</span>'),
 
-	'U_SEARCH_UNANSWERED' => append_sid('search.php?search_id=unanswered'),
-	'U_SEARCH_SELF' => append_sid('search.php?search_id=egosearch'),
-	'U_SEARCH_NEW' => append_sid('search.php?search_id=newposts'),
+	'U_SEARCH_UNANSWERED' => check_sid('search.php?search_id=unanswered'),
+	'U_SEARCH_SELF' => check_sid('search.php?search_id=egosearch'),
+	'U_SEARCH_NEW' => check_sid('search.php?search_id=newposts'),
 	
-	'U_REGISTER' => append_sid('profile.php?mode=register'),
-	'U_PROFILE' => append_sid('profile.php?mode=editprofile'),
-	'U_PRIVATEMSGS' => append_sid('privmsg.php?folder=inbox'),
-	'U_PRIVATEMSGS_POPUP' => append_sid('privmsg.php?mode=newpm'),
-	'U_SEARCH' => append_sid('search.php'),
-	'U_MEMBERLIST' => append_sid('memberlist.php'),
-	'U_MODCP' => append_sid('modcp.php'),
-	'U_FAQ' => append_sid('faq.php'),
-	'U_VIEWONLINE' => append_sid('viewonline.php'),
-	'U_LOGIN_LOGOUT' => append_sid($u_login_logout),
-	'U_GROUP_CP' => append_sid('groupcp.php'),
+	'U_REGISTER' => check_sid('profile.php?mode=register'),
+	'U_PROFILE' => check_sid('profile.php?mode=editprofile'),
+	'U_PRIVATEMSGS' => check_sid('privmsg.php?folder=inbox'),
+	'U_PRIVATEMSGS_POPUP' => check_sid('privmsg.php?mode=newpm'),
+	'U_SEARCH' => check_sid('search.php'),
+	'U_MEMBERLIST' => check_sid('memberlist.php'),
+	'U_MODCP' => check_sid('modcp.php'),
+	'U_FAQ' => check_sid('faq.php'),
+	'U_VIEWONLINE' => check_sid('viewonline.php'),
+	'U_LOGIN_LOGOUT' => check_sid($u_login_logout),
+	'U_GROUP_CP' => check_sid('groupcp.php'),
 
 	'S_CONTENT_DIRECTION' => $lang['DIRECTION'],
 	'S_CONTENT_ENCODING' => $lang['ENCODING'],
 	'S_CONTENT_DIR_LEFT' => $lang['LEFT'],
 	'S_CONTENT_DIR_RIGHT' => $lang['RIGHT'],
 	'S_TIMEZONE' => sprintf($lang['All_times'], $l_timezone),
-	'S_LOGIN_ACTION' => append_sid('login.php'),
+	'S_LOGIN_ACTION' => check_sid('login.php'),
 	
 	'redirect' => ( !$userdata['session_logged_in'] ) ? $smart_redirect : '',
 
@@ -512,7 +512,7 @@ $template->assign_vars(array(
 	'T_BODY_BACKGROUND' => $theme['body_background'],
 	'T_BODY_BGCOLOR' => '#'.$theme['body_bgcolor'],
 	
-	'S_NEWSLETTER_ACTION'	=> append_sid('newsletter.php'),
+	'S_NEWSLETTER_ACTION'	=> check_sid('newsletter.php'),
 	
 	'NAV_LINKS' => $nav_links_html)
 );

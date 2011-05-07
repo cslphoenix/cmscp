@@ -47,7 +47,35 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript" src="./../admin/style/jscolor.js"></script>
+<script type="text/JavaScript">
+
+function lookup(user_name)
+{
+	if ( user_name.length == 0 )
+	{
+		// Hide the suggestion box.
+		$('#suggestions').hide();
+	}
+	else
+	{
+		$.post("./ajax/ajax_user.php", {user_name: ""+user_name+""}, function(data) {
+				if ( data.length > 0 )
+				{
+					$('#suggestions').show();
+					$('#autoSuggestionsList').html(data);
+				}
+			}
+		);
+	}
+}
+
+function fill(thisValue)
+{
+	$('#user_name').val(thisValue);
+	setTimeout("$('#suggestions').hide();", 200);
+}
+
+</script>
 <script type="text/javascript">
 // <![CDATA[
 	
@@ -76,7 +104,7 @@ function deactivated()
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 	<!-- BEGIN _update -->
-	<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
+	<li><a href="{S_MEMBER}">{L_VIEWMEMBER}</a></li>
 	<!-- END _update -->
 </ul>
 </div>
@@ -102,15 +130,20 @@ function deactivated()
 </tr>
 <tr>
 	<td valign="top">
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
+		<table border="0" cellspacing="0" cellpadding="0">
+		<tbody class="trhover">
 		<tr>
 			<td class="row1" width="155"><label for="group_name">{L_NAME}: *</label></td>
 			<td class="row2"><input type="text" class="post" name="group_name" id="group_name" value="{NAME}"></td>
 		</tr>
 		<!-- BEGIN _create -->
 		<tr>
-			<td class="row1"><label for="user_id">{L_MOD}: *</label></td>
-			<td class="row2">{S_MOD}</td>
+			<td class="row1"><label for="user_name">{L_MOD}: *</label></td>
+			<td class="row2"><input type="text" class="post" name="user_id" id="user_name" value="{MOD}" onkeyup="lookup(this.value);" onblur="fill();" autocomplete="off" style="width:165px;">
+		<div class="suggestionsBox" id="suggestions" style="display:none;">
+			<img src="style/images/upArrow.png" style="position: relative; top: -12px; left: 30px;" alt="upArrow" />
+			<div class="suggestionList" id="autoSuggestionsList"></div>
+		</div></td>
 		</tr>
 		<!-- END _create -->
 		<tr>
@@ -122,7 +155,7 @@ function deactivated()
 			<td class="row2">{S_TYPE}</td>
 		</tr>
 		<tr>
-			<td class="row1 top"><label for="group_desc">{L_DESC}:</label></td>
+			<td class="row1"><label for="group_desc">{L_DESC}:</label></td>
 			<td class="row2"><textarea class="textarea" name="group_desc" id="group_desc" rows="5" cols="40">{GROUP_DESC}</textarea></td>
 		</tr>
 		<tr>
@@ -141,6 +174,7 @@ function deactivated()
 			<td class="row1"><label for="group_order">{L_ORDER}:</label></td>
 			<td class="row2">{S_ORDER}</td>
 		</tr>
+		</tbody>
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -153,20 +187,23 @@ function deactivated()
 				</div>
 			</th>
 		</tr>
+		<tbody class="trhover">
 		<!-- BEGIN _image -->
 		<tr>
-			<td class="row1 top">{L_IMAGE_CURRENT}:</td>
+			<td class="row1">{L_IMAGE_CURRENT}:</td>
 			<td class="row2"><img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="group_image_delete">&nbsp;{L_IMAGE_DELETE}</td>
 		</tr>
 		<!-- END _image -->
 		<tr>
 			<td class="row1"><label for="ufile">{L_IMAGE_UPLOAD}:</label></td>
 			<td class="row2"><input type="file" class="post" name="group_img" /></td>
-		</tr>		
+		</tr>
+		</tbody>
 		</table>
 	</td>
 	<td valign="top" align="right">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
+		<tbody class="trhover">
 		<!-- BEGIN _auth -->
 		<tr>
 			<td class="row1"><label for="{_input._auth.FIELDS}">{_input._auth.TITLE}</label></td>
@@ -176,6 +213,7 @@ function deactivated()
 		<tr>
 			<td class="row3" colspan="2" align="right"><a class="small" href="#" onclick="activated();">{L_MARK_YES}</a>&nbsp;&bull;&nbsp;<a class="small" href="#" onclick="deactivated();">{L_MARK_NO}</a></td>
 		</tr>
+		</tbody>
 		</table>
 	</td>
 </tr>
@@ -195,8 +233,8 @@ function deactivated()
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_EDIT}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current">{L_MEMBER}</a></li>
+	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
+	<li id="active"><a href="#" id="current">{L_VIEWMEMBER}</a></li>
 </ul>
 </div>
 
@@ -206,7 +244,7 @@ function deactivated()
 </tr>
 </table>
 
-<br />
+<br /><div align="center">{ERROR_BOX}</div>
 
 <div id="navcontainer">
 <ul id="navlist">
@@ -219,18 +257,18 @@ function deactivated()
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
-<!-- BEGIN _mods_row -->
+<!-- BEGIN _mod_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_member._mods_row.USERNAME}</td>
-	<td class="row_class1" align="center" nowrap="nowrap">{_member._mods_row.REGISTER}</td>
-	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member._mods_row.USER_ID}"></td>
+	<td class="row_class1" align="left" width="100%">{_member._mod_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{_member._mod_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member._mod_row.USER_ID}"></td>
 </tr>
-<!-- END _mods_row -->
-<!-- BEGIN _no_moderators -->
+<!-- END _mod_row -->
+<!-- BEGIN _mod_no -->
 <tr>
-	<td class="row_noentry" colspan="3" align="center">{L_NO_MODERATORS}</td>
+	<td class="entry_empty" colspan="3" align="center">{L_MODERATOR_NO}</td>
 </tr>
-<!-- END _no_moderators -->
+<!-- END _mod_no -->
 </table>
 
 <br />
@@ -246,26 +284,34 @@ function deactivated()
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
-<!-- BEGIN _nomods_row -->
+<!-- BEGIN _mem_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_member._nomods_row.USERNAME}</td>
-	<td class="row_class1" align="center" nowrap="nowrap">{_member._nomods_row.REGISTER}</td>
-	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member._nomods_row.USER_ID}"></td>
+	<td class="row_class1" align="left" width="100%">{_member._mem_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{_member._mem_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="members[]" value="{_member._mem_row.USER_ID}"></td>
 </tr>
-<!-- END _nomods_row -->
-<!-- BEGIN _no_members -->
+<!-- END _mem_row -->
+<!-- BEGIN _mem_no -->
 <tr>
-	<td class="row_noentry" colspan="3" align="center">{L_NO_MEMBERS}</td>
+	<td class="entry_empty" colspan="3" align="center">{L_MEMBER_NO}</td>
 </tr>
-<!-- END _no_members -->
+<!-- END _mem_no -->
+</table>
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td colspan="2" align="right">{S_OPTIONS}&nbsp;<input type="submit" class="button2" value="{L_SUBMIT}" /></td>
+</tr>
+<tr>
+	<td colspan="2" align="right" class="row5"><a href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
+</tr>
 </table>
 
-<!-- BEGIN pending -->
+<!-- BEGIN _pending -->
 <br />
 
 <div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_PENDING_MEMBER}</a></li>
+	<li id="active"><a href="#" id="current">{L_PENDING}</a></li>
 </ul>
 </div>
 <table class="info" border="0" cellspacing="1" cellpadding="0">
@@ -274,29 +320,25 @@ function deactivated()
 	<td class="rowHead" align="center">{L_REGISTER}</td>
 	<td class="rowHead" align="center">#</td>
 </tr>
-<!-- BEGIN pending_row -->
+<!-- BEGIN _pending_row -->
 <tr>
-	<td class="{_member.pending.pending_row.CLASS}" align="left" width="100%">{_member.pending.pending_row.USERNAME}</td>
-	<td class="{_member.pending.pending_row.CLASS}" align="center" nowrap="nowrap">{_member.pending.pending_row.REGISTER}</td>
-	<td class="{_member.pending.pending_row.CLASS}" align="center" nowrap="nowrap"><input type="checkbox" name="pending_members[]" value="{_member.pending.pending_row.USER_ID}" checked="checked"></td>
+	<td class="row_class1" align="left" width="100%">{_member._pending._pending_row.USERNAME}</td>
+	<td class="row_class1" align="center" nowrap="nowrap">{_member._pending._pending_row.REGISTER}</td>
+	<td class="row_class2" align="center" nowrap="nowrap"><input type="checkbox" name="pending_members[]" value="{_member._pending._pending_row.USER_ID}" checked="checked"></td>
 </tr>
-<!-- END pending_row -->
+<!-- END _pending_row -->
 </table>
-<!-- END pending -->
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td colspan="2" align="right">{S_ACTION_OPTIONS}&nbsp;<input type="submit" class="button2" value="{L_SUBMIT}" /></td>
-</tr>
-<tr>
-	<td colspan="2" align="right"><a href="#" onclick="marklist('list', 'member', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
+	<td colspan="2" align="right">{S_PENDING}&nbsp;<input type="submit" class="button2" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
-<input type="hidden" name="rank_id" value="" />
+<!-- END _pending -->
 {S_FIELDS}
 </form>
 
-<form action="{S_ACTION}" method="post" name="post" id="list">
+<form action="{S_ACTION}" method="post" name="post">
 <table class="head" cellspacing="0">
 <tr>
 	<th>
@@ -314,8 +356,8 @@ function deactivated()
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 top" width="50%"><textarea class="textarea" name="members" style="width:100%" rows="5"></textarea></td>
-	<td class="row2 top">{S_ACTION_ADDUSERS}</td>
+	<td class="row2" width="50%"><textarea class="textarea" name="textarea" style="width:100%" rows="5"></textarea></td>
+	<td class="row2">{S_USERS}</td>
 </tr>
 <tr>
 	<td class="row2" colspan="2"><input type="checkbox" name="mod" /> Moderatorstatus</td>
@@ -324,22 +366,24 @@ function deactivated()
 	<td class="row2" colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}"></td>
 </tr>
 </table>
-<input type="hidden" name="mode" value="_user_add" />
+<input type="hidden" name="smode" value="_add" />
 {S_FIELDS}
 </form>
-<!-- END team_member -->
+<!-- END _member -->
 
 <!-- BEGIN _overview -->
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 	<li><a href="#" id="right">{L_OVERVIEW}</a></li>
 </ul>
 </div>
 
 <table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row2 small">{L_OVERVIEW_EXPLAIN}</td>
+	<td class="row4 small">{L_OVERVIEW_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -347,30 +391,38 @@ function deactivated()
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<!-- BEGIN groups_data -->
 	<td>
 		<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current">{_overview.groups_data.NAME}</a></li>
-		</ul>
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_INPUT_OPTION}</a></li>
+			</ul>
 		</div>
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN groups_auth -->
-		<tr>
-			{_overview.groups_data.groups_auth.TITLE}
-			<td class="row2">{_overview.groups_data.groups_auth.SELECT}</td>
-		</tr>
-		<!-- END groups_auth -->
-		</table>
 	</td>
-	<!-- END groups_data -->
+	<!-- BEGIN _grp_name -->
+	<td>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{_overview._grp_name.NAME}</a></li>
+			</ul>
+		</div>
+	</td>
+	<!-- END _grp_name -->
 </tr>
-</table>
-
-<table border="0" cellspacing="1" cellpadding="2">
+<!-- BEGIN _grp_auth -->
+<tr class="hover">
+	<td class="row1_2"><label>{_overview._grp_auth.NAME}:</label></td>
+	<!-- BEGIN _auth -->
+	<td class="row2">{_overview._grp_auth._auth.INFO}</td>
+	<!-- END _auth -->
+</tr>
+<!-- END _grp_auth -->
 <tr>
-	<td width="50%" align="left">{PAGE_NUMBER}</td>
-	<td width="50%" align="right">{PAGINATION}</td>
+	<td colspan="{COLSPAN}" class="row4 small"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
+</tr>
+<tr>
+	<td colspan="{COLSPAN}" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
+{S_FIELDS}
+</form>
 <!-- END _overview -->

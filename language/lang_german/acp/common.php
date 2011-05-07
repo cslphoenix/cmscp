@@ -5,476 +5,458 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-/*	Hauptmenü	*/
-$lang['_headmenu_01_main']			= 'Allgemein';
-$lang['_headmenu_02_forum']			= 'Forum';
-$lang['_headmenu_03_news']			= 'News';
-$lang['_headmenu_04_users']			= 'Benutzer';
-$lang['_headmenu_05_teams']			= 'Teams';
-$lang['_headmenu_06_groups']		= 'Gruppen';
-$lang['_headmenu_07_development']	= 'Entwicklung';		
-$lang['_headmenu_08_games']			= 'Spiele';
-$lang['_headmenu_09_server']		= 'Server';
-$lang['_headmenu_10_contact']		= 'Kontakt';
-$lang['_headmenu_11_database']		= 'Datenbank';
-$lang['_headmenu_12_template']		= 'Themes/Template';
+$lang = array_merge($lang, array(
+	
+	'content_encoding'	=> 'iso-8859-1',
+	'content_direction'	=> 'ltr',
 
-/*	Submenü	*/
-$lang['_submenu_authlist']		= 'Berechtigungsfelder';
-$lang['_submenu_bugtracker']	= 'Bugtracker';
-$lang['_submenu_cash']			= 'Clankasse';
-$lang['_submenu_changelog']		= 'Changelog';
-$lang['_submenu_downloads']		= 'Downloads';
-$lang['_submenu_overview']		= 'Übersicht';
-$lang['_submenu_fightus']		= 'Fight us';
-$lang['_submenu_joinus']		= 'Join us';
-$lang['_submenu_contact']		= 'Kontakt';
-$lang['_submenu_database']		= 'Datenbank';
-$lang['_submenu_backup']		= 'Backup';
-$lang['_submenu_restore']		= 'Wiederherstellen';
-$lang['_submenu_optimize']		= 'Optimieren';
-$lang['_submenu_event']			= 'Ereignisse';
-$lang['_submenu_perm']			= 'Berechtigung';
-$lang['_submenu_perm_list']		= 'Berechtigungsliste';
-$lang['_submenu_logs']			= 'Protokoll';
-$lang['_submenu_logs_error']	= 'Fehlerprotokoll';		
-$lang['_submenu_maps']			= 'Karten';
-$lang['_submenu_match']			= 'Begegnungen';
-$lang['_submenu_navi']			= 'Navigation';
-$lang['_submenu_news']			= 'News';
-$lang['_submenu_newscat']		= 'Kategorie';
-$lang['_submenu_network']		= 'Netzwerk';
-$lang['_submenu_newsletter']	= 'Newsletter';		
-$lang['_submenu_profile']		= 'Profilefelder';
-$lang['_submenu_ranks']			= 'Ränge';
-$lang['_submenu_teamspeak']		= 'Teamspeak';
-$lang['_submenu_gameserver']	= 'Gameserver';
-$lang['_submenu_add_new']		= 'add new';
-$lang['_submenu_create']		= 'create';
-$lang['_submenu_manage']		= 'manage';
-$lang['_submenu_export']		= 'export';
-$lang['_submenu_settings']		= 'Einstellungen';
-$lang['_submenu_games']			= 'Spiele';
-$lang['_submenu_gallery']		= 'Galerie';
-$lang['_submenu_training']		= 'Training';
-$lang['_submenu_group']			= 'Gruppe';
-$lang['_submenu_forum']			= 'Forum';
-$lang['_submenu_index']			= 'Übersicht';
-$lang['_submenu_users']			= 'Benutzer';
-$lang['_submenu_group']			= 'Gruppe';
-$lang['_submenu_teams']			= 'Teams';
+	/* Hauptmenü */
+	'_headmenu_01_main'			=> 'Allgemein',
+	'_headmenu_02_forum'		=> 'Forum',
+	'_headmenu_03_news'			=> 'News',
+	'_headmenu_04_users'		=> 'Benutzer',
+	'_headmenu_05_teams'		=> 'Teams',
+	'_headmenu_06_groups'		=> 'Gruppen',
+	'_headmenu_07_development'	=> 'Entwicklung',		
+	'_headmenu_08_games'		=> 'Spiele',
+	'_headmenu_09_server'		=> 'Server',
+	'_headmenu_10_contact'		=> 'Kontakt',
+	'_headmenu_11_database'		=> 'Datenbank',
+	'_headmenu_12_template'		=> 'Themes/Template',
+	/* Hauptmenü */
+	
+	/* Submenü */
+	'_submenu_authlist'			=> 'Berechtigungsfelder',
+	'_submenu_bugtracker'		=> 'Bugtracker',
+	'_submenu_cash'				=> 'Clankasse',
+	'_submenu_changelog'		=> 'Changelog',
+	'_submenu_downloads'		=> 'Downloads',
+	'_submenu_overview'			=> 'Übersicht',
+	'_submenu_fightus'			=> 'Fight us',
+	'_submenu_joinus'			=> 'Join us',
+	'_submenu_contact'			=> 'Kontakt',
+	'_submenu_database'			=> 'Datenbank',
+	'_submenu_backup'			=> 'Backup',
+	'_submenu_restore'			=> 'Wiederherstellen',
+	'_submenu_optimize'			=> 'Optimieren',
+	'_submenu_event'			=> 'Ereignisse',
+	'_submenu_perm'				=> 'Berechtigung',
+	'_submenu_perm_list'		=> 'Berechtigungsliste',
+	'_submenu_logs'				=> 'Protokoll',
+	'_submenu_logs_error'		=> 'Fehlerprotokoll',		
+	'_submenu_maps'				=> 'Karten',
+	'_submenu_match'			=> 'Begegnungen',
+	'_submenu_navi'				=> 'Navigation',
+	'_submenu_news'				=> 'News',
+	'_submenu_newscat'			=> 'Kategorie',
+	'_submenu_network'			=> 'Netzwerk',
+	'_submenu_newsletter'		=> '!Newsletter',		
+	'_submenu_profile'			=> 'Profilefelder',
+	'_submenu_ranks'			=> 'Ränge',
+	'_submenu_teamspeak'		=> 'Teamspeak',
+	'_submenu_gameserver'		=> 'Gameserver',
+	'_submenu_add_new'			=> 'add new',
+	'_submenu_create'			=> 'create',
+	'_submenu_manage'			=> 'manage',
+	'_submenu_export'			=> 'export',
+	'_submenu_settings'			=> 'Einstellungen',
+	'_submenu_games'			=> 'Spiele',
+	'_submenu_gallery'			=> 'Galerie',
+	'_submenu_training'			=> 'Training',
+	'_submenu_group'			=> 'Gruppe',
+	'_submenu_forum'			=> 'Forum',
+	'_submenu_index'			=> 'Übersicht',
+	'_submenu_users'			=> 'Benutzer',
+	'_submenu_group'			=> 'Gruppe',
+	'_submenu_teams'			=> 'Teams',
+	/* Submenü */
+	
+	/* sprintf: Allgemein */
+	'sprintf_head'				=> '%s Administration',
+	'sprintf_create'			=> '%s hinzufügen',
+	'sprintf_update'			=> '%s bearbeiten: %s',
+	
+	'sprintf_new_create'		=> 'Neue %s erstellen',
+	'sprintf_new_createn'		=> 'Neuen %s erstellen',		
+	'sprintf_new_creates'		=> 'Neues %s erstellen',
+	
+	'sprintf_name'				=> '%sname',
+	'sprintf_title'				=> '%stitel',
+	'sprintf_desc'				=> '%sbeschreibung',
+	/* sprintf: Allgemein */
+	
+	/* sprintf: Spiele */
+	'sprintf_tag'				=> '%s Tag',				# game
+	'sprintf_image'				=> '%s Bild',				# game, maps, network, newscat
+	'sprintf_size'				=> '%sgröße',				# gane
+	'sprintf_event'				=> 'am: %s von %s - %s',	# event
+	'sprintf_type'				=> '%s Type',				# maps, network, navi, profile
+	'sprintf_cat'				=> '%skategorie',			# maps, news
+	'sprintf_text'				=> '%stext',				# news
+	'sprintf_rating'			=> '%sbewertung',			# news
+	
+	'sprintf_auth'				=> '%sberechtigung',
+	'sprintf_comments'			=> '%skommentare erlauben?',
+	'sprintf_create_user'		=> '%s hinzufügen',		
+	'sprintf_intern'			=> '<em><b> %s </b></em>',
+	'sprintf_list'				=> '%sliste',
+	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',		
+	'sprintf_match_name'		=> 'vs. %s',
+	'sprintf_message'			=> '%s Nachricht',
+	'sprintf_news_title'		=> '<em><b>%s</b></em>',
+	'sprintf_normal'			=> '%s',
+	'sprintf_overview'			=> '%s Übersicht',
+	'sprintf_processing'		=> '%s Bearbeitung',
+	'sprintf_right_overview'	=> '%s Rechteübersicht',		
+	'sprintf_update_user'		=> '%s bearbeiten: %s',		
+	'sprintf_upload'			=> '%s Upload',
+	'sprintf_upload_info'		=> 'Abmessung: %s x %s / Größe: %s KB\'s',
+	'sprintf_select_format'		=> '&raquo;&nbsp;%s&nbsp;',
+	'sprintf_select_format2'	=> '&raquo;&nbsp;%s&nbsp;::&nbsp;%s',
+	'sprintf_select_order'		=> '&raquo;&nbsp;nach:&nbsp;%s&nbsp;',
+	'sprintf_select_before'		=> '&raquo;&nbsp;vor:&nbsp;%s&nbsp;',
+	'sprintf_imagesize'			=> 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.',
+	'sprintf_ajax_fail'			=> 'Kein Suchergebnis!',
+	'sprintf_ajax_users'		=> '%s<br />&nbsp;&not;&nbsp;Benutzerlevel: %s<br />&nbsp;&not;&nbsp;Reg: %s<br />&nbsp;&not;&nbsp;Log: %s',
+	'sprintf_db_create'			=> '|%s| geändert in: %s',
+	'sprintf_db_delete'			=> '|%s| gelöscht: %s',
+	'sprintf_db_change'			=> '|%s| von: %s auf: %s geändert.',
+	
+	/* allgemein: Standard */
+	'common_confirm'		=> 'Bestätigen',
+	'common_order'			=> 'Reihenfolge',
+	'common_date'			=> 'Datum',
+	'common_userlevel'		=> 'Benutzerlevel',
+	'common_duration'		=> 'Dauer',
+	'common_comments'		=> 'Kommentare',
+	'common_view'			=> 'Anzeigen',
+	'common_image_delete'	=> 'Bild löschen',
+	'common_more'			=> 'Erweitern',
+	'common_remove'			=> 'Entfernen',
+	'common_language'		=> 'Sprachdatei',
+	'common_intern'			=> 'Intern',
+	'common_visible'		=> 'Sichtbar',
+	'common_no'				=> 'Nein',
+	'common_yes'			=> 'Ja',
+	'common_cat'			=> 'Kategorie',
+	'common_required'		=> 'Mit * markierte Felder sind erforderlich!',
 
-/*	Allgemein:	"sprintf"	*/
-$lang['sprintf_auth']			= '%sberechtigung';
-$lang['sprintf_category']		= '%skategorie';
-$lang['sprintf_comments']		= '%skommentare erlauben?';
-$lang['sprintf_create']			= '%s hinzufügen';
-$lang['sprintf_create_user']	= '%s hinzufügen';		
-$lang['sprintf_desc']			= '%sbeschreibung';
-$lang['sprintf_event']			= 'am: %s von %s - %s';
-$lang['sprintf_head']			= '%s Administration';
-$lang['sprintf_image']			= '%s Bild';
-$lang['sprintf_intern']			= '<em><b> %s </b></em>';
-$lang['sprintf_list']			= '%sliste';
-$lang['sprintf_match_intern']	= '<span style="font-style:italic;">vs. %s</span>';		
-$lang['sprintf_match_name']		= 'vs. %s';
-$lang['sprintf_message']		= '%s Nachricht';
-$lang['sprintf_name']			= '%sname';
-$lang['sprintf_title']			= '%stitel';
-$lang['sprintf_text']			= '%stext';
-$lang['sprintf_new_create']		= 'Neue %s erstellen';
-$lang['sprintf_new_createn']	= 'Neuen %s erstellen';		
-$lang['sprintf_new_creates']	= 'Neues %s erstellen';		
-$lang['sprintf_news_title']		= '<em><b>%s</b></em>';
-$lang['sprintf_normal']			= '%s';
-$lang['sprintf_overview']		= '%s Übersicht';
-$lang['sprintf_processing']		= '%s Bearbeitung';
-$lang['sprintf_rating']			= '%sbewertung';
-$lang['sprintf_right_overview']	= '%s Rechteübersicht';		
-
-$lang['sprintf_type']			= '%s Type';
-$lang['sprintf_update']			= '%s bearbeiten: %s';
-$lang['sprintf_update_user']	= '%s bearbeiten: %s';		
-$lang['sprintf_upload']			= '%s Upload';
-$lang['sprintf_upload_info']	= 'Abmessung: %s x %s / Größe: %s KB\'s';
-$lang['sprintf_tag']			= '%s Tag';
-$lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
-$lang['sprintf_select_format2']	= '&raquo;&nbsp;%s&nbsp;::&nbsp;%s';
-$lang['sprintf_select_order']	= '&raquo;&nbsp;nach:&nbsp;%s&nbsp;';
-$lang['sprintf_select_before']	= '&raquo;&nbsp;vor:&nbsp;%s&nbsp;';
-$lang['sprintf_imagesize']		= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
-$lang['sprintf_size']			= '%sgröße';
-
-$lang['sprintf_db_create'] = '|%s| geändert in: %s';
-$lang['sprintf_db_delete'] = '|%s| gelöscht: %s';
-$lang['sprintf_db_change'] = '|%s| von: %s auf: %s geändert.';
-
-/*	Allgemein:	Sprachdateien	*/
-$lang['common_add']				= 'Hinzufügen';
-$lang['common_auth']			= 'Berechtigung';
-$lang['common_category']		= 'Kategorie';		
-$lang['common_comment']			= 'Kommentar';
-$lang['common_comments']		= 'Kommentare';		
-$lang['common_confirm']			= 'Bestätigen';
-$lang['common_input_data']		= 'Daten eingeben';
-$lang['common_input_option']	= 'Option';
-$lang['common_input_upload']	= 'Upload';
-$lang['common_date']			= 'Datum';
-$lang['common_default']			= 'Standarteinstellungen';
-$lang['common_default']			= 'Standarteinstellungen';
-$lang['common_delete']			= 'Löschen';
-$lang['common_desc']			= 'Beschreibung';
-$lang['common_details']			= 'Details';
-$lang['common_duration']		= 'Dauer';		
-$lang['common_image']			= 'Bild';
-$lang['common_image_delete']	= 'Bild löschen';			
-$lang['common_intern']			= 'Intern';
-$lang['common_language']		= 'Sprachdatei';		
-$lang['common_member']			= 'Mitglied';
-$lang['common_members']			= 'Mitglieder';
-$lang['common_message']			= 'Nachricht';
-$lang['common_moderator']		= 'Moderator';		
-$lang['common_moderators']		= 'Moderatoren';		
-$lang['common_more']			= 'Erweitern';
-$lang['common_no']				= 'Nein';
-$lang['common_option_select']	= 'Option wählen';			
-$lang['common_overview']		= 'Übersicht';		
-$lang['common_remove']			= 'Entfernen';
-$lang['common_reset']			= 'Zurücksetzen';
-$lang['common_setting']			= 'Einstellung';
-$lang['common_settings']		= 'Einstellungen';		
-$lang['common_submit']			= 'Absenden';
-$lang['common_update']			= 'Bearbeiten';
-$lang['common_upload']			= 'Upload';
-$lang['common_userlevel']		= 'Benutzerlevel';		
-$lang['common_view']			= 'Anzeigen';
-$lang['common_visible']			= 'Sichtbar';
-$lang['common_yes']				= 'Ja';
-
-$lang['common_order']			= 'Reihenfolge';
-
-/*	Ajax	*/
-$lang['msg_empty_maps'] = 'Keine Maps vorhanden/eingetragen.';
-$lang['msg_empty_ranks'] = 'Keine Ränge vorhanden/eingetragen.';
-
-/*	Allgemein	*/
-$lang['msg_empty_name'] = 'Bitte ein Namen eintragen!';
-$lang['msg_empty_desc'] = 'Bitte eine Beschreibung eintragen!';
-$lang['msg_empty_title'] = 'Bitte ein Titel eintragen!';
-
-$lang['msg_select_game'] = 'Bitte ein Spiel auswählen!';
-$lang['msg_select_ranks'] = 'Bitte einen Rang auswählen!';
-$lang['msg_select_team'] = 'Bitte ein Team auswählen!';
-$lang['msg_select_map'] = 'Bitte eine Map auswählen!';
-$lang['msg_select_team_first'] = 'Bitte ein Team zuerst auswählen!';
-
-
-/*	Teams	*/
-$lang['msg_select_nomembers'] = 'Keine Teammitglieder ausgewählt oder eingetragen.';
-
-/*	Event	*/
-$lang['msg_select_past'] = 'Bitte ein Datum/Zeit in der Zukunft auswählen!';
-$lang['msg_select_date'] = 'Bitte ein Gültiges Datum auswählen!';
-
-/*	Karten	*/
-$lang['select_msg_map_file'] = 'Bitte ein Bild auswählen!';
-
-/*	Forum	*/
-$lang['msg_select_forms'] = 'Bitte ein Forum auswählen!';
-$lang['msg_select_forum'] = 'Bitte ein Hauptforum auswählen!';
-
-/*	Maps	*/
-
-$lang['msg_empty_map'] = 'Bitte eine Map eintragen!';
-
-
-/*	Training	*/
-
-
-
-#	Meldungen: keine Rechte
-$lang['msg_sprintf_auth_fail'] = 'Keine Berechtiung für dieses Modul: <b>%s</b>';
-$lang['msg_no_module_select'] = 'Keine Funktion ausgewählt!';
-
-$lang['msg_select_order'] = 'Bitte Reihenfolge auswählen!';
-$lang['msg_empty_text'] = 'Bitte einen Text eintragen!';
-$lang['msg_empty_type'] = 'Bitte ein Type auswählen!';
-$lang['msg_select_forum'] = 'Bitte ein Hauptforum auswählen!';
-$lang['msg_empty_url'] = 'Bitte eine URL eintragen!';
-$lang['msg_empty_tag'] = 'Bitte ein Tag eintragen!';
-$lang['msg_select_type'] = 'Bitte ein Type auswählen!';
-
-$lang['select_msg_game_image'] = 'Bitte ein Spielbild auswählen!';
-$lang['msg_select_newscat'] = 'Bitte eine Newskategorie auswählen!';
-$lang['select_msg_cat_image'] = 'Bitte ein Kategoriebild auswählen!';
-$lang['sprintf_msg_select']	= 'Bitte ein(e) <b>%s</b> eintragen!';
-$lang['msg_select_user']	= 'Bitte einen Benutzer auswählen!';
-$lang['msg_select_amount']	= 'Bitte einen Betrag eintragen!';
-
-$lang['msg_select_file'] = 'Bitte eine Datei auswählen!';
-
-$lang['select_msg_forum_icon'] = 'Bitte ein Forumicon auswählen!';
-
-
-
-$lang['msg_select_url']				= 'Bitte ein Link eintragen!';
-$lang['msg_select_user']			= 'Bitte einen Benutzer auswählen!';
-$lang['msg_select_team']			= 'Bitte ein Team auswählen!';
-$lang['msg_select_sort_team']		= 'Team fürs sortieren wählen!';
-$lang['msg_select_type']			= 'Bitte ein Type / Art auswählen!';
-$lang['msg_select_cat']				= 'Bitte ein Match Art auswählen!';
-
-
-$lang['msg_select_order_end']		= 'am Ende sortieren';
-
-
-$lang['msg_select_dir']				= 'Bitte ein Verzeichnis auswählen!';
-$lang['msg_select_desc']			= 'Bitte eine Beschreibung eintragen';
-
-$lang['msg_select_rival']			= 'Bitte ein Gegnernamen eintragen';
-$lang['msg_select_rival_tag']		= 'Bitte ein Gegnerclantag eintragen';
-$lang['msg_select_server']			= 'Bitte ein Gameserver eintragen';
-
-$lang['msg_select_ip']		= 'Bitte IP-Adresse vom Server eingeben!';
-$lang['msg_select_port']	= 'Bitte Port vom Server eingeben!';
-$lang['msg_select_qport']	= 'Bitte QPort vom Server eingeben!';
-
-
-$lang['msg_select_duration']		= 'Bitte eine Zeitdauer auswählen';
-
-$lang['msg_select_cat']				= 'Bitte ein Match Art auswählen';
-$lang['msg_select_league']			= 'Bitte eine Liga auswählen';
-$lang['msg_select_maps']			= 'Bitte eine Map Auswählen!';
-$lang['msg_select_match']			= 'Bitte eine Begegnung auswählen';
-$lang['msg_select_game_image']		= 'Bitte ein Spielbild auswählen!';
-$lang['msg_select_newscat_image']	= 'Bitte ein Newsbild auswählen!';
+	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
+	'common_entry_new'		=> 'Neuer Eintrag',
+		
+	'common_add'			=> 'Hinzufügen',
+	'common_auth'			=> 'Berechtigung',
+	
+	'common_comment'		=> 'Kommentar',
+	'common_comments_pub'	=> 'Kommentare erlauben',
+	'common_input_data'		=> 'Daten eingeben',
+	'common_input_option'	=> 'Option',
+	'common_input_upload'	=> 'Upload',
+	'common_input_standard'	=> 'Standard',
+	'common_default'		=> 'Standarteinstellungen',
+	'common_delete'			=> 'Löschen',
+	'common_desc'			=> 'Beschreibung',
+	'common_details'		=> 'Details',
+	'common_image'			=> 'Bild',
+	
+	
+	
+	'common_member'			=> 'Mitglied',
+	'common_members'		=> 'Mitglieder',
+	'common_message'		=> 'Nachricht',
+	'common_moderator'		=> 'Moderator',		
+	'common_moderators'		=> 'Moderatoren',		
+	
+	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
+	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
+	
+	'common_option_select'	=> 'Option wählen',			
+	'common_overview'		=> 'Übersicht',		
+	
+	'common_reset'			=> 'Zurücksetzen',
+	'common_setting'		=> 'Einstellung',
+	'common_settings'		=> 'Einstellungen',		
+	'common_submit'			=> 'Absenden',
+	'common_update'			=> 'Bearbeiten',
+	'common_upload'			=> 'Upload',
+	
+	
+	
+	'common_sort'			=> 'Sortieren',
+	'common_public'			=> 'Öffentlich',
+	/* allgemein: Standard */
+	
+	'return'			=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a></strong>',
+	'return_update'		=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;zurück</a></strong>',
+	
+	/* msg: alle */
+	'msg_auth_fail'			=> 'Keine Berechtiung für dieses Modul: <b>%s</b>',
+	'msg_confirm_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?',
+	'msg_select_must'		=> 'Es muss ein %s ausgewählt werden!',
+	'msg_select_module'		=> 'Es wurde keine Gültige Funktion ausgewählt!',
+	
+	'msg_available_name'	=> 'Name ist schon vergeben, bitte einen anderen eintragen!',
+	'msg_available_title'	=> 'Titel ist schon vergeben, bitte einen anderen eintragen!',
+	'msg_available_tag'		=> 'Tag ist schon vergeben, bitte einen anderen eintragen!',
+			
+	'msg_empty_name'		=> 'Bitte ein Namen eintragen!',
+	'msg_empty_title'		=> 'Bitte ein Titel eintragen!',
+	'msg_empty_desc'		=> 'Bitte eine Beschreibung eintragen!',
+	'msg_empty_text'		=> 'Bitte einen Text eintragen!',
+	
+	'msg_select_type'		=> 'Bitte ein Type auswählen!',
+	'msg_select_date'		=> 'Bitte ein Gültiges Datum auswählen!',
+	'msg_select_past'		=> 'Bitte ein Datum/Zeit in der Zukunft auswählen!',
+	/* msg: alle */
+	
+	/* msg: ajax */
+	'msg_empty_maps'		=> 'Keine Maps vorhanden/eingetragen.',
+	'msg_empty_ranks'		=> 'Keine Ränge vorhanden/eingetragen.',
+	
+	/* games */
+	'msg_empty_tag'			=> 'Bitte ein Tag eintragen!',
+	/* games */
+	
+	/* server */
+	'msg_empty_ip'			=> 'Bitte eine IP-Adresse vom Server eintragen!',
+	'msg_empty_port'		=> 'Bitte einen Port vom Server eintragen!',
+	'msg_empty_qport'		=> 'Bitte den QPort vom Server eintragen!',
+	/* server */
+	
+	/* network */
+	'msg_empty_url'			=> 'Bitte eine URL (Webadresse) eintragen!',
+	/* network */
+	
+	/* news / news_cat */
+	'msg_select_cat'		=> 'Bitte eine Kategorie auswählen!',
+	'msg_select_cat_image'	=> 'Bitte ein Kategoriebild auswählen!',
+	/* news / news_cat */
+	
+	/* maps / maps_cat */
+	'msg_select_map_file'	=> 'Bitte ein Bild auswählen!',		
+	/* maps / maps_cat */
+	
+	/* profile */
+	'msg_select_profile_field'	=> 'Bitte bei <b>%s</b> einen Wert eintragen, dass ist ein Pflichtfeld!',
+	/* profile */
+	
+	/* user */
+	'msg_empty_pass'			=> 'Bitte ein Passwort eintragen!',
+	'msg_empty_pass_confirm'	=> 'Bitte ein Passwort Bestätigen!',
+	'msg_select_pass'			=> 'Bitte ein Passworttype auswählen!',
+	'msg_empty_email'			=> 'Bitte ein eMail eintragen!',
+	'msg_empty_email_confirm'	=> 'Die eMails stimmen nicht überein Bestätigen!',
+	'msg_empty_email_mismatch'	=> 'Die eMails stimmen nicht überein!',
+	'msg_empty_pass_mismatch'	=> 'Die Passwörter stimmen nicht überein!',
+	/* user */
+	
+	/* groups */
+	'msg_empty_add'				=> 'Keine <i>Neuen</i> oder <i>eingetragene</i> Benutzer ausgwählt/eingetragen!',
+	'msg_select_level'			=> 'Bitte ein Gruppenlevel auswählen!',
+	
+	'msg_select_item'			=> 'Bitte etwas auswählen!',
+	
+	'msg_empty_map'				=> 'Bitte eine Map eintragen!',
+	'msg_empty_rival_name'		=> 'Bitte einen Gegnernamen eintragen!',		
+	'msg_empty_rival_tag'		=> 'Bitte einen Gegnerclantag eintragen!',		
+	'msg_empty_server'			=> 'Bitte einen Gameserver eintragen!',	
+	
+	
+	
+	'msg_must_select_authlist'	=> 'Es muss ein Wähle ein Authfeld aus',		
+	'msg_must_select_game'		=> 'Wähle ein Spiel aus',		
+	'msg_select_amount'			=> 'Bitte einen Betrag eintragen!',	
+	'msg_select_cat'			=> 'Bitte ein Match Art auswählen!',	
+	'msg_select_cat'			=> 'Bitte ein Match Art auswählen',	
+	'msg_select_cat'			=> 'Bitte eine Kategorie auswählen',	
+	'msg_select_desc'			=> 'Bitte eine Beschreibung eintragen',	
+	'msg_select_dir'			=> 'Bitte ein Verzeichnis auswählen!',	
+	'msg_select_duration'		=> 'Bitte eine Zeitdauer auswählen',		
+	'msg_select_file'			=> 'Bitte eine Datei auswählen!',	
+	'msg_select_forms'			=> 'Bitte ein Forum auswählen!',	
+	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
+	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
+	'msg_select_game'			=> 'Bitte ein Spiel auswählen!',	
+	'msg_select_game_image'		=> 'Bitte ein Spielbild auswählen!',		
+	'msg_select_league'			=> 'Bitte eine Liga auswählen!',	
+	'msg_select_map'			=> 'Bitte eine Map auswählen!',	
+	'msg_select_map'			=> 'Bitte eine Karte auswählen!',	
+	'msg_select_maps'			=> 'Bitte eine Map Auswählen!',	
+	'msg_select_match'			=> 'Bitte eine Begegnung auswählen',	
+	'msg_select_match_map'		=> 'Bitte Karteninfos eintragen!',		
+	'msg_select_member'			=> 'Bitte 1 oder mehrere Mitglieder auswählen!',	
+	
+	
+	'msg_select_no_users'		=> 'Keine Benutzer ausgewählt.',		
+	'msg_select_nomembers'		=> 'Keine Teammitglieder ausgewählt oder eingetragen.',		
+	'msg_select_option'			=> 'Bitte eine <b>Option</b> auswählen!',	
+	'msg_select_order'			=> 'Bitte Reihenfolge auswählen!',	
+	'msg_select_order_end'		=> 'am Ende sortieren',		
+	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder auswählen, zum löschen.',	
+	'msg_select_profilefield'	=> 'Bitte Profilefeld eintragen!',		
+	'msg_select_rank_set'		=> 'Status %s setzen',		
+	'msg_select_ranks'			=> 'Bitte einen Rang auswählen!',	
+	'msg_select_rival'			=> 'Bitte ein Gegnernamen eintragen',	
+	'msg_select_rival_tag'		=> 'Bitte ein Gegnerclantag eintragen',		
+	'msg_select_server'			=> 'Bitte ein Gameserver eintragen',	
+	'msg_select_sort_team'		=> 'Team fürs sortieren wählen!',		
+	'msg_select_team'			=> 'Bitte ein Team auswählen!',	
+	'msg_select_team'			=> 'Bitte ein Team auswählen!',	
+	'msg_select_team_first'		=> 'Bitte ein Team zuerst auswählen!',		
+	'msg_select_type'			=> 'Bitte ein Type auswählen!',	
+	'msg_select_type'			=> 'Bitte ein Type / Art auswählen!',	
+	'msg_select_url'			=> 'Bitte ein Link eintragen!',	
+	'msg_select_user'			=> 'Bitte einen Benutzer auswählen!',	
+	'msg_select_user_level'		=> 'Bitte ein Benutzerlevel auswählen!',		
+	'msg_select_war'			=> 'Bitte ein Wartype auswählen!',	
+	'msg_selected_member'		=> 'Bitte Spieler auswählen die noch nicht eingetragen sind.',		
+	'msg_sprintf_noentry'		=> 'Es sind keine %s eingetragen',		
+	'select_msg_cat_image'		=> 'Bitte ein Kategoriebild auswählen!',		
+	'select_msg_forum_icon'		=> 'Bitte ein Forumicon auswählen!',		
+	'select_msg_game_image'		=> 'Bitte ein Spielbild auswählen!',		
+	
+	'select_rank'				=> 'Rang setzen &raquo;',
+	'select_ranks_rights'		=> 'Gruppenrechte geben/nehmen',		
+	'sprintf_msg_select'		=> 'Bitte ein(e) <b>%s</b> eintragen!',		
+	
 
 
-$lang['msg_select_pics']			= 'Bitte ein oder mehrere Bilder auswählen, zum löschen.';
-$lang['msg_select_cat']				= 'Bitte eine Kategorie auswählen';
+	
+	
+	
+	
+	'create_forum'			=> 'Neues Forum hinzugefügt.',
+	'create_newsletter'		=> 'Neue eMailadresse hinzugefügt.',
+	'create_teamspeak'		=> 'Neuen Teamspeak Server hinzugefügt.',
+	'create_user'			=> 'Neuen Benutzer hinzugefügt.',
+	'create_map'			=> 'Karte hinzugefügt',
+	'create_map_cat'		=> 'Kartenkategorie hinzugefügt',
 
+	'update_forum'			=> 'Forumdaten erfolgreich geändert',
+	'update_newsletter'		=> 'eMailadresse erfolgreich geändert',
+	'update_teamspeak'		=> 'Teamspeakdaten erfolgreich geändert',
+	'update_user'			=> 'Benutzerdaten erfolgreich geändert',
+	'update_map'			=> 'Karteninformation erfolgreich geändert',
+	'update_map_cat'		=> 'Kartenkategorie erfolgreich geändert',
 
-$lang['msg_select_no_users']		= 'Keine Benutzer ausgewählt.';
+	'delete_confirm_map'		=> 'dass diese Karte:',
+	'delete_confirm_map_cat'	=> 'dass diese Kartenkategorie:',
+	'delete_log'				=> 'Der oder die Logeinträge wurde gelöscht',
+	'delete_log_all'			=> 'Alle Logeinträge wurde gelöscht!',
+	'delete_log_error'			=> 'Der oder die Fehlermeldungen wurde gelöscht!',
+	'delete_newsletter'			=> 'Die eMailadresse wurde gelöscht!',
+	'delete_teamspeak'			=> 'Der Teamspeak wurde gelöscht!',
+	'delete_user'				=> 'Der Benutzer wurde gelöscht!',
+	'delete_map'				=> 'Die Karte wurde gelöscht!',
+	'delete_map_cat'			=> 'Die Kartenkategorie, samt Inahlt wurde gelöscht!',
 
-$lang['msg_select_match_map']		= 'Bitte Karteninfos eintragen!';
-$lang['msg_select_profilefield']	= 'Bitte Profilefeld eintragen!';
-$lang['msg_select_userlevel']		= 'Bitte ein Benutzerlevel auswählen!';
+	
 
+	/*	Hauptinformationen	*/
+	
+	
+	'index_session'		=> 'als Administrator Abmelden',
+	'index_logout'		=> 'Abmelden',
+	'header_acp'	=> 'Adminhauptseite',
 
+	'mark_all'			=> 'alle markieren',
+	'mark_deall'		=> 'keine Auswahl',
+	'mark_yes'			=> 'Ja aktivieren',
+	'mark_no'			=> 'Nein aktivieren',
+	
+	/* index */
+	'index'		=> 'Hauptseite Clanportal',
+	'explain'	=> 'Willkommen im Adminbereich des Clanportals von CMS-Phoenix.de usw.',
+	/* index */
+	
 
-$lang['select_ranks_rights']		= 'Gruppenrechte geben/nehmen';
-$lang['select_rank']				= 'Rang setzen &raquo;';
-$lang['msg_select_rank_set']		= 'Status %s setzen';
-
-$lang['sprintf_must_select']		= 'Es muss ein %s ausgewählt werden!';
-
-$lang['msg_must_select_authlist']		= 'Es muss ein Wähle ein Authfeld aus';
-$lang['msg_must_select_game']			= 'Wähle ein Spiel aus';
-
-$lang['msg_sprintf_noentry']		= 'Es sind keine %s eingetragen';
-
-
-
-/*	Erstellen / Erneuern / Löschen / Bestätigen zum Löschen / Klicks	*/	
-$lang['create_forum']				= 'Neues Forum hinzugefügt.';
-$lang['create_match']				= 'Neues Match hinzugefügt.';
-$lang['create_match_user']			= 'Neuen Benutzer zum Lineup hinzugefügt.';
-
-$lang['create_newsletter']			= 'Neue eMailadresse hinzugefügt.';
-$lang['create_teamspeak']			= 'Neuen Teamspeak Server hinzugefügt.';
-$lang['create_user']				= 'Neuen Benutzer hinzugefügt.';
-$lang['create_map']					= 'Karte hinzugefügt';
-$lang['create_map_cat']				= 'Kartenkategorie hinzugefügt';
-
-$lang['update_forum']				= 'Forumdaten erfolgreich geändert';
-$lang['update_match']				= 'Matchdaten erfolgreich geändert';
-$lang['update_match_maps']			= 'Details erfolgreich geändert';
-$lang['update_match_user']			= 'Match Lineup geändert';
-
-$lang['update_newsletter']			= 'eMailadresse erfolgreich geändert';
-$lang['update_teamspeak']			= 'Teamspeakdaten erfolgreich geändert';
-$lang['update_user']				= 'Benutzerdaten erfolgreich geändert';
-$lang['upload_match']				= 'Bild/Bilder für das Match wurden hochgeladen!';
-$lang['update_map']					= 'Karteninformation erfolgreich geändert';
-$lang['update_map_cat']				= 'Kartenkategorie erfolgreich geändert';
-
-$lang['sprintf_delete_confirm']		= 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?';
-
-$lang['delete_confirm_match']		= 'dass dieses Begegnung:';
-$lang['delete_confirm_map']			= 'dass diese Karte:';
-$lang['delete_confirm_map_cat']		= 'dass diese Kartenkategorie:';
-
-$lang['delete_log']					= 'Der oder die Logeinträge wurde gelöscht';
-$lang['delete_log_all']				= 'Alle Logeinträge wurde gelöscht!';
-$lang['delete_log_error']			= 'Der oder die Fehlermeldungen wurde gelöscht!';
-$lang['delete_match']				= 'Die Begegnung wurde gelöscht!';
-$lang['delete_match_user']			= 'Die Benutzer wurden aus der Begegnung gelöscht!';
-$lang['delete_newsletter']			= 'Die eMailadresse wurde gelöscht!';
-$lang['delete_teamspeak']			= 'Der Teamspeak wurde gelöscht!';
-$lang['delete_user']				= 'Der Benutzer wurde gelöscht!';
-$lang['delete_map']					= 'Die Karte wurde gelöscht!';
-$lang['delete_map_cat']				= 'Die Kartenkategorie, samt Inahlt wurde gelöscht!';
-
-$lang['return']					= '<br /><br /><strong>%s&laquo; %s%s</strong>';
-$lang['return_update']			= '<br /><br /><strong>%s&laquo; zurück%s</strong>';
-
-/*	Hauptinformationen	*/
-$lang['index_header']		= 'Adminbereich von: %s :: %s';
-$lang['index_cms']			= 'Willkommen im Adminbereichs des Phoenix-Clanportals';
-$lang['index_cms_explain']	= 'Text bla blub bla ;).';
-$lang['index_session']		= 'ACP Abmelden';
-$lang['index_logout']		= 'Abmelden';
-$lang['index_overview']		= 'Übersicht';
-$lang['index_front']		= 'WebSeite';
-
-$lang['mark_all']		= 'alle markieren';
-$lang['mark_deall']		= 'keine Auswahl';
-$lang['mark_yes']		= 'Ja aktivieren';
-$lang['mark_no']		= 'Nein aktivieren';
-
-$lang['ON'] = 'Aktiv';// This is for GZip compression
-$lang['OFF'] = 'Inaktiv';
+	'ON'	=> 'Aktiv',// This is for GZip compression
+	'OFF'	=> 'Inaktiv',
 
 /*	Berechtigung	*/
-$lang['auth_guest']			= 'Gast';
-$lang['auth_user']			= 'Benutzer';
-$lang['auth_trial']			= 'Trial';
-$lang['auth_member']		= 'Member';
-$lang['auth_mod']			= 'Moderator';
-$lang['auth_admin']			= 'Administrator';
+	'auth_guest'	=> 'Gast',
+	'auth_user'		=> 'Benutzer',
+	'auth_trial'	=> 'Trial',
+	'auth_member'	=> 'Member',
+	'auth_mod'		=> 'Moderator',
+	'auth_admin'	=> 'Administrator',
 
-$lang['switch_level']	= array(
-	GUEST	=> $lang['auth_guest'],
-	USER	=> $lang['auth_user'],
-	TRIAL	=> $lang['auth_trial'],
-	MEMBER	=> $lang['auth_member'],
-	MOD		=> $lang['auth_mod'],
-	ADMIN	=> $lang['auth_admin']
-);
+	'switch_level' => array(
+						GUEST	=> 	'Gast',
+						USER	=> 	'Benutzer',
+						TRIAL	=> 	'Trial',
+						MEMBER	=> 	'Member',
+						MOD		=> 	'Moderator',
+						ADMIN	=> 	'Administrator',
+					),
 
-$lang['auth_cash']			= 'Clankasse';
-$lang['auth_contact']		= 'Kontakt';
-$lang['auth_event']			= 'Event';
-$lang['auth_fightus']		= 'Fightus';
-$lang['auth_forum']			= 'Forum';
-$lang['auth_forum_auth']	= 'Forumberechtigung';
-$lang['auth_gallery']		= 'Galerie';
-$lang['auth_games']			= 'Spiele';
-$lang['auth_groups']		= 'Gruppen';
-$lang['auth_groups_perm']	= 'Gruppen Befugnisse';		
-$lang['auth_joinus']		= 'Joinus';
-$lang['auth_match']			= 'Match/Wars';
-$lang['auth_navi']			= 'Navigation';
-$lang['auth_network']		= 'Network';
-$lang['auth_news']			= 'News';
-$lang['auth_news_public']	= 'News veröffentlichen';		
-$lang['auth_newscat']		= 'News Kategorien';
-$lang['auth_newsletter']	= 'Newsletter';		
-$lang['auth_ranks']			= 'Ränge';
-$lang['auth_server']		= 'Server';
-$lang['auth_teams']			= 'Teams';
-$lang['auth_teamspeak']		= 'Teamspeak';
-$lang['auth_training']		= 'Training';
-$lang['auth_user']			= 'Benutzer';
-$lang['auth_user_perm']		= 'Benutzer Befugnisse';
-$lang['auth_download']		= 'Downloads';
-$lang['auth_download_cat']	= 'Downloadkategorien';
-$lang['auth_maps']			= 'Karten';
+	'auth_cash'			=> 'Clankasse',
+	'auth_contact'		=> 'Kontakt',
+	'auth_event'		=> 'Event',
+	'auth_fightus'		=> 'Fightus',
+	'auth_forum'		=> 'Forum',
+	'auth_forum_perm'	=> 'Forumberechtigung',
+	'auth_gallery'		=> 'Galerie',
+	'auth_games'		=> 'Spiele',
+	'auth_groups'		=> 'Gruppen',
+	'auth_groups_perm'	=> 'Gruppen Befugnisse',		
+	'auth_joinus'		=> 'Joinus',
+	'auth_match'		=> 'Begegnungen',
+	'auth_navi'			=> 'Navigation',
+	'auth_network'		=> 'Network',
+	'auth_news'			=> 'News',
+	'auth_news_public'	=> 'News veröffentlichen',		
+	'auth_newscat'		=> 'Newskategorien',
+	'auth_newsletter'	=> 'Newsletter',		
+	'auth_ranks'		=> 'Ränge',
+	'auth_server'		=> 'Server',
+	'auth_teams'		=> 'Teams',
+	'auth_teamspeak'	=> 'Teamspeak',
+	'auth_training'		=> 'Training',
+	'auth_user'			=> 'Benutzer',
+	'auth_user_perm'	=> 'Benutzer Befugnisse',
+	'auth_download'		=> 'Download',
+	'auth_download_cat'	=> 'Downloadkategorien',
+	'auth_maps'			=> 'Karten',
 
-$lang['auths'] = array(
-	'auth_cash'				=> $lang['auth_cash'],
-	'auth_contact'			=> $lang['auth_contact'],
-	'auth_event'			=> $lang['auth_event'],
-	'auth_fightus'			=> $lang['auth_fightus'],
-	'auth_forum'			=> $lang['auth_forum'],
-	'auth_forum_auth'		=> $lang['auth_forum_auth'],
-	'auth_gallery'			=> $lang['auth_gallery'],
-	'auth_games'			=> $lang['auth_games'],
-	'auth_groups'			=> $lang['auth_groups'],
-	'auth_groups_perm'		=> $lang['auth_groups_perm'],
-	'auth_joinus'			=> $lang['auth_joinus'],	
-	'auth_match'			=> $lang['auth_match'],	
-	'auth_navi'				=> $lang['auth_navi'],
-	'auth_network'			=> $lang['auth_network'],	
-	'auth_news'				=> $lang['auth_news'],
-	'auth_news_public'		=> $lang['auth_news_public'],
-	'auth_newscat'			=> $lang['auth_newscat'],	
-	'auth_newsletter'		=> $lang['auth_newsletter'],
-	'auth_ranks'			=> $lang['auth_ranks'],	
-	'auth_server'			=> $lang['auth_server'],	
-	'auth_teams'			=> $lang['auth_teams'],	
-	'auth_teamspeak'		=> $lang['auth_teamspeak'],
-	'auth_training'			=> $lang['auth_training'],	
-	'auth_user'				=> $lang['auth_user'],
-	'auth_user_perm'		=> $lang['auth_user_perm'],
-	'auth_download'			=> $lang['auth_download'],
-	'auth_download_cat'		=> $lang['auth_download_cat'],
-	'auth_maps'				=> $lang['auth_maps'],
-	'auth_download'			=> $lang['auth_download'],
-);
+	'auths' => array(
+				'auth_cash'				=> 	'Clankasse',
+				'auth_contact'			=> 	'Kontakt',
+				'auth_event'			=> 	'Event',
+				'auth_fightus'			=> 	'Fightus',
+				'auth_forum'			=> 	'Forum',
+				'auth_forum_perm'		=> 	'Forumberechtigung',
+				'auth_gallery'			=> 	'Galerie',
+				'auth_games'			=> 	'Spiele',
+				'auth_groups'			=> 	'Gruppen',
+				'auth_groups_perm'		=> 	'Gruppen Befugnisse',
+				'auth_joinus'			=> 	'Joinus',	
+				'auth_match'			=> 	'Begegnungen',	
+				'auth_navi'				=> 	'Navigation',
+				'auth_network'			=> 	'Network',	
+				'auth_news'				=> 	'News',
+				'auth_news_public'		=> 	'News veröffentlichen',
+				'auth_newscat'			=> 	'Newskategorien',	
+				'auth_newsletter'		=> 	'Newsletter',
+				'auth_ranks'			=> 	'Ränge',	
+				'auth_server'			=> 	'Server',	
+				'auth_teams'			=> 	'Teams',	
+				'auth_teamspeak'		=> 	'Teamspeak',
+				'auth_training'			=> 	'Training',	
+				'auth_user'				=> 	'Benutzer',
+				'auth_user_perm'		=> 	'Benutzer Befugnisse',
+				'auth_download'			=> 	'Download',
+				'auth_download_cat'		=> 	'Downloadkategorien',
+				'auth_maps'				=> 	'Karten',
+			),
 
-$lang['image_filesize'] = 'Die Dateigröße muss kleiner als %d KB sein.';
-$lang['image_imagesize'] = 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
+	'image_filesize'	=> 'Die Dateigröße muss kleiner als %d KB sein.',
+	'image_imagesize'	=> 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.',
 
-/*
-	alter kram ;)
-*/
-$lang['Look_up_Forum'] = 'Forum auswählen';
-$lang['Simple_mode'] = 'Einfache Methode';
-$lang['Advanced_mode'] = 'Fortgeschrittene Methode';
-$lang['Auth_Control_Forum'] = 'Forenzugangskontrolle';
-$lang['Forum_auth_explain'] = 'Du kannst hier die Zugangsebenen für jedes Forum bestimmen. Es gibt eine einfache und eine fortgeschrittene Methode, dies zu tun. Bei der fortgeschrittenen Methode hast du eine bessere Kontrolle über jedes Forum. Bedenke, dass das Ändern der Zugangsebene beeinflusst, welche Benutzer welche Aktionen im Forum durchführen können.';
-
-
-$lang['Forum_auth_list_explain_ALL'] = 'All users';
-$lang['Forum_auth_list_explain_REG'] = 'All registered users';
-$lang['Forum_auth_list_explain_PRIVATE'] = 'Only users granted special permission';
-$lang['Forum_auth_list_explain_MOD'] = 'Only moderators of this forum';
-$lang['Forum_auth_list_explain_ADMIN'] = 'Only administrators';
-
-$lang['Forum_auth_list_explain_auth_view'] = '%s can view this forum';
-$lang['Forum_auth_list_explain_auth_read'] = '%s can read posts in this forum';
-$lang['Forum_auth_list_explain_auth_post'] = '%s can post in this forum';
-$lang['Forum_auth_list_explain_auth_reply'] = '%s can reply to posts this forum';
-$lang['Forum_auth_list_explain_auth_edit'] = '%s can edit posts in this forum';
-$lang['Forum_auth_list_explain_auth_delete'] = '%s can delete posts in this forum';
-$lang['Forum_auth_list_explain_auth_sticky'] = '%s can post sticky topics in this forum';
-$lang['Forum_auth_list_explain_auth_announce'] = '%s can post announcements in this forum';
-$lang['Forum_auth_list_explain_auth_vote'] = '%s can vote in polls in this forum';
-$lang['Forum_auth_list_explain_auth_pollcreate'] = '%s can create polls in this forum';
-
-$lang['auth_forum_explain_all'] = 'All users';
-$lang['auth_forum_explain_register'] = 'All registered users';
-$lang['auth_forum_explain_private'] = 'Only users granted special permission';
-$lang['auth_forum_explain_moderator'] = 'Only moderators of this forum';
-$lang['auth_forum_explain_admin'] = 'Only administrators';
-$lang['auth_forum_explain_trial'] = 'Only trials';
-$lang['auth_forum_explain_member'] = 'Only member';
-
-
-$lang['auth_forum_explain_auth_view'] = '%s can view this forum';
-$lang['auth_forum_explain_auth_read'] = '%s can read posts in this forum';
-$lang['auth_forum_explain_auth_post'] = '%s can post in this forum';
-$lang['auth_forum_explain_auth_reply'] = '%s can reply to posts this forum';
-$lang['auth_forum_explain_auth_edit'] = '%s can edit posts in this forum';
-$lang['auth_forum_explain_auth_delete'] = '%s can delete posts in this forum';
-$lang['auth_forum_explain_auth_sticky'] = '%s can post sticky topics in this forum';
-$lang['auth_forum_explain_auth_announce'] = '%s can post announcements in this forum';
-$lang['auth_forum_explain_auth_globalannounce'] = '%s can post globalannouncements in this forum';
-$lang['auth_forum_explain_auth_poll'] = '%s can vote in polls in this forum';
-$lang['auth_forum_explain_auth_pollcreate'] = '%s can create polls in this forum';
-
-$lang['Permissions_List'] = 'Permissions List';// Added by Permissions List MOD
-$lang['Forum_auth_list_explain'] = 'This provides a summary of the authorisation levels of each forum. You can edit these permissions, using either a simple or advanced method by clicking on the forum name. Remember that changing the permission level of forums will affect which users can carry out the various operations within them.';// Added by Permissions List MOD
-$lang['Cat_auth_list_explain'] = 'This provides a summary of the authorisation levels of each forum within this category. You can edit the permissions of individual forums, using either a simple or advanced method by clicking on the forum name. Alternatively, you can set the permissions for all the forums in this category by using the drop-down menus at the bottom of the page. Remember that changing the permission level of forums will affect which users can carry out the various operations within them.';// Added by Permissions List MOD
-$lang['Forum_name'] = 'Forumsname';
-
-$lang['empty_site'] = "<html>
-<head>
-	<title></title>
-	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-</head>
-<body bgcolor=\"#FFFFFF\" text=\"#000000\"></body>
-</html>";
+	'empty_site' => "<html><head><title></title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"></head><body bgcolor=\"#FFFFFF\" text=\"#000000\"></body></html>",
+	
+	
+	
+));
 
 ?>

@@ -112,13 +112,13 @@ foreach ( $tss2info_playerlist as $player )
 $tsv_array_1 = array(" ","-","(",")","[","]","{","}","&");
 $tsv_array_2 = array("_","_","","","","","","","");
 
-$tsv_username = ( $userdata['user_id'] == ANONYMOUS ) ? $teamspeak['teamspeak_join_name'] : $userdata['username'];
+$tsv_user_name = ( $userdata['user_id'] == ANONYMOUS ) ? $teamspeak['teamspeak_join_name'] : $userdata['user_name'];
 
 for ( $x=0; $x < count($tsv_array_1); $x++ )
 {
-	$tsv_username = trim(str_replace($tsv_array_1[$x], $tsv_array_2[$x], $tsv_username));
+	$tsv_user_name = trim(str_replace($tsv_array_1[$x], $tsv_array_2[$x], $tsv_user_name));
 }
-$tsv_username = trim($tsv_username);
+$tsv_user_name = trim($tsv_user_name);
 
 $counter = 0;
 $channelcounter = count($tss2info->channelList) - 1;
@@ -172,7 +172,7 @@ foreach ($tss2info->channelList as $channelInfo)
 				//
 				//	Mouseover
 				//
-				$channel_mouseover1 = sprintf($lang['ts_info_1'], $tsv_username, $channelInfo['channelname'], $channelInfo['channeltopic'], $channelInfo['channelmaxplayers'], $channelInfo['channelcurrentplayers'], $channelInfo['channelcodec']);
+				$channel_mouseover1 = sprintf($lang['ts_info_1'], $tsv_user_name, $channelInfo['channelname'], $channelInfo['channeltopic'], $channelInfo['channelmaxplayers'], $channelInfo['channelcurrentplayers'], $channelInfo['channelcodec']);
 				$channel_mouseover2 = sprintf($lang['ts_info_2'], $channelInfo['channelname'], $channelInfo['channeltopic'], $channelInfo['channelmaxplayers'], $channelInfo['channelcurrentplayers'], $channelInfo['channelcodec']);
 				
 				//
@@ -183,7 +183,7 @@ foreach ($tss2info->channelList as $channelInfo)
 					$channel_mouseover = "title=\"" . $channel_mouseover1 . "\"";
 					
 					$channelicon = 'channel.gif';
-					$channellink = '<a class="channellink" href="teamspeak://' . $teamspeak['teamspeak_ip'] . ':' . $teamspeak['teamspeak_port'] . '/?channel=' . rawurlencode($channelInfo['channelname']) . '?password=' . $teamspeak['teamspeak_pass'] . '?nickname=' . rawurlencode($tsv_username) . ' "'.$channel_mouseover.'">' . $channelInfo['channelname'] . '</a>';
+					$channellink = '<a class="channellink" href="teamspeak://' . $teamspeak['teamspeak_ip'] . ':' . $teamspeak['teamspeak_port'] . '/?channel=' . rawurlencode($channelInfo['channelname']) . '?password=' . $teamspeak['teamspeak_pass'] . '?nickname=' . rawurlencode($tsv_user_name) . ' "'.$channel_mouseover.'">' . $channelInfo['channelname'] . '</a>';
 				}
 				else
 				{
@@ -270,7 +270,7 @@ foreach ($tss2info->channelList as $channelInfo)
 			{
 				if ( $subchannelInfo['channelparent'] == $channelInfo['channelid'] )
 				{
-					$subchannel_mouseover1 = sprintf($lang['ts_info_1'], $tsv_username, $subchannelInfo['channelname'], $subchannelInfo['channeltopic'], $subchannelInfo['channelmaxplayers'], $subchannelInfo['channelcurrentplayers'], $subchannelInfo['channelcodec']);
+					$subchannel_mouseover1 = sprintf($lang['ts_info_1'], $tsv_user_name, $subchannelInfo['channelname'], $subchannelInfo['channeltopic'], $subchannelInfo['channelmaxplayers'], $subchannelInfo['channelcurrentplayers'], $subchannelInfo['channelcodec']);
 					$subchannel_mouseover2 = sprintf($lang['ts_info_2'], $subchannelInfo['channelname'], $subchannelInfo['channeltopic'], $subchannelInfo['channelmaxplayers'], $subchannelInfo['channelcurrentplayers'], $subchannelInfo['channelcodec']);
 					
 					if ( !$subchannelInfo['channelpasswort'] )
@@ -278,7 +278,7 @@ foreach ($tss2info->channelList as $channelInfo)
 						$subchannel_mouseover = "title=\"" . $subchannel_mouseover1 . "\"";
 				
 						$subchannelicon = 'channel.gif';
-						$subchannellink = '<a class="channellink" href="teamspeak://' . $teamspeak['teamspeak_ip'] . ':' . $teamspeak['teamspeak_port'] . '/?channel=' . rawurlencode($subchannelInfo['channelname']) . '?password=' . $teamspeak['teamspeak_pass'] . '?nickname=' . rawurlencode($tsv_username) . ' "'.$subchannel_mouseover.'">' . $subchannelInfo['channelname'] . '</a>';
+						$subchannellink = '<a class="channellink" href="teamspeak://' . $teamspeak['teamspeak_ip'] . ':' . $teamspeak['teamspeak_port'] . '/?channel=' . rawurlencode($subchannelInfo['channelname']) . '?password=' . $teamspeak['teamspeak_pass'] . '?nickname=' . rawurlencode($tsv_user_name) . ' "'.$subchannel_mouseover.'">' . $subchannelInfo['channelname'] . '</a>';
 					}
 					else
 					{
@@ -353,7 +353,7 @@ $template->assign_vars(array(
 	'L_TS_VIEWER'			=> $lang['teamspeak_viewer'],
 	'L_TS_PLIST'			=> $lang['teamspeak_plist'],
 	
-	'S_TEAMSPEAK_ACTION'	=> append_sid('teamspeak.php'),
+	'S_TEAMSPEAK_ACTION'	=> check_sid('teamspeak.php'),
 ));
 
 include($root_path . 'includes/page_header.php');

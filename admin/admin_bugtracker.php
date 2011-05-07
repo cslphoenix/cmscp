@@ -4,7 +4,7 @@ if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == 6 )
 	{
 		$module['_headmenu_07_development']['_submenu_bugtracker'] = $root_file;
 	}
@@ -20,11 +20,9 @@ else
 	$current	= '_submenu_games';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('games');
-	
+
 	$error	= '';
 	$index	= '';
 	$fields	= '';
@@ -76,10 +74,10 @@ else
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	if ( isset($HTTP_POST_VARS['order']) )
 	{
@@ -102,8 +100,8 @@ else
 			$template->assign_block_vars('detail', array());
 			
 			$sql = "SELECT	bt.*,
-							u1.user_id as user_id1, u1.username as user_name1, u1.user_color as user_color1,
-							u2.user_id as user_id2, u2.username as user_name2, u2.user_color as user_color2
+							u1.user_id as user_id1, u1.user_name as user_name1, u1.user_color as user_color1,
+							u2.user_id as user_id2, u2.user_name as user_name2, u2.user_color as user_color2
 						FROM " . BUGTRACKER . " bt
 							LEFT JOIN " . USERS . " u1 ON u1.user_id = bt.bugtracker_creator
 							LEFT JOIN " . USERS . " u2 ON u2.user_id = bt.bugtracker_editor
@@ -174,7 +172,7 @@ else
 				'S_STATUS'		=> $s_status,
 				
 				'S_FIELDS'		=> $fields,
-				'S_ACTION'		=> append_sid($file),
+				'S_ACTION'		=> check_sid($file),
 			));
 		
 			break;
@@ -201,8 +199,8 @@ else
 			}
 			
 			$sql = "SELECT	bt.bugtracker_id, bt.bugtracker_title, bt.bugtracker_creator_type, bt.bugtracker_creator_status, bt.bugtracker_editor_type, bt.bugtracker_editor_status, bt.bugtracker_create,
-							u1.user_id as user_id1, u1.username as user_name1, u1.user_color as user_color1,
-							u2.user_id as user_id2, u2.username as user_name2, u2.user_color as user_color2
+							u1.user_id as user_id1, u1.user_name as user_name1, u1.user_color as user_color1,
+							u2.user_id as user_id2, u2.user_name as user_name2, u2.user_color as user_color2
 						FROM " . BUGTRACKER . " bt
 							LEFT JOIN " . USERS . " u1 ON u1.user_id = bt.bugtracker_creator
 							LEFT JOIN " . USERS . " u2 ON u2.user_id = bt.bugtracker_editor
@@ -232,8 +230,8 @@ else
 						'CREATOR'	=> '<span style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</span>',
 						'WORKER'	=> '<span style="color:' . $bugtracker_data[$i]['user_color2'] . '">' . $bugtracker_data[$i]['user_name2'] . '</span>',
 						
-						'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$data_id"),
-						'U_DETAIL'	=> append_sid("$file?mode=_detail&amp;$url=$data_id"),
+						'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$data_id"),
+						'U_DETAIL'	=> check_sid("$file?mode=_detail&amp;$url=$data_id"),
 					));
 				}
 			}
@@ -258,7 +256,7 @@ else
 				'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 				
 				'S_SORT'		=> $s_sort,
-				'S_ACTION'		=> append_sid($file),
+				'S_ACTION'		=> check_sid($file),
 			));
 			
 			break;

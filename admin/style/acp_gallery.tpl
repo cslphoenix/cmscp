@@ -24,14 +24,14 @@
 <!-- BEGIN _gallery_row -->
 <tr>
 	<td class="row_class1" align="left"><span style="float:right;">{_display._gallery_row.INFO}&nbsp;</span><b>{_display._gallery_row.NAME}</b><br />{_display._gallery_row.DESC}</td>
-	<td class="row_class2" align="left" nowrap="nowrap">{_display._gallery_row.MOVE_UP}{_display._gallery_row.MOVE_DOWN} {_display._gallery_row.OVERVIEW} <a href="{_display._gallery_row.U_UPLOAD}">{I_UPLOAD}</a> <a href="{_display._gallery_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._gallery_row.U_DELETE}">{I_DELETE}</a><span style="padding:8px;"></span>{_display._gallery_row.RESYNC}</td>
+	<td class="row_class2" align="left" nowrap="nowrap">{_display._gallery_row.MOVE_UP}{_display._gallery_row.MOVE_DOWN}{_display._gallery_row.RESYNC} {_display._gallery_row.VIEW} <a href="{_display._gallery_row.U_UPLOAD}">{I_UPLOAD}</a> <a href="{_display._gallery_row.U_UPDATE}">{I_UPDATE}</a><a href="{_display._gallery_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _gallery_row -->
-<!-- BEGIN _no_entry -->
+<!-- BEGIN _entry_empty -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
-<!-- END _no_entry -->
+<!-- END _entry_empty -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
@@ -45,44 +45,17 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript" src="./../includes/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript">
-// <![CDATA[
-tinyMCE.init({
-	language : "de",
-	theme : "advanced",
-	mode : "textareas",
-	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager",
-	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,removeformat,cleanup,code,preview",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	plugin_preview_width : "500",
-	plugin_preview_height : "600",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_statusbar_location : "bottom",
-	theme_advanced_resizing : true,
-	entity_encoding : "raw",
-	add_unload_trigger : false,
-	remove_linebreaks : false,
-	inline_styles : false,
-	convert_fonts_to_spans : false,
-	
-});
-// ]]>
-</script>
-
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	<!-- BEGIN _overview -->
-	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
-	<!-- END _overview -->
 	<!-- BEGIN _upload -->
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
 	<!-- END _upload -->
+	<!-- BEGIN _overview -->
+	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
+	<!-- END _overview -->
 </ul>
 </div>
 
@@ -109,7 +82,7 @@ tinyMCE.init({
 	<td class="row2"><input type="text" class="post" name="gallery_name" id="gallery_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_AUTH}:</label></td>
+	<td class="row1"><label>{L_AUTH}:</label></td>
 	<td class="row3">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN _auth -->
@@ -154,8 +127,8 @@ tinyMCE.init({
 	<td class="row2"><input type="text" class="post" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_DESC}: *</label></td>
-	<td class="row2"><textarea class="textarea" name="gallery_desc" rows="5" style="width:100%">{DESC}</textarea></td>
+	<td class="row1"><label>{L_DESC}: *</label></td>
+	<td class="row2"><textarea class="textarea" name="gallery_desc" rows="5" style="width:50%">{DESC}</textarea></td>
 </tr>
 <tr>
 	<td class="row1"><label for="gallery_comments">{L_COMMENT}:</label></td>
@@ -211,11 +184,11 @@ function clone(objButton)
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_INPUT}">{L_INPUT}</a></li>
+	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
+	<li id="active"><a href="#" id="current">{L_UPLOAD}</a></li>
 	<!-- BEGIN _overview -->
 	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
 	<!-- END _overview -->
-	<li id="active"><a href="#" id="current">{L_UPLOAD}</a></li>
 </ul>
 </div>
 
@@ -231,12 +204,13 @@ function clone(objButton)
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
-	<td class="row1 top">{L_UPLOAD}:</td>
+	<td class="row1">{L_UPLOAD}:</td>
 	<td class="row3">
 		<div><div>
-			<input class="post" name="ufile[]" type="file" id="ufile[]" size="25" /><br />
-			<input class="post" name="title[]" type="text" id="title[]">&nbsp;<input class="button2" type="button" value="mehr"onclick="clone(this)">
+			
+			<input class="post" name="title[]" type="text" id="title[]">&nbsp;<input class="post" name="ufile[]" type="file" id="ufile[]" size="25" />&nbsp;<input class="button2" type="button" value="mehr"onclick="clone(this)">
 		</div></div>
 	</td>
 </tr>
@@ -256,9 +230,9 @@ function clone(objButton)
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_EDIT}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current">{L_OVERVIEW}</a></li>
+	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_OVERVIEW}</a></li>
 </ul>
 </div>
 
@@ -281,7 +255,7 @@ function clone(objButton)
 		</ul>
 		</div>
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
-        <tr>
+        <tr class="hover">
         	<td class="row1"><a href="{_overview._list._gallery_row.IMAGE}" rel="lightbox"><img src="{_overview._list._gallery_row.PREV}" alt="" border="0" /></a></td>
 			<td class="row3" nowrap="nowrap">
 				<table class="update" border="0" cellspacing="0" cellpadding="0">
@@ -302,7 +276,7 @@ function clone(objButton)
 					<td class="small" align="left">{_overview._list._gallery_row.SIZE}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_SIZE}:&nbsp;</td>
+					<td class="small" align="right">{L_NAME}:&nbsp;</td>
 					<td class="small" align="left">{_overview._list._gallery_row.NAME}</td>
 				</tr>
 				</table>
@@ -310,10 +284,10 @@ function clone(objButton)
 			<td class="row2" width="100%">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td><!-- Bewertung --></td>
+					<td>Bewertung</td>
 				</tr>
 				<tr>
-					<td><!-- Kommentare --></td>
+					<td>Kommentare</td>
 				</tr>
 				</table>
 			</td>
@@ -353,7 +327,7 @@ function clone(objButton)
 					</td>
 				</tr>
 				<tr>
-					<td class="small" align="right"><label for="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]">{L_TITLE}:&nbsp;</label></td>
+					<td class="small" align="right">{L_TITLE}:&nbsp;<label for="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]"></label></td>
 					<td class="small" align="left"><input type="text" class="postsmall" name="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]" id="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]" value="{_overview._preview._gallery_row._gallery_col.TITLE}" /></td>
 				</tr>
 				<tr>
@@ -369,7 +343,7 @@ function clone(objButton)
 					<td class="small" align="left">{_overview._preview._gallery_row._gallery_col.SIZE}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_SIZE}:&nbsp;</td>
+					<td class="small" align="right">{L_NAME}:&nbsp;</td>
 					<td class="small" align="left">{_overview._preview._gallery_row._gallery_col.NAME}</td>
 				</tr>
 				</table>
@@ -389,7 +363,7 @@ function clone(objButton)
 	<td width="49%" align="right">{PAGE_NUMBER}</td>
 </tr>
 <tr>
-	<td colspan="2" align="right"><a href="#" onclick="marklist('list', 'pic', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'pic', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
+	<td colspan="2" align="right"><a class="small" onclick="marklist('list', 'pic', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a class="small" onclick="marklist('list', 'pic', false); return false;">{L_MARK_DEALL}</a></td>
 </tr>
 <tr>
 	<td colspan="2" align="center">&nbsp;</td>
@@ -462,13 +436,13 @@ function clone(objButton)
 	<td class="row2"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_AUTH}:</label></td>
+	<td class="row1"><label>{L_AUTH}:</label></td>
 	<td class="row3">
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN _auth_gallery -->
 		<tr>
-			<td nowrap="nowrap">{_default._auth_gallery.S_SELECT}</td>
-			<td width="99%">&nbsp;{_default._auth_gallery.TITLE}</td>
+			<td nowrap="nowrap">{_default._auth_gallery.S_DROP}</td>
+			<td width="99%">&nbsp;<label for="{_default._auth_gallery.FIELD}">{_default._auth_gallery.L_NAME}</label></td>
 		</tr>
 		<!-- END _auth_gallery -->
 		</table>
@@ -498,7 +472,7 @@ function clone(objButton)
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="6" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

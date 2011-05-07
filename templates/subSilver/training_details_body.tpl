@@ -157,7 +157,7 @@
 				<!-- END training_users_status -->
 				<!-- BEGIN no_entry_status -->
 				<tr>
- 					<td align="center" colspan="3">{NO_ENTRY}</td>
+ 					<td align="center" colspan="3">{L_ENTRY_NO}</td>
 				</tr>
 				<!-- END no_entry -->
 				</table>
@@ -188,7 +188,7 @@
 		<!-- END users_status -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>
@@ -284,7 +284,7 @@
 		<!-- END comments -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

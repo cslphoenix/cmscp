@@ -1,3 +1,13 @@
+<script type="text/javascript">
+// <![CDATA[
+	
+function update_image(newimage)
+{
+	document.getElementById('image').src = (newimage) ? "{GAME_PATH}/" + encodeURI(newimage) : "./../images/spacer.gif";
+}
+	
+// ]]>
+</script>
 <!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
@@ -27,11 +37,11 @@
 	<td class="row_class2" align="center" nowrap="nowrap">{_display._team_row.MOVE_UP}{_display._team_row.MOVE_DOWN} <a href="{_display._team_row.U_MEMBER}">{I_MEMBER}</a> <a href="{_display._team_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._team_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _team_row -->
-<!-- BEGIN _no_entry -->
+<!-- BEGIN _entry_empty -->
 <tr>
-	<td class="row_noentry" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="4">{L_ENTRY_NO}</td>
 </tr>
-<!-- END _no_entry -->
+<!-- END _entry_empty -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
@@ -46,16 +56,7 @@
 
 <!-- BEGIN _input -->
 {TINYMCE}
-<script type="text/javascript">
-// <![CDATA[
-	
-function update_image(newimage)
-{
-	document.getElementById('image').src = (newimage) ? "{GAME_PATH}/" + encodeURI(newimage) : "./../images/spacer.gif";
-}
-	
-// ]]>
-</script>
+
 
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <div id="navcontainer">
@@ -95,12 +96,12 @@ function update_image(newimage)
 	<td class="row2">{S_GAME}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="team_desc">{L_DESC}: *</label></td>
+	<td class="row1"><label for="team_desc">{L_DESC}: *</label></td>
 	<td class="row2"><textarea class="textarea" name="team_desc" rows="5" cols="40">{DESC}</textarea></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="team_order">{L_ORDER}:</label></td>
-	<td class="row2 top">{S_ORDER}</td>
+	<td class="row1"><label for="team_order">{L_ORDER}:</label></td>
+	<td class="row2">{S_ORDER}</td>
 </tr>
 <tr>
 	<td colspan="2">&nbsp;</td>
@@ -166,24 +167,24 @@ function update_image(newimage)
 				<!-- BEGIN _logo -->
 				<!-- BEGIN _img -->
 				<tr>
-					<td class="row1 top">{L_LOGO_CURRENT}:</td>
+					<td class="row1">{L_LOGO_CURRENT}:</td>
 					<td class="row2"><img src="{LOGO}" alt="" /><br /><input type="checkbox" name="delete_logo" id="delete_logo">&nbsp;<label for="delete_logo">{L_DELETE}</label></td>
 				</tr>
 				<!-- END _img -->
 				<tr>
-					<td class="row1 top" width="150" nowrap="nowrap"><label for="team_logo">{L_LOGO_UP}:</label></td>
+					<td class="row1" width="150" nowrap="nowrap"><label for="team_logo">{L_LOGO_UP}:</label></td>
 					<td class="row2"><input class="post" type="file" name="temp_logo"><br /><span class="small">{L_LOGO_UP_INFO}</span></td>
 				</tr>
 				<!-- END _logo -->
 				<!-- BEGIN _flag -->
 				<!-- BEGIN _img -->
 				<tr>
-					<td class="row1 top">{L_FLAG_CURRENT}:</td>
+					<td class="row1">{L_FLAG_CURRENT}:</td>
 					<td class="row2"><img src="{FLAG}" alt="" /><br /><input type="checkbox" name="delete_flag" id="delete_flag">&nbsp;<label for="delete_flag">{L_DELETE}</label></td>
 				</tr>
 				<!-- END _img -->
 				<tr>
-					<td class="row1 top" width="25%" nowrap="nowrap">{L_FLAG_UP}:</td>
+					<td class="row1" width="25%" nowrap="nowrap">{L_FLAG_UP}:</td>
 					<td class="row2"><input class="post" type="file" name="temp_flag" /><br /><span class="small">{L_FLAG_UP_INFO}</span></td>
 				</tr>
 				<!-- END _flag -->
@@ -309,7 +310,7 @@ function interpretRequest()
 <!-- END _mod_row -->
 <!-- BEGIN _no_moderators -->
 <tr>
-	<td class="row_noentry" colspan="5" align="center">{L_NO_MODERATORS}</td>
+	<td class="entry_empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
 </tr>
 <!-- END _no_moderators -->
 </table>
@@ -340,7 +341,7 @@ function interpretRequest()
 <!-- END _member_row -->
 <!-- BEGIN _no_members -->
 <tr>
-	<td class="row_noentry" colspan="5" align="center">{L_NO_MEMBERS}</td>
+	<td class="entry_empty" colspan="5" align="center">{L_NO_MEMBERS}</td>
 </tr>
 <!-- END _no_members -->
 </table>
@@ -384,7 +385,7 @@ function interpretRequest()
 	<td class="row2">{S_RANK_SELECT}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="members">{L_USERNAME}:</label></td>
+	<td class="row1"><label for="members">{L_USERNAME}:</label></td>
 	<td class="row2"><textarea class="textarea" name="members" style="width:50%" rows="5"></textarea><br />{S_USERS}</td>
 </tr>
 </table>

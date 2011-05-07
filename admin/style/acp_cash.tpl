@@ -67,7 +67,7 @@
 <!-- END _cash_row -->
 <!-- BEGIN _no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="4">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry -->
 <tr>
@@ -104,7 +104,7 @@
 <!-- END _cashuser_row -->
 <!-- BEGIN _no_entry_user -->
 <tr>
-	<td class="row_noentry" align="center" colspan="4">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="4">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_user -->
 <tr>
@@ -154,6 +154,7 @@
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="cash_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="cash_name" id="cash_name" value="{NAME}"></td>
@@ -163,7 +164,7 @@
 	<td class="row2"><input type="text" class="post" name="cash_amount" id="cash_amount" value="{AMOUNT}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="cash_type">{L_TYPE}:</label></td>
+	<td class="row1"><label for="cash_type">{L_TYPE}:</label></td>
 	<td class="row2">
 		<label><input type="radio" name="cash_type" id="cash_type" value="0" {S_TYPE_GAME} />&nbsp;{L_TYPE_GAME}</label><br />
 		<label><input type="radio" name="cash_type" value="1" {S_TYPE_VOICE} />&nbsp;{L_TYPE_VOICE}</label><br />
@@ -171,13 +172,14 @@
 	</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="cash_interval">{L_INTERVAL}:</label></td>
+	<td class="row1"><label for="cash_interval">{L_INTERVAL}:</label></td>
 	<td class="row2">
 		<label><input type="radio" name="cash_interval" id="cash_interval" value="0" {S_INT_MONTH} />&nbsp;{L_INTAVAL_MONTH}</label><br />
 		<label><input type="radio" name="cash_interval" value="1" {S_INT_WEEKS} />&nbsp;{L_INTAVAL_WEEKS}</label><br />
 		<label><input type="radio" name="cash_interval" value="2" {S_INT_WEEKLY} />&nbsp;{L_INTAVAL_WEEKLY}</label>
 	</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -225,13 +227,14 @@
 	<td class="row2"><input type="text" class="post" name="user_amount" value="{AMOUNT}"></td>
 </tr>
 <tr>
-	<td class="row1 top">{L_USER_MONTH}:</td>
+	<td class="row1">{L_USER_MONTH}:</td>
 	<td class="row2">{S_MONTH}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="user_interval">{L_USER_INTERVAL}:</label></td>
 	<td class="row2"><label><input type="radio" name="user_interval" value="1" id="user_interval" {S_INTAVAL_ONLY} />&nbsp;{L_INTAVAL_ONLY}</label><span style="padding:4px;"></span><label><input type="radio" name="user_interval" value="0" {S_INTAVAL_MONTH} />&nbsp;{L_INTAVAL_MONTH}</label></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -290,6 +293,7 @@
 	<td class="row1"><label for="bank_reason">{L_REASON}:</label></td>
 	<td class="row2"><input type="text" class="post" name="bank_reason" id="bank_reason" value="{REASON}"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

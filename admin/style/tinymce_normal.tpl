@@ -1,4 +1,4 @@
-<script type="text/javascript" src="./../includes/js/tinymce/tiny_mce.js"></script>
+<script type="text/javascript" src="./../includes/js/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 tinyMCE.init({
 	// General options
@@ -31,7 +31,7 @@ tinyMCE.init({
 	
 	// Replace values for the template plugin
 	template_replace_values : {
-			username : "Some User",
+			user_name : "Some User",
 			staffid : "991234"
 	}
 });

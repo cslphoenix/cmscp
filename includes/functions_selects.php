@@ -6,7 +6,7 @@
  *	$type = art
  *	$class = cssstyle
  *	$field_id = user_id/group_id
- *	$field_name = username/group_name
+ *	$field_name = user_name/group_name
  *	$default = startauswahl
  *	$switch = team_join/team_fight
  *
@@ -93,7 +93,7 @@ function _select_newscat($default)
 {
 	global $db;
 		
-	$sql = 'SELECT * FROM ' . NEWS_CAT . " ORDER BY cat_order";
+	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY cat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -125,7 +125,7 @@ function _select_match($default, $type, $class)
 	
 	$where = ($type == '') ? ' WHERE match_date > ' . time() : '';
 	
-	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
+	$sql = 'SELECT match_id, match_rival_name, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -137,7 +137,7 @@ function _select_match($default, $type, $class)
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$selected = ( $row['match_id'] == $default ) ? 'selected="selected"' : '';
-		$func_select .= '<option value="' . $row['match_id'] . '" ' . $selected . ' >&raquo; ' . $row['match_rival'] . ' :: ' . $row['match_rival_tag'] . '&nbsp;</option>';
+		$func_select .= '<option value="' . $row['match_id'] . '" ' . $selected . ' >&raquo; ' . $row['match_rival_name'] . ' :: ' . $row['match_rival_tag'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 

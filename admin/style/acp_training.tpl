@@ -28,7 +28,7 @@
 <!-- END _training_new_row -->
 <!-- BEGIN _no_entry_new -->
 <tr>
-	<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
+	<td class="entry_empty" colspan="3" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_new -->
 </table>
@@ -49,7 +49,7 @@
 <!-- END _training_old_row -->
 <!-- BEGIN _no_entry_old -->
 <tr>
-	<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
+	<td class="entry_empty" colspan="3" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_old -->
 </table>
@@ -149,33 +149,6 @@ function interpretRequest()
 	}
 }
 </script>
-
-<script type="text/JavaScript">
-// <![CDATA[
-function clone(objButton)
-{
-	if ( objButton.parentNode )
-	{
-		tmpNode		= objButton.parentNode.cloneNode(true);
-		target		= objButton.parentNode.parentNode;
-		arrInput	= tmpNode.getElementsByTagName("input");
-		
-		for ( var i = 0; i < arrInput.length; i++ )
-		{
-			if ( arrInput[i].type == 'text' )
-			{
-				arrInput[i].value = '';
-			}
-		}
-		
-		target.appendChild(tmpNode);
-		objButton.value="{L_REMOVE}";
-		objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
-	}
-}
-
-// ]]>
-</script>
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -201,6 +174,7 @@ function clone(objButton)
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="training_vs">{L_VS}: *</label></td>
 	<td class="row2"><input class="post" type="text" name="training_vs" id="training_vs" value="{VS}"></td>
@@ -222,7 +196,7 @@ function clone(objButton)
 	<td class="row2">{S_DURATION}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_MAPS}: *</label></td>
+	<td class="row1"><label>{L_MAPS}: *</label></td>
 	<td class="row2">
 		<div id="close">
 		<table border="0" cellspacing="0" cellpadding="0">
@@ -244,9 +218,10 @@ function clone(objButton)
 	</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="training_text">{L_TEXT}:</label></td>
+	<td class="row1"><label for="training_text">{L_TEXT}:</label></td>
 	<td class="row2"><textarea class="post" rows="5" cols="50" name="training_text" id="training_text">{TEXT}</textarea></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

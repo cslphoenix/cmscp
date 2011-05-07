@@ -39,7 +39,7 @@
 <!-- END cash_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row3" align="center" colspan="3">{NO_ENTRY}</td>
+	<td class="row3" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry -->
 <tr>
@@ -73,7 +73,7 @@
 <!-- END cash_user -->
 <!-- BEGIN no_entry_users -->
 <tr>
-	<td class="row3" align="center" colspan="3">{NO_ENTRY}</td>
+	<td class="row3" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry_users -->
 <tr>

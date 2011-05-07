@@ -30,7 +30,7 @@
 <!-- END row_bugtracker -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_noentry2" align="center" colspan="5">{NO_ENTRY}</td>
+	<td class="row_noentry2" align="center" colspan="5">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -48,32 +48,6 @@
 <!-- END _display -->
 
 <!-- BEGIN detail -->
-<script type="text/javascript" src="./../includes/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript">
-// <![CDATA[
-tinyMCE.init({
-	language : "de",
-	theme : "advanced",
-	mode : "textareas",
-	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager",
-	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,removeformat,cleanup,code,preview",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	plugin_preview_width : "500",
-	plugin_preview_height : "600",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_statusbar_location : "bottom",
-	theme_advanced_resizing : true,
-	entity_encoding : "raw",
-	add_unload_trigger : false,
-	remove_linebreaks : false,
-	inline_styles : false,
-	convert_fonts_to_spans : false,	
-});
-// ]]>
-</script>
-
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -128,7 +102,7 @@ tinyMCE.init({
 	<td class="row2">{VERSION}</td>
 </tr>
 <tr>
-	<td class="row1 top">{L_REPORT}:</td>
+	<td class="row1">{L_REPORT}:</td>
 	<td class="row2"><textarea class="textarea" name="report" rows="5" style="width:100%">{REPORT}</textarea></td>
 </tr>
 <tr>

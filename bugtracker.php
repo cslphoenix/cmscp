@@ -94,8 +94,8 @@ if ( $mode == 'list' )
 	
 	$template->assign_block_vars('list', array());
 	
-	$sql = 'SELECT	u.user_id as user_id1, u.username as username1, u.user_color as user_color1,
-					u2.user_id as user_id2, u2.username as username2, u2.user_color as user_color2,
+	$sql = 'SELECT	u.user_id as user_id1, u.user_name as user_name1, u.user_color as user_color1,
+					u2.user_id as user_id2, u2.user_name as user_name2, u2.user_color as user_color2,
 					bt.*
 				FROM ' . BUGTRACKER . ' bt
 					LEFT JOIN ' . USERS . ' u ON u.user_id = bt.bugtracker_creator
@@ -128,8 +128,8 @@ if ( $mode == 'list' )
 			{ 
 				$time = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $bugtracker_data[$i]['bugtracker_create'], $userdata['user_timezone'])); 
 			}
-			$user	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['username1'] . '</a>';
-			$user2	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['username2'] . '</a>';
+			$user	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
+			$user2	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
 			
 			foreach ( $lang['bt_error'] as $key_t => $value_t )
 			{
@@ -158,12 +158,12 @@ if ( $mode == 'list' )
 				'BT_CREATE'		=> sprintf($lang['bt_create_by'], $user, $time),
 				
 				'BT_WORKER'		=> ( $bugtracker_data[$i]['bugtracker_worker'] ) ? $user2 : $lang['bt_unassigned'],
-//				'BT_EDIT'		=> '<a href="' . append_sid('bugtracker.php?mode=edit&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_data[$i]['bugtracker_id']) . '">edit ' . $bugtracker_data[$i]['username2'] . '</a>',
+//				'BT_EDIT'		=> '<a href="' . check_sid('bugtracker.php?mode=edit&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_data[$i]['bugtracker_id']) . '">edit ' . $bugtracker_data[$i]['user_name2'] . '</a>',
 				
 				'BT_TYPE'		=> $bt_type,
 				'BT_STATUS'		=> $bt_status,
 				
-				'U_DETAILS'		=> append_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_data[$i]['bugtracker_id']),
+				'U_DETAILS'		=> check_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_data[$i]['bugtracker_id']),
 				
 			));
 		}
@@ -182,7 +182,7 @@ if ( $mode == 'list' )
 		
 		'S_BUGTRACKER_ORDER'	=> $s_sort_order,
 		'S_BUGTRACKER_SORT'		=> $s_sort,
-		'S_BUGTRACKER_ACTION'	=> append_sid('bugtracker.php'),
+		'S_BUGTRACKER_ACTION'	=> check_sid('bugtracker.php'),
 	));
 }
 else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
@@ -192,7 +192,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 	
 	if ( !$userdata['session_logged_in'] )
 	{
-		redirect(append_sid("login.php?redirect=bugtracker.php?mode=$mode"));
+		redirect(check_sid("login.php?redirect=bugtracker.php?mode=$mode"));
 	}
 	
 	$page_title = $lang['bugtracker'];
@@ -301,7 +301,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 			}
 			
 			$message = ( $mode == 'add' ) ? $lang['bt_add'] : $lang['bt_edit'];
-			$message .= '<br><br>' . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid('bugtracker.php') . '">', '</a>');
+			$message .= '<br><br>' . sprintf($lang['click_return_bugtracker'],  '<a href="' . check_sid('bugtracker.php') . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -322,7 +322,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 		'S_TYPE'				=> bt_type($bt_type),
 		'S_VERSION'				=> bt_version($bt_version),
 		'S_HIDDEN_FIELD'		=> $s_hidden_field,
-		'S_BUGTRACKER_ACTION'	=> append_sid('bugtracker.php'),
+		'S_BUGTRACKER_ACTION'	=> check_sid('bugtracker.php'),
 	));
 }
 else if ( $mode == 'details' && $bugtracker_id )
@@ -332,8 +332,8 @@ else if ( $mode == 'details' && $bugtracker_id )
 	
 	$template->assign_block_vars('details', array());
 	
-	$sql = 'SELECT	u.user_id as user_id1, u.username as username1, u.user_color as user_color1,
-					u2.user_id as user_id2, u2.username as username2, u2.user_color as user_color2,
+	$sql = 'SELECT	u.user_id as user_id1, u.user_name as user_name1, u.user_color as user_color1,
+					u2.user_id as user_id2, u2.user_name as user_name2, u2.user_color as user_color2,
 					bt.*
 				FROM ' . BUGTRACKER . ' bt
 					LEFT JOIN ' . USERS . ' u ON u.user_id = bt.bugtracker_creator
@@ -352,7 +352,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 	
 	$template->assign_block_vars('details.bt_comment', array());
 	
-	$sql = 'SELECT btc.*, u.username, u.user_color, u.user_email
+	$sql = 'SELECT btc.*, u.user_name, u.user_color, u.user_email
 				FROM ' . BUGTRACKER_COMMENTS . ' btc
 					LEFT JOIN ' . USERS . ' u ON btc.poster_id = u.user_id
 				WHERE bugtracker_id = ' . $bugtracker_id . '
@@ -425,7 +425,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			}
 
 			$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
-			$userurl = '<a href="' . append_sid('profile.php?mode=details&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['username'] . '</a>';
+			$userurl = '<a href="' . check_sid('profile.php?mode=details&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['user_name'] . '</a>';
 
 			$template->assign_block_vars('details.bt_comment.row', array(
 				'CLASS' 		=> $class,
@@ -435,8 +435,8 @@ else if ( $mode == 'details' && $bugtracker_id )
 				'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
 				'ICON'			=> $icon,
 
-				'U_EDIT'		=> append_sid('match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['bugtracker_id']),
-				'U_DELETE'		=> append_sid('match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['bugtracker_id'])
+				'U_EDIT'		=> check_sid('match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['bugtracker_id']),
+				'U_DELETE'		=> check_sid('match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['bugtracker_id'])
 			));
 		}
 	
@@ -517,7 +517,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			$oCache -> deleteCache('bugtracker_details_' . $bugtracker_id . '_comments');
 			_comment_message('add', 'bugtracker', $bugtracker_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
-			$message = $lang['add_comment'] . sprintf($lang['click_return_bugtracker'],  '<a href="' . append_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_id) . '">', '</a>');
+			$message = $lang['add_comment'] . sprintf($lang['click_return_bugtracker'],  '<a href="' . check_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_id) . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -550,15 +550,15 @@ else if ( $mode == 'details' && $bugtracker_id )
 //		
 //		'DETAILS_COMMENT'		=> $details['details_comment'],
 //		
-//		'MATCH_MAIN'			=> '<a href="' . append_sid('match.php') . '">&raquo; Übersicht</a>',
+//		'MATCH_MAIN'			=> '<a href="' . check_sid('match.php') . '">&raquo; Übersicht</a>',
 //	
 //		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-//		'S_MATCH_ACTION'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $bugtracker_id)
+//		'S_MATCH_ACTION'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $bugtracker_id)
 	));
 }
 else
 {
-	redirect(append_sid('bugtracker.php', true));
+	redirect(check_sid('bugtracker.php', true));
 }
 
 $template->pparse('body');

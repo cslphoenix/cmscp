@@ -51,7 +51,7 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 	if ( !$userdata['session_logged_in'] )
 	{
 		$redirect = POST_FORUM_URL . "=$forum_id" . ( ( isset($start) ) ? "&start=$start" : '' );
-		redirect(append_sid("login.$phpEx?redirect=viewforum.$phpEx&$redirect", true));
+		redirect(check_sid("login.$phpEx?redirect=viewforum.$phpEx&$redirect", true));
 	}
 	//
 	// The user is not authed to read this forum ...
@@ -61,7 +61,7 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 	message(GENERAL_MESSAGE, $message);
 }
 
-$sql = "SELECT u.user_id, u.username, u.user_color 
+$sql = "SELECT u.user_id, u.user_name, u.user_color 
 	FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g, " . USERS . " u
 	WHERE aa.forum_id = $forum_id 
 		AND aa.auth_mod = " . TRUE . " 
@@ -69,7 +69,7 @@ $sql = "SELECT u.user_id, u.username, u.user_color
 		AND gu.group_id = aa.group_id 
 		AND g.group_id = aa.group_id 
 		AND u.user_id = gu.user_id 
-	GROUP BY u.user_id, u.username  
+	GROUP BY u.user_id, u.user_name  
 	ORDER BY u.user_id";
 if ( !($result = $db->sql_query($sql)) )
 {
@@ -79,7 +79,7 @@ if ( !($result = $db->sql_query($sql)) )
 $moderators = array();
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . append_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER_URL . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['username'] . '</a>';
+	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER_URL . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
 }
 //	AND g.group_type <> ". GROUP_HIDDEN ."
 $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
@@ -99,7 +99,7 @@ if ( !($result = $db->sql_query($sql)) )
 
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . append_sid('groupcp.$phpEx?' . POST_GROUPS_URL . '=' . $row['group_id']) . '" style="color:#' . $row['group_color'] . '">' . $row['group_name'] . '</a>';
+	$moderators[] = '<a href="' . check_sid('groupcp.$phpEx?' . POST_GROUPS_URL . '=' . $row['group_id']) . '" style="color:#' . $row['group_color'] . '">' . $row['group_name'] . '</a>';
 }
 
 $l_moderators = ( count($moderators) == 1 ) ? $lang['Moderator'] : $lang['Moderators'];
@@ -130,7 +130,7 @@ if ( $is_auth['auth_mod'] )
 // All announcement data, this keeps announcements
 // on each viewforum page ...
 //
-$sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as id2, p.post_time, p.post_username
+$sql = "SELECT t.*, u.user_name, u.user_id, u2.user_name as user2, u2.user_id as id2, p.post_time, p.post_user_name
 	FROM " . TOPICS . " t, " . USERS . " u, " . POSTS . " p, " . USERS . " u2
 	WHERE t.forum_id = $forum_id 
 		AND t.topic_poster = u.user_id
@@ -157,7 +157,7 @@ $db->sql_freeresult($result);
 // Grab all the basic data (all topics except announcements)
 // for this forum
 //
-$sql = "SELECT t.*, u.username, u.user_id, u2.username as user2, u2.user_id as id2, p.post_username, p2.post_username AS post_username2, p2.post_time 
+$sql = "SELECT t.*, u.user_name, u.user_id, u2.user_name as user2, u2.user_id as id2, p.post_user_name, p2.post_user_name AS post_user_name2, p2.post_time 
 	FROM " . TOPICS . " t, " . USERS . " u, " . POSTS . " p, " . POSTS . " p2, " . USERS . " u2
 	WHERE t.forum_id = $forum_id
 		AND t.topic_poster = u.user_id
@@ -184,7 +184,7 @@ $db->sql_freeresult($result);
 $template->assign_vars(array(
 	'L_DISPLAY_TOPICS' => $lang['Display_topics'],
 
-	'U_POST_NEW_TOPIC' => append_sid('posting.php?mode=newtopic&amp;" . POST_FORUM_URL . "=$forum_id'),
+	'U_POST_NEW_TOPIC' => check_sid('posting.php?mode=newtopic&amp;" . POST_FORUM_URL . "=$forum_id'),
 ));
 
 //
@@ -231,9 +231,9 @@ $template->assign_vars(array(
 	'L_MODERATOR'	=> $l_moderators,
 	'MODERATORS'	=> $forum_moderators,
 
-	'U_VIEW_FORUM' => append_sid('viewforum.php?" . POST_FORUM_URL ."=$forum_id'),
+	'U_VIEW_FORUM' => check_sid('viewforum.php?" . POST_FORUM_URL ."=$forum_id'),
 
-	'U_MARK_READ' => append_sid('viewforum.php?" . POST_FORUM_URL . "=$forum_id&amp;mark=topics'))
+	'U_MARK_READ' => check_sid('viewforum.php?" . POST_FORUM_URL . "=$forum_id&amp;mark=topics'))
 );
 
 //
@@ -347,7 +347,7 @@ if( $total_topics )
 							$folder_image = $folder_new;
 							$folder_alt = $lang['New_posts'];
 
-							$newest_post_img = '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
+							$newest_post_img = '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
 						}
 						else
 						{
@@ -362,7 +362,7 @@ if( $total_topics )
 						$folder_image = $folder_new;
 						$folder_alt = ( $topic_rowset[$i]['topic_status'] == TOPIC_LOCKED ) ? $lang['Topic_locked'] : $lang['New_posts'];
 
-						$newest_post_img = '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
+						$newest_post_img = '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
 					}
 				}
 				else 
@@ -390,7 +390,7 @@ if( $total_topics )
 			$times = 1;
 			for($j = 0; $j < $replies + 1; $j += $board_config['posts_per_page'])
 			{
-				$goto_page .= '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=" . $topic_id . "&amp;start=$j") . '">' . $times . '</a>';
+				$goto_page .= '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=" . $topic_id . "&amp;start=$j") . '">' . $times . '</a>';
 				if( $times == 1 && $total_pages > 4 )
 				{
 					$goto_page .= ' ... ';
@@ -410,10 +410,10 @@ if( $total_topics )
 			$goto_page = '';
 		}
 		
-		$view_topic_url = append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id");
+		$view_topic_url = check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id");
 
-		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
-		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? $topic_rowset[$i]['username'] : ( ( $topic_rowset[$i]['post_username'] != '' ) ? $topic_rowset[$i]['post_username'] : $lang['Guest'] );
+		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
+		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? $topic_rowset[$i]['user_name'] : ( ( $topic_rowset[$i]['post_user_name'] != '' ) ? $topic_rowset[$i]['post_user_name'] : $lang['Guest'] );
 
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
 
@@ -421,9 +421,9 @@ if( $total_topics )
 
 		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['page_timezone']);
 
-		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_username2'] != '' ) ? $topic_rowset[$i]['post_username2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
+		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_user_name2'] != '' ) ? $topic_rowset[$i]['post_user_name2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
 
-		$last_post_url = '<a href="' . append_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
+		$last_post_url = '<a href="' . check_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
 
 		$views = $topic_rowset[$i]['topic_views'];
 		

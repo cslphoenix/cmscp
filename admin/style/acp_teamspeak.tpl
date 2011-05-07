@@ -172,7 +172,7 @@
 	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _servers_row -->
-<tr class="wihte">
+<tr class="hover">
 	<td class="row_class1" align="left">{_display._servers_row.NAME}</td>
 	<td class="row_class2" align="center"><a href="{_display._servers_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._servers_row.U_DELETE}">{I_DELETE}</a></td>		
 </tr>

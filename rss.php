@@ -48,14 +48,13 @@ $template->assign_vars(array(
 // END Assign static variabless to template
 //
 
-$sql = 'SELECT n.*, nc.cat_title, nc.cat_image, u.username, u.user_color, m.*, md.*, t.team_name, g.game_image, g.game_size
+$sql = 'SELECT n.*, nc.cat_name, nc.cat_image, u.user_name, u.user_color, m.*, t.team_name, g.game_image, g.game_size
 			FROM ' . NEWS . ' n
 				LEFT JOIN ' . USERS . ' u ON n.user_id = u.user_id
 				LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
-				LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
-				LEFT JOIN ' . NEWS_CAT . ' nc ON n.news_cat = nc.cat_id
+				LEFT JOIN ' . NEWSCAT . ' nc ON n.news_cat = nc.cat_id
 			WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
 		ORDER BY n.news_time_public DESC, n.news_id DESC';
 if ( !($result = $db->sql_query($sql)) )
@@ -77,7 +76,7 @@ else
 		$template->assign_block_vars('post_item', array(
 			'NEWS_TITLE'		=> $news_data[$i]['news_title'],
 			'NEWS_DATE'			=> $news_date,
-			'NEWS_AUTHOR'		=> $news_data[$i]['username'],
+			'NEWS_AUTHOR'		=> $news_data[$i]['user_name'],
 		));
 	}
 }

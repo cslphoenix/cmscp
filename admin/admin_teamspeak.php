@@ -20,9 +20,6 @@ else
 	$current	= '_submenu_authlist';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/class_cyts.php');
-	include($root_path . 'includes/acp/acp_functions.php');
-	include($root_path . 'language/lang_' . $userdata['user_lang'] . '/acp/teamspeak.php');
 	
 	$data_id	= request(POST_TEAMSPEAK_URL, 0);
 	$confirm	= request('confirm', 1);
@@ -31,10 +28,10 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid('admin_teamspeak.php', true)) : false;
+	( $header ) ? redirect('admin/' . check_sid('admin_teamspeak.php', true)) : false;
 	
 	function ts_time($time)
 	{
@@ -50,7 +47,7 @@ else
 		return $date;
 	}
 	
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
@@ -151,8 +148,8 @@ else
 					'S_VIEWER_NO'	=> ( !$data['teamspeak_show'] ) ? ' checked="checked"' : '',
 
 					'S_FIELDS'	=> $fields,
-					'S_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member'),
-					'S_ACTION'	=> append_sid('admin_teamspeak.php'),
+					'S_MEMBER'	=> check_sid('admin_teamspeak.php?mode=member'),
+					'S_ACTION'	=> check_sid('admin_teamspeak.php'),
 				));
 				
 				if ( request('submit', 1) )
@@ -208,7 +205,7 @@ else
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$message = $lang['create_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
+							$message = $lang['create_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . check_sid('admin_teamspeak.php'));
 							log_add(LOG_ADMIN, LOG_SEK_TEAMSPEAK, 'create_teamspeak');
 						}
 						else
@@ -233,8 +230,8 @@ else
 							}
 							
 							$message = $lang['update_teamspeak']
-								. sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $data_id) . '">', '</a>');
+								. sprintf($lang['click_return_teamspeak'], '<a href="' . check_sid('admin_teamspeak.php') . '">', '</a>')
+								. sprintf($lang['return_update'], '<a href="' . check_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TRAINING_URL . '=' . $data_id));
 							log_add(LOG_ADMIN, LOG_SEK_GAMES, 'update_teamspeak');
 						}
 						
@@ -281,13 +278,13 @@ else
 					
 					if ( $teamspeak_user[$i]['b_client_privilege_serveradmin'] == '-1' )
 					{
-						$edit	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=useredit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['edit'] . '</a>' : $lang['edit'];
-						$delete	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['common_delete'] . '</a>' : $lang['common_delete'];
+						$edit	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . check_sid('admin_teamspeak.php?mode=useredit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['edit'] . '</a>' : $lang['edit'];
+						$delete	= ( $userdata['user_level'] == ADMIN ) ? '<a href="' . check_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['common_delete'] . '</a>' : $lang['common_delete'];
 					}
 					else
 					{
-						$edit	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=useredit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['edit'] . '</a>' : $lang['edit'];
-						$delete	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . append_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['common_delete'] . '</a>' : $lang['common_delete'];
+						$edit	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . check_sid('admin_teamspeak.php?mode=useredit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['edit'] . '</a>' : $lang['edit'];
+						$delete	= ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN ) ? '<a href="' . check_sid('admin_teamspeak.php?mode=userdelete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_user[$i]['i_client_id']) . '">' . $lang['common_delete'] . '</a>' : $lang['common_delete'];
 					}
 					
 					$template->assign_block_vars('teamspeak_member.member_row', array(
@@ -315,8 +312,8 @@ else
 					'PAGINATION'			=> generate_pagination('admin_teamspeak.php?', count($teamspeak_user), $settings['site_entry_per_page'], $start),
 					'PAGE_NUMBER'			=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 					
-					'S_TEAMSPEAK_EDIT'			=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_id),
-					'S_TEAMSPEAK_ACTION'		=> append_sid('admin_teamspeak.php'),
+					'S_TEAMSPEAK_EDIT'			=> check_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_id),
+					'S_TEAMSPEAK_ACTION'		=> check_sid('admin_teamspeak.php'),
 				));
 				
 				$template->pparse('body');
@@ -337,7 +334,7 @@ else
 				
 					log_add(LOG_ADMIN, LOG_SEK_TEAMSPEAK, 'acp_teamspeak_delete', $teamspeak['teamspeak_name']);
 					
-					$message = $lang['delete_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . append_sid('admin_teamspeak.php') . '">', '</a>');
+					$message = $lang['delete_teamspeak'] . sprintf($lang['click_return_teamspeak'], '<a href="' . check_sid('admin_teamspeak.php'));
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -349,10 +346,10 @@ else
 					
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
-						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_teamspeak'], $data['teamspeak_name']),
+						'MESSAGE_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['delete_confirm_teamspeak'], $data['teamspeak_name']),
 						
 						'S_FIELDS'		=> $fields,
-						'S_ACTION'		=> append_sid('admin_teamspeak.php'),
+						'S_ACTION'		=> check_sid('admin_teamspeak.php'),
 					));
 				}
 				else
@@ -364,7 +361,7 @@ else
 				
 				break;
 			
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -398,9 +395,9 @@ else
 		'L_EXPLAIN'		=> $lang['teamspeak_explain'],
 		
 		'S_FIELDS'		=> $fields,
-		'S_MEMBER'		=> append_sid('admin_teamspeak.php?mode=_member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
-		'S_CREATE'		=> append_sid('admin_teamspeak.php?mode=_create'),
-		'S_ACTION'		=> append_sid('admin_teamspeak.php'),
+		'S_MEMBER'		=> check_sid('admin_teamspeak.php?mode=_member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
+		'S_CREATE'		=> check_sid('admin_teamspeak.php?mode=_create'),
+		'S_ACTION'		=> check_sid('admin_teamspeak.php'),
 	));
 	
 	$data = get_data_array(TEAMSPEAK, '', 'teamspeak_id', 'ASC');
@@ -412,8 +409,8 @@ else
 		$template->assign_block_vars('_display._servers_row', array(
 			'NAME'		=> $data[$i]['teamspeak_name'],
 			
-			'U_UPDATE'	=> append_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TEAMSPEAK_URL . '=' . $data_id),
-			'U_DELETE'	=> append_sid('admin_teamspeak.php?mode=_delete&amp;' . POST_TEAMSPEAK_URL . '=' . $data_id),
+			'U_UPDATE'	=> check_sid('admin_teamspeak.php?mode=_update&amp;' . POST_TEAMSPEAK_URL . '=' . $data_id),
+			'U_DELETE'	=> check_sid('admin_teamspeak.php?mode=_delete&amp;' . POST_TEAMSPEAK_URL . '=' . $data_id),
 		));
 	}
 	
@@ -439,8 +436,8 @@ else
 			'TS_PORT'	=> $teamspeak_data['teamspeak_port'],
 			'TS_VIEW'	=> ( $teamspeak_data['teamspeak_show'] ) ? $lang['Enabled'] : $lang['Disabled'],
 			
-			'U_DELETE'	=> append_sid('admin_teamspeak.php?mode=delete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_data['teamspeak_id']),
-			'U_EDIT'	=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_data['teamspeak_id']),
+			'U_DELETE'	=> check_sid('admin_teamspeak.php?mode=delete&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_data['teamspeak_id']),
+			'U_EDIT'	=> check_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak_data['teamspeak_id']),
 		));
 	}
 	
@@ -469,9 +466,9 @@ else
 		'L_DELETE'				=> $lang['common_delete'],
 		
 		'S_FIELDS'		=> $fields,
-		'S_TEAMSPEAK_EDIT'		=> append_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
-		'S_TEAMSPEAK_MEMBER'	=> append_sid('admin_teamspeak.php?mode=member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
-		'S_TEAMSPEAK_ACTION'	=> append_sid('admin_teamspeak.php'),
+		'S_TEAMSPEAK_EDIT'		=> check_sid('admin_teamspeak.php?mode=edit&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
+		'S_TEAMSPEAK_MEMBER'	=> check_sid('admin_teamspeak.php?mode=member&amp;' . POST_TEAMSPEAK_URL . '=' . $teamspeak['teamspeak_id']),
+		'S_TEAMSPEAK_ACTION'	=> check_sid('admin_teamspeak.php'),
 	));
 	*/
 	if ( $teamspeak )
@@ -517,7 +514,7 @@ else
 				'L_SERVER_RECEIVED_BYTE'	=> $lang['teamspeak_server_bytesreceived'],
 				'L_SERVER_UPTIME'			=> $lang['teamspeak_server_uptime'],
 				'L_SERVER_NUM_CHANNELS'		=> $lang['teamspeak_server_currentchannels'],
-				'S_TEAMSPEAK_ACTION'		=> append_sid('admin_teamspeak.php'),
+				'S_TEAMSPEAK_ACTION'		=> check_sid('admin_teamspeak.php'),
 				
 				
 			));

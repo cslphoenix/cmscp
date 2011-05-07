@@ -17,6 +17,11 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Die Karte wurde gelöscht!',
 	'confirm'	=> 'dass diese Karte:',
 	
+	'create_cat'	=> 'Neue Kategorie hinzugefügt.',
+	'update_cat'	=> 'Kategoriedaten erfolgreich geändert.',
+	'delete_cat'	=> 'Die Kategorie wurde gelöscht!',
+	'confirm_cat'	=> 'dass diese Kategorie:',
+	
 	'tag'		=> 'Tag',
 
 ));

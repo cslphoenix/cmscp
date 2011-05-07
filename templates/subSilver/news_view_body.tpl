@@ -102,7 +102,7 @@
 		<!-- END comments -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

@@ -4,7 +4,7 @@ if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == 6 )
 	{
 		$module['_headmenu_12_template']['_submenu_add_new']	= "$root_file?mode=addnew";
 		$module['_headmenu_12_template']['_submenu_create']	= "$root_file?mode=create";
@@ -27,10 +27,10 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid('admin_styles.php', true)) : false;
+	( $header ) ? redirect('admin/' . check_sid('admin_styles.php', true)) : false;
 	
 	if ( isset($HTTP_POST_VARS['mode']) || isset($HTTP_GET_VARS['mode']) )
 	{
@@ -97,7 +97,7 @@ else
 					message(GENERAL_ERROR, "Could not insert theme data!", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$message = $lang['Theme_installed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid('admin_styles.php') . "\">", "</a>");
+				$message = $lang['Theme_installed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . check_sid('admin_styles.php') . "\">", "</a>");
 	
 				message(GENERAL_MESSAGE, $message);
 			}
@@ -162,7 +162,7 @@ else
 							"STYLE_NAME" => $installable_themes[$i]['style_name'],
 							"TEMPLATE_NAME" => $installable_themes[$i]['template_name'],
 	
-							"U_STYLES_INSTALL" => append_sid("admin_styles.php?mode=addnew&amp;style=" . urlencode($installable_themes[$i]['style_name']) . "&amp;install_to=" . urlencode($installable_themes[$i]['template_name'])))
+							"U_STYLES_INSTALL" => check_sid("admin_styles.php?mode=addnew&amp;style=" . urlencode($installable_themes[$i]['style_name']) . "&amp;install_to=" . urlencode($installable_themes[$i]['template_name'])))
 						);
 					
 					}
@@ -354,7 +354,7 @@ else
 						message(GENERAL_ERROR, "Could not update themes name table!", "", __LINE__, __FILE__, $sql);
 					}
 								
-					$message = $lang['Theme_updated'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid('admin_styles.php') . "\">", "</a>");
+					$message = $lang['Theme_updated'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . check_sid('admin_styles.php') . "\">", "</a>");
 	
 					message(GENERAL_MESSAGE, $message);
 				}
@@ -455,7 +455,7 @@ else
 						message(GENERAL_ERROR, "Could not insert themes name table!", "", __LINE__, __FILE__, $sql);
 					}
 					
-					$message = $lang['Theme_created'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid('admin_styles.php') . "\">", "</a>");
+					$message = $lang['Theme_created'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . check_sid('admin_styles.php') . "\">", "</a>");
 	
 					message(GENERAL_MESSAGE, $message);
 				}
@@ -667,7 +667,7 @@ else
 					"SPAN_CLASS2_NAME" => $selected['span_class2_name'],
 					"SPAN_CLASS3_NAME" => $selected['span_class3_name'],
 					
-					"S_THEME_ACTION" => append_sid('admin_styles.php'),
+					"S_THEME_ACTION" => check_sid('admin_styles.php'),
 					"S_TEMPLATE_SELECT" => $s_template_select,
 					"S_HIDDEN_FIELDS" => $fields)
 				);
@@ -726,7 +726,7 @@ else
 					$fields = '<input type="hidden" name="theme_info" value="' . htmlspecialchars($theme_data) . '" />';
 					$fields .= '<input type="hidden" name="send_file" value="1" /><input type="hidden" name="mode" value="export" />';
 					
-					$download_form = '<form action="' . append_sid('admin_styles.php') . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $fields;
+					$download_form = '<form action="' . check_sid('admin_styles.php') . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $fields;
 	
 					$template->set_filenames(array(
 						"body" => "message_body.tpl")
@@ -744,7 +744,7 @@ else
 				$result = @fputs($fp, $theme_data, strlen($theme_data));
 				fclose($fp);
 				
-				$message = $lang['Theme_info_saved'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid('admin_styles.php') . "\">", "</a>");
+				$message = $lang['Theme_info_saved'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . check_sid('admin_styles.php') . "\">", "</a>");
 	
 				message(GENERAL_MESSAGE, $message);
 	
@@ -786,7 +786,7 @@ else
 					"L_TEMPLATE_SELECT" => $lang['Select_template'],
 					"L_SUBMIT" => $lang['Submit'], 
 	
-					"S_EXPORTER_ACTION" => append_sid('admin_styles.php?mode=export'),
+					"S_EXPORTER_ACTION" => check_sid('admin_styles.php?mode=export'),
 					"S_TEMPLATE_SELECT" => $s_template_select)
 				);
 				
@@ -821,7 +821,7 @@ else
 					"L_YES" => $lang['Yes'],
 					"L_NO" => $lang['No'],
 	
-					"S_CONFIRM_ACTION" => append_sid('admin_styles.php'),
+					"S_CONFIRM_ACTION" => check_sid('admin_styles.php'),
 					"S_HIDDEN_FIELDS" => $fields)
 				);
 	
@@ -857,7 +857,7 @@ else
 					message(GENERAL_ERROR, "Could not update user style information", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$message = $lang['Style_removed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid('admin_styles.php') . "\">", "</a>");
+				$message = $lang['Style_removed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . check_sid('admin_styles.php') . "\">", "</a>");
 	
 				message(GENERAL_MESSAGE, $message);
 			}
@@ -899,8 +899,8 @@ else
 					"STYLE_NAME" => $style_rowset[$i]['style_name'],
 					"TEMPLATE_NAME" => $style_rowset[$i]['template_name'],
 	
-					"U_STYLES_EDIT" => append_sid('admin_styles.php?mode=edit&amp;style_id=' . $style_rowset[$i]['themes_id']),
-					"U_STYLES_DELETE" => append_sid('admin_styles.php?mode=delete&amp;style_id=' . $style_rowset[$i]['themes_id']))
+					"U_STYLES_EDIT" => check_sid('admin_styles.php?mode=edit&amp;style_id=' . $style_rowset[$i]['themes_id']),
+					"U_STYLES_DELETE" => check_sid('admin_styles.php?mode=delete&amp;style_id=' . $style_rowset[$i]['themes_id']))
 				);
 			}
 			

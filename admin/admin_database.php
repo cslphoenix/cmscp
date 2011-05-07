@@ -31,11 +31,9 @@ else
 	$current	= '_submenu_database';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/sql_parse.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('database');
-	
+
 	$mode		= request('mode', 1);
 	$file		= basename(__FILE__);
 	$fields	= '';
@@ -567,7 +565,7 @@ else
 	// End Functions
 	// -------------
 	
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
@@ -607,9 +605,9 @@ else
 						'L_DL_BOTH'		=> $lang['dl_both'],
 						'L_DL_SERV'		=> $lang['dl_serv'],
 						
-						'S_OPTIMIZE'	=> append_sid("$file?mode=_optimize"),
-						'S_RESTORE'		=> append_sid("$file?mode=_restore"),
-						'S_ACTION'		=> append_sid($file),
+						'S_OPTIMIZE'	=> check_sid("$file?mode=_optimize"),
+						'S_RESTORE'		=> check_sid("$file?mode=_restore"),
+						'S_ACTION'		=> check_sid($file),
 						'S_FIELDS'		=> $fields,
 					));
 					
@@ -755,7 +753,7 @@ else
 								'match_lineup',
 								'match_maps',
 								'match_users',
-								'navigation',
+								'navi',
 								'network',
 								'news',
 								'newscategory',
@@ -806,7 +804,7 @@ else
 								'log', 'log_error',
 								'maps', 'maps_cat',
 								'match', 'match_comments', 'match_comments_read', 'match_details', 'match_lineup', 'match_maps', 'match_users',
-								'navigation',
+								'navi',
 								'network',
 								'news', 'newscategory', 'news_comments', 'news_comments_read',
 								'newsletter',
@@ -934,7 +932,7 @@ else
 					"L_SELECT_FILE" => $lang['Select_file'],
 					"L_START_RESTORE" => $lang['Start_Restore'],
 
-					"S_DBUTILS_ACTION" => append_sid("admin_db_utilities.$phpEx"),
+					"S_DBUTILS_ACTION" => check_sid("admin_db_utilities.$phpEx"),
 					"S_HIDDEN_FIELDS" => $s_hidden_fields)
 				);
 				$template->pparse("body");
@@ -1293,7 +1291,7 @@ else
 					
 					"S_SHOW_BEGIN_FOR" => $opt_conf['show_begin_for'],
 					
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 
@@ -1326,14 +1324,14 @@ else
 				if ( $optimize_notablechecked == true )
 				{
 					$message = $lang['Optimize_NoTableChecked']
-						. "<br /><br />" . sprintf($lang['Optimize_return'], "<a href=\"" . append_sid("admin_database.php?perform=optimize") . "\">", "</a>")
-						. "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
+						. "<br /><br />" . sprintf($lang['Optimize_return'], "<a href=\"" . check_sid("admin_database.php?perform=optimize") . "\">", "</a>")
+						. "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . check_sid("index.php?pane=right") . "\">", "</a>");
 				}
 				else
 				{
 					$message = $message = $lang['Optimize_success']
-						. "<br /><br />" . sprintf($lang['Optimize_return'], "<a href=\"" . append_sid("admin_database.php?perform=optimize") . "\">", "</a>")
-						. "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
+						. "<br /><br />" . sprintf($lang['Optimize_return'], "<a href=\"" . check_sid("admin_database.php?perform=optimize") . "\">", "</a>")
+						. "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . check_sid("index.php?pane=right") . "\">", "</a>");
 				}	
 				
 				message(GENERAL_MESSAGE, $message);

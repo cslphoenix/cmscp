@@ -17,18 +17,8 @@ $lang = array_merge($lang, array(
 	
 	'match'		=> 'Match einbinden',
 	'link'		=> 'Link (URL) / Name',
-	'time'		=> 'Zeit & Datum',
+	'time'		=> 'sichtbar ab',
 	'public'	=> 'Öffentlich',
 ));
-
-#$lang['news_match']		= 'Match einbinden';
-#$lang['news_text']			= 'Newstext';
-#$lang['news_link']			= 'Link URL / Name';
-#$lang['news_public']		= 'Öffentlich?';
-#$lang['news_public_time']	= 'Zeit & Datum zum veröffentlichen';
-#$lang['news_intern']		= 'Internnews';
-#$lang['news_comments']		= 'Kommentare erlauben';
-#$lang['news_new']			= 'Neue Seite';
-#$lang['news_self']			= 'Selbe Seite';
 
 ?>

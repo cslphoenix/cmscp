@@ -21,30 +21,27 @@
 <tr>
 	<td>
 		<!-- BEGIN table_row -->
-		<table cellpadding="1" style="width:100%; height:400px; text-align:center;  font-size:10px; margin:0px;">
+		<table cellpadding="1" style="width:100%; text-align:center;  font-size:10px; margin:0px;">
 		<tr>
-			<td colspan="{table_row.COL}" style="height:5px;">{table_row.VALUE}</td>
+			<td colspan="{table_row.COL}">{table_row.VALUE}</td>
 		</tr>
 		
 		<tr>
 			<!-- BEGIN balken_row -->
-			<td style="vertical-align:bottom; height:5px; width:{table_row.balken_row.WERT1}px;"><div style="margin:auto; background-color:red; height:{table_row.balken_row.WERT2}px; width:{table_row.balken_row.WERT3}" title="{table_row.balken_row.WERT4}"></div></td>
+			<td style="vertical-align:bottom; width:{table_row.balken_row.WERT1}px;"><div style="margin:auto; background-color:red; height:{table_row.balken_row.WERT2}px; width:{table_row.balken_row.WERT3}" title="{table_row.balken_row.WERT4}"></div></td>
 			<!-- END balken_row -->
 		</tr>
 		
 		<tr>
 			<!-- BEGIN stellen_row -->
-			<td style=" border:solid 1px #fff; height:5px;">{table_row.stellen_row.STELLE}</td>
+			<td style=" border:solid 1px #fff;">{table_row.stellen_row.STELLE}</td>
 			<!-- END stellen_row -->
 		</tr>
-		
-		
-		
 		</table>
 		<!-- END table_row -->
 	</td>
 </tr>
 <tr>
-			<td>&nbsp;</td>
-		</tr>
+	<td>&nbsp;</td>
+</tr>
 </table>

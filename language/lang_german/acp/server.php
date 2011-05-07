@@ -15,10 +15,10 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Der Server wurde gelöscht!',
 	'confirm'	=> 'dass dieser Server:',
 	
-	'ip'		=> 'IP',
-	'pw'		=> 'Passwort',
-	'port'		=> 'Port',
-	'qport'		=> 'QPort',
+	'server_ip'		=> 'IP',
+	'server_pw'		=> 'Passwort',
+	'server_port'	=> 'Port',
+	'server_qport'	=> 'QPort',
 	
 	'list'		=> 'Auflisten',
 	'show'		=> 'Anzeigen',

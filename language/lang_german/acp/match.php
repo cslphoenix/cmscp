@@ -5,6 +5,115 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
+$lang = array_merge($lang, array(
+	
+	'match'		=> 'Begegnung',
+	'explain'	=> 'Begegnung Details',
+	
+	'upcoming'	=> 'Anstehende Begegnung',
+	'expired'	=> 'Abgelaufen Begegnung',
+
+	'create'		=> 'Neues Begegnung hinzugefügt.',
+	'update'		=> 'Begegnungsdaten erfolgreich geändert.',
+	'delete'		=> 'Die Begegnung wurde gelöscht!',
+	'confirm'		=> 'dass diese Begegnung:',
+	'create_map'	=> 'Neue Map hinzugefügt.',
+	'update_map'	=> 'Mapinfos erfolgreich geändert.',
+	'delete_map'	=> 'Die Map wurde aus der Begegnung gelöscht!',	
+	'create_user'	=> 'Neuen Benutzer zum Lineup hinzugefügt.',
+	'update_user'	=> 'Lineup erfolgreich geändert.',
+	'delete_user'	=> 'Der Benutzer wurden aus dem Lineup gelöscht!',
+	
+	'head_details'	=> 'Matchdeatials',
+	'head_standard'	=> 'Standard Infos',
+	'head_rival'	=> 'Gegner Infos',
+	'head_server'	=> 'Server Infos',
+	'head_message'	=> 'Kommentar / Report',
+	'head_training'	=> 'Training',
+
+	'match_type' => array(
+		'type_unknown'	=> 'unbekannt',
+		'type_two'		=> '2 on 2',
+		'type_three'	=> '3 on 3',
+		'type_four'		=> '4 on 4',
+		'type_five'		=> '5 on 5',
+		'type_six'		=> '6 on 6',
+	),
+
+	'match_war' => array(
+		'war_fun'		=> 'Fun War',
+		'war_training'	=> 'Training War',
+		'war_clan'		=> 'Clan War',
+		'war_league'	=> 'Liga War',
+	),
+
+	'match_league' => array(
+		'league_nope'	=> array('name' => 'keine Liga', 'url' => 'leer'),
+		'league_esl'	=> array('name' => 'ESL', 'url' => 'http://www.esl.eu/'),
+		'league_sk'		=> array('name' => 'Stammkneipe', 'url' => 'http://www.stammkneipe.eu/'),
+		'league_liga'	=> array('name' => '0815 Liga', 'url' => 'http://www.0815liga.eu/'),
+		'league_lgz'	=> array('name' => 'Leaguez', 'url' => 'http://www.lgz.eu/'),
+		'league_te'		=> array('name' => 'TE', 'url' => 'http://www.tactical-esports.de/'),
+		'league_xgc'	=> array('name' => 'XGC', 'url' => 'http://www.xgc-online.de/'),
+		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
+	),
+
+	'team'				=> 'Team',
+	'type'				=> 'Typ',
+	'war'				=> 'Begegnungstyp',
+	'league'			=> 'Liga',
+	'league_url'		=> 'Ligawebsite',
+	'league_match'		=> 'Ligaegegnungslink / ID',
+	'rival_name'		=> 'Gegner Name',
+	'rival_tag'			=> 'Gegner Clantag',
+	'rival_url'			=> 'Gegner Homepage',
+	'rival_logo'		=> 'Gegner Logo',
+	'rival_lineup'		=> 'Gegner Lineup',
+	'rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
+	'server_ip'			=> 'Server IP',
+	'server_pw'			=> 'Server Passwort',
+	'hltv_ip'			=> 'HLTV-Server IP',
+	'hltv_pw'			=> 'HLTV-Server Passwort',
+	
+	'comment'		=> 'Kommentar',
+	'comment_exp'	=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
+	'report'		=> 'Report',
+	'report_exp'	=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
+	
+	'training'		=> 'Training',
+	'train_date'	=> 'Trainingstermin',
+	'train_maps'	=> 'Trainingsmaps',
+	'train_text'	=> 'Trainingsbericht',
+	
+	'reset_list'	=> 'Teilnahmen reset?',
+	
+	'training_create'	=> 'hinzufügen',
+	'training_update'	=> 'Trainingsliste',
+	
+	
+	/* Detail */
+	/* Lineup */
+	'lineup'			=> 'Clan Lineup',
+	'lineup_rival'		=> 'Gegner Lineup',
+	'lineup_status'		=> 'Spielerstatus',
+	'lineup_add'		=> 'Spieler hinzufügen',
+	'lineup_add_exp'	=> 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.',
+	
+	'status_set'		=> 'Status %s setzen',
+	'status_player'		=> 'Spieler',
+	'status_replace'	=> 'Ersatz',
+	
+));
+
+
+
+
+$lang['no_users'] = 'Keine Mitglieder im Team!';
+$lang['no_users_store'] = 'Keine Mitglieder gespeichert.';
+
+
+
+/*
 $lang['match']					= 'Begegnung';
 $lang['match_details']			= 'Begegnung Details';
 $lang['match_explain']			= 'Hier können Wars verwaltet werden.';
@@ -20,22 +129,23 @@ $lang['info_rival']				= 'Gegner Infos';
 $lang['info_server']			= 'Server Infos';
 $lang['info_message']			= 'Bericht / Kommentar';
 $lang['info_training']			= 'Training Infos';
-$lang['info_team']				= 'Team';
-$lang['info_type']				= 'XonX';
-$lang['info_categorie']			= 'Match Art';
-$lang['info_league']			= 'Liga';
-$lang['info_league_url']		= 'Liga Website';
-$lang['info_league_match']		= 'Liga Matchlink';
-$lang['info_date']				= 'Match Datum';
-$lang['info_public']			= 'Match Öffentlich?';
-$lang['info_rival']				= 'Gegner Name';
-$lang['info_rival_tag']			= 'Gegner Clantag';
-$lang['info_rival_url']			= 'Gegner Homepage';
-$lang['info_rival_lineup']		= 'Gegner Lineup';
-$lang['info_server']			= 'Server';
-$lang['info_server_pw']			= 'Server PW';
-$lang['info_hltv']				= 'HLTV-Server';
-$lang['info_hltv_pw']			= 'HLTV-Server PW';
+
+$lang['info_team'] = 'Team';
+$lang['info_type'] = 'XonX';
+$lang['info_categorie'] = 'Match Art';
+$lang['info_league'] = 'Liga';
+$lang['info_league_url'] = 'Liga Website';
+$lang['info_league_match'] = 'Liga Matchlink';
+$lang['info_date'] = 'Match Datum';
+$lang['info_public'] = 'Match Öffentlich?';
+$lang['info_rival'] = 'Gegner Name';
+$lang['info_rival_tag'] = 'Gegner Clantag';
+$lang['info_rival_url'] = 'Gegner Homepage';
+$lang['info_rival_lineup'] = 'Gegner Lineup';
+$lang['info_server'] = 'Server';
+$lang['info_server_pw'] = 'Server PW';
+$lang['info_hltv'] = 'HLTV-Server';
+$lang['info_hltv_pw'] = 'HLTV-Server PW';
 
 $lang['training_date']			= 'Trainingstermin';
 $lang['training_maps']			= 'Trainingsmaps';
@@ -50,7 +160,7 @@ $lang['match_training_update']	= 'Trainingsliste';
 #	Match	Text
 
 $lang['match_text']				= 'Match Bericht';
-$lang['match_interest_reset']	= 'Teilnahme zurücksetzen?';
+
 
 
 
@@ -85,21 +195,7 @@ $lang['select_type4']		= '4on4';
 $lang['select_type5']		= '5on5';
 $lang['select_type6']		= '6on6';
 
-$lang['match_type'] = array(
-	'type_unknown'	=> 'unbekannt',
-	'type_two'		=> '2 on 2',
-	'type_three'	=> '3 on 3',
-	'type_four'		=> '4 on 4',
-	'type_five'		=> '5 on 5',
-	'type_six'		=> '6 on 6',
-);
 
-$lang['match_category'] = array(
-	'war_fun'		=> 'Fun War',
-	'war_training'	=> 'Training War',
-	'war_clan'		=> 'Clan War',
-	'war_league'	=> 'Liga War',
-);
 
 $lang['select_league']		= 'Liga auswählen';
 $lang['select_league1']		= 'ESL';
@@ -132,11 +228,8 @@ $lang['details_maps']				= 'Maps hinzufügen';
 $lang['details_maps_pic']			= 'Maps mit Bildern hinzufügen';
 $lang['details_maps_overview']		= 'Maps Übersicht';
 
-$lang['details_lineup']				= 'Clan Lineup';
-$lang['details_lineup_player']		= 'Spieler für das Lineup';
-$lang['details_lineup_status']		= 'Spielerstatus';
-$lang['details_lineup_add']			= 'Spieler hinzufügen';
-$lang['details_lineup_add_explain']	= 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.';
+
+
 
 $lang['details_status_set']			= 'Status %s setzen';
 $lang['details_status_player']		= 'Spieler';
@@ -145,5 +238,5 @@ $lang['details_status_replace']		= 'Ersatz';
 $lang['details_map']				= 'Karte';
 $lang['details_mappic']				= 'Bild';
 $lang['details_points']				= 'Punkte';
-
+*/
 ?>

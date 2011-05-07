@@ -4,7 +4,7 @@ if( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userauth['auth_forum_auth'] || $userdata['user_level'] == ADMIN )
+	if ( $userauth['auth_forum_perm'] || $userdata['user_level'] == ADMIN )
 	{
 		$module['_headmenu_02_forum']['_submenu_perm'] = $root_file;
 	}
@@ -20,13 +20,12 @@ else
 	//
 	$root_path = './../';
 	require('./pagestart.php');
-	require($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('forum_auth');
 	
-	if ( !$userauth['auth_forum_auth'] && $userdata['user_level'] != ADMIN )
+	if ( !$userauth['auth_forum_perm'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
 	//
@@ -154,9 +153,9 @@ else
 		}
 	
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id) . '">')
+			'META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id) . '">')
 		);
-		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid('admin_forumauth.php') . '">', "</a>");
+		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . check_sid('admin_forumauth.php') . '">', "</a>");
 		message(GENERAL_MESSAGE, $message);
 	
 	} // End of submit
@@ -204,7 +203,7 @@ else
 			'L_AUTH_SELECT' => $lang['Select_a_Forum'],
 			'L_LOOK_UP' => $lang['Look_up_Forum'],
 	
-			'S_ACTION' => append_sid('admin_forumauth.php'),
+			'S_ACTION' => check_sid('admin_forumauth.php'),
 			'S_SELECT' => $select_list)
 		);
 	
@@ -301,7 +300,7 @@ else
 		}
 		
 		$adv_mode = ( empty($adv) ) ? '1' : '0';
-		$switch_mode = append_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id . "&adv=". $adv_mode);
+		$switch_mode = check_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id . "&adv=". $adv_mode);
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
@@ -318,7 +317,7 @@ else
 	
 			'U_SWITCH_MODE' => $u_switch_mode,
 	
-			'S_FORUMAUTH_ACTION' => append_sid('admin_forumauth.php'),
+			'S_FORUMAUTH_ACTION' => check_sid('admin_forumauth.php'),
 			'S_COLUMN_SPAN' => $s_column_span,
 			'S_FIELDS' => $fields)
 		);

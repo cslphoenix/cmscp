@@ -30,7 +30,7 @@ if ( isset($_POST['name']) )
 		
 		foreach ( $rank as $info => $value )
 		{
-			$s_select .= "<option value=\"" . $value['rank_id'] . "\">" . sprintf($lang['sprintf_select_format'], sprintf($lang['msg_select_rank_set'], $value['rank_title'])) . "</option>";
+			$s_select .= "<option value=\"" . $value['rank_id'] . "\">" . sprintf($lang['sprintf_select_format'], sprintf($lang['msg_select_rank_set'], $value['rank_name'])) . "</option>";
 		}
 		
 		$s_select .= "</select>";

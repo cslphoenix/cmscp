@@ -1,3 +1,12 @@
+<script type="text/javascript">
+// <![CDATA[
+	function set_right(id,text)
+	{
+		var obj = document.getElementById(id).value = text;
+	}
+// ]]>
+</script>
+
 <!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
@@ -55,10 +64,9 @@
 <!-- END _forum_row -->
 <!-- BEGIN _no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="3">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry -->
-
 </table>
 
 <table border="0" cellspacing="1" cellpadding="0">
@@ -74,6 +82,7 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
+{UIMG}
 {TINYMCE}
 <script type="text/javascript">
 
@@ -195,28 +204,6 @@ function interpretRequest2()
 	}
 }
 
-function clip(id)
-{
-	if ( document.getElementById("tbody_" + id).style.display == 'none' )
-	{
-		document.getElementById("tbody_" + id).style.display = "";
-	}
-	else
-	{
-		document.getElementById("tbody_" + id).style.display = "none";
-	}
-}
-
-function update_image(newimage)
-{
-	document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./images/spacer.gif";
-}
-
-function set_right(id,text)
-{
-	var obj = document.getElementById(id).value = text;
-}
-
 </script>
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
@@ -286,11 +273,11 @@ function set_right(id,text)
 </tr>
 </tbody>
 <tr> 
-	<td class="row1 top"><span style="float:right;"><img src="{IMAGE}" id="image" alt="" /></span><label for="forum_icon">{L_ICON}:</label></td>
+	<td class="row1"><span style="float:right;"><img src="{IMAGE}" id="image" alt="" /></span><label for="forum_icon">{L_ICON}:</label></td>
 	<td class="row2">{S_IMAGE}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="forum_desc">{L_DESC}:</label></td>
+	<td class="row1"><label for="forum_desc">{L_DESC}:</label></td>
 	<td class="row2"><textarea class="textarea" name="forum_desc" id="forum_desc" rows="20" style="width:100%">{DESC}</textarea></td>
 </tr>
 <tr>
@@ -338,6 +325,7 @@ function set_right(id,text)
 	<td class="row1">{L_COPY}:</td>
 	<td class="row2">{S_COPY}</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -376,14 +364,16 @@ function set_right(id,text)
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="cat_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="cat_name" id="cat_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="game_order">{L_ORDER}:</label></td>
-	<td class="row2 top">{S_ORDER}</td>
+	<td class="row1"><label for="game_order">{L_ORDER}:</label></td>
+	<td class="row2">{S_ORDER}</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

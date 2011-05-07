@@ -1,15 +1,17 @@
 <!-- BEGIN _display -->
-<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+	</ul>
 </div>
 
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row4 small">{L_EXPLAIN}</td>
+</tr>
+<tr>
+	<td class="small" align="right"><form action="{S_ACTION}" method="post">{L_SORT}: {S_LEVEL}</form></td>
 </tr>
 </table>
 
@@ -17,26 +19,50 @@
 
 <table class="info" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="rowHead" width="99%">{L_TITLE}</td>
+	<td class="rowHead" width="99%">{L_UPCOMING}</td>
 	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
 </tr>
-<!-- BEGIN _event_row -->
+<!-- BEGIN _event_new_row -->
 <tr>
-	<td class="row_class1" align="left"><span style="float:right;">{_display._event_row.DATE}</span>{_display._event_row.TITLE}</td>
-	<td class="row_class2" align="center"><a href="{_display._event_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._event_row.U_DELETE}">{I_DELETE}</a></td>		
+	<td class="row_class1" align="left"><span style="float:right;">{_display._event_new_row.DATE}</span>{_display._event_new_row.TITLE}</td>
+	<td class="row_class2" align="center">{_display._event_new_row.UPDATE} {_display._event_new_row.DELETE}</td>		
 </tr>
-<!-- END _event_row -->
-<!-- BEGIN _no_entry -->
+<!-- END _event_new_row -->
+<!-- BEGIN _entry_empty_new -->
 <tr>
-	<td class="row_noentry" colspan="2" align="center">{NO_ENTRY}</td>
+	<td class="entry_empty" colspan="2" align="center">{L_ENTRY_NO}</td>
 </tr>
-<!-- END _no_entry -->
+<!-- END _entry_empty_new -->
 </table>
 
+<br />
+
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="rowHead" width="99%">{L_EXPIRED}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+</tr>
+<!-- BEGIN _event_old_row -->
+<tr>
+	<td class="row_class1" align="left"><span style="float:right;">{_display._event_old_row.DATE}</span>{_display._event_old_row.TITLE}</td>
+	<td class="row_class2" align="center">{_display._event_old_row.UPDATE} {_display._event_old_row.DELETE}</td>		
+</tr>
+<!-- END _event_old_row -->
+<!-- BEGIN _entry_empty_old -->
+<tr>
+	<td class="entry_empty" colspan="2" align="center">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _entry_empty_old -->
+</table>
+
+<form action="{S_ACTION}" method="post">
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="event_title"></td>
 	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+<tr>
+	<td class="row4" colspan="2"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
 </tr>
 </table>
 {S_FIELDS}
@@ -44,46 +70,8 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript" src="./../includes/js/tinymce/tiny_mce.js"></script>
-<script type="text/javascript">
-tinyMCE.init({
-	// General options
-	mode : "textareas",
-	theme : "advanced",
-	plugins : "preview, xhtmlxtras",
-	
-	// Theme options
-	theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull, preview, code, image",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_buttons4 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_statusbar_location : "bottom",
-	theme_advanced_resizing : true,
-	
-	// Skin options
-	skin : "o2k7",
-	skin_variant : "silver",
-	
-	// Example content CSS (should be your site CSS)
-	//  content_css : "css/example.css",
-	
-	// Drop lists for link/image/media/template dialogs
-	template_external_list_url : "js/template_list.js",
-	external_link_list_url : "js/link_list.js",
-	external_image_list_url : "js/image_list.js",
-	media_external_list_url : "js/media_list.js",
-	
-	// Replace values for the template plugin
-	template_replace_values : {
-			username : "Some User",
-			staffid : "991234"
-	}
-});
-</script>
-
 <form action="{S_ACTION}" method="post">
+{TINYMCE}
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
@@ -109,6 +97,7 @@ tinyMCE.init({
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="event_title">{L_TITLE}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
@@ -118,7 +107,7 @@ tinyMCE.init({
 	<td class="row2">{S_LEVEL}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="event_desc">{L_DESC}: *</label></td>
+	<td class="row1"><label for="event_desc">{L_DESC}: *</label></td>
 	<td class="row2"><textarea class="textarea" name="event_desc" id="event_desc" rows="20" style="width:100%">{DESC}</textarea></td>
 </tr>
 <tr>
@@ -133,6 +122,7 @@ tinyMCE.init({
 	<td class="row1"><label for="event_comments">{L_COMMENTS}:</label></td>
 	<td class="row2"><label><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

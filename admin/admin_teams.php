@@ -21,9 +21,6 @@ else
 	$current	= '_submenu_teams';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_upload.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('teams');
 	
@@ -40,9 +37,9 @@ else
 	
 	$data_id	= request($url, 0);
 	$confirm	= request('confirm', 1);
-	$smode		= request('smode', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
+	$smode		= request('smode', 1);	
 	
 	$path_dir	= $root_path . $settings['path_teams'] . '/';
 	$path_games	= $root_path . $settings['path_games'] . '/';
@@ -52,15 +49,15 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_teams'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header )		? redirect('admin/' . append_sid($file, true)) : false;
-	( $header_sub )	? redirect('admin/' . append_sid("$file?mode=_member&$url=$data_id")) : false;
+	( $header )		? redirect('admin/' . check_sid($file, true)) : false;
+	( $header_sub )	? redirect('admin/' . check_sid("$file?mode=_member&$url=$data_id")) : false;
 	
 	( $smode == '_user_delete' ) ? $mode = '_user_delete' : false;
 	
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
@@ -208,9 +205,9 @@ else
 					'S_ORDER'			=> select_order('select', TEAMS, 'team', $data['team_order']),
 					
 					'S_GAME'			=> select_box('game', 'select', $data['team_game']),
-					'S_MEMBER'			=> append_sid("$file?mode=_member&amp;$url=$data_id"),
+					'S_MEMBER'			=> check_sid("$file?mode=_member&amp;$url=$data_id"),
 					
-					'S_ACTION'			=> append_sid($file),
+					'S_ACTION'			=> check_sid($file),
 					'S_FIELDS'			=> $fields,
 				));
 				
@@ -236,7 +233,7 @@ else
 					$temp_logo = request_file('temp_logo');
 					$temp_flag = request_file('temp_flag');
 					
-					$data['team_game']	= img_num(GAMES, 'game', request('game_image', 2));
+					
 					$data['team_order']	= ( !$data['team_order'] ) ? maxa(TEAMS, 'team_order', false) : $data['team_order'];
 				
 									
@@ -251,20 +248,20 @@ else
 					
 					if ( !$error )
 					{
+					#	$data['team_game'] = img_num(GAMES, 'game', request('game_image', 2));
+						$data['team_game'] = search_image(GAMES, 'id', request('game_image', 1));
 						if ( $mode == '_create' )
 						{
 							$db_data = sql(TEAMS, $mode, $data);
 							
 							$message = $lang['create']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+								. sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							$db_data = sql(TEAMS, $mode, $data, 'team_id', $data_id);
 							
-							$message = $lang['update']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 					
 					#	$oCache -> sCachePath = './../cache/';
@@ -326,7 +323,7 @@ else
 					}
 					
 					$message = $lang['delete']
-						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+						. sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					orders(TEAMS);
 					
@@ -342,13 +339,13 @@ else
 	
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['team_name']),
+						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['team_name']),
 						
-						'S_ACTION'	=> append_sid($file),
+						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['team'])); }
+				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['team'])); }
 			
 				$template->pparse('body');
 				
@@ -363,7 +360,7 @@ else
 				
 				$sql_id = $team_mods = $team_members = $s_options = $s_users = '';
 				
-				$sql = "SELECT tu.rank_id, tu.team_join, tu.team_mod, u.user_id, u.username, u.user_regdate, r.rank_title
+				$sql = "SELECT tu.rank_id, tu.team_join, tu.team_mod, u.user_id, u.user_name, u.user_regdate, r.rank_name
 							FROM " . USERS . " u, " . TEAMS_USERS . " tu
 								LEFT JOIN " . RANKS . " r ON r.rank_id = tu.rank_id
 							WHERE tu.team_id = $data_id AND tu.user_id = u.user_id
@@ -401,14 +398,16 @@ else
 						{
 							$template->assign_block_vars('_member._mod_row', array(
 								'ID'	=> $team_mods[$i]['user_id'],
-								'NAME'	=> $team_mods[$i]['username'],
-								'RANK'	=> $team_mods[$i]['rank_title'],
+								'NAME'	=> $team_mods[$i]['user_name'],
+								'RANK'	=> $team_mods[$i]['rank_name'],
 								'REG'	=> create_date($userdata['user_dateformat'], $team_mods[$i]['user_regdate'], $userdata['user_timezone']),
 								'JOIN'	=> create_date($userdata['user_dateformat'], $team_mods[$i]['team_join'], $userdata['user_timezone']),
 							));
 						}
 					}
-					else { $template->assign_block_vars('_member._no_moderators', array()); }
+					else
+	{
+		$template->assign_block_vars('_member._no_moderators', array()); }
 					
 					if ( $team_members )
 					{
@@ -416,14 +415,16 @@ else
 						{
 							$template->assign_block_vars('_member._member_row', array(
 								'ID'	=> $team_members[$i]['user_id'],
-								'NAME'	=> $team_members[$i]['username'],
-								'RANK'	=> $team_members[$i]['rank_title'],
+								'NAME'	=> $team_members[$i]['user_name'],
+								'RANK'	=> $team_members[$i]['rank_name'],
 								'REG'	=> create_date($userdata['user_dateformat'], $team_members[$i]['user_regdate'], $userdata['user_timezone']),
 								'JOIN'	=> create_date($userdata['user_dateformat'], $team_members[$i]['team_join'], $userdata['user_timezone']),
 							));
 						}
 					}
-					else { $template->assign_block_vars('_member._no_members', array()); }
+					else
+	{
+		$template->assign_block_vars('_member._no_members', array()); }
 				}
 				else
 				{
@@ -438,7 +439,7 @@ else
 				$s_options .= "<option value=\"_user_delete\">" . sprintf($lang['sprintf_select_format'], $lang['common_delete']) . "</option>";
 				$s_options .= "</select>";
 				
-				$sql = "SELECT username, user_id FROM " . USERS . " WHERE user_id <> " . ANONYMOUS . $sql_id;
+				$sql = "SELECT user_name, user_id FROM " . USERS . " WHERE user_id <> " . ANONYMOUS . $sql_id;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -453,7 +454,7 @@ else
 					
 					foreach ( $missing_users as $info => $value )
 					{
-						$s_users .= "<option value=\"" . $value['user_id'] . "\">" . sprintf($lang['sprintf_select_format'], $value['username']) . "</option>";
+						$s_users .= "<option value=\"" . $value['user_id'] . "\">" . sprintf($lang['sprintf_select_format'], $value['user_name']) . "</option>";
 					}
 					
 					$s_users .= "</select>";
@@ -479,7 +480,7 @@ else
 				#	'L_ADD_RANK'	=> $lang['team_set_rank'],
 				#	'L_ADD_MOD'		=> $lang['team_set_moderator'],
 				
-					'L_USERNAME'			=> $lang['username'],
+					'L_USERNAME'			=> $lang['user_name'],
 					'L_REGISTER'			=> $lang['register'],
 					'L_JOIN'				=> $lang['joined'],
 					'L_RANK'				=> $lang['rank_team'],
@@ -491,16 +492,14 @@ else
 					'S_USERS'	=> $s_users,
 					'S_OPTIONS'	=> $s_options,
 				#	'S_RANKS'	=> $s_ranks,
-					'S_INPUT'	=> append_sid("$file?mode=_update&amp;$url=$data_id"),
+					'S_INPUT'	=> check_sid("$file?mode=_update&amp;$url=$data_id"),
 					
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 				
 				if ( $smode == '_user_create' || $smode == '_user_setrank' || $smode == '_user_level' )
 				{
-					debug($_POST);
-					
 					if ( $smode == '_user_create' )
 					{
 						$members	= request('members', 2);
@@ -513,9 +512,9 @@ else
 							$members = trim($members, ', ');
 							$members = trim($members, ',');
 							
-							$username_ary = array_unique(explode(', ', $members));
+							$user_name_ary = array_unique(explode(', ', $members));
 							
-							$which_ary = 'username_ary';
+							$which_ary = 'user_name_ary';
 							
 							if ( $$which_ary && !is_array($$which_ary))
 							{
@@ -527,9 +526,9 @@ else
 							
 							$sql_in = implode("', '", $sql_in);
 							
-							$user_id_ary = $username_ary = array();
+							$user_id_ary = $user_name_ary = array();
 							
-							$sql = 'SELECT * FROM ' . USERS . ' WHERE username IN ("' . $sql_in . '")';
+							$sql = 'SELECT * FROM ' . USERS . ' WHERE user_name IN ("' . $sql_in . '")';
 							if ( !($result = $db->sql_query($sql)) )
 							{
 								message(GENERAL_MESSAGE, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -544,7 +543,7 @@ else
 							
 							do
 							{
-								$username_ary[$row['user_id']] = $row['username'];
+								$user_name_ary[$row['user_id']] = $row['user_name'];
 								$user_id_ary[] = $row['user_id'];
 							}
 							while ($row = $db->sql_fetchrow($result));
@@ -699,8 +698,8 @@ else
 					if ( !$error )
 					{
 						$message = $lang[$lang_type]
-							. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-							. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&$url=$data_id") . '">', '</a>');	
+							. sprintf($lang['return'], check_sid($file), $acp_title)
+							. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=$mode&$url=$data_id"));	
 						
 						log_add(LOG_ADMIN, $log, $smode, $lang_type);
 						message(GENERAL_MESSAGE, $message);
@@ -738,7 +737,7 @@ else
 					#$oCache -> deleteCache('list_teams');
 					#$oCache -> deleteCache('subnavi_list_teams');
 					
-					$message = $lang['delete_team_user'] . sprintf($lang['click_return_team'], '<a href="' . append_sid($file) . '">', '</a>');
+					$message = $lang['delete_team_user'] . sprintf($lang['click_return_team'], '<a href="' . check_sid($file));
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $members && !$confirm )
@@ -749,28 +748,28 @@ else
 					
 					$fields = '<input type="hidden" name="mode" value="_user_delete" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" /><input type="hidden" name="members" value="' . $sql_in . '" />';
 					
-					$sql = "SELECT username, user_id FROM " . USERS . " WHERE user_id IN ($sql_in)";
+					$sql = "SELECT user_name, user_id FROM " . USERS . " WHERE user_id IN ($sql_in)";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
-					$ary_userid = $ary_username = array();
+					$ary_userid = $ary_user_name = array();
 							
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$ary_userid[]	= (int)		$row['user_id'];
-						$ary_username[]	= (string)	$row['username'];
+						$ary_user_name[]	= (string)	$row['user_name'];
 					}
 					$db->sql_freeresult($result);
 					
-					$usernames = implode(', ', $ary_username);
+					$user_names = implode(', ', $ary_user_name);
 
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
-						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], sprintf($lang['delete_confirm_team_user'], $usernames), $data['team_name']),
+						'MESSAGE_TEXT'	=> sprintf($lang['msg_confirm_delete'], sprintf($lang['delete_confirm_team_user'], $user_names), $data['team_name']),
 					
 						'S_FIELDS'		=> $fields,
-						'S_ACTION'		=> append_sid($file),
+						'S_ACTION'		=> check_sid($file),
 					));
 				}
 				else
@@ -782,7 +781,7 @@ else
 			
 				break;
 			
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -807,8 +806,8 @@ else
 		'L_COUNT'	=> $lang['count'],
 		'L_MEMBER'	=> $lang['common_member'],
 		
-		'S_CREATE'	=> append_sid("$file?mode=_create"),
-		'S_ACTION'	=> append_sid($file),
+		'S_CREATE'	=> check_sid("$file?mode=_create"),
+		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
 	
@@ -861,16 +860,19 @@ else
 				
 				'GAME'	=> ( $row['game_image'] != '-1' ) ? "<img src=\"" . $path_games . $row['game_image'] . "\"  width=\"$game_size\" height=\"$game_size\" alt=\"\" />" : " - ",
 				
-				'MOVE_UP'	=> ( $row['team_order'] != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$team_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $row['team_order'] != $max ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$team_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $row['team_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$team_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $row['team_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url=$team_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_MEMBER'	=> append_sid("$file?mode=_member&amp;$url=$team_id"),
-				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$team_id"),
-				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$team_id"),
+				'U_MEMBER'	=> check_sid("$file?mode=_member&amp;$url=$team_id"),
+				'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$team_id"),
+				'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$team_id"),
 			));
 		}
 	}
-	else { $template->assign_block_vars('_display._no_team', array()); }
+	else
+	{
+		$template->assign_block_vars('_display._no_team', array());
+	}
 
 	$template->pparse('body');
 			

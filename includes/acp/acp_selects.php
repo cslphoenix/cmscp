@@ -6,18 +6,18 @@ function select_box_image($class, $table, $field, $default = '')
 	#params $table		> table
 	#params $field		> field
 	#params $default	> vorgabe
+	
+	/*
+		require:	acp_news
+					
+	*/
 
 	global $db, $lang;	
 	
 	switch ( $table )
 	{
-		case NEWS_CAT:
-			$lang_field = 'news' . $field;
-			break;
-			
-		default:
-			$lang_field = $field;
-			break;
+		case NEWSCAT:	$lang_field = 'news' . $field;	break;
+		default:		$lang_field = $field;			break;
 	}
 	
 	$sql = "SELECT " . $field . "_id, " . $field . "_title, " . $field . "_image FROM $table ORDER BY " . $field . "_order ASC";
@@ -48,6 +48,96 @@ function select_box_image($class, $table, $field, $default = '')
 	return $select;
 }
 
+#$s_sort = select_team(css, msg, change, name, select);
+#$s_sort = select_team('selectsmall', 'sort_team', true, $url_team, $data_team);
+function select_team($css, $msg, $chg, $name, $mark)
+{
+	global $db, $lang;
+	
+	/*
+		@
+	*/
+	
+	$sql = "SELECT * FROM " . TEAMS . " ORDER BY team_order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$tmp = $db->sql_fetchrowset($result);
+	
+	$s_select = '';
+	
+	if ( $tmp )	
+	{
+		if ( $chg == 'submit' ) 
+		{
+			$s_select .= "<select class=\"$css\" name=\"$name\" id=\"$name\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
+		}
+		else if ( $chg == 'request')
+		{
+			$s_select .= "<select class=\"$css\" name=\"$name\" id=\"$name\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
+		}
+		else
+		{
+			$s_select .= "<select class=\"$css\" name=\"$name\" id=\"$name\">";
+		}
+		$s_select .= "<option value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $msg]) . "</option>";
+		
+		foreach ( $tmp as $k => $v )
+		{
+			$team_id	= $v['team_id'];
+			$team_name	= $v['team_name'];
+			
+			$selected = ( $team_id == $mark ) ? ' selected="selected"' : '';
+			$s_select .= "<option value=\"$team_id\"$selected>" . sprintf($lang['sprintf_select_format'], $team_name) . "</option>";
+		}
+		$s_select .= "</select>";
+	
+	}
+	else
+	{
+		$s_select = sprintf($lang['sprintf_select_format'], $lang['commen_noteams']);
+	}
+	
+	return $s_select;
+}
+
+function select_level($css, $msg, $name, $mark, $level = '')
+{
+	global $lang;
+	
+	debug($level);
+	
+	$s_select = '';
+	
+	$s_select .= "<select class=\"$css\" name=\"$name\" id=\"$name\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
+	$s_select .= "<option value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $msg]) . "</option>";
+	
+	$lng_lvl = $lang['switch_level'];
+	
+	if ( is_array($level) )
+	{
+		foreach ( $level as $key )
+		{
+			unset($key[0]);
+		}
+	}
+	else
+	{
+		unset($lng_lvl[$level]);
+	}
+	
+	
+	foreach ( $lng_lvl as $lvl => $name )
+	{
+		$selected = ( $lvl == $mark ) ? ' selected="selected"' : '';
+		$s_select .= "<option value=\"$lvl\"$selected>" . sprintf($lang['sprintf_select_format'], $name) . "</option>";
+	}
+	$s_select .= "</select>";
+	
+	return $s_select;
+}
+
 function select_box($type, $class, $default = '', $switch = '')
 {
 	/*
@@ -56,7 +146,7 @@ function select_box($type, $class, $default = '', $switch = '')
 	 *	$type = art
 	 *	$class = css
 	 *	$field_id = user_id/group_id
-	 *	$field_name = username/group_name
+	 *	$field_name = user_name/group_name
 	 *	$default = startauswahl
 	 *	$switch = team_join/team_fight
 	 *
@@ -68,14 +158,14 @@ function select_box($type, $class, $default = '', $switch = '')
 	{
 		case 'match':
 			$table	= MATCH;
-			$fields	= 'match_id, match_rival';
+			$fields	= 'match_id, match_rival_name';
 			$where	= ' WHERE match_date >= ' . time();
 			$order	= ' ORDER BY match_id DESC';
 			$selct	= false;
 			break;
 
 		case 'newscat':
-			$table	= NEWS_CAT;
+			$table	= NEWSCAT;
 			$fields	= 'cat_id, cat_title, cat_image';
 			$where	= '';
 			$order	= ' ORDER BY cat_order ASC';
@@ -92,7 +182,7 @@ function select_box($type, $class, $default = '', $switch = '')
 
 		case 'user':
 			$table	= USERS;
-			$fields	= 'user_id, username';
+			$fields	= 'user_id, user_name';
 			$where	= ' WHERE user_id <> ' . ANONYMOUS;
 			$order	= ' ORDER BY user_id DESC';
 			$selct	= false;
@@ -108,7 +198,7 @@ function select_box($type, $class, $default = '', $switch = '')
 			
 		case 'ranks':
 			$table	= RANKS;
-			$fields	= 'rank_id, rank_title';
+			$fields	= 'rank_id, rank_name';
 			$where	= ' WHERE rank_type = ' . $switch;
 			$order	= ' ORDER BY rank_order ASC';
 			$selct	= false;
@@ -153,12 +243,17 @@ function select_box($type, $class, $default = '', $switch = '')
 
 function select_box_files($class, $type, $path, $default = '')
 {
+	/*
+		require:	acp_games
+					acp_newscat
+	*/
+	
 	global $db, $lang, $images;
 	
 	$path_files = scandir($path);
 				
 	$select = '<select class="' . $class . '" name="' . $type . '" id="' . $type . '" onchange="update_image(this.options[selectedIndex].value);">';
-	$select .= '<option value="spacer.gif">' . sprintf($lang['sprintf_select_format'], $lang['select_msg_' . $type ]) . '</option>';
+	$select .= '<option value="spacer.gif">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $type ]) . '</option>';
 	
 	$endung = array('png', 'jpg', 'jpeg', 'gif');
 	
@@ -216,7 +311,7 @@ function _select_rank($class, $default, $type)
 	
 	$order = ( $type == '2' ) ? 'rank_order' : 'rank_id';
 	
-	$sql = 'SELECT rank_id, rank_title, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
+	$sql = 'SELECT rank_id, rank_name, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -227,7 +322,7 @@ function _select_rank($class, $default, $type)
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$selected = ( $row['rank_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_title'] . '&nbsp;</option>';
+		$func_select .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . $row['rank_name'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -239,7 +334,7 @@ function select_newscategory($default)
 {
 	global $db, $lang;
 		
-	$sql = 'SELECT * FROM ' . NEWS_CAT . " ORDER BY cat_order";
+	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY cat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -304,7 +399,7 @@ function _select_match($default, $type, $class)
 	
 	$where = ($type == '') ? ' WHERE match_date > ' . time() : '';
 	
-	$sql = 'SELECT match_id, match_rival, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
+	$sql = 'SELECT match_id, match_rival_name, match_rival_tag FROM ' . MATCH . $where . ' ORDER BY match_date';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -316,7 +411,7 @@ function _select_match($default, $type, $class)
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$selected = ( $row['match_id'] == $default ) ? 'selected="selected"' : '';
-		$func_select .= '<option value="' . $row['match_id'] . '" ' . $selected . ' >&raquo; ' . $row['match_rival'] . ' :: ' . $row['match_rival_tag'] . '&nbsp;</option>';
+		$func_select .= '<option value="' . $row['match_id'] . '" ' . $selected . ' >&raquo; ' . $row['match_rival_name'] . ' :: ' . $row['match_rival_tag'] . '&nbsp;</option>';
 	}
 	$func_select .= '</select>';
 
@@ -457,6 +552,10 @@ function select_order_cat($class, $table, $id, $order)
 
 function select_order($class, $table, $cat, $default = '')
 {
+	/*
+		require:	acp_games
+	*/
+	
 	global $db, $lang;
 	
 	$select = '';
@@ -469,7 +568,7 @@ function select_order($class, $table, $cat, $default = '')
 			$order	= 'ORDER BY server_order ASC';
 			break;
 			
-		case NEWS_CAT:
+		case NEWSCAT:
 			$fields	= 'cat_title, cat_order';
 			$where	= '';
 			$order	= 'ORDER BY cat_order ASC';
@@ -591,38 +690,6 @@ function select_lang($class, $field, $field_lang, $type, $data)
 	$select .= '</select>';
 	
 	return $select;
-}
-
-function img_num($table, $field, $name)
-{
-	global $db;
-	
-	$sql = "SELECT " . $field . "_id FROM $table WHERE " . $field . "_image = '$name'";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrow($result);
-	
-	$num = ( $row[$field . "_id"] ) ? $row[$field . "_id"] : '-1';
-	
-	return $num;
-}
-
-function img_name($table, $field, $num)
-{
-	global $db;
-	
-	$sql = "SELECT " . $field . "_image FROM $table WHERE " . $field . "_id = '$num'";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrow($result);
-	
-	$name = ( $row[$field . "_image"] ) ? $row[$field . "_image"] : '-1';
-	
-	return $name;
 }
 
 function select_maps($tag = '')

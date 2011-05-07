@@ -16,92 +16,106 @@
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="top" width="49%">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="{U_NEWS}" id="current"><img src="{I_NEWS}" width="12" height="12" alt="" />&nbsp;{L_NEWS}</a></li>
-		</ul>
-		</div>
-		<table class="small" border="0" cellspacing="2" cellpadding="1">
+		<table class="index" border="0" cellspacing="0" cellpadding="0">
+		<th colspan="4">
+			<div id="navcontainer">
+				<ul id="navlist">
+					<li><a href="{U_NEWS}" id="current"><img src="{I_NEWS}" width="12" height="12" alt="" />&nbsp;{L_NEWS}</a></li>
+				</ul>
+			</div>
+		</th>
 		<!-- BEGIN row_news -->
-		<tr class="wihte">
-			<td width="90%"><span style="float:right;">{row_news.NEWS_DATE}</span>{row_news.NEWS_TITLE}</td>
-			<td nowrap="nowrap">{row_news.NEWS_PUBLIC} {row_news.NEWS_UPDATE} {row_news.NEWS_DELETE}</td>
+		<tr class="hover">
+			<td>{row_news.GAME}</td>
+			<td>{row_news.TITLE}</td>
+			<td>{row_news.DATE}</td>
+			<td>{row_news.PUBLIC} {row_news.UPDATE} {row_news.DELETE}</td>
 		</tr>
 		<!-- END row_news -->
-		<!-- BEGIN no_entry_news -->
+		<!-- BEGIN _entry_empty_news -->
 		<tr>
-			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
+			<td class="entry_empty" colspan="4" align="center">{L_ENTRY_NO}</td>
 		</tr>
-		<!-- END no_entry_news -->
+		<!-- END _entry_empty_news -->
 		</table>
 	</td>
-	<td width="2%"></td>
 	<td class="top" width="49%">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="{U_MATCH}" id="right">{L_MATCH}&nbsp;<img src="{I_MATCH}" width="12" height="12" alt="" /></a></li>
-		</ul>
-		</div>
-		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN row_match -->
-		<tr class="wihte">
-			<td width="90%"><span style="float:right;">{row_match.MATCH_DATE}</span>{row_match.MATCH_RIVAL}</td>
-			<td nowrap="nowrap">{row_match.MATCH_DETAILS} {row_match.MATCH_UPDATE} {row_match.MATCH_DELETE}</td>
+		<table class="index" border="0" cellspacing="0" cellpadding="0">
+		<th colspan="4">
+			<div id="navcontainer">
+				<ul id="navlist">
+					<li><a href="{U_EVENT}" id="right"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li>
+				</ul>
+			</div>
+		</th>
+		<!-- BEGIN _event_row -->
+		<tr class="hover">
+			<td><img src="{_event_row.LEVEL}" title="{_event_row.LEVEL_EXP}" alt="" /></td>
+			<td>{_event_row.TITLE}</td>
+			<td>{_event_row.DATE}</td>
+			<td>{_event_row.UPDATE} {_event_row.DELETE}</td>
 		</tr>
-		<!-- END row_match -->
+		<!-- END _event_row -->
+		<!-- BEGIN _entry_empty_event -->
+		<tr>
+			<td class="entry_empty" colspan="4" align="center">{L_ENTRY_NO}</td>
+		</tr>
+		<!-- END _entry_empty_event -->
+		</table>
+	</td>
+</tr>
+</table>
+
+<br />
+
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="top" width="49%">
+		<table class="index" border="0" cellspacing="0" cellpadding="0">
+		<th colspan="4">
+			<div id="navcontainer">
+				<ul id="navlist">
+					<li><a href="{U_MATCH}" id="current">{L_MATCH}&nbsp;<img src="{I_MATCH}" width="12" height="12" alt="" /></a></li>
+				</ul>
+			</div>
+		</th>
+		<!-- BEGIN _match_row -->
+		<tr class="hover">
+			<td>{_match_row.GAME}</td>
+			<td>{_match_row.RIVAL}</td>
+			<td>{_match_row.DATE}</td>
+			<td>{_match_row.DETAIL} {_match_row.UPDATE} {_match_row.DELETE}</td>
+		</tr>
+		<!-- END _match_row -->
 		<!-- BEGIN no_entry_match -->
 		<tr>
-			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
+			<td class="entry_empty" colspan="4" align="center">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry_match -->
 		</table>
 	</td>
-</tr>
-</table>
-
-<br />
-
-<table class="update" border="0" cellspacing="0" cellpadding="0">
-<tr>
 	<td class="top" width="49%">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="{U_EVENT}" id="current"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li>
-		</ul>
-		</div>
-		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN row_event -->
-		<tr class="wihte">
-			<td width="90%"><span style="float:right;">{row_event.EVENT_DATE}</span>{row_event.EVENT_TITLE}</td>
-			<td>{row_event.EVENT_UPDATE} {row_event.EVENT_DELETE}</td>
+		<table class="index" border="0" cellspacing="0" cellpadding="0">
+		<th colspan="4">
+			<div id="navcontainer">
+				<ul id="navlist">
+					<li><a href="{U_TRAIN}" id="right">{L_TRAIN}&nbsp;<img src="{I_TRAIN}" width="12" height="12" alt="" /></a></li>
+				</ul>
+			</div>
+		</th>
+		<!-- BEGIN _training_row -->
+		<tr class="hover">
+			<td>{_training_row.GAME}</td>
+			<td>{_training_row.VS}</td>
+			<td>{_training_row.DATE}</td>
+			<td>{_training_row.UPDATE} {_training_row.DELETE}</td>
 		</tr>
-		<!-- END row_event -->
-		<!-- BEGIN no_entry_event -->
+		<!-- END _training_row -->
+		<!-- BEGIN _entry_empty_training -->
 		<tr>
-			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
+			<td class="entry_empty">{L_ENTRY_NO}</td>
 		</tr>
-		<!-- END no_entry_event -->
-		</table>
-	</td>
-	<td width="2%"></td>
-	<td class="top" width="49%">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="{U_TRAIN}" id="right">{L_TRAIN}&nbsp;<img src="{I_TRAIN}" width="12" height="12" alt="" /></a></li>
-		</ul>
-		</div>
-		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN row_training -->
-		<tr class="wihte">
-			<td width="90%"><span style="float:right;">{row_training.TRAINING_DATE}</span>{row_training.TRAINING_VS}</td>
-			<td nowrap="nowrap">{row_training.TRAINING_UPDATE} {row_training.TRAINING_DELETE}</td>
-		</tr>
-		<!-- END row_training -->
-		<!-- BEGIN no_entry_training -->
-		<tr>
-			<td class="row_noentry1" colspan="2" align="center">{NO_ENTRY}</td>
-		</tr>
-		<!-- END no_entry_training -->
+		<!-- END _entry_empty_training -->
 		</table>
 	</td>
 </tr>
@@ -109,26 +123,26 @@
 
 <br />
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="top">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="{U_USERS}" id="right">{L_USERS}&nbsp;<img src="{I_USERS}" width="12" height="12" alt="" /></a></li>
-		</ul>
-		</div>
-		<table class="small" border="0" cellspacing="2" cellpadding="1">
-		<!-- BEGIN row_user -->
-		<tr class="wihte">
-			<td align="left" width="97%"><span style="float:right;">{row_user.USER_REGDATE}</span>{row_user.USER_NAME}</td>
-			<td nowrap="nowrap">{row_user.USER_AUTH} {row_user.USER_UPDATE} {row_user.USER_DELETE}</td>
+	<td>
+		
+		<table class="index" border="0" cellspacing="0" cellpadding="0">
+		<th colspan="4">
+			<div id="navcontainer">
+				<ul id="navlist">
+					<li><a href="{U_USERS}" id="right">{L_USERS}&nbsp;<img src="{I_USERS}" width="12" height="12" alt="" /></a></li>
+				</ul>
+			</div>
+		</th>
+		<!-- BEGIN _user_row -->
+		<tr class="hover">
+			<td><img src="{_user_row.LEVEL}" title="{_user_row.LEVEL_EXP}" alt="" /></td>
+			<td>{_user_row.NAME}</td>
+			<td>{_user_row.REGDATE}</td>
+			<td>{_user_row.AUTH} {_user_row.UPDATE} {_user_row.DELETE}</td>
 		</tr>
-		<!-- END row_user -->
-		<!-- BEGIN no_entry_user -->
-		<tr>
-			<td class="row_noentry" colspan="3" align="center">{NO_ENTRY}</td>
-		</tr>
-		<!-- END no_entry_user -->
+		<!-- END _user_row -->
 		</table>
 	</td>
 </tr>

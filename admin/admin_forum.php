@@ -20,10 +20,10 @@ else
 	$current	= '_submenu_forum';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('forums');
+
+	include($root_path . 'includes/acp/acp_constants.php');
 	
 	$error	= '';
 	$index	= '';
@@ -45,16 +45,23 @@ else
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	
+	$path_dir	= $root_path . 'images/forum/icon/';
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['forum']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
+	$template->set_filenames(array(
+			'body' => 'style/acp_forum.tpl',
+			'tiny' => 'style/tinymce_news.tpl',
+			'uimg' => 'style/inc_java_img.tpl',					
+		));
+	/*
 	//
 	// Start program - define vars
 	//
@@ -103,6 +110,7 @@ else
 	
 	$forum_auth_levels	= array('all', 'reg', 'trial', 'member', 'moderator', 'private', 'admin');
 	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
+	*/
 	
 	function simple_auth($forum_row)
 	{
@@ -246,17 +254,18 @@ else
 		}
 	}
 		
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
 			case '_create':
 			case '_update':
 			
-				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
+				
 				$template->assign_block_vars('_input', array());
 				
-				$template->set_filenames(array('tiny' => 'style/tinymce_news.tpl'));
+				$template->assign_vars(array('PATH' => $path_dir));
+				$template->assign_var_from_handle('UIMG', 'uimg');
 				$template->assign_var_from_handle('TINYMCE', 'tiny');
 				
 				if ( $mode == '_create' && !(request('submit', 1)) )
@@ -612,7 +621,7 @@ else
 					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['forum'], $data['forum_name']),
 				
 					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['forum']),
-					'L_CAT'			=> $lang['common_category'],
+					'L_CAT'			=> $lang['common_cat'],
 					'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['forum']),
 					
 					'L_SUB'			=> $lang['sub'],
@@ -635,8 +644,7 @@ else
 					'DESC'			=> $data['forum_desc'],
 				#	'FIELD'			=> str_replace('profile_', '', $data['profile_field']),
 					
-					'PATH'			=> $root_path . 'images/forum/icon/',
-					'IMAGE'			=> ( $data['forum_icon'] ) ? $root_path . 'images/forum/icon/' . $data['forum_icon'] : $images['icon_acp_spacer'],
+					'IMAGE'			=> ( $data['forum_icon'] ) ? $path_dir . $data['forum_icon'] : $images['icon_acp_spacer'],
 					
 					'S_SUB_NO'		=> (!$data['forum_sub'] ) ? 'checked="checked"' : '',
 					'S_SUB_YES'		=> ( $data['forum_sub'] ) ? 'checked="checked"' : '',
@@ -659,7 +667,7 @@ else
 					
 					'S_IMAGE'	=> select_box_files('post', 'forum_icon', $root_path . 'images/forum/icon/', $data['forum_icon']),
 						
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 				
@@ -673,7 +681,7 @@ else
 								'forum_icon'			=> request('forum_icon', 2),
 								'forum_status'			=> request('forum_status', 1),
 								'forum_legend'			=> request('forum_legend', 1),
-								'forum_order'			=> ( request('forum_order_new', 0) ) ? request('forum_order_new', 0) : request('forum_order', 0),
+								'forum_order'			=> request('forum_order', 0) ? request('forum_order', 0) : request('forum_order_new', 0),
 								'forum_auth'			=> request('forum_auth', 1),
 								'auth_view'				=> request('auth_view', 1),
 								'auth_read'				=> request('auth_read', 1),
@@ -752,17 +760,16 @@ else
 					{
 						if ( $mode == '_create' )
 						{
-							sql(FORUM, 'insert', $data);
+							$db_data = sql(FORUM, $mode, $data);
 							
-							$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$message = $lang['create']
+								. sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							sql(FORUM, 'update', $data, 'forum_id', $data_id);
+							$db_data = sql(FORUM, $mode, $data, 'forum_id', $data_id);
 							
-							 $message = $lang['update']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+							 $message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
 						#$oCache -> sCachePath = './../cache/';
@@ -770,7 +777,7 @@ else
 						
 						orders_new(FORUM, $type, $t_id);
 						
-						log_add(LOG_ADMIN, $log, $mode, $data['forum_name']);
+						log_add(LOG_ADMIN, $log, $mode, $db_data);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -825,7 +832,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$message = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					orders_new(FORUM, $type, $t_id);
 					
@@ -841,13 +848,13 @@ else
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['forum_name']),
+						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['forum_name']),
 
-						'S_ACTION'	=> append_sid($file),
+						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['forum'])); }
+				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['forum'])); }
 				
 				$template->pparse('body');
 				
@@ -856,7 +863,7 @@ else
 			case '_create_cat':
 			case '_update_cat':
 			
-				$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
+				$template->set_filenames(array('body' => 'style/acp_forum.tpl'));
 				$template->assign_block_vars('_input_cat', array());
 				
 				if ( $mode == '_create_cat' && !(request('submit', 1)) )
@@ -912,7 +919,6 @@ else
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
-				$fields .= "<input type=\"hidden\" name=\"cat_order\" value=\"" . $data['cat_order'] . "\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['forum']),
@@ -923,7 +929,7 @@ else
 					
 					'S_ORDER'	=> $s_order,
 					
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 				
@@ -931,33 +937,32 @@ else
 				{
 					$data = array(
 								'cat_name'	=> request('cat_name', 2),
-								'cat_order'	=> ( request('cat_order_new', 0) ) ? request('cat_order_new', 0) : request('cat_order', 0),
+								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
 							);
 							
-					$error .= ( !$data['cat_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					
 					$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(FORUM_CAT, 'cat_order', '') : $data['cat_order'];
+					
+					$error .= ( !$data['cat_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					
 					if ( !$error )
 					{
 						if ( $mode == '_create_cat' )
 						{
-							sql(FORUM_CAT, 'insert', $data);
+							$db_data = sql(FORUM_CAT, $mode, $data);
 							
-							$message = $lang['create_c'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$message = $lang['create_c']
+								. sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							sql(FORUM_CAT, 'update', $data, 'cat_id', $data_cat);
+							$db_data = sql(FORUM_CAT, $mode, $data, 'cat_id', $data_cat);
 							
-							$message = $lang['update_c']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url_c=$data_cat") . '">', '</a>');
+							$message = $lang['update_c'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url_c=$data_cat"));
 						}
 						
 						orders(FORUM_CAT);
 						
-						log_add(LOG_ADMIN, $log, $mode, $data['cat_name']);
+						log_add(LOG_ADMIN, $log, $mode, $db_data);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
@@ -991,16 +996,17 @@ else
 			
 				if ( $data_cat && $confirm )
 				{
-					sql(FORUM_CAT, 'delete', false, 'cat_id', $data_cat);
+					$db_data = sql(FORUM_CAT, $mode, $data, 'cat_id', $data_cat);
 					
-					$message = $lang['delete_c'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$message = $lang['delete_c']
+						. sprintf($lang['return'], check_sid($file), $acp_title);
 					
 				#	$oCache -> sCachePath = './../cache/';
 				#	$oCache -> deleteCache('_display_navi_news');
 					
 					orders(PROFILE_CAT);
 					
-					log_add(LOG_ADMIN, $log, $mode, $data['cat_name']);
+					log_add(LOG_ADMIN, $log, $mode, $db_data);
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_cat && !$confirm )
@@ -1012,19 +1018,19 @@ else
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm_c'], $data['cat_name']),
+						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm_c'], $data['cat_name']),
 
-						'S_ACTION'	=> append_sid($file),
+						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['forum_cat'])); }
+				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['forum_cat'])); }
 				
 				$template->pparse('body');
 				
 				break;
 				
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -1034,7 +1040,7 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => 'style/acp_forums.tpl'));
+	$template->set_filenames(array('body' => 'style/acp_forum.tpl'));
 	$template->assign_block_vars('_display', array());
 	
 	$template->assign_vars(array(
@@ -1044,14 +1050,13 @@ else
 		
 		'L_AUTH'			=> sprintf($lang['sprintf_auth'], $lang['forum']),
 		
-		'S_CREATE_CAT'		=> append_sid("$file?mode=_create_cat"),
-		'S_CREATE_FORUM'	=> append_sid("$file?mode=_create"),
+		'S_CREATE_CAT'		=> check_sid("$file?mode=_create_cat"),
+		'S_CREATE_FORUM'	=> check_sid("$file?mode=_create"),
 		
 	));
 	
-	$max = get_data_max(FORUM_CAT, 'cat_order', '');
+	$max = maxi(FORUM_CAT, 'cat_order', '');
 	$tmp = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
-#	$tmp = get_data_array(FORUM_CAT, '', 'cat_order', 'ASC');
 	
 	if ( $tmp )
 	{
@@ -1071,11 +1076,11 @@ else
 			$template->assign_block_vars('_display._cat_row', array(
 				'NAME'		=> $tmp[$i]['cat_name'],
 				
-				'MOVE_UP'	=> ( $tmp[$i]['cat_order'] != '10' )		? '<a id="right" href="' . append_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" /></a>',
-				'MOVE_DOWN'	=> ( $tmp[$i]['cat_order'] != $max['max'] )	? '<a id="right" href="' . append_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" /></a>',
+				'MOVE_UP'	=> ( $tmp[$i]['cat_order'] != '10' ) ? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" /></a>',
+				'MOVE_DOWN'	=> ( $tmp[$i]['cat_order'] != $max ) ? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" /></a>',
 				
-				'U_UPDATE'	=> append_sid("$file?mode=_update_cat&amp;$url_c=$cat_id"),
-				'U_DELETE'	=> append_sid("$file?mode=_delete_cat&amp;$url_c=$cat_id"),
+				'U_UPDATE'	=> check_sid("$file?mode=_update_cat&amp;$url_c=$cat_id"),
+				'U_DELETE'	=> check_sid("$file?mode=_delete_cat&amp;$url_c=$cat_id"),
 			
 				'S_SUBMIT'	=> "add_forum[$cat_id]",
 				'S_NAME'	=> "forum_name[$cat_id]",
@@ -1108,12 +1113,12 @@ else
 							
 							'AUTH'		=> $simple_auth,
 							
-							'MOVE_UP'	=> ( $forms[$j]['forum_order'] != '10' )						? '<a href="' . append_sid("$file?mode=_order&amp;cat_type=$cat_id&amp;move=-15&amp;$url=$forum_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-							'MOVE_DOWN'	=> ( $forms[$j]['forum_order'] != $max_forum['max' . $cat_id] )	? '<a href="' . append_sid("$file?mode=_order&amp;cat_type=$cat_id&amp;move=+15&amp;$url=$forum_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+							'MOVE_UP'	=> ( $forms[$j]['forum_order'] != '10' )						? '<a href="' . check_sid("$file?mode=_order&amp;cat_type=$cat_id&amp;move=-15&amp;$url=$forum_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+							'MOVE_DOWN'	=> ( $forms[$j]['forum_order'] != $max_forum['max' . $cat_id] )	? '<a href="' . check_sid("$file?mode=_order&amp;cat_type=$cat_id&amp;move=+15&amp;$url=$forum_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 							
-							'U_RESYNC' => append_sid("$file?mode=_resync&amp;$url=$forum_id"),
-							'U_UPDATE' => append_sid("$file?mode=_update&amp;$url=$forum_id"),						
-							'U_DELETE' => append_sid("$file?mode=_delete&amp;$url=$forum_id"),
+							'U_RESYNC' => check_sid("$file?mode=_resync&amp;$url=$forum_id"),
+							'U_UPDATE' => check_sid("$file?mode=_update&amp;$url=$forum_id"),						
+							'U_DELETE' => check_sid("$file?mode=_delete&amp;$url=$forum_id"),
 						));
 					}
 					
@@ -1132,18 +1137,21 @@ else
 								
 								'AUTH'		=> $simple_auth_sub,
 								
-								'MOVE_UP'	=> ( $subs[$k]['forum_order'] != '10' )							? '<a href="' . append_sid("$file?mode=_order_sub&amp;cat_form=$forum_id&amp;move=-15&amp;$url=$sub_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-								'MOVE_DOWN'	=> ( $subs[$k]['forum_order'] != $max_sub['max' . $forum_id] )	? '<a href="' . append_sid("$file?mode=_order_sub&amp;cat_form=$forum_id&amp;move=+15&amp;$url=$sub_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+								'MOVE_UP'	=> ( $subs[$k]['forum_order'] != '10' )							? '<a href="' . check_sid("$file?mode=_order_sub&amp;cat_form=$forum_id&amp;move=-15&amp;$url=$sub_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+								'MOVE_DOWN'	=> ( $subs[$k]['forum_order'] != $max_sub['max' . $forum_id] )	? '<a href="' . check_sid("$file?mode=_order_sub&amp;cat_form=$forum_id&amp;move=+15&amp;$url=$sub_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 								
-								'U_RESYNC' => append_sid("$file?mode=_resync&amp;$url=$sub_id"),
-								'U_UPDATE' => append_sid("$file?mode=_update&amp;$url=$sub_id"),						
-								'U_DELETE' => append_sid("$file?mode=_delete&amp;$url=$sub_id"),
+								'U_RESYNC' => check_sid("$file?mode=_resync&amp;$url=$sub_id"),
+								'U_UPDATE' => check_sid("$file?mode=_update&amp;$url=$sub_id"),						
+								'U_DELETE' => check_sid("$file?mode=_delete&amp;$url=$sub_id"),
 							));
 						}
 					}
 				}
 			}
-			else { $template->assign_block_vars('_display._cat_row._no_entry', array()); }
+			else
+			{
+				$template->assign_block_vars('_display._cat_row._no_entry', array());
+			}
 		}	
 	}
 }

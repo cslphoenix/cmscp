@@ -81,6 +81,20 @@
 		return retValue;
 	}
 	
+	function toggle(name)
+	{
+		var el = document.getElementById(name);
+		
+		if ( el.style.display != 'none' )
+		{
+			el.style.display = 'none';
+		}
+		else
+		{
+			el.style.display = '';
+		}
+	}
+	
 	// ]]>
 	</script>
 
@@ -153,7 +167,7 @@
 				<form action="{S_LOGIN_ACTION}" method="post">
 				<tr>
 					<td width="100%">{SITENAME}</td>
-					<td align="left"><input type="text" class="post" name="username" size="10"></td>
+					<td align="left"><input type="text" class="post" name="user_name" size="10"></td>
 					<td align="left"><input class="post" type="password" name="password" size="10" maxlength="32"> <!--  autocomplete="off" --></td>
 					<td align="left"><input type="submit" class="button3" name="login" value=""></td>
 					<td>&nbsp;</td>
@@ -284,7 +298,7 @@
 				<!-- END _news_subnavi_row -->
 				<!-- BEGIN _news_subnavi_empty -->
 				<tr>
-					<td colspan="3" align="center">{NO_ENTRY}</td>
+					<td colspan="3" align="center">{L_ENTRY_NO}</td>
 				</tr>
 				<!-- END _news_subnavi_empty -->
 				</table>
@@ -304,7 +318,7 @@
 				<!-- END _match_subnavi_row -->
 				<!-- BEGIN _match_subnavi_empty -->
 				<tr>
-					<td colspan="3" align="center">{NO_ENTRY}</td>
+					<td colspan="3" align="center">{L_ENTRY_NO}</td>
 				</tr>
 				<!-- END _match_subnavi_empty -->
 				</table>
@@ -369,7 +383,7 @@
 						<!-- END _teams_row -->
 						<!-- BEGIN _teams_subnavi_empty -->
 						<tr>
-							<td>{NO_ENTRY}</td>
+							<td>{L_ENTRY_NO}</td>
 						</tr>
 						<!-- END _teams_subnavi_empty -->
 						</table>

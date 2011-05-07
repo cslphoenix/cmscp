@@ -244,7 +244,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 		
-			$message = $lang['contact_save'] . sprintf($lang['click_return_contact'], '<a href="' . append_sid("contact.php?mode=$mode") . '">', '</a>');
+			$message = $lang['contact_save'] . sprintf($lang['click_return_contact'], '<a href="' . check_sid("contact.php?mode=$mode") . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -264,17 +264,17 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 		
 		'S_TYPE'			=> _select_type($contact_wartype),
 //		'S_TEAM'			=> _select_team($team_id, $typ, 'post'),
-		'S_TEAM'			=> select_box('team', 'select', 'team_id', 'team_name', $team_id"),
+		'S_TEAM'			=> select_box('team', 'select', 'team_id', 'team_name', $team_id),
 		'S_CATEGORIE'		=> _select_categorie($contact_categorie),
 		'S_HIDDEN_FIELD'	=> $s_hidden_field,
-		'S_CONTACT_ACTION'	=> append_sid('contact.php?mode=$mode'),
+		'S_CONTACT_ACTION'	=> check_sid('contact.php?mode=$mode'),
 		
 	));
 
 }
 else
 {
-	redirect(append_sid('contact.php?mode=contact', true));
+	redirect(check_sid('contact.php?mode=contact', true));
 }
 
 $template->pparse('body');

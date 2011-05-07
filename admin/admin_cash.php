@@ -20,13 +20,13 @@ else
 	$current	= '_submenu_cash';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('cash');
-	
+
 	$error	= '';
 	$index	= '';
+	$fields	= '';
+	
 	$log	= LOG_SEK_CASH;
 	$url	= POST_CASH_URL;
 	$url_u	= POST_CASH_USER_URL;
@@ -40,23 +40,23 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	$path_dir	= $root_path . $settings['path_games'] . '/';
+
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['cash']);
-	$fields	= '';
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_cash'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
+	
+	$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 	
 	switch ( $mode )
 	{
 		case '_bankdata':
 			
-			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('_bankdata', array());
 			
 			if ( !request('submit', 1) )
@@ -92,7 +92,7 @@ else
 				'NUMBER'		=> $data['bank_number'],
 				'REASON'		=> $data['bank_reason'],
 
-				'S_ACTION'		=> append_sid($file),
+				'S_ACTION'		=> check_sid($file),
 				'S_FIELDS'		=> $fields,
 			));
 			
@@ -141,7 +141,7 @@ else
 						$message = $lang['create_bank'];
 					}
 					
-					$message .= sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$message .= sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					log_add(LOG_ADMIN, $log, $mode);
 					message(GENERAL_MESSAGE, $message);
@@ -168,7 +168,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			
-				$message = $lang['delete_bank'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+				$message = $lang['delete_bank'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				log_add(LOG_ADMIN, $log, $mode);
 				message(GENERAL_MESSAGE, $message);
@@ -184,20 +184,19 @@ else
 					'M_TITLE'	=> $lang['common_confirm'],
 					'M_TEXT'	=> $lang['confirm'],
 
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
 			
 			break;
 			
-		case '_create_user':
-		case '_update_user':
+		case '_create':
+		case '_update':
 		
-			$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
 			$template->assign_block_vars('_input_user', array());
 			
-			if ( $mode == '_create_user' && !request('submit', 1) )
+			if ( $mode == '_create' && !request('submit', 1) )
 			{
 				$data = array(
 							'user_id'		=> request('user_id', 0),
@@ -206,7 +205,7 @@ else
 							'user_interval'	=> '1',
 						);
 			}
-			else if ( $mode == '_update_user' && !request('submit', 1) )
+			else if ( $mode == '_update' && !request('submit', 1) )
 			{
 				$data = data(CASH_USER, $data_user, false, 1, 1);
 			}
@@ -221,7 +220,7 @@ else
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= '<input type="hidden" name="' . $url_u . '" value="' . $data_user . '" />';
+			$fields .= "<input type=\"hidden\" name=\"$url_u\" value=\"$data_user\" />";
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> $acp_title,
@@ -241,7 +240,7 @@ else
 				'S_INTAVAL_MONTH'	=> ( $data['user_interval'] == '0' ) ? ' checked="checked"' : '',
 				'S_INTAVAL_ONLY'	=> ( $data['user_interval'] == '1' ) ? ' checked="checked"' : '',
 
-				'S_ACTION'			=> append_sid($file),
+				'S_ACTION'			=> check_sid($file),
 				'S_FIELDS'			=> $fields,
 			));
 			
@@ -257,7 +256,7 @@ else
 				
 				if ( !$error )
 				{
-					if ( $mode == '_create_user' )
+					if ( $mode == '_create' )
 					{
 						$sql = "INSERT INTO " . CASH_USER . " (user_id, user_amount, user_month, user_interval)
 									VALUES ('$user_id', '$user_amount', '$user_month', '$user_interval')";
@@ -266,7 +265,7 @@ else
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$message = $lang['create_user'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+						$message = $lang['create_user'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
@@ -282,8 +281,8 @@ else
 						}
 						
 						$message = $lang['update_user']
-							. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-							. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&$url_u=$data_user") . '">', '</a>');
+							. sprintf($lang['return'], check_sid($file), $acp_title)
+							. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=$mode&$url_u=$data_user"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $user_id);
@@ -313,9 +312,9 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				$message = $lang['delete_user'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+				$message = $lang['delete_user'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
-				log_add(LOG_ADMIN, $log, $mode, $data['username']);
+				log_add(LOG_ADMIN, $log, $mode, $data['user_name']);
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_user && !$confirm )
@@ -327,13 +326,13 @@ else
 				
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm_user'], $data['username']),
+					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm_user'], $data['user_name']),
 
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
-			else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['user'])); }
+			else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['user'])); }
 			
 			break;
 			
@@ -393,7 +392,7 @@ else
 				'S_INT_WEEKS'		=> ( $data['cash_interval'] == INTERVAL_WEEKS ) ? ' checked="checked"' : '',
 				'S_INT_WEEKLY'		=> ( $data['cash_interval'] == INTERVAL_WEEKLY ) ? ' checked="checked"' : '',
 
-				'S_ACTION'			=> append_sid($file),
+				'S_ACTION'			=> check_sid($file),
 				'S_FIELDS'			=> $fields,
 			));
 			
@@ -417,7 +416,7 @@ else
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$message = $lang['create'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+						$message = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
@@ -433,8 +432,8 @@ else
 						}
 						
 						$message = $lang['update_cash']
-							. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-							. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+							. sprintf($lang['return'], check_sid($file), $acp_title)
+							. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=$mode&amp;$url=$data_id"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $cash_name);
@@ -464,7 +463,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 			
-				$message = $lang['delete_cash'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+				$message = $lang['delete_cash'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				log_add(LOG_ADMIN, $log, $mode, $data['cash_name']);
 				message(GENERAL_MESSAGE, $message);
@@ -478,13 +477,13 @@ else
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_cash'], $data['cash_name']),
+					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['delete_confirm_cash'], $data['cash_name']),
 					
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
-			else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['cash'])); }
+			else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['cash'])); }
 
 			break;
 		
@@ -499,7 +498,7 @@ else
 			$cash = data(CASH, false, true, 0, false);
 			$bank = data(CASH_BANK, false, false, 0, true);
 			
-			$sql = "SELECT cu.*, u.username, u.user_color
+			$sql = "SELECT cu.*, u.user_name, u.user_color
 						FROM " . CASH_USER . " cu
 							LEFT JOIN " . USERS . " u ON cu.user_id = u.user_id
 						WHERE u.user_id <> " . ANONYMOUS . "
@@ -552,8 +551,8 @@ else
 						'AMOUNT'	=> $cash[$i]['cash_amount'],
 						'DATE'		=> $cash_interval,
 						
-						'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$cash_id"),
-						'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$cash_id"),
+						'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$cash_id"),
+						'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$cash_id"),
 					));
 					
 					$postage_cash += $cash_amount;
@@ -584,13 +583,13 @@ else
 					$user_interval = ( $user[$i]['user_interval'] ) ? $lang['interval_only'] : $lang['interval_month'];
 					
 					$template->assign_block_vars('_display._cashuser_row', array(
-						'USERNAME'	=> $user[$i]['username'],
+						'USERNAME'	=> $user[$i]['user_name'],
 						'MONTH'		=> $user[$i]['user_month'],
 						'AMOUNT'	=> $user[$i]['user_amount'],
 						'INTERVAL'	=> $user_interval,
 						
-						'U_UPDATE'	=> append_sid("$file?mode=_update_user&amp;$url_u=$user_id"),
-						'U_DELETE'	=> append_sid("$file?mode=_delete_user&amp;$url_u=$user_id"),
+						'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url_u=$user_id"),
+						'U_DELETE'	=> check_sid("$file?mode=_delete_user&amp;$url_u=$user_id"),
 					));
 				}
 			}
@@ -614,7 +613,7 @@ else
 				'L_REASON'		=> $lang['cash_reason'],
 				
 				'L_NAME'			=> $lang['cash_name'],
-				'L_USERNAME'		=> $lang['username'],
+				'L_USERNAME'		=> $lang['user_name'],
 				'L_INTERVAL'		=> $lang['interval'],
 				'L_POSTAGE'			=> $lang['postage'],
 				
@@ -633,11 +632,11 @@ else
 				'POSTAGE_CASHUSER'	=> $postage_cashuser,
 				'POSTAGE_CLASS'		=> $postage_class,
 				
-				'S_CREATE_USER_BOX'	=> select_box('user', 'selectsmall', 'user_id', 'username'),
-				'S_BANKDATA'		=> append_sid("$file?mode=_bankdata"),				
-				'S_CREATE_USER'		=> append_sid("$file?mode=_create_user"),
-				'S_CREATE'			=> append_sid("$file?mode=_create"),
-				'S_ACTION'			=> append_sid($file),
+				'S_CREATE_USER_BOX'	=> select_box('user', 'selectsmall', 'user_id', 'user_name'),
+				'S_BANKDATA'		=> check_sid("$file?mode=_bankdata"),				
+				'S_CREATE_USER'		=> check_sid("$file?mode=_create"),
+				'S_CREATE'			=> check_sid("$file?mode=_create"),
+				'S_ACTION'			=> check_sid($file),
 			));
 			
 			break;

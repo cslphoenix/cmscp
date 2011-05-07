@@ -19,15 +19,13 @@ else
 	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
 	$no_page_header = $cancel;
 	require('./pagestart.php');
-	include($root_path . 'includes/functions_admin.php');
-	include($root_path . 'includes/functions_newsletter.php');
 	
 	if ( !$userauth['auth_newsletter'] && $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid('admin_newsletter.php', true)) : false;
+	( $header ) ? redirect('admin/' . check_sid('admin_newsletter.php', true)) : false;
 	
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
@@ -52,7 +50,7 @@ else
 	
 	$s_index = '';
 	
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
@@ -96,7 +94,7 @@ else
 					'NL_MAIL'			=> $newsletter['newsletter_mail'],
 					
 					'S_FIELDS'	=> $fields,
-					'S_NL_ACTION'		=> append_sid('admin_newsletter.php'),
+					'S_NL_ACTION'		=> check_sid('admin_newsletter.php'),
 				));
 			
 				$template->pparse('body');
@@ -121,7 +119,7 @@ else
 				
 				log_add(LOG_ADMIN, $log, 'acp_newsletter_edit', $newsletter_mail);
 	
-				$message = $lang['create_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newscat.php') . '">', '</a>');
+				$message = $lang['create_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newscat.php'));
 				message(GENERAL_MESSAGE, $message);
 
 				break;
@@ -144,7 +142,7 @@ else
 				
 				log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
 				
-				$message = $lang['update_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
+				$message = $lang['update_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newsletter.php'));
 				message(GENERAL_MESSAGE, $message);
 	
 				break;
@@ -165,7 +163,7 @@ else
 				
 					log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
 					
-					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
+					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newsletter.php'));
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -181,7 +179,7 @@ else
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_newsletter'],
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
-						'S_ACTION'	=> append_sid('admin_newsletter.php'),
+						'S_ACTION'	=> check_sid('admin_newsletter.php'),
 						'S_FIELDS'	=> $fields,
 					));
 				}
@@ -208,7 +206,7 @@ else
 				
 					log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
 					
-					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('admin_newsletter.php') . '">', '</a>');
+					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newsletter.php'));
 					message(GENERAL_MESSAGE, $message);
 				
 				}
@@ -223,7 +221,7 @@ else
 						'MESSAGE_TEXT'		=> $lang['confirm_delete_newsletter_all'],
 						'L_YES'				=> $lang['common_yes'],
 						'L_NO'				=> $lang['common_no'],
-						'S_ACTION'	=> append_sid('admin_newsletter.php'),
+						'S_ACTION'	=> check_sid('admin_newsletter.php'),
 						'S_FIELDS'	=> $fields,
 					));
 				}
@@ -236,7 +234,7 @@ else
 				
 				break;
 			
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 				break;
 		}
 	
@@ -261,7 +259,7 @@ else
 		'L_DELETE'			=> $lang['common_delete'],
 		'L_ALLDELETE'		=> $lang['alldelete'],
 		
-		'S_NL_ACTION'		=> append_sid('admin_newsletter.php'),
+		'S_NL_ACTION'		=> check_sid('admin_newsletter.php'),
 	));
 	
 	$sql = 'SELECT * FROM ' . NEWSLETTER . ' ORDER BY newsletter_id';
@@ -289,9 +287,9 @@ else
 				'NL_MAIL'		=> $newsletter_data[$i]['newsletter_mail'],
 				'NL_STATUS'		=> $newsletter_data[$i]['newsletter_status'],
 				
-				'U_PUBLIC'		=> append_sid('admin_newsletter.php?mode=public&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
-				'U_DELETE'		=> append_sid('admin_newsletter.php?mode=delete&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
-				'U_EDIT'		=> append_sid('admin_newsletter.php?mode=edit&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
+				'U_PUBLIC'		=> check_sid('admin_newsletter.php?mode=public&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
+				'U_DELETE'		=> check_sid('admin_newsletter.php?mode=delete&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
+				'U_EDIT'		=> check_sid('admin_newsletter.php?mode=edit&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
 			));
 		}
 	}

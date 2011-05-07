@@ -3,7 +3,6 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
 </div>
 
@@ -28,7 +27,7 @@
 <!-- END _link_row -->
 <!-- BEGIN _no_entry_link -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_link -->
 </table>
@@ -36,7 +35,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="network_name[1]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE_LINK}"></td>
 </tr>
 </table>
 
@@ -55,7 +54,7 @@
 <!-- END _partner_row -->
 <!-- BEGIN _no_entry_partner -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_partner -->
 </table>
@@ -63,7 +62,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="network_name[2]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE_PARTNER}"></td>
 </tr>
 </table>
 	
@@ -82,7 +81,7 @@
 <!-- END _sponsor_row -->
 <!-- BEGIN _no_entry_sponsor -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_sponsor -->
 </table>
@@ -90,7 +89,7 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="text" class="post" name="network_name[3]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE_SPONSOR}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -98,71 +97,7 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript">
-	
-	function update_image(newimage)
-	{
-		document.getElementById('image').src = (newimage) ? "{NETWORKS_PATH}/" + encodeURI(newimage) : "./../images/spacer.gif";
-	}
-
-	var request = false;
-
-	// Request senden
-	function setRequest(value)
-	{
-		// Request erzeugen
-		if (window.XMLHttpRequest)
-		{// code for IE7+, Firefox, Chrome, Opera, Safari
-			request=new XMLHttpRequest();
-		}
-		else
-		{// code for IE6, IE5
-			request=new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		
-		// überprüfen, ob Request erzeugt wurde
-		if (!request)
-		{
-			alert("Kann keine XMLHTTP-Instanz erzeugen");
-			return false;
-		}
-		else
-		{
-			var url = "ajax/ajax_network.php";
-			// Request öffnen
-			request.open('post', url, true);
-			// Requestheader senden
-			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			// Request senden
-			request.send('name='+value);
-		//	request.send("name="+value+"&option="+option);
-			// Request auswerten
-			request.onreadystatechange = interpretRequest;
-		}
-	}
-
-	// Request auswerten
-	function interpretRequest() {
-		switch (request.readyState) {
-			// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
-			case 4:
-				if (request.status != 200) {
-					alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
-				} else {
-					var content = request.responseText;
-					// den Inhalt des Requests in das <div> schreiben
-					document.getElementById('content').innerHTML = content;
-				}
-				break;
-			
-			default:
-					document.getElementById('close').style.display = "none";
-				break;
-		}
-	}
-
-</script>
-
+{AJAX}
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <div id="navcontainer">
 <ul id="navlist">
@@ -198,7 +133,7 @@
 	<td class="row2"><input type="text" class="post" name="network_url" id="network_url" value="{URL}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="network_image">{L_IMAGE}:</label></td>
+	<td class="row1"><label for="network_image">{L_IMAGE}:</label></td>
 	<td class="row3">
 		<!-- BEGIN _image -->
 		<img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="network_image_delete">&nbsp;{L_IMAGE_DELETE}<br />
@@ -209,9 +144,9 @@
 <tr>
 	<td class="row1"><label>{L_TYPE}: *</label></td>
 	<td class="row2">
-		<label><input type="radio" name="network_type" value="1" onclick="setRequest('1')" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br />
-		<label><input type="radio" name="network_type" value="2" onclick="setRequest('2')" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br />
-		<label><input type="radio" name="network_type" value="3" onclick="setRequest('3')" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label>
+		<label><input type="radio" name="network_type" value="1" onclick="setRequest('network', '1')" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br />
+		<label><input type="radio" name="network_type" value="2" onclick="setRequest('network', '2')" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br />
+		<label><input type="radio" name="network_type" value="3" onclick="setRequest('network', '3')" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label>
 	</td> 
 </tr>
 <tr>

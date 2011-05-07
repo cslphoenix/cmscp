@@ -66,7 +66,7 @@ function get_data($mode, $id, $type)
 		break;
 		
 		case 'newscat':
-			$table		= NEWS_CAT;
+			$table		= NEWSCAT;
 			$idfield	= 'cat_id';
 		break;
 		
@@ -86,7 +86,7 @@ function get_data($mode, $id, $type)
 			break;
 		
 		case 'navi':
-			$table		= NAVIGATION;
+			$table		= NAVI;
 			$idfield	= 'navi_id';
 			break;
 			
@@ -109,7 +109,7 @@ function get_data($mode, $id, $type)
 			$table		= NEWS;
 			$idfield	= 'news_id';
 			$connection	= 'news_cat';
-			$table2		= NEWS_CAT;
+			$table2		= NEWSCAT;
 			$idfield2	= 'cat_id';
 		break;
 		
@@ -205,7 +205,7 @@ function orders($mode, $type = '')
 		break;
 		
 		case 'newscat':
-			$table		= NEWS_CAT;
+			$table		= NEWSCAT;
 			$idfield	= 'cat_id';
 			$orderfield	= 'cat_order';
 		break;
@@ -232,7 +232,7 @@ function orders($mode, $type = '')
 			break;
 		
 		case 'navi':
-			$table		= NAVIGATION;
+			$table		= NAVI;
 			$idfield	= 'navi_id';
 			$orderfield = 'navi_order';
 			$typefield	= 'navi_type';

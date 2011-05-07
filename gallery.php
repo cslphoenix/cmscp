@@ -40,7 +40,7 @@ if ( $data_id )
 	{
 		if ( !$userdata['session_logged_in'] )
 		{
-			redirect(append_sid('login.php?redirect=gallery.php&' . POST_GALLERY_URL . '=' . $data_id, true));
+			redirect(check_sid('login.php?redirect=gallery.php&' . POST_GALLERY_URL . '=' . $data_id, true));
 		}
 		else
 		{
@@ -148,9 +148,9 @@ else
 			'GALLERY_CREATE'	=> create_date($config['default_dateformat'], $galleries[$i]['gallery_pics'], $userdata['user_timezone']),
 			'GALLERY_UPDATE'	=> create_date($config['default_dateformat'], $galleries[$i]['gallery_pics'], $userdata['user_timezone']),
 			
-			'U_GALLERY'			=> append_sid('gallery.php?' . POST_GALLERY_URL . '=' . $galleries[$i]['gallery_id']),
-#			'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
-#			'TO_TEAM'		=> append_sid('gallery.php?mode=view&amp;' . POST_GALLERY_URL . '=' . $teams[$j]['team_id']),
+			'U_GALLERY'			=> check_sid('gallery.php?' . POST_GALLERY_URL . '=' . $galleries[$i]['gallery_id']),
+#			'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
+#			'TO_TEAM'		=> check_sid('gallery.php?mode=view&amp;' . POST_GALLERY_URL . '=' . $teams[$j]['team_id']),
 		));
 	}
 }	

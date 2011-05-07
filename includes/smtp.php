@@ -117,7 +117,7 @@ function smtpmail($mail_to, $subject, $message, $headers = '')
 
 	// Do we want to use AUTH?, send RFC2554 EHLO, else send RFC821 HELO
 	// This improved as provided by SirSir to accomodate
-	if( !empty($board_config['smtp_username']) && !empty($board_config['smtp_password']) )
+	if( !empty($board_config['smtp_user_name']) && !empty($board_config['smtp_password']) )
 	{ 
 		fputs($socket, "EHLO " . $board_config['smtp_host'] . "\r\n");
 		server_parse($socket, "250", __LINE__);
@@ -125,7 +125,7 @@ function smtpmail($mail_to, $subject, $message, $headers = '')
 		fputs($socket, "AUTH LOGIN\r\n");
 		server_parse($socket, "334", __LINE__);
 
-		fputs($socket, base64_encode($board_config['smtp_username']) . "\r\n");
+		fputs($socket, base64_encode($board_config['smtp_user_name']) . "\r\n");
 		server_parse($socket, "334", __LINE__);
 
 		fputs($socket, base64_encode($board_config['smtp_password']) . "\r\n");

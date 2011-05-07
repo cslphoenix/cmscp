@@ -6,13 +6,13 @@
 
 <!-- BEGIN listitem --><li><!-- END listitem -->
 
-<!-- BEGIN quote_username_open --></span>
+<!-- BEGIN quote_user_name_open --></span>
 <table width="90%" cellspacing="1" cellpadding="3" border="0" align="center">
 <tr> 
 	  <td><span class="genmed"><b>{USERNAME} {L_WROTE}:</b></span></td>
 	</tr>
 	<tr>
-	  <td class="quote"><!-- END quote_username_open -->
+	  <td class="quote"><!-- END quote_user_name_open -->
 <!-- BEGIN quote_open --></span>
 <table width="90%" cellspacing="1" cellpadding="3" border="0" align="center">
 <tr> 

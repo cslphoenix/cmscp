@@ -47,7 +47,7 @@ $template->assign_vars(array(
 	'L_FORUM_LOCKED' => $lang['Forum_is_locked'],
 	'L_MARK_FORUMS_READ' => $lang['Mark_all_forums'], 
 
-	'U_MARK_READ' => append_sid('index.$phpEx?mark=forums'),
+	'U_MARK_READ' => check_sid('index.$phpEx?mark=forums'),
 ));
 
 if ( $cats )
@@ -55,7 +55,7 @@ if ( $cats )
 	//
 	// Define appropriate SQL
 	//
-	$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id
+	$sql = "SELECT f.*, p.post_time, p.post_user_name, u.user_name, u.user_id
 				FROM (( " . FORUM . " f
 				LEFT JOIN " . POSTS . " p ON p.post_id = f.forum_last_post_id )
 				LEFT JOIN " . USERS . " u ON u.user_id = p.poster_id )
@@ -100,7 +100,7 @@ if ( $cats )
 					$template->assign_block_vars('_cat_row', array(
 						'CAT_ID' => $cat_id,
 						'CAT_DESC' => $cats[$i]['cat_name'],
-						'U_VIEWCAT' => append_sid('forum.php?' . POST_CATEGORY_URL . '=' . $cat_id)
+						'U_VIEWCAT' => check_sid('forum.php?' . POST_CATEGORY_URL . '=' . $cat_id)
 					));
 					
 					for ( $j = 0; $j < count($forms); $j++ )
@@ -177,9 +177,9 @@ if ( $cats )
 	
 									$last_post = $last_post_time . '<br>';
 	
-									$last_post .= ( $forms[$j]['user_id'] == ANONYMOUS ) ? ( ($forms[$j]['post_username'] != '' ) ? $forms[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER_URL . '='  . $forms[$j]['user_id']) . '">' . $forms[$j]['username'] . '</a> ';
+									$last_post .= ( $forms[$j]['user_id'] == ANONYMOUS ) ? ( ($forms[$j]['post_user_name'] != '' ) ? $forms[$j]['post_user_name'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER_URL . '='  . $forms[$j]['user_id']) . '">' . $forms[$j]['user_name'] . '</a> ';
 									
-									$last_post .= '<a href="' . append_sid('viewtopic.php?'  . POST_POST_URL . '=' . $forms[$j]['forum_last_post_id']) . '#' . $forms[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
+									$last_post .= '<a href="' . check_sid('viewtopic.php?'  . POST_POST_URL . '=' . $forms[$j]['forum_last_post_id']) . '#' . $forms[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
 								}
 								else
 								{
@@ -200,7 +200,7 @@ if ( $cats )
 									'LAST_POST' => $last_post,
 									'L_FORUM_FOLDER_ALT' => $folder_alt, 
 	
-									'U_VIEWFORUM' => append_sid('viewforum.php?' . POST_FORUM_URL . '=' . $forum_id),
+									'U_VIEWFORUM' => check_sid('forum_view.php?' . POST_FORUM_URL . '=' . $forum_id),
 								));
 								
 								if ( $forms[$j]['forum_legend'] )
@@ -211,7 +211,7 @@ if ( $cats )
 										
 										if ( $forum_id == $subforms[$k]['forum_sub'] )
 										{
-										$template->assign_block_vars('_cat_row._forum_row._subforum_row', array(
+											$template->assign_block_vars('_cat_row._forum_row._subforum_row', array(
 												'NAME' => $subforms[$k]['forum_name'],
 											));
 										}
