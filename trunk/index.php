@@ -40,7 +40,7 @@ $template->assign_vars(array(
 	
 	'L_MARK_FORUMS_READ' => $lang['Mark_all_forums'], 
 
-	'U_MARK_READ' => append_sid('index.php?mark=forums'))
+	'U_MARK_READ' => check_sid('index.php?mark=forums'))
 );
 
 if ( $mode == 'cache')
@@ -50,7 +50,7 @@ if ( $mode == 'cache')
 	message(GENERAL_MESSAGE, 'Cache geleert!');
 }
 
-redirect(append_sid('news.php', true));
+redirect(check_sid('news.php', true));
 
 
 include($root_path . 'includes/page_header.php');

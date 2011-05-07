@@ -1,10 +1,10 @@
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
+	</ul>
 </div>
 
-<table class="edit" cellspacing="5">
+<table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td align="center" class="{CLASS}">
 		<table class="{CLASS}" cellspacing="1">
@@ -23,3 +23,5 @@
 </table>
 
 <br clear="all" />
+
+{META}

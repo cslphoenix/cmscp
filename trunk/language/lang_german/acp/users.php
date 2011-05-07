@@ -5,6 +5,70 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
+
+$lang = array_merge($lang, array(
+	
+	'game'		=> 'Spiel',
+	'explain'	=> 'Hier kannst du die Benutzer verwalten und organisieren.',
+
+	'create'	=> 'Neuen Benutzer hinzugefügt.',
+	'update'	=> 'Benutzerdaten erfolgreich geändert.',
+	'delete'	=> 'Der Benutzer wurde gelöscht!',
+	'confirm'	=> 'dass dieser Benutzer:',
+	
+	'update_auth'	=> 'Benutzerberechtigungen erfolgreich geändert.',
+	'update_groups'	=> 'Benutzergruppen & Teams erfolgreich geändert.',
+	'update_fields'	=> 'Profilefelder erfolgreich geändert.',
+	
+	'_option' => array(
+		'_update'	=> 'Erforderliche Daten',
+		'_settings'	=> '!Einstellungen',
+		'_pics'		=> '!Foto & Avatar',
+		'_auth'		=> 'Benutzerberechtigungen',
+		'_groups'	=> 'Benutzergruppen & Teams',		
+		'_fields'	=> 'Profilfelder',
+		'_overview'	=> '!Übersicht',
+	),
+	
+	'teams'			=> 'Teams',
+	'usergroups'	=> 'Benutzergruppen',
+	
+	'auth_default'		=> 'Vorgabe',
+	'auth_special'		=> 'Spezial',
+	'auth_allowed'		=> 'Ja',
+	'auth_disallowed'	=> 'Nein',
+	
+	'mail'	=> 'eMail verschicken?',
+	'mod'	=> 'Moderatorstatus',
+
+	'all_default' => 'Vorgabe aktivieren',
+	'all_special' => 'Spezial aktivieren',
+	
+	'auth'			=> 'Benutzerberechtigungen',
+	'auth_explain'	=> 'Hier kann jeder Benutzer individuell eingestellt werden, "<em>Spezial</em>" heisst, er hat immer diese Rechte, egal wie die Gruppe oder Gruppen eingestellt sind von den Rechten.',
+	
+	'password_random'	=> 'Beispiel: %s',
+	'password_input'	=> 'Passwort eintragen',
+	'password_generate'	=> 'Passwort generieren',
+	
+	'register'			=> 'Angemeldet seit',
+	'lastlogin'			=> 'Letzter Login',
+	'founder'			=> 'Gründer',
+	'email'				=> 'Mail',
+	'email_confirm'		=> 'Mail bestätigen',
+	'password'			=> 'Passwort',
+	'password_confirm'	=> 'Passwort wiederholen',
+	
+	'auth_for'		=> 'Rechte für: %s',
+	'auth_from'		=> 'Rechte von: %s',
+	
+	'active'		=> 'Aktiviert',
+
+));
+
+
+
+/*
 $lang['user_pass_random']	= 'Beispiel: %s';
 
 //
@@ -65,5 +129,5 @@ $lang['group_disallowed']	= 'Nein';
 
 $lang['all_default']		= 'Vorgabe aktivieren';
 $lang['all_special']		= 'Spezial aktivieren';
-
+*/
 ?>

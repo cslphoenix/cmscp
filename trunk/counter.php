@@ -317,7 +317,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 		'COUNT_MONTH'		=> $anzahl_monat,
 		'COUNT_YEAR'		=> $anzahl_jahr,
 		
-		'S_COUNTER_ACTION'	=> append_sid('counter.php'),
+		'S_COUNTER_ACTION'	=> check_sid('counter.php'),
 	));
 
 $template->pparse('body');

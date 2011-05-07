@@ -20,11 +20,9 @@ else
 	$current	= '_submenu_training';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('training');
-	
+
 	$error	= '';
 	$index	= '';
 	$fields	= '';
@@ -49,20 +47,22 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_training'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
+	
+	$template->set_filenames(array(
+		'body' => 'style/acp_training.tpl',
+		'tiny' => 'style/tinymce_normal.tpl',
+	));
 	
 	switch ( $mode )
 	{
 		case '_create':
 		case '_update':
 		
-			$template->set_filenames(array('body' => 'style/acp_training.tpl'));
 			$template->assign_block_vars('_input', array());
-			
-			$template->set_filenames(array('tiny' => 'style/tinymce_normal.tpl'));
 			$template->assign_var_from_handle('TINYMCE', 'tiny');
 			
 			if ( $mode == '_create' && !request('submit', 1) )
@@ -99,10 +99,6 @@ else
 						);
 			}
 		
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-			$fields .= '<input type="hidden" name="training_create" value="' . $data['training_create'] . '" />';
-			
 			$sql = 'SELECT team_id, team_name FROM ' . TEAMS . ' ORDER BY team_order';
 			if ( !($result = $db->sql_query($sql)) )
 			{
@@ -126,39 +122,43 @@ else
 				$s_teams .= "</select>";
 			}
 			
-			$type = ( $data['team_id'] >= 1 ) ? " cat_id = " . $data['team_id'] : false;
-			
-			if ( $type )
+			if ( $data['team_id'] > 0 )
 			{
-				$maps = data(MAPS, $type, 'map_order ASC', 1, false);
-				$cats = data(MAPS_CAT, $type, 'cat_order ASC', 1, false);
-			
+				$sql = "SELECT mc.*
+							FROM " . MAPS_CAT . " mc
+								LEFT JOIN " . TEAMS . " t ON t.team_id = " . $data['team_id'] . "
+								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+						WHERE mc.cat_tag = g.game_tag";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$cats = $db->sql_fetchrow($result);
+				
+				$maps = $cats ? data(MAPS, "cat_id = " . $cats['cat_id'], 'map_order ASC', 1, false) : false;
+				
 				$s_select = '';
 				
 				if ( $maps )
 				{
 					$s_select .= "<div><div><select class=\"selectsmall\" name=\"training_maps[]\" id=\"training_maps\">";
-					$s_select .= "<option selected=\"selected\" value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
+					$s_select .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
 					
-					for ( $i = 0; $i < count($cats); $i++ )
+					$cat_id		= $cats['cat_id'];
+					$cat_name	= $cats['cat_name'];
+					
+					$s_maps = '';
+					
+					for ( $j = 0; $j < count($maps); $j++ )
 					{
-						$cat_id		= $cats[$i]['cat_id'];
-						$cat_name	= $cats[$i]['cat_name'];
-						
-						$s_maps = '';
-						
-						for ( $j = 0; $j < count($maps); $j++ )
-						{
-							$map_id		= $maps[$j]['map_id'];
-							$map_cat	= $maps[$j]['cat_id'];
-							$map_name	= $maps[$j]['map_name'];
+						$map_id		= $maps[$j]['map_id'];
+						$map_cat	= $maps[$j]['cat_id'];
+						$map_name	= $maps[$j]['map_name'];
 
-							$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
-						}
-						
-						$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
+						$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
 					}
-				
+					
+					$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
 					$s_select .= "</select>&nbsp;<input type=\"button\" class=\"button2\" value=\"" . $lang['common_more'] . "\" onclick=\"clone(this)\"></div></div>";
 				}
 				else
@@ -175,13 +175,24 @@ else
 			{
 				$maps = unserialize($data['training_maps']);
 				
-				$data_maps = data(MAPS, 'cat_id = ' . $data['team_id'], 'map_order ASC', 1, false);
+				$sql = "SELECT mc.*
+							FROM " . MAPS_CAT . " mc
+								LEFT JOIN " . TEAMS . " t ON t.team_id = " . $data['team_id'] . "
+								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+						WHERE mc.cat_tag = g.game_tag";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$cats = $db->sql_fetchrow($result);
+				
+				$data_maps = data(MAPS, 'cat_id = ' . $cats['cat_id'], 'map_order ASC', 1, false);
 				
 				for ( $i = 0; $i < count($maps); $i++ )
 				{
 					for ( $k = 0; $k < count($data_maps); $k++ )
 					{
-						if ( empty($maps[$i]) || $maps[$i] == '-1' )
+						if ( empty($maps[$i]) || $maps[$i] == '0' )
 						{
 							false;
 						}
@@ -201,20 +212,30 @@ else
 					for ( $j = 0; $j < count($maps_new); $j++ )
 					{
 						$custom_auth[$j] = "<select class=\"selectsmall\" name=\"training_maps[]\">";
-						$custom_auth[$j] .= "<option selected=\"selected\" value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
-				
+						$custom_auth[$j] .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
+						
+						$cat_id		= $cats['cat_id'];
+						$cat_name	= $cats['cat_name'];
+						
+						$s_maps = '';
+						
 						for ( $k = 0; $k < count($data_maps); $k++ )
 						{
 							$selected = ( $maps_new[$j] == $data_maps[$k]['map_id'] ) ? ' selected="selected"' : '';
-							$custom_auth[$j] .= '<option value="' . $data_maps[$k]['map_id'] . '"' . $selected . '>' . $data_maps[$k]['map_name'] . '</option>';
+							$s_maps .= '<option value="' . $data_maps[$k]['map_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $data_maps[$k]['map_name']) . '</option>';
 						}
 						
+						$custom_auth[$j] .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
 						$custom_auth[$j] .= '</select>&nbsp;';
 				
 						$template->assign_block_vars('_input._maps_row', array('MAPS' => $custom_auth[$j]));
 					}
 				}
 			}
+			
+			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"training_create\" value=\"" . $data['training_create'] . "\" />";
 						
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
@@ -231,13 +252,10 @@ else
 				'MAPS'			=> $data['training_maps'],
 				'TEXT'			=> $data['training_text'],
 				
-			#	'S_MAPS'		=> select_maps($s_select),
-			
 				'S_TEAMS'		=> $s_teams,
 				'S_MAPS'		=> $s_select,
-				
-			#	'S_TEAMS'		=> select_box('team',	'select', $data['team_id']),
 				'S_MATCH'		=> select_box('match',	'select', $data['match_id']),
+				
 				'S_DAY'			=> select_date('selectsmall', 'day',		'day',		date('d', $data['training_date']), $data['training_create']),
 				'S_MONTH'		=> select_date('selectsmall', 'month',		'month',	date('m', $data['training_date']), $data['training_create']),
 				'S_YEAR'		=> select_date('selectsmall', 'year',		'year',		date('Y', $data['training_date']), $data['training_create']),
@@ -245,7 +263,7 @@ else
 				'S_MIN'			=> select_date('selectsmall', 'min',		'min',		date('i', $data['training_date']), $data['training_create']),
 				'S_DURATION'	=> select_date('selectsmall', 'duration',	'dmin',		( $data['training_duration'] - $data['training_date'] ) / 60),
 				
-				'S_ACTION'		=> append_sid($file),
+				'S_ACTION'		=> check_sid($file),
 				'S_FIELDS'		=> $fields,
 			));
 			
@@ -267,13 +285,24 @@ else
 						
 				$maps = $data['training_maps'];
 				
-				$data_maps = data(MAPS, 'cat_id = ' . $data['team_id'], 'map_order ASC', 1, false);
+				$sql = "SELECT mc.*
+							FROM " . MAPS_CAT . " mc
+								LEFT JOIN " . TEAMS . " t ON t.team_id = " . $data['team_id'] . "
+								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+						WHERE mc.cat_tag = g.game_tag";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$cats = $db->sql_fetchrow($result);
+				
+				$data_maps = data(MAPS, 'cat_id = ' . $cats['cat_id'], 'map_order ASC', 1, false);
 				
 				for ( $i = 0; $i < count($maps); $i++ )
 				{
 					for ( $k = 0; $k < count($data_maps); $k++ )
 					{
-						if ( empty($maps[$i]) || $maps[$i] == '-1' )
+						if ( empty($maps[$i]) || $maps[$i] == '0' )
 						{
 							false;
 						}
@@ -288,7 +317,7 @@ else
 					}
 				}
 				
-				$data['training_maps'] = serialize($maps_new);
+				$data['training_maps'] = isset($maps_new) ? serialize($maps_new) : '';
 				
 				$error .= ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
 				$error .= ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
@@ -303,19 +332,19 @@ else
 						$db_data = sql(TRAINING, $mode, $data);
 							
 						$message = $lang['create']
-							. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							. sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
 						$db_data = sql(TRAINING, $mode, $data, 'training_id', $data_id);
 						
 						$message = $lang['update']
-							. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-							. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+							. sprintf($lang['return'], check_sid($file), $acp_title)
+							. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=$mode&amp;$url=$data_id"));
 					}
 					
 				#	$oCache -> sCachePath = './../cache/';
-				#	$oCache -> deleteCache('subnavi_calendar_' . request('month', 0) . '_member');
+				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');
 				#	$oCache -> deleteCache('subnavi_training_' . request('month', 0));
 					
 					log_add(LOG_ADMIN, $log, $mode, $db_data);
@@ -366,7 +395,7 @@ else
 			#	$oCache -> sCachePath = './../cache/';
 			#	$oCache -> deleteCache('subnavi_training_*');
 				
-				$message = $lang['delete'] . sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+				$message = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				log_add(LOG_ADMIN, $log, $mode, $data['training_vs']);
 				message(GENERAL_MESSAGE, $message);
@@ -380,13 +409,16 @@ else
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['training_vs']),
+					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['training_vs']),
 					
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
-			else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['training'])); }
+			else
+			{
+				message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['training']));
+			}
 			
 			break;
 						
@@ -420,8 +452,8 @@ else
 				'S_LIST'	=> $s_action,
 				'S_TEAMS'	=> select_box('team', 'selectsmall', 0),
 				
-				'S_CREATE'	=> append_sid("$file?mode=_create"),
-				'S_ACTION'	=> append_sid($file),
+				'S_CREATE'	=> check_sid("$file?mode=_create"),
+				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
 			
@@ -464,12 +496,15 @@ else
 							'IMAGE'		=> display_gameicon($training_new[$i]['game_size'], $training_new[$i]['game_image']),
 							'DATE'		=> create_date($userdata['user_dateformat'], $training_new[$i]['training_date'], $userdata['user_timezone']),
 							
-							'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$training_id"),
-							'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$training_id"),
+							'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$training_id"),
+							'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$training_id"),
 						));
 					}
 				}
-				else { $template->assign_block_vars('_display._no_entry_new', array()); }
+				else
+				{
+					$template->assign_block_vars('_display._no_entry_new', array());
+				}
 				
 				if ( $training_old )
 				{
@@ -482,12 +517,15 @@ else
 							'IMAGE'	=> display_gameicon($training_old[$i]['game_size'], $training_old[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_old[$i]['training_date'], $userdata['user_timezone']),
 							
-							'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$training_id"),
-							'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$training_id"),
+							'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$training_id"),
+							'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$training_id"),
 						));
 					}
 				}
-				else { $template->assign_block_vars('_display._no_entry_old', array()); }
+				else
+				{
+					$template->assign_block_vars('_display._no_entry_old', array());
+				}
 			}
 			else
 			{

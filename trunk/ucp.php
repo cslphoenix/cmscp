@@ -120,7 +120,7 @@ if ( $userdata['session_logged_in'] )
 					
 					$template->assign_block_vars('lobby.news_new_row', array(
 						'NEWS_NAME'		=> cut_string($news_data[$i]['news_title'], $settings['cut_news_lobby']),
-						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' . sprintf($language, $count) . '</a>' : '<a href="' . append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' . $lang['common_unread'] . '</a>',
+						'NEWS_COMMENTS'	=> ( $count ) ? '<a href="' . check_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' . sprintf($language, $count) . '</a>' : '<a href="' . check_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $news_data[$i]['news_id']) . '">' . $lang['common_unread'] . '</a>',
 					));
 				}
 			}
@@ -221,8 +221,8 @@ if ( $userdata['session_logged_in'] )
 					$language = ( $count == '1' ) ? $lang['common_num_comment'] : $lang['common_num_comments'];
 					
 					$template->assign_block_vars('match_new_row', array(
-						'MATCH_NAME'		=> $match_data[$i]['match_rival'],
-						'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+						'MATCH_NAME'		=> $match_data[$i]['match_rival_name'],
+						'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 					));
 				}
 				else if ( $match_data[$i]['match_date'] < time() )
@@ -275,8 +275,8 @@ if ( $userdata['session_logged_in'] )
 						
 						$template->assign_block_vars('match_old', array());
 						$template->assign_block_vars('match_old.match_old_row', array(
-							'MATCH_NAME'		=> $match_data[$i]['match_rival'],
-							'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+							'MATCH_NAME'		=> $match_data[$i]['match_rival_name'],
+							'MATCH_COMMENTS'	=> ( $count ) ? '<a href="' . check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_data[$i]['match_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 						));
 					}
 	
@@ -361,7 +361,7 @@ if ( $userdata['session_logged_in'] )
 						
 						$template->assign_block_vars('training.training_new_row', array(
 							'TRAINING_NAME'		=> $training_data[$i]['training_vs'],
-							'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=details&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+							'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . check_sid('match.php?mode=details&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 						));
 					}
 					else if ( $training_data[$i]['training_date'] < time() )
@@ -414,7 +414,7 @@ if ( $userdata['session_logged_in'] )
 							$template->assign_block_vars('training.training_old', array());
 							$template->assign_block_vars('training.training_old.training_old_row', array(
 								'TRAINING_NAME'		=> $training_data[$i]['training_vs'],
-								'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . append_sid('match.php?mode=details&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
+								'TRAINING_COMMENTS'	=> ( $count ) ? '<a href="' . check_sid('match.php?mode=details&amp;' . POST_TRAINING_URL . '=' . $training_data[$i]['training_id']) . '">' .  sprintf($language, $count) . '</a>' : '',
 								
 							));
 						}
@@ -511,7 +511,7 @@ else
 {
 	if ( !$userdata['session_logged_in'] )
 	{
-		redirect(append_sid('login.php?redirect=ucp.php', true));
+		redirect(check_sid('login.php?redirect=ucp.php', true));
 	}
 }
 

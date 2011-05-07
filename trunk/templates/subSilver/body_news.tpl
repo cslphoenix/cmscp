@@ -50,7 +50,7 @@
 </tr>
 <!-- BEGIN no_entry -->
 <tr>
-	<td colspan="4" align="center">{NO_ENTRY}</td>
+	<td colspan="4" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -161,7 +161,7 @@
 		<!-- END comments -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

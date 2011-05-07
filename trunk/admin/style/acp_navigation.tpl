@@ -3,7 +3,6 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 	<li><a id="setting" href="{S_SET}">{L_SET}</a></li>
 </ul>
 </div>
@@ -29,7 +28,7 @@
 <!-- END _main_row -->
 <!-- BEGIN _no_entry_main -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_main -->
 </table>
@@ -56,7 +55,7 @@
 <!-- END _clan_row -->
 <!-- BEGIN _no_entry_clan -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_clan -->
 </table>
@@ -83,7 +82,7 @@
 <!-- END _com_row -->
 <!-- BEGIN _no_entry_com -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_com -->
 </table>
@@ -110,7 +109,7 @@
 <!-- END _misc_row -->
 <!-- BEGIN _no_entry_misc -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_misc -->
 </table>
@@ -137,7 +136,7 @@
 <!-- END _user_row -->
 <!-- BEGIN _no_entry_user -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_user -->
 </table>
@@ -155,64 +154,7 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript">
-	var request = false;
-
-	// Request senden
-	function setRequest(value)
-	{
-		// Request erzeugen
-		if (window.XMLHttpRequest)
-		{// code for IE7+, Firefox, Chrome, Opera, Safari
-			request=new XMLHttpRequest();
-		}
-		else
-		{// code for IE6, IE5
-			request=new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		
-		// überprüfen, ob Request erzeugt wurde
-		if (!request)
-		{
-			alert("Kann keine XMLHTTP-Instanz erzeugen");
-			return false;
-		}
-		else
-		{
-			var url = "./../includes/ajax/ajax_navi.php";
-			// Request öffnen
-			request.open('post', url, true);
-			// Requestheader senden
-			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			// Request senden
-			request.send('name='+value);
-		//	request.send("name="+value+"&option="+option);
-			// Request auswerten
-			request.onreadystatechange = interpretRequest;
-		}
-	}
-
-	// Request auswerten
-	function interpretRequest() {
-		switch (request.readyState) {
-			// wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
-			case 4:
-				if (request.status != 200) {
-					alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
-				} else {
-					var content = request.responseText;
-					// den Inhalt des Requests in das <div> schreiben
-					document.getElementById('content').innerHTML = content;
-				}
-				break;
-			
-			default:
-					document.getElementById('close').style.display = "none";
-				break;
-		}
-	}
-
-</script>
+{AJAX}
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -249,13 +191,13 @@
 	<td class="row2">{S_LIST} <input type="text" class="post" name="navi_url" value="{URL}" id="select"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_TYPE}: *</label></td>
+	<td class="row1"><label>{L_TYPE}: *</label></td>
 	<td class="row2">
-		<label><input type="radio" name="navi_type" value="1" onclick="setRequest('1')" {S_TYPE_MAIN} />&nbsp;{L_TYPE_MAIN}</label><br />
-		<label><input type="radio" name="navi_type" value="2" onclick="setRequest('2')" {S_TYPE_CLAN} />&nbsp;{L_TYPE_CLAN}</label><br />
-		<label><input type="radio" name="navi_type" value="3" onclick="setRequest('3')" {S_TYPE_COM} />&nbsp;{L_TYPE_COM}</label><br />
-		<label><input type="radio" name="navi_type" value="4" onclick="setRequest('4')" {S_TYPE_MISC} />&nbsp;{L_TYPE_MISC}</label><br />
-		<label><input type="radio" name="navi_type" value="5" onclick="setRequest('5')" {S_TYPE_USER} />&nbsp;{L_TYPE_USER}</label>
+		<label><input type="radio" name="navi_type" value="1" onclick="setRequest('navi', '1')" {S_TYPE_MAIN} />&nbsp;{L_TYPE_MAIN}</label><br />
+		<label><input type="radio" name="navi_type" value="2" onclick="setRequest('navi', '2')" {S_TYPE_CLAN} />&nbsp;{L_TYPE_CLAN}</label><br />
+		<label><input type="radio" name="navi_type" value="3" onclick="setRequest('navi', '3')" {S_TYPE_COM} />&nbsp;{L_TYPE_COM}</label><br />
+		<label><input type="radio" name="navi_type" value="4" onclick="setRequest('navi', '4')" {S_TYPE_MISC} />&nbsp;{L_TYPE_MISC}</label><br />
+		<label><input type="radio" name="navi_type" value="5" onclick="setRequest('navi', '5')" {S_TYPE_USER} />&nbsp;{L_TYPE_USER}</label>
 	</td> 
 </tr>
 <tr>
@@ -278,9 +220,10 @@
 	<td class="row2"><label><input type="radio" name="navi_lang" value="1" {S_LANG_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="navi_lang" value="0" {S_LANG_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="navi_order">{L_ORDER}:</label></td>
-	<td class="row2 top"><div id="close">{S_ORDER}</div><div id="content"></div></td>
+	<td class="row1"><label for="navi_order">{L_ORDER}:</label></td>
+	<td class="row2"><div id="close">{S_ORDER}</div><div id="content"></div></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -335,6 +278,7 @@
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="subnavi_match_limit" title="{L_MATCH_LIMIT_EXPLAIN}">{L_MATCH_LIMIT}:</label></td>
 	<td class="row2"><input class="post" type="text" name="subnavi_match_limit" id="subnavi_match_limit" value="{MATCH_LIMIT}" size="2"></td>
@@ -385,6 +329,7 @@
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="subnavi_teams_show" title="{L_TEAMS_SHOW_EXPLAIN}">{L_TEAMS_SHOW}:</label></td>
 	<td class="row2"><label><input type="radio" name="subnavi_teams_show" value="1" {TEAMS_ON} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_teams_show" value="0" {TEAMS_OFF} />&nbsp;{L_NO}</label></td>
@@ -397,6 +342,7 @@
 	<td class="row1"><label for="subnavi_teams_length" title="{L_TEAMS_LENGTH_EXPLAIN}">{L_TEAMS_LENGTH}:</label></td>
 	<td class="row2"><input class="post" type="text" size="2" name="subnavi_teams_length" value="{TEAMS_LENGTH}"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

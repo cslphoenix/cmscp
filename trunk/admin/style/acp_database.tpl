@@ -25,8 +25,9 @@
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
-	<td class="row1 top"><label for="full_backup">{L_TYPE}:</label></td>
+	<td class="row1"><label for="full_backup">{L_TYPE}:</label></td>
 	<td class="row2">
 		<label><input type="radio" name="backup_type" value="data" /> {L_TYPE_DATA}</label><br />
 		<label><input type="radio" name="backup_type" value="structure" /> {L_TYPE_STRU}</label><br />
@@ -34,7 +35,7 @@
 	</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="table">{L_TABLE}:</label></td>
+	<td class="row1"><label for="table">{L_TABLE}:</label></td>
 	<td class="row2">
 		<label><input type="radio" name="table_type" value="dev" /> {L_TABLE_DEV}</label><br />
 		<label><input type="radio" name="table_type" value="full" checked="checked" id="table" /> {L_TABLE_FULL}</label><br />
@@ -50,13 +51,14 @@
 	<td class="row2"><label><input type="radio" name="gzip_type" value="1" id="gzip" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="gzip_type" value="0" checked />&nbsp;{L_NO}</label>
 </tr>
 <tr>
-	<td class="row1 top"><label for="file">{L_DOWNLOAD}:</label></td>
+	<td class="row1"><label for="file">{L_DOWNLOAD}:</label></td>
 	<td class="row2">
 		<label><input type="radio" name="download_type" value="file" checked="checked" id="file" /> {L_DL_FILE}</label><br />
 		<label><input type="radio" name="download_type" value="serv" /> {L_DL_SERV}</label><br />
 		<label><input type="radio" name="download_type" value="both" /> {L_DL_BOTH}</label>
 	</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -69,28 +71,6 @@
 <!-- END _database_backup -->
 
 <!-- BEGIN _database_optimize -->
-<script type="text/javascript">  
-
-/*
-	Einfacher Klapptext, wird mit jquery noch erweitert!
-*/
-
-function clip(id)
-{
-	if ( document.getElementById("tbody_" + id).style.display == 'none' )
-	{
-		document.getElementById("img_" + id).src = "style/images/collapse.gif";
-		document.getElementById("tbody_" + id).style.display = "";
-	}
-	else
-	{
-		document.getElementById("img_" + id).src = "style/images/expand.gif";
-		document.getElementById("tbody_" + id).style.display = "none";
-	}
-}
-
-</script>
-
 {SELECT_SCRIPT}
 <div id="navcontainer">
 	<ul id="navlist">
@@ -133,6 +113,7 @@ function clip(id)
 	<td class="row1">{L_SHOW_BEGIN_FOR}:</td>
 	<td class="row2"><input class="post" type="text" maxlength="255" name="show_begin_for" value="{S_SHOW_BEGIN_FOR}" /></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -178,6 +159,7 @@ function clip(id)
 <tr>
 	<td colspan="2" align="center"><a href="#" onclick="setCheckboxes('tablesForm', true); return false;">{L_CHECKALL}</a>&nbsp;/&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', false); return false;">{L_UNCHECKALL}</a>&nbsp;/&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', 'invert'); return false;">{L_INVERTCHECKED}</a></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

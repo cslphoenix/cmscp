@@ -33,13 +33,13 @@
 
 	<td class="{_display._logs_row.CLASS}" align="center">{_display._logs_row.SEKTION}</td>
 	<td class="{_display._logs_row.CLASS}" align="center">{_display._logs_row.MESSAGE}</td>
-	<td class="{_display._logs_row.CLASS}" align="center"><span class="small">{_display._logs_row.DATA}</span></td>
+	<td class="{_display._logs_row.CLASS}" align="left">{_display._logs_row.DATA}</td>
 	<td class="{_display._logs_row.CLASS}" align="center" width="1%"><input type="checkbox" name="log_id[]" value="{_display._logs_row.LOG_ID}"></td>
 </tr>
 <!-- END _logs_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_ENTRY}</td>
+	<td class="row_class1" align="center" colspan="7">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -117,7 +117,7 @@
 <!-- END error_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" colspan="4" align="center">{NO_ENTRY}</td>
+	<td class="row_class1" colspan="4" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry -->
 </table>

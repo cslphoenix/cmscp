@@ -33,7 +33,7 @@ if ( $mode == '' )
 {
 	if ( !$userdata['session_logged_in'] )
 	{
-		redirect(append_sid("login.php?redirect=training.php?mode=$mode"));
+		redirect(check_sid("login.php?redirect=training.php?mode=$mode"));
 	}
 	
 	$page_title = $lang['training'];
@@ -41,7 +41,7 @@ if ( $mode == '' )
 	
 	$template->set_filenames(array('body' => 'training_body.tpl'));
 	
-	$sql = 'SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival
+	$sql = 'SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival_name
 				FROM ' . TRAINING . ' tr
 					LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
@@ -61,19 +61,19 @@ if ( $mode == '' )
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
-			$training_name	= ($training_entry[$i]['match_rival']) ? $lang['training_vs'] . $training_entry[$i]['match_rival'] . ' <span style="font-style:italic;">' . $training_entry[$i]['training_vs'] . '</span>' : $training_entry[$i]['training_vs'];
+			$training_name	= ($training_entry[$i]['match_rival_name']) ? $lang['training_vs'] . $training_entry[$i]['match_rival_name'] . ' <span style="font-style:italic;">' . $training_entry[$i]['training_vs'] . '</span>' : $training_entry[$i]['training_vs'];
 			
 			$template->assign_block_vars('training_row_new', array(
 				'CLASS' 		=> $class,
 				'TRAINING_GAME'	=> display_gameicon($training_entry[$i]['game_size'], $training_entry[$i]['game_image']),
 				'TRAINING_NAME'	=> $training_name,
 				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_entry[$i]['training_id'])
+				'U_DETAILS'		=> check_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_entry[$i]['training_id'])
 			));
 		}
 	}
 	
-	$sql = 'SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival
+	$sql = 'SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival_name
 				FROM ' . TRAINING . ' tr
 					LEFT JOIN ' . TEAMS . ' t ON tr.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
@@ -93,14 +93,14 @@ if ( $mode == '' )
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
-			$training_name	= ($training_entry[$i]['match_rival']) ? $lang['training_vs'] . $training_entry[$i]['match_rival'] . ' <span style="font-style:italic;">' . $training_entry[$i]['training_vs'] . '</span>' : $training_entry[$i]['training_vs'];
+			$training_name	= ($training_entry[$i]['match_rival_name']) ? $lang['training_vs'] . $training_entry[$i]['match_rival_name'] . ' <span style="font-style:italic;">' . $training_entry[$i]['training_vs'] . '</span>' : $training_entry[$i]['training_vs'];
 			
 			$template->assign_block_vars('training_row_old', array(
 				'CLASS' 		=> $class,
 				'TRAINING_GAME'	=> display_gameicon($training_entry[$i]['game_size'], $training_entry[$i]['game_image']),
 				'TRAINING_NAME'	=> $training_name,
 				'TRAINING_DATE'	=> create_date($userdata['user_dateformat'], $training_entry[$i]['training_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_entry[$i]['training_id'])
+				'U_DETAILS'		=> check_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_entry[$i]['training_id'])
 			));
 		}
 	}
@@ -137,9 +137,9 @@ if ( $mode == '' )
 				'CLASS' 		=> $class,
 				'TEAM_GAME'		=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 				'TEAM_NAME'		=> $teams[$i]['team_name'],
-				'ALL_MATCHES'	=> append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
-				'TO_TEAM'		=> append_sid('teams.php?mode=show&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
-				'FIGHTUS'		=> append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+				'ALL_MATCHES'	=> check_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+				'TO_TEAM'		=> check_sid('teams.php?mode=show&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
+				'FIGHTUS'		=> check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']),
 			));
 		}		
 	}
@@ -175,11 +175,11 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	if ($userauth['auth_match'] || $userdata['user_level'] == ADMIN )
 	{
 		$template->assign_block_vars('training_edit', array(
-			'EDIT_TRAINING' => '<a href="' . append_sid('admin/admin_training.php?mode=edit&' . POST_TRAINING_URL . '=' . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',
+			'EDIT_TRAINING' => '<a href="' . check_sid('admin/admin_training.php?mode=edit&' . POST_TRAINING_URL . '=' . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',
 		));
 	}
 	
-	$sql = 'SELECT tru.*, u.username
+	$sql = 'SELECT tru.*, u.user_name
 				FROM ' . TRAINING_USERS . ' tru, ' . USERS . ' u
 			WHERE tru.user_id = u.user_id AND tru.training_id = ' . $training_id;
 	$result = $db->sql_query($sql);
@@ -206,7 +206,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		
 		$template->assign_block_vars('training_users.training_users_status', array(
 			'CLASS' 		=> $class,
-			'USERNAME'		=> $row['username'],
+			'USERNAME'		=> $row['user_name'],
 			'STATUS'		=> $status,
 			'DATE'			=> ($row['training_users_update']) ? $lang['change_on'] . create_date($userdata['user_dateformat'], $row['training_users_update'], $userdata['user_timezone']) : create_date($userdata['user_dateformat'], $row['training_users_create'], $userdata['user_timezone'])
 		));
@@ -220,7 +220,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	$db->sql_freeresult($result);
 	
 	$template->assign_vars(array(
-		'L_USERNAME'		=> $lang['username'],
+		'L_USERNAME'		=> $lang['user_name'],
 		'L_STATUS'			=> $lang['status'],
 		'L_STATUS_YES'		=> $lang['status_yes'],
 		'L_STATUS_NO'		=> $lang['status_no'],
@@ -268,7 +268,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 	{
 		$template->assign_block_vars('training_comments', array());
 		
-		$sql = 'SELECT trc.*, u.username, u.user_email
+		$sql = 'SELECT trc.*, u.user_name, u.user_email
 					FROM ' . TRAINING_COMMENTS . ' trc
 						LEFT JOIN ' . USERS . ' u ON trc.poster_id = u.user_id
 					WHERE trc.training_id = ' . $training_id . ' ORDER BY trc.time_create DESC';
@@ -331,15 +331,15 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				$template->assign_block_vars('training_comments.comments', array(
 					'CLASS' 		=> $class,
 					'ID' 			=> $comment_entry[$i]['training_comments_id'],
-					'L_USERNAME'	=> $comment_entry[$i]['username'],
+					'L_USERNAME'	=> $comment_entry[$i]['user_name'],
 	//				'U_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_email'] : $comment_entry[$i]['user_email'],	Profil-Link und Mail schreiben an Gast
 					'MESSAGE'		=> $comment,
 					'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
 					
 					'ICON'			=> $icon,
 	
-					'U_EDIT'		=> append_sid('training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $comment_entry[$i]['training_id']),
-					'U_DELETE'		=> append_sid('training.php?mode=delete&amp;' . POST_TRAINING_URL . '=' . $comment_entry[$i]['training_id'])
+					'U_EDIT'		=> check_sid('training.php?mode=edit&amp;' . POST_TRAINING_URL . '=' . $comment_entry[$i]['training_id']),
+					'U_DELETE'		=> check_sid('training.php?mode=delete&amp;' . POST_TRAINING_URL . '=' . $comment_entry[$i]['training_id'])
 				));
 			}
 		
@@ -425,7 +425,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 				
 				_comment_message('add', 'training', $training_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
-				$message = $lang['add_comment'] . sprintf($lang['click_return_training'],  '<a href="' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">', '</a>');
+				$message = $lang['add_comment'] . sprintf($lang['click_return_training'],  '<a href="' . check_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 			}
 		}
@@ -441,7 +441,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		'TRAINING_RIVAL_TAG'	=> $row_details['training_rival_tag'],
 		
 	
-		'TRAINING_CATEGORIE'	=> $match_category,
+		'TRAINING_CATEGORIE'	=> $match_cat,
 		'TRAINING_TYPE'			=> $match_type,
 		'TRAINING_LEAGUE_INFO'	=> $match_league,
 		'SERVER'				=> ($row_details['server']) ? '<a href="hlsw://' . $row_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
@@ -460,7 +460,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING_URL])
 		'DETAILS_COMMENT'		=> $row_details['details_comment'],
 	*/
 		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-		'S_MATCH_ACTION'		=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id))
+		'S_MATCH_ACTION'		=> check_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id))
 	);
 }
 else if ($mode == 'change')
@@ -496,7 +496,7 @@ else if ($mode == 'change')
 		$message = $lang['update_training_status_none'];
 	}
 
-	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">'));
+	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . check_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $training_id) . '">'));
 	message(GENERAL_MESSAGE, $message);
 }
 else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
@@ -546,7 +546,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 				'MATCH_GAME'	=> display_gameicon($trainings_entry[$i]['game_size'], $trainings_entry[$i]['game_image']),
 				'MATCH_NAME'	=> ($trainings_entry[$i]['training_public']) ? 'vs. ' . $trainings_entry[$i]['training_rival'] : 'vs. <span style="font-style:italic;">' . $trainings_entry[$i]['training_rival'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $trainings_entry[$i]['training_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid('training.php?mode=trainingdetails&amp;' . POST_MATCH_URL . '=' . $trainings_entry[$i]['training_id'])
+				'U_DETAILS'		=> check_sid('training.php?mode=trainingdetails&amp;' . POST_MATCH_URL . '=' . $trainings_entry[$i]['training_id'])
 			));
 		}
 	}
@@ -562,7 +562,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 }
 else
 {
-	redirect(append_sid('training.php', true));
+	redirect(check_sid('training.php', true));
 }
 
 if ( $userdata['user_level'] <= TRIAL )

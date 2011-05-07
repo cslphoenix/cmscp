@@ -21,26 +21,26 @@
  ***************************************************************************/
 
 //
-// Check to see if the username has been taken, or if it is disallowed.
-// Also checks if it includes the " character, which we don't allow in usernames.
-// Used for registering, changing names, and posting anonymously with a username
+// Check to see if the user_name has been taken, or if it is disallowed.
+// Also checks if it includes the " character, which we don't allow in user_names.
+// Used for registering, changing names, and posting anonymously with a user_name
 //
-function validate_username($username)
+function validate_user_name($user_name)
 {
 	global $db, $lang, $userdata;
 
 	// Remove doubled up spaces
-	$username = preg_replace('#\s+#', ' ', trim($username)); 
-	$username = phpbb_clean_username($username);
+	$user_name = preg_replace('#\s+#', ' ', trim($user_name)); 
+	$user_name = phpbb_clean_user_name($user_name);
 
-	$sql = "SELECT username 
+	$sql = "SELECT user_name 
 		FROM " . USERS . "
-		WHERE LOWER(username) = '" . strtolower($username) . "'";
+		WHERE LOWER(user_name) = '" . strtolower($user_name) . "'";
 	if ($result = $db->sql_query($sql))
 	{
 		while ($row = $db->sql_fetchrow($result))
 		{
-			if (($userdata['session_logged_in'] && $row['username'] != $userdata['username']) || !$userdata['session_logged_in'])
+			if (($userdata['session_logged_in'] && $row['user_name'] != $userdata['user_name']) || !$userdata['session_logged_in'])
 			{
 				$db->sql_freeresult($result);
 				return array('error' => true, 'error_msg' => $lang['Username_taken']);
@@ -51,7 +51,7 @@ function validate_username($username)
 
 	$sql = "SELECT group_name
 		FROM " . GROUPS . " 
-		WHERE LOWER(group_name) = '" . strtolower($username) . "'";
+		WHERE LOWER(group_name) = '" . strtolower($user_name) . "'";
 	if ($result = $db->sql_query($sql))
 	{
 		if ($row = $db->sql_fetchrow($result))
@@ -62,7 +62,7 @@ function validate_username($username)
 	}
 	$db->sql_freeresult($result);
 
-	$sql = "SELECT disallow_username
+	$sql = "SELECT disallow_user_name
 		FROM " . DISALLOW;
 	if ($result = $db->sql_query($sql))
 	{
@@ -70,7 +70,7 @@ function validate_username($username)
 		{
 			do
 			{
-				if (preg_match("#\b(" . str_replace("\*", ".*?", preg_quote($row['disallow_username'], '#')) . ")\b#i", $username))
+				if (preg_match("#\b(" . str_replace("\*", ".*?", preg_quote($row['disallow_user_name'], '#')) . ")\b#i", $user_name))
 				{
 					$db->sql_freeresult($result);
 					return array('error' => true, 'error_msg' => $lang['Username_disallowed']);
@@ -81,8 +81,8 @@ function validate_username($username)
 	}
 	$db->sql_freeresult($result);
 
-	// Don't allow " and ALT-255 in username.
-	if (strstr($username, '"') || strstr($username, '&quot;') || strstr($username, chr(160)) || strstr($username, chr(173)))
+	// Don't allow " and ALT-255 in user_name.
+	if (strstr($user_name, '"') || strstr($user_name, '&quot;') || strstr($user_name, chr(160)) || strstr($user_name, chr(173)))
 	{
 		return array('error' => true, 'error_msg' => $lang['Username_invalid']);
 	}

@@ -77,7 +77,7 @@ if ( $userdata['user_level'] >= TRIAL )
 {
 	if ( defined('CACHE') )
 	{
-		$sCacheName = 'calendar_' . $monat . '_member';
+		$sCacheName = 'cal_member_' . $monat;
 
 		if ( ($monat_data = $oCache -> readCache($sCacheName)) === false )
 		{
@@ -85,7 +85,7 @@ if ( $userdata['user_level'] >= TRIAL )
 			{
 				if ( $i < 10 ) { $i = '0' . $i; }
 				
-				$sql = 'SELECT user_id, username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT user_id, user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -99,7 +99,7 @@ if ( $userdata['user_level'] >= TRIAL )
 				}
 				$day_rows_e = $db->sql_fetchrowset($result);
 				
-				$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+				$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 						FROM " . MATCH . " m
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -140,7 +140,7 @@ if ( $userdata['user_level'] >= TRIAL )
 		{
 			$i = ( $i < 10 ) ? '0' . $i : $i;
 			
-			$sql = 'SELECT user_id, username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+			$sql = 'SELECT user_id, user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -154,7 +154,7 @@ if ( $userdata['user_level'] >= TRIAL )
 			}
 			$day_rows_e = $db->sql_fetchrowset($result);
 			
-			$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+			$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 						FROM " . MATCH . " m
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -202,7 +202,7 @@ else
 {
 	if ( defined('CACHE') )
 	{
-		$sCacheName = 'calendar_' . $monat . '_guest';
+		$sCacheName = 'cal_guests_' . $monat;
 
 		if ( ($monat_data = $oCache -> readCache($sCacheName)) === false )
 		{
@@ -210,7 +210,7 @@ else
 			{
 				$i = ( $i < 10 ) ? '0' . $i : $i;
 				
-				$sql = 'SELECT user_id, username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT user_id, user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -224,7 +224,7 @@ else
 				}
 				$day_rows_e = $db->sql_fetchrowset($result);
 				
-				$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+				$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 						FROM " . MATCH . " m
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -256,7 +256,7 @@ else
 				$i = '0'.$i;
 			}
 			
-			$sql = 'SELECT user_id, username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+			$sql = 'SELECT user_id, user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -272,7 +272,7 @@ else
 			
 			
 			
-			$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+			$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 						FROM " . MATCH . " m
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -340,7 +340,7 @@ for ( $i = 1; $i < $tage + 1; $i++ )
 						$gebdt = $gebdt + 10000;
 					}
 	
-					$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['username'], $alter);
+					$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['user_name'], $alter);
 				}
 				
 				$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
@@ -398,7 +398,7 @@ for ( $i = 1; $i < $tage + 1; $i++ )
 				for ( $k = 0; $k < count($monat_matchs[$i]); $k++ )
 				{
 					$match_id	= $monat_matchs[$i][$k]['match_id'];
-					$match_vs	= $monat_matchs[$i][$k]['match_rival'];
+					$match_vs	= $monat_matchs[$i][$k]['match_rival_name'];
 					$match_time	= create_date('H:i', $monat_matchs[$i][$k]['match_date'], $config['page_timezone']);
 					$team_name	= $monat_matchs[$i][$k]['team_name'];
 					$game_size	= $monat_matchs[$i][$k]['game_size'];
@@ -470,7 +470,7 @@ for ( $i = 1; $i < $tage + 1; $i++ )
 						$gebdt = $gebdt + 10000;
 					}
 	
-					$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['username'], $alter);
+					$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['user_name'], $alter);
 				}
 				
 				$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];

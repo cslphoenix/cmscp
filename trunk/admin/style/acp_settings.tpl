@@ -43,7 +43,7 @@
 	<td class="row2"><input type="text" class="post" size="25" name="page_name" id="page_name" value="{PAGE_NAME}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="page_desc">{L_PAGE_DESC}:</label></td>
+	<td class="row1"><label for="page_desc">{L_PAGE_DESC}:</label></td>
 	<td class="row2"><textarea class="post" cols="35" rows="4" maxlength="255" name="page_desc" id="page_desc">{PAGE_DESC}</textarea></td>
 </tr>
 <tr>
@@ -51,11 +51,11 @@
 	<td class="row2"><label><input type="radio" name="page_disable" id="page_disable" value="1" {S_DISABLE_PAGE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="page_disable" value="0" {S_DISABLE_PAGE_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="page_disable_msg">{L_DISABLE_PAGE_REASON}:</label></td>
+	<td class="row1"><label for="page_disable_msg">{L_DISABLE_PAGE_REASON}:</label></td>
 	<td class="row2"><textarea class="post" cols="35" rows="4" maxlength="255" name="page_disable_msg" id="page_disable_msg">{DISABLE_REASON}</textarea></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="page_disable_mode">{L_DISABLE_PAGE_MODE}:</label></td>
+	<td class="row1"><label for="page_disable_mode">{L_DISABLE_PAGE_MODE}:</label></td>
 	<td class="row2">{PAGE_DISABLE_MODE}</td>
 </tr>
 </table>

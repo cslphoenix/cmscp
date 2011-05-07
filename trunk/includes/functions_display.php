@@ -33,7 +33,7 @@ function display_navi()
 {
 	global $db, $root_path, $settings, $template, $userdata, $lang;
 	
-	$sql = ( $userdata['session_logged_in'] ) ? 'SELECT * FROM ' . NAVIGATION . ' WHERE navi_show = 1' : 'SELECT * FROM ' . NAVIGATION . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
+	$sql = ( $userdata['session_logged_in'] ) ? 'SELECT * FROM ' . NAVI . ' WHERE navi_show = 1' : 'SELECT * FROM ' . NAVI . ' WHERE navi_show = 1 AND navi_intern != 1 AND navi_type != ' . NAVI_USER;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -77,9 +77,9 @@ function display_navi_news()
 					LEFT JOIN ' . MATCH . ' m ON n.match_id = m.match_id
 					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
-				WHERE n.news_time_public < ' . time() . '
+				WHERE n.news_time_public < ' . time() . ' AND news_public != 0
 			ORDER BY n.news_time_public DESC, n.news_id DESC LIMIT 0,' . $settings['subnavi_news_limit'];
-	$tmp = _cached($sql, 'display_navi_news');
+	$tmp = _cached($sql, 'dsp_news');
 	
 	if ( $tmp )
 	{
@@ -118,12 +118,14 @@ function display_navi_news()
 					'CLASS' 		=> $class,
 					'NEWS_TITLE'	=> cut_string($tmp[$i]['news_title'], $settings['subnavi_news_length']),
 					'NEWS_GAME'		=> ( $tmp[$i]['match_id'] ) ? display_gameicon($tmp[$i]['game_size'], $tmp[$i]['game_image']) : '',
-					'U_DETAILS'		=> append_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $tmp[$i]['news_id']),
+					'U_DETAILS'		=> check_sid('news.php?mode=view&amp;' . POST_NEWS_URL . '=' . $tmp[$i]['news_id']),
 				));
 			}
 		}
 	}
-	else { $template->assign_block_vars('_news_subnavi_empty', array()); }
+	else
+	{
+		$template->assign_block_vars('_news_subnavi_empty', array()); }
 	
 	return;
 }
@@ -134,82 +136,80 @@ function display_navi_match()
 {
 	global $config, $db, $lang, $root_path, $settings, $template, $userdata;
 	
-	$sql = "SELECT
-				m.match_id, m.match_date, m.match_rival, m.match_public,
-				md.details_mapa_clan, md.details_mapb_clan, md.details_mapc_clan, md.details_mapd_clan, md.details_mapa_rival, md.details_mapb_rival, md.details_mapc_rival, md.details_mapd_rival,
-				t.team_name,
-				g.game_image, g.game_size
+	$sql = "SELECT m.match_id, m.match_date, m.match_rival_name, m.match_public, t.team_name, g.game_image, g.game_size
 				FROM " . MATCH . " m
-					LEFT JOIN " . MATCH_DETAILS . " md ON m.match_id = md.match_id
-					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+					LEFT JOIN " . TEAMS . " t ON t.team_id = m.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
 				WHERE m.match_date < " . time() . "
 			ORDER BY m.match_date ASC LIMIT 0," . $settings['subnavi_match_limit'];
-	$tmp = _cached($sql, 'display_navi_match');
+	$match = _cached($sql, 'dsp_navi_match');
 	
-	if ( $tmp )
+	if ( $match )
 	{
-		$navi_match_last = array();
-			
-		foreach ( $tmp as $navi_match => $row )
+		foreach ( $match as $key => $row )
 		{
 			if ( $userdata['user_level'] >= TRIAL )
 			{
 				if ( $row['match_date'] < time() )
 				{
-					$navi_match_last[] = $row;
+					$match_last[] = $row;
+					$_ary_ids[] = $row['match_id'];
 				}
 			}
 			else if ( $row['match_public'] == '1' )
 			{
 				if ( $row['match_date'] < time() )
 				{
-					$navi_match_last[] = $row;
+					$match_last[] = $row;
+					$_ary_ids[] = $row['match_id'];
 				}
 			}
 		}
 		
-		if ( $navi_match_last )
+		$ids = implode(', ', $_ary_ids);
+		
+		$sql = "SELECT match_id, map_name, map_points_home, map_points_rival FROM " . MATCH_MAPS . " WHERE match_id IN ($ids) ORDER BY match_id, map_order ASC";
+		$maps = _cached($sql, 'dsp_navi_match_maps');
+		
+		if ( $match_last )
 		{
-			for ( $i = 0; $i < count($navi_match_last); $i++ )
+			for ( $i = 0; $i < count($match_last); $i++ )
 			{
+				$match_id = $match_last[$i]['match_id'];
+				
 				$class = ($i % 2) ? 'row1r' : 'row2r';
 				
-				$result_clan	= $navi_match_last[$i]['details_mapa_clan'] + $navi_match_last[$i]['details_mapb_clan'] + $navi_match_last[$i]['details_mapc_clan'] + $navi_match_last[$i]['details_mapd_clan'];
-				$result_rival	= $navi_match_last[$i]['details_mapa_rival'] + $navi_match_last[$i]['details_mapb_rival'] + $navi_match_last[$i]['details_mapc_rival'] + $navi_match_last[$i]['details_mapd_rival'];
+				$result_clan = '';
+				$result_rival = '';
 				
-				if ( $result_clan > $result_rival )
+				for ( $j = 0; $j < count($maps); $j++ )
 				{
-					$class_result = 'win';
-				}
-				else if	( $result_clan < $result_rival )
-				{
-					$class_result = 'lose';
-				}
-				else if	( $result_clan = $result_rival )
-				{
-					$class_result = 'draw';
-				}
-				else
-				{
-					$class_result = '';
+					$map_match = $maps[$j]['match_id'];
+					
+					if ( $match_id == $map_match )
+					{
+						$result_clan[$i]	= $maps[$j]['map_points_home'];
+						$result_rival[$i]	= $maps[$j]['map_points_rival'];
+					}
 				}
 				
-				$match_rival	= cut_string($navi_match_last[$i]['match_rival'], $settings['subnavi_match_length']);
-				$match_name		= ( $navi_match_last[$i]['match_public'] ) ? sprintf($lang['sprintf_subnavi_match'], $match_rival) : sprintf($lang['sprintf_subnavi_match_i'], $match_rival);
+				$class_result	= ( $result_clan[$i] != $result_rival[$i] ) ? ( $result_clan[$i] > $result_rival[$i] ) ? WIN : LOSE : DRAW;
+				$match_name		= $match_last[$i]['match_public'] ? sprintf($lang['sprintf_subnavi_match'], cut_string($match_last[$i]['match_rival_name'], $settings['subnavi_match_length'])) : sprintf($lang['sprintf_subnavi_match_i'], cut_string($match_last[$i]['match_rival_name'], $settings['subnavi_match_length']));
 				
 				$template->assign_block_vars('_match_subnavi_row', array(
 					'CLASS' 		=> $class,
 					'CLASS_RESULT'	=> $class_result,
-					'MATCH_GAME'	=> display_gameicon($navi_match_last[$i]['game_size'], $navi_match_last[$i]['game_image']),
+					'MATCH_GAME'	=> display_gameicon($match_last[$i]['game_size'], $match_last[$i]['game_image']),
 					'MATCH_NAME'	=> $match_name,
-					'MATCH_RESULT'	=> sprintf($lang['sprintf_subnavi_match_result'], $result_clan, $result_rival),
-					'U_DETAILS'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $navi_match_last[$i]['match_id']),
+					'MATCH_RESULT'	=> sprintf($lang['sprintf_subnavi_match_result'], $result_clan[$i], $result_rival[$i]),
+					'U_DETAILS'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_last[$i]['match_id']),
 				));
 			}
 		}
 	}
-	else { $template->assign_block_vars('_match_subnavi_empty', array()); }
+	else
+	{
+		$template->assign_block_vars('_match_subnavi_empty', array()); }
 	
 	return;
 }
@@ -224,7 +224,7 @@ function display_navi_newusers()
 	{
 		$template->assign_block_vars('_subnavi_newusers', array());
 		
-		$sql = "SELECT user_id, username, user_color
+		$sql = "SELECT user_id, user_name, user_color
 					FROM " . USERS . "
 					WHERE user_id != -1 AND user_active = 1
 				ORDER BY user_regdate
@@ -239,8 +239,8 @@ function display_navi_newusers()
 		for ( $i = 0; $i < count($users); $i++ )
 		{
 			$template->assign_block_vars('_subnavi_newusers._user_row', array(
-				'L_USERNAME'	=> '<b>' . cut_string($users[$i]['username'], $settings['subnavi_newusers_length']) . '</b>',
-				'U_USERNAME'	=> append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $users[$i]['user_id']),
+				'L_USERNAME'	=> '<b>' . cut_string($users[$i]['user_name'], $settings['subnavi_newusers_length']) . '</b>',
+				'U_USERNAME'	=> check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $users[$i]['user_id']),
 				'C_USERNAME'	=> 'style="color:' . $users[$i]['user_color'] . '"',
 			));
 		}
@@ -283,11 +283,14 @@ function display_navi_teams()
 				$template->assign_block_vars('_subnavi_teams._teams_row', array(
 					'I_TEAM'	=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
 					'L_TEAM'	=> cut_string($teams[$i]['team_name'], $settings['subnavi_teams_length']),
-					'U_TEAM'	=> append_sid("teams.php?" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
+					'U_TEAM'	=> check_sid("teams.php?" . POST_TEAMS_URL . "=" . $teams[$i]['team_id']),
 				));
 			}
 		}
-		else { $template->assign_block_vars('_teams_subnavi_empty', array()); }
+		else
+		{
+			$template->assign_block_vars('_teams_subnavi_empty', array());
+		}
 	}
 	
 	return;
@@ -368,7 +371,7 @@ function display_navi_minical()
 	{
 		if ( defined('CACHE') )
 		{
-			$sCacheName = 'subnavi_calendar_' . $monat . '_member';
+			$sCacheName = 'cal_member_' . $monat;
 	
 			if ( ( $monat_data = $oCache -> readCache($sCacheName)) === false )
 			{
@@ -376,7 +379,7 @@ function display_navi_minical()
 				{
 					$i = ( $i < 10 ) ? '0' . $i : $i;
 					
-					$sql = "SELECT username, user_birthday, user_color FROM " . USERS . " WHERE MONTH(user_birthday) = $monat AND DAYOFMONTH(user_birthday) = $i";
+					$sql = "SELECT user_name, user_birthday, user_color FROM " . USERS . " WHERE MONTH(user_birthday) = $monat AND DAYOFMONTH(user_birthday) = $i";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -390,8 +393,8 @@ function display_navi_minical()
 					}
 					$day_rows_e = $db->sql_fetchrowset($result);
 					
-				#	$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-					$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+				#	$sql = 'SELECT match_rival_name, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
+					$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 								FROM " . MATCH . " m
 									LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 									LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -428,7 +431,7 @@ function display_navi_minical()
 			{
 				$i = ( $i < 10 ) ? '0' . $i : $i;
 				
-				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -442,8 +445,8 @@ function display_navi_minical()
 				}
 				$day_rows_e = $db->sql_fetchrowset($result);
 				
-			#	$sql = 'SELECT match_rival, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-				$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+			#	$sql = 'SELECT match_rival_name, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
+				$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 								FROM " . MATCH . " m
 									LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 									LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -487,7 +490,7 @@ function display_navi_minical()
 	{
 		if ( defined('CACHE') )
 		{
-			$sCacheName = 'subnavi_calendar_' . $monat . '_guest';
+			$sCacheName = 'cal_guests_' . $monat;
 	
 			if (( $monat_data = $oCache -> readCache($sCacheName)) === false )
 			{
@@ -495,7 +498,7 @@ function display_navi_minical()
 				{
 					$i = ( $i < 10 ) ? '0' . $i : $i;
 					
-					$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+					$sql = 'SELECT user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -510,7 +513,7 @@ function display_navi_minical()
 					$day_rows_e = $db->sql_fetchrowset($result);
 					
 				#	$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-					$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+					$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 								FROM " . MATCH . " m
 									LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 									LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -539,7 +542,7 @@ function display_navi_minical()
 			{
 				$i = ( $i < 10 ) ? '0' . $i : $i;
 				
-				$sql = 'SELECT username, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
+				$sql = 'SELECT user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -554,7 +557,7 @@ function display_navi_minical()
 				$day_rows_e = $db->sql_fetchrowset($result);
 				
 			#	$sql = 'SELECT * FROM ' . MATCH . " WHERE match_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-				$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+				$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 								FROM " . MATCH . " m
 									LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 									LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -650,7 +653,7 @@ function display_navi_minical()
 							$gebdt = $gebdt + 10000;
 						}
 		
-						$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['username'], $alter);
+						$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['user_name'], $alter);
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
@@ -697,7 +700,7 @@ function display_navi_minical()
 					for ( $k = 0; $k < count($monat_matchs[$i]); $k++ )
 					{
 					#	$match_id	= $monat_matchs[$i][$k]['match_id'];
-						$match_vs	= $monat_matchs[$i][$k]['match_rival'];
+						$match_vs	= $monat_matchs[$i][$k]['match_rival_name'];
 						$match_time	= create_date('H:i', $monat_matchs[$i][$k]['match_date'], $config['page_timezone']);
 						$team_name	= $monat_matchs[$i][$k]['team_name'];
 						$game_size	= $monat_matchs[$i][$k]['game_size'];
@@ -705,7 +708,7 @@ function display_navi_minical()
 						$team_image	= "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" align=\"middle\">";
 						
 						$list[] = "$team_image $match_vs - $match_time";
-					#	$list[] = $monat_matchs[$i][$k]['match_rival'];
+					#	$list[] = $monat_matchs[$i][$k]['match_rival_name'];
 					}
 					
 					$language		= ( count($list) == '1' ) ? $lang['cal_match'] : $lang['cal_matchs'];
@@ -733,7 +736,7 @@ function display_navi_minical()
 				if ( $day_event_num )
 				{
 					$class = ( $day_event_num > 1 ) ? 'more' : $day_class;
-					$day .= "<td align=\"center\" width=\"14%\" class=\"$class\"><a class=\"$class\" href=\"" . append_sid("calendar.php#$i") . "\">$i $day_event</span></a></td>";
+					$day .= "<td align=\"center\" width=\"14%\" class=\"$class\"><a class=\"$class\" href=\"" . check_sid("calendar.php#$i") . "\">$i $day_event</span></a></td>";
 				}
 				else
 				{
@@ -776,7 +779,7 @@ function display_navi_minical()
 							$gebdt = $gebdt + 10000;
 						}
 		
-						$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['username'], $alter);
+						$list[] = sprintf($lang['cal_birth'], $monat_birthday[$i][$k]['user_name'], $alter);
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
@@ -823,7 +826,7 @@ function display_navi_minical()
 					
 					for ( $k=0; $k < count($monat_matchs[$i]); $k++ )
 					{
-						$list[] = $monat_matchs[$i][$k]['match_rival'];
+						$list[] = $monat_matchs[$i][$k]['match_rival_name'];
 					}
 					
 					$language		= (count($list) == 1) ? $lang['cal_match'] : $lang['cal_matchs'];
@@ -834,7 +837,7 @@ function display_navi_minical()
 				}
 				
 				$class = ( $day_event_num > 1 ) ? 'more' : $day_class;
-				$day .= '<td align="center" width="14%" class="' . $class . '"><a class="' . $class . '" href="' . append_sid('calendar.php#' . $i ) . '">' . $i . '' . $day_event . '</span></a></td>';
+				$day .= '<td align="center" width="14%" class="' . $class . '"><a class="' . $class . '" href="' . check_sid('calendar.php#' . $i ) . '">' . $i . '' . $day_event . '</span></a></td>';
 				
 			}
 			else
@@ -886,7 +889,7 @@ function display_next_match()
 	{
 		$cache = 'subnavi_match_' . $monat . '_member';
 		
-		$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+		$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 						FROM " . MATCH . " m
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -897,7 +900,7 @@ function display_next_match()
 	{
 		$cache = 'subnavi_match_' . $monat . '_guest';
 		
-		$sql = "SELECT m.match_id, m.match_rival, m.match_date, g.game_image, g.game_size, t.team_name
+		$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
 						FROM " . MATCH . " m
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -914,14 +917,14 @@ function display_next_match()
 			$game_image	= $tmp[$k]['game_image'];
 			$info_date	= create_date('d H:i', $tmp[$k]['match_date'], $userdata['user_timezone']);
 			$info_image	= "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" align=\"middle\">";
-			$info_name	= ( strlen($tmp[$k]['match_rival']) < 10 ) ? $tmp[$k]['match_rival'] : substr($tmp[$k]['match_rival'], 0, 9) . ' ...';
+			$info_name	= ( strlen($tmp[$k]['match_rival_name']) < 10 ) ? $tmp[$k]['match_rival_name'] : substr($tmp[$k]['match_rival_name'], 0, 9) . ' ...';
 			
 			
 			$template->assign_block_vars('_next_match._match_row', array(
 				'NAME'	=> $info_name,
 				'DATE'	=> $info_date,
 				'IMAGE'	=> $info_image,
-				'URL'	=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $tmp[$k]['match_id']),
+				'URL'	=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $tmp[$k]['match_id']),
 			));
 		}
 	}
@@ -956,7 +959,7 @@ function display_next_training()
 			
 			$template->assign_block_vars('_next_training._training_row', array(
 				'L_NAME'	=> $details,
-				'U_NAME'	=> append_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $tmp[$k]['training_id']),
+				'U_NAME'	=> check_sid('training.php?mode=trainingdetails&amp;' . POST_TRAINING_URL . '=' . $tmp[$k]['training_id']),
 				'DATE'		=> $date,
 				
 			));

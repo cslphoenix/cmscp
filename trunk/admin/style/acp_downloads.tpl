@@ -28,7 +28,7 @@
 <!-- END _dl_cat_row -->
 <!-- BEGIN _no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="2">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry -->
 </table>
@@ -75,11 +75,11 @@
 	<td class="row2"><input type="text" class="post" name="cat_title" id="cat_title" value="{TITLE}"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_DESC}:</label></td>
+	<td class="row1"><label>{L_DESC}:</label></td>
 	<td class="row2"><textarea class="textarea" name="cat_desc" rows="5" style="width:100%">{DESC}</textarea></td>
 </tr>
 <tr>
-	<td class="row1 top"><label>{L_ICON}:</label></td>
+	<td class="row1"><label>{L_ICON}:</label></td>
 	<td class="row2">{S_SELECT}</td>
 </tr>
 <tr>

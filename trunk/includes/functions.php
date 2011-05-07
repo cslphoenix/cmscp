@@ -77,6 +77,21 @@ function request($request_var, $request_type = '', $filter = '')
 				}
 				
 				break;
+				
+			case 5:
+				
+				/*	URL	*/
+				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
+			
+				break;
+			
+			/*	Image-URL	*/	
+			case 6:
+				
+				/*	URL	*/
+				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
+			
+				break;
 			
 			default:
 				
@@ -227,10 +242,7 @@ function group_set_auth($user_id, $group_id)
 {
 	global $db, $oCache;
 	
-	$sql = 'SELECT group_access, group_color
-				FROM ' . GROUPS . '
-				WHERE group_id = ' . $group_id . '
-					AND group_type <> ' . GROUP_HIDDEN;
+	$sql = "SELECT group_access, group_color FROM " . GROUPS . " WHERE group_id = $group_id AND group_type <> " . GROUP_HIDDEN;
 	if ( !$result = $db->sql_query($sql) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -250,7 +262,7 @@ function group_set_auth($user_id, $group_id)
 	
 	if ( $group_access == ADMIN && ( $user_level < ADMIN || $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
 	{
-		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . ADMIN . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+		$sql = "UPDATE " . USERS . " SET user_level = " . ADMIN . ", user_color = '#$group_color' WHERE user_id = $user_id";
 		if ( !$result = $db->sql_query($sql) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -258,7 +270,8 @@ function group_set_auth($user_id, $group_id)
 	}
 	else if ( $group_access == MOD && ( $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
 	{
-		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+	#	$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ', user_color = "#' . $group_color . '" WHERE user_id = ' . $user_id;
+		$sql = "UPDATE " . USERS . " SET user_level = " . MOD . ", user_color = '#$group_color' WHERE user_id = $user_id";
 		if ( !$result = $db->sql_query($sql) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -266,7 +279,8 @@ function group_set_auth($user_id, $group_id)
 	}
 	else if ( $group_access == MEMBER && ( $user_level < MEMBER || $user_level < TRIAL ) )
 	{
-		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+	#	$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ', user_color = "#' . $group_color . '" WHERE user_id = ' . $user_id;
+		$sql = "UPDATE " . USERS . " SET user_level = " . MEMBER . ", user_color = '#$group_color' WHERE user_id = $user_id";
 		if ( !$result = $db->sql_query($sql) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -274,7 +288,8 @@ function group_set_auth($user_id, $group_id)
 	}
 	else if ( $group_access == TRIAL && $user_level <= TRIAL )
 	{
-		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ', user_color = "' . $group_color . '" WHERE user_id = ' . $user_id;
+	#	$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ', user_color = "#' . $group_color . '" WHERE user_id = ' . $user_id;
+		$sql = "UPDATE " . USERS . " SET user_level = " . TRIAL . ", user_color = '#$group_color' WHERE user_id = $user_id";
 		if ( !$result = $db->sql_query($sql) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -312,7 +327,7 @@ function group_reset_auth($user_id, $group_id)
 	
 	if ( $user['user_founder'] == '0' )
 	{
-		$sql = 'UPDATE ' . USERS . ' SET user_level = ' . $group['group_access'] . ', user_color = "' . $group['group_color'] . '" WHERE user_id = ' . $user_id;
+		$sql = "UPDATE " . USERS . " SET user_level = " . $group['group_access'] . ", user_color = '#" . $group['group_color'] . "' WHERE user_id = $user_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -322,7 +337,7 @@ function group_reset_auth($user_id, $group_id)
 
 function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$joined, &$poster_avatar, &$profile_img, &$profile, &$search_img, &$search, &$pm_img, &$pm, &$email_img, &$email, &$www_img, &$www, &$icq_status_img, &$icq_img, &$icq, &$aim_img, &$aim, &$msn_img, &$msn, &$yim_img, &$yim)
 {
-	global $lang, $images, $config, $phpEx;
+	global $lang, $images, $config;
 
 	$from = ( !empty($row['user_from']) ) ? $row['user_from'] : '&nbsp;';
 	$joined = create_date($date_format, $row['user_regdate'], $config['page_timezone']);
@@ -331,7 +346,7 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 
 	if ( !empty($row['user_viewemail']) || $group_mod )
 	{
-		$email_uri = ( $config['page_email_form'] ) ? append_sid('profile.php?mode=email&amp;' . POST_USER_URL .'=' . $row['user_id']) : 'mailto:' . $row['user_email'];
+		$email_uri = ( $config['page_email_form'] ) ? check_sid('profile.php?mode=email&amp;' . POST_USER_URL .'=' . $row['user_id']) : 'mailto:' . $row['user_email'];
 
 		$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
 		$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
@@ -342,11 +357,11 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 		$email = '&nbsp;';
 	}
 
-	$temp_url = append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $row['user_id']);
+	$temp_url = check_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $row['user_id']);
 	$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
 	$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
 
-	$temp_url = append_sid('privmsg.php?mode=post&amp;' . POST_USER_URL . '=' . $row['user_id']);
+	$temp_url = check_sid('privmsg.php?mode=post&amp;' . POST_USER_URL . '=' . $row['user_id']);
 	$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
 	$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
 
@@ -354,7 +369,7 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 }
 
 //
-// Get Userdata, $user can be username or user_id. If force_str is true, the username will be forced.
+// Get Userdata, $user can be user_name or user_id. If force_str is true, the user_name will be forced.
 //
 function get_userdata($user, $force_str = false)
 {
@@ -362,7 +377,7 @@ function get_userdata($user, $force_str = false)
 
 	if ( !is_numeric($user) || $force_str )
 	{
-		$user = phpbb_clean_username($user);
+		$user = phpbb_clean_user_name($user);
 	}
 	else
 	{
@@ -370,7 +385,7 @@ function get_userdata($user, $force_str = false)
 	}
 
 	$sql = 'SELECT * FROM ' . USERS . ' WHERE ';
-	$sql .= ( ( is_integer($user) ) ? 'user_id = ' . $user : 'username = "' .  str_replace("\'", "''", $user) . "'" ) . ' AND user_id <> ' . ANONYMOUS;
+	$sql .= ( ( is_integer($user) ) ? 'user_id = ' . $user : 'user_name = "' .  str_replace("\'", "''", $user) . "'" ) . ' AND user_id <> ' . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -478,10 +493,11 @@ function _cached($sql, $name, $row = '', $time = '')
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
+			
 			$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 			
-			$oCache -> writeCache($sCacheName, $fetch, $time);
+			$oCache->writeCache($sCacheName, $fetch, $time);
 		}
 	}
 	else
@@ -499,7 +515,7 @@ function _cached($sql, $name, $row = '', $time = '')
 
 function error_handler($errno, $errstr, $errfile, $errline)
 {
-	global $root_path, $debug_msg;
+	global $root_path, $template, $test_msg;
 	
 	$errfile = str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $errfile);
 	
@@ -569,7 +585,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 	}
 	
 	$msg .= "]:</b> $errstr in <b>$errfile</b> Zeile: <b>$errline</b>";
-    $msg .= "<br /></div>";
+	$msg .= "</div>";
 	
 	if (isset($GLOBALS['error_fatal']))
 	{
@@ -579,9 +595,32 @@ function error_handler($errno, $errstr, $errfile, $errline)
 		}
 	}
 	
-	$debug_msg = $msg;
-	
-	print $debug_msg;
+	echo $msg;
+}
+
+function error_fatal($mask = NULL){
+    if(!is_null($mask)){
+        $GLOBALS['error_fatal'] = $mask;
+    }elseif(!isset($GLOBALS['die_on'])){
+        $GLOBALS['error_fatal'] = 0;
+    }
+    return $GLOBALS['error_fatal'];
+}
+
+function debug($data, $name = '')
+{
+	print '<div align="left">';
+	print '<-- start -->';
+	print '<br>';
+	print ( $name ) ? '<br>' . $name : '';
+	print '<br>';
+	print '<pre>';
+	print_r($data);
+	print '</pre>';
+	print '<br>';
+	print '<-- end -->';
+	print '<br>';
+	print '</div>';
 }
 
 function debuge($data)
@@ -599,22 +638,6 @@ function debuge($data)
 	include($root_path . $inc);
 	
 	exit;
-}
-
-function debug($data, $name='')
-{
-	print '<div align="left">';
-	print '<-- start -->';
-	print '<br>';
-	print ( $name ) ? '<br>' . $name : '';
-	print '<br>';
-	print '<pre>';
-	print_r($data);
-	print '</pre>';
-	print '<br>';
-	print '<-- end -->';
-	print '<br>';
-	print '</div>';
 }
 
 function check_image_type(&$type)
@@ -973,16 +996,24 @@ function picture_delete($num, $logo_file, $logo_preview_file)
 	return "details_map_pic_$num = '', pic_" . $num . "_preview = '', ";
 }
 
-function log_add($type, $sektion, $message, $data = '')
+function log_add($type, $log, $message, $data = '')
 {
 	global $db, $userdata;
 	
-	$message = strtolower($message);
+	$msg	= strtolower($message);
+	$data	= serialize($data);
 	
-	$sql = "INSERT INTO " . LOGS . " SET log_type = '$type', log_time = " . time() . ", user_id = '" . $userdata['user_id'] . "', user_ip = '" . $userdata['session_ip'] . "', log_sektion = '$sektion', log_message = '$message', log_data = '$data'";
+	$sql = "INSERT INTO " . LOGS . " SET
+				log_type = '$type',
+				log_time = " . time() . ",
+				user_id = '" . $userdata['user_id'] . "',
+				user_ip = '" . $userdata['session_ip'] . "',
+				log_sektion = '$log',
+				log_message = '$msg',
+				log_data = '$data'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'log fail', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'Log SQL Error ', '', __LINE__, __FILE__, $sql);
 	}
 }
 
@@ -1010,7 +1041,7 @@ function get_db_stat($mode)
 			break;
 
 		case 'newestuser':
-			$sql = "SELECT user_id, username
+			$sql = "SELECT user_id, user_name
 				FROM " . USERS . "
 				WHERE user_id <> " . ANONYMOUS . "
 				ORDER BY user_id DESC
@@ -1051,14 +1082,14 @@ function get_db_stat($mode)
 }
 */
 
-// added at phpBB 2.0.11 to properly format the username
-function phpbb_clean_username($username)
+// added at phpBB 2.0.11 to properly format the user_name
+function phpbb_clean_user_name($user_name)
 {
-	$username = substr(htmlspecialchars(str_replace("\'", "'", trim($username))), 0, 25);
-	$username = phpbb_rtrim($username, "\\");
-	$username = str_replace("'", "\'", $username);
+	$user_name = substr(htmlspecialchars(str_replace("\'", "'", trim($user_name))), 0, 25);
+	$user_name = phpbb_rtrim($user_name, "\\");
+	$user_name = str_replace("'", "\'", $user_name);
 
-	return $username;
+	return $user_name;
 }
 
 /**
@@ -1150,7 +1181,7 @@ function dss_rand()
 
 /*
 //
-// Get Userdata, $user can be username or user_id. If force_str is true, the username will be forced.
+// Get Userdata, $user can be user_name or user_id. If force_str is true, the user_name will be forced.
 //
 function get_userdata($user, $force_str = false)
 {
@@ -1158,7 +1189,7 @@ function get_userdata($user, $force_str = false)
 
 	if (!is_numeric($user) || $force_str)
 	{
-		$user = phpbb_clean_username($user);
+		$user = phpbb_clean_user_name($user);
 	}
 	else
 	{
@@ -1168,7 +1199,7 @@ function get_userdata($user, $force_str = false)
 	$sql = "SELECT *
 		FROM " . USERS . " 
 		WHERE ";
-	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "username = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
+	$sql .= ( ( is_integer($user) ) ? "user_id = $user" : "user_name = '" .  str_replace("\'", "''", $user) . "'" ) . " AND user_id <> " . ANONYMOUS;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'Tried obtaining data for a non-existent user', '', __LINE__, __FILE__, $sql);
@@ -1313,19 +1344,19 @@ function init_userprefs($userdata)
 	// and be able to change the variables within code.
 	//
 	$nav_links['top'] = array ( 
-		'url' => append_sid($root_path . 'index.php'),
+		'url' => check_sid($root_path . 'index.php'),
 		'title' => sprintf($lang['Forum_Index'], $config['page_name'])
 	);
 	$nav_links['search'] = array ( 
-		'url' => append_sid($root_path . 'search.php'),
+		'url' => check_sid($root_path . 'search.php'),
 		'title' => $lang['Search']
 	);
 	$nav_links['help'] = array ( 
-		'url' => append_sid($root_path . 'faq.php'),
+		'url' => check_sid($root_path . 'faq.php'),
 		'title' => $lang['FAQ']
 	);
 	$nav_links['author'] = array ( 
-		'url' => append_sid($root_path . 'memberlist.php'),
+		'url' => check_sid($root_path . 'memberlist.php'),
 		'title' => $lang['Memberlist']
 	);
 	
@@ -1511,7 +1542,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 
 		for($i = 1; $i < $init_page_max + 1; $i++)
 		{
-			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . append_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
+			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . check_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
 			if ( $i <  $init_page_max )
 			{
 				$page_string .= ", ";
@@ -1529,7 +1560,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 
 				for($i = $init_page_min - 1; $i < $init_page_max + 2; $i++)
 				{
-					$page_string .= ($i == $on_page) ? '<b>' . $i . '</b>' : '<a href="' . append_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
+					$page_string .= ($i == $on_page) ? '<b>' . $i . '</b>' : '<a href="' . check_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
 					if ( $i <  $init_page_max + 1 )
 					{
 						$page_string .= ', ';
@@ -1545,7 +1576,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 
 			for($i = $total_pages - 2; $i < $total_pages + 1; $i++)
 			{
-				$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>'  : '<a href="' . append_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
+				$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>'  : '<a href="' . check_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
 				if( $i <  $total_pages )
 				{
 					$page_string .= ", ";
@@ -1557,7 +1588,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 	{
 		for($i = 1; $i < $total_pages + 1; $i++)
 		{
-			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . append_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
+			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . check_sid($base_url . "&amp;start=" . ( ( $i - 1 ) * $per_page ) ) . '">' . $i . '</a>';
 			if ( $i <  $total_pages )
 			{
 				$page_string .= ', ';
@@ -1569,12 +1600,12 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 	{
 		if ( $on_page > 1 )
 		{
-			$page_string = ' <a href="' . append_sid($base_url . "&amp;start=" . ( ( $on_page - 2 ) * $per_page ) ) . '">' . $lang['Previous'] . '</a>&nbsp;&nbsp;' . $page_string;
+			$page_string = ' <a href="' . check_sid($base_url . "&amp;start=" . ( ( $on_page - 2 ) * $per_page ) ) . '">' . $lang['Previous'] . '</a>&nbsp;&nbsp;' . $page_string;
 		}
 
 		if ( $on_page < $total_pages )
 		{
-			$page_string .= '&nbsp;&nbsp;<a href="' . append_sid($base_url . "&amp;start=" . ( $on_page * $per_page ) ) . '">' . $lang['Next'] . '</a>';
+			$page_string .= '&nbsp;&nbsp;<a href="' . check_sid($base_url . "&amp;start=" . ( $on_page * $per_page ) ) . '">' . $lang['Next'] . '</a>';
 		}
 
 	}

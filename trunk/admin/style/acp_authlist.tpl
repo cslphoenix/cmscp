@@ -23,7 +23,7 @@
 <!-- BEGIN _authlist_row -->
 <tr>
 	<td class="row_class1" align="left">{_display._authlist_row.NAME}</td>
-	<td class="row_class2" align="center"><a href="{_display._authlist_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._authlist_row.U_DELETE}">{I_DELETE}</a></td>		
+	<td class="row_class2" align="center">{_display._authlist_row.UPDATE} {_display._authlist_row.DELETE}</td>		
 </tr>
 <!-- END _authlist_row -->
 </table>
@@ -65,10 +65,12 @@
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="authlist_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="authlist_name" id="authlist_name" value="{NAME}"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

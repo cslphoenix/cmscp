@@ -51,7 +51,7 @@ if ( $team_id )
 	{
 		if ( !$userdata['session_logged_in'] )
 		{
-			redirect(append_sid('login.php?redirect=teams.php&' . POST_TEAMS_URL . '=' . $team_id, true));
+			redirect(check_sid('login.php?redirect=teams.php&' . POST_TEAMS_URL . '=' . $team_id, true));
 		}
 	}
 	
@@ -92,7 +92,7 @@ if ( $team_id )
 		
 		if ( !$userdata['session_logged_in'] )
 		{
-			redirect(append_sid('login.php?redirect=teams.php&' . POST_GROUPS_URL . '=' . $team_id, true));
+			redirect(check_sid('login.php?redirect=teams.php&' . POST_GROUPS_URL . '=' . $team_id, true));
 		} 
 		else if ( $sid !== $userdata['session_id'] )
 		{
@@ -101,9 +101,9 @@ if ( $team_id )
 
 		if ( !$is_moderator && $userdata['user_level'] != ADMIN )
 		{
-			$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('index.php') . '">'));
+			$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('index.php') . '">'));
 
-			$message = $lang['Not_group_moderator'] . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+			$message = $lang['Not_group_moderator'] . '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . check_sid('index.php') . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
 		}
 
@@ -214,11 +214,11 @@ if ( $team_id )
 				}
 
 				
-//					$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . append_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">'));
+//					$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">'));
 				
 				$message = $lang['group_set_mod']
-					. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . append_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">', '</a>')
-					. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . append_sid('index.php') . '">', '</a>');
+					. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . check_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">', '</a>')
+					. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . check_sid('index.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 
 			}
@@ -320,11 +320,11 @@ if ( $team_id )
 	
 //	debug($team);
 	
-	$sql = 'SELECT u.username, u.user_id, u.user_viewemail, u.user_posts, u.user_regdate, u.user_email, tu.team_mod
+	$sql = 'SELECT u.user_name, u.user_id, u.user_viewemail, u.user_posts, u.user_regdate, u.user_email, tu.team_mod
 				FROM ' . USERS . ' u, ' . TEAMS_USERS . ' tu
 				WHERE tu.team_id = ' . $team_id . '
 					AND u.user_id = tu.user_id
-				ORDER BY u.username';
+				ORDER BY u.user_name';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
@@ -370,7 +370,7 @@ if ( $team_id )
 	{
 		for ( $j = 0; $j < count($teams_mods); $j++ )
 		{
-			$username	= $teams_mods[$j]['username'];
+			$user_name	= $teams_mods[$j]['user_name'];
 			$user_id	= $teams_mods[$j]['user_id'];
 	
 			generate_user_info($teams_mods[$j], $config['default_dateformat'], $is_moderator, $from, $posts, $joined, $poster_avatar, $profile_img, $profile, $search_img, $search, $pm_img, $pm, $email_img, $email, $www_img, $www, $icq_status_img, $icq_img, $icq, $aim_img, $aim, $msn_img, $msn, $yim_img, $yim);
@@ -379,7 +379,7 @@ if ( $team_id )
 
 			$template->assign_block_vars('details.mod_row', array(
 				'ROW_CLASS' => $row_class,
-				'USERNAME' => $username,
+				'USERNAME' => $user_name,
 				'JOINED' => $joined,
 				'POSTS' => $posts,
 				'USER_ID' => $user_id, 
@@ -390,7 +390,7 @@ if ( $team_id )
 				'EMAIL_IMG' => $email_img,
 				'EMAIL' => $email,
 				
-				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
+				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -409,7 +409,7 @@ if ( $team_id )
 	{
 		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($teams_nomods)); $i++ )
 		{
-			$username	= $teams_nomods[$i]['username'];
+			$user_name	= $teams_nomods[$i]['user_name'];
 			$user_id	= $teams_nomods[$i]['user_id'];
 	
 			generate_user_info($teams_nomods[$i], $config['default_dateformat'], $is_moderator, $from, $posts, $joined, $poster_avatar, $profile_img, $profile, $search_img, $search, $pm_img, $pm, $email_img, $email, $www_img, $www, $icq_status_img, $icq_img, $icq, $aim_img, $aim, $msn_img, $msn, $yim_img, $yim);
@@ -418,7 +418,7 @@ if ( $team_id )
 
 			$template->assign_block_vars('details.member_row', array(
 				'ROW_CLASS' => $row_class,
-				'USERNAME' => $username,
+				'USERNAME' => $user_name,
 				'FROM' => $from,
 				'JOINED' => $joined,
 				'POSTS' => $posts,
@@ -444,7 +444,7 @@ if ( $team_id )
 				'YIM_IMG' => $yim_img,
 				'YIM' => $yim,
 				
-				'U_VIEWPROFILE' => append_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
+				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -479,7 +479,7 @@ if ( $team_id )
 		$sql_id .= " AND NOT user_id IN (" . implode(', ', $ids) . ")";
 	}
 	
-	$sql = 'SELECT username, user_id
+	$sql = 'SELECT user_name, user_id
 				FROM ' . USERS . '
 				WHERE user_id <> ' . ANONYMOUS . $sql_id;
 	if (!($result = $db->sql_query($sql)))
@@ -492,7 +492,7 @@ if ( $team_id )
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$select_users .= '<option value="' . $row['user_id'] . '" >&raquo; '. $row['username'] . '&nbsp;</option>';
+		$select_users .= '<option value="' . $row['user_id'] . '" >&raquo; '. $row['user_name'] . '&nbsp;</option>';
 	}
 	$select_users .= '</select>';
 	
@@ -549,7 +549,7 @@ if ( $team_id )
 		'L_SELECT' => $lang['Select'],
 		'L_REMOVE_SELECTED' => $lang['Remove_selected'],
 		'L_ADD_MEMBER' => $lang['Add_member'],
-		'L_FIND_USERNAME' => $lang['Find_username'],
+		'L_FIND_USERNAME' => $lang['Find_user_name'],
 		
 		'L_JOINED'	=> $lang['Joined'],
 
@@ -562,7 +562,7 @@ if ( $team_id )
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
 		'S_SELECT_OPTION'	=> $select_options,
-		'S_ACTION' => append_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
+		'S_ACTION' => check_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
 	));
 	
 }
@@ -611,10 +611,10 @@ else
 			
 				$template->assign_block_vars('select.game_row.team_row', array(
 					'TEAM_NAME'		=> $teams[$j]['team_name'],
-					'TEAM_MATCH'	=> '<a href="' . append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['all_matches'] . '</a>',
-					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . append_sid('contact.php?mode=joinus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
-					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
-					'TO_TEAM'		=> append_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$j]['team_id']),
+					'TEAM_MATCH'	=> '<a href="' . check_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['all_matches'] . '</a>',
+					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . check_sid('contact.php?mode=joinus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
+					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
+					'TO_TEAM'		=> check_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$j]['team_id']),
 				));
 			}
 		}

@@ -32,7 +32,7 @@ if ( $mode == '' )
 {
 	if ( !$userdata['session_logged_in'] )
 	{
-		redirect(append_sid("login.php?redirect=cash.php"));
+		redirect(check_sid("login.php?redirect=cash.php"));
 	}
 	
 	$page_title = $lang['head_cash'];
@@ -120,7 +120,7 @@ if ( $mode == '' )
 	//
 	//	Benutzereinträge
 	//
-	$sql = 'SELECT cu.*, u.username, u.user_color
+	$sql = 'SELECT cu.*, u.user_name, u.user_color
 				FROM ' . CASH_USER . ' cu
 					LEFT JOIN ' . USERS . ' u ON cu.user_id = u.user_id
 				WHERE u.user_id <> ' . ANONYMOUS . '
@@ -146,7 +146,7 @@ if ( $mode == '' )
 			
 			$user_id			= $cash_user_data[$i]['user_id'];
 			$user_amount		= $cash_user_data[$i]['user_amount'];
-			$user_name			= $cash_user_data[$i]['username'];
+			$user_name			= $cash_user_data[$i]['user_name'];
 			$user_interval		= ( $cash_user_data[$i]['user_interval'] ) ? $lang['cash_interval_o'] : $lang['cash_interval_m'];
 			$user_month			= '';
 			$user_month_info	= '';
@@ -214,7 +214,7 @@ if ( $mode == '' )
 	
 				$template->assign_block_vars('display.cash_user', array(
 					'CLASS' 				=> $class,
-					'CASHUSER_NAME'		=> $data['username'],
+					'CASHUSER_NAME'		=> $data['user_name'],
 					'CASHUSER_AMOUNT'		=> $data['user_amount'],
 					'CASHUSER_INTERVAL'	=> ( $data['user_interval'] ) ? $lang['cash_interval_o'] : $lang['cash_interval_m'],
 					'CASHUSER_MONTH'		=> $user_month_info,
@@ -232,7 +232,7 @@ if ( $mode == '' )
 		'L_CASH_AMOUNT'		=> $lang['cash_amount'],
 		'L_CASH_NAME'		=> $lang['cash_name'],
 		'L_CASH_INTERVAL'	=> $lang['cash_interval'],
-		'L_CASHUSER_USERNAME'	=> $lang['username'],
+		'L_CASHUSER_USERNAME'	=> $lang['user_name'],
 		
 		'CASH_T_AMOUNT'		=> $total_amount,
 		'CASH_U_AMOUNT'		=> $total_users_amount,
@@ -240,13 +240,13 @@ if ( $mode == '' )
 		'CASH_CLASS'		=> $cash_class,
 		'CASH_COUNT'		=> $cash_count,
 		
-		'S_CASH_ACTION'		=> append_sid('cash.php'),
+		'S_CASH_ACTION'		=> check_sid('cash.php'),
 	));
 	
 }
 else
 {
-	redirect(append_sid('cash.php', true));
+	redirect(check_sid('cash.php', true));
 }
 
 if ( $userdata['user_level'] <= TRIAL )

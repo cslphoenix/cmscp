@@ -61,7 +61,7 @@ if ( $mode == 'subscribe' || !$mode )
 				include($root_path . 'includes/functions_mail.php');
 		
 				$mail_data['user_id']			= ANONYMOUS;
-				$mail_data['username']			= $lang['guest'];
+				$mail_data['user_name']			= $lang['guest'];
 				$mail_data['user_email']		= $mail;
 				$mail_data['user_lang']			= $config['default_lang'];
 				$mail_data['user_send_type']	= '0';
@@ -71,7 +71,7 @@ if ( $mode == 'subscribe' || !$mode )
 				
 				log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
-				$message = $lang['newsletter_subscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+				$message = $lang['newsletter_subscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 			}
 			else
@@ -106,7 +106,7 @@ else if ( $mode == 'active' && $mail && $key_code )
 		include($root_path . 'includes/functions_mail.php');
 		
 		$mail_data['user_id']			= ANONYMOUS;
-		$mail_data['username']			= $lang['guest'];
+		$mail_data['user_name']			= $lang['guest'];
 		$mail_data['user_email']		= $mail;
 		$mail_data['user_lang']			= $config['default_lang'];
 		$mail_data['user_send_type']	= '0';
@@ -116,14 +116,14 @@ else if ( $mode == 'active' && $mail && $key_code )
 		
 		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
 		
-		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 		message(GENERAL_MESSAGE, $message);
 	}
 	$db->sql_freeresult($result);
 	
 	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add_confirm');
 		
-	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 	message(GENERAL_ERROR, $message);
 }
 else if ( $mode == 'unsubscribe' )
@@ -133,7 +133,7 @@ else if ( $mode == 'unsubscribe' )
 		include($root_path . 'includes/functions_mail.php');
 		
 		$mail_data['user_id']			= ANONYMOUS;
-		$mail_data['username']			= $lang['guest'];
+		$mail_data['user_name']			= $lang['guest'];
 		$mail_data['user_email']		= $mail;
 		$mail_data['user_lang']			= $config['default_lang'];
 		$mail_data['user_send_type']	= '0';
@@ -143,7 +143,7 @@ else if ( $mode == 'unsubscribe' )
 				
 		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete');
 		
-		$message = $lang['newsletter_unsubscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+		$message = $lang['newsletter_unsubscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 		message(GENERAL_MESSAGE, $message);
 	}
 	else
@@ -174,7 +174,7 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 		include($root_path . 'includes/functions_mail.php');
 		
 		$mail_data['user_id']			= ANONYMOUS;
-		$mail_data['username']			= $lang['guest'];
+		$mail_data['user_name']			= $lang['guest'];
 		$mail_data['user_email']		= $mail;
 		$mail_data['user_lang']			= $config['default_lang'];
 		$mail_data['user_send_type']	= '0';
@@ -184,16 +184,16 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 		
 		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete_confirm');
 		
-		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 		message(GENERAL_MESSAGE, $message);
 	}
 		
-	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . append_sid('newsletter.php') . '">', '</a>');
+	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 	message(GENERAL_ERROR, $message);
 }
 else
 {
-	redirect(append_sid('newsletter.php', true));
+	redirect(check_sid('newsletter.php', true));
 }
 
 $template->pparse('body');

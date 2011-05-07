@@ -578,13 +578,13 @@ function session_reset_keys($user_id, $user_ip)
 // around every single URL and form action. If you replace the session
 // code you must include this routine, even if it's empty.
 //
-function append_sid($url, $non_html_amp = false)
+function check_sid($url, $non_html_amp = false)
 {
 	global $SID;
 
 	if ( !empty($SID) && !preg_match('#sid=#', $url) )
 	{
-		$url .= ( ( strpos($url, '?') !== false ) ?  ( ( $non_html_amp ) ? '&' : '&amp;' ) : '?' ) . $SID;
+		$url .= ( ( strpos($url, '?') !== false ) ? ( ( $non_html_amp ) ? '&' : '&amp;' ) : '?' ) . $SID;
 	}
 
 	return $url;

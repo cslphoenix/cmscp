@@ -7,7 +7,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 	include($root_path . 'includes/class_emailer.php');
 	
 	$user_id			= $mail_data['user_id'];
-	$user_name			= $mail_data['username'];
+	$user_name			= $mail_data['user_name'];
 	$user_email			= $mail_data['user_email'];
 	$user_lang			= $mail_data['user_lang'];
 	$user_send_type		= $mail_data['user_send_type'];
@@ -21,7 +21,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 	if ( $user_send_type )
 	{
 		$privmsg_subject = $lang[$type];
-		$privmsg_message = sprintf($lang[$type . '_msg'], $user_name, $page_name, '<a href=' . append_sid(server_url($file)) . '>', '</a>', $page_email_sig);
+		$privmsg_message = sprintf($lang[$type . '_msg'], $user_name, $page_name, '<a href=' . check_sid(server_url($file)) . '>', '</a>', $page_email_sig);
 
 		$sql = 'INSERT INTO ' . PRIVMSGS . '
 				(

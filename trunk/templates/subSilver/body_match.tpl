@@ -13,7 +13,7 @@
 <!-- END match_row_new -->
 <!-- BEGIN no_entry_new -->
 <tr>
-	<td class="noentry" colspan="4" align="center">{NO_ENTRY}</td>
+	<td class="noentry" colspan="4" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry_new -->
 </table>
@@ -34,7 +34,7 @@
 <!-- END match_row_old -->
 <!-- BEGIN no_entry_old -->
 <tr>
-	<td class="noentry" colspan="4" align="center">{NO_ENTRY}</td>
+	<td class="noentry" colspan="4" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry_old -->
 </table>
@@ -62,7 +62,7 @@
 <!-- END teams_row -->
 <!-- BEGIN no_entry_team -->
 <tr>
-	<td class="noentry" colspan="4" align="center">{NO_ENTRY}</td>
+	<td class="noentry" colspan="4" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry_team -->
 </table>
@@ -228,7 +228,7 @@
 				<!-- END match_users_status -->
 				<!-- BEGIN no_entry_status -->
 				<tr>
- 					<td align="center" colspan="3">{NO_ENTRY}</td>
+ 					<td align="center" colspan="3">{L_ENTRY_NO}</td>
 				</tr>
 				<!-- END no_entry -->
 				</table>
@@ -259,7 +259,7 @@
 		<!-- END users_status -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>
@@ -353,7 +353,7 @@
 		<!-- END comments -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{NO_ENTRY}</td>
+			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

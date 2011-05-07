@@ -20,9 +20,6 @@ else
 	$current	= '_submenu_match';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_upload.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('match');
 	
@@ -48,59 +45,75 @@ else
 	$move		= request('move', 1);
 	$order		= request('order', 0);
 	$smode		= request('smode', 1);
-	$index		= request('index', 1);
 	
 	$path_dir	= $root_path . $settings['path_matchs'] . '/';
+	
+	$acp_main	= request('acp_main', 0);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['match']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_match'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header && !$index )		? redirect('admin/' . append_sid($file, true)) : false;
-	( $header && $index == 1 )	? redirect('admin/' . append_sid('index.php', true)) : false;
+	( $header && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
+	( $header && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
 	
-	if ( !empty($mode) )
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_match.tpl',
+		'ajax'		=> 'style/inc_request.tpl',
+		'error'		=> 'style/info_error.tpl',
+		'confirm'	=> 'style/info_confirm.tpl',
+	));
+	
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
 			case '_create':
 			case '_update':
 			
-				$template->set_filenames(array('body' => 'style/acp_match.tpl'));
 				$template->assign_block_vars('_input', array());
 				$template->assign_block_vars('_input.' . $mode, array());
 				
-				debug($_POST);
+				$template->assign_vars(array('FILE' => 'ajax_listmaps'));
+				$template->assign_var_from_handle('AJAX', 'ajax');
 				
 				if ( $mode == '_create' && !request('submit', 1) )
 				{
 					$data = array(
 								'team_id'				=> request('team_id', 0),
 								'match_type'			=> 'type_unknown',
-								'match_category'		=> '0',
-								'match_date'			=> time(),
-								'match_public'			=> '1',
-								'match_comments'		=> $settings['comments_matches'],
-								'match_league'			=> '',
+								'match_war'				=> 'war_fun',
+								'match_league'			=> 'league_nope',
 								'match_league_url'		=> '',
 								'match_league_match'	=> '',
-								'match_rival'			=> '',
+								'match_public'			=> '1',
+								'match_comments'		=> $settings['comments_matches'],
+								'match_rival_name'		=> '',
 								'match_rival_tag'		=> '',
 								'match_rival_url'		=> '',
+								'match_rival_logo'		=> '',
 								'match_rival_lineup'	=> '',
-								'server_ip'				=> '',
-								'server_pw'				=> '',
-								'server_hltv'			=> '',
-								'server_hltv_pw'		=> '',
-								'training'				=> '0',
+								'match_server_ip'		=> '',
+								'match_server_pw'		=> '',
+								'match_hltv_ip'			=> '',
+								'match_hltv_pw'			=> '',
+								'match_report'			=> '',
+								'match_comment'			=> '',
+								'match_date'			=> time(),
+								'match_create'			=> time(),
+							);
+					
+					$s_train = '0';
+					$d_train = array(
 								'training_date'			=> time(),
 								'training_duration'		=> '',
 								'training_maps'			=> '',
 								'training_text'			=> '',
-								'match_create'			=> time(),
-							);
+							);	
+						
 				}
 				else if ( $mode == '_update' && !request('submit', 1) )
 				{
@@ -110,42 +123,46 @@ else
 				}
 				else
 				{
-					$match_date	= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
-					$train_date	= ( $mode == '_create' ) ? mktime(request('thour', 0), request('tmin', 0), 00, request('tmonth', 0), request('tday', 0), request('tyear', 0)) : '';
-					$train_dura	= ( $mode == '_create' ) ? mktime(request('thour', 0), request('tmin', 0) + request('dmin', 0), 00, request('tmonth', 0), request('tday', 0), request('tyear', 0)) : '';
-					
-					( $mode == '_update' && $match_date > time() ) ? $template->assign_block_vars('_input._reset', array()) : false;
-					
 					$data = array(
-						'team_id'				=> request('team_id', 0),
-						'match_type'			=> request('match_type', 2),
-						'match_category'		=> request('match_category', 0),
-						'match_public'			=> request('match_public', 0),
-						'match_comments'		=> request('match_comments', 0),
-						'match_date'			=> $match_date,
-						'match_league'			=> request('match_league', 2),
-						'match_league_url'		=> request('match_league_url', 2),
-						'match_league_match'	=> request('teamatch_league_matchm_id', 2),
-						'match_rival'			=> request('match_rival', 2),
-						'match_rival_tag'		=> request('match_rival_tag', 2),
-						'match_rival_url'		=> request('match_rival_url', 2),
-						'match_rival_lineup'	=> request('match_rival_lineup', 2),
-						'server_ip'				=> request('server_ip', 2),
-						'server_pw'				=> request('server_pw', 2),
-						'server_hltv'			=> request('server_hltv', 2),
-						'server_hltv_pw'		=> request('server_hltv_pw', 2),
-						'training'				=> ( $mode == '_create' ) ? request('training', 0) : '',
-						'training_date'			=> ( $mode == '_create' ) ? $train_date : '',
-						'training_duration'		=> ( $mode == '_create' ) ? $train_dura : '',
-						'training_maps'			=> ( $mode == '_create' ) ? request('training_maps', 2) : '',
-						'training_text'			=> ( $mode == '_create' ) ? request('training_text', 2) : '',
-						'match_create'			=> request('_create', 0),
-					);
+								'match_rival_name'		=> request('match_rival_name', 2),
+								'match_rival'			=> strtolower(request('match_rival_name', 2)),
+								'match_rival_tag'		=> request('match_rival_tag', 2),
+								'match_rival_url'		=> request('match_rival_url', 5),
+								'match_rival_logo'		=> request('match_rival_logo', 6),
+								'match_rival_lineup'	=> request('match_rival_lineup', 2),
+								'team_id'				=> request('team_id', 0),
+								'match_type'			=> request('match_type', 1),
+								'match_war'				=> request('match_war', 1),
+								'match_league'			=> request('match_league', 1),
+								'match_league_url'		=> request('match_league_url', 2),
+								'match_league_match'	=> request('match_league_match', 2),
+								'match_public'			=> request('match_public', 0),
+								'match_comments'		=> request('match_comments', 0),
+								'match_server_ip'		=> request('match_server_ip', 2),
+								'match_server_pw'		=> request('match_server_pw', 2),
+								'match_hltv_ip'			=> request('match_hltv_ip', 2),
+								'match_hltv_pw'			=> request('match_hltv_pw', 2),
+								'match_report'			=> request('match_report', 2),
+								'match_comment'			=> request('match_comment', 2),
+								'match_create'			=> request('match_create', 0),
+								'match_date'			=> mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0)),
+							);
+							
+					( $mode == '_update' && $data['match_date'] > time() ) ? $template->assign_block_vars('_input._reset', array()) : false;
+					
+					if ( $mode == '_create' )
+					{
+						$s_train = request('training', 0);
+						$d_train = array(
+									'training_date'			=> mktime(request('thour', 0), request('tmin', 0), 00, request('tmonth', 0), request('tday', 0), request('tyear', 0)),
+									'training_duration'		=> mktime(request('thour', 0), request('tmin', 0) + request('dmin', 0), 00, request('tmonth', 0), request('tday', 0), request('tyear', 0)),
+									'training_maps'			=> request('training_maps', 4),
+									'training_text'			=> request('training_text', 2),
+								);
+								
+						debug($d_train);
+					}
 				}
-				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-			#	$fields .= '<input type="hidden" name="_create" value="' . $data['match_create'] . '" />';
 				
 				foreach ( $lang['match_type'] as $key => $value )
 				{
@@ -156,69 +173,140 @@ else
 					));
 				}
 				
-				foreach ( $lang['match_category'] as $key => $value )
+				foreach ( $lang['match_war'] as $key => $value )
 				{
-					$template->assign_block_vars('_input._cat', array(
+					$template->assign_block_vars('_input._war', array(
 						'NAME'	=> $value,
 						'TYPE'	=> $key,
-						'MARK'	=> ( $key == $data['match_category'] ) ? 'checked="checked"' : '',
+						'MARK'	=> ( $key == $data['match_war'] ) ? 'checked="checked"' : '',
 					));
 				}
 				
+				foreach ( $lang['match_league'] as $key => $value )
+				{
+					$template->assign_block_vars('_input._league', array(
+						'NAME'	=> $value['name'],
+						'TYPE'	=> $key,
+						'CLICK'	=> "set_site('match_league_url', '" . $value['url'] . "')",
+						'MARK'	=> ( $key == $data['match_league'] ) ? 'checked="checked"' : '',
+					));
+				}
+				
+				if ( $data['team_id'] )
+				{
+					$sql = "SELECT mc.*
+								FROM cms_maps_cat mc
+									LEFT JOIN cms_teams t ON t.team_id = " . $data['team_id'] . "
+									LEFT JOIN cms_game g ON t.team_game = g.game_id
+							WHERE mc.cat_tag = g.game_tag";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$cats = $db->sql_fetchrow($result);
+					$maps = $cats ? data(MAPS, " cat_id = " . $cats['cat_id'], 'map_order ASC', 1, false) : '';
+					
+					$s_maps = '';
+					
+					if ( $maps )
+					{
+						$s_maps .= "<div><div><select class=\"selectsmall\" name=\"training_maps[]\" id=\"training_maps\">";
+						$s_maps .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
+						
+						$cat_id		= $cats['cat_id'];
+						$cat_name	= $cats['cat_name'];
+						
+						$s_map = '';
+						
+						for ( $j = 0; $j < count($maps); $j++ )
+						{
+							$map_id		= $maps[$j]['map_id'];
+							$map_cat	= $maps[$j]['cat_id'];
+							$map_name	= $maps[$j]['map_name'];
+	
+							$s_map .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
+						}
+						
+						$s_maps .= ( $s_map != '' ) ? "<optgroup label=\"$cat_name\">$s_map</optgroup>" : '';
+						$s_maps .= "</select>&nbsp;<input type=\"button\" class=\"button2\" value=\"" . $lang['common_more'] . "\" onclick=\"clone(this)\"></div></div>";
+					}
+					else
+					{
+						$s_maps = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+					}
+				}
+				else
+				{
+					$s_maps = sprintf($lang['sprintf_select_format'], $lang['msg_select_team_first']);
+				}
+				
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"match_create\" value=\"" . $data['match_create'] . "\" />";
+				
 				$template->assign_vars(array(
-					'L_TITLE'			=> sprintf($lang['sprintf_head'], $lang['match']),
-					'L_INPUT'			=> sprintf($lang['sprintf' . $mode], $lang['match'], $data['match_rival']),
-					'L_DETAIL'			=> $lang['match_details'],
-					'L_INFO_STANDARD'	=> $lang['info_standard'],
-					'L_INFO_RIVAL'		=> $lang['info_rival'],
-					'L_INFO_SERVER'		=> $lang['info_server'],
-					'L_INFO_MESSAGE'	=> $lang['info_message'],
-					'L_INFO_TRAINING'	=> $lang['info_training'],
+					'L_TITLE'		=> sprintf($lang['sprintf_head'], $lang['match']),
+					'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['match'], $data['match_rival_name']),
+					'L_DETAIL'		=> $lang['head_details'],
+					'L_STANDARD'	=> $lang['head_standard'],
+					'L_RIVAL'		=> $lang['head_rival'],
+					'L_SERVER'		=> $lang['head_server'],
+					'L_MESSAGE'		=> $lang['head_message'],
+					'L_TRAINING'	=> $lang['head_training'],
 					
-					'L_TEAM'			=> $lang['info_team'],
-					'L_TYPE'			=> $lang['info_type'],
-					'L_CATEGORY'		=> $lang['info_category'],
-					'L_LEAGUE'			=> $lang['info_league'],
-					'L_LEAGUE_URL'		=> $lang['info_league_url'],
-					'L_LEAGUE_MATCH'	=> $lang['info_league_match'],
-					'L_DATE'			=> $lang['info_date'],
-					'L_PUBLIC'			=> $lang['info_public'],
-					'L_COMMENTS'		=> sprintf($lang['sprintf_comments'], $lang['match']),
-					'L_RIVAL'			=> $lang['info_rival'],
-					'L_RIVAL_TAG'		=> $lang['info_rival_tag'],
-					'L_RIVAL_URL'		=> $lang['info_rival_url'],
-					'L_RIVAL_LINEUP'	=> $lang['info_rival_lineup'],
-					'L_SERVER_IP'		=> $lang['info_server'],
-					'L_SERVER_PW'		=> $lang['info_server_pw'],
-					'L_HLTV'			=> $lang['info_hltv'],
-					'L_HLTV_PW'			=> $lang['info_hltv_pw'],
-					'L_COMMENT'			=> $lang['match_details_comment'],
-					'L_REPORT'			=> $lang['match_text'],
+					'L_TEAM'			=> $lang['team'],
+					'L_TYPE'			=> $lang['type'],
+					'L_WAR'				=> $lang['war'],
+					'L_LEAGUE'			=> $lang['league'],
+					'L_LEAGUE_URL'		=> $lang['league_url'],
+					'L_LEAGUE_MATCH'	=> $lang['league_match'],
+					'L_RIVAL_NAME'		=> $lang['rival_name'],
+					'L_RIVAL_TAG'		=> $lang['rival_tag'],
+					'L_RIVAL_URL'		=> $lang['rival_url'],
+					'L_RIVAL_LOGO'		=> $lang['rival_logo'],
+					'L_RIVAL_LINEUP'	=> $lang['rival_lineup'],
+					'L_RIVAL_LINEUP_EXP'=> $lang['rival_lineup_exp'],
+					'L_SERVER_IP'		=> $lang['server_ip'],
+					'L_SERVER_PW'		=> $lang['server_pw'],
+					'L_HLTV_IP'			=> $lang['hltv_ip'],
+					'L_HLTV_PW'			=> $lang['hltv_pw'],
+					
+					'L_DATE'			=> $lang['common_date'],
+					'L_PUBLIC'			=> $lang['common_public'],
+					'L_COMMENTS'		=> $lang['common_comments_pub'],
+					'L_COMMENT'			=> $lang['comment'],
+					'L_COMMENT_EXP'		=> $lang['comment_exp'],
+					'L_REPORT'			=> $lang['report'],
+					'L_REPORT_EXP'		=> $lang['report_exp'],
+					'L_RESET_LIST'		=> $lang['reset_list'],
+					
 					'L_TRAINING'		=> $lang['training'],
-					'L_TRAINING_DATE'	=> $lang['training_date'],
-					'L_TRAINING_MAPS'	=> $lang['training_maps'],
-					'L_TRAINING_TEXT'	=> $lang['training_text'],
-					'L_RESET_LIST'		=> $lang['match_interest_reset'],
-					
-					'RIVAL'				=> $data['match_rival'],
-					'RIVAL_TAG'			=> $data['match_rival_tag'],
-					'RIVAL_URL'			=> $data['match_rival_url'],
-					'RIVAL_LINEUP'		=> $data['match_rival_lineup'],
+					'L_TRAINING_DATE'	=> $lang['train_date'],
+					'L_TRAINING_MAPS'	=> $lang['train_maps'],
+					'L_TRAINING_TEXT'	=> $lang['train_text'],
+				
 					'LEAGUE_URL'		=> $data['match_league_url'],
 					'LEAGUE_MATCH'		=> $data['match_league_match'],
-					'SERVER_IP'			=> $data['server_ip'],
-					'SERVER_PW'			=> $data['server_pw'],
-					'SERVER_HLTV'		=> $data['server_hltv'],
-					'SERVER_HLTV_PW'	=> $data['server_hltv_pw'],
-					'TRAINING_MAPS'		=> ( $mode == '_create' ) ? $data['training_maps'] : '',
-					'TRAINING_TEXT'		=> ( $mode == '_create' ) ? $data['training_text'] : '',
 					
-					'S_TEAMS'			=> select_box('team', 'select', $data['team_id'], 0),
+					'RIVAL_NAME'		=> $data['match_rival_name'],
+					'RIVAL_TAG'			=> $data['match_rival_tag'],
+					'RIVAL_URL'			=> $data['match_rival_url'],
+					'RIVAL_LOGO'		=> $data['match_rival_logo'],
+					'RIVAL_LINEUP'		=> $data['match_rival_lineup'],
 					
-					'S_TYPE'			=> select_lang_box('select_type_box', 'match_type', $data['match_type'], 'select'),
-									
-					'S_LEAGUE'			=> select_lang_box('select_league_box', 'match_league', $data['match_league'], 'select'),
-					'S_CATEGORIE'		=> select_lang_box('select_categorie_box', 'match_category', $data['match_category'], 'select'),
+					'SERVER_IP'			=> $data['match_server_ip'],
+					'SERVER_PW'			=> $data['match_server_pw'],
+					'HLTV_IP'			=> $data['match_hltv_ip'],
+					'HLTV_PW'			=> $data['match_hltv_pw'],
+					
+					'MATCH_REPORT'		=> $data['match_report'],
+					'MATCH_COMMENT'		=> $data['match_comment'],
+					
+					'TRAINING_MAPS'		=> ( $mode == '_create' ) ? $d_train['training_maps'] : '',
+					'TRAINING_TEXT'		=> ( $mode == '_create' ) ? $d_train['training_text'] : '',
+					
+					'S_TEAM'			=> select_team('select', 'team', 'request', 'team_id', $data['team_id']),
+					'S_MAPS'			=> $s_maps,
 					
 					'S_DAY'				=> select_date('selectsmall', 'day', 'day',		date('d', $data['match_date']), $data['match_create']),
 					'S_MONTH'			=> select_date('selectsmall', 'month', 'month',	date('m', $data['match_date']), $data['match_create']),
@@ -226,154 +314,111 @@ else
 					'S_HOUR'			=> select_date('selectsmall', 'hour', 'hour',	date('H', $data['match_date']), $data['match_create']),
 					'S_MIN'				=> select_date('selectsmall', 'min', 'min',		date('i', $data['match_date']), $data['match_create']),
 					
-					'S_PUBLIC_YES'		=> ( $data['match_public'] ) ? ' checked="checked"' : '',
-					'S_PUBLIC_NO'		=> (!$data['match_public'] ) ? ' checked="checked"' : '',
-					'S_COMMENT_YES'		=> ( $data['match_comments'] ) ? ' checked="checked"' : '',
-					'S_COMMENT_NO'		=> (!$data['match_comments'] ) ? ' checked="checked"' : '',
+					'S_PUBLIC_YES'		=> ( $data['match_public'] ) ? 'checked="checked"' : '',
+					'S_PUBLIC_NO'		=> (!$data['match_public'] ) ? 'checked="checked"' : '',
+					'S_COMMENT_YES'		=> ( $data['match_comments'] ) ? 'checked="checked"' : '',
+					'S_COMMENT_NO'		=> (!$data['match_comments'] ) ? 'checked="checked"' : '',
 					
-					'S_TRAINING_YES'	=> ( $mode == '_create' ) ? ( $data['training'] ? ' checked="checked"' : '' ) : '',
-					'S_TRAINING_NO'		=> ( $mode == '_create' ) ? (!$data['training'] ? ' checked="checked"' : '' ) : '',
-					'S_TRAINING_NONE'	=> ( $mode == '_create' ) ? (!$data['training'] ? 'none' : '' ) : '',
+					'S_TRAINING_YES'	=> ( $mode == '_create' ) ? ( $s_train ? 'checked="checked"' : '' ) : '',
+					'S_TRAINING_NO'		=> ( $mode == '_create' ) ? (!$s_train ? 'checked="checked"' : '' ) : '',
+					'S_TRAINING_NONE'	=> ( $mode == '_create' ) ? ( $s_train ? '' : 'none' ) : '',
 					
-					'S_TDAY'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'day', 'tday',		date('d', $data['training_date']), $data['match_create']) : '',
-					'S_TMONTH'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'month', 'tmonth',	date('m', $data['training_date']), $data['match_create']) : '',
-					'S_TYEAR'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'year', 'tyear',		date('Y', $data['training_date']), $data['match_create']) : '',
-					'S_THOUR'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'hour', 'thour',		date('H', $data['training_date']), $data['match_create']) : '',
-					'S_TMIN'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'min', 'tmin',		date('i', $data['training_date']), $data['match_create']) : '',
-					'S_TDURATION'		=> ( $mode == '_create' ) ? select_date('selectsmall', 'duration', 'dmin',	date('i', $data['training_date']), $data['match_create']) : '',
+					'S_TDAY'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'day', 'tday',		date('d', $d_train['training_date']), $data['match_create']) : '',
+					'S_TMONTH'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'month', 'tmonth',	date('m', $d_train['training_date']), $data['match_create']) : '',
+					'S_TYEAR'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'year', 'tyear',		date('Y', $d_train['training_date']), $data['match_create']) : '',
+					'S_THOUR'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'hour', 'thour',		date('H', $d_train['training_date']), $data['match_create']) : '',
+					'S_TMIN'			=> ( $mode == '_create' ) ? select_date('selectsmall', 'min', 'tmin',		date('i', $d_train['training_date']), $data['match_create']) : '',
+					'S_TDURATION'		=> ( $mode == '_create' ) ? select_date('selectsmall', 'duration', 'dmin',	date('i', $d_train['training_date']), $data['match_create']) : '',
 					
-					'S_DETAIL'			=> append_sid("$file?mode=_detail&amp;$url=$data_id"),
-					'S_ACTION'			=> append_sid($file),
+					'S_DETAIL'			=> check_sid("$file?mode=_detail&amp;$url=$data_id"),
+					'S_ACTION'			=> check_sid($file),
 					'S_FIELDS'			=> $fields,
 				));
 				
 				if ( request('submit', 1) )
 				{
-					$team_id			= request('team_id', 0);
-					$match_type			= request('match_type', 0);
-					$match_category	= request('match_category', 0);
-					$match_public		= request('match_public', 0);
-					$match_comments		= request('match_comments', 0);
-					$match_league		= request('match_league', 2);
-					$match_league_url	= request('match_league_url', 2);
-					$match_league_match	= request('match_league_match', 2);
-					$match_rival		= request('match_rival', 2);
-					$match_rival_tag	= request('match_rival_tag', 2);
-					$match_rival_url	= request('match_rival_url', 2);
-					$match_rival_lineup	= request('match_rival_lineup', 2);
-					$server_ip			= request('server_ip', 2);
-					$server_pw			= request('server_pw', 2);
-					$server_hltv		= request('server_hltv', 2);
-					$server_hltv_pw		= request('server_hltv_pw', 2);
-					$training			= request('training', 0);
-					$training_maps		= request('training_maps', 2);
-					$training_comment	= request('training_comment', 2);
-					$match_create		= request('_create', 0);
+					$min	= request('min', 0);
+					$hour	= request('hour', 0);
+					$day	= request('day', 0);
+					$month	= request('month', 1);
+					$year	= request('year', 0);
+					$tday	= request('tday', 0);
+					$tmonth	= request('tmonth', 0);
+					$tyear	= request('tyear', 0);
+					$reset	= request('listdel', 0);
 					
-					$error .= ( $team_id == '-1' )	? $lang['msg_select_team'] : '';
-					$error .= ( !$match_type )		? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
-					$error .= ( !$match_category ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_cat'] : '';
-					$error .= ( !$match_league )	? ( $error ? '<br />' : '' ) . $lang['msg_select_league'] : '';
-					$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
-					$error .= (	$mode == '_create' &&  time() >= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0))) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
-					$error .= ( !$match_rival )		? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
-					$error .= ( !$match_rival_tag )	? ( $error ? '<br />' : '' ) . $lang['msg_select_rival_tag'] : '';
-					$error .= ( !$server_ip )		? ( $error ? '<br />' : '' ) . $lang['msg_select_server'] : '';
-					$error .= ( $mode == '_create' && $training && !checkdate(request('tmonth', 0), request('tday', 0), request('tyear', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
-					$error .= ( $mode == '_create' && $training && time() >= mktime(request('hour', 0), request('min', 0), 00, request('tmonth', 0), request('tday', 0), request('tyear', 0))) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
+					$error .= !$data['team_id']				? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
+					$error .= !$data['match_type']			? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
+					$error .= !$data['match_war']			? ( $error ? '<br />' : '' ) . $lang['msg_select_war'] : '';
+					$error .= !$data['match_league']		? ( $error ? '<br />' : '' ) . $lang['msg_select_league'] : '';
+					$error .= !$data['match_rival_name']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_rival_name'] : '';
+					$error .= !$data['match_rival_tag']		? ( $error ? '<br />' : '' ) . $lang['msg_empty_rival_tag'] : '';
+					$error .= !$data['match_server_ip']		? ( $error ? '<br />' : '' ) . $lang['msg_empty_server'] : '';
+					
+					$error .= !checkdate($month, $day, $year) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
+					$error .= (	$mode == '_create' && time() >= $data['match_date'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
+					
+					if ( $mode == '_create' && $s_train == 1 )
+					{
+						$error .= ( !checkdate($tmonth, $tday, $tyear) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
+						$error .= ( time() >= mktime($hour, $min, 00, $tmonth, $tday, $tyear)) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
+					}
 					
 					if ( !$error )
 					{
 						if ( $mode == '_create' )
 						{
-							$match_date = mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
+							$data['match_path'] = create_folder($path_dir, $day . $month . $year . '_', true);
 							
-							$sql = "INSERT INTO " . MATCH . " (team_id, match_type, match_league, match_league_url, match_league_match, match_date, match_category, match_public, match_comments, match_rival, match_rival_tag, match_rival_url, server_ip, server_pw, server_hltv, server_hltv_pw, match_create)
-										VALUES ('$team_id', '$match_type', '$match_league', '$match_league_url', '$match_league_match', '$match_date', '$match_category', '$match_public', '$match_comments', '$match_rival', '$match_rival_tag', '$match_rival_url', '$server_ip', '$server_pw', '$server_hltv', '$server_hltv_pw', '$match_create')";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+							$db_data = sql(MATCH, $mode, $data);
 							
-							if ( request('training', 1) )
+							if ( $s_train )
 							{
-								$train_date	= mktime(request('thour'), request('tmin'), 00, request('tmonth'), request('tday'), request('tyear'));
-								$train_dura	= mktime(request('thour'), request('tmin') + request('dmin', 0), 00, request('tmonth'), request('tday'), request('tyear'));
+								$d_train['team_id']			= $data['team_id'];
+								$d_train['match_id']		= $db->sql_nextid();								
+								$d_train['training_vs']		= $data['match_rival_name'];
+								$d_train['training_create']	= $data['match_create'];
 								
-								$sql = "INSERT INTO " . TRAINING . " (training_vs, team_id, match_id, training_date, training_duration, training_create, training_maps, training_comment)
-											VALUES ('$match_rival', '$team_id', '$data_id', '$train_date', '$train_dura', '$match_create', '$training_maps', '$training_comment')";
-								if ( !($result = $db->sql_query($sql)) )
-								{
-									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-								}
+								$db_train = sql(TRAINING, $mode, $d_train);
 							}
 							
-							$message = $lang['create_match'] . sprintf($lang['click_return_match'], '<a href="' . append_sid($file) . '">', '</a>');
+							$message = $lang['create']
+								. sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$match_date = mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
-				
-							if ( request('listdel', 1) )
+							$db_data = sql(MATCH, $mode, $data, 'match_id', $data_id);
+							
+							if ( $reset )
 							{
-								$sql = "DELETE FROM " . MATCH_USERS . " WHERE match_id = $data_id";
-								if ( !$db->sql_query($sql) )
-								{
-									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-								}
+								sql(MATCH_USERS, 'delete', false, 'match_id', $data_id);
 							}
 							
-							$sql = "UPDATE " . MATCH . " SET
-										team_id				= '$team_id',
-										match_type			= '$match_type',
-										match_league		= '$match_league',
-										match_league_url	= '$match_league_url',
-										match_league_match	= '$match_league_match',
-										match_date			= '$match_date',
-										match_category		= '$match_category',
-										match_public		= '$match_public',
-										match_comments		= '$match_comments',
-										match_rival			= '$match_rival',
-										match_rival_tag		= '$match_rival_tag',
-										match_rival_url		= '$match_rival_url',
-										match_rival_lineup	= '$match_rival_lineup',
-										server_ip			= '$server_ip',
-										server_pw			= '$server_pw',
-										server_hltv			= '$server_hltv',
-										server_hltv_pw		= '$server_hltv_pw',
-										match_update		= '" . time() . "'
-									WHERE match_id = $data_id";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							
-							$message = $lang['update_match']
-								. sprintf($lang['click_return_match'], '<a href="' . append_sid($file) . '">', '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');;
+							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));;
 						}
 							
-						$monat = request('month', 0);
-						#$oCache -> sCachePath = './../cache/';
-						#$oCache -> deleteCache('match_list_open_member');
-						#$oCache -> deleteCache('match_list_open_guest');
-						#$oCache -> deleteCache('match_list_close_member');
-						#$oCache -> deleteCache('match_list_close_guest');
-						#$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
-						#$oCache -> deleteCache('calendar_' . $monat . '_match_member');
-						#$oCache -> deleteCache('calendar_' . $monat . '_guest');
-						#$oCache -> deleteCache('calendar_' . $monat . '_member');
-						#$oCache -> deleteCache('display_subnavi_matchs_guest');
-						#$oCache -> deleteCache('display_subnavi_matchs_member');
+					#	$monat = request('month', 0);
+					#	$oCache -> sCachePath = './../cache/';
+					#	$oCache -> deleteCache('match_list_open_member');
+					#	$oCache -> deleteCache('match_list_open_guest');
+					#	$oCache -> deleteCache('match_list_close_member');
+					#	$oCache -> deleteCache('match_list_close_guest');
+					#	$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
+					#	$oCache -> deleteCache('calendar_' . $monat . '_match_member');
+					#	$oCache -> deleteCache('calendar_' . $monat . '_guest');
+					#	$oCache -> deleteCache('calendar_' . $monat . '_member');
+					#	$oCache -> deleteCache('display_subnavi_matchs_guest');
+					#	$oCache -> deleteCache('display_subnavi_matchs_member');
 	
-						log_add(LOG_ADMIN, $log, $mode, $match_rival);
+						log_add(LOG_ADMIN, $log, $mode, $db_data);
 						message(GENERAL_MESSAGE, $message);
 					}
 					else
 					{
-						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						log_add(LOG_ADMIN, $log, $mode, $error);
+						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+						$template->assign_var_from_handle('ERROR_BOX', 'error');
 					}
 				}
 				
@@ -434,12 +479,6 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					$sql = 'DELETE FROM ' . MATCH_DETAILS . " WHERE match_id = $data_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
 					$sql = 'DELETE FROM ' . MATCH_LINEUP . " WHERE match_id = $data_id";
 					if ( !($result = $db->sql_query($sql)) )
 					{
@@ -452,47 +491,43 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-				#	$monat = date("m", time());
-				#	#$oCache -> sCachePath = './../cache/';
-				#	#$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
-				#	#$oCache -> deleteCache('calendar_' . $monat . '_match_member');
-				#	#$oCache -> deleteCache('calendar_' . $monat . '_member');
-				#	#$oCache -> deleteCache('display_subnavi_matchs_guest');
-				#	#$oCache -> deleteCache('display_subnavi_matchs_member');
+				#	monat = date("m", time());
+				#	$oCache -> sCachePath = './../cache/';
+				#	$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
+				#	$oCache -> deleteCache('calendar_' . $monat . '_match_member');
+				#	$oCache -> deleteCache('calendar_' . $monat . '_member');
+				#	$oCache -> deleteCache('display_subnavi_matchs_guest');
+				#	$oCache -> deleteCache('display_subnavi_matchs_member');
 					
-					$message = $lang['delete_match'] . sprintf($lang['click_return_match'], '<a href="' . append_sid($file) . '">', '</a>');
+					$message = $lang['delete_match'] . sprintf($lang['click_return_match'], '<a href="' . check_sid($file));
 					log_add(LOG_ADMIN, $log, 'delete_match');
 					message(GENERAL_MESSAGE, $message);
 				}
 				else if ( $data_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
-		
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= '<input type="hidden" name="index" value="' . $index . '" />';
 					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+					$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_match'], $data['match_rival']),
+						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['match_rival_name']),
 						
-						'S_ACTION'	=> append_sid($file),
+						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else
-				{
-					message(GENERAL_MESSAGE, $lang['msg_must_select_match']);
-				}
+				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['match'])); }
 			
-				$template->pparse('body');
+				$template->pparse('confirm');
 				
 				break;
 			
 			case '_detail':
 			
-				$template->set_filenames(array('body' => 'style/acp_match.tpl'));
 				$template->assign_block_vars('_detail', array());
+				
+				$s_options = $s_team_users = '';
 				
 				if ( $order )
 				{
@@ -502,7 +537,7 @@ else
 					log_add(LOG_ADMIN, $log, '_order_maps');
 				}
 				
-				$sql = "SELECT	m.*, t.team_id, t.team_name, g.game_image 
+				$sql = "SELECT	m.*, t.team_id, t.team_name, g.game_image, g.game_tag
 							FROM " . MATCH . " m
 								LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -513,7 +548,17 @@ else
 				}
 				$detail = $db->sql_fetchrow($result);
 				
-				$sql = "SELECT u.user_id, u.username, ml.status
+				$sql = "SELECT u.user_id, u.user_name
+							FROM " . USERS . " u, " . TEAMS_USERS . " tu
+						WHERE tu.team_id = " . $detail['team_id'] . " AND tu.user_id = u.user_id
+						ORDER BY u.user_name";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$team_users = $db->sql_fetchrowset($result);
+				
+				$sql = "SELECT u.user_id, u.user_name, ml.status
 							FROM " . MATCH_LINEUP . " ml, " . USERS . " u
 						WHERE ml.match_id = $data_id AND ml.user_id = u.user_id
 						ORDER BY ml.status";
@@ -521,127 +566,177 @@ else
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-				$users = $db->sql_fetchrowset($result);
+				$list_users = $db->sql_fetchrowset($result);
 				
-				if ( $users )
+				if ( $team_users || $list_users )
 				{
-					$template->assign_block_vars('_detail._option', array());
-					
-					for ( $i = 0; $i < count($users); $i++ )
+					if ( $team_users )
 					{
-						$template->assign_block_vars('_detail._member_row', array(
-							'USER_ID'	=> $users[$i]['user_id'],
-							'USERNAME'	=> $users[$i]['username'],
-							'STATUS'	=> ( !$users[$i]['status'] ) ? $lang['details_status_player'] : $lang['details_status_replace'],
-						));
-					}
-				}
-				else { $template->assign_block_vars('_detail._no_member', array()); }
-				
-				$sql = "SELECT u.user_id, u.username
-							FROM " . USERS . " u, " . TEAMS_USERS . " tu
-						WHERE tu.team_id = " . $detail['team_id'] . " AND tu.user_id = u.user_id
-						ORDER BY u.username";
-				if (!($result_addusers = $db->sql_query($sql)))
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$s_select = '<select class="select" name="members[]" rows="5" multiple>';
-				while ( $addusers = $db->sql_fetchrow($result_addusers ))
-				{
-					$s_select .= '<option value="' . $addusers['user_id'] . '">' . $addusers['username'] . '&nbsp;</option>';
-				}
-				$s_select .= '</select>';
-				
-				//	Dropdown
-				$s_options = '<select class="postselect" name="smode">';
-			#	$s_options .= '<option value="option">&raquo; ' . $lang['option_select'] . '</option>';
-				$s_options .= '<option value="_user_player">&raquo; ' . sprintf($lang['details_status_set'], $lang['details_status_player']) . '&nbsp;</option>';
-				$s_options .= '<option value="_user_replace">&raquo; ' . sprintf($lang['details_status_set'], $lang['details_status_replace']) . '&nbsp;</option>';
-				$s_options .= '<option value="_user_delete">&raquo; ' . $lang['common_delete'] . '</option>';
-				$s_options .= '</select>';
-				
-				/*
-				 *	Map Upload Übersicht
-				 */
-				$max_order			= get_data_max(MATCH_MAPS, 'map_order', 'match_id = ' . $data_id);
-				$match_maps_data	= get_data_array(MATCH_MAPS, 'match_id = ' . $data_id, 'map_order', 'ASC');
-				
-				if ( $match_maps_data )
-				{
-					$template->assign_block_vars('_detail.maps', array());
-					
-					for ( $i = 0; $i < count($match_maps_data); $i++ )
-					{
-						$map_id = $match_maps_data[$i]['map_id'];
+						$template->assign_block_vars('_detail._team_users', array());
 						
-						$template->assign_block_vars('_detail.maps.info_row', array(
-							'INFO_MAP_ID'		=> $map_id,
-																						  
-							'INFO_MAP_NAME'		=> $match_maps_data[$i]['map_name'],
-							'INFO_MAP_HOME'		=> $match_maps_data[$i]['map_points_home'],
-							'INFO_MAP_RIVAL'	=> $match_maps_data[$i]['map_points_rival'],
-							'INFO_PIC_URL'		=> '<a href="' . $path_dir . $match_maps_data[$i]['map_picture'] . '" rel="lightbox"><img src="' . $path_dir . $match_maps_data[$i]['map_preview'] . '" alt="" /></a>',
-							
-							'MOVE_UP'			=> ( $match_maps_data[$i]['map_order'] != '10' )				? '<a href="' . append_sid("$file?mode=_detail&amp;$url=$data_id&amp;order=1&amp;move=-15&amp;$url_pic=$map_id") .'"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-							'MOVE_DOWN'			=> ( $match_maps_data[$i]['map_order'] != $max_order['max'] )	? '<a href="' . append_sid("$file?mode=_detail&amp;$url=$data_id&amp;order=1&amp;move=+15&amp;$url_pic=$map_id") .'"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
-	
-						));
+						$s_team_users = "<select class=\"select\" name=\"members[]\" size=\"6\" multiple=\"multiple\">";
 						
-						if ( $match_maps_data[$i]['map_picture'] )
+						for ( $i = 0; $i < count($team_users); $i++ )
 						{
-							$template->assign_block_vars('_detail.maps.info_row.delete', array());
+							$s_team_users .= "<option value=\"" . $team_users[$i]['user_id'] . "\">" . sprintf($lang['sprintf_select_format'], $team_users[$i]['user_name']) . "</option>";
 						}
+						
+						$s_team_users .= "</select>";
+					}
+					
+					if ( $list_users )
+					{
+						$template->assign_block_vars('_detail._list_users', array());
+						
+						for ( $i = 0; $i < count($list_users); $i++ )
+						{
+							$template->assign_block_vars('_detail._list_users._member_row', array(
+								'USER_ID'	=> $list_users[$i]['user_id'],
+								'USERNAME'	=> $list_users[$i]['user_name'],
+								'STATUS'	=> ( !$list_users[$i]['status'] ) ? $lang['status_player'] : $lang['status_replace'],
+							));
+						}
+						
+						$s_options .= "<select class=\"postselect\" name=\"smode\">";
+						$s_options .= "<option value=\"option\">" . sprintf($lang['sprintf_select_format'], $lang['common_option_select']) . "</option>";
+						$s_options .= "<option value=\"_user_player\">" . sprintf($lang['sprintf_select_format'], sprintf($lang['status_set'], $lang['status_player'])) . "</option>";
+						$s_options .= "<option value=\"_user_replace\">" . sprintf($lang['sprintf_select_format'], sprintf($lang['status_set'], $lang['status_replace'])) . "</option>";
+						$s_options .= "<option value=\"_user_delete\">" . sprintf($lang['sprintf_select_format'], $lang['common_delete']) . "</option>";
+						$s_options .= "</select>";
+					}
+					else
+					{
+						$template->assign_block_vars('_detail._no_list_users', array());
+					}
+				}
+				else
+				{
+					$template->assign_block_vars('_detail._entry_empty', array());
+					
+					$s_team_users = $lang['no_users'];
+				}
+				
+				$max = maxi(MATCH_MAPS, 'map_order', 'match_id = ' . $data_id);
+				$match_maps = data(MATCH_MAPS, $data_id, 'map_order', 1, false);
+				
+				if ( $match_maps )
+				{
+					$template->assign_block_vars('_detail._maps', array());
+					
+					for ( $i = 0; $i < count($match_maps); $i++ )
+					{
+						$map_id = $match_maps[$i]['map_id'];
+						
+						$template->assign_block_vars('_detail._maps._map_row', array(
+							'MAP_ID'	=> $map_id,
+							'MAP_HOME'	=> $match_maps[$i]['map_points_home'],
+							'MAP_RIVAL'	=> $match_maps[$i]['map_points_rival'],
+							
+							'PIC_URL'	=> '<a href="' . $path_dir . $detail['match_path'] . '/' . $match_maps[$i]['map_picture'] . '" rel="lightbox"><img src="' . $path_dir . $detail['match_path'] . '/' . $match_maps[$i]['map_preview'] . '" alt="" /></a>',
+							
+							'MOVE_UP'	=> ( $match_maps[$i]['map_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_detail&amp;$url=$data_id&amp;order=1&amp;move=-15&amp;$url_pic=$map_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+							'MOVE_DOWN'	=> ( $match_maps[$i]['map_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_detail&amp;$url=$data_id&amp;order=1&amp;move=+15&amp;$url_pic=$map_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+							
+							'S_MAP'		=> select_map($detail['team_id'], $match_maps[$i]['map_name']),
+						));
+						
+						( $match_maps[$i]['map_picture'] ) ? $template->assign_block_vars('_detail._maps._map_row._delete', array()) : '';
 					}
 				}
 				
-				$fields .= '<input type="hidden" name="mode" value="_detail" />';
+				$cats = data(MAPS_CAT, " cat_tag = '" . $detail['game_tag'] . "'", 'cat_order ASC', 1, true);
+				$maps = $cats ? data(MAPS, " cat_id = " . $cats['cat_id'], 'map_order ASC', 1, false) : '';
+				
+				$s_maps = '';
+				
+				if ( $maps )
+				{
+					$s_maps .= "<select class=\"selectsmall\" name=\"map_name[]\" id=\"map_name\">";
+					$s_maps .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
+					
+					$cat_id		= $cats['cat_id'];
+					$cat_name	= $cats['cat_name'];
+					
+					$s_map = '';
+					
+					for ( $j = 0; $j < count($maps); $j++ )
+					{
+						$map_id		= $maps[$j]['map_id'];
+						$map_cat	= $maps[$j]['cat_id'];
+						$map_name	= $maps[$j]['map_name'];
+
+						$s_map .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
+					}
+					
+					$s_maps .= ( $s_map != '' ) ? "<optgroup label=\"$cat_name\">$s_map</optgroup>" : '';
+					$s_maps .= "</select>";
+				}
+				else
+				{
+					$s_maps = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+				}
+				
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['match']),
-					'L_INPUT'			=> sprintf($lang['sprintf_update'], $lang['match'], $detail['match_rival']),
-					'L_DETAIL'			=> $lang['match_details'],
-					'L_EXPLAIN'			=> $lang['match_details_explain'],
+			#		'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['match']),
+			#		'L_INPUT'			=> sprintf($lang['sprintf_update'], $lang['match'], $detail['match_rival_name']),
+			#		'L_DETAIL'			=> $lang['match_details'],
+			#		'L_EXPLAIN'			=> $lang['match_details_explain'],
 					
-					'L_MAPS'			=> $lang['details_maps'],
-					'L_MAPS_PIC'		=> $lang['details_maps_pic'],
-					'L_MAPS_OVERVIEW'	=> $lang['details_maps_overview'],
+			
+					'L_LINEUP'			=> $lang['lineup'],
+					'L_LINEUP_ADD'		=> $lang['lineup_add'],
+					'L_LINEUP_ADD_EXP'	=> $lang['lineup_add_exp'],
+					'L_LINEUP_PLAYER'	=> $lang['status_player'],
+					'L_LINEUP_REPLACE'	=> $lang['status_replace'],
+					'L_LINEUP_STATUS'	=> $lang['lineup_status'],
 					
-					'L_LINEUP'			=> $lang['details_lineup'],
-					'L_LINEUP_PLAYER'	=> $lang['details_lineup_player'],
-					'L_LINEUP_STATUS'	=> $lang['details_lineup_status'],
+					'L_NO_MEMBER'	=> $lang['no_users'],
+					'L_NO_STORE'	=> $lang['no_users_store'],
 					
-					'L_LINEUP_ADD_EX'	=> $lang['details_lineup_add_explain'],
-					'L_LINEUP_PLAYER'	=> $lang['details_status_player'],
-					'L_LINEUP_REPLACE'	=> $lang['details_status_replace'],
-					'L_LINEUP_USERNAME'	=> $lang['username'],
-					'L_DETAIL_MAP'		=> $lang['details_map'],
-					'L_DETAIL_MAPPIC'	=> $lang['details_mappic'],
-					'L_DETAIL_POINTS'	=> $lang['details_points'],
+			#		'L_MAPS'			=> $lang['details_maps'],
+			#		'L_MAPS_PIC'		=> $lang['details_maps_pic'],
+			#		'L_MAPS_OVERVIEW'	=> $lang['details_maps_overview'],
+		
+				
 					
-					'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
 					
-					'L_LINEUP_ADD'		=> $lang['details_lineup_add'],
-					'L_LINEUP_PLAYER'	=> $lang['details_status_player'],
-					'L_LINEUP_REPLACE'	=> $lang['details_status_replace'],
+					
+					
+			#		'L_DETAIL_MAP'		=> $lang['details_map'],
+			#		'L_DETAIL_MAPPIC'	=> $lang['details_mappic'],
+			#		'L_DETAIL_POINTS'	=> $lang['details_points'],
+					
+			#		'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
+					
+				#	
+				#	'L_LINEUP_PLAYER'	=> $lang['status_player'],
+				#	'L_LINEUP_REPLACE'	=> $lang['status_replace'],
+				#	
+					
+				#	'L_LINEUP_PLAYER'	=> $lang['lineup_player'],
+				#	
+				
 					'L_ADD'				=> $lang['common_add'],
 					
-					'S_MAP'				=> select_maps(),
+					'S_MAP'				=> $s_maps,
 					
-					'S_SELECT'			=> $s_select,
+					'S_USERS'		=> $s_team_users,
+					
+					
 					'S_OPTIONS'			=> $s_options,
-					'S_INPUT'			=> append_sid("$file?mode=_update&amp;$url=$data_id"),
+					'S_INPUT'			=> check_sid("$file?mode=_update&amp;$url=$data_id"),
 					
-					'S_ACTION'			=> append_sid($file),
+					'S_ACTION'			=> check_sid($file),
 					'S_FIELDS'			=> $fields,
 				));
 				
-				if ( $smode == '_details_map' || $smode == '_details_mappic' || $smode == '_details_update' )
+				if ( $smode == '_details_map' || $smode == '_detail_mappic' || $smode == '_details_update' )
 				{
-					$max_row	= get_data_max(MATCH_MAPS, 'map_order', 'match_id = ' . $data_id);
-					$next_order = ( !$max_row ) ? 10 : $max_row['max'] + 10;
+				#	$max_row	= get_data_max(MATCH_MAPS, 'map_order', 'match_id = ' . $data_id);
+				#	$next_order = ( !$max_row ) ? 10 : $max_row['max'] + 10;
 						
 					if ( $smode == '_details_map' )
 					{
@@ -693,76 +788,88 @@ else
 									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 								}
 								
-								$message = $lang['update_match'] . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("$file?mode=_details&amp;$url=$data_id") . '">', '</a>');
+								$message = $lang['update_match'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_details&amp;$url=$data_id"));
 								log_add(LOG_ADMIN, $log, 'update_match_map');
 							}
 							else
 							{
-								$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("$file?mode=_details&amp;$url=$data_id") . '">', '</a>');
+								$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_details&amp;$url=$data_id"));
 							}
 						}
 						else
 						{
-							$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("$file?mode=_details&amp;$url=$data_id") . '">', '</a>');
+							$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_details&amp;$url=$data_id"));
 							message(GENERAL_ERROR, $message);
 						}
 					}
-					else if ( request('_details_mappic') )
+					else if ( $smode == '_detail_mappic' )
 					{
-						$pic_info = request_files('ufile');
-						$pic_count = count($pic_info['temp']);
+						$map_name	= request('map_name', 4);
+						$map_home	= request('map_points_home', 4);
+						$map_rival	= request('map_points_rival', 4);
+						$map_file	= request_files('ufile');
+						$next_order = maxa(MATCH_MAPS, 'map_order', "match_id = $data_id");
 						
-						if ( $pic_info['temp'] )
+						if ( $map_name )
 						{
-							debug($pic_info['temp']);
-							
-							for ( $i = 0; $i < $pic_count; $i++ )
+							for ( $i = 0; $i < count($map_name); $i++ )
 							{
-								$sql_pic[] = image_upload('', 'image_match', '', '1', '', '', $path_dir, $pic_info['temp'][$i], $pic_info['name'][$i], $pic_info['size'][$i], $pic_info['type'][$i]);
-							}
-							
-							$db_ary = array();
-							$pic_ary = array();
-							
-							for ( $i = 0; $i < $pic_count; $i++ )
-							{
-								$pic_ary[] = array(
-									'match_id'			=> $data_id,
-									'map_name'			=> "'" . $_POST['map_name'][$i] . "'",
-									'map_points_home'	=> "'" . $_POST['map_points_home'][$i] . "'",
-									'map_points_rival'	=> "'" . $_POST['map_points_rival'][$i] . "'",
-									'map_picture'		=> "'" . $sql_pic[$i]['pic_filename'] . "'",
-									'map_preview'		=> "'" . $sql_pic[$i]['pic_preview'] . "'",
-									'upload_user'		=> $userdata['user_id'],
-									'upload_time'		=> time(),
-									'map_order'			=> $next_order,
-								);
-								$next_order += 10;
-							}
-							
-							foreach ( $pic_ary as $id => $_pic_ary )
-							{
-								$values = array();
-								foreach ( $_pic_ary as $key => $var )
+								if ( $map_name[$i] )
 								{
-									$values[] = $var;
+									if ( $map_file['temp'][$i] )
+									{
+										$pic_ary[$map_name[$i]] = image_upload('', 'image_match', '', '1', '', '', $path_dir . $detail['match_path'], $map_file['temp'][$i], $map_file['name'][$i], $map_file['size'][$i], $map_file['type'][$i], $error);
+									}
 								}
-								$db_ary[] = '(' . implode(', ', $values) . ')';
 							}
 							
-							$sql = "INSERT INTO " . MATCH_MAPS . " (" . implode(', ', array_keys($pic_ary[0])) . ") VALUES " . implode(', ', $db_ary);
-							if ( !($result = $db->sql_query($sql)) )
+							$map_ary = '';
+							
+							for ( $i = 0; $i < count($map_name); $i++ )
 							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								if ( $map_name[$i] )
+								{
+									$map_ary[] = array(
+										'match_id'			=> $data_id,
+										'map_name'			=> $map_name[$i],
+										'map_points_home'	=> $map_home[$i],
+										'map_points_rival'	=> $map_rival[$i],
+										'map_picture'		=> isset($pic_ary[$map_name[$i]]['pic_filename']) ? $pic_ary[$map_name[$i]]['pic_filename'] : '',
+										'map_preview'		=> isset($pic_ary[$map_name[$i]]['pic_preview']) ? $pic_ary[$map_name[$i]]['pic_preview'] : '',
+										'upload_user'		=> $userdata['user_id'],
+										'upload_time'		=> time(),
+										'map_order'			=> $next_order,
+									);
+									$next_order += 10;
+								}
 							}
 							
-							$message = $lang['upload_match'] . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("$file?mode=_details&amp;$url=$data_id") . '">', '</a>');
-							log_add(LOG_ADMIN, $log, 'update_match_upload');
-						}
-						else
-						{
-							$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("$file?mode=_details&amp;$url=$data_id") . '">', '</a>');
-							message(GENERAL_ERROR, $message);
+							if ( $map_ary )
+							{
+								for ( $i = 0; $i < count($map_ary); $i++ )
+								{
+									sql(MATCH_MAPS, 'create', $map_ary[$i]);
+								}
+							}
+							else
+							{
+								$error .= ( $error ? '<br />' : '' ) . $lang['msg_select_map'];
+							}
+							
+							if ( !$error )
+							{
+								$message = $lang['create_map'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+										
+								log_add(LOG_ADMIN, $log, $smode);
+								message(GENERAL_MESSAGE, $message);
+							}
+							else
+							{
+								log_add(LOG_ADMIN, $log, $mode, $error);
+						
+								$template->assign_vars(array('ERROR_MESSAGE' => $error));
+								$template->assign_var_from_handle('ERROR_BOX_UPLOAD', 'error');
+							}
 						}
 					}
 				/*
@@ -873,21 +980,19 @@ else
 						}
 					}
 				*/
-					log_add(LOG_ADMIN, $log, 'update_match');
-					message(GENERAL_MESSAGE, $message);
+				#	log_add(LOG_ADMIN, $log, 'update_match');
+				#	message(GENERAL_MESSAGE, $message);
 				}
 				
-				if ( $smode == '_user_add' || $smode == '_user_player' || $smode == '_user_replace' || $smode == '_user_delete' )
+				if ( $smode == '_user_add' || $smode == '_user_player' || $smode == '_user_replace' || $smode == '_user_delete' || $smode == 'option' )
 				{
-					$error		= '';
 					$status		= ( $smode == '_user_add' ) ? request('status', 0) : ( $smode == '_user_player' ? '0' : '1' );
 					$members	= request('members', 4);
 					
-					if ( !$members )
-					{
-						$error = $lang['msg_select_no_members'];
-					}
-					else
+					$error .= ( !$members ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_member'] : '';
+					$error .= ( $smode == 'option' ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_option'] : '';
+					
+					if ( !$error )
 					{
 						if ( $smode == '_user_add' )
 						{
@@ -911,7 +1016,7 @@ else
 							
 							if ( !count($user_in_db) )
 							{
-								$error = $lang['match_lineup_no_users'];
+								$error = ( $error ? '<br />' : '' ) . $lang['msg_selected_member'];
 							}
 							else
 							{
@@ -928,7 +1033,7 @@ else
 							
 								if ( !count($sql_ary) )
 								{
-									$error = $lang['match_lineup_no_users'];
+									$error = ( $error ? '<br />' : '' ) . $lang['msg_selected_member'];
 								}
 								
 								$ary = array();
@@ -949,7 +1054,7 @@ else
 								}
 							}
 							
-							$lang_type = 'create_match_user';
+							$lang_type = 'create_user';
 						}
 						else if ( $smode == '_user_player' || $smode == '_user_replace' )
 						{
@@ -962,7 +1067,7 @@ else
 								}
 							}
 							
-							$lang_type = 'update_match_user';
+							$lang_type = 'update_user';
 						}
 						else if ( $smode == '_user_delete' )
 						{
@@ -971,24 +1076,35 @@ else
 							$sql = "DELETE FROM " . MATCH_LINEUP . " WHERE user_id IN ($sql_in) AND match_id = $data_id";
 							if ( !$db->sql_query($sql) )
 							{
-								message(GENERAL_ERROR, 'Could not delete memer', '', __LINE__, __FILE__, $sql);
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$lang_type = 'delete_match_user';
+							$lang_type = 'delete_user';
 						}
 						
-						$message = $lang[$lang_type]
-							. sprintf($lang['click_return_match'], '<a href="' . append_sid($file) . '">', '</a>')
-							. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=_details&amp;$url=$data_id") . '">', '</a>');
-						log_add(LOG_ADMIN, $log, $lang_type);
-						message(GENERAL_MESSAGE, $message);
+						if ( $error )
+						{
+							log_add(LOG_ADMIN, $log, $smode, $error);
+							
+							$template->assign_vars(array('ERROR_MESSAGE' => $error));
+							$template->assign_var_from_handle('ERROR_BOX_PLAYER', 'error');
+						}
+						else
+						{
+							$message = $lang[$lang_type]
+								. sprintf($lang['return'], check_sid($file), $acp_title)
+								. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						
+							log_add(LOG_ADMIN, $log, $smode, $lang_type);
+							message(GENERAL_MESSAGE, $message);
+						}
 					}
-					
-					if ( $error )
+					else
 					{
-						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
+						log_add(LOG_ADMIN, $log, $smode, $error);
+						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX_PLAYER', 'reg_header');
+						$template->assign_var_from_handle('ERROR_BOX_PLAYER', 'error');
 					}
 				}
 				
@@ -1044,13 +1160,13 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				$message = $lang['upload_match'] . sprintf($lang['click_return_match_details'], '<a href="' . append_sid("$file?mode=_detail&amp;$url=$data_id") . '">', '</a>');
+				$message = $lang['upload_match'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_detail&amp;$url=$data_id"));
 				log_add(LOG_ADMIN, $log, 'update_match_upload');
 				message(GENERAL_MESSAGE, $message);
 	
 				break;
 	
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -1058,24 +1174,11 @@ else
 			include('./page_footer_admin.php');
 			exit;
 		}
-	}
+	} // if end
 	
-	$template->set_filenames(array('body' => 'style/acp_match.tpl'));
 	$template->assign_block_vars('_display', array());
 	
-	$teams = get_data_array(TEAMS, '', 'team_order', '');
-	
-	$s_teams = '<select class="selectsmall" name="' . $url_team . '" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
-	$s_teams .= '<option value="0">&raquo;&nbsp;' . $lang['msg_select_sort_team'] . '&nbsp;</option>';
-	
-	foreach ( $teams as $info => $value )
-	{
-		$selected = ( $value['team_id'] == $data_team ) ? 'selected="selected"' : '';
-		$s_teams .= '<option value="' . $value['team_id'] . '" ' . $selected . '>&raquo;&nbsp;' . $value['team_name'] . '&nbsp;</option>';
-	}
-	$s_teams .= '</select>';
-	
-	$select_id = ( $data_team >= '1' ) ? "WHERE m.team_id = $data_team" : '';
+	$select_id = ( $data_team > 0 ) ? "WHERE m.team_id = $data_team" : '';
 
 	$sql = "SELECT m.*, t.team_name, g.game_image, g.game_size, tr.training_id
 				FROM " . MATCH . " m
@@ -1088,99 +1191,105 @@ else
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
-	$data_match = $db->sql_fetchrowset($result); 
+	$data = $db->sql_fetchrowset($result);
 	
-	if ( $data_match )
+	$data_new = $data_old = '';
+	
+	if ( $data )
 	{
-		$match_new = $match_old = array();
-		
-		foreach ( $data_match as $match => $row )
+		foreach ( $data as $match => $row )
 		{
 			if ( $row['match_date'] > time() )
 			{
-				$match_new[] = $row;
+				$data_new[] = $row;
 			}
 			else if ( $row['match_date'] < time() )
 			{
-				$match_old[] = $row;
+				$data_old[] = $row;
 			}
 		}
 		
-		if ( $match_new )
+		if ( !$data_new )
 		{
-			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_new)); $i++ )
+			$template->assign_block_vars('_display._entry_empty_new', array());
+		}
+		else
+		{
+			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_new)); $i++ )
 			{
-				$team_id		= $match_new[$i]['team_id'];
-				$match_id		= $match_new[$i]['match_id'];
-				$match_rival	= $match_new[$i]['match_rival'];
-				$public			= ( $match_new[$i]['match_public'] ) ? 'sprintf_match_name' : 'sprintf_match_intern';
+				$team_id		= $data_new[$i]['team_id'];
+				$match_id		= $data_new[$i]['match_id'];
+				$match_rival	= $data_new[$i]['match_rival_name'];
+				$public			= $data_new[$i]['match_public'] ? 'sprintf_match_name' : 'sprintf_match_intern';
 				
 				$template->assign_block_vars('_display._match_new_row', array(
-					'NAME'		=> sprintf($lang[$public], $match_new[$i]['match_rival']),
-					'GAME'		=> display_gameicon($match_new[$i]['game_size'], $match_new[$i]['game_image']),
-					'DATE'		=> create_date($userdata['user_dateformat'], $match_new[$i]['match_date'], $userdata['user_timezone']),
+					'NAME'		=> sprintf($lang[$public], $match_rival),
+					'GAME'		=> display_gameicon($data_new[$i]['game_size'], $data_new[$i]['game_image']),
+					'DATE'		=> create_date($userdata['user_dateformat'], $data_new[$i]['match_date'], $userdata['user_timezone']),
 					
-					'L_TRAIN'	=> ( !$match_new[$i]['training_id'] ) ? $lang['match_training_create'] : $lang['match_training_update'],
-					'U_TRAIN'	=> ( !$match_new[$i]['training_id'] ) ? append_sid("admin_training.php?mode=_create&amp;$url_team=$team_id&amp;$url=$match_id&amp;vs=$match_rival") : append_sid("admin_training.php?mode=_list&amp;$url_team=$team_id"),
+					'L_TRAIN'	=> !$data_new[$i]['training_id'] ? $lang['training_create'] : $lang['training_update'],
+					'U_TRAIN'	=> !$data_new[$i]['training_id'] ? check_sid("admin_training.php?mode=_create&amp;$url_team=$team_id&amp;$url=$match_id&amp;vs=$match_rival") : check_sid("admin_training.php?mode=_list&amp;$url_team=$team_id"),
 					
-					'U_DETAIL'	=> append_sid("$file?mode=_detail&amp;$url=$match_id"),
-					'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$match_id"),
-					'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$match_id"),
+					'U_DETAIL'	=> check_sid("$file?mode=_detail&amp;$url=$match_id"),
+					'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$match_id"),
+					'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$match_id"),
 				));
 			}
 		}
-		else { $template->assign_block_vars('_display._no_entry_new', array()); }
 		
-		if ( $match_old )
+		
+		if ( !$data_old )
 		{
-			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($match_old)); $i++ )
+			$template->assign_block_vars('_display._entry_empty_old', array());
+		}
+		else
+		{
+			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_old)); $i++ )
 			{
-				$match_id	= $match_old[$i]['match_id'];
-				$public		= ( $match_old[$i]['match_public'] ) ? 'sprintf_match_name' : 'sprintf_match_intern';
-				
+				$match_id	= $data_old[$i]['match_id'];
+				$public		= $data_old[$i]['match_public'] ? 'sprintf_match_name' : 'sprintf_match_intern';
 				
 				$template->assign_block_vars('_display._match_old_row', array(
-					'NAME'		=> sprintf($lang[$public], $match_old[$i]['match_rival']),
-					'GAME'		=> display_gameicon($match_old[$i]['game_size'], $match_old[$i]['game_image']),
-					'DATE'		=> create_date($userdata['user_dateformat'], $match_old[$i]['match_date'], $userdata['user_timezone']),
+					'NAME'		=> sprintf($lang[$public], $data_old[$i]['match_rival_name']),
+					'GAME'		=> display_gameicon($data_old[$i]['game_size'], $data_old[$i]['game_image']),
+					'DATE'		=> create_date($userdata['user_dateformat'], $data_old[$i]['match_date'], $userdata['user_timezone']),
 					
-					'U_DETAIL'	=> append_sid("$file?mode=_detail&amp;$url=$match_id"),
-					'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$match_id"),
-					'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$match_id"),
+					'U_DETAIL'	=> check_sid("$file?mode=_detail&amp;$url=$match_id"),
+					'U_UPDATE'	=> check_sid("$file?mode=_update&amp;$url=$match_id"),
+					'U_DELETE'	=> check_sid("$file?mode=_delete&amp;$url=$match_id"),
 				));
 			}
 		}
-		else { $template->assign_block_vars('_display._no_entry_old', array()); }
 	}
 	else
 	{
-		$template->assign_block_vars('_display._no_entry_new', array());
-		$template->assign_block_vars('_display._no_entry_old', array());
+		$template->assign_block_vars('_display._entry_empty_new', array());
+		$template->assign_block_vars('_display._entry_empty_old', array());
 	}
-
-	$current_page = ( !count($data_match) ) ? 1 : ceil( count($data_match) / $settings['site_entry_per_page'] );
+	
+	$current_page = !count($data) ? 1 : ceil( count($data) / $settings['site_entry_per_page'] );
 	
 	$fields = '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['match']),
 		'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['match']),
-		'L_EXPLAIN'		=> $lang['match_explain'],
+		'L_EXPLAIN'		=> $lang['explain'],
 		
 		'L_TRAINING'	=> $lang['training'],
-		'L_UPCOMING'	=> $lang['match_upcoming'],
-		'L_EXPIRED'		=> $lang['match_expired'],
+		'L_UPCOMING'	=> $lang['upcoming'],
+		'L_EXPIRED'		=> $lang['expired'],
 		'L_DETAILS'		=> $lang['common_details'],
 		
-		'PAGE_NUMBER'	=> ( count($data_match) ) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
-		'PAGE_PAGING'	=> ( count($data_match) ) ? generate_pagination('admin_match.php?', count($data_match), $settings['site_entry_per_page'], $start ) : '',
+		'PAGE_NUMBER'	=> count($data) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
+		'PAGE_PAGING'	=> count($data) ? generate_pagination('admin_match.php?', count($data), $settings['site_entry_per_page'], $start ) : '',
 		
-		'S_LIST'		=> $s_teams,
-		'S_TEAMS'		=> select_box('team', 'selectsmall', 0, 0),
+		'S_SORT'		=> select_team('selectsmall', 'sort_team', 'submit', $url_team, $data_team),
+		'S_TEAM'		=> select_team('selectsmall', 'team', false, 'team_id', false),
 		
+		'S_CREATE'		=> check_sid("$file?mode=_create"),
+		'S_ACTION'		=> check_sid($file),
 		'S_FIELDS'		=> $fields,
-		'S_CREATE'		=> append_sid("$file?mode=_create"),
-		'S_ACTION'		=> append_sid($file),
 	));
 	
 	$template->pparse('body');

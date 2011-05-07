@@ -1,3 +1,154 @@
+<script type="text/javascript">  
+// <![CDATA[
+	function set_right(id)
+	{
+		var obj = document.getElementById(id).checked = true;
+	}
+// ]]>
+</script>
+
+<form action="{S_ACTION}" method="post">
+<!-- BEGIN _display -->
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="row2 small">{L_EXPLAIN}</td>
+</tr>
+</table>
+
+<br />
+
+<!-- BEGIN _cats_row -->
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="rowHead" colspan="{S_COLUMN_SPAN}">{_display._cats_row.NAME}</td>
+	<!-- BEGIN _image -->
+	<td class="rowHead" align="center"><img src="{_display._cats_row._image.IMAGE}" title="{_display._cats_row._image.TITLE}" width="24" height="24" /></td>
+	<!-- END _image -->
+</tr>
+<!-- BEGIN _forms_row -->
+<tr> 
+	<td class="{_display._cats_row._forms_row.CLASS}"><span style="float:right">{_display._cats_row._forms_row.SUBS}</span>{_display._cats_row._forms_row.NAME}</td>
+	<!-- BEGIN _forms_auth -->
+	<td class="{_display._cats_row._forms_row.CLASS}" align="center"><img src="{_display._cats_row._forms_row._forms_auth.IMAGE}" title="{_display._cats_row._forms_row._forms_auth.EXPLAIN}" /></td>
+	<!-- END _forms_auth -->
+</tr>
+<!-- BEGIN _subs_row -->
+<tr> 
+	<td class="{_display._cats_row._forms_row._subs_row.CLASS}">{_display._cats_row._forms_row._subs_row.NAME}</td>
+	<!-- BEGIN _subs_auth -->
+	<td class="{_display._cats_row._forms_row._subs_row.CLASS}" align="center"><img src="{_display._cats_row._forms_row._subs_row._subs_auth.IMAGE}" title="{_display._cats_row._forms_row._subs_row._subs_auth.EXPLAIN}" /></td>
+	<!-- END _subs_auth -->
+</tr>
+<!-- END _subs_row -->
+<!-- END _forms_row -->
+<!-- BEGIN _no_entry -->
+<tr>
+	<td class="entry_empty" align="center" colspan="12">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _no_entry -->
+</table>
+
+<br />
+<!-- END _cats_row -->
+<!-- END _display -->
+
+<!-- BEGIN _cats -->
+<div id="navcontainer">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+</ul>
+</div>
+
+<table class="head" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="row4 small">{L_EXPLAIN}</td>
+</tr>
+</table>
+
+<br />
+
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<!-- BEGIN _cats_row -->
+<tr>
+	<td class="rowHead" colspan="{S_COLUMN_SPAN}">{_cats._cats_row.NAME}</td>
+	<!-- BEGIN _image -->
+	<td class="rowHead" align="center"><img src="{_cats._cats_row._image.IMAGE}" title="{_cats._cats_row._image.TITLE}" width="24" height="24" /></td>
+	<!-- END _image -->
+</tr>
+<!-- BEGIN _forms_row -->
+<tr> 
+	<td class="{_cats._cats_row._forms_row.CLASS}"><span style="float:right">{_cats._cats_row._forms_row.SUBS}</span>{_cats._cats_row._forms_row.NAME}</td>
+	<!-- BEGIN _forms_auth -->
+	<td class="{_cats._cats_row._forms_row.CLASS}" align="center"><img src="{_cats._cats_row._forms_row._forms_auth.IMAGE}" title="{_cats._cats_row._forms_row._forms_auth.EXPLAIN}" /></td>
+	<!-- END _forms_auth -->
+</tr>
+<!-- END _forms_row -->
+</table>
+<!-- END _cats_row -->
+<br />
+
+<table class="update" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<th colspan="12">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current" onclick="clip('settings')"><img src="style/images/expand.gif" id="img_settings" border="0" /> {L_INPUT_STANDARD}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tbody id="tbody_settings" style="display:none">
+<tr>
+	<td colspan="12" class="row4"><span class="small">{STANDARDS}</span></td>
+</tr>
+</tbody>
+<tr>
+	<td colspan="12">&nbsp;</td>
+</tr>
+<tr>
+	<td>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_INPUT_OPTION}</a></li>
+			</ul>
+		</div>
+	</td>
+	<!-- BEGIN _image -->
+	<td>
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current"><img src="{_cats._image.IMAGE}" title="{_cats._image.TITLE}" width="12" height="12" alt="" /></a></li>
+			</ul>
+		</div>
+	</td>
+	<!-- END _image -->
+</tr>
+<!-- BEGIN _set -->
+<tr class="hover">
+	<td class="row4">{_cats._set.NAME}:&nbsp;</td>
+	<!-- BEGIN _auth -->
+	<td align="center">{_cats._set._auth.SELECT}</td>
+	<!-- END _auth -->
+</tr>
+<!-- END _set -->
+<tr>
+	<td colspan="12">&nbsp;</td>
+</tr>
+
+<tr>
+	<td colspan="12" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+<!-- END _cats -->
+</form>
+
 <!-- BEGIN _auth_list -->
 <script type="text/javascript">  
 
@@ -25,7 +176,7 @@ function clip(id)
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li id="active"><a href="#" onclick="clip('legend')" id="right"><img src="style/images/expand.gif" id="img_legend" width="9" height="9" border="0" /> {L_LEGEND}</a></li>
+	<li id="active"><a href="#" onclick="clip('legend')" id="right"><img src="style/images/expand.gif" id="img_legend" border="0" /> {L_LEGEND}</a></li>
 </ul>
 </div>
 
@@ -69,7 +220,7 @@ function clip(id)
 </tr>
 <!-- BEGIN cat_row -->
 <tr>
-	<td class="rowHead" colspan="{S_COLUMN_SPAN}"><a href="{_auth_list.cat_row.CAT_URL}">{_auth_list.cat_row.CAT_NAME}</a></td>
+	<td class="rowHead" colspan="{S_COLUMN_SPAN}">{_auth_list.cat_row.CAT_NAME}</td>
 </tr>
 <!-- BEGIN forum_row -->
 <tr>
@@ -87,29 +238,18 @@ function clip(id)
 </tr>
 <!-- END _sub_row -->
 <!-- END forum_row -->
-<!-- END cat_row -->
-</table>
-
-<table border="0" cellspacing="1" cellpadding="2">
+<!-- BEGIN _no_entry -->
 <tr>
-	<td align="right"><input type="text" class="post" name="game_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td class="entry_empty" align="center" colspan="{S_COLUMN_SPAN}">{L_ENTRY_NO}</td>
 </tr>
+<!-- END _no_entry -->
+<!-- END cat_row -->
 </table>
 {S_FIELDS}
 </form>
 <!-- END _auth_list -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript">
-// <![CDATA[
-	function update_image(newimage)
-	{
-		document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./images/spacer.gif";
-	}
-// ]]>
-</script>
-
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 <ul id="navlist">
@@ -136,6 +276,7 @@ function clip(id)
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="game_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="game_name" id="game_name" value="{NAME}"></td>
@@ -145,17 +286,18 @@ function clip(id)
 	<td class="row2"><input type="text" class="post" name="game_tag" id="game_tag" value="{TAG}"></td>
 </tr>
 <tr>
-	<td class="row1 top">{L_IMAGE}:</td>
-	<td class="row2 top">{S_IMAGE}<br /><img src="{IMAGE}" id="image" alt="" /></td>
+	<td class="row1">{L_IMAGE}:</td>
+	<td class="row2">{S_IMAGE}<br /><img src="{IMAGE}" id="image" alt="" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="game_size">{L_SIZE}:</label></td>
 	<td class="row2"><input type="text" class="post" name="game_size" id="game_size" value="{SIZE}" size="2"></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="game_order">{L_ORDER}:</label></td>
-	<td class="row2 top">{S_ORDER}</td>
+	<td class="row1"><label for="game_order">{L_ORDER}:</label></td>
+	<td class="row2">{S_ORDER}</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

@@ -14,7 +14,15 @@ $lang = array_merge($lang, array(
 	'partner'	=> 'Partner',
 	'sponsor'	=> 'Sponsor',
 	
+	'page'	=> 'Seite',
+	'forum'	=> 'Forum',
+	'team'	=> 'Team',
+	
+	'maps'	=> 'Karten',
+	
 ));
+
+$lang['current_time'] = 'Aktuelles Datum und Uhrzeit: %s';
 
 $lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
 $lang['msg_select_order']		= 'Bitte Reihenfolge ausw&auml;hlen';
@@ -256,8 +264,9 @@ $lang['select_league_box']['8']['league_link']	= '';
 //
 //	Allgemein
 //
-$lang['no_entry']			= 'keine Einträge vorhanden';
-$lang['username']			= 'Benutzername';
+$lang['no_entry']			= 'Keine Einträge vorhanden.';
+$lang['new_entry'] = 'Neuer Eintrag';
+$lang['user_name']			= 'Benutzername';
 $lang['joined']				= 'beigetreten';
 $lang['rank_team']			= 'Rang im Team';
 $lang['rank_group']			= 'Rang in Gruppe';
@@ -282,7 +291,7 @@ $lang['Unknown_error'] = "Unknown Error";
 $lang['404'] = "404 - Not Found"; 
 $lang['404_Description'] = "The page you are trying to reach does not exist on this server.<br>You can browse the forum by following one of the links above.<br><br>We apologise for the inconvenience."; 
 $lang['401'] = "401 - Incorrect Password"; 
-$lang['401_Description'] = "The username or password you supplied is not correct.<br>You can browse the forum by following one of the links above."; 
+$lang['401_Description'] = "The user_name or password you supplied is not correct.<br>You can browse the forum by following one of the links above."; 
 $lang['403'] = "403 - Access Denied"; 
 $lang['403_Description'] = "You don't have the proper rights to view this page.<br>You can browse the forum by following one of the links above."; 
 $lang['500'] = "500 - Internal Server Error"; 
@@ -495,7 +504,7 @@ $lang['Posted_article_total'] = 'Unsere Benutzer haben <b>einen</b> Beitrag gesc
 $lang['Registered_users_zero_total'] = 'Wir haben <b>keine</b> registrierten Benutzer.';// # registered users
 $lang['Registered_users_total'] = 'Wir haben <b>%d</b> registrierte Benutzer.';// # registered users
 $lang['Registered_user_total'] = 'Wir haben <b>einen</b> registrierten Benutzer.';// # registered users
-$lang['Newest_user'] = 'Der neueste Benutzer ist <b>%s%s%s</b>.';// a href, username, /a
+$lang['Newest_user'] = 'Der neueste Benutzer ist <b>%s%s%s</b>.';// a href, user_name, /a
 
 $lang['No_new_posts_last_visit'] = 'Keine neuen Beiträge seit deinem letzten Besuch';
 $lang['No_new_posts'] = 'Keine neuen Beiträge';
@@ -614,7 +623,7 @@ $lang['Edit_delete_post'] = 'Beitrag bearbeiten oder löschen';
 $lang['View_IP'] = 'IP-Adresse zeigen';
 $lang['Delete_post'] = 'Beitrag löschen';
 
-$lang['wrote'] = 'hat Folgendes geschrieben';// proceeds the username and is followed by the quoted text
+$lang['wrote'] = 'hat Folgendes geschrieben';// proceeds the user_name and is followed by the quoted text
 $lang['Quote'] = 'Zitat';// comes before bbcode quote output.
 $lang['Code'] = 'Code';// comes before bbcode code output.
 
@@ -820,7 +829,7 @@ $lang['Edit_message'] = 'Private Nachricht bearbeiten';
 
 $lang['Notification_subject'] = 'Eine neue private Nachricht ist eingetroffen!';
 
-$lang['Find_username'] = 'Benutzernamen finden';
+$lang['Find_user_name'] = 'Benutzernamen finden';
 $lang['Find'] = 'Finden';
 $lang['No_match'] = 'Keine Ergebnisse gefunden.';
 
@@ -844,7 +853,7 @@ $lang['Click_view_privmsg'] = 'Klick %shier%s, um deinen Posteingang aufzurufen'
 //
 // Profiles/Registration
 //
-$lang['Viewing_user_profile'] = 'Profil anzeigen: %s';// %s is username
+$lang['Viewing_user_profile'] = 'Profil anzeigen: %s';// %s is user_name
 $lang['About_user'] = 'Alles über %s';
 
 $lang['Preferences'] = 'Einstellungen';
@@ -868,7 +877,7 @@ $lang['Poster_rank'] = 'Rang';
 $lang['Total_posts'] = 'Beiträge insgesamt';
 $lang['User_post_pct_stats'] = '%.2f%% aller Beiträge';// 1.25% of total
 $lang['User_post_day_stats'] = '%.2f Beiträge pro Tag';// 1.5 posts per day
-$lang['Search_user_posts'] = 'Alle Beiträge von %s anzeigen';// Find all posts by username
+$lang['Search_user_posts'] = 'Alle Beiträge von %s anzeigen';// Find all posts by user_name
 
 $lang['No_user_id_specified'] = 'Dieser Benutzer existiert nicht.';
 $lang['Wrong_Profile'] = 'Du kannst nur dein eigenes Profil bearbeiten.';
@@ -1417,7 +1426,7 @@ $lang['dbg_empty'] = 'Empty';
 
 
 
-$lang['required']		= 'Mit * markierte Felder sind erforderlich';
+$lang['required']		= "Mit * markierte Felder sind erforderlich!";
 
 
 $lang['access_denied']	= 'Keine Berechtigung für diese Seite.';
@@ -1429,7 +1438,7 @@ $lang['access_denied']	= 'Keine Berechtigung für diese Seite.';
 //
 $lang['head_cash']		= 'Clankasse';
 
-$lang['month'] = array(
+$lang['ary_month'] = array(
 	'01'	=> 'Januar',
 	'02'	=> 'Februar',
 	'03'	=> 'März',

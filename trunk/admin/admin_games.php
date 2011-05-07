@@ -20,8 +20,6 @@ else
 	$current	= '_submenu_games';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('games');
 	
@@ -47,25 +45,34 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
-	if ( !empty($mode) )
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_games.tpl',
+		'uimg'		=> 'style/inc_java_img.tpl',
+		'error'		=> 'style/info_error.tpl',
+		'confirm'	=> 'style/info_confirm.tpl',
+	));
+	
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
 			case '_create':
 			case '_update':
 			
-				$template->set_filenames(array('body' => 'style/acp_games.tpl'));
 				$template->assign_block_vars('_input', array());
+				
+				$template->assign_vars(array('PATH' => $path_dir));
+				$template->assign_var_from_handle('UIMG', 'uimg');
 				
 				if ( $mode == '_create' && !request('submit', 1) )
 				{
 					$data = array(
-								'game_name'		=> request('game_name', 2),
+								'game_name'		=> request('game_name', 1),
 								'game_tag'		=> '',
 								'game_image'	=> '',
 								'game_size'		=> '16',
@@ -74,13 +81,13 @@ else
 				}
 				else if ( $mode == '_update' && !request('submit', 1) )
 				{
-					$data = data(GAMES, $data_id, false, 1, 1);
+					$data = data(GAMES, $data_id, false, 1, true);
 				}
 				else
 				{
 					$data = array(
 								'game_name'		=> request('game_name', 2),
-								'game_tag'		=> request('game_tag', 2),
+								'game_tag'		=> strtolower(request('game_tag', 2)),
 								'game_image'	=> request('game_image', 2),
 								'game_size'		=> request('game_size', 0),
 								'game_order'	=> request('game_order', 0) ? request('game_order', 0) : request('game_order_new', 0),
@@ -97,66 +104,57 @@ else
 					'L_TAG'		=> sprintf($lang['sprintf_tag'], $lang['game']),
 					'L_IMAGE'	=> sprintf($lang['sprintf_image'], $lang['game']),
 					'L_SIZE'	=> sprintf($lang['sprintf_size'], $lang['common_image']),
-					'L_ORDER'	=> $lang['common_order'],
 					
 					'NAME'		=> $data['game_name'],
 					'TAG'		=> $data['game_tag'],
 					'SIZE'		=> $data['game_size'],
-					'PATH'		=> $path_dir,
-					'IMAGE'		=> ( $data['game_image'] ) ? $path_dir . $data['game_image'] : $images['icon_acp_spacer'],
+					'IMAGE'		=> $data['game_image'] ? $path_dir . $data['game_image'] : $images['icon_acp_spacer'],
 					
-					'S_ORDER'	=> select_order('select', GAMES, 'game', $data['game_order']),
+					'S_ORDER'	=> simple_order(GAMES, 'game_id != -1', 'select', $data['game_order']),
 					'S_IMAGE'	=> select_box_files('post', 'game_image', $path_dir, $data['game_image']),
 										
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 				
 				if ( request('submit', 1) )
 				{
-					$data = array(
-								'game_name'		=> request('game_name', 2),
-								'game_tag'		=> request('game_tag', 2),
-								'game_image'	=> request('game_image', 2),
-								'game_size'		=> request('game_size', 0),
-								'game_order'	=> request('game_order', 0) ? request('game_order', 0) : request('game_order_new', 0),
+					debug($_POST);
+					
+					$_ary = array(
+								'game_name' => $data['game_name'],
+								'game_id' => $data_id,
 							);
 							
-					$data['game_order'] = ( !$data['game_order'] ) ? maxa(GAMES, 'game_order', 'game_id != -1') : $data['game_order'];
-					
-					$error .= ( !$data['game_name'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					$error .= ( !$data['game_tag'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_tag'] : '';
+					$error .= check(GAMES, $_ary, $error);
+					$error .= empty($data['game_tag']) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_tag'] : '';
 					
 					if ( !$error )
 					{
+						$data['game_order'] = ( !$data['game_order'] ) ? maxa(GAMES, 'game_order', 'game_id != -1') : $data['game_order'];
+												
 						if ( $mode == '_create' )
 						{
-							$db_data = sql(GAMES, $mode, $data);
-							
-							$message = $lang['create']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+							$sql = sql(GAMES, $mode, $data);
+							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$db_data = sql(GAMES, $mode, $data, 'game_id', $data_id);
-							
-							$message = $lang['update']
-								. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=$mode&amp;$url=$data_id") . '">', '</a>');
+							$sql = sql(GAMES, $mode, $data, 'game_id', $data_id);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
 						orders(GAMES, -1);
 						
-						log_add(LOG_ADMIN, $log, $mode, $db_data);
-						message(GENERAL_MESSAGE, $message);
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
 					}
 					else
 					{
 						log_add(LOG_ADMIN, $log, $mode, $error);
 						
-						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
+						$template->assign_var_from_handle('ERROR_BOX', 'error');
 					}
 				}
 				
@@ -177,42 +175,38 @@ else
 				
 			case '_delete':
 			
-				$data = data(GAMES, $data_id, false, 1, 1);
+				$data = data(GAMES, $data_id, false, 1, true);
 			
 				if ( $data_id && $confirm )
 				{
-					$db_data = sql(GAMES, $mode, $data, 'game_id', $data_id);
-					
-					$message = $lang['delete']
-						. sprintf($lang['return'], '<a href="' . append_sid($file) . '">', $acp_title, '</a>');
+					$sql = sql(GAMES, $mode, $data, 'game_id', $data_id);
+					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					orders(GAMES, '-1');
 					
-					log_add(LOG_ADMIN, $log, $mode, $db_data);
-					message(GENERAL_MESSAGE, $message);
+					log_add(LOG_ADMIN, $log, $mode, $sql);
+					message(GENERAL_MESSAGE, $msg);
 				}
 				else if ( $data_id && !$confirm )
 				{
-					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
-		
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['confirm'], $data['game_name']),
+						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['game_name']),
 
-						'S_ACTION'	=> append_sid($file),
+						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['sprintf_must_select'], $lang['game'])); }
+				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['game'])); }
 				
-				$template->pparse('body');
+				$template->pparse('confirm');
 				
 				break;
 			
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -222,7 +216,6 @@ else
 		}
 	}
 			
-	$template->set_filenames(array('body' => 'style/acp_games.tpl'));
 	$template->assign_block_vars('_display', array());
 	
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
@@ -234,40 +227,43 @@ else
 		
 		'L_EXPLAIN'	=> $lang['explain'],
 		
-		'S_CREATE'	=> append_sid("$file?mode=_create"),
-		'S_ACTION'	=> append_sid($file),
+		'S_CREATE'	=> check_sid("$file?mode=_create"),
+		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
 	
 	$max = maxi(GAMES, 'game_order', '');
-	$tmp = data(GAMES, '-1', 'game_order ASC', 1, false);
+	$games = data(GAMES, 'game_id != -1', 'game_order ASC', 1, false);
 	
-	if ( $tmp )
+	if ( !$games )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($tmp)); $i++ )
+		$template->assign_block_vars('_display._entry_empty', array());
+	}
+	else
+	{
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($games)); $i++ )
 		{
-			$game_id	= $tmp[$i]['game_id'];
-			$game_size	= $tmp[$i]['game_size'];
-			$game_order	= $tmp[$i]['game_order'];
-			$game_image	= $tmp[$i]['game_image'] ? $path_dir . $tmp[$i]['game_image'] : $images['icon_acp_spacer'];
+			$game_id	= $games[$i]['game_id'];
+			$game_size	= $games[$i]['game_size'];
+			$game_order	= $games[$i]['game_order'];
+			$game_image	= $games[$i]['game_image'] ? $path_dir . $games[$i]['game_image'] : $images['icon_acp_spacer'];
 			
 			$template->assign_block_vars('_display._game_row', array(
-				'NAME'		=> $tmp[$i]['game_name'],
-				'TAG'		=> $tmp[$i]['game_tag'],
+				'NAME'		=> $games[$i]['game_name'],
+				'TAG'		=> $games[$i]['game_tag'],
 				'IMAGE'		=> "<img src=\"$game_image\" width=\"$game_size\" height=\"$game_size\" alt=\"\" />",
 				
-				'MOVE_UP'	=> ( $game_order != '10' ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $game_order != $max ) ? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $game_order != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $game_order != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE'	=> append_sid("$file?mode=_update&amp;$url=$game_id"),
-				'U_DELETE'	=> append_sid("$file?mode=_delete&amp;$url=$game_id"),
+				'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$game_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+				'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$game_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
 			));
 		}
 	}
-	else { $template->assign_block_vars('_display._no_entry', array()); }
 	
 	$template->pparse('body');
-
+	
 	include('./page_footer_admin.php');
 }
 

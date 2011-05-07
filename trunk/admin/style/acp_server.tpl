@@ -29,7 +29,7 @@
 <!-- END _server_row -->
 <!-- BEGIN _no_entry -->
 <tr>
-	<td class="row_noentry" align="center" colspan="3">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry -->
 </table>
@@ -71,13 +71,11 @@
 		</div>
 	</th>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="server_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="server_name" id="server_name" value="{NAME}"></td>
 </tr>
-<tr>
-	<td class="row1"><label for="server_type">{L_LIVE}:</label></td>
-	<td class="row2">{S_LIVE}</td>
 <tr>
 	<td class="row1"><label for="server_ip">{L_IP}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="server_ip" id="server_ip" value="{IP}"></td>
@@ -107,9 +105,10 @@
 	<td class="row2"><label><input type="radio" name="server_own" id="server_own" value="1" {S_OWN_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="server_own" value="0" {S_OWN_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="server_order">{L_ORDER}:</label></td>
-	<td class="row2 top">{S_ORDER}</td>
+	<td class="row1"><label for="server_order">{L_ORDER}:</label></td>
+	<td class="row2">{S_ORDER}</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

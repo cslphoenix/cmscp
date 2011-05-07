@@ -24,16 +24,14 @@
 <tr>
 	<td class="row_class1" align="center" width="1%"><img src="{_display._news_row.STATUS}" alt=""></td>
 	<td class="row_class1" align="left">{_display._news_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._news_row.LINK} {_display._news_row.UPDATE} {_display._news_row.DELETE}</td>		
+	<td class="row_class2" align="center">{_display._news_row.LINKS}</td>		
 </tr>
 <!-- END _news_row -->
-
-
-<!-- BEGIN _no_entry -->
+<!-- BEGIN _entry_empty -->
 <tr>
-	<td class="row_noentry" colspan="5" align="center">{NO_ENTRY}</td>
+	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
-<!-- END _no_entry -->
+<!-- END _entry_empty -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
@@ -47,77 +45,8 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<script type="text/javascript" src="./../includes/js/tinymce/tiny_mce.js"></script>
-<script type="text/javascript">
-tinyMCE.init({
-	// General options
-	mode : "textareas",
-	theme : "advanced",
-	plugins : "preview, xhtmlxtras",
-	
-	// Theme options
-	theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull, preview, code, image",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_buttons4 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_statusbar_location : "bottom",
-	theme_advanced_resizing : true,
-	
-	// Skin options
-	skin : "o2k7",
-	skin_variant : "silver",
-	
-	// Example content CSS (should be your site CSS)
-	//  content_css : "css/example.css",
-	
-	// Drop lists for link/image/media/template dialogs
-	template_external_list_url : "js/template_list.js",
-	external_link_list_url : "js/link_list.js",
-	external_image_list_url : "js/image_list.js",
-	media_external_list_url : "js/media_list.js",
-	
-	// Replace values for the template plugin
-	template_replace_values : {
-			username : "Some User",
-			staffid : "991234"
-	}
-});
-</script>
-<script type="text/javascript">
-// <![CDATA[
-	
-function update_image(newimage)
-{
-	document.getElementById('image').src = (newimage) ? "{IMAGE_PATH}/" + encodeURI(newimage) : "{IMAGE_DEFAULT}";
-}
-
-function clone(objButton)
-{
-	if ( objButton.parentNode )
-	{
-		tmpNode = objButton.parentNode.cloneNode(true);
-		target = objButton.parentNode.parentNode;
-		arrInput = tmpNode.getElementsByTagName("input");
-		
-		for ( var i=0; i<arrInput.length; i++ )
-		{
-			if ( arrInput[i].type=='text' )
-			{
-				arrInput[i].value='';
-			}
-		}
-		
-		target.appendChild(tmpNode);
-		objButton.value="{L_REMOVE}";
-		objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
-	}
-}
-
-// ]]>
-</script>
-
+{UIMG}
+{TINYMCE}
 <form action="{S_ACTION}" method="post" name="form">
 <div id="navcontainer">
 <ul id="navlist">
@@ -144,15 +73,15 @@ function clone(objButton)
 	<td class="row2">{S_LIST_MATCH}</td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="image">{L_CAT}: *</label></td>
+	<td class="row1"><label for="image">{L_CAT}: *</label></td>
 	<td class="row2">{S_LIST_CAT}<br /><img src="{IMAGE}" id="image" alt=""></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="news_text">{L_TEXT}: *</label></td>
+	<td class="row1"><label for="news_text">{L_TEXT}: *</label></td>
 	<td class="row2"><textarea class="textarea" name="news_text" id="news_text" rows="20" style="width:100%">{TEXT}</textarea></td>
 </tr>
 <tr>
-	<td class="row1 top"><label for="news_url">{L_LINK}:</label></td>
+	<td class="row1"><label for="news_url">{L_LINK}:</label></td>
 	<td class="row2">
 		<table border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN _link_row -->

@@ -40,7 +40,7 @@ $lang['path_games_explain']		= 'Der Pfad in deinem CMS-Verzeichnis, in dem die S
 $lang['path_ranks']				= 'Ränge';
 $lang['path_ranks_explain']		= 'Der Pfad in deinem CMS-Verzeichnis, in dem die Rangbilder liegen (z. B. images/ranks)';
 $lang['path_newscat']			= 'Newskategorie';
-$lang['path_newscat_explain']	= 'Der Pfad in deinem CMS-Verzeichnis, in dem die Newskategoriebileder liegen (z. B. images/newscat)';
+$lang['path_cat_explain']	= 'Der Pfad in deinem CMS-Verzeichnis, in dem die Newskategoriebileder liegen (z. B. images/newscat)';
 
 $lang['path_gallery']			= 'Galerie';
 $lang['path_gallery_explain']	= 'Der Pfad in deinem CMS-Verzeichnis, in dem die Spieleicons liegen (z. B. images/games)';

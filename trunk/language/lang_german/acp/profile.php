@@ -24,6 +24,16 @@ $lang = array_merge($lang, array(
 	'field'		=> 'Profilefeld',
 	'cat'		=> 'Profilekategrie',
 	'cats'		=> 'Profilekategrien',
+	
+	'show_guest'	=> 'für Gäste',
+	'show_member'	=> 'für Mitglieder',
+	'show_register'	=> 'beim registieren',
+	
+	'necessary'	=> 'Pflichtfeld',
+	
+	'type_text' => 'Textzeile',
+	'type_area' => 'Textfeld',
+
 
 ));
 

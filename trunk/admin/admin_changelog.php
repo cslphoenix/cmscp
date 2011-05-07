@@ -4,7 +4,7 @@ if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
+	if ( $userdata['user_level'] == 6 && $userdata['user_founder'] )
 	{
 		$module['_headmenu_07_development']['_submenu_changelog'] = $root_file;
 	}
@@ -20,11 +20,9 @@ else
 	$current	= '_submenu_games';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('games');
-	
+
 	$error	= '';
 	$index	= '';
 	$log	= LOG_SEK_GAMES;
@@ -45,10 +43,10 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_CASH, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid('admin_changelog.php', true)) : false;
+	( $header ) ? redirect('admin/' . check_sid('admin_changelog.php', true)) : false;
 
 	switch ( $mode )
 	{
@@ -85,7 +83,7 @@ else
 				'NAME'			=> str_replace('auth_', '', $authlist['authlist_name']),
 				
 				'S_FIELDS'		=> $fields,
-				'S_ACTION'		=> append_sid('admin_authlist.php'),
+				'S_ACTION'		=> check_sid('admin_authlist.php'),
 			));
 			
 			break;
@@ -114,7 +112,7 @@ else
 			#$oCache -> sCachePath = './../cache/';
 			#$oCache -> deleteCache('authlist');
 			
-			$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+			$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php'));
 			log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'create_authlist');
 			message(GENERAL_MESSAGE, $message);
 
@@ -146,8 +144,8 @@ else
 			#$oCache -> deleteCache('authlist');
 						
 			$message = $lang['update_authlist']
-				. sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>')
-				. sprintf($lang['return_update'], '<a href="' . append_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id") . '">', '</a>');
+				. sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php') . '">', '</a>')
+				. sprintf($lang['return_update'], '<a href="' . check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"));
 			log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'update_authlist');
 			message(GENERAL_MESSAGE, $message);
 			
@@ -174,7 +172,7 @@ else
 				#$oCache -> sCachePath = './../cache/';
 				#$oCache -> deleteCache('authlist');
 				
-				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . append_sid('admin_authlist.php') . '">', '</a>');
+				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php'));
 				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'delete_authlist');
 				message(GENERAL_MESSAGE, $message);
 			}
@@ -190,7 +188,7 @@ else
 					'L_NO'				=> $lang['common_no'],
 					'L_YES'				=> $lang['common_yes'],
 					'S_FIELDS'	=> $fields,
-					'S_ACTION'	=> append_sid('admin_authlist.php'),
+					'S_ACTION'	=> check_sid('admin_authlist.php'),
 				));
 			}
 			else
@@ -214,8 +212,8 @@ else
 				'L_EXPLAIN'		=> $lang['changelog_explain'],
 				
 				'S_FIELDS'		=> $fields,
-				'S_CREATE'		=> append_sid('admin_changelog.php?mode=_create'),
-				'S_ACTION'		=> append_sid('admin_changelog.php'),
+				'S_CREATE'		=> check_sid('admin_changelog.php?mode=_create'),
+				'S_ACTION'		=> check_sid('admin_changelog.php'),
 			));
 			
 			$authlist_data = get_data_array(AUTHLIST, '', 'authlist_id', 'ASC');
@@ -229,8 +227,8 @@ else
 					
 					'AUTHLIST_NAME'	=> $authlist_data[$i]['authlist_name'],
 					
-					'U_UPDATE'		=> append_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"),
-					'U_DELETE'		=> append_sid("admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"),
+					'U_UPDATE'		=> check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"),
+					'U_DELETE'		=> check_sid("admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"),
 				));
 			}
 			

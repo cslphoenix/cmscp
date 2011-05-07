@@ -24,7 +24,6 @@ else
 	$current	= '_submenu_logs';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 
 	load_lang('logs');
 	
@@ -43,10 +42,10 @@ else
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	switch ( $mode )
 	{
@@ -117,8 +116,8 @@ else
 				'PAGINATION'		=> generate_pagination('admin_logs.php?', count($log_entry), $settings['site_entry_per_page'], $start),
 				'PAGE_NUMBER'		=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 				
-				'S_LOG_ERROR'		=> append_sid('admin_logs.php?mode=error'),
-				'S_LOG_ACTION'		=> append_sid($file),
+				'S_LOG_ERROR'		=> check_sid('admin_logs.php?mode=error'),
+				'S_LOG_ACTION'		=> check_sid($file),
 			));
 			
 			$template->pparse('body');
@@ -141,7 +140,7 @@ else
 				
 				log_add(LOG_ADMIN, $log, 'acp_log_delete_error');
 				
-				$message = $lang['delete_log_error'] . sprintf($lang['click_return_log_error'], '<a href="' . append_sid('admin_logs.php?mode=error') . '">', '</a>');
+				$message = $lang['delete_log_error'] . sprintf($lang['click_return_log_error'], '<a href="' . check_sid('admin_logs.php?mode=error'));
 				message(GENERAL_MESSAGE, $message);
 	
 			}
@@ -159,7 +158,7 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_ACTION'	=> append_sid('admin_logs.php?mode=error'),
+					'S_ACTION'	=> check_sid('admin_logs.php?mode=error'),
 					'S_FIELDS'	=> $fields,
 				));
 			}
@@ -186,7 +185,7 @@ else
 				
 				log_add(LOG_ADMIN, $log, 'acp_log_delete_all');
 				
-				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . append_sid($file) . '">', '</a>');
+				$message = $lang['delete_log_all'] . sprintf($lang['click_return_log'], '<a href="' . check_sid($file));
 				message(GENERAL_MESSAGE, $message);
 	
 			}
@@ -203,7 +202,7 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
@@ -232,7 +231,7 @@ else
 				
 				log_add(LOG_ADMIN, $log, 'acp_log_delete');
 				
-				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . append_sid($file) . '">', '</a>');
+				$message = $lang['delete_log'] . sprintf($lang['click_return_log'], '<a href="' . check_sid($file));
 				message(GENERAL_MESSAGE, $message);
 	
 			}
@@ -250,7 +249,7 @@ else
 					'L_YES'				=> $lang['common_yes'],
 					'L_NO'				=> $lang['common_no'],
 	
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
@@ -269,26 +268,26 @@ else
 			$template->assign_block_vars('_display', array());
 					
 			$template->assign_vars(array(
-				'L_LOG_TITLE'		=> $lang['log_head'],
-				'L_LOG_EXPLAIN'		=> $lang['log_explain'],
-				'L_LOG_ERROR'		=> $lang['log_error'],
+		#		'L_LOG_TITLE'		=> $lang['log_head'],
+		#		'L_LOG_EXPLAIN'		=> $lang['log_explain'],
+		#		'L_LOG_ERROR'		=> $lang['log_error'],
 				
-				'L_LOG_USERNAME'	=> $lang['log_username'],
-				'L_LOG_IP'			=> $lang['log_ip'],
-				'L_LOG_TIME'		=> $lang['log_time'],
-				'L_LOG_SEKTION'		=> $lang['log_sektion'],
-				'L_LOG_MESSAGE'		=> $lang['log_message'],
-				'L_LOG_CHANGE'		=> $lang['log_change'],
+		#		'L_LOG_USERNAME'	=> $lang['log_user_name'],
+		#		'L_LOG_IP'			=> $lang['log_ip'],
+		#		'L_LOG_TIME'		=> $lang['log_time'],
+		#		'L_LOG_SEKTION'		=> $lang['log_sektion'],
+		#		'L_LOG_MESSAGE'		=> $lang['log_message'],
+		#		'L_LOG_CHANGE'		=> $lang['log_change'],
 				
-				'L_MARK_ALL'		=> $lang['mark_all'],
-				'L_MARK_DEALL'		=> $lang['mark_deall'],
-				'L_DELETE'			=> $lang['common_delete'],
+		#		'L_MARK_ALL'		=> $lang['mark_all'],
+		#		'L_MARK_DEALL'		=> $lang['mark_deall'],
+		#		'L_DELETE'			=> $lang['common_delete'],
 		
-				'S_LOG_ERROR'		=> append_sid('admin_logs.php?mode=error'),
-				'S_LOG_ACTION'		=> append_sid($file),
+				'S_LOG_ERROR'		=> check_sid('admin_logs.php?mode=error'),
+				'S_LOG_ACTION'		=> check_sid($file),
 			));
 			
-			$sql = 'SELECT l.*, u.username
+			$sql = 'SELECT l.*, u.user_name
 						FROM ' . LOGS . ' l, ' . USERS . ' u
 						WHERE l.user_id = u.user_id
 					ORDER BY log_id DESC';
@@ -311,35 +310,54 @@ else
 					$class = ($i % 2) ? 'row_class1' : 'row_class2';
 					
 					// Log Sektion
-					switch ( $log_entry[$i]['log_sektion'] )
+				#	switch ( $log_entry[$i]['log_sektion'] )
+				#	{
+				#		case 0:
+				#			$sektion = 'news';
+				#			break;
+				#		case 1:
+				#			$sektion = 'team';
+				#			break;
+				#		case 2:
+				#			$sektion = 'rank';
+				#			break;
+				#		case 3:
+				#			$sektion = 'user';
+				#			break;
+				#		default:
+				#			$sektion = $log_entry[$i]['log_sektion'];
+				#			break;
+				#	}
+				
+					$msg = $log_entry[$i]['log_message'];
+					
+					if ( strstr($msg, 'create') )		{ $msg = $lang['common_create']; }
+					else if ( strstr($msg, 'update') )	{ $msg = $lang['common_update']; }
+					else if ( strstr($msg, 'delete') )	{ $msg = $lang['common_delete']; }
+					else								{ $msg = $lang['common_default']; }
+					
+					$log_data = unserialize($log_entry[$i]['log_data']);
+									
+					if ( is_array($log_data) )
 					{
-						case 0:
-							$sektion = 'news';
-							break;
-						case 1:
-							$sektion = 'team';
-							break;
-						case 2:
-							$sektion = 'rank';
-							break;
-						case 3:
-							$sektion = 'user';
-							break;
-						default:
-							$sektion = $log_entry[$i]['log_sektion'];
-							break;
+						$log_data = "<pre>" . print_r($log_data, true) . "</pre>";
 					}
+					else
+					{
+						$log_data = $log_data;
+					}
+					
 			
 					$template->assign_block_vars('_display._logs_row', array(
 						'CLASS'		=> $class,
 						
 						'LOG_ID'	=> $log_entry[$i]['log_id'],
-						'USERNAME'	=> $log_entry[$i]['username'],
+						'USERNAME'	=> $log_entry[$i]['user_name'],
 						'IP'		=> decode_ip($log_entry[$i]['user_ip']),
 						'DATE'		=> create_date($userdata['user_dateformat'], $log_entry[$i]['log_time'], $userdata['user_timezone']),
-						'SEKTION'	=> $sektion,
-						'MESSAGE'	=> $log_entry[$i]['log_message'],
-						'DATA'		=> $log_entry[$i]['log_data']
+						'SEKTION'	=> $log_entry[$i]['log_sektion'],
+						'MESSAGE'	=> $msg,
+						'DATA'		=> $log_data,
 					));
 				}
 			}

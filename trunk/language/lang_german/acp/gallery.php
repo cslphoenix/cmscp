@@ -8,8 +8,8 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'gallery'	=> 'Galerie',
-	'explain'	=> 'Hier kannst Du Galerien verwalten.',
-	'explain_d'	=> 'Standarteinstellungen für Galerien, es kann aber jede Galerie selbst anders eingestellt werden.',
+	'explain'	=> 'Hier werden alle Galerien verwaltet. Die Ordnergröße und Anzahl wird immer nur auf die Eigentlichen Bilder bezogen nicht auf die Vorschaubilder, diese werden nicht mit einberechnet!',
+	'explain_d'	=> 'Standarteinstellungen für das erstellen neuer Galerien, es kann aber jede Galerie eingenständig verwaltet werden von den Rechten. Die Rechte sind nur mit den vorhergesehen Gruppen verbunden, Leader Rechte beziehen sich nur auf die Benutzer die in der Gruppe Leader sind. Für weitere Infos einfach auf der Entwicklerhauptseite informieren.',
 	
 	'create'	=> 'Neue Galerie hinzugefügt.',
 	'update'	=> 'Galerie erfolgreich geändert.',
@@ -17,6 +17,10 @@ $lang = array_merge($lang, array(
 	'confirm'	=> 'dass diese Galerie:',
 	
 	'sprintf_size-pic'	=> '%s / %s Bilder',
+	
+	'update_d'	=> 'Standarteinstellungen erfolgreich geändert.',
+	
+	'update_u'	=> 'Bild/Bilder erfolgreich hochgeladen.',
 	
 	
 #	$lang['create_gallery']				= 'Neue Galerie hinzugefügt.';
@@ -61,6 +65,12 @@ $lang = array_merge($lang, array(
 
 	'list'		=> 'als Liste',
 	'preview'	=> 'nach Vorgabe der Einstellungen',
+	
+	'pic'			=> 'Bild',
+	'pic_widht'		=> 'Breite',
+	'pic_height'	=> 'Höhe',
+	'pic_size'		=> 'Größe',
+
 
 ));
 
@@ -96,9 +106,6 @@ $lang['auth_gallery_coleader']	= 'Squadleader';
 $lang['auth_gallery_leader']	= 'Leader';
 $lang['auth_gallery_upload']	= 'Uploader';
 
-$lang['pic_widht']				= 'Breite';
-$lang['pic_height']				= 'Höhe';
-$lang['pic_size']				= 'Größe';
 
 $lang['auth_gallery_view']		= 'Betrachten';
 $lang['auth_gallery_edit']		= 'Bearbeiten';

@@ -67,59 +67,33 @@ function counter_update()
 
 function counter_result()
 {
-	global $config, $db, $lang, $settings, $template, $userdata;
-
-	// User die 'heute' auf der Seite waren 
-    $sql = 'SELECT counter_entry FROM ' . COUNTER_COUNTER . ' WHERE counter_date = CURDATE()';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrow($result);
-//	$row = _cached($sql, 'counter_stats_today', 1, 1800);
-	$stats_day = (int) $row['counter_entry'];
-	$db->sql_freeresult($result);
+	global $db, $lang, $settings, $template, $userdata;
 	
-	// User die 'gestern' auf der Seite waren 
-	$sql = 'SELECT counter_entry AS sum FROM ' . COUNTER_COUNTER . ' WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrow($result);
-//	$row = _cached($sql, 'counter_stats_yesterday', 1, 1800);
-	$stats_yesterday = (int) $row['sum'];
-	$db->sql_freeresult($result);
-	
-	// user-monat: 
-	$sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')"; 
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrow($result);
-//	$row = _cached($sql, 'counter_stats_month', 1, 1800);
-	$stats_month = (int) $row['sum'];
-	$db->sql_freeresult($result);
+	$sql = "SELECT counter_entry FROM " . COUNTER_COUNTER . " WHERE counter_date = CURDATE()";
+	$tmp = _cached($sql, 'count_day', 1, 1800);
+	$stats_day = $tmp['counter_entry'];
 
-	// User die insgesamt die Seite besucht haben. 
-    // Dazu wird die Gruppenfunktion SUM() 
-    // verwendet, die alle Werte der Spalte 'Anzahl' summiert 
-    $sql = 'SELECT SUM(counter_entry) AS sum FROM ' . COUNTER_COUNTER;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrow($result);
-//	$row = _cached($sql, 'counter_stats_total', 1, 1800);
-	$stats_year = (int) $row['sum'];
-	$db->sql_freeresult($result);
+	$sql = "SELECT counter_entry FROM " . COUNTER_COUNTER . " WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+	$tmp = _cached($sql, 'count_yesterday', 1, 86400);
+	$stats_yesterday = $tmp['counter_entry'];
+	
+	$sql = "SELECT SUM(counter_entry) AS count FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')";
+	$tmp = _cached($sql, 'count_month', 1, 86400);
+	$stats_month = $tmp['count'];
+	
+    $sql = "SELECT SUM(counter_entry) AS count FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%y') = DATE_FORMAT(NOW(), '%y')";
+	$tmp = _cached($sql, 'count_year', 1, 86400);
+	$stats_year = $tmp['count'];
+	
+	$sql = "SELECT SUM(counter_entry) AS count FROM " . COUNTER_COUNTER;
+	$tmp = _cached($sql, 'count_total', 1, 86400);
+	$stats_total = $tmp['count'];
 	
 	$l_counter_head = sprintf($lang['counter_today'], $stats_day);
 	$l_counter_head .= sprintf($lang['counter_yesterday'], $stats_yesterday);
 	$l_counter_head .= sprintf($lang['counter_month'], $stats_month);
 	$l_counter_head .= sprintf($lang['counter_year'], $stats_year);
-	$l_counter_head .= sprintf($lang['counter_total'], $stats_year+$config['counter_start']);
+	$l_counter_head .= sprintf($lang['counter_total'], $stats_total);
 	
 	$template->assign_vars(array(
 		'TOTAL_COUNTER_HEAD'		=> $l_counter_head,
@@ -134,7 +108,7 @@ function counter_result()
 			'STATS_COUNTER_YESTERDAY' 	=> sprintf($lang['counter_yesterday'], $stats_yesterday),
 			'STATS_COUNTER_MONTH' 		=> sprintf($lang['counter_month'], $stats_month),
 			'STATS_COUNTER_YEAR' 		=> sprintf($lang['counter_year'], $stats_year),
-			'STATS_COUNTER_TOTAL' 		=> sprintf($lang['counter_total'], $stats_year+$config['counter_start']),
+			'STATS_COUNTER_TOTAL' 		=> sprintf($lang['counter_total'], $stats_total),
 //			'STATS_COUNTER_CACHE'		=> ( defined('CACHE') ) ? display_cache('counter_stats_total', 1) : '',
 		));
 	}

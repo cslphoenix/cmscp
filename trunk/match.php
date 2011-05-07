@@ -24,7 +24,7 @@ if ( $mode == '' )
 	/*
 	 *	Anstehende / Abgelaufen Wars
 	*/
-	$sql = "SELECT m.match_id, m.match_rival, m.match_date, m.match_public, t.team_name, g.game_image, g.game_size
+	$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, m.match_public, t.team_name, g.game_image, g.game_size
 				FROM " . MATCH . " m
 					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -75,9 +75,9 @@ if ( $mode == '' )
 				$template->assign_block_vars('list.match_row_new', array(
 					'CLASS' 		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					'MATCH_GAME'	=> display_gameicon($match_new[$i]['game_size'], $match_new[$i]['game_image']),
-					'MATCH_NAME'	=> sprintf($lang[$match_typ], $match_new[$i]['match_rival']),
+					'MATCH_NAME'	=> sprintf($lang[$match_typ], $match_new[$i]['match_rival_name']),
 					'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_new[$i]['match_date'], $userdata['user_timezone']),
-					'U_DETAILS'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id']),
+					'U_DETAILS'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_new[$i]['match_id']),
 				));
 			}
 		}
@@ -96,9 +96,9 @@ if ( $mode == '' )
 				$template->assign_block_vars('list.match_row_old', array(
 					'CLASS' 		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					'MATCH_GAME'	=> display_gameicon($match_old[$i]['game_size'], $match_old[$i]['game_image']),
-					'MATCH_NAME'	=> sprintf($lang[$match_typ], $match_old[$i]['match_rival']),
+					'MATCH_NAME'	=> sprintf($lang[$match_typ], $match_old[$i]['match_rival_name']),
 					'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $match_old[$i]['match_date'], $userdata['user_timezone']),
-					'U_DETAILS'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id'])
+					'U_DETAILS'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_old[$i]['match_id'])
 				));
 			}
 		}
@@ -140,9 +140,9 @@ if ( $mode == '' )
 			$template->assign_block_vars('list.teams_row', array(
 				'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
 				'TEAM_GAME'	=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
-				'TEAM_NAME'	=> '<a href="' . append_sid('teams.php?mode=show&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']) . '">' . $teams[$i]['team_name'] . '</a>',
-				'MATCHES'	=> '<a href="' . append_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']) . '">' . $lang['all_matches'] . '</a>',
-				'FIGHTUS'	=> ( $teams[$i]['team_fight'] ) ? '<a href="' . append_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']) . '">' . $lang['match_fightus'] . '</a>'  : '',
+				'TEAM_NAME'	=> '<a href="' . check_sid('teams.php?mode=show&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']) . '">' . $teams[$i]['team_name'] . '</a>',
+				'MATCHES'	=> '<a href="' . check_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']) . '">' . $lang['all_matches'] . '</a>',
+				'FIGHTUS'	=> ( $teams[$i]['team_fight'] ) ? '<a href="' . check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $teams[$i]['team_id']) . '">' . $lang['match_fightus'] . '</a>'  : '',
 			));
 		}		
 	}
@@ -176,9 +176,8 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	$template->assign_block_vars('details', array());
 	$template->set_filenames(array('body' => 'body_match.tpl'));
 	
-	$sql = 'SELECT	m.*, md.*, t.team_id, t.team_name, g.game_image, ml.match_id AS lineup_match_id, tr.training_vs, tr.training_date
+	$sql = 'SELECT	m.*, t.team_id, t.team_name, g.game_image, ml.match_id AS lineup_match_id, tr.training_vs, tr.training_date
 				FROM ' . MATCH . ' m
-					LEFT JOIN ' . MATCH_DETAILS . ' md ON m.match_id = md.match_id
 					LEFT JOIN ' . MATCH_LINEUP . ' ml ON m.match_id = ml.match_id
 					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
@@ -211,8 +210,8 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	if ( $userauth['auth_match'] || $userdata['user_level'] == ADMIN )
 	{
 		$template->assign_block_vars('details.match_edit', array(
-			'EDIT_MATCH'			=> '&nbsp;<a href="' . append_sid('admin/admin_match.php?mode=edit&' . POST_MATCH_URL . '=' . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match'] . '</a>',
-			'EDIT_MATCH_DETAILS'	=> '&nbsp;<a href="' . append_sid('admin/admin_match.php?mode=details&' . POST_MATCH_URL . '=' . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match_details'] . '</a>'
+			'EDIT_MATCH'			=> '&nbsp;<a href="' . check_sid('admin/admin_match.php?mode=edit&' . POST_MATCH_URL . '=' . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match'] . '</a>',
+			'EDIT_MATCH_DETAILS'	=> '&nbsp;<a href="' . check_sid('admin/admin_match.php?mode=details&' . POST_MATCH_URL . '=' . $match_id . "&sid=" . $userdata['session_id']) . '">&raquo; ' . $lang['edit_match_details'] . '</a>'
 		));
 	}
 
@@ -267,9 +266,9 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	
 	foreach ( $lang['select_categorie_box'] as $key_s => $value_s )
 	{
-		if ( $key_s == $match_details['match_category'] )
+		if ( $key_s == $match_details['match_cat'] )
 		{
-			$match_category = $value_s;
+			$match_cat = $value_s;
 		}
 	}
 	
@@ -296,7 +295,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	{
 		$template->assign_block_vars('clan', array());
 		
-		$sql = 'SELECT ml.user_id, ml.status, u.username
+		$sql = 'SELECT ml.user_id, ml.status, u.user_name
 					FROM ' . MATCH_LINEUP . ' ml, ' . USERS . ' u
 					WHERE match_id = ' . $match_id . ' AND u.user_id = ml.user_id
 				ORDER BY ml.status';
@@ -314,20 +313,20 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		do
 		{
 			$type = $row['status'];
-			$username_ary[$type][$row['user_id']] = $row['username'];
+			$user_name_ary[$type][$row['user_id']] = $row['user_name'];
 		}
 		while ($row = $db->sql_fetchrow($result));
 		$db->sql_freeresult($result);
 		
 		
-		foreach ($username_ary as $type => $row_ary)
+		foreach ($user_name_ary as $type => $row_ary)
 		{
 			$replace = ($type == '1') ? $lang['replace'] : '';
 			
 			$clan_players = array();
-			foreach ($row_ary as $user_id => $username)
+			foreach ($row_ary as $user_id => $user_name)
 			{
-				$clan_players[] = '<a href="profile.php?user=' . $user_id . '">' . $username . '</a>';
+				$clan_players[] = '<a href="profile.php?user=' . $user_id . '">' . $user_name . '</a>';
 			}
 			
 			$clan_players = $replace . implode(', ', $clan_players);
@@ -357,7 +356,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		//	Teilnahme von mitgliedern zu diesem Match
 		//	- nur sichtbar mit dem Status Trail, Member oder Admin
 		//
-		$sql = 'SELECT mu.*, u.username
+		$sql = 'SELECT mu.*, u.user_name
 					FROM ' . MATCH_USERS . ' mu, ' . USERS . ' u
 					WHERE mu.user_id = u.user_id
 						AND mu.match_id = ' . $match_id;
@@ -386,7 +385,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 			
 			$template->assign_block_vars('details.match_users.match_users_status', array(
 				'CLASS' 		=> $class,
-				'USERNAME'		=> $row['username'],
+				'USERNAME'		=> $row['user_name'],
 				'STATUS'		=> $status,
 				'DATE'			=> ( $row['match_users_update'] ) ? $lang['change_on'] . create_date($userdata['user_dateformat'], $row['match_users_update'], $userdata['user_timezone']) : create_date($userdata['user_dateformat'], $row['match_users_create'], $userdata['user_timezone']),
 			));
@@ -400,7 +399,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		$db->sql_freeresult($result);
 		
 		$template->assign_vars(array(
-			'L_USERNAME'		=> $lang['username'],
+			'L_USERNAME'		=> $lang['user_name'],
 			'L_STATUS'			=> $lang['status'],
 			'L_STATUS_YES'		=> $lang['status_yes'],
 			'L_STATUS_NO'		=> $lang['status_no'],
@@ -490,7 +489,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 	{
 		$template->assign_block_vars('details.match_comments', array());
 		
-		$sql = 'SELECT mc.*, u.username, u.user_email
+		$sql = 'SELECT mc.*, u.user_name, u.user_email
 					FROM ' . MATCH_COMMENTS . ' mc
 						LEFT JOIN ' . USERS . ' u ON mc.poster_id = u.user_id
 					WHERE match_id = ' . $match_id . '
@@ -565,11 +564,11 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				if ( $comment_entry[$i]['poster_nick'] )
 				{
 					
-					$comment_user	= ( $userdata['session_logged_in'] ) ? '<a href="' . append_sid('mailto:' . $comment_entry[$i]['poster_email']) . '">' . $comment_entry[$i]['poster_nick'] . '</a>' : $comment_entry[$i]['poster_nick'];
+					$comment_user	= ( $userdata['session_logged_in'] ) ? '<a href="' . check_sid('mailto:' . $comment_entry[$i]['poster_email']) . '">' . $comment_entry[$i]['poster_nick'] . '</a>' : $comment_entry[$i]['poster_nick'];
 				}
 				else
 				{
-					$comment_user	= '<a href="' . append_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $comment_entry[$i]['poster_id']) . '">' . $comment_entry[$i]['username'] . '</a>';
+					$comment_user	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $comment_entry[$i]['poster_id']) . '">' . $comment_entry[$i]['user_name'] . '</a>';
 				}
 				
 				if ( $config['time_today'] < $comment_entry[$i]['time_create'] )
@@ -590,8 +589,8 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 					'MESSAGE'		=> $comment_msg,
 					'USERNAME'		=> $comment_user,
 
-					'U_EDIT'		=> append_sid('match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['match_id']),
-					'U_DELETE'		=> append_sid('match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['match_id'])
+					'U_EDIT'		=> check_sid('match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['match_id']),
+					'U_DELETE'		=> check_sid('match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['match_id'])
 				));
 			}
 		
@@ -720,7 +719,7 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 				
 				_comment_message('add', 'match', $match_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
 				
-				$message = $lang['add_comment'] . sprintf($lang['click_return_match'],  '<a href="' . append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id) . '">', '</a>');
+				$message = $lang['add_comment'] . sprintf($lang['click_return_match'],  '<a href="' . check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id) . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 			}
 		}
@@ -730,13 +729,13 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		'L_MATCH_INFO'			=> $lang['match_info'],
 		'L_SUBMIT'				=> $lang['Submit'],
 		
-		'MATCH_RIVAL'			=> $match_details['match_rival'],
+		'MATCH_RIVAL'			=> $match_details['match_rival_name'],
 		'U_MATCH_RIVAL_URL'		=> $match_details['match_rival_url'],
 		'MATCH_RIVAL_URL'		=> $match_details['match_rival_url'],
 		'MATCH_RIVAL_TAG'		=> $match_details['match_rival_tag'],
 		
 	
-		'MATCH_CATEGORIE'		=> $match_category,
+		'MATCH_CATEGORIE'		=> $match_cat,
 		'MATCH_TYPE'			=> $match_type,
 		'MATCH_LEAGUE_INFO'		=> $match_league,
 		'SERVER'				=> ($match_details['server']) ? '<a href="hlsw://' . $match_details['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
@@ -779,10 +778,10 @@ else if ( $mode == 'details' && isset($HTTP_GET_VARS[POST_MATCH_URL]))
 		
 		'DETAILS_COMMENT'		=> $match_details['details_comment'],
 		
-		'MATCH_MAIN'			=> '<a href="' . append_sid('match.php') . '">&raquo; Übersicht</a>',
+		'MATCH_MAIN'			=> '<a href="' . check_sid('match.php') . '">&raquo; Übersicht</a>',
 	
 		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-		'S_MATCH_ACTION'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id))
+		'S_MATCH_ACTION'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id))
 	);
 }
 else if ($mode == 'change')
@@ -821,7 +820,7 @@ else if ($mode == 'change')
 		$message = $lang['update_match_status_none'];
 	}
 
-	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id) . '">'));
+	$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $match_id) . '">'));
 	message(GENERAL_MESSAGE, $message);
 }
 else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
@@ -849,7 +848,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	//
 	if ( $userdata['user_level'] >= TRIAL )
 	{
-		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival_name, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH . ' m
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
@@ -859,7 +858,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 	}
 	else
 	{
-		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival, t.team_name, g.game_image, g.game_size
+		$sql = 'SELECT m.match_id, m.match_date, m.match_public, m.match_rival_name, t.team_name, g.game_image, g.game_size
 					FROM ' . MATCH . ' m
 						LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 						LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
@@ -882,9 +881,9 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 			$template->assign_block_vars('match_teams', array(
 				'CLASS' 		=> $class,
 				'MATCH_GAME'	=> display_gameicon($matchs_entry[$i]['game_size'], $matchs_entry[$i]['game_image']),
-				'MATCH_NAME'	=> ($matchs_entry[$i]['match_public']) ? 'vs. ' . $matchs_entry[$i]['match_rival'] : 'vs. <span style="font-style:italic;">' . $matchs_entry[$i]['match_rival'] . '</span>',
+				'MATCH_NAME'	=> ($matchs_entry[$i]['match_public']) ? 'vs. ' . $matchs_entry[$i]['match_rival_name'] : 'vs. <span style="font-style:italic;">' . $matchs_entry[$i]['match_rival_name'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $matchs_entry[$i]['match_date'], $userdata['user_timezone']),
-				'U_DETAILS'		=> append_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $matchs_entry[$i]['match_id'])
+				'U_DETAILS'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $matchs_entry[$i]['match_id'])
 			));
 		}
 	}
@@ -900,7 +899,7 @@ else if ($mode == 'teammatches' && isset($HTTP_GET_VARS[POST_TEAMS_URL]))
 }
 else
 {
-	redirect(append_sid('match.php', true));
+	redirect(check_sid('match.php', true));
 }
 
 $template->pparse('body');

@@ -19,16 +19,14 @@ else
 	$current	= '_submenu_settings';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('settings');
-	
+
 	$sort = ( request('sort', 1) ) ? request('sort', 1) : '_default';
 
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
 	function _select_path($default = '')
@@ -151,7 +149,7 @@ else
 		#$oCache -> deleteCache('config');
 		#$oCache -> deleteCache('settings');
 
-		$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . append_sid('admin_settings.php') . '">', '</a>');
+		$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . check_sid('admin_settings.php'));
 		message(GENERAL_MESSAGE, $message);
 	}
 	
@@ -499,8 +497,8 @@ else
 		"L_USE_SMTP" => $lang['Use_SMTP'],
 		"L_USE_SMTP_EXPLAIN" => $lang['Use_SMTP_explain'],
 		"L_SMTP_SERVER" => $lang['SMTP_server'], 
-		"L_SMTP_USERNAME" => $lang['SMTP_username'], 
-		"L_SMTP_USERNAME_EXPLAIN" => $lang['SMTP_username_explain'], 
+		"L_SMTP_USERNAME" => $lang['SMTP_user_name'], 
+		"L_SMTP_USERNAME_EXPLAIN" => $lang['SMTP_user_name_explain'], 
 		"L_SMTP_PASSWORD" => $lang['SMTP_password'], 
 		"L_SMTP_PASSWORD_EXPLAIN" => $lang['SMTP_password_explain'], 
 		
@@ -579,7 +577,7 @@ else
 		"SMTP_YES" => $smtp_yes,
 		"SMTP_NO" => $smtp_no,
 		"SMTP_HOST" => $new['smtp_host'],
-		"SMTP_USERNAME" => $new['smtp_username'],
+		"SMTP_USERNAME" => $new['smtp_user_name'],
 		"SMTP_PASSWORD" => $new['smtp_password'],
 		
 		"L_ENABLED" => $lang['Enabled'], 
@@ -587,7 +585,7 @@ else
 		*/
 
 		'S_SORT'	=> $s_sort,
-		'S_ACTION'	=> append_sid('admin_settings.php'),
+		'S_ACTION'	=> check_sid('admin_settings.php'),
 	));
 	
 	$template->pparse('body');

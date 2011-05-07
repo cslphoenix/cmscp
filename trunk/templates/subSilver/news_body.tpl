@@ -51,7 +51,7 @@
 </tr>
 <!-- BEGIN no_entry -->
 <tr>
-	<td colspan="3" align="center">{NO_ENTRY}</td>
+	<td colspan="3" align="center">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry -->
 </table>

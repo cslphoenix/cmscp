@@ -271,6 +271,8 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 		{
 			$sql_pic['pic_filename'] = $new_filename;
 			$sql_pic['pic_preview'] = $new_filename_preview;
+			
+#			$sql_pic = $new_filename;
 		}
 	}
 	else

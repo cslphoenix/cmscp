@@ -10,12 +10,14 @@ $lang = array_merge($lang, array(
 	'group'		=> 'Gruppe',
 	'groups'	=> 'Gruppen',
 	'explain'	=> 'Hier kannst du die Gruppen Verwalten.',
-	'explain_o'	=> 'Hier sind alle Gruppen aufgelistet die es gibt, leider aus Platzgründen vorerst immer nur 5!',
+	'explain_o'	=> 'Hier sind alle Gruppen aufgelistet die es gibt.',
 	
 	'create'	=> 'Neue Gruppe hinzugefügt.',
 	'update'	=> 'Gruppendaten erfolgreich geändert.',
 	'delete'	=> 'Die Gruppe wurde gelöscht!',
 	'confirm'	=> 'das diese Gruppe:',
+	
+	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
 	
 	'auth'		=> 'Gruppenrechte',
 	'data'		=> 'Gruppendaten',
@@ -33,7 +35,7 @@ $lang = array_merge($lang, array(
 
 
 	'count'		=> 'Mitgliederanzahl',
-	'member'	=> 'Mitglieder Übersicht',
+	'view_member'	=> 'Mitglieder Übersicht',
 	
 	'group_allowed'		=> 'Ja',
 	'group_disallowed'	=> 'Nein',
@@ -48,24 +50,34 @@ $lang = array_merge($lang, array(
 	'group_closed'		=> 'Gruppe: geschlossen',
 	'group_hidden'		=> 'Gruppe: versteckt',
 	'group_system'		=> 'Gruppe: System',
+	
+	'change'			=> 'Rechte geben/nehmen',
+	'request_agree'		=> 'Antrag zustimmen',
+	'request_deny'		=> 'Antrag verweigern',
+	
+	'pending_members'	=> 'wartende Mitglieder',
+	
+	'group_access'		=> array(
+		USER	=> 'Benutzer',
+		TRIAL	=> 'Trial',
+		MEMBER	=> 'Member',
+		MOD		=> 'Moderator',
+		ADMIN	=> 'Administrator',
+	),
+	
+	'group_type'	=> array(
+		GROUP_OPEN		=> 'Gruppe: ohne Anfrage',
+		GROUP_REQUEST	=> 'Gruppe: mit Anfrage',
+		GROUP_CLOSED	=> 'Gruppe: geschlossen',
+		GROUP_HIDDEN	=> 'Gruppe: versteckt',
+		GROUP_SYSTEM	=> 'Gruppe: System',
+	),
 
 ));
 
-$lang['group_option_access'] = array(
-	ADMIN	=> $lang['auth_admin'],
-	MOD		=> $lang['auth_mod'],
-	MEMBER	=> $lang['auth_member'],
-	TRIAL	=> $lang['auth_trial'],
-	USER	=> $lang['auth_user'],
-);
 
-$lang['group_option_type'] = array(
-	GROUP_SYSTEM	=> $lang['group_system'],
-	GROUP_HIDDEN	=> $lang['group_hidden'],
-	GROUP_CLOSED	=> $lang['group_closed'],
-	GROUP_REQUEST	=> $lang['group_request'],
-	GROUP_OPEN		=> $lang['group_open'],
-);
+
+
 
 /*
 $lang['group_member']			= 'Gruppenmitglieder';

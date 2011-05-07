@@ -20,11 +20,9 @@ else
 	$current	= '_submenu_downloads';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
 	
 	load_lang('downloads');
-	
+
 	$error	= '';
 	$index	= '';
 	$log	= LOG_SEK_GAMES;
@@ -46,10 +44,10 @@ else
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_download'] )
 	{
 		log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_sprintf_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . append_sid($file, true)) : false;
+	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	/*	was ein mist ....	*/
 	if ( isset($_POST['_create_file']) || isset($_POST['_create_file']) )
@@ -74,7 +72,7 @@ else
 	debug($_POST);
 #	debug($_FILES);
 	
-	if ( !empty($mode) )
+	if ( $mode )
 	{
 		switch ( $mode )
 		{
@@ -120,7 +118,7 @@ else
 					'DESC'		=> $data['cat_desc'],
 					
 					'S_FIELDS'	=> $fields,
-					'S_ACTION'	=> append_sid($file),
+					'S_ACTION'	=> check_sid($file),
 				));
 				
 				if ( request('submit', 1) )
@@ -145,7 +143,7 @@ else
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$message = $lang['create_download_cat'] . sprintf($lang['click_return_rank'], '<a href="' . append_sid($file) . '">', '</a>');
+							$message = $lang['create_download_cat'] . sprintf($lang['click_return_rank'], '<a href="' . check_sid($file));
 							log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'create_download_cat');
 						}
 						else
@@ -162,8 +160,8 @@ else
 							}
 							
 							$message = $lang['update_download_cat']
-								. sprintf($lang['return_sub'], '<a href="' . append_sid($file) . '">', '</a>')
-								. sprintf($lang['return_update'], '<a href="' . append_sid("$file?mode=_update&amp;$url_c=$data_cat") . '">', '</a>');
+								. sprintf($lang['return_sub'], '<a href="' . check_sid($file) . '">', '</a>')
+								. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=_update&amp;$url_c=$data_cat"));
 							log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'update_download_cat');
 						}
 						message(GENERAL_MESSAGE, $message);
@@ -203,7 +201,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					$message = $lang['delete_download_cat'] . sprintf($lang['click_return_download_cat'], '<a href="' . append_sid($file) . '">', '</a>');
+					$message = $lang['delete_download_cat'] . sprintf($lang['click_return_download_cat'], '<a href="' . check_sid($file));
 					log_add(LOG_ADMIN, LOG_SEK_DOWNLOAD_CAT, 'delete_download_cat');
 					message(GENERAL_MESSAGE, $message);
 				}
@@ -215,10 +213,10 @@ else
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
-						'MESSAGE_TEXT'	=> sprintf($lang['sprintf_delete_confirm'], $lang['delete_confirm_download_cat'], $data['cat_title']),
+						'MESSAGE_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['delete_confirm_download_cat'], $data['cat_title']),
 						
 						'S_FIELDS'		=> $fields,
-						'S_ACTION'		=> append_sid($file),
+						'S_ACTION'		=> check_sid($file),
 					));
 				}
 				else
@@ -230,7 +228,7 @@ else
 				
 				break;
 	
-			default: message(GENERAL_ERROR, $lang['msg_no_module_select']); break;
+			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -252,8 +250,8 @@ else
 		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['download_cat']),
 		'L_EXPLAIN'		=> $lang['download_explain'],
 		
-		'S_CREATE'		=> append_sid("$file?mode=_create"),
-		'S_ACTION'		=> append_sid($file),
+		'S_CREATE'		=> check_sid("$file?mode=_create"),
+		'S_ACTION'		=> check_sid($file),
 		'S_FIELDS'		=> $fields,
 	));
 	
@@ -272,15 +270,18 @@ else
 				'FILES'		=> $data[$i]['cat_files'],
 				'DESC'		=> $data[$i]['cat_desc'],
 				
-				'MOVE_UP'	=> ( $data[$i]['cat_order'] != '10' )			? '<a href="' . append_sid("$file?mode=_order&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $data[$i]['cat_order'] != $max['max'] )	? '<a href="' . append_sid("$file?mode=_order&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $data[$i]['cat_order'] != '10' )			? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
+				'MOVE_DOWN'	=> ( $data[$i]['cat_order'] != $max['max'] )	? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'U_UPDATE' => append_sid("$file?mode=_update&amp;$url_c=$cat_id"),
-				'U_DELETE' => append_sid("$file?mode=_delete&amp;$url_c=$cat_id"),
+				'U_UPDATE' => check_sid("$file?mode=_update&amp;$url_c=$cat_id"),
+				'U_DELETE' => check_sid("$file?mode=_delete&amp;$url_c=$cat_id"),
 			));
 		}
 	}
-	else { $template->assign_block_vars('_display._no_entry', array()); }
+	else
+	{
+		$template->assign_block_vars('_display._no_entry', array());
+	}
 	
 	$template->pparse('body');
 			
