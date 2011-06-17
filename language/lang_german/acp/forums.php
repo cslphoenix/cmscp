@@ -33,7 +33,7 @@ $lang = array_merge($lang, array(
 	'legend_ex'	=> 'Wurde \'Ja\' aktiviert, werden die Unterforen in der Legende angezeigt.',
 	
 	'auth_all'			=> 'Öffentlich',
-	'auth_reg'			=> 'Registriert',
+	'auth_register'		=> 'Registriert',
 	'auth_trial'		=> 'Trial',
 	'auth_member'		=> 'Mitglieder',
 	'auth_moderator'	=> 'Moderatoren',

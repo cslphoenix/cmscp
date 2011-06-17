@@ -12,6 +12,8 @@ $lang['restore']		= 'Wiederherstellen';
 
 $lang['explain']		= 'Die Datenbank kann gespeichert, optimiert oder auch wiederhergestellt werden.';
 
+$lang['create'] = 'DB erstellt!';
+
 
 $lang['opt_cron_enable']		= 'Automatische Optimierung';
 $lang['opt_cron_intervall']		= 'Optimierungsintervall';

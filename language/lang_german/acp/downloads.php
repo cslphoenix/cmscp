@@ -5,14 +5,26 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-$lang['download']			= 'Download';
-$lang['download_explain']	= 'Downloads verhalten usw. .....';
+$lang = array_merge($lang, array(
+	
+	'title'		=> 'Download',
+	'title_cat'	=> 'Kategorie',
+	'explain'	=> 'Downloads',
 
-$lang['downloads']			= 'Downloads';
+	'create'	=> 'Neuen Download hinzugefügt.',
+	'update'	=> 'Download erfolgreich geändert.',
+	'delete'	=> 'Der Download wurde gelöscht!',
+	'confirm'	=> 'dass dieser Download:',
+	
+	'create_cat'	=> 'Neue Downloadkategorie hinzugefügt.',
+	'update_cat'	=> 'Downloadkategorie erfolgreich geändert.',
+	'delete_cat'	=> 'Die Downloadkategorie wurde gelöscht!',
+	'confirm_cat'	=> 'dass diese Downloadkategorie:',
+	
+	'download_name'		=> 'Spielname',
+	'download_tag'		=> 'Spiel Tag',
+	'download_image'	=> 'Spiel Bild',
 
-$lang['cat']				= 'Kategorie';
-$lang['cat_icon']			= 'Kategorie Icon';
-$lang['download_cat']		= 'Downloadkategorie';
-$lang['download_file']		= 'Datei hinzufügen';
+));
 
 ?>

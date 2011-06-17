@@ -23,6 +23,11 @@ $lang = array_merge($lang, array(
 	'list'		=> 'Auflisten',
 	'show'		=> 'Anzeigen',
 	'own'		=> 'eigener Server',
+	
+	'cur_max'	=> '%s / %s',
+	
+	'gameserver'	=> 'Gameserver',
+	'voiceserver'	=> 'Voiceserver',
 
 ));
 
