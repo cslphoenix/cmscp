@@ -38,12 +38,12 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 		$template->set_filenames(array('body' => 'body_profile.tpl'));
 		$template->assign_block_vars('details', array());
 		
-		if ( empty($HTTP_GET_VARS[POST_USER_URL]) || $HTTP_GET_VARS[POST_USER_URL] == ANONYMOUS )
+		if ( empty($HTTP_GET_VARS[POST_USER]) || $HTTP_GET_VARS[POST_USER] == ANONYMOUS )
 		{
 			message(GENERAL_MESSAGE, $lang['No_user_id_specified']);
 		}
 		
-		$user_data = get_userdata($HTTP_GET_VARS[POST_USER_URL]);
+		$user_data = get_userdata($HTTP_GET_VARS[POST_USER]);
 		$user_info = get_profiledata($user_data['user_id']);
 		
 		if (!$user_data)
@@ -79,8 +79,8 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 				$cat_id = $category_rows[$i]['cat_id'];
 		
 				$template->assign_block_vars('details.info_cat', array( 
-					'CATEGORY_ID'			=> $cat_id,
-					'CATEGORY_NAME'			=> $category_rows[$i]['cat_name'],
+					'CAT_ID'	=> $cat_id,
+					'CAT_NAME'	=> $category_rows[$i]['cat_name'],
 				));
 				
 				for ($j = 0; $j < $total_profile; $j++ )

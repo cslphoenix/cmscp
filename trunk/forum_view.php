@@ -4,9 +4,9 @@ define('IN_CMS', true);
 $root_path = './';
 include($root_path . 'common.php');
 
-if ( isset($HTTP_GET_VARS[POST_FORUM_URL]) || isset($HTTP_POST_VARS[POST_FORUM_URL]) )
+if ( isset($HTTP_GET_VARS[POST_FORUM]) || isset($HTTP_POST_VARS[POST_FORUM]) )
 {
-	$forum_id = ( isset($HTTP_GET_VARS[POST_FORUM_URL]) ) ? intval($HTTP_GET_VARS[POST_FORUM_URL]) : intval($HTTP_POST_VARS[POST_FORUM_URL]);
+	$forum_id = ( isset($HTTP_GET_VARS[POST_FORUM]) ) ? intval($HTTP_GET_VARS[POST_FORUM]) : intval($HTTP_POST_VARS[POST_FORUM]);
 }
 else if ( isset($HTTP_GET_VARS['forum']))
 {
@@ -50,7 +50,7 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 {
 	if ( !$userdata['session_logged_in'] )
 	{
-		$redirect = POST_FORUM_URL . "=$forum_id" . ( ( isset($start) ) ? "&start=$start" : '' );
+		$redirect = POST_FORUM . "=$forum_id" . ( ( isset($start) ) ? "&start=$start" : '' );
 		redirect(check_sid("login.$phpEx?redirect=viewforum.$phpEx&$redirect", true));
 	}
 	//
@@ -79,7 +79,7 @@ if ( !($result = $db->sql_query($sql)) )
 $moderators = array();
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER_URL . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
+	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
 }
 //	AND g.group_type <> ". GROUP_HIDDEN ."
 $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
@@ -99,7 +99,7 @@ if ( !($result = $db->sql_query($sql)) )
 
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . check_sid('groupcp.$phpEx?' . POST_GROUPS_URL . '=' . $row['group_id']) . '" style="color:#' . $row['group_color'] . '">' . $row['group_name'] . '</a>';
+	$moderators[] = '<a href="' . check_sid('groupcp.$phpEx?' . POST_GROUPS . '=' . $row['group_id']) . '" style="color:#' . $row['group_color'] . '">' . $row['group_name'] . '</a>';
 }
 
 $l_moderators = ( count($moderators) == 1 ) ? $lang['Moderator'] : $lang['Moderators'];
@@ -123,7 +123,7 @@ $s_auth_can .= ( ( $is_auth['auth_poll'] ) ? $lang['Rules_vote_can'] : $lang['Ru
 
 if ( $is_auth['auth_mod'] )
 {
-	$s_auth_can .= sprintf($lang['Rules_moderate'], "<a href=\"modcp.$phpEx?" . POST_FORUM_URL . "=$forum_id&amp;start=" . $start . "&amp;sid=" . $userdata['session_id'] . '">', '</a>');
+	$s_auth_can .= sprintf($lang['Rules_moderate'], "<a href=\"modcp.$phpEx?" . POST_FORUM . "=$forum_id&amp;start=" . $start . "&amp;sid=" . $userdata['session_id'] . '">', '</a>');
 }
 
 //
@@ -184,7 +184,7 @@ $db->sql_freeresult($result);
 $template->assign_vars(array(
 	'L_DISPLAY_TOPICS' => $lang['Display_topics'],
 
-	'U_POST_NEW_TOPIC' => check_sid("forum_post.php?mode=newtopic&amp;" . POST_FORUM_URL . "=$forum_id"),
+	'U_POST_NEW_TOPIC' => check_sid("forum_post.php?mode=newtopic&amp;" . POST_FORUM . "=$forum_id"),
 ));
 
 //
@@ -231,9 +231,9 @@ $template->assign_vars(array(
 	'L_MODERATOR'	=> $l_moderators,
 	'MODERATORS'	=> $forum_moderators,
 
-	'U_VIEW_FORUM' => check_sid('viewforum.php?" . POST_FORUM_URL ."=$forum_id'),
+	'U_VIEW_FORUM' => check_sid('viewforum.php?" . POST_FORUM ."=$forum_id'),
 
-	'U_MARK_READ' => check_sid('viewforum.php?" . POST_FORUM_URL . "=$forum_id&amp;mark=topics'))
+	'U_MARK_READ' => check_sid('viewforum.php?" . POST_FORUM . "=$forum_id&amp;mark=topics'))
 );
 
 //
@@ -347,7 +347,7 @@ if( $total_topics )
 							$folder_image = $folder_new;
 							$folder_alt = $lang['New_posts'];
 
-							$newest_post_img = '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
+							$newest_post_img = '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
 						}
 						else
 						{
@@ -362,7 +362,7 @@ if( $total_topics )
 						$folder_image = $folder_new;
 						$folder_alt = ( $topic_rowset[$i]['topic_status'] == TOPIC_LOCKED ) ? $lang['Topic_locked'] : $lang['New_posts'];
 
-						$newest_post_img = '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
+						$newest_post_img = '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC . "=$topic_id&amp;view=newest") . '"><img src="' . $images['icon_newest_reply'] . '" alt="' . $lang['View_newest_post'] . '" title="' . $lang['View_newest_post'] . '" border="0" /></a> ';
 					}
 				}
 				else 
@@ -390,7 +390,7 @@ if( $total_topics )
 			$times = 1;
 			for($j = 0; $j < $replies + 1; $j += $board_config['posts_per_page'])
 			{
-				$goto_page .= '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=" . $topic_id . "&amp;start=$j") . '">' . $times . '</a>';
+				$goto_page .= '<a href="' . check_sid("viewtopic.$phpEx?" . POST_TOPIC . "=" . $topic_id . "&amp;start=$j") . '">' . $times . '</a>';
 				if( $times == 1 && $total_pages > 4 )
 				{
 					$goto_page .= ' ... ';
@@ -410,9 +410,9 @@ if( $total_topics )
 			$goto_page = '';
 		}
 		
-		$view_topic_url = check_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id");
+		$view_topic_url = check_sid("viewtopic.$phpEx?" . POST_TOPIC . "=$topic_id");
 
-		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
+		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? $topic_rowset[$i]['user_name'] : ( ( $topic_rowset[$i]['post_user_name'] != '' ) ? $topic_rowset[$i]['post_user_name'] : $lang['Guest'] );
 
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
@@ -421,9 +421,9 @@ if( $total_topics )
 
 		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['page_timezone']);
 
-		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_user_name2'] != '' ) ? $topic_rowset[$i]['post_user_name2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER_URL . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
+		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_user_name2'] != '' ) ? $topic_rowset[$i]['post_user_name2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
 
-		$last_post_url = '<a href="' . check_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
+		$last_post_url = '<a href="' . check_sid("viewtopic.$phpEx?"  . POST_POST . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
 
 		$views = $topic_rowset[$i]['topic_views'];
 		
@@ -457,8 +457,8 @@ if( $total_topics )
 	$topics_count -= $total_announcements;
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination("viewforum.$phpEx?" . POST_FORUM_URL . "=$forum_id&amp;topicdays=$topic_days", $topics_count, $board_config['topics_per_page'], $start),
-		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $board_config['topics_per_page'] ) + 1 ), ceil( $topics_count / $board_config['topics_per_page'] )), 
+		'PAGINATION' => generate_pagination("viewforum.$phpEx?" . POST_FORUM . "=$forum_id&amp;topicdays=$topic_days", $topics_count, $board_config['topics_per_page'], $start),
+		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $board_config['topics_per_page'] ) + 1 ), ceil( $topics_count / $board_config['topics_per_page'] )), 
 
 		'L_GOTO_PAGE' => $lang['Goto_page'])
 	);

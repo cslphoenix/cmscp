@@ -10,9 +10,9 @@ init_userprefs($userdata);
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 $start = ( $start < 0 ) ? 0 : $start;
 
-if ( isset($HTTP_POST_VARS[POST_BUGTRACKER_URL]) || isset($HTTP_GET_VARS[POST_BUGTRACKER_URL]) )
+if ( isset($HTTP_POST_VARS[POST_BUGTRACKER]) || isset($HTTP_GET_VARS[POST_BUGTRACKER]) )
 {
-	$bugtracker_id = ( isset($HTTP_POST_VARS[POST_BUGTRACKER_URL]) ) ? intval($HTTP_POST_VARS[POST_BUGTRACKER_URL]) : intval($HTTP_GET_VARS[POST_BUGTRACKER_URL]);
+	$bugtracker_id = ( isset($HTTP_POST_VARS[POST_BUGTRACKER]) ) ? intval($HTTP_POST_VARS[POST_BUGTRACKER]) : intval($HTTP_GET_VARS[POST_BUGTRACKER]);
 }
 else
 {
@@ -128,8 +128,8 @@ if ( $mode == 'list' )
 			{ 
 				$time = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $bugtracker_data[$i]['bugtracker_create'], $userdata['user_timezone'])); 
 			}
-			$user	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
-			$user2	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
+			$user	= '<a href="' . check_sid('profile.php?' . POST_USER . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
+			$user2	= '<a href="' . check_sid('profile.php?' . POST_USER . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
 			
 			foreach ( $lang['bt_error'] as $key_t => $value_t )
 			{
@@ -158,12 +158,12 @@ if ( $mode == 'list' )
 				'BT_CREATE'		=> sprintf($lang['bt_create_by'], $user, $time),
 				
 				'BT_WORKER'		=> ( $bugtracker_data[$i]['bugtracker_worker'] ) ? $user2 : $lang['bt_unassigned'],
-//				'BT_EDIT'		=> '<a href="' . check_sid('bugtracker.php?mode=edit&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_data[$i]['bugtracker_id']) . '">edit ' . $bugtracker_data[$i]['user_name2'] . '</a>',
+//				'BT_EDIT'		=> '<a href="' . check_sid('bugtracker.php?mode=edit&amp;' . POST_BUGTRACKER . '=' . $bugtracker_data[$i]['bugtracker_id']) . '">edit ' . $bugtracker_data[$i]['user_name2'] . '</a>',
 				
 				'BT_TYPE'		=> $bt_type,
 				'BT_STATUS'		=> $bt_status,
 				
-				'U_DETAILS'		=> check_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_data[$i]['bugtracker_id']),
+				'U_DETAILS'		=> check_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER . '=' . $bugtracker_data[$i]['bugtracker_id']),
 				
 			));
 		}
@@ -178,7 +178,7 @@ if ( $mode == 'list' )
 		'L_STATUS_TYPE'			=> $lang['bt_status_type'],
 		
 		'PAGINATION'			=> generate_pagination("bugtracker.php?sort=$sort&amp;order=$sort_order", count($bugtracker_data), $settings['site_entry_per_page'], $start),
-		'PAGE_NUMBER'			=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+		'PAGE_NUMBER'			=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 		
 		'S_BUGTRACKER_ORDER'	=> $s_sort_order,
 		'S_BUGTRACKER_SORT'		=> $s_sort,
@@ -227,7 +227,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 		$bt_version	= $bugtracker_data['bugtracker_version'];
 		
 		$s_hidden_field = '<input type="hidden" name="mode" value="edit" />';
-		$s_hidden_field .= '<input type="hidden" name="' . POST_BUGTRACKER_URL . '" value="' . $bugtracker_id . '" />';
+		$s_hidden_field .= '<input type="hidden" name="' . POST_BUGTRACKER . '" value="' . $bugtracker_id . '" />';
 	}
 	
 	if ( isset($HTTP_POST_VARS['submit']) )
@@ -425,18 +425,18 @@ else if ( $mode == 'details' && $bugtracker_id )
 			}
 
 			$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
-			$userurl = '<a href="' . check_sid('profile.php?mode=details&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['user_name'] . '</a>';
+			$userurl = '<a href="' . check_sid('profile.php?mode=details&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['user_name'] . '</a>';
 
 			$template->assign_block_vars('details.bt_comment.row', array(
 				'CLASS' 		=> $class,
 				'ID' 			=> $comment_entry[$i]['bugtracker_comments_id'],
-				'USER_URL'		=> $userurl,
+				'USER'		=> $userurl,
 				'MESSAGE'		=> $comment,
 				'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
 				'ICON'			=> $icon,
 
-				'U_EDIT'		=> check_sid('match.php?mode=edit&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['bugtracker_id']),
-				'U_DELETE'		=> check_sid('match.php?mode=delete&amp;' . POST_MATCH_URL . '=' . $comment_entry[$i]['bugtracker_id'])
+				'U_EDIT'		=> check_sid('match.php?mode=edit&amp;' . POST_MATCH . '=' . $comment_entry[$i]['bugtracker_id']),
+				'U_DELETE'		=> check_sid('match.php?mode=delete&amp;' . POST_MATCH . '=' . $comment_entry[$i]['bugtracker_id'])
 			));
 		}
 	
@@ -444,8 +444,8 @@ else if ( $mode == 'details' && $bugtracker_id )
 		
 		$template->assign_vars(array(
 			'L_GOTO_PAGE'	=> $lang['Goto_page'],
-			'PAGINATION'	=> generate_pagination('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_id, count($comment_entry), $settings['site_comment_per_page'], $start),
-			'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
+			'PAGINATION'	=> generate_pagination('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER . '=' . $bugtracker_id, count($comment_entry), $settings['site_comment_per_page'], $start),
+			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
 		));
 		
 		sort($comment_entry);
@@ -517,7 +517,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			$oCache -> deleteCache('bugtracker_details_' . $bugtracker_id . '_comments');
 			_comment_message('add', 'bugtracker', $bugtracker_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment']);
 			
-			$message = $lang['add_comment'] . sprintf($lang['click_return_bugtracker'],  '<a href="' . check_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER_URL . '=' . $bugtracker_id) . '">', '</a>');
+			$message = $lang['add_comment'] . sprintf($lang['click_return_bugtracker'],  '<a href="' . check_sid('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER . '=' . $bugtracker_id) . '">', '</a>');
 			message(GENERAL_MESSAGE, $message);
 		}
 	}
@@ -533,8 +533,8 @@ else if ( $mode == 'details' && $bugtracker_id )
 //		'L_SUBMIT'				=> $lang['Submit'],
 //		
 //		'MATCH_RIVAL'			=> $details['bugtracker_rival'],
-//		'U_MATCH_RIVAL_URL'		=> $details['bugtracker_rival_url'],
-//		'MATCH_RIVAL_URL'		=> $details['bugtracker_rival_url'],
+//		'U_MATCH_RIVAL'		=> $details['bugtracker_rival_url'],
+//		'MATCH_RIVAL'		=> $details['bugtracker_rival_url'],
 //		'MATCH_RIVAL_TAG'		=> $details['bugtracker_rival_tag'],
 //		
 //	
@@ -553,7 +553,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 //		'MATCH_MAIN'			=> '<a href="' . check_sid('match.php') . '">&raquo; Übersicht</a>',
 //	
 //		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-//		'S_MATCH_ACTION'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH_URL . '=' . $bugtracker_id)
+//		'S_MATCH_ACTION'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH . '=' . $bugtracker_id)
 	));
 }
 else
