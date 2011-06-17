@@ -15,16 +15,16 @@
 </ul>
 </div>
 
-<table class="head" border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row2 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
 <!-- BEGIN _cats_row -->
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" colspan="{S_COLUMN_SPAN}">{_display._cats_row.NAME}</td>
 	<!-- BEGIN _image -->
@@ -73,7 +73,7 @@
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <!-- BEGIN _cats_row -->
 <tr>
 	<td class="rowHead" colspan="{S_COLUMN_SPAN}">{_cats._cats_row.NAME}</td>
@@ -101,7 +101,7 @@
 				<li id="active"><a href="#" id="current" onclick="clip('settings')"><img src="style/images/expand.gif" id="img_settings" border="0" /> {L_INPUT_STANDARD}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody id="tbody_settings" style="display:none">
 <tr>
@@ -180,9 +180,9 @@ function clip(id)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -211,9 +211,9 @@ function clip(id)
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead">{L_FORUM_NAME}</td>
+	<th>{L_FORUM_NAME}</td>
 	<!-- BEGIN _titles -->
 	<td class="rowHead" align="center"><img src="{_auth_list._titles.IMAGE}" title="{_auth_list._titles.TITLE}" width="24" height="24" /></td>
 	<!-- END _titles -->
@@ -258,23 +258,23 @@ function clip(id)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>

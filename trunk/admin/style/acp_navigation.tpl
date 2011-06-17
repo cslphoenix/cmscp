@@ -1,150 +1,155 @@
 <!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a id="setting" href="{S_SET}">{L_SET}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+		<li><a id="setting" href="{S_SET}">{L_SET}</a></li>
+	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="100%">{L_MAIN}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_MAIN}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _main_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._main_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._main_row.LANG} {_display._main_row.SHOW} {_display._main_row.MOVE_UP} {_display._main_row.MOVE_DOWN} <a href="{_display._main_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._main_row.U_DELETE}">{I_DELETE}</a></td>
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._main_row.URL}</span>{_display._main_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._main_row.LANG} {_display._main_row.SHOW} {_display._main_row.INTERN}{_display._main_row.MOVE_UP}{_display._main_row.MOVE_DOWN}{_display._main_row.UPDATE} {_display._main_row.DELETE}</td>
 </tr>
 <!-- END _main_row -->
 <!-- BEGIN _no_entry_main -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="row_class1" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_main -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="navi_name[1]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[1]" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="navi_name[1]"></td>
+	<td><input type="submit" class="button2" name="navi_type[1]" value="{L_CREATE}"></td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="100%">{L_CLAN}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_CLAN}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _clan_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._clan_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._clan_row.LANG} {_display._clan_row.SHOW} {_display._clan_row.MOVE_UP} {_display._clan_row.MOVE_DOWN} <a href="{_display._clan_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._clan_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float:right;">{_display._clan_row.URL}</span>{_display._clan_row.NAME}</td>
+	<td>{_display._clan_row.LANG} {_display._clan_row.SHOW} {_display._clan_row.INTERN}{_display._clan_row.MOVE_UP}{_display._clan_row.MOVE_DOWN}{_display._clan_row.UPDATE} {_display._clan_row.DELETE}</td>
 </tr>
 <!-- END _clan_row -->
 <!-- BEGIN _no_entry_clan -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_clan -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="navi_name[2]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[2]" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="navi_name[2]"></td>
+	<td><input type="submit" class="button2" name="navi_type[2]" value="{L_CREATE}"></td>
 </tr>
 </table>
 
 <br />
 	
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="100%">{L_COM}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_COM}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _com_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._com_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._com_row.LANG} {_display._com_row.SHOW} {_display._com_row.MOVE_UP} {_display._com_row.MOVE_DOWN} <a href="{_display._com_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._com_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float:right;">{_display._com_row.URL}</span>{_display._com_row.NAME}</td>
+	<td>{_display._com_row.LANG} {_display._com_row.SHOW} {_display._com_row.INTERN}{_display._com_row.MOVE_UP}{_display._com_row.MOVE_DOWN}{_display._com_row.UPDATE} {_display._com_row.DELETE}</td>
 </tr>
 <!-- END _com_row -->
 <!-- BEGIN _no_entry_com -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_com -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="navi_name[3]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[3]" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="navi_name[3]"></td>
+	<td><input type="submit" class="button2" name="navi_type[3]" value="{L_CREATE}"></td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="100%">{L_MISC}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_MISC}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _misc_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._misc_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._misc_row.LANG} {_display._misc_row.SHOW} {_display._misc_row.MOVE_UP} {_display._misc_row.MOVE_DOWN} <a href="{_display._misc_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._misc_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float:right;">{_display._misc_row.URL}</span>{_display._misc_row.NAME}</td>
+	<td>{_display._misc_row.LANG} {_display._misc_row.SHOW} {_display._misc_row.INTERN}{_display._misc_row.MOVE_UP}{_display._misc_row.MOVE_DOWN}{_display._misc_row.UPDATE} {_display._misc_row.DELETE}</td>
 </tr>
 <!-- END _misc_row -->
 <!-- BEGIN _no_entry_misc -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_misc -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="navi_name[4]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[4]" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="navi_name[4]"></td>
+	<td><input type="submit" class="button2" name="navi_type[4]" value="{L_CREATE}"></td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="100%">{L_USER}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_USER}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _user_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._user_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._user_row.LANG} {_display._user_row.SHOW} {_display._user_row.MOVE_UP} {_display._user_row.MOVE_DOWN} <a href="{_display._user_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._user_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float:right;">{_display._user_row.URL}</span>{_display._user_row.NAME}</td>
+	<td>{_display._user_row.LANG} {_display._user_row.SHOW} {_display._user_row.INTERN}{_display._user_row.MOVE_UP}{_display._user_row.MOVE_DOWN}{_display._user_row.UPDATE} {_display._user_row.DELETE}</td>
 </tr>
 <!-- END _user_row -->
 <!-- BEGIN _no_entry_user -->
 <tr>
-	<td class="row_class1" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _no_entry_user -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="navi_name[5]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="navi_type[5]" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="navi_name[5]"></td>
+	<td><input type="submit" class="button2" name="navi_type[5]" value="{L_CREATE}"></td>
 </tr>
 </table>
 
@@ -164,24 +169,25 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1" width="155"><label for="navi_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="navi_name" id="navi_name" value="{NAME}"></td>
@@ -193,11 +199,11 @@
 <tr>
 	<td class="row1"><label>{L_TYPE}: *</label></td>
 	<td class="row2">
-		<label><input type="radio" name="navi_type" value="1" onclick="setRequest('navi', '1')" {S_TYPE_MAIN} />&nbsp;{L_TYPE_MAIN}</label><br />
-		<label><input type="radio" name="navi_type" value="2" onclick="setRequest('navi', '2')" {S_TYPE_CLAN} />&nbsp;{L_TYPE_CLAN}</label><br />
-		<label><input type="radio" name="navi_type" value="3" onclick="setRequest('navi', '3')" {S_TYPE_COM} />&nbsp;{L_TYPE_COM}</label><br />
-		<label><input type="radio" name="navi_type" value="4" onclick="setRequest('navi', '4')" {S_TYPE_MISC} />&nbsp;{L_TYPE_MISC}</label><br />
-		<label><input type="radio" name="navi_type" value="5" onclick="setRequest('navi', '5')" {S_TYPE_USER} />&nbsp;{L_TYPE_USER}</label>
+		<label><input type="radio" name="navi_type" value="1" onclick="setRequest('navi', 1, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_MAIN} />&nbsp;{L_TYPE_MAIN}</label><br />
+		<label><input type="radio" name="navi_type" value="2" onclick="setRequest('navi', 2, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_CLAN} />&nbsp;{L_TYPE_CLAN}</label><br />
+		<label><input type="radio" name="navi_type" value="3" onclick="setRequest('navi', 3, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_COM} />&nbsp;{L_TYPE_COM}</label><br />
+		<label><input type="radio" name="navi_type" value="4" onclick="setRequest('navi', 4, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_MISC} />&nbsp;{L_TYPE_MISC}</label><br />
+		<label><input type="radio" name="navi_type" value="5" onclick="setRequest('navi', 5, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_USER} />&nbsp;{L_TYPE_USER}</label>
 	</td> 
 </tr>
 <tr>
@@ -238,10 +244,10 @@
 <!-- BEGIN _settings -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="right">{L_SET}</a></li>
-</ul>
+	<ul id="navlist">
+		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+		<li id="active"><a href="#" id="right">{L_SET}</a></li>
+	</ul>
 </div>
 
 <br />
@@ -255,7 +261,7 @@
 			<li id="active"><a href="#" id="current">{L_NEWS}</a></li>
 		</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row1_1" nowrap="nowrap"><label for="subnavi_news_limit" title="{L_NEWS_LIMIT_EXPLAIN}">{L_NEWS_LIMIT}:</label></td>
@@ -276,7 +282,7 @@
 			<li id="active"><a href="#" id="current">{L_MATCH}</a></li>
 		</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
@@ -298,7 +304,7 @@
 			<li id="active"><a href="#" id="current">{L_NEWUSERS}</a></li>
 		</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row1_1" nowrap="nowrap"><label for="subnavi_newusers_show" title="{L_NEWUSERS_SHOW_EXPLAIN}">{L_NEWUSERS_SHOW}:</label></td>
@@ -327,7 +333,7 @@
 			<li id="active"><a href="#" id="current">{L_TEAMS}</a></li>
 		</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>

@@ -5,38 +5,64 @@
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<title>{L_HEADER}</title>
-	<link rel="stylesheet" href="style/style.css" type="text/css">
-	<link rel="stylesheet" href="style/lightbox.css" type="text/css" media="screen" />
-	
 	<link rel="icon" href="./../favicon.ico" type="image/x-icon">
 	
-	<script type="text/javascript" src="./../includes/js/jquery-1.5.2.min.js">
-	/*
-		require:	acp_user.tpl
-		or:	http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js <- old ... better local
-	*/
-	</script>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
 	
-	<script type="text/javascript" src="style/lightbox.js">
-	/*
-		http://www.lokeshdhakar.com/projects/lightbox/ <- aktiv
-		http://www.lokeshdhakar.com/projects/lightbox2/
-	*/	
-	</script>
+	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.custom.css">
+	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.lightbox.css" media="screen" />
 	
-	<script type="text/javascript" src="./../admin/style/jscolor.js">
-	/*	http://jscolor.com/
-		
-		require:	acp_groups.tpl
-	*/
-	</script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.min.js"></script>
+	<!--
+			Name:		JQuery
+			Version:	1.6.1
+			require:	acp_user.tpl
+	-->
+	
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.core.min.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.datepicker.min.js"></script>
+	<!--
+			Name:		JQuery.UI
+			Version:	1.8.13
+	-->
+	
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.lightbox.min.js"></script>
+	<!--
+			Name:		JQuery Lightbox
+			Version:	0.5
+	-->
+	
+	<script type="text/javascript" src="./../includes/js/jscolor.js"></script>
+	<!--
+			Name:		JSColor
+			Version:	1.3.3
+			WebSite:	jscolor.com
+	-->
 	
 	<script type="text/javascript">
+	// <![CDATA[
+	
+	/*	
+		require:	acp_logs.tpl
+					acp_match.tpl
+	*/
+	function checked(id)
+	{
+		if ( document.getElementById('check_'+id).checked == true )
+		{
+			document.getElementById('check_'+id).checked = false;
+		}
+		else
+		{
+			document.getElementById('check_'+id).checked = true;
+		}
+	}
+	
 	/*	
 		require:	acp_training.tpl
 					acp_news.tpl
+					acp_gallery.tpl
 	*/
-	// <![CDATA[
 	function clone(objButton)
 	{
 		if ( objButton.parentNode )
@@ -51,6 +77,11 @@
 				{
 					arrInput[i].value = '';
 				}
+				
+				if ( arrInput[i].type=='file' )
+				{
+					arrInput[i].value='';
+				}
 			}
 			
 			target.appendChild(tmpNode);
@@ -59,10 +90,6 @@
 		}
 	}
 	
-	// ]]>
-	</script>
-	
-	<script type="text/javascript">  
 	/*
 		Einfacher Klapptext, wird mit jquery noch erweitert!
 		
@@ -70,20 +97,40 @@
 					acp_forum.tpl
 					acp_forum_auth.tpl
 					acp_match.tpl
+					acp_maps.tpl
 	*/
-	
 	function clip(id)
 	{
 		if ( document.getElementById(id).style.display == 'none' )
 		{
-			document.getElementById("img_" + id).src = "style/images/collapse.gif";
+			document.getElementById("img_" + id).src = "../images/collapse.gif";
 			document.getElementById(id).style.display = "";
 		}
 		else
 		{
-			document.getElementById("img_" + id).src = "style/images/expand.gif";
+			document.getElementById("img_" + id).src = "../images/expand.gif";
 			document.getElementById(id).style.display = "none";
 		}
+	}
+	
+	/*
+		by phpBB3
+	*/
+	function toggle(name)
+	{
+		var e = document.getElementById(name);
+		
+		if (!e) return true;
+		
+		if ( e.style.display == "none" )
+		{
+			e.style.display = "block"
+		}
+		else
+		{
+			e.style.display = "none"
+		}
+		return true;
 	}
 	
 	/*
@@ -102,44 +149,6 @@
 	}
 	*/
 	
-	</script>
-	
-	<script type="text/javascript">
-	/*
-		by phpBB3
-	*/
-	// <![CDATA[
-				
-	function toggle(name)
-	{
-		var el = document.getElementById(name);
-		
-		if ( el.style.display != 'none' )
-		{
-			el.style.display = 'none';
-		}
-		else
-		{
-			el.style.display = '';
-		}
-	}
-	
-	function toggleMe(a)
-	{
-		var e = document.getElementById(a);
-		if (!e) return true;
-		
-		if ( e.style.display == "none" )
-		{
-			e.style.display = "block"
-		}
-		else
-		{
-			e.style.display = "none"
-		}
-		return true;
-	}
-				
 	/*
 	 *	Mark/unmark checkboxes
 	 *	id = ID of parent container, name = name prefix, aktion = aktion [true/false]
@@ -169,9 +178,52 @@
 	}
 	// ]]>
 	</script>
-
+	
+	<script type="text/javascript">
+	
+	function UnCryptMailto( s )
+	{
+		var n = 0;
+		var r = "";
+	  
+		for( var i = 0; i < s.length; i++)
+		{
+			n = s.charCodeAt( i );
+			if( n >= 8364 )
+			{
+				n = 128;
+			}
+			r += String.fromCharCode( n - 1 );
+		}
+		return r;
+	}
+	
+	function linkTo_UnCryptMailto( s )
+	{
+		location.href=UnCryptMailto( s );
+	}
+	
+	</script>
+	
+	<script type="text/javascript">
+	$(function() {
+		$('a.lightbox').lightBox({
+			overlayBgColor: '#FFF',
+			overlayOpacity: 0.6,
+			imageLoading: './../images/jquery/lightbox-ico-loading.gif',
+			imageBtnClose: './../images/jquery/lightbox-btn-close.gif',
+			imageBtnPrev: './../images/jquery/lightbox-btn-prev.gif',
+			imageBtnNext: './../images/jquery/lightbox-btn-next.gif',
+			imageBlank: './../images/jquery/lightbox-blank.gif',
+			containerResizeSpeed: 350,
+			txtImage: 'Imagem',
+			txtOf: 'de'
+		});
+	});
+	</script>
+	
 </head>
-<body onload="initLightbox()">
+<body>
 <div id="acp_head">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:5px;" id="hover">
 	<tr>

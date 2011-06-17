@@ -1,4 +1,4 @@
-<!-- BEGIN _database_backup -->
+<!-- BEGIN _backup -->
 <div id="navcontainer">
 	<ul id="navlist">
 		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
@@ -13,9 +13,9 @@
 <br />
 
 <form method="post" action="{S_ACTION}">
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_BACKUP}</a></li>
@@ -23,7 +23,7 @@
 				<li><a href="{S_RESTORE}">{L_RESTORE}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
@@ -31,14 +31,14 @@
 	<td class="row2">
 		<label><input type="radio" name="backup_type" value="data" /> {L_TYPE_DATA}</label><br />
 		<label><input type="radio" name="backup_type" value="structure" /> {L_TYPE_STRU}</label><br />
-		<label><input type="radio" name="backup_type" id="full_backup" value="full" checked="checked" /> {L_TYPE_FULL}</label>
+		<label><input type="radio" name="backup_type" value="full" id="full_backup" checked="checked" /> {L_TYPE_FULL}</label>
 	</td>
 </tr>
 <tr>
 	<td class="row1"><label for="table">{L_TABLE}:</label></td>
 	<td class="row2">
-		<label><input type="radio" name="table_type" value="dev" /> {L_TABLE_DEV}</label><br />
-		<label><input type="radio" name="table_type" value="full" checked="checked" id="table" /> {L_TABLE_FULL}</label><br />
+		<label><input type="radio" name="table_type" value="dev" checked="checked" id="table" /> {L_TABLE_DEV}</label><br />
+		<label><input type="radio" name="table_type" value="full" /> {L_TABLE_FULL}</label><br />
 		<label><input type="radio" name="table_type" value="min" /> {L_TABLE_MIN}</label>
 	</td>
 </tr>
@@ -68,18 +68,18 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END _database_backup -->
+<!-- END _backup -->
 
-<!-- BEGIN _database_optimize -->
+<!-- BEGIN _optimize -->
 {SELECT_SCRIPT}
 <div id="navcontainer">
 	<ul id="navlist">
 		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
 	</ul>
 </div>
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -91,20 +91,20 @@
 		<li><a href="{S_BACKUP}">{L_BACKUP}</a></li>
 		<li id="active"><a href="#" id="current">{L_OPTIMIZE}</a></li>
 		<li><a href="{S_RESTORE}">{L_RESTORE}</a></li>
-		<li id="active"><a href="#" onclick="clip('settings')" id="right"><img src="style/images/expand.gif" id="img_settings" width="9" height="9" border="0" /> {L_SETTINGS}</a></li>
+		<li id="active"><a href="#" onclick="clip('settings')" id="right"><img src="../images/expand.gif" id="img_settings" width="9" height="9" border="0" /> {L_SETTINGS}</a></li>
 	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
-<tbody id="tbody_settings" style="display:none">
+<tbody id="settings" style="display:none" class="trhover">
 <tr>
 	<td class="row1">{L_SHOW_NOT_OPTIMIZED}:</td>
 	<td class="row2"><input type="radio" name="show_not_optimized" value="1" {S_ENABLE_NOT_OPTIMIZED_YES}/> {L_YES}&nbsp;&nbsp;<input type="radio" name="show_not_optimized" value="0" {S_ENABLE_NOT_OPTIMIZED_NO} /> {L_NO}</td>
@@ -113,7 +113,6 @@
 	<td class="row1">{L_SHOW_BEGIN_FOR}:</td>
 	<td class="row2"><input class="post" type="text" maxlength="255" name="show_begin_for" value="{S_SHOW_BEGIN_FOR}" /></td>
 </tr>
-</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -126,40 +125,36 @@
 </tbody>
 <tr>
 	<td colspan="2">
-		<table class="info" border="0" cellspacing="1" cellpadding="0">
+		<table class="rows">
 		<tr>
-			<td class="rowHead" align="center">{L_TABLE}</td>
-			<td class="rowHead" align="center">{L_RECORD}</td>
-			<td class="rowHead" align="center">{L_TYPE}</td>
-			<td class="rowHead" align="center">{L_SIZE}</td>
-			<td class="rowHead" align="center">{L_STATUS}</td>
-			<td class="rowHead" align="center">#</td>
+			<th align="center">{L_NAME}</th>
+			<th align="center">{L_ROWS}</th>
+			<th align="center">{L_SIZE}</th>
+			<th align="center">{L_STATUS}</th>
+			<th align="center">#</th>
 		</tr>	
-		<!-- BEGIN _optimize -->
+		<!-- BEGIN _optimize_row -->
 		<tr>
-			<td class="row_class1">{_database_optimize._optimize.TABLE}</td>
-			<td class="row_class1" align="right">{_database_optimize._optimize.RECORD}</td>
-			<td class="row_class1" align="center">{_database_optimize._optimize.TYPE}</td>
-			<td class="row_class1" align="right">{_database_optimize._optimize.SIZE}</td>
-			<td class="row_class1" align="center">{_database_optimize._optimize.STATUS}</td>
-			<td class="row_class2" align="center">{_database_optimize._optimize.S_SELECT_TABLE}</td>
+			<td class="row_class1" align="left">{_optimize._optimize_row.NAME}</td>
+			<td class="row_class1" align="right">{_optimize._optimize_row.ROWS}</td>
+			<td class="row_class1" align="right">{_optimize._optimize_row.SIZE}</td>
+			<td class="row_class1" align="center">{_optimize._optimize_row.FREE}</td>
+			<td class="row_class2" align="center">{_optimize._optimize_row.S_SELECT}</td>
 		</tr>
-		<!-- END _optimize -->
+		<!-- END _optimize_row -->
 		<tr>
-			<td class="rowHead">{TOT_TABLE}</td>
-			<td class="rowHead" align="right">{TOT_RECORD}</td>
-			<td class="rowHead" align="center">- -</td>
-			<td class="rowHead" align="right">{TOT_SIZE}</td>
-			<td class="rowHead" align="center">{TOT_STATUS}</td>
-			<td class="rowHead">&nbsp;</td>
+			<td class="rowHead" align="left">{TOTAL_TBLS}</td>
+			<td class="rowHead" align="right">{TOTAL_ROWS}</td>
+			<td class="rowHead" align="right">{TOTAL_SIZE}</th>
+	<th>{TOTAL_FREE}</td>
+			<td class="rowHead" align="center">&nbsp;</td>
 		</tr>
 		</table>
 	</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><a href="#" onclick="setCheckboxes('tablesForm', true); return false;">{L_CHECKALL}</a>&nbsp;/&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', false); return false;">{L_UNCHECKALL}</a>&nbsp;/&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', 'invert'); return false;">{L_INVERTCHECKED}</a></td>
+	<td colspan="2" align="center"><a href="#" onclick="setCheckboxes('tablesForm', true); return false;">{L_CHECKALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', false); return false;">{L_UNCHECKALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', 'invert'); return false;">{L_INVERTCHECKED}</a></td>
 </tr>
-</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -169,7 +164,7 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END _database_optimize -->
+<!-- END _optimize -->
 
 
 <!-- BEGIN _display -->
@@ -189,7 +184,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_AUTH_SELECT}</td>
+	<th>{L_AUTH_SELECT}</td>
 </tr>
 <tr>
 	<td class="row2">{S_FIELDS}{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
@@ -209,7 +204,7 @@
 				<li id="active"><a href="#" id="current">{L_FORUM}: {FORUM_NAME}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_AUTH_EXPLAIN}</td>

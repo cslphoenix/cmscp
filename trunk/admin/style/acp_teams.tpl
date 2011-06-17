@@ -17,18 +17,18 @@ function update_image(newimage)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" width="99%" colspan="2"><span style="float:right;">{L_COUNT}</span>{L_NAME}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _team_row -->
 <tr>
@@ -69,23 +69,23 @@ function update_image(newimage)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row1" width="155"><label for="team_name">{L_NAME}: *</label></td>
@@ -111,16 +111,16 @@ function update_image(newimage)
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td width="50%" valign="top">
-				<table class="update" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<th colspan="2">
+				<table class="update">
+<tr>
+	<td colspan="2">
 						<div id="navcontainer">
 							<ul id="navlist">
 								<li id="active"><a href="#" id="current">{L_INPUT_OPTION}</a></li>
 							</ul>
-						</div>
-					</th>
-				</tr>
+		</div>
+	</td>
+</tr>
 				<tr>
 					<td class="row1" width="155"><label for="team_navi">{L_NAVI}:</label></td>
 					<td class="row2"><label><input type="radio" name="team_navi" id="team_navi" value="1" {S_NAVI_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="team_navi" value="0" {S_NAVI_NO} />&nbsp;{L_NO}</label></td> 
@@ -161,9 +161,9 @@ function update_image(newimage)
 							<ul id="navlist">
 								<li id="active"><a href="#" id="current">{L_INPUT_UPLOAD}</a></li>
 							</ul>
-						</div>
-					</th>
-				</tr>
+		</div>
+	</td>
+</tr>
 				<!-- BEGIN _logo -->
 				<!-- BEGIN _img -->
 				<tr>

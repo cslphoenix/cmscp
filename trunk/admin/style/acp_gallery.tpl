@@ -1,43 +1,44 @@
 <!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+		<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
+	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="99%">{L_NAME}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _gallery_row -->
 <tr>
-	<td class="row_class1" align="left"><span style="float:right;">{_display._gallery_row.INFO}&nbsp;</span><b>{_display._gallery_row.NAME}</b><br />{_display._gallery_row.DESC}</td>
-	<td class="row_class2" align="left" nowrap="nowrap">{_display._gallery_row.MOVE_UP}{_display._gallery_row.MOVE_DOWN}{_display._gallery_row.RESYNC} {_display._gallery_row.VIEW} <a href="{_display._gallery_row.U_UPLOAD}">{I_UPLOAD}</a> <a href="{_display._gallery_row.U_UPDATE}">{I_UPDATE}</a><a href="{_display._gallery_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float:right;">{_display._gallery_row.INFO}&nbsp;</span><b>{_display._gallery_row.NAME}</b><br />{_display._gallery_row.DESC}</td>
+	<td>{_display._gallery_row.MOVE_UP}{_display._gallery_row.MOVE_DOWN}{_display._gallery_row.RESYNC} {_display._gallery_row.VIEW}{_display._gallery_row.UPLOAD} {_display._gallery_row.UPDATE} {_display._gallery_row.DELETE}</td>
 </tr>
 <!-- END _gallery_row -->
 <!-- BEGIN _entry_empty -->
 <tr>
-	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="gallery_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="gallery_name"></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -59,23 +60,23 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row1" width="155"><label for="gallery_name">{L_NAME}: *</label></td>
@@ -150,36 +151,6 @@
 <!-- END _input -->
 
 <!-- BEGIN _upload -->
-<script type="text/JavaScript">
-// <![CDATA[
-function clone(objButton)
-{
-	if ( objButton.parentNode )
-	{
-		tmpNode = objButton.parentNode.cloneNode(true);
-		target = objButton.parentNode.parentNode;
-		arrInput = tmpNode.getElementsByTagName("input");
-		
-		for ( var i=0; i<arrInput.length; i++ )
-		{
-			if ( arrInput[i].type=='text' )
-			{
-				arrInput[i].value='';
-			}
-			
-			if ( arrInput[i].type=='file' )
-			{
-				arrInput[i].value='';
-			}
-		}
-		
-		target.appendChild(tmpNode);
-		objButton.value="entfernen";
-		objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
-	}
-}
-// ]]>
-</script>
 <form action="{S_ACTION}" method="post" name="form" id="form" enctype="multipart/form-data">
 <div id="navcontainer">
 <ul id="navlist">
@@ -194,15 +165,15 @@ function clone(objButton)
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
@@ -236,9 +207,9 @@ function clone(objButton)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
@@ -256,7 +227,7 @@ function clone(objButton)
 		</div>
 		<table class="update" border="0" cellspacing="0" cellpadding="0">
         <tr class="hover">
-        	<td class="row1"><a href="{_overview._list._gallery_row.IMAGE}" rel="lightbox"><img src="{_overview._list._gallery_row.PREV}" alt="" border="0" /></a></td>
+        	<td class="row1"><a href="{_overview._list._gallery_row.IMAGE}" class="lightbox"><img src="{_overview._list._gallery_row.PREV}" alt="" border="0" /></a></td>
 			<td class="row3" nowrap="nowrap">
 				<table class="update" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -385,9 +356,9 @@ function clone(objButton)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -405,23 +376,23 @@ function clone(objButton)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
     <td class="row1" width="155"><label for="max_height">{L_MAX_HEIGHT}:</label></td>

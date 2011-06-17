@@ -6,73 +6,69 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 <tr>
-	<td class="small" align="right"><form action="{S_ACTION}" method="post">{L_SORT}: {S_SORT}</form></td>
+	<td align="right"><form action="{S_ACTION}" method="post">{L_SORT}: {S_SORT}</form></td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" colspan="2" width="100%">{L_UPCOMING}</td>
-	<td class="rowHead" align="center">{L_TRAINING}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_UPCOMING}</th>
+	<th>{L_TRAINING}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _match_new_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._match_new_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float: right;">{_display._match_new_row.DATE}</span>{_display._match_new_row.NAME}</td>
-	<td class="row_class1" align="center">&nbsp;<a href="{_display._match_new_row.U_TRAIN}">{_display._match_new_row.L_TRAIN}</a>&nbsp;</td>
-	<td class="row_class2" align="center"><a href="{_display._match_new_row.U_DETAIL}">{I_DETAILS}</a> <a href="{_display._match_new_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._match_new_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float: right;">{_display._match_new_row.DATE}</span>{_display._match_new_row.GAME} {_display._match_new_row.NAME}</td>
+	<td><a href="{_display._match_new_row.U_TRAIN}">{_display._match_new_row.L_TRAIN}</a></td>
+	<td><a href="{_display._match_new_row.U_DETAIL}">{I_DETAILS}</a> <a href="{_display._match_new_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._match_new_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _match_new_row -->
 <!-- BEGIN _entry_empty_new -->
 <tr>
-	<td class="entry_empty" align="center" colspan="4">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty_new -->
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" colspan="2" width="100%">{L_EXPIRED}</td>
-	<td class="rowHead" align="center">{L_TRAINING}</td>
-	<td class="rowHead" align="center">{L_SETTINGS}</td>
+	<th>{L_EXPIRED}</th>
+	<th>{L_TRAINING}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _match_old_row -->
 <tr>
-	<td class="row_class1">{_display._match_old_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float: right;">{_display._match_old_row.DATE}</span>{_display._match_old_row.NAME}</td>
-	<td class="row_class1" align="center"> - </td>
-	<td class="row_class2" align="center"><a href="{_display._match_old_row.U_DETAIL}">{I_DETAILS}</a> <a href="{_display._match_old_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._match_old_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float: right;">{_display._match_old_row.DATE}</span>{_display._match_old_row.GAME} {_display._match_old_row.NAME}</td>
+	<td> - </td>
+	<td><a href="{_display._match_old_row.U_DETAIL}">{I_DETAILS}</a> <a href="{_display._match_old_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._match_old_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _match_old_row -->
 <!-- BEGIN _entry_empty_old -->
 <tr>
-	<td class="entry_empty" align="center" colspan="4">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty_old -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<form action="{S_ACTION}" method="post">
+<table class="footer">
 <tr>
-	<form action="{S_ACTION}" method="post">
-	<td align="right">{S_TEAM}</td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
-	{S_FIELDS}
-	</form>
-</tr>
-<tr>
-	<td class="row4" colspan="2"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+	<td>{S_TEAM}</td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
+{S_FIELDS}
+</form>
 <!-- END _display -->
 
 <!-- BEGIN _input -->
@@ -178,23 +174,23 @@ function set_site(name, text)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current" onclick="clip('settings')"><img src="style/images/collapse.gif" id="img_settings" width="9" height="9" border="0" /> {L_STANDARD}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody id="settings" style="display:">
 <tr>
@@ -262,7 +258,7 @@ function set_site(name, text)
 				<li id="active"><a href="#" id="current" onclick="clip('show_server')"><img src="style/images/collapse.gif" id="img_show_server" width="9" height="9" border="0" /> {L_RIVAL} / {L_SERVER}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody id="show_server" style="display:">
 <tr>
@@ -312,7 +308,7 @@ function set_site(name, text)
 				<li id="active"><a href="#" id="current" onclick="clip('msg')"><img src="style/images/collapse.gif" id="img_msg" width="9" height="9" border="0" /> {L_MESSAGE}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody id="msg" style="display:">
 <tr>
@@ -335,7 +331,7 @@ function set_site(name, text)
 			<li id="active"><a href="#" id="current">{L_TRAINING}</a></li>
 		</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
@@ -409,9 +405,9 @@ function clone(objButton)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
@@ -421,16 +417,16 @@ function clone(objButton)
 <tr>
 	<td width="50%" class="row5 top">
 		<form action="{S_ACTION}" method="post" name="post">
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<th colspan="2">
+		<table class="update">
+<tr>
+	<td colspan="2">
 				<div id="navcontainer">
 					<ul id="navlist">
 						<li id="active"><a href="#" id="current">{L_LINEUP}</a></li>
 					</ul>
-				</div>
-			</th>
-		</tr>
+		</div>
+	</td>
+</tr>
 		<!-- BEGIN _team_users -->
 		<tr>
 			<td class="row1" width="46%"><label for="player_status">{L_LINEUP_STATUS}:</label></td>
@@ -465,15 +461,15 @@ function clone(objButton)
 						<li><a href="#" id="right">{L_LINEUP_STATUS}</a></li>
 						<li><a href="#" id="current">{L_USERNAME}</a></li>
 					</ul>
-				</div>
-			</th>
-		</tr>
+		</div>
+	</td>
+</tr>
 		<!-- BEGIN _list_users -->
 		<!-- BEGIN _member_row -->
-		<tr class="hover">
-			<td align="left" style="padding: 0px 0px 0px 5px;"><label for="test_{_detail._list_users._member_row.USER_ID}">{_detail._list_users._member_row.USERNAME}</label></td>
+		<tr class="hover" onclick="checked({_detail._list_users._member_row.USER_ID})">
+			<td align="left" style="padding: 0px 0px 0px 5px;">{_detail._list_users._member_row.USERNAME}</td>
 			<td align="center">{_detail._list_users._member_row.STATUS}</td>
-			<td align="center"><input type="checkbox" name="members[]" value="{_detail._list_users._member_row.USER_ID}" id="test_{_detail._list_users._member_row.USER_ID}"></td>
+			<td align="center"><input type="checkbox" name="members[]" value="{_detail._list_users._member_row.USER_ID}" id="check_{_detail._list_users._member_row.USER_ID}"></td>
 		</tr>
 		<!-- END _member_row -->
 		<tr>
@@ -506,7 +502,7 @@ function clone(objButton)
 
 <br /><div align="center">{ERROR_BOX_MAPS}</div>
 <!-- BEGIN _maps -->
-<form action="{S_ACTION}" method="post" id="delete" enctype="multipart/form-data">
+<form action="{S_ACTION}" method="post" id="map_delete" enctype="multipart/form-data">
 <div id="navcontainer">
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_MAPS_OVERVIEW}</a></li>
@@ -520,25 +516,26 @@ function clone(objButton)
 <td>
 	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
-		<td class="row1" width="28%"><input type="hidden" name="id[]" value="{_detail._maps._map_row.MAP_ID}">{L_DETAIL_MAP}:</td>
+		<td class="row1" width="28%">{L_DETAIL_MAP}:</td>
 		<td class="row2" width="28%">{_detail._maps._map_row.S_MAP}</td>
 		<td class="row3" rowspan="3" width="43%" align="center">{_detail._maps._map_row.PIC_URL}
 			<!-- BEGIN _delete -->
-			<br /><input type="checkbox" name="mappic_delete[]" value="{_detail._maps._map_row.INFO_MAP_ID}">&nbsp;{L_IMAGE_DELETE}
+			<br /><input type="checkbox" name="map_pic[{_detail._maps._map_row.MAP_ID}]" value="on">&nbsp;{L_IMAGE_DELETE}
 			<!-- END _delete -->
 		</td>
 		<td class="row3" rowspan="3" width="43%" align="center" nowrap="nowrap">{_detail._maps._map_row.MOVE_UP}{_detail._maps._map_row.MOVE_DOWN}</td>
-		<td class="row3" rowspan="3" width="1%"><input type="checkbox" name="delete[]" title="{L_DELETE}" value="{_detail._maps._map_row.INFO_MAP_ID}"></td>
+		<td class="row3" rowspan="3" width="1%"><input type="checkbox" name="map_delete[{_detail._maps._map_row.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 	</tr>
 	<tr>
 		<td class="row1">{L_DETAIL_POINTS}:</td>
-		<td class="row2"><input type="text" class="post" name="map_points_home[]" value="{_detail._maps._map_row.MAP_HOME}" size="2">&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" class="post" name="map_points_rival[]" value="{_detail._maps._map_row.MAP_RIVAL}" size="2"></td>
+		<td class="row2"><input type="text" class="post" name="map_points_home[{_detail._maps._map_row.MAP_ID}]" value="{_detail._maps._map_row.MAP_HOME}" size="2"><span style=" vertical-align:top; padding:2px;">:</span><input type="text" class="post" name="map_points_rival[{_detail._maps._map_row.MAP_ID}]" value="{_detail._maps._map_row.MAP_RIVAL}" size="2"> {_detail._maps._map_row.S_ROUND}</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_DETAIL_MAPPIC}:</td>
-		<td class="row2" width="1"><input type="file" class="post" name="ufile[]2" id="ufile[]2" size="12" /></td>
+		<td class="row2" width="1"><input type="file" class="post" name="ufile[{_detail._maps._map_row.MAP_ID}]" id="ufile[]" size="12" /></td>
 	</tr>
 	</table>
+	<input type="hidden" name="map_id[]" value="{_detail._maps._map_row.MAP_ID}">
 </td>
 </tr>
 <!-- END _map_row -->
@@ -546,12 +543,13 @@ function clone(objButton)
 	<td colspan="4">&nbsp;</td>
 	</tr>
 <tr>
-	<td colspan="4" align="right"><input type="submit" name="_details_update" class="button2" value="{L_SUBMIT}"></td>
+	<td colspan="4" align="right"><input type="submit" class="button2" value="{L_SUBMIT}"></td>
 </tr>
 <tr>
-	<td colspan="4" align="right" class="row5"><a href="#" class="small" onclick="marklist('delete', 'delete', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" class="small" onclick="marklist('delete', 'delete', false); return false;">{L_MARK_DEALL}</a></td>
+	<td colspan="4" align="right" class="row5"><a href="#" class="small" onclick="marklist('map_delete', 'map_delete', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" class="small" onclick="marklist('map_delete', 'map_delete', false); return false;">{L_MARK_DEALL}</a></td>
 </tr>
 </table>
+{S_UPDATE}
 {S_FIELDS}
 </form>
 <!-- END _maps -->
@@ -566,7 +564,7 @@ function clone(objButton)
 <table class="edit" border="0" cellspacing="1" cellpadding="0">
 <tr>
 	<td class="row1">{L_DETAIL_MAP}&nbsp;/&nbsp;{L_DETAIL_POINTS}&nbsp;:&nbsp;{L_DETAIL_POINTS}&nbsp;/&nbsp;{L_DETAIL_MAPPIC}:</td>
-	<td class="row2"><div><div>{S_MAP}&nbsp;&nbsp;<input type="text" class="post" name="map_points_home[]" id="map_points_home[]" size="2">&nbsp;&nbsp;<input type="text" class="post" name="map_points_rival[]" id="map_points_rival[]" size="2">&nbsp;&nbsp;<input type="file" class="post" name="ufile[]" id="ufile[]" size="12">&nbsp;<input type="button" class="button2" value="{L_MORE}" onclick="clone(this)"></div></div></td>
+	<td class="row2"><div><div>{S_MAP}&nbsp;&nbsp;<input type="text" class="post" name="map_points_home[]" id="map_points_home[]" size="2"><span style=" vertical-align:middle; padding:2px;">:</span><input type="text" class="post" name="map_points_rival[]" id="map_points_rival[]" size="2">&nbsp;&nbsp;<input type="file" class="post" name="ufile[]" id="ufile[]" size="12">&nbsp;<input type="button" class="button2" value="{L_MORE}" onclick="clone(this)"></div></div></td>
 </tr>
 </tbody>
 <tr>
@@ -576,7 +574,7 @@ function clone(objButton)
 	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_UPLOAD}"></td>
 </tr>
 </table>
-<input type="hidden" name="smode" value="_detail_mappic" />
+{S_CREATE}
 {S_FIELDS}
 </form>
 <!-- END _detail -->

@@ -7,37 +7,37 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="99%" colspan="2">{L_NAME}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _server_row -->
 <tr>
-	<td class="row_class1" align="left" width="1%">{_display._server_row.IMAGE}</td>
-	<td class="row_class1" align="left">{_display._server_row.NAME}</td>
-	<td class="row_class2" align="center">{_display._server_row.MOVE_UP}{_display._server_row.MOVE_DOWN} <a href="{_display._server_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._server_row.U_DELETE}">{I_DELETE}</a></td>
+	<td><span style="float: right;">{_display._server_row.USERS} {_display._server_row.STATUS}</span>{_display._server_row.GAME} {_display._server_row.NAME}</td>
+	<td>{_display._server_row.MOVE_UP}{_display._server_row.MOVE_DOWN}{_display._server_row.UPDATE} {_display._server_row.DELETE}</td>
 </tr>
 <!-- END _server_row -->
-<!-- BEGIN _no_entry -->
+<!-- BEGIN _entry_empty -->
 <tr>
 	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
-<!-- END _no_entry -->
+<!-- END _entry_empty -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="server_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="server_name"></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -47,34 +47,42 @@
 <!-- BEGIN _input -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-</ul>
+	<ul id="navlist">
+		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
+	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
 	<td class="row1"><label for="server_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="server_name" id="server_name" value="{NAME}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="server_type">{L_TYPE}:</label></td>
+	<td class="row2"><label><input type="radio" name="server_type" id="server_type" value="0" {S_GAMESERVER} />&nbsp;{L_GAMESERVER}</label><span style="padding:4px;"></span><label><input type="radio" name="server_type" value="1" {S_VOICESERVER} />&nbsp;{L_VOICESERVER}</label></td>
+</tr>
+<tr>
+	<td class="row1"><label for="server_game">{L_GAME}: *</label></td>
+	<td class="row2">{S_GAME}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_ip">{L_IP}: *</label></td>
@@ -91,6 +99,10 @@
 <tr>
 	<td class="row1"><label for="server_pw">{L_PW}:</label></td>
 	<td class="row2"><input type="text" class="post" name="server_pw" id="server_pw" value="{PW}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="server_live">{L_LIVE}:</label></td>
+	<td class="row2"><label><input type="radio" name="server_live" id="server_live" value="1" {S_LIVE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="server_live" value="0" {S_LIVE_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_list">{L_LIST}:</label></td>

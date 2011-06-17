@@ -36,18 +36,18 @@ function fill(thisValue)
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="99%">{L_NAME}</td>
-	<td class="rowHead">{L_SETTINGS}</td>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _user_row -->
 <tr>
@@ -100,15 +100,30 @@ function fill(thisValue)
 <!-- END _head -->
 
 <!-- BEGIN _input -->
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<script>
+
+$(function()
+{
+//	var date = $('#datepicker').datepicker({ dateFormat: 'd.m.yy' });
+	
+	$( "#datepicker" ).datepicker(
+	{
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'd.m.yy'
+	});
+});
+
+</script>
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
@@ -138,6 +153,10 @@ function fill(thisValue)
 	<td class="row2">{S_LEVEL}</td>
 </tr>
 <tr>
+	<td class="row1"><label>{L_BIRTHDAY}:</label></td>
+	<td class="row2"><input class="post" type="text" name="user_birthday" id="datepicker" value="{BIRTHDAY}"></td>
+</tr>
+<tr>
 	<td class="row1"><label for="user_email">{L_EMAIL}:</label></td>
 	<td class="row2"><input type="text" class="post" name="user_email" id="user_email" value="{USEREMAIL}"></td>
 </tr>
@@ -148,8 +167,8 @@ function fill(thisValue)
 <tr>
 	<td class="row1"><label>{L_PASSWORD}:</label></td>
 	<td class="row2">
-	<label><input type="radio" name="s_pass" value="1" onChange="document.getElementById('pass_random').style.display = ''; document.getElementById('pass_input').style.display = 'none';" {S_INPUT} />&nbsp;{L_PASSWORD_RANDOM}</label><br />
-	<label><input type="radio" name="s_pass" value="0" onChange="document.getElementById('pass_random').style.display = 'none'; document.getElementById('pass_input').style.display = '';" {S_RANDOM} />&nbsp;{L_PASSWORD_INPUT}</label>
+	<label><input type="radio" name="pass_switch" value="1" onChange="document.getElementById('pass_random').style.display = ''; document.getElementById('pass_input').style.display = 'none';" {S_INPUT} />&nbsp;{L_PASSWORD_RANDOM}</label><br />
+	<label><input type="radio" name="pass_switch" value="0" onChange="document.getElementById('pass_random').style.display = 'none'; document.getElementById('pass_input').style.display = '';" {S_RANDOM} />&nbsp;{L_PASSWORD_INPUT}</label>
 	</td>
 </tbody>
 </tr>
@@ -187,16 +206,91 @@ function fill(thisValue)
 </form>
 <!-- END _input -->
 
-<!-- BEGIN _fields -->
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<!-- BEGIN _settings -->
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_SETTINGS}</a></li>
+			</ul>
+		</div>
+	</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_PUBLIC_VIEW_EMAIL}</span></td>
+	<td class="row2"><label><input type="radio" name="user_viewemail" value="1" {VIEWEMAIL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="user_viewemail" value="0" {VIEWEMAIL_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_HIDE_USER}</span></td>
+	<td class="row2"><label><input type="radio" name="hideonline" value="1" {HIDE_USER_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="hideonline" value="0" {HIDE_USER_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_NOTIFY_ON_REPLY}</span></td>
+	<td class="row2"><label><input type="radio" name="notifyreply" value="1" {NOTIFY_REPLY_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="notifyreply" value="0" {NOTIFY_REPLY_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_NOTIFY_ON_PRIVMSG}</span></td>
+	<td class="row2"><label><input type="radio" name="notifypm" value="1" {NOTIFY_PM_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="notifypm" value="0" {NOTIFY_PM_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_POPUP_ON_PRIVMSG}</span></td>
+	<td class="row2"><label><input type="radio" name="popup_pm" value="1" {POPUP_PM_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="popup_pm" value="0" {POPUP_PM_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ADD_SIGNATURE}</span></td>
+	<td class="row2"><label><input type="radio" name="attachsig" value="1" {ALWAYS_ADD_SIGNATURE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="attachsig" value="0" {ALWAYS_ADD_SIGNATURE_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ALLOW_BBCODE}</span></td>
+	<td class="row2"><label><input type="radio" name="allowbbcode" value="1" {ALWAYS_ALLOW_BBCODE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="allowbbcode" value="0" {ALWAYS_ALLOW_BBCODE_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ALLOW_HTML}</span></td>
+	<td class="row2"><label><input type="radio" name="allowhtml" value="1" {ALWAYS_ALLOW_HTML_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="allowhtml" value="0" {ALWAYS_ALLOW_HTML_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ALLOW_SMILIES}</span></td>
+	<td class="row2"><label><input type="radio" name="allowsmilies" value="1" {ALWAYS_ALLOW_SMILIES_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="allowsmilies" value="0" {ALWAYS_ALLOW_SMILIES_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_BOARD_LANGUAGE}</span></td>
+	<td class="row2">{S_LANG}</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_BOARD_STYLE}</span></td>
+	<td class="row2">{S_STYLE}</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_TIMEZONE}</span></td>
+	<td class="row2">{S_TIMEZONE}</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_DATE_FORMAT}</span><br /><span class="gensmall">{L_DATE_FORMAT_EXPLAIN}</span></td>
+	<td class="row2"><input class="post" type="text" name="dateformat" value="{DATE_FORMAT}" maxlength="16" /></td>
+</tr>
+
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END _settings -->
+
+<!-- BEGIN _fields -->
+<table class="update">
+<tr>
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_FIELDS}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <!-- BEGIN _cat_row -->
 <tr>
@@ -353,15 +447,15 @@ function set_color(name,farbe)
 
 // ]]>
 </script>
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_AUTH}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <!-- BEGIN _data -->
 <tr>

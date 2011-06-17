@@ -1,4 +1,5 @@
 <!-- BEGIN _display -->
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 	<ul id="navlist">
 		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
@@ -6,63 +7,61 @@
 	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 <tr>
-	<td class="small" align="right"><form action="{S_ACTION}" method="post">{L_SORT}: {S_LEVEL}</form></td>
+	<td align="right">{L_SORT}: {S_LEVEL}</td>
 </tr>
 </table>
-
+</form>
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="99%">{L_UPCOMING}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _event_new_row -->
+<!-- BEGIN _new_row -->
 <tr>
-	<td class="row_class1" align="left"><span style="float:right;">{_display._event_new_row.DATE}</span>{_display._event_new_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._event_new_row.UPDATE} {_display._event_new_row.DELETE}</td>		
+	<td><span style="float:right;">{_display._new_row.DATE}</span>{_display._new_row.TITLE}</td>
+	<td>{_display._new_row.UPDATE} {_display._new_row.DELETE}</td>		
 </tr>
-<!-- END _event_new_row -->
+<!-- END _new_row -->
 <!-- BEGIN _entry_empty_new -->
 <tr>
-	<td class="entry_empty" colspan="2" align="center">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty_new -->
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="99%">{L_EXPIRED}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_EXPIRED}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _event_old_row -->
+<!-- BEGIN _old_row -->
 <tr>
-	<td class="row_class1" align="left"><span style="float:right;">{_display._event_old_row.DATE}</span>{_display._event_old_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._event_old_row.UPDATE} {_display._event_old_row.DELETE}</td>		
+	<td><span style="float:right;">{_display._old_row.DATE}</span>{_display._old_row.TITLE}</td>
+	<td>{_display._old_row.UPDATE} {_display._old_row.DELETE}</td>		
 </tr>
-<!-- END _event_old_row -->
+<!-- END _old_row -->
 <!-- BEGIN _entry_empty_old -->
 <tr>
-	<td class="entry_empty" colspan="2" align="center">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty_old -->
 </table>
 
 <form action="{S_ACTION}" method="post">
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="event_title"></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
-</tr>
-<tr>
-	<td class="row4" colspan="2"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+	<td><input type="text" class="post" name="event_title" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}" /></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -79,28 +78,28 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
 	<td class="row1"><label for="event_title">{L_TITLE}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}"></td>
+	<td class="row2"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="event_level">{L_LEVEL}:</label></td>
@@ -127,7 +126,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
 </tr>
 </table>
 {S_FIELDS}
