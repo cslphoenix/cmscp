@@ -33,11 +33,11 @@ $lang = array_merge($lang, array(
 
 	'match_type' => array(
 		'type_unknown'	=> 'unbekannt',
-		'type_two'		=> '2 on 2',
-		'type_three'	=> '3 on 3',
-		'type_four'		=> '4 on 4',
-		'type_five'		=> '5 on 5',
-		'type_six'		=> '6 on 6',
+		'type_two'		=> '2on2',
+		'type_three'	=> '3on3',
+		'type_four'		=> '4on4',
+		'type_five'		=> '5on5',
+		'type_six'		=> '6on6',
 	),
 
 	'match_war' => array(
@@ -102,6 +102,8 @@ $lang = array_merge($lang, array(
 	'status_set'		=> 'Status %s setzen',
 	'status_player'		=> 'Spieler',
 	'status_replace'	=> 'Ersatz',
+	
+	'sprintf_round'		=> 'Runde: %s',
 	
 ));
 

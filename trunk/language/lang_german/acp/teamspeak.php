@@ -5,45 +5,68 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-$lang['teamspeak_explain'] = 'teamspeak_explain äö';
+$lang = array_merge($lang, array(
+	
+	'title'		=> 'Teamspeak',
+	'explain'	=> 'teamspeak_explain äö',
 
-$lang['teamspeak_codec_on']			= 'Aktiviert';
-$lang['teamspeak_codec_off']		= 'Deaktiviert';
+	'create'	=> 'Neues Spiel hinzugefügt.',
+	'update'	=> 'Spieldaten erfolgreich geändert.',
+	'delete'	=> 'Das Spiel wurde gelöscht!',
+	'confirm'	=> 'dass dieses Spiel:',
+	
+	'name'			=> 'Teamspeak Name',
+	'ip'			=> 'Teamspeak IP',
+	'port'			=> 'Teamspeak Port',
+	'port_explain'	=> 'Standard Port für TS2: 8767 und für TS3: 9987',
+	'qport'			=> 'Teamspeak QueryPort',
+	'qport_explain'	=> 'Standard QueryPort für TS2: 51234 und für TS3: 10011',
+	'pass'			=> 'Teamspeak Passwort',
+	'type'			=> 'Teamspeaktype',
+	'viewer'		=> 'Viewerdetails',
+	
+	'ts2'		=> 'Teamspeak 2',
+	'ts3'		=> 'Teamspeak 3',
+	
+	'uptime'	=> '%s Tage %s:%s:%s',
+	
+	'server_name'			=> 'Server Name',
+	'server_platform'			=> 'Server Plattform',
+	'server_welcomemessage'			=> 'Willkommensnachricht',			
+	'server_webpost_linkurl'			=> '',
+	'server_webpost_posturl'			=> '',
+	'server_password'			=> 'Server Passwort',
+	'server_clan_server'			=> 'Server Type',
+	'server_maxusers'			=> 'Maximale Benutzer',
+	'server_currentusers'			=> 'momentane Benutzer',
+	'server_allow_codec_celp51'			=> 'Codec: Celp 5.1 Kbit',
+	'server_allow_codec_celp63'			=> 'Codec: Celp 6.3 Kbit',
+	'server_allow_codec_gsm148'			=> 'Codec: GSM 14.8 Kbit',
+	'server_allow_codec_gsm164'			=> 'Codec: GSM 16.4 Kbit',
+	'server_allow_codec_windowscelp52'			=> 'Codec: CELP Windows 5.2 Kbit',
+	'server_allow_codec_speex2150'			=> 'Codec: Speex 3.4 Kbit',
+	'server_allow_codec_speex3950'			=> 'Codec: Speex 5.2 Kbit',
+	'server_allow_codec_speex5950'			=> 'Codec: Speex 7.2 Kbit',
+	'server_allow_codec_speex8000'			=> 'Codec: Speex 9.3 Kbit',
+	'server_allow_codec_speex11000'			=> 'Codec: Speex 12.3 Kbit',
+	'server_allow_codec_speex15000'			=> 'Codec: Speex 16.3 Kbit',
+	'server_allow_codec_speex18200'			=> 'Codec: Speex 19.5 Kbit',
+	'server_allow_codec_speex24600'			=> 'Codec: Speex 25.9 Kbit',
+	'server_packetssend'			=> 'Gesendete Packete',
+	'server_bytessend'			=> 'Gesendete Bytes',
+	'server_packetsreceived'			=> 'Empfangene Packete',
+	'server_bytesreceived'			=> 'Empfangene Bytes',
+	'server_uptime'			=> 'Server Laufzeit',
+	'server_currentchannels'			=> 'momentane Channelanzahl',
+	'codec_on'			=> 'Aktiviert',
+	'codec_off'			=> 'Deaktiviert',
 
-$lang['teamspeak_server_name']						= 'Server Name';
-$lang['teamspeak_server_platform']					= 'Server Plattform';
-$lang['teamspeak_server_welcomemessage']			= 'Willkommensnachricht';			
-$lang['teamspeak_server_webpost_linkurl']			= '';
-$lang['teamspeak_server_webpost_posturl']			= '';
-$lang['teamspeak_server_password']					= 'Server Passwort';
-$lang['teamspeak_server_clan_server']				= 'Server Type';
-$lang['teamspeak_server_maxusers']					= 'Maximale Benutzer';
-$lang['teamspeak_server_currentusers']				= 'momentane Benutzer';
-$lang['teamspeak_server_allow_codec_celp51']		= 'Codec: Celp 5.1 Kbit';
-$lang['teamspeak_server_allow_codec_celp63']		= 'Codec: Celp 6.3 Kbit';
-$lang['teamspeak_server_allow_codec_gsm148']		= 'Codec: GSM 14.8 Kbit';
-$lang['teamspeak_server_allow_codec_gsm164']		= 'Codec: GSM 16.4 Kbit';
-$lang['teamspeak_server_allow_codec_windowscelp52']	= 'Codec: CELP Windows 5.2 Kbit';
-$lang['teamspeak_server_allow_codec_speex2150']		= 'Codec: Speex 3.4 Kbit';
-$lang['teamspeak_server_allow_codec_speex3950']		= 'Codec: Speex 5.2 Kbit';
-$lang['teamspeak_server_allow_codec_speex5950']		= 'Codec: Speex 7.2 Kbit';
-$lang['teamspeak_server_allow_codec_speex8000']		= 'Codec: Speex 9.3 Kbit';
-$lang['teamspeak_server_allow_codec_speex11000']	= 'Codec: Speex 12.3 Kbit';
-$lang['teamspeak_server_allow_codec_speex15000']	= 'Codec: Speex 16.3 Kbit';
-$lang['teamspeak_server_allow_codec_speex18200']	= 'Codec: Speex 19.5 Kbit';
-$lang['teamspeak_server_allow_codec_speex24600']	= 'Codec: Speex 25.9 Kbit';
-$lang['teamspeak_server_packetssend']				= 'Gesendete Packete';
-$lang['teamspeak_server_bytessend']					= 'Gesendete Bytes';
-$lang['teamspeak_server_packetsreceived']			= 'Empfangene Packete';
-$lang['teamspeak_server_bytesreceived']				= 'Empfangene Bytes';
-$lang['teamspeak_server_uptime']					= 'Server Laufzeit';
-$lang['teamspeak_server_currentchannels']			= 'momentane Channelanzahl';
+));
 
-$lang['teamspeak_name']			= 'Server Name';
-$lang['teamspeak_ip']			= 'Server IP';
-$lang['teamspeak_port']			= 'Server Port';
-$lang['teamspeak_qport']		= 'Server QueryPort';
-$lang['teamspeak_pass']			= 'Server Passwort';
+
+
+	
+
 $lang['teamspeak_join']			= 'Nickname für Gäste';
 $lang['teamspeak_cstats']		= 'Channel Rechte';
 $lang['teamspeak_ustats']		= 'Benutzer Rechte';

@@ -7,15 +7,16 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'navi'		=> 'Navigation',
-	'navi_s'	=> 'Subnavieinstellungen',
+	'title'		=> 'Navigation',
 	'explain'	=> 'Hier kannst du die Navigation Verwalten. Einträge die wie das <em><strong>Beispiel</strong></em> aussehen sind Intern, also nur für eingeloggte Personen.',
 	
 	'create'	=> 'Neuen Navi-Link hinzugefügt.',
 	'update'	=> 'Navidaten erfolgreich geändert.',
-	'update_s'	=> 'Subnavigation erfolgreich geändert.',
 	'delete'	=> 'Der Navi-Link wurde gelöscht!',
 	'confirm'	=> 'das der Navi-Link:',
+	
+	'title_s'	=> 'Subnavieinstellungen',
+	'update_s'	=> 'Subnavigation erfolgreich geändert.',
 	
 	'return_s'	=> '<br /><br /><strong>%s&laquo; Subnavigations Administration%s</strong>',
 	

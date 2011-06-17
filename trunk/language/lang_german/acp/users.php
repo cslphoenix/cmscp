@@ -63,6 +63,7 @@ $lang = array_merge($lang, array(
 	'auth_from'		=> 'Rechte von: %s',
 	
 	'active'		=> 'Aktiviert',
+	'birthday'		=> 'Geburtstag',
 
 ));
 

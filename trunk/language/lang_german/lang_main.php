@@ -1,8 +1,14 @@
 <?php
 
 include('lang_head.php');
+include('lang_control.php');
+include('lang_teamspeak.php');
 
 $lang = array_merge($lang, array(
+
+	'cur_max'	=> '%s / %s',
+
+	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
 
 	'main'	=> 'Main Navi',
 	'clan'	=> 'Clan Navi',
@@ -20,6 +26,95 @@ $lang = array_merge($lang, array(
 	
 	'maps'	=> 'Karten',
 	
+	'match_update'	=> 'bearbeiten',
+	'match_detail'	=> 'Details bearbeiten',
+	
+	'lineup_player'		=> 'Spieler: %s',
+	'lineup_players'	=> 'Spieler: %s<br />Ersatz: %s',
+	
+	'msg_change_status_none'	=> 'Status nicht verändert.',
+	'msg_change_status_create'	=> 'Status hinzugefügt.',
+	'msg_change_status_update'	=> 'Status geändert.',
+	
+	'msg_empty_nick'	=> 'Bitte ein Nickname eintragen!',
+	'msg_empty_mail'	=> 'Bitte ein Mail eintragen!',
+	'msg_empty_text'	=> 'Bitte ein Nachricht eintragen!',
+	'msg_empty_captcha'	=> 'Bitte ein Captcha richtig eintragen!',
+	
+	'post_normal'	=> 'Normal',
+	'post_sticky'	=> 'Wichtig',
+	'post_announce'	=> 'Ankündigung',
+	'post_global'	=> 'Globaleankündigung',
+	
+	'msg_empty_subject'	=> 'Bitte Thementitel eintragen!',
+	'msg_empty_message'	=> 'Bitte Themennachricht eintragen!',
+	
+	'newtopic'	=> 'Thema erstellt',
+
+    'sort_all'			=> 'alle',
+    'sort_others'		=> 'andere',
+	'sort_by_letter'	=> 'Nur Benutzernamen beginnend mit',
+
+));
+
+$lang = array_merge($lang, array(
+	'language' => array(
+		'german' => 'Deutsch',
+	),
+));
+
+/* server error */
+$lang = array_merge($lang, array(
+	'unknown_error'	=> 'Unknown Error',
+	'code_404'	=> '404 - Not Found',
+	'desc_404'	=> 'The page you are trying to reach does not exist on this server.<br>You can browse the forum by following one of the links above.<br><br>We apologise for the inconvenience.',
+	'code_401'	=> '401 - Incorrect Password',
+	'desc_401'	=> 'The user_name or password you supplied is not correct.<br>You can browse the forum by following one of the links above.',
+	'code_403'	=> '403 - Access Denied',
+	'desc_403'	=> 'You don\'t have the proper rights to view this page.<br>You can browse the forum by following one of the links above.',
+	'code_500'	=> '500 - Internal Server Error',
+	'desc_500'	=> 'An Internal Server Error occurred.<br>If reloading the page doens\'t help, please contact the system administrator.',
+));
+
+$lang['msg_match_fail'] = 'Match nicht vorhanden oder Match nicht freigegeben!';
+$lang['at_today'] = "Heute %s"; // %s is the time
+$lang['at_yesterday'] = "Gestern %s"; // %s is the time
+$lang['at_tomorrow'] = "Morgen %s"; // %s is the time
+
+$lang['news'] = 'News';
+$lang['lobby_news'] = 'News';
+
+$lang['comment']	= '%s neuer Kommentar';
+$lang['comments']	= '%s neue Kommentare';
+
+$lang['sprintf_comment']	= 'Kommentar: 1 Kommentar';
+$lang['sprintf_comments']	= 'Kommentare: %s Kommentare';
+$lang['sprintf_comment_no']	= 'Kommentar: keine Kommentare';
+
+/* event */
+$lang = array_merge($lang, array(
+
+	'event_upcoming'	=> 'Ereignis: Aktuelle',
+	'event_expired'		=> 'Ereignis: Abgelaufen',
+
+	'sprintf_event'	=> 'am: %s von %s - %s',
+	
+	'join_not'	=> 'keine Teilnahme',
+	'join_yes'	=> 'Teilnahme',
+	'join_none'	=> 'Unbekannt',
+));
+
+$lang = array_merge($lang, array(
+	'header_sprintf'	=> '%s: %s',
+	'update_sprintf'	=> '%s bearbeiten',
+	
+	'header_overview'		=> 'Übersicht',
+	'header_news'			=> 'News',
+	'header_news_archiv'	=> 'News: Archiv',
+	'header_event'			=> 'Ereignis',
+	'header_match'			=> 'Begegnung',
+	'header_calendar'		=> 'Kalender',
+	'header_group'			=> 'Benutzergruppe',
 ));
 
 $lang['current_time'] = 'Aktuelles Datum und Uhrzeit: %s';
@@ -109,18 +204,6 @@ $lang['today_at'] = "Heute um %s"; // %s is the time
 $lang['yesterday_at'] = "Gestern um %s"; // %s is the time
 $lang['tomorrow_at'] = "Morgen um %s"; // %s is the time
 
-$lang['news']		= 'News';
-
-$lang['comment']	= '%s neuer Kommentar';
-$lang['comments']	= '%s neue Kommentare';
-$lang['']	= '';
-$lang['']	= '';
-$lang['']	= '';
-$lang['']	= '';
-$lang['']	= '';
-$lang['']	= '';
-$lang['']	= '';
-$lang['']	= '';
 
 
 $lang['page_disable'] = 'Seite deaktiviert.';
@@ -209,9 +292,9 @@ $lang['edit_training']			= 'Training bearbeiten';
 $lang['set_status']			= 'Status ändern';
 $lang['status_none']		= 'Unbekannt';
 $lang['status_yes']			= 'kann spielen';
-$lang['status_no']			= 'kann nicht spielen';
+$lang['status_no']			= 'kann nicht';
 $lang['status_replace']		= 'Ersatzspieler';
-$lang['change_on']			= '<i>geändert am:</i> ';
+$lang['change_on']			= '<i>geändert:</i> ';
 
 
 
@@ -276,26 +359,10 @@ $lang['status']				= 'Status';
 
 $lang['items_required']			= 'Mit * markierte Felder sind erforderlich';
 
-$lang['update_match_status_add']	= 'Status hinzugefügt';
-$lang['update_match_status_edit']	= 'Status geändert';
-$lang['update_match_status_none']	= 'Status nicht verändert';
-
 $lang['day']				= 'Tag';
 $lang['month']				= 'Monat';
 $lang['year']				= 'Jahr';
 
-//
-//	Meldungen
-//
-$lang['Unknown_error'] = "Unknown Error"; 
-$lang['404'] = "404 - Not Found"; 
-$lang['404_Description'] = "The page you are trying to reach does not exist on this server.<br>You can browse the forum by following one of the links above.<br><br>We apologise for the inconvenience."; 
-$lang['401'] = "401 - Incorrect Password"; 
-$lang['401_Description'] = "The user_name or password you supplied is not correct.<br>You can browse the forum by following one of the links above."; 
-$lang['403'] = "403 - Access Denied"; 
-$lang['403_Description'] = "You don't have the proper rights to view this page.<br>You can browse the forum by following one of the links above."; 
-$lang['500'] = "500 - Internal Server Error"; 
-$lang['500_Description'] = "An Internal Server Error occurred.<br>If reloading the page doens't help, please contact the system administrator."; 
 //$lang['back']			= '<br><a style="color:#fff; font-weight:bold; font-size:blod;" href="javascript:history.back(-1)">&laquo; Zurück</a>';
 $lang['back']			= '%s&laquo; Zurück%s';
 
@@ -389,6 +456,7 @@ $lang['Error'] = 'Fehler';
 
 $lang['yes']	= 'Ja';
 $lang['no']		= 'Nein';
+$lang['replace']	= 'Ersatz';
 $lang['show']	= 'Anzeigen';
 $lang['noshow']	= 'nicht Anzeigen';
 
@@ -402,7 +470,7 @@ $lang['IP_Address'] = 'IP-Adresse';
 $lang['Select_forum'] = 'Forum auswählen';
 $lang['View_latest_post'] = 'Letzten Beitrag anzeigen';
 $lang['View_newest_post'] = 'Neuesten Beitrag anzeigen';
-$lang['Page_of'] = 'Seite <b>%d</b> von <b>%d</b>';// Replaces with: Page 1 of 2 for example
+$lang['common_page_of'] = 'Seite <b>%d</b> von <b>%d</b>';// Replaces with: Page 1 of 2 for example
 
 $lang['ICQ'] = 'ICQ-Nummer';
 $lang['AIM'] = 'AIM-Name';
@@ -884,8 +952,8 @@ $lang['Wrong_Profile'] = 'Du kannst nur dein eigenes Profil bearbeiten.';
 
 $lang['Only_one_avatar'] = 'Es kann nur ein Avatar ausgewählt werden';
 $lang['File_no_data'] = 'Die angegebene Datei enthält keine Daten';
-$lang['No_connection_URL'] = 'Es konnte keine Verbindung zur angegebenen Datei hergestellt werden';
-$lang['Incomplete_URL'] = 'Die angegebene URL ist unvollständig';
+$lang['No_connection'] = 'Es konnte keine Verbindung zur angegebenen Datei hergestellt werden';
+$lang['Incomplete'] = 'Die angegebene URL ist unvollständig';
 $lang['Wrong_remote_avatar_format'] = 'Das Format des Avatars ist nicht gültig';
 $lang['No_send_account_inactive'] = 'Sorry, aber ein neues Passwort kann im Moment nicht gesendet werden, da dein Account derzeit noch inaktiv ist. Bitte kontaktiere den Administrator für weitere Informationen.';
 
@@ -916,12 +984,12 @@ $lang['password_confirm_if_changed'] = 'Du musst dein neues Passwort bestätigen,
 $lang['Avatar'] = 'Avatar';
 $lang['Avatar_explain'] = 'Zeigt eine kleine Grafik neben jedem deiner Beiträge an. Es kann immer nur ein Avatar angezeigt werden, seine Breite darf nicht größer als %d Pixel sein, die Höhe nicht größer als %d Pixel, und die Dateigröße darf maximal %d KB betragen.';
 $lang['Upload_Avatar_file'] = 'Avatar von deinem Computer hochladen';
-$lang['Upload_Avatar_URL'] = 'Avatar von URL hochladen';
+$lang['Upload_Avatar'] = 'Avatar von URL hochladen';
 $lang['Upload_Avatar_URL_explain'] = 'Gib die URL des gewünschten Avatars an, dieser wird dann kopiert';
 $lang['Pick_local_Avatar'] = 'Avatar aus der Galerie auswählen';
 $lang['Link_remote_Avatar'] = 'Zu einem externen Avatar verlinken';
 $lang['Link_remote_Avatar_explain'] = 'Gib die URL des Avatars ein, der verlinkt werden soll';
-$lang['Avatar_URL'] = 'URL des Avatars';
+$lang['Avatar'] = 'URL des Avatars';
 $lang['Select_from_gallery'] = 'Avatar aus der Galerie auswählen';
 $lang['View_avatar_gallery'] = 'Galerie anzeigen';
 
@@ -1290,39 +1358,46 @@ $lang['11'] = 'GMT + 11 Stunden';
 $lang['12'] = 'GMT + 12 Stunden';
 $lang['13'] = 'GMT + 13 Stunden';
 
-// These are displayed in the timezone select box
-$lang['tz']['-12'] = 'GMT - 12 Stunden';
-$lang['tz']['-11'] = 'GMT - 11 Stunden';
-$lang['tz']['-10'] = 'GMT - 10 Stunden';
-$lang['tz']['-9'] = 'GMT - 9 Stunden';
-$lang['tz']['-8'] = 'GMT - 8 Stunden';
-$lang['tz']['-7'] = 'GMT - 7 Stunden';
-$lang['tz']['-6'] = 'GMT - 6 Stunden';
-$lang['tz']['-5'] = 'GMT - 5 Stunden';
-$lang['tz']['-4'] = 'GMT - 4 Stunden';
-$lang['tz']['-3.5'] = 'GMT - 3.5 Stunden';
-$lang['tz']['-3'] = 'GMT - 3 Stunden';
-$lang['tz']['-2'] = 'GMT - 2 Stunden';
-$lang['tz']['-1'] = 'GMT - 1 Stunden';
-$lang['tz']['0'] = 'GMT';
-$lang['tz']['1'] = 'GMT + 1 Stunde';
-$lang['tz']['2'] = 'GMT + 2 Stunden';
-$lang['tz']['3'] = 'GMT + 3 Stunden';
-$lang['tz']['3.5'] = 'GMT + 3.5 Stunden';
-$lang['tz']['4'] = 'GMT + 4 Stunden';
-$lang['tz']['4.5'] = 'GMT + 4.5 Stunden';
-$lang['tz']['5'] = 'GMT + 5 Stunden';
-$lang['tz']['5.5'] = 'GMT + 5.5 Stunden';
-$lang['tz']['6'] = 'GMT + 6 Stunden';
-$lang['tz']['6.5'] = 'GMT + 6.5 Stunden';
-$lang['tz']['7'] = 'GMT + 7 Stunden';
-$lang['tz']['8'] = 'GMT + 8 Stunden';
-$lang['tz']['9'] = 'GMT + 9 Stunden';
-$lang['tz']['9.5'] = 'GMT + 9.5 Stunden';
-$lang['tz']['10'] = 'GMT + 10 Stunden';
-$lang['tz']['11'] = 'GMT + 11 Stunden';
-$lang['tz']['12'] = 'GMT + 12 Stunden';
-$lang['tz']['13'] = 'GMT + 13 Stunden';
+/* These are displayed in the timezone select box */
+/* by phpBB2 */
+/* mody by script */
+$lang = array_merge($lang, array(
+	'tz' => array(
+		'-12' => 'GMT - 12 Stunden',
+		'-11' => 'GMT - 11 Stunden',
+		'-10' => 'GMT - 10 Stunden',
+		'-9' => 'GMT - 9 Stunden',
+		'-8' => 'GMT - 8 Stunden',
+		'-7' => 'GMT - 7 Stunden',
+		'-6' => 'GMT - 6 Stunden',
+		'-5' => 'GMT - 5 Stunden',
+		'-4' => 'GMT - 4 Stunden',
+		'-3.5' => 'GMT - 3.5 Stunden',
+		'-3' => 'GMT - 3 Stunden',
+		'-2' => 'GMT - 2 Stunden',
+		'-1' => 'GMT - 1 Stunden',
+		'0' => 'GMT',
+		'1' => 'GMT + 1 Stunde',
+		'2' => 'GMT + 2 Stunden',
+		'3' => 'GMT + 3 Stunden',
+		'3.5' => 'GMT + 3.5 Stunden',
+		'4' => 'GMT + 4 Stunden',
+		'4.5' => 'GMT + 4.5 Stunden',
+		'5' => 'GMT + 5 Stunden',
+		'5.5' => 'GMT + 5.5 Stunden',
+		'6' => 'GMT + 6 Stunden',
+		'6.5' => 'GMT + 6.5 Stunden',
+		'7' => 'GMT + 7 Stunden',
+		'8' => 'GMT + 8 Stunden',
+		'9' => 'GMT + 9 Stunden',
+		'9.5' => 'GMT + 9.5 Stunden',
+		'10' => 'GMT + 10 Stunden',
+		'11' => 'GMT + 11 Stunden',
+		'12' => 'GMT + 12 Stunden',
+		'13' => 'GMT + 13 Stunden',
+	),
+));
+
 
 $lang['datetime']['Sunday'] = 'Sonntag';
 $lang['datetime']['Monday'] = 'Montag';
