@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum'] )
 	{
-		$module['_headmenu_02_forum']['_submenu_settings'] = $root_file;
+		$module['hm_forum']['sm_settings'] = $root_file;
 	}
 
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_forum';
+	$current	= 'sm_forum';
 	
 	include('./pagestart.php');
 	
@@ -29,9 +29,9 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_FORUM;
-	$url	= POST_FORUM_URL;
-	$url_c	= POST_CATEGORY_URL;
+	$log	= SECTION_FORUM;
+	$url	= POST_FORUM;
+	$url_c	= POST_CATEGORY;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -782,7 +782,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
@@ -967,7 +967,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
@@ -1056,13 +1056,13 @@ else
 	));
 	
 	$max = maxi(FORUM_CAT, 'cat_order', '');
-	$tmp = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
+	$cats = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
 	
-	if ( $tmp )
+	if ( $cats )
 	{
-		for ( $i = 0; $i < count($tmp); $i++ )
+		for ( $i = 0; $i < count($cats); $i++ )
 		{
-			$cat_id = $tmp[$i]['cat_id'];
+			$cat_id = $cats[$i]['cat_id'];
 			
 			$forms = data(FORUM, 'cat_id = ' . $cat_id, 'cat_id, forum_order ASC', 1, false);
 			
@@ -1074,10 +1074,10 @@ else
 			$max_forum = $db->sql_fetchrow($result);
 	
 			$template->assign_block_vars('_display._cat_row', array(
-				'NAME'		=> $tmp[$i]['cat_name'],
+				'NAME'		=> $cats[$i]['cat_name'],
 				
-				'MOVE_UP'	=> ( $tmp[$i]['cat_order'] != '10' ) ? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" /></a>',
-				'MOVE_DOWN'	=> ( $tmp[$i]['cat_order'] != $max ) ? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" /></a>',
+				'MOVE_UP'	=> ( $cats[$i]['cat_order'] != '10' ) ? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" /></a>',
+				'MOVE_DOWN'	=> ( $cats[$i]['cat_order'] != $max ) ? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" /></a>',
 				
 				'U_UPDATE'	=> check_sid("$file?mode=_update_cat&amp;$url_c=$cat_id"),
 				'U_DELETE'	=> check_sid("$file?mode=_delete_cat&amp;$url_c=$cat_id"),
@@ -1086,7 +1086,11 @@ else
 				'S_NAME'	=> "forum_name[$cat_id]",
 			));
 			
-			if ( $forms )
+			if ( !$forms )
+			{
+				$template->assign_block_vars('_display._cat_row._entry_empty', array());
+			}
+			else
 			{
 				for ( $j = 0; $j < count($forms); $j++ )
 				{
@@ -1147,10 +1151,6 @@ else
 						}
 					}
 				}
-			}
-			else
-			{
-				$template->assign_block_vars('_display._cat_row._no_entry', array());
 			}
 		}	
 	}

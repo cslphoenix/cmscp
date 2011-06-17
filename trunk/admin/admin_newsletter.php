@@ -4,9 +4,9 @@ if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userauth['auth_newsletter'] || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_newsletter'] )
 	{
-		$module['_headmenu_03_news']['_submenu_newsletter'] = $root_file;
+		$module['hm_news']['sm_newsletter'] = $root_file;
 	}
 	
 	return;
@@ -30,9 +30,9 @@ else
 	$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 	$start = ( $start < 0 ) ? 0 : $start;
 	
-	if ( isset($HTTP_POST_VARS[POST_NEWSLETTER_URL]) || isset($HTTP_GET_VARS[POST_NEWSLETTER_URL]) )
+	if ( isset($HTTP_POST_VARS[POST_NEWSLETTER]) || isset($HTTP_GET_VARS[POST_NEWSLETTER]) )
 	{
-		$newsletter_id = ( isset($HTTP_POST_VARS[POST_NEWSLETTER_URL]) ) ? intval($HTTP_POST_VARS[POST_NEWSLETTER_URL]) : intval($HTTP_GET_VARS[POST_NEWSLETTER_URL]);
+		$newsletter_id = ( isset($HTTP_POST_VARS[POST_NEWSLETTER]) ) ? intval($HTTP_POST_VARS[POST_NEWSLETTER]) : intval($HTTP_GET_VARS[POST_NEWSLETTER]);
 	}
 	else
 	{
@@ -75,7 +75,7 @@ else
 				$template->assign_block_vars('newsletter_edit', array());
 				
 				$fields = '<input type="hidden" name="mode" value="' . $new_mode . '" />';
-				$fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
+				$fields .= '<input type="hidden" name="' . POST_NEWSLETTER . '" value="' . $newsletter_id . '" />';
 
 				$template->assign_vars(array(
 					'L_NL_HEAD'			=> $lang['newsletter_head'],
@@ -140,7 +140,7 @@ else
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
 				
-				log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_newsletter_edit');
+				log_add(LOG_ADMIN, SECTION_NEWSLETTER, 'acp_newsletter_edit');
 				
 				$message = $lang['update_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newsletter.php'));
 				message(GENERAL_MESSAGE, $message);
@@ -161,7 +161,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
+					log_add(LOG_ADMIN, SECTION_NEWSLETTER, 'acp_newsletter_delete', $newsletter['newsletter_mail']);
 					
 					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newsletter.php'));
 					message(GENERAL_MESSAGE, $message);
@@ -172,7 +172,7 @@ else
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 		
 					$fields = '<input type="hidden" name="mode" value="delete" />';
-					$fields .= '<input type="hidden" name="' . POST_NEWSLETTER_URL . '" value="' . $newsletter_id . '" />';
+					$fields .= '<input type="hidden" name="' . POST_NEWSLETTER . '" value="' . $newsletter_id . '" />';
 		
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -204,7 +204,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 				
-					log_add(LOG_ADMIN, LOG_SEK_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
+					log_add(LOG_ADMIN, SECTION_NEWSLETTER, 'acp_category_clear', 'Alle Einträge gelöscht!');
 					
 					$message = $lang['delete_newsletter'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('admin_newsletter.php'));
 					message(GENERAL_MESSAGE, $message);
@@ -271,7 +271,7 @@ else
 	
 	if ( !$newsletter_data )
 	{
-		$template->assign_block_vars('_display._no_entry', array());
+		$template->assign_block_vars('_display._entry_empty', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
@@ -287,9 +287,9 @@ else
 				'NL_MAIL'		=> $newsletter_data[$i]['newsletter_mail'],
 				'NL_STATUS'		=> $newsletter_data[$i]['newsletter_status'],
 				
-				'U_PUBLIC'		=> check_sid('admin_newsletter.php?mode=public&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
-				'U_DELETE'		=> check_sid('admin_newsletter.php?mode=delete&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
-				'U_EDIT'		=> check_sid('admin_newsletter.php?mode=edit&amp;' . POST_NEWSLETTER_URL . '=' . $newsletter_id),
+				'U_PUBLIC'		=> check_sid('admin_newsletter.php?mode=public&amp;' . POST_NEWSLETTER . '=' . $newsletter_id),
+				'U_DELETE'		=> check_sid('admin_newsletter.php?mode=delete&amp;' . POST_NEWSLETTER . '=' . $newsletter_id),
+				'U_EDIT'		=> check_sid('admin_newsletter.php?mode=edit&amp;' . POST_NEWSLETTER . '=' . $newsletter_id),
 			));
 		}
 	}

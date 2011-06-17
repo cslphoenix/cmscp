@@ -7,46 +7,12 @@ if ( !defined('IN_CMS') )
 
 define('HEADER_INC', true);
 
-//
-// gzip_compression
-//
-$do_gzip_compress = FALSE;
-if ( $config['gzip_compress'] )
-{
-	$phpver = phpversion();
-
-	$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT');
-
-	if ( $phpver >= '4.0.4pl1' && ( strstr($useragent,'compatible') || strstr($useragent,'Gecko') ) )
-	{
-		if ( extension_loaded('zlib') )
-		{
-			ob_start('ob_gzhandler');
-		}
-	}
-	else if ( $phpver > '4.0' )
-	{
-		if ( strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') )
-		{
-			if ( extension_loaded('zlib') )
-			{
-				$do_gzip_compress = TRUE;
-				ob_start();
-				ob_implicit_flush(0);
-
-				header('Content-Encoding: gzip');
-			}
-		}
-	}
-}
-
 $template->set_filenames(array(
 	'header'	=> 'style/page_header.tpl',
 	'nav'		=> 'style/page_navigate.tpl',
 	'footer'	=> 'style/page_footer.tpl'
 ));
 
-// Format Timezone. We are unable to use array_pop here, because of PHP3 compatibility
 $l_timezone = explode('.', $config['page_timezone']);
 $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['page_timezone'])] : $lang[number_format($config['page_timezone'])];
 
@@ -62,13 +28,14 @@ $template->assign_vars(array(
 	'L_LOGOUT'	=> $lang['index_logout'],	
 	'L_SESSION'	=> $lang['index_session'],
 	
+	'L_NAVIGATION'		=> $lang['navi_navigation'],
+	
 	'L_INPUT_DATA'		=> $lang['common_input_data'],
 	'L_INPUT_OPTION'	=> $lang['common_input_option'],
 	'L_INPUT_UPLOAD'	=> $lang['common_input_upload'],
 	'L_INPUT_STANDARD'	=> $lang['common_input_standard'],
 	
-	'VERSION'	=> $config['page_version'],
-	'SYNC'		=> "<a href=\"" . check_sid("?mode=_sync") . "\">Sync</a>",
+	'CMS_VERSION'	=> $config['page_version'],
 	
 	'I_UPDATE'			=> '<img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" />',
 	'I_UPDATE_SMALL'	=> '<img width="75%" src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" />',
@@ -121,6 +88,7 @@ else
 {
 	header('Cache-Control: private, pre-check=0, post-check=0, max-age=0');
 }
+
 header('Expires: 0');
 header('Pragma: no-cache');
 
@@ -140,7 +108,7 @@ while ( $file = @readdir($dir) )
 
 unset($setmodules);
 
-ksort($module);
+#ksort($module);
 
 while ( list($cat, $action_array) = each($module) )
 {

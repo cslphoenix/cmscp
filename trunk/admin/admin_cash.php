@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_cash'] )
 	{
-		$module['_headmenu_01_main']['_submenu_cash'] = $root_file;
+		$module['hm_main']['sm_cash'] = $root_file;
 	}
 	
 	return;
@@ -17,33 +17,31 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_cash';
+	$current	= 'sm_authlist';
 	
 	include('./pagestart.php');
 	
 	load_lang('cash');
-
+	
 	$error	= '';
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_CASH;
-	$url	= POST_CASH_URL;
-	$url_u	= POST_CASH_USER_URL;
+	$log	= SECTION_CASH;
+	$url	= POST_CASH;
+	$url_u	= POST_CASH_USER;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
-	$start	= ( $start < 0 ) ? 0 : $start;
+	$oCache -> sCachePath = $root_path . 'cache/';
 	
 	$data_id	= request($url, 0);
 	$data_user	= request($url_u, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
-	$move		= request('move', 1);
-
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['cash']);
 	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_cash'] )
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
+	
+	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
@@ -51,7 +49,11 @@ else
 	
 	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
-	$template->set_filenames(array('body' => 'style/acp_cash.tpl'));
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_cash.tpl',
+		'error'		=> 'style/info_error.tpl',
+		'confirm'	=> 'style/info_confirm.tpl',
+	));
 	
 	switch ( $mode )
 	{
@@ -77,7 +79,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> $acp_title,
+				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['cash']),
 				'L_BANKDATA'	=> $lang['cash_bank'],
 				
 				'L_HOLDER'		=> $lang['bank_holder'],
@@ -148,7 +150,7 @@ else
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, $mode, $error);
+					log_add(LOG_ADMIN, $log, 'error', $error);
 					
 					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
@@ -223,7 +225,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"$url_u\" value=\"$data_user\" />";
 
 			$template->assign_vars(array(
-				'L_HEAD'			=> $acp_title,
+				'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['cash']),
 				'L_INPUT'			=> sprintf($lang['sprintf' . str_replace('_user', '', $mode)], $lang['user'], $data['user_id']),
 				'L_USER'			=> $lang['user'],
 				'L_USER_AMOUNT'		=> $lang['amount'],
@@ -265,7 +267,7 @@ else
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$message = $lang['create_user'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = $lang['create_user'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
@@ -280,17 +282,15 @@ else
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$message = $lang['update_user']
-							. sprintf($lang['return'], check_sid($file), $acp_title)
-							. sprintf($lang['return_update'], '<a href="' . check_sid("$file?mode=$mode&$url_u=$data_user"));
+						$msg = $lang['update_user'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&$url_u=$data_user"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $user_id);
-					message(GENERAL_MESSAGE, $message);
+					message(GENERAL_MESSAGE, $msg);
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, $mode, $error);
+					log_add(LOG_ADMIN, $log, 'error', $error);
 					
 					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
@@ -441,7 +441,7 @@ else
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, $mode, $error);
+					log_add(LOG_ADMIN, $log, 'error', $error);
 					
 					$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
@@ -560,7 +560,7 @@ else
 			}
 			else
 			{
-				$template->assign_block_vars('_display._no_entry', array());
+				$template->assign_block_vars('_display._entry_empty', array());
 			}
 			
 			if ( $user )
@@ -602,24 +602,18 @@ else
 			$postage_class	= ( $postage < 0 ) ? ( $postage > 0 ) ? 'draw' : 'lose' : 'win';
 			
 			$template->assign_vars(array(
-				'L_HEAD'			=> $acp_title,
-				'L_CREATE'			=> sprintf($lang['sprintf_new_create'], $lang['cash_reason']),
-				'L_CREATE_USER'		=> sprintf($lang['sprintf_new_creates'], $lang['cash_user']),
-				'L_CREATE_BANK'		=> $lang['cash_bank'],
-				
-				'L_EXPLAIN'			=> $lang['explain'],
-				
+				'L_HEAD'		=> $acp_title,
+				'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['cash_reason']),
+				'L_CREATE_USER'	=> sprintf($lang['sprintf_new_creates'], $lang['cash_user']),
+				'L_CREATE_BANK'	=> $lang['cash_bank'],
+				'L_EXPLAIN'		=> $lang['explain'],
 				'L_CASH'		=> $lang['cash'],
 				'L_REASON'		=> $lang['cash_reason'],
-				
-				'L_NAME'			=> $lang['cash_name'],
-				'L_USERNAME'		=> $lang['user_name'],
-				'L_INTERVAL'		=> $lang['interval'],
-				'L_POSTAGE'			=> $lang['postage'],
-				
-				'L_BD'				=> $lang['cash_bankdata'],
-				
-				
+				'L_NAME'		=> $lang['cash_name'],
+				'L_USERNAME'	=> $lang['user_name'],
+				'L_INTERVAL'	=> $lang['interval'],
+				'L_POSTAGE'		=> $lang['postage'],
+				'L_BD'			=> $lang['cash_bankdata'],
 				'L_HOLDER'		=> $lang['bank_holder'],
 				'L_NAME'		=> $lang['bank_name'],
 				'L_BLZ'			=> $lang['bank_blz'],

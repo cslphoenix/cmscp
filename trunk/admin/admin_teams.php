@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_teams'] )
 	{
-		$module['_headmenu_05_teams']['_submenu_settings'] = $root_file;
+		$module['hm_teams']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -15,10 +15,9 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$header_sub	= ( isset($_POST['cancel_sub']) ) ? true : false;
-	$current	= '_submenu_teams';
+	$current	= 'sm_settings_teams';
 	
 	include('./pagestart.php');
 	
@@ -28,8 +27,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_TEAM;
-	$url	= POST_TEAMS_URL;
+	$log	= SECTION_TEAM;
+	$url	= POST_TEAMS;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -125,8 +124,9 @@ else
 								'temp_flag'		=> request_file('temp_flag'),
 							);
 							
-					$data['team_game']	= img_num(GAMES, 'game', request('game_image', 2));
-					$data['game_image']	= ( $data['team_game'] == '-1' ) ? $images['icon_acp_spacer'] : $path_games . img_name(GAMES, 'game', $data['team_game']);
+				#	$data['team_game']	= img_num(GAMES, 'game', request('game_image', 2));
+				#	$data['team_game']	= search_image(GAMES, 'name', request('team_game', 2));
+				#	$data['game_image']	= ( $data['team_game'] == '-1' ) ? $images['icon_acp_spacer'] : $path_games . img_name(GAMES, 'game', $data['team_game']);
 				}
 				
 				if ( $settings['team_logo_upload'] || $settings['team_flag_upload'] )
@@ -250,6 +250,7 @@ else
 					{
 					#	$data['team_game'] = img_num(GAMES, 'game', request('game_image', 2));
 						$data['team_game'] = search_image(GAMES, 'id', request('game_image', 1));
+						
 						if ( $mode == '_create' )
 						{
 							$db_data = sql(TEAMS, $mode, $data);
@@ -275,7 +276,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
@@ -706,7 +707,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 
 						$template->set_filenames(array('reg_header' => 'style/info_error.tpl'));
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));

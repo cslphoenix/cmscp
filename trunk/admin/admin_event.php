@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] )
 	{
-		$module['_headmenu_01_main']['_submenu_event'] = $root_file;
+		$module['hm_main']['sm_event'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_event';
+	$current	= 'sm_event';
 	
 	include('./pagestart.php');
 	
@@ -27,8 +27,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_EVENT;
-	$url	= POST_EVENT_URL;
+	$log	= SECTION_EVENT;
+	$url	= POST_EVENT;
 	$file	= basename(__FILE__);
 	
 	$oCache -> sCachePath = $root_path . 'cache/';
@@ -37,8 +37,6 @@ else
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
 	$data_id	= request($url, 0);	
-	$data_level = request('level', 0);
-	
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
@@ -46,7 +44,7 @@ else
 	$path_dir	= $root_path . $settings['path_games'] . '/';
 	
 	$acp_main	= request('acp_main', 0);
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['event']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_event'] )
 	{
@@ -99,6 +97,42 @@ else
 							'event_comments'	=> request('event_comments', 0),
 							'event_create'		=> request('event_create', 0),
 						);
+						
+				$error .= ( !$data['event_title'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_title'] : '';
+				$error .= ( !$data['event_desc'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_desc'] : '';
+				$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
+				$error .= ( time() >= $data['event_date'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
+				
+				if ( !$error )
+				{
+					if ( $mode == '_create' )
+					{
+						$sql = sql(EVENT, $mode, $data);
+						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+					}
+					else
+					{
+						$sql = sql(EVENT, $mode, $data, 'event_id', $data_id);
+						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+					}
+					
+					$month = date('m', $data['event_date']);
+					
+					$oCache->deleteCache('data_event');
+					$oCache->deleteCache('data_calendar_' . $month);
+					$oCache->deleteCache('dsp_sn_minical');
+					$oCache->deleteCache('ly_event');
+					
+					log_add(LOG_ADMIN, $log, $mode, $sql);
+					message(GENERAL_MESSAGE, $msg);
+				}
+				else
+				{
+					log_add(LOG_ADMIN, $log, 'error', $error);
+
+					$template->assign_vars(array('ERROR_MESSAGE' => $error));
+					$template->assign_var_from_handle('ERROR_BOX', 'error');
+				}
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
@@ -106,7 +140,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"event_create\" value=\"" . $data['event_create'] . "\" />";
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['event']),
+				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
 				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['event'], $data['event_title']),
 				'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['event']),
 				'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['event']),
@@ -134,43 +168,6 @@ else
 				'S_FIELDS'		=> $fields,
 			));
 			
-			if ( request('submit', 1) )
-			{
-				$error .= ( !$data['event_title'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_title'] : '';
-				$error .= ( !$data['event_desc'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_desc'] : '';
-				$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
-				$error .= ( time() >= $data['event_date'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
-				
-				if ( !$error )
-				{
-					if ( $mode == '_create' )
-					{
-						$sql = sql(EVENT, $mode, $data);
-						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
-					}
-					else
-					{
-						$sql = sql(EVENT, $mode, $data, 'event_id', $data_id);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
-					}
-					
-					$month = date('m', $data['event_date']);
-					
-					$oCache->deleteCache('cal_member_' . $month);
-					$oCache->deleteCache('cal_guests_' . $month);
-					
-					log_add(LOG_ADMIN, $log, $mode, $sql);
-					message(GENERAL_MESSAGE, $msg);
-				}
-				else
-				{
-					log_add(LOG_ADMIN, $log, $mode, $error);
-
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
-				}
-			}
-			
 			break;
 		
 		case '_delete':
@@ -187,9 +184,11 @@ else
 				$msg = $lang['delete'] . sprintf($lang['return'], $file, $name);
 				
 				$month = date('m', $data['event_date']);
-				
-				$oCache->deleteCache('cal_member_' . $month);
-				$oCache->deleteCache('cal_guests_' . $month);
+					
+				$oCache->deleteCache('data_event');
+				$oCache->deleteCache('data_calendar_' . $month);
+				$oCache->deleteCache('dsp_sn_minical');
+				$oCache->deleteCache('ly_event');
 				
 				log_add(LOG_ADMIN, $log, $mode, $sql);
 				message(GENERAL_MESSAGE, $msg);
@@ -218,43 +217,52 @@ else
 			break;
 		
 		default:
-			
+		
 			$template->assign_block_vars('_display', array());
 			
-			$level = ( $data_level != 0 ) ? ( $data_level > 0 ) ? "event_level = $data_level" : '' : "event_level = 0";
-			$event = data(EVENT, $level, 'event_date', 1, false);
+			$lvl	= isset($_POST['level']) ? $_POST['level'] : -1;
+			$level	= ( $lvl >= 0 ) ? "event_level = $lvl" : '';
+			$event	= data(EVENT, $level, 'event_date', 1, false);
 			
-			$event_new = $event_old = '';
+			$new = $old = '';
 					
-			if ( $event )
+			if ( !$event )
+			{
+				$template->assign_block_vars('_display._entry_empty_new', array());
+				$template->assign_block_vars('_display._entry_empty_old', array());
+			}
+			else
 			{
 				foreach ( $event as $key => $row )
 				{
 					if ( $row['event_date'] > time() )
 					{
-						$event_new[] = $row;
+						$new[] = $row;
 					}
 					else if ( $row['event_date'] < time() )
 					{
-						$event_old[] = $row;
+						$old[] = $row;
 					}
 				}
 				
-				if ( !$event_new )
+				$cnt_new = count($new);
+				$cnt_old = count($old);
+				
+				if ( !$new )
 				{
 					$template->assign_block_vars('_display._entry_empty_new', array());
 				}
 				else
 				{
-					for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($event_new)); $i++ )
+					for ( $i = 0; $i < $cnt_new; $i++ )
 					{
-						$event_id	= $event_new[$i]['event_id'];
-						$event_date	= create_date('d.m.Y', $event_new[$i]['event_date'], $userdata['user_timezone']);
-						$event_time	= create_date('H:i', $event_new[$i]['event_date'], $userdata['user_timezone']);
-						$event_dura	= create_date('H:i', $event_new[$i]['event_duration'], $userdata['user_timezone']);
+						$event_id	= $new[$i]['event_id'];
+						$event_date	= create_date('d.m.Y', $new[$i]['event_date'], $userdata['user_timezone']);
+						$event_time	= create_date('H:i', $new[$i]['event_date'], $userdata['user_timezone']);
+						$event_dura	= create_date('H:i', $new[$i]['event_duration'], $userdata['user_timezone']);
 						
-						$template->assign_block_vars('_display._event_new_row', array(
-							'TITLE'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$event_id") . '" alt="" />' . $event_new[$i]['event_title'] . '</a>',
+						$template->assign_block_vars('_display._new_row', array(
+							'TITLE'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$event_id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
 							'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
 							
 							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$event_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
@@ -263,21 +271,21 @@ else
 					}
 				}
 				
-				if ( !$event_old )
+				if ( !$old )
 				{
 					$template->assign_block_vars('_display._entry_empty_old', array());
 				}
 				else
 				{
-					for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($event_old)); $i++ )
+					for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $cnt_old); $i++ )
 					{
-						$event_id	= $event_old[$i]['event_id'];
-						$event_date	= create_date('d.m.Y', $event_old[$i]['event_date'], $userdata['user_timezone']);
-						$event_time	= create_date('H:i', $event_old[$i]['event_date'], $userdata['user_timezone']);
-						$event_dura	= create_date('H:i', $event_old[$i]['event_duration'], $userdata['user_timezone']);
+						$event_id	= $old[$i]['event_id'];
+						$event_date	= create_date('d.m.Y', $old[$i]['event_date'], $userdata['user_timezone']);
+						$event_time	= create_date('H:i', $old[$i]['event_date'], $userdata['user_timezone']);
+						$event_dura	= create_date('H:i', $old[$i]['event_duration'], $userdata['user_timezone']);
 						
-						$template->assign_block_vars('_display._event_old_row', array(
-							'TITLE'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$event_id") . '" alt="" />' . $event_old[$i]['event_title'] . '</a>',
+						$template->assign_block_vars('_display._old_row', array(
+							'TITLE'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$event_id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
 							'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
 							
 							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$event_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
@@ -286,18 +294,13 @@ else
 					}
 				}
 			}
-			else
-			{
-				$template->assign_block_vars('_display._entry_empty_new', array());
-				$template->assign_block_vars('_display._entry_empty_old', array());
-			}
-			
-			$current_page = !count($event) ? 1 : ceil( count($event) / $settings['site_entry_per_page'] );
+						
+			$current_page = ( !$cnt_old ) ? 1 : ceil( $cnt_old / $settings['site_entry_per_page'] );
 			
 			$fields .= '<input type="hidden" name="mode" value="_create" />';
 					
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['event']),
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
 				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['event']),
 				
 				'L_UPCOMING'	=> $lang['upcoming'],
@@ -306,10 +309,10 @@ else
 				'L_EXPLAIN'	=> $lang['explain'],
 				'L_DATE'	=> $lang['common_date'],
 				
-				'PAGE_NUMBER'	=> count($event) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
-				'PAGE_PAGING'	=> count($event) ? generate_pagination("$file?", count($event), $settings['site_entry_per_page'], $start ) : '',
+				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page),
+				'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_old, $settings['site_entry_per_page'], $start ),
 				
-				'S_LEVEL'	=> select_level('selectsmall', 'user_level', 'level', $data_level),
+				'S_LEVEL'	=> select_level('selectsmall', 'user_level', 'level', $lvl),
 				'S_CREATE'	=> check_sid("$file?mode=_create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,

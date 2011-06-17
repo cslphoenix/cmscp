@@ -4,9 +4,9 @@ if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_votes'] )
 	{
-		$module['hm_teams']['sm_training'] = $root_file;
+		$module['hm_main']['sm_votes'] = $root_file;
 	}
 
 	return;
@@ -15,35 +15,33 @@ else
 {
 	define('IN_CMS', true);
 	
+	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_training';
+	$current	= 'sm_votes';
 	
 	include('./pagestart.php');
 	
-	load_lang('training');
+	load_lang('votes');
 
 	$error	= '';
 	$index	= '';
 	$fields	= '';
 	
-	$log	= SECTION_TRAINING;
-	$url	= POST_TRAINING;
-	$team	= POST_TEAMS;
-	$match	= POST_MATCH;
+	$log	= SECTION_VOTES;
+	$url	= POST_VOTES;
 	$file	= basename(__FILE__);
 	
-	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
+	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$sort		= ( request('sort', 1) ) ? request('sort', 1) : '';
 	$data_id	= request($url, 0);
-	$team_id	= request($team, 0);
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
+	$move		= request('move', 1);
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['training']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 		
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_training'] )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_votes'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
@@ -52,9 +50,9 @@ else
 	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	$template->set_filenames(array(
-		'body'		=> 'style/acp_training.tpl',
-		'ajax'		=> 'style/inc_request.tpl',
-		'tiny'		=> 'style/tinymce_normal.tpl',
+		'body'		=> 'style/acp_votes.tpl',
+	#	'ajax'		=> 'style/inc_request.tpl',
+	#	'tiny'		=> 'style/tinymce_normal.tpl',
 		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
@@ -66,206 +64,41 @@ else
 		
 			$template->assign_block_vars('_input', array());
 			
-			$template->assign_vars(array('FILE' => 'ajax_listmaps'));
-			$template->assign_var_from_handle('AJAX', 'ajax');
-			$template->assign_var_from_handle('TINYMCE', 'tiny');
+		#	$template->assign_vars(array('FILE' => 'ajax_listmaps'));
+		#	$template->assign_var_from_handle('AJAX', 'ajax');
+		#	$template->assign_var_from_handle('TINYMCE', 'tiny');
 			
 			if ( $mode == '_create' && !request('submit', 1) )
 			{
 				$data = array(
-							'training_vs'		=> ( request('training_vs', 2) ) ? request('training_vs', 2) : request('vs', 2),
-							'team_id'			=> ( request('team_id', 0) ) ? request('team_id', 0) : $team_id,
-							'match_id'			=> request($match),
-							'training_maps'		=> '',
-							'training_text'		=> '',
-							'training_date'		=> time(),
-							'training_create'	=> time(),
-							'training_duration'	=> '',
+							'vote_title'	=> request('vote_title', 2) ? request('training_vs', 2) : '',
+							'topic_id'		=> '',
+							'vote_text'		=> '',
+							'vote_start'	=> time(),
+							'vote_end'		=> time(),
 						);
 			}
 			else if ( $mode == '_update' && !request('submit', 1) )
 			{
-				$data = data(TRAINING, $data_id, false, 1, true);
-				
-			#	$data['training_maps'] = isset($data['training_maps']) ? unserialize($data['training_maps']) : array();
-				$data['training_maps'] = unserialize($data['training_maps']);
+				$data = data(VOTES, $data_id, false, 1, true);
 			}
 			else
 			{
-				$training_date	= mktime(request('hour', 0), request('min', 0), 00, request('month', 0), request('day', 0), request('year', 0));
-				$training_dura	= mktime(request('hour', 0), request('min', 0) + request('dmin', 0), 00, request('month', 0), request('day', 0), request('year', 0));
+				$date_start	= mktime(request('shour', 0), request('smin', 0), 00, request('smonth', 0), request('sday', 0), request('syear', 0));
+				$date_end	= mktime(request('ehour', 0), request('emin', 0), 00, request('emonth', 0), request('eday', 0), request('eyear', 0));
 				
 				$data = array(
-							'training_vs'		=> request('training_vs', 2),
-							'team_id'			=> request('team_id', 0),
-							'match_id'			=> request('match_id', 0),
-							'training_maps'		=> request('training_maps', 4),
-							'training_text'		=> request('training_text', 2),
-							'training_date'		=> $training_date,
-							'training_create'	=> request('training_create', 0),
-							'training_duration'	=> ( $training_dura - $training_date ) / 60,
+							'vote_title'	=> request('vote_title', 2),
+							'topic_id'		=> request('topic_id', 0),
+							'vote_text'		=> request('vote_text', 2),
+							'vote_start'	=> request('vote_start', 0),
+							'vote_end'		=> request('vote_end', 0),
 						);
-				
-				if ( $data['training_maps'] )
-				{
-					$ary_maps = '';
-					
-					$maps = $data['training_maps'];
-					
-					for ( $i = 0; $i < count($maps); $i++ )
-					{
-						if ( empty($maps[$i]) || $maps[$i] == '0' )
-						{
-							false;
-						}
-						else
-						{
-							$ary_maps[] = $maps[$i];
-						}
-					}
-					
-					$data['training_maps'] = is_array($ary_maps) ? $ary_maps : array();
-				}
-			}
-		
-			$sql = 'SELECT team_id, team_name FROM ' . TEAMS . ' ORDER BY team_order';
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$teams = $db->sql_fetchrowset($result);
-			
-			$s_teams = '';
-				
-			if ( $teams )
-			{	
-				$s_teams .= "<select class=\"select\" name=\"team_id\" id=\"team_id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";	
-				$s_teams .= "<option value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_team']) . "</option>";
-				
-				foreach ( $teams as $info => $value )
-				{
-					$selected = ( $data['team_id'] == $value['team_id'] ) ? ' selected="selected"' : '';
-					$s_teams .= "<option value=\"" . $value['team_id'] . "\"$selected>" . sprintf($lang['sprintf_select_format'], $value['team_name']) . "</option>";
-				}
-				
-				$s_teams .= "</select>";
-			}
-			
-			if ( $data['team_id'] > 0 )
-			{
-				$sql = "SELECT mc.*
-							FROM " . MAPS_CAT . " mc
-								LEFT JOIN " . TEAMS . " t ON t.team_id = " . $data['team_id'] . "
-								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-						WHERE mc.cat_tag = g.game_tag";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$cats = $db->sql_fetchrow($result);
-				
-				$maps = $cats ? data(MAPS, "cat_id = " . $cats['cat_id'], 'map_order ASC', 1, false) : false;
-				
-				$s_select = '';
-				
-				if ( $maps )
-				{
-					$s_select .= "<div><div><select class=\"selectsmall\" name=\"training_maps[]\" id=\"training_maps\">";
-					$s_select .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
-					
-					$cat_id		= $cats['cat_id'];
-					$cat_name	= $cats['cat_name'];
-					
-					$s_maps = '';
-					
-					for ( $j = 0; $j < count($maps); $j++ )
-					{
-						$map_id		= $maps[$j]['map_id'];
-						$map_cat	= $maps[$j]['cat_id'];
-						$map_name	= $maps[$j]['map_name'];
-
-						$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
-					}
-					
-					$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
-					$s_select .= "</select>&nbsp;<input type=\"button\" class=\"button2\" value=\"" . $lang['common_more'] . "\" onclick=\"clone(this)\"></div></div>";
-				}
-				else
-				{
-					$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
-				}
-			}
-			else
-			{
-				$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_select_team_first']);
-			}
-			
-			if ( $data['training_maps'] )
-			{
-				$maps = $data['training_maps'];
-				
-				$sql = "SELECT mc.*
-							FROM " . MAPS_CAT . " mc
-								LEFT JOIN " . TEAMS . " t ON t.team_id = " . $data['team_id'] . "
-								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-						WHERE mc.cat_tag = g.game_tag";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$cats = $db->sql_fetchrow($result);
-				
-				$data_maps = data(MAPS, 'cat_id = ' . $cats['cat_id'], 'map_order ASC', 1, false);
-				
-				for ( $i = 0; $i < count($maps); $i++ )
-				{
-					for ( $k = 0; $k < count($data_maps); $k++ )
-					{
-						if ( empty($maps[$i]) || $maps[$i] == '0' )
-						{
-							false;
-						}
-						else if ( $maps[$i] != $data_maps[$k]['map_id'] )
-						{
-							false;
-						}
-						else
-						{
-							$maps_new[] = $maps[$i];
-						}
-					}
-				}
-				
-				if ( isset($maps_new) )
-				{
-					for ( $j = 0; $j < count($maps_new); $j++ )
-					{
-						$custom_auth[$j] = "<select class=\"selectsmall\" name=\"training_maps[]\">";
-						$custom_auth[$j] .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
-						
-						$cat_id		= $cats['cat_id'];
-						$cat_name	= $cats['cat_name'];
-						
-						$s_maps = '';
-						
-						for ( $k = 0; $k < count($data_maps); $k++ )
-						{
-							$selected = ( $maps_new[$j] == $data_maps[$k]['map_id'] ) ? ' selected="selected"' : '';
-							$s_maps .= '<option value="' . $data_maps[$k]['map_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $data_maps[$k]['map_name']) . '</option>';
-						}
-						
-						$custom_auth[$j] .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
-						$custom_auth[$j] .= '</select>&nbsp;';
-				
-						$template->assign_block_vars('_input._maps_row', array('MAPS' => $custom_auth[$j]));
-					}
-				}
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-			$fields .= "<input type=\"hidden\" name=\"training_create\" value=\"" . $data['training_create'] . "\" />";
-						
+			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
 				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['training'], $data['training_vs']),
@@ -310,12 +143,12 @@ else
 					
 					if ( $mode == '_create' )
 					{
-						$sql = sql(TRAINING, $mode, $data);
+						$sql = sql(VOTES, $mode, $data);
 						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
-						$sql = sql(TRAINING, $mode, $data, 'training_id', $data_id);
+						$sql = sql(VOTES, $mode, $data, 'training_id', $data_id);
 						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 					}
 					
@@ -338,16 +171,16 @@ else
 			
 		case '_delete':
 		
-			$data = data(TRAINING, $data_id, false, 1, true);
+			$data = data(VOTES, $data_id, false, 1, true);
 		
 			if ( $data_id && $confirm )
 			{
-				$sql = sql(TRAINING, $mode, $data, 'training_id', $data_id);
+				$sql = sql(VOTES, $mode, $data, 'training_id', $data_id);
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 			#	sql(COMMENTS, $mode, $data, 'training_id', $data_id);
 			#	sql(COMMENTS_READ, $mode, $data, 'training_id', $data_id);
-				sql(TRAINING_USERS, $mode, false, 'training_id', $data_id);
+				sql(VOTES_USERS, $mode, false, 'training_id', $data_id);
 					
 			#	$oCache -> deleteCache('subnavi_training_*');
 				
@@ -379,7 +212,7 @@ else
 		default:
 		
 			$template->assign_block_vars('_display', array());
-			
+			/*
 			$teams = data(TEAMS, false, 'team_order', 0, false);
 			
 			$s_sort = "<select class=\"selectsmall\" name=\"$team\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
@@ -412,7 +245,7 @@ else
 			$select_id = ( $team_id >= '1' ) ? "AND tr.team_id = $team_id" : '';
 			
 			$sql = "SELECT tr.*, g.game_image, g.game_size
-						FROM " . TRAINING . " tr, " . TEAMS . " t, " . GAMES . " g
+						FROM " . VOTES . " tr, " . TEAMS . " t, " . GAMES . " g
 						WHERE tr.team_id = t.team_id AND t.team_game = g.game_id $select_id
 					ORDER BY training_date";
 			if ( !($result = $db->sql_query($sql)) )
@@ -491,7 +324,7 @@ else
 				'PAGE_NUMBER' => ( count($training) ) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
 				'PAGE_PAGING' => ( count($training) ) ? generate_pagination('admin_match.php?', count($training), $settings['site_entry_per_page'], $start) : '',
 			));
-			
+			*/
 			break;
 	}
 

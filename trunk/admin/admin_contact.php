@@ -6,22 +6,22 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'])
 	{
-		$module['_headmenu_10_contact']['_submenu_overview'] = $root_file;
+		$module['hm_contact']['sm_overview'] = $root_file;
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] )
 	{
-		$module['_headmenu_10_contact']['_submenu_contact'] = $root_file . "?mode=contact";
+		$module['hm_contact']['sm_contact'] = $root_file . "?mode=contact";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_joinus'] )
 	{
-		$module['_headmenu_10_contact']['_submenu_joinus'] = $root_file . "?mode=joinus";
+		$module['hm_contact']['sm_joinus'] = $root_file . "?mode=joinus";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_fightus'] )
 	{
-		$module['_headmenu_10_contact']['_submenu_fightus'] = $root_file . "?mode=fightus";
+		$module['hm_contact']['sm_fightus'] = $root_file . "?mode=fightus";
 	}
 
 	return;
@@ -32,7 +32,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_overview';
+	$current	= 'sm_overview';
 	
 	include('./pagestart.php');
 	
@@ -42,8 +42,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_GAMES;
-	$url	= POST_CONTACT_URL;
+	$log	= SECTION_GAMES;
+	$url	= POST_CONTACT;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -69,7 +69,7 @@ else
 	{
 		case 'contact':
 			
-			$current = '_submenu_contact';
+			$current = 'sm_contact';
 			
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_contact'] )
 			{
@@ -81,7 +81,7 @@ else
 			
 		case 'joinus':
 		
-			$current = '_submenu_joinus';
+			$current = 'sm_joinus';
 			
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_joinus'] )
 			{
@@ -93,7 +93,7 @@ else
 			
 		case 'fightus':
 		
-			$current = '_submenu_fightus';
+			$current = 'sm_fightus';
 			
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_fightus'] )
 			{
@@ -234,7 +234,7 @@ else
 		'TAB_AKTIV3'	=> $tab_aktiv3,
 		
 		'PAGINATION' => ( count($data) ) ? generate_pagination('admin_contact.php?', count($data), $settings['site_entry_per_page'], $start) : '',
-		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		
 		'S_NORMAL'	=> check_sid("$file?mode=contact"),
 		'S_JOINUS'	=> check_sid("$file?mode=joinus"),
