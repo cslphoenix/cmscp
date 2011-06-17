@@ -433,9 +433,7 @@ function session_end($session_id, $user_id)
 	//
 	// Delete existing session
 	//
-	$sql = 'DELETE FROM ' . SESSIONS . " 
-		WHERE session_id = '$session_id' 
-			AND session_user_id = $user_id";
+	$sql = 'DELETE FROM ' . SESSIONS . " WHERE session_id = '$session_id' AND session_user_id = $user_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'Error removing user session', '', __LINE__, __FILE__, $sql);
