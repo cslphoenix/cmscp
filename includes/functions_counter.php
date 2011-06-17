@@ -67,33 +67,99 @@ function counter_update()
 
 function counter_result()
 {
-	global $db, $lang, $settings, $template, $userdata;
+	global $db, $lang, $settings, $template, $userdata, $oCache;
 	
-	$sql = "SELECT counter_entry FROM " . COUNTER_COUNTER . " WHERE counter_date = CURDATE()";
-	$tmp = _cached($sql, 'count_day', 1, 1800);
-	$stats_day = $tmp['counter_entry'];
+	if ( defined('CACHE') )
+	{
+		$sCacheName = 'data_counter';
 
-	$sql = "SELECT counter_entry FROM " . COUNTER_COUNTER . " WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
-	$tmp = _cached($sql, 'count_yesterday', 1, 86400);
-	$stats_yesterday = $tmp['counter_entry'];
+		if ( ( $counter_data = $oCache -> readCache($sCacheName)) === false )
+		{
+			$sql = "SELECT counter_entry AS count_day FROM " . COUNTER_COUNTER . " WHERE counter_date = CURDATE()";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$count_day = $db->sql_fetchrow($result);
+		
+			$sql = "SELECT COUNT(counter_entry) AS count_yesterday FROM " . COUNTER_COUNTER . " WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$count_yesterday = $db->sql_fetchrow($result);
+			
+			$sql = "SELECT SUM(counter_entry) AS count_month FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$count_month = $db->sql_fetchrow($result);
+			
+			$sql = "SELECT SUM(counter_entry) AS count_year FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%y') = DATE_FORMAT(NOW(), '%y')";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$count_year = $db->sql_fetchrow($result);
+			
+			$sql = "SELECT SUM(counter_entry) AS count_total FROM " . COUNTER_COUNTER;
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$count_total = $db->sql_fetchrow($result);
+			
+			$counter_data = array_merge($count_day, $count_yesterday, $count_month, $count_year, $count_total);
+			
+			$oCache -> writeCache($sCacheName, $counter_data);
+		}
+	}
+	else
+	{
+		$sql = "SELECT counter_entry AS count_day FROM " . COUNTER_COUNTER . " WHERE counter_date = CURDATE()";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$count_day = $db->sql_fetchrow($result);
 	
-	$sql = "SELECT SUM(counter_entry) AS count FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')";
-	$tmp = _cached($sql, 'count_month', 1, 86400);
-	$stats_month = $tmp['count'];
+		$sql = "SELECT SELECT COUNT(counter_entry) AS count_yesterday FROM " . COUNTER_COUNTER . " WHERE counter_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$count_yesterday = $db->sql_fetchrow($result);
+		
+		$sql = "SELECT SUM(counter_entry) AS count_month FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%m') = DATE_FORMAT(NOW(), '%m')";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$count_month = $db->sql_fetchrow($result);
+		
+		$sql = "SELECT SUM(counter_entry) AS count_year FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%y') = DATE_FORMAT(NOW(), '%y')";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$count_year = $db->sql_fetchrow($result);
+		
+		$sql = "SELECT SUM(counter_entry) AS count_total FROM " . COUNTER_COUNTER;
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$count_total = $db->sql_fetchrow($result);
+		
+		$counter_data = array_merge($count_day, $count_yesterday, $count_month, $count_year, $count_total);
+	}
 	
-    $sql = "SELECT SUM(counter_entry) AS count FROM " . COUNTER_COUNTER . " WHERE counter_entry != 0 AND DATE_FORMAT(counter_date, '%y') = DATE_FORMAT(NOW(), '%y')";
-	$tmp = _cached($sql, 'count_year', 1, 86400);
-	$stats_year = $tmp['count'];
-	
-	$sql = "SELECT SUM(counter_entry) AS count FROM " . COUNTER_COUNTER;
-	$tmp = _cached($sql, 'count_total', 1, 86400);
-	$stats_total = $tmp['count'];
-	
-	$l_counter_head = sprintf($lang['counter_today'], $stats_day);
-	$l_counter_head .= sprintf($lang['counter_yesterday'], $stats_yesterday);
-	$l_counter_head .= sprintf($lang['counter_month'], $stats_month);
-	$l_counter_head .= sprintf($lang['counter_year'], $stats_year);
-	$l_counter_head .= sprintf($lang['counter_total'], $stats_total);
+	$l_counter_head = sprintf($lang['counter_today'], $counter_data['count_day']);
+	$l_counter_head .= sprintf($lang['counter_yesterday'], $counter_data['count_yesterday']);
+	$l_counter_head .= sprintf($lang['counter_month'], $counter_data['count_month']);
+	$l_counter_head .= sprintf($lang['counter_year'], $counter_data['count_year']);
+	$l_counter_head .= sprintf($lang['counter_total'], $counter_data['count_total']);
 	
 	$template->assign_vars(array(
 		'TOTAL_COUNTER_HEAD'		=> $l_counter_head,

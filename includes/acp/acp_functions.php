@@ -1,5 +1,24 @@
 <?php
 
+function match_round($css, $round, $default)
+{
+	global $lang;
+	
+	$select = "<select class=\"$css\" name=\"map_round[$round]\">";
+				
+	for ( $i = 1; $i < 11; $i++ )
+	{
+	#	$i = ( $i < 10 ) ? '0' . $i : $i;
+		
+		$mark	= ( $i == $default ) ? 'selected="selected"' : '';
+		$select .= "<option value=\"$i\" $mark>" . sprintf($lang['sprintf_select_format'], sprintf($lang['sprintf_round'], $i)) . "</option>";
+	}
+	
+	$select .= "</select>";
+	
+	return $select;
+}
+
 /*
  *	Soll die Abfragen der Datenbank einfacher machen!
  *
@@ -22,9 +41,10 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 		case CASH_BANK:		$field_id = '';				break;
 		case CONTACT:		$field_id = 'contact_id';	break;
 		case DISALLOW:		$field_id = 'disallow_id';	break;
-	#	case DOWNLOAD:		$field_id = 'download_id';	break;
-		case DOWNLOAD_CAT:	$field_id = 'download_id';	break;
+		case DOWNLOAD:		$field_id = 'file_id';		break;
+		case DOWNLOAD_CAT:	$field_id = 'cat_id';		break;
 		case EVENT:			$field_id = 'event_id';		break;
+		case ERROR:			$field_id = 'error_id';		break;
 		case FORUM:			$field_id = 'forum_id';		break;		
 		case FORUM_CAT:		$field_id = 'cat_id';		break;
 		case GALLERY:		$field_id = 'gallery_id';	break;			
@@ -47,6 +67,7 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 		case RANKS:			$field_id = 'rank_id';		break;
 	#	case RATE:			$field_id = 'rate_id';		break;	
 		case SERVER:		$field_id = 'server_id';	break;
+		case SERVER_TYPE:	$field_id = 'type_id';		break;
 		case TEAMSPEAK:		$field_id = 'teamspeak_id';	break;	
 		case THEMES:		$field_id = 'themes_id';	break;
 		case TRAINING:		$field_id = 'training_id';	break;
@@ -118,9 +139,6 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 /*
  *	Gibt eine Liste wieder, wonach sortiert werden kann
  *
- *	Anmerkung:	mit AJAX und Kategorie, geht der Disable verloren!
- *				diese Funktion vielleicht mit AJAX Datei einbinden lassen!
- *
  *	@param: string	$mode		example: games
  *	@param: string	$option		example: game_id != -1
  *	@param: string	$css		example: select
@@ -130,18 +148,87 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 function simple_order($mode, $option, $css, $default)
 {
 	/*
-		require:	newscat
-					
+		require:	acp_game,
+					acp_group,
+					acp_map,
+					acp_navi,
+					acp_network,
+					acp_newscat,
+					acp_profile,
+					acp_rank
 	*/
-	global $db, $lang, $db_prefix;
+	global $db, $lang;
 	
 	$cats = '';
 	
-	$field = str_replace($db_prefix, '', $mode);
+	$filter = array(DOWNLOAD_CAT, MAPS_CAT, PROFILE_CAT);
+	
+	if ( in_array($mode, $filter) )
+	{
+		$sql = "SELECT * FROM $mode ORDER BY cat_order ASC";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		$field = 'cat';
+	}
 	
 	switch ( $mode )
 	{
+		/*
+		case DOWNLOAD_CAT:
+		
+			$field = 'cat';
+		
+			$sql = "SELECT * FROM " . DOWNLOAD_CAT . " ORDER BY cat_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
+		*/
+		
+		case SERVER:
+		
+			$field = 'server';
+		
+			$sql = "SELECT * FROM " . SERVER . " WHERE server_type = $option ORDER BY server_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
+			
+		case GAMES:
+		
+			$field = 'game';
+		
+			$sql = "SELECT * FROM " . GAMES . " WHERE $option ORDER BY game_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
+			
+		case GROUPS:
+		
+			$field = 'group';
+		
+			$sql = "SELECT * FROM " . GROUPS . " WHERE $option ORDER BY group_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
+			
 		case MAPS:
+		
+			$field = 'map';
 		
 			$sql = "SELECT cat_id AS cat_type, cat_name FROM " . MAPS_CAT . " WHERE cat_id = $option ORDER BY cat_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
@@ -156,11 +243,11 @@ function simple_order($mode, $option, $css, $default)
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			$field = 'map';
-			
 			break;
-			
+		/*	
 		case MAPS_CAT:
+		
+			$field = 'cat';
 		
 			$sql = "SELECT * FROM " . MAPS_CAT . " ORDER BY cat_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
@@ -168,11 +255,61 @@ function simple_order($mode, $option, $css, $default)
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
+			break;
+		*/	
+		case NAVI:
+		
+			$field = 'navi';
+		
+			$cats = array(
+				'0' => array('cat_type' => NAVI_MAIN,	'cat_name' => $lang['main']),
+				'1' => array('cat_type' => NAVI_CLAN,	'cat_name' => $lang['clan']),
+				'2' => array('cat_type' => NAVI_COM,	'cat_name' => $lang['com']),
+				'3' => array('cat_type' => NAVI_MISC,	'cat_name' => $lang['misc']),
+				'4' => array('cat_type' => NAVI_USER,	'cat_name' => $lang['user']),
+			);
+			
+			$sql = "SELECT * FROM " . NAVI . " WHERE navi_type = $option ORDER BY navi_type, navi_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
+			
+		case NETWORK:
+		
+			$field = 'network';
+			
+			$cats = array(
+				'0' => array('cat_type' => NETWORK_LINK,	'cat_name' => $lang['link']),
+				'1' => array('cat_type' => NETWORK_PARTNER,	'cat_name' => $lang['partner']),
+				'2' => array('cat_type' => NETWORK_SPONSOR,	'cat_name' => $lang['sponsor']),
+			);
+			
+			$sql = "SELECT * FROM " . NETWORK . " WHERE network_type = $option ORDER BY network_type, network_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
+			
+		case NEWSCAT:
+		
 			$field = 'cat';
 		
+			$sql = "SELECT * FROM " . NEWSCAT . " ORDER BY cat_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
 			break;
 			
 		case PROFILE:
+		
+			$field = 'profile';
 		
 			$sql = "SELECT cat_id AS cat_type, cat_name FROM " . PROFILE_CAT . " WHERE cat_id = $option ORDER BY cat_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
@@ -188,8 +325,10 @@ function simple_order($mode, $option, $css, $default)
 			}
 			
 			break;
-			
+		/*	
 		case PROFILE_CAT:
+		
+			$field = 'cat';
 			
 			$sql = "SELECT * FROM " . PROFILE_CAT . " ORDER BY cat_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
@@ -197,86 +336,16 @@ function simple_order($mode, $option, $css, $default)
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			$field = 'cat';
-			
 			break;
-			
-		case NAVI:
-		
-			$cats = array(
-				'0' => array('cat_type' => NAVI_MAIN, 'cat_name' => $lang['main']),
-				'1' => array('cat_type' => NAVI_CLAN, 'cat_name' => $lang['clan']),
-				'2' => array('cat_type' => NAVI_COM, 'cat_name' => $lang['com']),
-				'3' => array('cat_type' => NAVI_MISC, 'cat_name' => $lang['misc']),
-				'4' => array('cat_type' => NAVI_USER, 'cat_name' => $lang['user']),
-			);
-			
-			$sql = "SELECT * FROM " . NAVI . " WHERE navi_type = $option ORDER BY navi_type, navi_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-			
-		case NEWSCAT:
-		
-			$sql = "SELECT * FROM " . NEWSCAT . " ORDER BY cat_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			$field = 'cat';
-			
-			break;
-		
-		case GAMES:
-		
-			$sql = "SELECT * FROM " . GAMES . " WHERE $option ORDER BY game_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-			
-		case GROUPS:
-		
-			$sql = "SELECT * FROM " . GROUPS . " WHERE $option ORDER BY group_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			$field = 'group';
-			
-			break;			
-			
-		case NETWORK:
-			
-			$cats = array(
-				'0' => array('cat_type' => NETWORK_LINK, 'cat_name' => $lang['link']),
-				'1' => array('cat_type' => NETWORK_PARTNER, 'cat_name' => $lang['partner']),
-				'2' => array('cat_type' => NETWORK_SPONSOR, 'cat_name' => $lang['sponsor']),
-			);
-			
-			$sql = "SELECT * FROM " . NETWORK . " WHERE network_type = $option ORDER BY network_type, network_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-			
-		
-			
+		*/
 		case RANKS:
 		
+			$field = 'rank';	
+				
 			$cats = array(
-				'0' => array('cat_type' => RANK_PAGE, 'cat_name' => $lang['page']),
-				'1' => array('cat_type' => RANK_FORUM, 'cat_name' => $lang['forum']),
-				'2' => array('cat_type' => RANK_TEAM, 'cat_name' => $lang['team']),
+				'0' => array('cat_type' => RANK_PAGE,	'cat_name' => $lang['page']),
+				'1' => array('cat_type' => RANK_FORUM,	'cat_name' => $lang['forum']),
+				'2' => array('cat_type' => RANK_TEAM,	'cat_name' => $lang['team']),
 			);
 			
 			$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = $option ORDER BY rank_type, rank_order ASC";
@@ -286,8 +355,6 @@ function simple_order($mode, $option, $css, $default)
 			}
 			
 			break;
-			
-		
 	}	
 	$entries = $db->sql_fetchrowset($result);
 	
@@ -456,153 +523,23 @@ function update($table, $index, $move, $index_id)
 	return;
 }
 
-function sql($table, $type, $submit, $id_field = '', $id = '')
-{
-	global $db, $lang;
-	
-	/*
-		@params:	$table		=> SQL Table
-		@params:	$type		=> insert, update, delete
-		@params:	$submit		=> Data
-		@params:	$id_field	=> ID Field
-		@params:	$id			=> ID
-	*/
-	
-	if ( strstr($type, 'create') )
-	{
-		foreach ( $submit as $key => $var )
-		{
-			$keys[] = $key;
-			$vars[] = $var;
-		}
-		
-		$var = $vars;
-		
-		$keys = implode(', ', $keys);
-		$vars = implode('\', \'', $vars);
-		
-		$sql = "INSERT INTO $table ($keys) VALUES ('$vars')";
-		
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = $var[0];
-	}
-	else if ( strstr($type, 'update') )
-	{
-		$data = $submit;
-		$data_db = data($table, $id, false, 1, 1);
-		
-		if ( $data_db )
-		{
-			unset($data_db[$id_field]);
-		
-			$new = array_diff_assoc($data_db, $data);
-		
-			if ( $new )
-			{
-				$change = '';
-				
-				foreach ( $new as $key_new => $value_new )
-				{
-					foreach ( $submit as $key_submit => $value_submit )
-					{
-						if ( $key_new == $key_submit )
-						{
-							$change[] = array(
-										'field'	=> $key_new,
-										'data'	=> $value_new,
-										'post'	=> $value_submit,
-									);
-						}
-					}
-				}
-				
-				$change = $change;
-			}
-			else
-			{
-				$change = '';
-			}
-		}
-		else
-		{
-			$change = '';
-		}
-		
-		foreach ( $submit as $key => $var )
-		{
-			$input[] = "$key = '$var'";
-		}
-		
-		$input = implode(', ', $input);
-		
-		$sql = "UPDATE $table SET $input WHERE $id_field = $id";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = $change;
-	}
-	else if ( strstr($type, 'alter') )
-	{
-		$part = $submit['part'];
-		$type = $submit['type'];
-		
-		$sql = "ALTER TABLE $table $part $type";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = '';
-	}
-	else if ( strstr($type, 'delete') )
-	{
-		unset($submit[$id_field]);
-		
-		if ( !empty($submit) )
-		{
-			foreach ( $submit as $key => $var )
-			{
-				$vars[] = $var;
-			}
-		}
-		else
-		{
-			$var[] = '';
-		}
-		
-		$sql = "DELETE FROM $table WHERE $id_field = $id";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = $var[0];
-	}
-	
-	return $return;
-}
-
 function orders($mode, $type = '')
 {
 	global $db;
+	
+	if ( in_array($mode, array(DOWNLOAD_CAT, NEWSCAT, MAPS_CAT, FORUM_CAT, PROFILE_CAT)) )
+	{
+		$idfield = 'cat_id';
+		$orderfield	= 'cat_order';
+	}
 
 	switch ( $mode )
 	{
 		case GAMES:			$idfield = 'game_id';		$orderfield = 'game_order';		break;
-		case NEWSCAT:		$idfield = 'cat_id';		$orderfield	= 'cat_order';		break;
 		case SERVER:		$idfield = 'server_id';		$orderfield	= 'server_order';	break;
 		case TEAMS:			$idfield = 'team_id';		$orderfield = 'team_order';		break;
 		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
-		case MAPS_CAT:		$idfield = 'cat_id';		$orderfield	= 'cat_order';		break;
 		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
-		case FORUM_CAT:		$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
-		case PROFILE_CAT:	$idfield = 'cat_id';		$orderfield = 'cat_order';		break;
 		
 		case FORUM:			$idfield = 'forum_id';		$orderfield = 'forum_order';	$typefield = 'cat_id';				break;
 		case MAPS:			$idfield = 'map_id';		$orderfield	= 'map_order';		$typefield = 'cat_id';				break;
@@ -712,7 +649,7 @@ function orders_new($mode, $type, $id)
 
 function size_dir($path)
 {
-#	global $settings, $db, $lang;
+	global $lang;
 	
 	$size = 0;
 
@@ -734,11 +671,11 @@ function size_dir($path)
 		//
 		if ( $size >= 1048576 )
 		{
-			$size = round($size / 1048576 * 100) / 100 . " MB";
+			$size = round($size/1048576) . " MB";
 		}
-		else if($size >= 1024)
+		else if( $size >= 1024 )
 		{
-			$size = round($size / 1024 * 100) / 100 . " KB";
+			$size = round($size/1024) . " KB";
 		}
 		else
 		{
@@ -747,8 +684,7 @@ function size_dir($path)
 	}
 	else
 	{
-		$size = 'Not_available';
-#		$size = $lang['Not_available'];
+		$size = $lang['msg_unavailable_size_dir'];
 	}
 	
 	return $size;
@@ -762,7 +698,7 @@ function size_file($file)
 	{
 		$size = round($file / 1048576 * 100) / 100 . " MB";
 	}
-	else if($file >= 1024)
+	else if( $file >= 1024 )
 	{
 		$size = round($file / 1024 * 100) / 100 . " KB";
 	}
@@ -772,6 +708,32 @@ function size_file($file)
 	}
 	
 	return $size;
+}
+
+function _size($size, $round)
+{
+	global $lang;
+	
+	$return = 0;
+	
+	if ( $size >= 1073741824 )
+	{
+		$return = round($size/1073741824, $round) . $lang['size_gb'];
+	}
+	else if ( $size >= 1048576 )
+	{
+		$return = round($size/1048576, $round) . $lang['size_mb'];
+	}
+	else if ( $size >= 1024 )
+	{
+		$return = round($size/1024, $round) . $lang['size_kb'];
+	}
+	else
+	{
+		$return = round($size, $round) . $lang['size_by'];
+	}
+	
+	return $return;
 }
 
 /*
@@ -951,7 +913,7 @@ function get_data_index($table, $field, $where, $order)
 	return $return;
 }
 
-function select_map($team, $default)
+function select_map($team, $num, $default = '')
 {
 	global $db, $lang;
 	
@@ -982,7 +944,7 @@ function select_map($team, $default)
 		
 		if ( $maps )
 		{
-			$s_select .= "<select class=\"select\" name=\"map_name[]\" id=\"map_name\">";
+			$s_select .= "<select class=\"select\" name=\"map_name[$num]\" id=\"map_name\">";
 			$s_select .= "<optgroup label=\"" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "\" >";
 			
 			$s_maps = '';
@@ -1010,40 +972,6 @@ function select_map($team, $default)
 	{
 		$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
 	}
-	
-	/*
-	$cats = data(MAPS_CAT, " cat_tag = '" . $detail['game_tag'] . "'", 'cat_order ASC', 1, true);
-	$maps = $cats ? data(MAPS, " cat_id = " . $cats['cat_id'], 'map_order ASC', 1, false) : '';
-	
-	$s_maps = '';
-	
-	if ( $maps )
-	{
-		$s_maps .= "<select class=\"selectsmall\" name=\"map_name[]\" id=\"map_name\">";
-		$s_maps .= "<option selected=\"selected\" value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
-		
-		$cat_id		= $cats['cat_id'];
-		$cat_name	= $cats['cat_name'];
-		
-		$s_map = '';
-		
-		for ( $j = 0; $j < count($maps); $j++ )
-		{
-			$map_id		= $maps[$j]['map_id'];
-			$map_cat	= $maps[$j]['cat_id'];
-			$map_name	= $maps[$j]['map_name'];
-
-			$s_map .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
-		}
-		
-		$s_maps .= ( $s_map != '' ) ? "<optgroup label=\"$cat_name\">$s_map</optgroup>" : '';
-		$s_maps .= "</select>";
-	}
-	else
-	{
-		$s_maps = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
-	}
-	*/
 	
 	return $s_select;
 }

@@ -46,17 +46,29 @@ if ( $config['gzip_compress'] )
 //
 $time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
 //eregi($time_reg, $config['default_dateformat'], $regs);
-preg_match($time_reg, $config['default_dateformat'], $regs);
-$config['default_timeformat'] = $regs[1];
+preg_match($time_reg, $userdata['user_dateformat'], $regs);
+$userdata['default_timeformat'] = $regs[1];
 unset($time_reg);
 unset($regs);
 
 //
 // GET THE TIME TODAY AND YESTERDAY
 //
-$today_ary = explode('|', create_date('m|d|Y', time(), $config['page_timezone']));
-$config['time_today'] = gmmktime(0 - $config['page_timezone'] - $config['page_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-$config['time_yesterday'] = $config['time_today'] - 86400;
+$today_ary = explode('|', create_date('m|d|Y', time(), $userdata['user_timezone']));
+$zeit = localtime(time() , 1);
+
+if ( $zeit['tm_isdst'] )
+{
+	$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'] - date("I"),0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+}
+else
+{
+	$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+}
+
+#$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'] - $userdata['dstime'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+$userdata['time_yesterday'] = $userdata['time_today'] - 86400;
+$userdata['time_tomorrow'] = $userdata['time_today'] + 86400;
 unset($today_ary);
 
 //
@@ -117,28 +129,36 @@ if ( $settings['site_counter'] == '1' )
 	counter_result();
 }
 
-$sql = "SELECT group_id, group_name, group_color, group_order FROM " . GROUPS . " WHERE group_legend = 1 ORDER BY group_order";
-$groups_data = _cached($sql, 'list_overall_group');
-
-if ( $groups_data )
-{
-	$groups_list = array();
+	$sql = "SELECT group_id, group_name, group_color, group_legend FROM " . GROUPS . " WHERE group_single_user <> 1 ORDER BY group_order";
+#	if ( !($result = $db->sql_query($sql)) )
+#	{
+#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+#	}
+#	$groups = $db->sql_fetchrowset($result);
+	$groups = _cached($sql, 'dsp_groups');
 	
-	for ( $i=0; $i < count($groups_data); $i++ )
+	if ( $groups )
 	{
-		$groups_id		= $groups_data[$i]['group_id'];
-		$groups_name	= $groups_data[$i]['group_name'];
-		$groups_style	= $groups_data[$i]['group_color'];
+		$list = array();
 		
-		$groups_list[] = '<a href="' . check_sid('groups.php?mode=view&amp;' . POST_GROUPS_URL . '=' . $groups_id) . '" style="color:#' . $groups_style . '"><b>' . $groups_name . '</b></a>';
+		for ( $i = 0; $i < count($groups); $i++ )
+		{
+			$groups_id		= $groups[$i]['group_id'];
+			$groups_name	= $groups[$i]['group_name'];
+			$groups_style	= $groups[$i]['group_color'];
+			
+			if ( $groups[$i]['group_legend'] == 1 )
+			{
+				$list[] = "<a href=\"" . check_sid("groups.php?" . POST_GROUPS . "=$groups_id") . "\" style=\"color:#$groups_style\"><b>$groups_name</b></a>";
+			}
+		}
+		
+		$groups_list = implode(', ', $list);
 	}
-	
-	$groups_list = implode(', ', $groups_list);
-}
-else
-{
-	$groups_list = '';
-}
+	else
+	{
+		$groups_list = '';
+	}
 			
 //
 // Get basic (user_names + totals) online
@@ -184,12 +204,12 @@ while( $row = $db->sql_fetchrow($result) )
 
 			if ( $row['user_allow_viewonline'] )
 			{
-				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
+				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
 				$logged_visible_online++;
 			}
 			else
 			{
-				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER_URL . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
+				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
 				$logged_hidden_online++;
 			}
 
@@ -389,7 +409,8 @@ if ( $settings['subnavi_statsonline'] )
 $userauth = auth_acp_check($userdata['user_id']);
 
 $auth = array();
-foreach ($userauth as $key => $value)
+
+foreach ( $userauth as $key => $value )
 {
 	if ($value != '0')
 	{
@@ -427,7 +448,7 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 // in a template.
 //
 $template->assign_vars(array(
-
+	'L_ENTRY_NO' => $lang['no_entry'],
 	'NO_ENTRY' => $lang['no_entry'],
 	'L_SUBNAVI_NEWS'	=> $lang['subnavi_news'],
 	'L_SUBNAVI_MATCH'	=> $lang['subnavi_match'],
@@ -466,7 +487,7 @@ $template->assign_vars(array(
 	'L_PASSWORD' => $lang['Password'],
 	'L_LOGIN_LOGOUT' => $l_login_logout,
 	'L_LOGIN' => $lang['Login'],
-	'L_LOG_ME_IN' => $lang['Log_me_in'],
+	'L_LOGS_ME_IN' => $lang['Log_me_in'],
 	'L_AUTO_LOGIN' => $lang['Log_me_in'],
 	
 	'L_REGISTER' => $lang['Register'],
@@ -516,8 +537,6 @@ $template->assign_vars(array(
 	
 	'NAV_LINKS' => $nav_links_html)
 );
-
-
 
 //
 // Login box?

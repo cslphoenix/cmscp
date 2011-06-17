@@ -99,7 +99,7 @@ function _send_notice($mail_data, $type, $file, $urlstring = '')
 			'SITENAME'	=> $page_name,
 			'USERNAME'	=> $user_name,
 			'EMAIL_SIG'	=> (!empty($page_email_sig)) ? str_replace('<br>', "\n", "-- \n" . $page_email_sig) : '', 
-			'U_URL'		=> server_url($file) . $urlstring,
+			'U'		=> server_url($file) . $urlstring,
 		));
 		
 		$emailer->send();

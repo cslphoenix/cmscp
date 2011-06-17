@@ -106,8 +106,6 @@ function select_level($css, $msg, $name, $mark, $level = '')
 {
 	global $lang;
 	
-	debug($level);
-	
 	$s_select = '';
 	
 	$s_select .= "<select class=\"$css\" name=\"$name\" id=\"$name\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
@@ -746,11 +744,13 @@ function select_date($class, $default, $var, $value, $create = '')
 	
 	global $lang;
 	
+	$time = time();
+	
 	switch ( $default )
 	{
 		case 'day':
 		
-			if ( $create <= ( time()- 86400 ) )
+			if ( $create > $time )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}

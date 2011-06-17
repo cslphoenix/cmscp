@@ -63,7 +63,7 @@ function bt_add($creator, $title, $desc, $type, $php, $sql, $message)
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	log_add(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_BUGTRACKER, 'bt_add');
+	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_BUGTRACKER, 'bt_add');
 	
 	return;
 }
@@ -97,7 +97,7 @@ function bt_edit($bt_id, $title, $desc, $type, $php, $sql, $message)
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 
-	log_add(LOG_USER, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_BUGTRACKER, 'bt_edit');
+	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_BUGTRACKER, 'bt_edit');
 	
 	return;
 }

@@ -457,20 +457,20 @@ function query_one($ip, $port, $game, $request)
       $rawsetting[$i] = strtolower($rawsetting[$i]);
       $rawsetting[$i] = preg_replace("/\^./", "", $rawsetting[$i]);
       $rawsetting[$i+1] = preg_replace("/\^./", "", $rawsetting[$i+1]);
-      $setting[$rawsetting[$i]] = $rawsetting[$i+1];
+      $settings[$rawsetting[$i]] = $rawsetting[$i+1];
       $i++;
     }
 
     unset($data);
 
-    $data['gamemod']    = $setting['gamename'];
-    $data['hostname']   = $setting['sv_hostname'];
-    $data['mapname']    = strtolower($setting['mapname']);
+    $data['gamemod']    = $settings['gamename'];
+    $data['hostname']   = $settings['sv_hostname'];
+    $data['mapname']    = strtolower($settings['mapname']);
     $data['players']    = count($rawdata) - 2;
-    $data['maxplayers'] = $setting['sv_maxclients'];
-    $data['password']   = $setting['g_needpass'];
+    $data['maxplayers'] = $settings['sv_maxclients'];
+    $data['password']   = $settings['g_needpass'];
 
-    if (isset($setting['pswrd'])) { $data['password'] = $setting['pswrd']; }
+    if (isset($settings['pswrd'])) { $data['password'] = $settings['pswrd']; }
 
     if ($request == "info") { return $data; }
 
@@ -550,7 +550,7 @@ function query_one($ip, $port, $game, $request)
 
         if ($rawsetting[$i] != "final" && $rawsetting[$i] != "queryid")
         {
-          $setting[$rawsetting[$i]] = $rawsetting[$i+1];
+          $settings[$rawsetting[$i]] = $rawsetting[$i+1];
         }
 
         $i++;
@@ -558,21 +558,21 @@ function query_one($ip, $port, $game, $request)
 
       unset($data);
 
-      $data['gamemod'] = $setting['gamename'];
+      $data['gamemod'] = $settings['gamename'];
 
       if (!$data['gamemod'] || $game == "bf1942")
       {
-        $data['gamemod'] = $setting['gameid'];
+        $data['gamemod'] = $settings['gameid'];
       }
 
-      $data['hostname'] = $setting['sv_hostname'];
+      $data['hostname'] = $settings['sv_hostname'];
 
-      if (!$data['hostname']) { $data['hostname'] = $setting['hostname']; }
+      if (!$data['hostname']) { $data['hostname'] = $settings['hostname']; }
 
-      $data['mapname']    = str_replace("_"," ",$setting['mapname']);
-      $data['players']    = $setting['numplayers'];
-      $data['maxplayers'] = $setting['maxplayers'];
-      $data['password']   = $setting['password'];
+      $data['mapname']    = str_replace("_"," ",$settings['mapname']);
+      $data['players']    = $settings['numplayers'];
+      $data['maxplayers'] = $settings['maxplayers'];
+      $data['password']   = $settings['password'];
 
       return $data;
     }
@@ -674,19 +674,19 @@ function query_one($ip, $port, $game, $request)
       $setting_code = substr($rawdata[$i], 0, 2);
       $setting_code = $ravenshield_codes[$setting_code];
       $rawdata[$i] = substr($rawdata[$i], 3);
-      $setting[$setting_code] = trim($rawdata[$i]);
+      $settings[$setting_code] = trim($rawdata[$i]);
     }
 
     if ($request == "info")
     {
       unset($data);
 
-      $data['gamemod']    = $setting['gamename'];
-      $data['hostname']   = $setting['hostname'];
-      $data['mapname']    = $setting['mapname'];
-      $data['players']    = $setting['players'];
-      $data['maxplayers'] = $setting['maxplayers'];
-      $data['password']   = $setting['password'];
+      $data['gamemod']    = $settings['gamename'];
+      $data['hostname']   = $settings['hostname'];
+      $data['mapname']    = $settings['mapname'];
+      $data['players']    = $settings['players'];
+      $data['maxplayers'] = $settings['maxplayers'];
+      $data['password']   = $settings['password'];
 
       return $data;
     }
@@ -694,10 +694,10 @@ function query_one($ip, $port, $game, $request)
 
     if ($request == "players")
     {
-      $playername  = explode("/", $setting['playername']);
-      $playertime  = explode("/", $setting['playertime']);
-      $playerping  = explode("/", $setting['playerping']);
-      $playerscore = explode("/", $setting['playerscore']);
+      $playername  = explode("/", $settings['playername']);
+      $playertime  = explode("/", $settings['playertime']);
+      $playerping  = explode("/", $settings['playerping']);
+      $playerscore = explode("/", $settings['playerscore']);
 
       for($i=1; $i<count($playername); $i++)
       {
@@ -946,7 +946,7 @@ function query_one($ip, $port, $game, $request)
       if (!trim($server[$i])) { continue; }
 
       $server[$i] = strtolower("$server[$i]");
-      $setting[$server[$i]] = $server[$i+1];
+      $settings[$server[$i]] = $server[$i+1];
     }
 
     if ($request == "settings") { return $setting; }
@@ -956,14 +956,14 @@ function query_one($ip, $port, $game, $request)
     {
       unset($data);
       
-      $gamemod = ($setting['gamename']=='stella'||$setting['gamename']=='stellad')
-                 ?'bf2142':$setting['gamename'];
+      $gamemod = ($settings['gamename']=='stella'||$settings['gamename']=='stellad')
+                 ?'bf2142':$settings['gamename'];
       $data['gamemod']    = $gamemod;
-      $data['hostname']   = $setting['hostname'];
-      $data['mapname']    = $setting['mapname'];
-      $data['players']    = $setting['numplayers'];
-      $data['maxplayers'] = $setting['maxplayers'];
-      $data['password']   = $setting['password'];
+      $data['hostname']   = $settings['hostname'];
+      $data['mapname']    = $settings['mapname'];
+      $data['players']    = $settings['numplayers'];
+      $data['maxplayers'] = $settings['maxplayers'];
+      $data['password']   = $settings['password'];
 
       return $data;
     }
@@ -1037,7 +1037,7 @@ function query_one($ip, $port, $game, $request)
       if (!trim($tmp[$i])) { continue; }
 
       $tmp[$i] = strtolower("$tmp[$i]");
-      $setting[$tmp[$i]] = $tmp[$i+1];
+      $settings[$tmp[$i]] = $tmp[$i+1];
     }
 
     for($i=1; $i<=count($buffer); $i++)
@@ -1077,12 +1077,12 @@ function query_one($ip, $port, $game, $request)
 
     if ($request == "players") { return $player; }
 
-    $data['gamemod']    = $setting['*gamedir'];
-    $data['hostname']   = $setting['hostname'];
-    $data['mapname']    = $setting['map'];
+    $data['gamemod']    = $settings['*gamedir'];
+    $data['hostname']   = $settings['hostname'];
+    $data['mapname']    = $settings['map'];
     $data['players']    = count($player);
-    $data['maxplayers'] = $setting['maxclients'];
-    $data['password']   = ($setting['needpass'] > 0 && $setting['needpass'] < 4 ? TRUE:FALSE);
+    $data['maxplayers'] = $settings['maxclients'];
+    $data['password']   = ($settings['needpass'] > 0 && $settings['needpass'] < 4 ? TRUE:FALSE);
 
     return $data;
   }
@@ -1121,30 +1121,30 @@ function query_one($ip, $port, $game, $request)
     }
     while ($position < strlen($buffer));
 
-    $setting['game']       = $rawsetting[0];
-    $setting['port']       = $rawsetting[1];
-    $setting['hostname']   = preg_replace("/\\$\d/", "", $rawsetting[2]);
-    $setting['mode']       = $rawsetting[3];
-    $setting['mapname']    = $rawsetting[4];
-    $setting['version']    = $rawsetting[5];
-    $setting['password']   = $rawsetting[6];
-    $setting['players']    = $rawsetting[7];
-    $setting['maxplayers'] = $rawsetting[8];
+    $settings['game']       = $rawsetting[0];
+    $settings['port']       = $rawsetting[1];
+    $settings['hostname']   = preg_replace("/\\$\d/", "", $rawsetting[2]);
+    $settings['mode']       = $rawsetting[3];
+    $settings['mapname']    = $rawsetting[4];
+    $settings['version']    = $rawsetting[5];
+    $settings['password']   = $rawsetting[6];
+    $settings['players']    = $rawsetting[7];
+    $settings['maxplayers'] = $rawsetting[8];
 
     for($i=9; $i<=count($rawsetting); $i=$i+2)
     {
       if (!trim($rawsetting[$i])) { continue; }
 
       $rawsetting[$i] = strtolower("$rawsetting[$i]");
-      $setting[$rawsetting[$i]] = $rawsetting[$i+1];
+      $settings[$rawsetting[$i]] = $rawsetting[$i+1];
     }
 
-    $data['gamemod']    = $setting['gr_ssmod'];
-    $data['hostname']   = $setting['hostname'];
-    $data['mapname']    = $setting['mapname'];
-    $data['players']    = $setting['players'];
-    $data['maxplayers'] = $setting['maxplayers'];
-    $data['password']   = $setting['password'];
+    $data['gamemod']    = $settings['gr_ssmod'];
+    $data['hostname']   = $settings['hostname'];
+    $data['mapname']    = $settings['mapname'];
+    $data['players']    = $settings['players'];
+    $data['maxplayers'] = $settings['maxplayers'];
+    $data['password']   = $settings['password'];
 
     if ($request == "info") { return $data; }
 
@@ -1218,17 +1218,17 @@ function query_one($ip, $port, $game, $request)
         if (!trim($rawsetting[$i])) { continue; }
 
         $rawsetting[$i] = strtolower("$rawsetting[$i]");
-        $setting[$rawsetting[$i]] = $rawsetting[$i+1];
+        $settings[$rawsetting[$i]] = $rawsetting[$i+1];
       }
     }
 
     if ($request == "info")
     {
-      $data['hostname']   = $setting['hostname'];
-      $data['mapname']    = $setting['mapname'];
-      $data['players']    = $setting['numplayers'];
-      $data['maxplayers'] = $setting['maxplayers'];
-      $data['password']   = $setting['password'];
+      $data['hostname']   = $settings['hostname'];
+      $data['mapname']    = $settings['mapname'];
+      $data['players']    = $settings['numplayers'];
+      $data['maxplayers'] = $settings['maxplayers'];
+      $data['password']   = $settings['password'];
 
       return $data;
     }
@@ -1287,7 +1287,7 @@ function query_one($ip, $port, $game, $request)
       $rawsetting[$i] = strtolower($rawsetting[$i]);
       $rawsetting[$i] = preg_replace("/\^./", "", $rawsetting[$i]);
       $rawsetting[$i+1] = preg_replace("/\^./", "", $rawsetting[$i+1]);
-      $setting[$rawsetting[$i]] = $rawsetting[$i+1];
+      $settings[$rawsetting[$i]] = $rawsetting[$i+1];
     }
 
     if ($game == "doom3")
@@ -1312,12 +1312,12 @@ function query_one($ip, $port, $game, $request)
 
     if($request == "players") { return $player;  }
 
-    $data['gamemod']    = $setting['gamename'];
-    $data['hostname']   = $setting['si_name'];
-    $data['mapname']    = $setting['si_map'];
+    $data['gamemod']    = $settings['gamename'];
+    $data['hostname']   = $settings['si_name'];
+    $data['mapname']    = $settings['si_map'];
     $data['players']    = count($player);
-    $data['maxplayers'] = $setting['si_maxplayers'];
-    $data['password']   = $setting['si_usepass'];
+    $data['maxplayers'] = $settings['si_maxplayers'];
+    $data['password']   = $settings['si_usepass'];
 
     return $data;
   }

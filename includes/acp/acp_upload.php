@@ -1,7 +1,6 @@
 <?php
 
-//function check_image_type(&$type)
-function image_check_type($type, $error)
+function img_check_type($type, $error)
 {
 	global $lang, $error;
 
@@ -9,38 +8,31 @@ function image_check_type($type, $error)
 	{
 		case 'jpeg':
 		case 'pjpeg':
-		case 'jpg':		return '.jpg';		break;
-		case 'gif':		return '.gif';		break;
-		case 'png':		return '.png';		break;
+		case 'jpg':	return '.jpg';	break;
+		case 'gif':	return '.gif';	break;
+		case 'png':	return '.png';	break;
 		
-		default:		
-		#	$error = true;
-			$error = (!empty($error)) ? $error . '<br />' . 'dateitype' : 'dateitype';
-			
-			break;
+		default:	$error = $error ? $error . '<br />' . 'dateitype' : 'dateitype';	break;
 	}
 	
 	return false;
 }
 
-function image_delete($image_current, $image_preview, $image_path, $mode_sql)
+function image_delete($image_current, $image_preview, $image_path, $mode_sql = '')
 {
-	$current_file = basename($image_current);
-	$preview_file = basename($image_preview);
-	
 	if ( $image_current != '' )
 	{
-		if ( @file_exists(@cms_realpath($image_path . '/' . $current_file)) )
+		if ( @file_exists($image_path . '/' . $image_current) )
 		{
-			@unlink($image_path . '/' . $current_file);
+			@unlink($image_path . '/' . $image_current);
 		}
 	}	
 	
-	if ( $preview_file != '' )
+	if ( $image_preview != '' )
 	{
-		if ( @file_exists(@cms_realpath($image_path . '/' . $preview_file)) )
+		if ( @file_exists($image_path . '/' . $image_preview) )
 		{
-			@unlink($image_path . '/' . $preview_file);
+			@unlink($image_path . '/' . $image_preview);
 		}
 	}
 	
@@ -141,7 +133,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 		list($width, $height, $type) = @getimagesize($image_filename);
 	}
 
-	if ( !($imgtype = image_check_type($image_filetype, $error)) )
+	if ( !($imgtype = img_check_type($image_filetype, $error)) )
 	{
 		return;
 	}
@@ -269,7 +261,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 		}
 		else
 		{
-			$sql_pic['pic_filename'] = $new_filename;
+			$sql_pic['map_picture'] = $new_filename;
 			$sql_pic['pic_preview'] = $new_filename_preview;
 			
 #			$sql_pic = $new_filename;
@@ -285,7 +277,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	return $sql_pic;
 }
 
-function image_gallery_upload($image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, $max_width, $max_height, $max_filesize, $pic_preview_widht, $pic_preview_height)
+function gallery_upload($image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, $max_width, $max_height, $max_filesize, $pic_preview_widht, $pic_preview_height)
 {
 	global $db, $lang, $settings, $error;
 
@@ -312,7 +304,7 @@ function image_gallery_upload($image_path, $image_filename, $image_realname, $im
 		list($width, $height, $type) = @getimagesize($image_filename);
 	}
 
-	if ( !($imgtype = image_check_type($image_filetype, $error)) )
+	if ( !($imgtype = img_check_type($image_filetype, $error)) )
 	{
 		return;
 	}
@@ -422,7 +414,7 @@ function image_gallery_upload($image_path, $image_filename, $image_realname, $im
 	}
 }
 
-function image_gallery_delete($image, $preview, $gallery_path)
+function gallery_delete($image, $preview, $gallery_path)
 {
 	$image_file		= basename($image);
 	$preview_file	= basename($preview);
