@@ -10,13 +10,11 @@ $trc_loc_start = $trc_loc_end = 0;
 
 ob_start();
 
-//
-//error_reporting (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
-//error_reporting(E_ALL ^ E_NOTICE); // will report all errors
+#error_reporting (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
+#error_reporting(E_ALL ^ E_NOTICE); // will report all errors
 
-
-
-set_magic_quotes_runtime(0); // Disable magic_quotes_runtime
+#set_magic_quotes_runtime(0); // Disable magic_quotes_runtime
+ini_set("magic_quotes_runtime", 0);
 
 // The following code (unsetting globals)
 // Thanks to Matt Kavanagh and Stefan Esser for providing feedback as well as patch files
@@ -190,95 +188,7 @@ unset($db_pwd);
 $client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
 $user_ip = encode_ip($client_ip);
 
-if ( !defined('IN_ADMIN') )
-{
-	if ( defined('CACHE') )
-	{
-		$sCacheNamea = 'config';
-		if ( ($config = $oCache -> readCache($sCacheNamea)) === false)
-		{
-			$sql = 'SELECT * FROM ' . CONFIG;
-			if (!($result = $db->sql_query($sql)))
-			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$config[$row['config_name']] = $row['config_value'];
-			}
-			$oCache -> writeCache($sCacheNamea, $config);
-		}
-		
-		$sCacheNameb = 'settings';
-		if ( ($settings = $oCache -> readCache($sCacheNameb)) === false)
-		{
-			$sql = 'SELECT * FROM ' . SETTINGS;
-			if (!($result = $db->sql_query($sql)))
-			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$settings[$row['settings_name']] = $row['settings_value'];
-			}
-			$oCache -> writeCache($sCacheNameb, $settings);
-		}
-		
-		$sCacheNameb = 'gallery';
-		if ( ($gallery_settings = $oCache -> readCache($sCacheNameb)) === false)
-		{
-			$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
-			if (!($result = $db->sql_query($sql)))
-			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$gallery_settings[$row['config_name']] = $row['config_value'];
-			}
-			$oCache -> writeCache($sCacheNameb, $gallery_settings);
-		}
-	}
-	else
-	{
-		$sql = 'SELECT * FROM ' . CONFIG;
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$config[$row['config_name']] = $row['config_value'];
-		}
-		
-		$sql = 'SELECT * FROM ' . SETTINGS;
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$settings[$row['settings_name']] = $row['settings_value'];
-		}
-		
-		$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$gallery_settings[$row['config_name']] = $row['config_value'];
-		}
-	}
-}
-else
+if ( defined('IN_ADMIN') )
 {
 	$sql = 'SELECT * FROM ' . CONFIG;
 	if ( !($result = $db->sql_query($sql)) )
@@ -311,6 +221,96 @@ else
 	while ( $row = $db->sql_fetchrow($result) )
 	{
 		$gallery_settings[$row['config_name']] = $row['config_value'];
+	}
+}
+else
+{
+	if ( defined('CACHE') )
+	{
+		$oCache->sCachePath = './cache/';
+		
+		if ( ( $config = $oCache -> readCache('cfg_config') ) === false )
+		{
+			$sql = "SELECT * FROM " . CONFIG;
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$config[$row['config_name']] = $row['config_value'];
+			}
+			
+			$oCache -> writeCache('cfg_config', $config);
+		}
+
+		if ( ( $settings = $oCache -> readCache('cfg_setting') ) === false )
+		{
+			$sql = "SELECT * FROM " . SETTINGS;
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$settings[$row['settings_name']] = $row['settings_value'];
+			}
+			
+			$oCache -> writeCache('cfg_setting', $settings);
+		}
+
+		if ( ( $gallery = $oCache -> readCache('cfg_gallery') ) === false )
+		{
+			$sql = "SELECT * FROM " . GALLERY_SETTINGS;
+			if (!($result = $db->sql_query($sql)))
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$gallery[$row['config_name']] = $row['config_value'];
+			}
+			
+			$oCache -> writeCache('cfg_gallery', $gallery);
+		}
+	}
+	else
+	{
+		$sql = "SELECT * FROM " . CONFIG;
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$config[$row['config_name']] = $row['config_value'];
+		}
+		
+		$sql = "SELECT * FROM " . SETTINGS;
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$settings[$row['settings_name']] = $row['settings_value'];
+		}
+		
+		$sql = "SELECT * FROM " . GALLERY_SETTINGS;
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$gallery[$row['config_name']] = $row['config_value'];
+		}
 	}
 }
 

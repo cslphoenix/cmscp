@@ -99,7 +99,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 	$error = FALSE;
 	$error_msg = '';
 	
-	$team_id = ( isset($HTTP_GET_VARS[POST_TEAMS_URL]) ) ? intval($HTTP_GET_VARS[POST_TEAMS_URL]) : '0';
+	$team_id = ( isset($HTTP_GET_VARS[POST_TEAMS]) ) ? intval($HTTP_GET_VARS[POST_TEAMS]) : '0';
 	$contact_categorie = 0;
 	$contact_wartype = 0;
 	

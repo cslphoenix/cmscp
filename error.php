@@ -3,11 +3,12 @@
 define('IN_CMS', true);
 
 $root_path = './';
+
 include($root_path . 'common.php'); 
 
-if (empty($lang))
+if ( empty($lang) )
 {
-	if (!empty($config['default_lang'])) 
+	if ( !empty($config['default_lang']) ) 
 	{
 		include($root_path . 'language/lang_' . $config['default_lang'] . '/lang_main.php');
 	}
@@ -17,22 +18,23 @@ if (empty($lang))
 	}
 }
 
-$code = $_GET['code'];
+$code = request('code', 2);
 
-switch ($code)
+switch ( $code )
 {
-	case '401':
-	case '403':
-	case '404':
-	case '500': 
-		$message = $lang[$code . '_Description'];
-		$message_title = $lang['Error'] . ":sd " . $lang[$code];
-	break;
-	default:
-		$message = $lang['Unknown_error'];
-	break;
+	case 401:
+	case 403:
+	case 404:
+	case 500: 
+		
+		$desc_msg = $lang['desc_' . $code];
+		$code_msg = $lang['Error'] . ": " . $lang['code_' . $code];
+	
+		break;
+	
+	default: $desc_msg = $lang['unknown_error']; break;
 }
 
-message(GENERAL_ERROR, $message, $message_title);
+message(GENERAL_ERROR, $desc_msg, $code_msg);
 
 ?>

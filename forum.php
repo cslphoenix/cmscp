@@ -9,7 +9,7 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_FORUM);
 init_userprefs($userdata);
 
-$viewcat = ( !empty($HTTP_GET_VARS[POST_CATEGORY_URL]) ) ? $HTTP_GET_VARS[POST_CATEGORY_URL] : -1;
+$viewcat = ( !empty($HTTP_GET_VARS[POST_CATEGORY]) ) ? $HTTP_GET_VARS[POST_CATEGORY] : -1;
 
 $sql = "SELECT * FROM " . FORUM_CAT . " ORDER BY cat_order";
 if ( !($result = $db->sql_query($sql)) )
@@ -100,7 +100,7 @@ if ( $cats )
 					$template->assign_block_vars('_cat_row', array(
 						'CAT_ID' => $cat_id,
 						'CAT_DESC' => $cats[$i]['cat_name'],
-						'U_VIEWCAT' => check_sid('forum.php?' . POST_CATEGORY_URL . '=' . $cat_id)
+						'U_VIEWCAT' => check_sid('forum.php?' . POST_CATEGORY . '=' . $cat_id)
 					));
 					
 					for ( $j = 0; $j < count($forms); $j++ )
@@ -177,9 +177,9 @@ if ( $cats )
 	
 									$last_post = $last_post_time . '<br>';
 	
-									$last_post .= ( $forms[$j]['user_id'] == ANONYMOUS ) ? ( ($forms[$j]['post_user_name'] != '' ) ? $forms[$j]['post_user_name'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER_URL . '='  . $forms[$j]['user_id']) . '">' . $forms[$j]['user_name'] . '</a> ';
+									$last_post .= ( $forms[$j]['user_id'] == ANONYMOUS ) ? ( ($forms[$j]['post_user_name'] != '' ) ? $forms[$j]['post_user_name'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER . '='  . $forms[$j]['user_id']) . '">' . $forms[$j]['user_name'] . '</a> ';
 									
-									$last_post .= '<a href="' . check_sid('viewtopic.php?'  . POST_POST_URL . '=' . $forms[$j]['forum_last_post_id']) . '#' . $forms[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
+									$last_post .= '<a href="' . check_sid('viewtopic.php?'  . POST_POST . '=' . $forms[$j]['forum_last_post_id']) . '#' . $forms[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
 								}
 								else
 								{
@@ -200,7 +200,7 @@ if ( $cats )
 									'LAST_POST' => $last_post,
 									'L_FORUM_FOLDER_ALT' => $folder_alt, 
 	
-									'U_VIEWFORUM' => check_sid('forum_view.php?' . POST_FORUM_URL . '=' . $forum_id),
+									'U_VIEWFORUM' => check_sid('forum_view.php?' . POST_FORUM . '=' . $forum_id),
 								));
 								
 								if ( $forms[$j]['forum_legend'] )

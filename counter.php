@@ -131,7 +131,12 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 					YEAR(counter_date) = "'.$year.'" AND
 					MONTH(counter_date) = "'.$month.'" AND
 					DAYOFMONTH(counter_date) = "'.$day.'"';
-	$row_day = _cached($sql, 'counter_day_' . $day . $month . $year, 1);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row_day = $db->sql_fetchrow($result);
+#	$row_day = _cached($sql, 'counter_day_' . $day . $month . $year, 1);
 	$anzahl_tag = (int) $row_day['counter_entry'];
 	
     $sql = 'SELECT SUM(counter_entry) AS sum
@@ -139,13 +144,23 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 				WHERE 
 					YEAR(counter_date) = "'.$year.'" AND
 					MONTH(counter_date) = "'.$month.'"';
-	$row_month = _cached($sql, 'counter_month_' . $day . $month . $year, 1);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row_month = $db->sql_fetchrow($result);
+#	$row_month = _cached($sql, 'counter_month_' . $day . $month . $year, 1);
 	$anzahl_monat = (int) $row_month['sum'];
 
     $sql = 'SELECT SUM(counter_entry) AS sum
 				FROM ' . COUNTER_COUNTER . '
 				WHERE YEAR(counter_date) = "'.$year.'"';
-	$row_year = _cached($sql, 'counter_year_' . $day . $month . $year, 1);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row_year = $db->sql_fetchrow($result);
+#	$row_year = _cached($sql, 'counter_year_' . $day . $month . $year, 1);
 	$anzahl_jahr = (int) $row_year['sum'];
 	
 	$diagramme = array();

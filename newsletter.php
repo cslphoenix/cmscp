@@ -69,7 +69,7 @@ if ( $mode == 'subscribe' || !$mode )
 				
 				_send_notice($mail_data, 'newsletter_subscribe_confirm', 'newsletter', "?mode=active&mail=$mail&key_code=$active_key");
 				
-				log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
+				log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_NEWSLETTER, 'ucp_newsletter_add');
 		
 				$message = $lang['newsletter_subscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
@@ -114,14 +114,14 @@ else if ( $mode == 'active' && $mail && $key_code )
 		
 		_send_notice($mail_data, 'newsletter_subscribe', 'newsletter');
 		
-		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_NEWSLETTER, 'ucp_newsletter_add');
 		
 		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 		message(GENERAL_MESSAGE, $message);
 	}
 	$db->sql_freeresult($result);
 	
-	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_add_confirm');
+	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_NEWSLETTER, 'ucp_newsletter_add_confirm');
 		
 	$message = $lang['newsletter_fail'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 	message(GENERAL_ERROR, $message);
@@ -141,7 +141,7 @@ else if ( $mode == 'unsubscribe' )
 		
 		_send_notice($mail_data, 'newsletter_unsubscribe_confirm', 'newsletter', "?mode=delete&mail=$mail&key_code=$deactive_key");
 				
-		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_NEWSLETTER, 'ucp_newsletter_delete');
 		
 		$message = $lang['newsletter_unsubscribe'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 		message(GENERAL_MESSAGE, $message);
@@ -182,7 +182,7 @@ else if ( $mode == 'delete' && $mail && $deactive_key )
 		
 		_send_notice($mail_data, 'newsletter_unsubscribe', 'newsletter');
 		
-		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_NEWSLETTER, 'ucp_newsletter_delete_confirm');
+		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_NEWSLETTER, 'ucp_newsletter_delete_confirm');
 		
 		$message = $lang['newsletter_subscribe_confirm'] . sprintf($lang['click_return_newsletter'], '<a href="' . check_sid('newsletter.php') . '">', '</a>');
 		message(GENERAL_MESSAGE, $message);

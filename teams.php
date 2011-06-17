@@ -8,23 +8,14 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_TEAMS);
 init_userprefs($userdata);
 
-if ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) || isset($HTTP_GET_VARS[POST_TEAMS_URL]) )
-{
-	$team_id = ( isset($HTTP_POST_VARS[POST_TEAMS_URL]) ) ? intval($HTTP_POST_VARS[POST_TEAMS_URL]) : intval($HTTP_GET_VARS[POST_TEAMS_URL]);
-}
-else
-{
-	$team_id = '';
-}
 
-if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
-{
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-}
-else
-{
-	$mode = '';
-}
+$log	= SECTION_NEWS;
+$url	= POST_TEAMS;
+
+$file	= basename(__FILE__);
+
+$data	= request($url, 0);	
+$mode	= request('mode', 1);
 /*
 $sid		= ( isset($HTTP_POST_VARS['sid']) ) ? $HTTP_POST_VARS['sid'] : '';
 $start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -40,8 +31,61 @@ $start		= ( $start < 0 ) ? 0 : $start;
 
 $is_moderator = FALSE;
 
-//if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS_URL]) )
-if ( $team_id )
+//if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS]) )
+
+$template->set_filenames(array(
+	'body' => 'body_teams.tpl'
+));
+
+if ( !$mode )
+{
+	$template->assign_block_vars('_list', array());
+	
+	$page_title = $lang['teams'];
+	
+	main_header();
+	
+	$sql = "SELECT DISTINCT g.* FROM " . GAMES . " g, " . TEAMS . " t WHERE g.game_id = t.team_game ORDER BY game_order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$games = $db->sql_fetchrowset($result);
+//	$games = _cached($sql, 'data_games');
+
+	$sql = "SELECT * FROM " . TEAMS . " ORDER BY team_order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$teams = $db->sql_fetchrowset($result);
+//	$teams = _cached($sql, 'data_teams');
+
+	for ( $i = 0; $i < count($games); $i++ )
+	{
+		$game_id = $games[$i]['game_id'];
+		
+		$template->assign_block_vars('_list._game_row', array('L_GAME' => $games[$i]['game_name']));
+															 
+		for ( $j = 0; $j < count($teams); $j++ )
+		{
+			$team_id	= $teams[$j]['team_id'];
+			$team_game	= $teams[$j]['team_game'];
+			
+			if ( $team_game == $game_id )
+			{
+				$template->assign_block_vars('_list._game_row._team_row', array(
+					'NAME'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$team_id") . '">' . $teams[$j]['team_name'] . '</a>',
+					'GAME'		=> display_gameicon($games[$i]['game_size'], $games[$i]['game_image']),
+					
+					'JOINUS'	=> $teams[$j]['team_join']	? '<a href="' . check_sid("contact.php?mode=joinus&amp;$url=$team_id") . '">' . $lang['match_joinus'] . '</a>'  : '',
+					'FIGHTUS'	=> $teams[$j]['team_fight']	? '<a href="' . check_sid("contact.php?mode=fightus&amp;$url=$team_id") . '">' . $lang['match_fightus'] . '</a>'  : '',
+				));
+			}
+		}
+	}
+}
+else if ( $mode == 'view' && $data )
 {
 //	$page_title = $lang['team'];
 	$template->set_filenames(array('body' => 'body_teams.tpl'));
@@ -51,7 +95,7 @@ if ( $team_id )
 	{
 		if ( !$userdata['session_logged_in'] )
 		{
-			redirect(check_sid('login.php?redirect=teams.php&' . POST_TEAMS_URL . '=' . $team_id, true));
+			redirect(check_sid('login.php?redirect=teams.php&' . POST_TEAMS . '=' . $team_id, true));
 		}
 	}
 	
@@ -92,7 +136,7 @@ if ( $team_id )
 		
 		if ( !$userdata['session_logged_in'] )
 		{
-			redirect(check_sid('login.php?redirect=teams.php&' . POST_GROUPS_URL . '=' . $team_id, true));
+			redirect(check_sid('login.php?redirect=teams.php&' . POST_GROUPS . '=' . $team_id, true));
 		} 
 		else if ( $sid !== $userdata['session_id'] )
 		{
@@ -150,7 +194,7 @@ if ( $team_id )
 				'GROUP_NAME' => $group_name,
 				'EMAIL_SIG' => (!empty($config['page_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['page_email_sig']) : '', 
 
-				'U_GROUPCP' => $server_url . '?' . POST_GROUPS_URL . "=$group_id")
+				'U_GROUPCP' => $server_url . '?' . POST_GROUPS . "=$group_id")
 			);
 			$emailer->send();
 			$emailer->reset();
@@ -214,10 +258,10 @@ if ( $team_id )
 				}
 
 				
-//					$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">'));
+//					$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('teams.php?' . POST_GROUPS . '=' . $team_id) . '">'));
 				
 				$message = $lang['group_set_mod']
-					. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . check_sid('teams.php?' . POST_GROUPS_URL . '=' . $team_id) . '">', '</a>')
+					. '<br><br>' . sprintf($lang['Click_return_group'], '<a href="' . check_sid('teams.php?' . POST_GROUPS . '=' . $team_id) . '">', '</a>')
 					. '<br><br>' . sprintf($lang['Click_return_index'], '<a href="' . check_sid('index.php') . '">', '</a>');
 				message(GENERAL_MESSAGE, $message);
 
@@ -308,7 +352,7 @@ if ( $team_id )
 						'GROUP_NAME' => $group_name,
 						'EMAIL_SIG' => (!empty($config['board_email_sig'])) ? str_replace('<br>', "\n", "-- \n" . $config['board_email_sig']) : '', 
 
-						'U_GROUPCP' => $server_url . '?' . POST_GROUPS_URL . "=$group_id")
+						'U_GROUPCP' => $server_url . '?' . POST_GROUPS . "=$group_id")
 					);
 					$emailer->send();
 					$emailer->reset();
@@ -390,7 +434,7 @@ if ( $team_id )
 				'EMAIL_IMG' => $email_img,
 				'EMAIL' => $email,
 				
-				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
+				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -444,7 +488,7 @@ if ( $team_id )
 				'YIM_IMG' => $yim_img,
 				'YIM' => $yim,
 				
-				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER_URL . '=' . $user_id)
+				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -503,12 +547,12 @@ if ( $team_id )
 	$select_options .= '<option value="change_level">&raquo; Gruppenrechte geben/nehmen</option>';
 	$select_options .= '</select>';
 	
-	$s_hidden_fields = '<input type="hidden" name="' . POST_TEAMS_URL . '" value="' . $team_id . '" />';
+	$s_hidden_fields = '<input type="hidden" name="' . POST_TEAMS . '" value="' . $team_id . '" />';
 	$s_hidden_fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
 	
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination('teams.php?' . POST_GROUPS_URL . "=$team_id", count($team_members), $settings['site_entry_per_page'], $start),
-		'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION' => generate_pagination('teams.php?' . POST_GROUPS . "=$team_id", count($team_members), $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE' => $lang['Goto_page'],
 		
 		'L_TEAM_VIEW'		=> $lang['team_view'],
@@ -562,68 +606,14 @@ if ( $team_id )
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
 		'S_SELECT_OPTION'	=> $select_options,
-		'S_ACTION' => check_sid('teams.php?' . POST_TEAMS_URL . '=' . $team_id)
+		'S_ACTION' => check_sid('teams.php?' . POST_TEAMS . '=' . $team_id)
 	));
 	
 }
 else
 {
-	$page_title = $lang['teams'];
-	
-	$template->set_filenames(array('body' => 'body_teams.tpl'));
-	$template->assign_block_vars('select', array());
-	
-	$sql = 'SELECT DISTINCT g.*
-				FROM ' . GAMES . ' g, ' . TEAMS . ' t
-				WHERE g.game_id = t.team_game
-			ORDER BY game_order';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$games = $db->sql_fetchrowset($result);
-//	$games = _cached($sql, 'info_games', 0);
-
-	$sql = 'SELECT *
-				FROM ' . TEAMS . '
-			ORDER BY team_order';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$teams = $db->sql_fetchrowset($result);
-//	$teams = _cached($sql, 'info_teams', 0);
-
-	for ( $i = 0; $i < count($games); $i++ )
-	{
-		$game_id = $games[$i]['game_id'];
-		
-		$template->assign_block_vars('select.game_row', array(
-			'L_GAME_NAME'	=> $games[$i]['game_name'],
-			'GAME_IMAGE'	=> display_gameicon('12', $games[$i]['game_image']),
-		));
-															 
-		for ( $j = 0; $j < count($teams); $j++ )
-		{
-			if ( $teams[$j]['team_game'] == $game_id )
-			{
-				$team_id = $teams[$j]['team_id'];
-			
-				$template->assign_block_vars('select.game_row.team_row', array(
-					'TEAM_NAME'		=> $teams[$j]['team_name'],
-					'TEAM_MATCH'	=> '<a href="' . check_sid('match.php?mode=teammatches&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['all_matches'] . '</a>',
-					'TEAM_JOINUS'	=> ( $teams[$j]['team_join'] )	? '<a href="' . check_sid('contact.php?mode=joinus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_joinus'] . '</a>'  : '',
-					'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
-					'TO_TEAM'		=> check_sid('teams.php?mode=view&amp;' . POST_TEAMS_URL . '=' . $teams[$j]['team_id']),
-				));
-			}
-		}
-	}
+	redirect(check_sid($file, true));
 }
-
-include($root_path . 'includes/page_header.php');
-
-debug($_POST);
 
 $template->pparse('body');
 

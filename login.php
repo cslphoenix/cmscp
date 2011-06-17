@@ -87,7 +87,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					{
 //						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['user_name'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
-						log_add(LOG_USERS, LOG_SEK_LOGIN, 'ucp_acp_login');
+					#	log_add(LOG_USERS, SECTION_LOGIN, 'ucp_acp_login');
 					}
 
 					if( $session_id )
@@ -116,7 +116,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					{
 //						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['user_name'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
-						log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, UCP_ACP_LOGIN_FALSE, '');
+					#	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_LOGIN, UCP_ACP_LOGIN_FALSE, '');
 					}
 				}
 
@@ -149,7 +149,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			{
 //				$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //				log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['user_name'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_False'], '');
-				log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_login_false');
+			#	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_LOGIN, 'ucp_login_false');
 			}
 
 			$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">"));
@@ -175,7 +175,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			message(CRITICAL_ERROR, 'Couldn\'t update Sessions Table', '', __LINE__, __FILE__, $sql);
 		}
 		
-		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], LOG_SEK_LOGIN, 'ucp_acp_logout');
+	#	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_LOGIN, 'ucp_acp_logout');
 		
 		redirect(check_sid('news.php', true));
 	}

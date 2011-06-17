@@ -10,9 +10,9 @@ init_userprefs($userdata);
 $start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
 $start = ( $start < 0 ) ? 0 : $start;
 
-if ( isset($HTTP_POST_VARS[POST_CASH_URL]) || isset($HTTP_GET_VARS[POST_CASH_URL]) )
+if ( isset($HTTP_POST_VARS[POST_CASH]) || isset($HTTP_GET_VARS[POST_CASH]) )
 {
-	$cash_id = ( isset($HTTP_POST_VARS[POST_CASH_URL]) ) ? intval($HTTP_POST_VARS[POST_CASH_URL]) : intval($HTTP_GET_VARS[POST_CASH_URL]);
+	$cash_id = ( isset($HTTP_POST_VARS[POST_CASH]) ) ? intval($HTTP_POST_VARS[POST_CASH]) : intval($HTTP_GET_VARS[POST_CASH]);
 }
 else
 {
@@ -77,7 +77,7 @@ if ( $mode == '' )
 	
 	if ( !$cash_data )
 	{
-		$template->assign_block_vars('_display._no_entry', array());
+		$template->assign_block_vars('_display._entry_empty', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else

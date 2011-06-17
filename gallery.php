@@ -40,7 +40,7 @@ if ( $data_id )
 	{
 		if ( !$userdata['session_logged_in'] )
 		{
-			redirect(check_sid('login.php?redirect=gallery.php&' . POST_GALLERY_URL . '=' . $data_id, true));
+			redirect(check_sid('login.php?redirect=gallery.php&' . POST_GALLERY . '=' . $data_id, true));
 		}
 		else
 		{
@@ -104,8 +104,8 @@ if ( $data_id )
 			
 			'PER_ROWS'		=> $gallery['per_rows'],
 			
-			'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $gallery['per_cols'] ) + 1 ), $current_page ),
-			'PAGINATION'	=> generate_pagination('gallery.php?mode=_overview&' . POST_GALLERY_URL . '=' . $data_id, count($galleries_pics), $gallery['per_cols'], $start),
+			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $gallery['per_cols'] ) + 1 ), $current_page ),
+			'PAGINATION'	=> generate_pagination('gallery.php?mode=_overview&' . POST_GALLERY . '=' . $data_id, count($galleries_pics), $gallery['per_cols'], $start),
 			
 			'S_AUTH'		=> $s_auth_can,
 		));
@@ -148,9 +148,9 @@ else
 			'GALLERY_CREATE'	=> create_date($config['default_dateformat'], $galleries[$i]['gallery_pics'], $userdata['user_timezone']),
 			'GALLERY_UPDATE'	=> create_date($config['default_dateformat'], $galleries[$i]['gallery_pics'], $userdata['user_timezone']),
 			
-			'U_GALLERY'			=> check_sid('gallery.php?' . POST_GALLERY_URL . '=' . $galleries[$i]['gallery_id']),
-#			'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS_URL . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
-#			'TO_TEAM'		=> check_sid('gallery.php?mode=view&amp;' . POST_GALLERY_URL . '=' . $teams[$j]['team_id']),
+			'U_GALLERY'			=> check_sid('gallery.php?' . POST_GALLERY . '=' . $galleries[$i]['gallery_id']),
+#			'TEAM_FIGHTUS'	=> ( $teams[$j]['team_fight'] )	? '<a href="' . check_sid('contact.php?mode=fightus&amp;' . POST_TEAMS . '=' . $team_id) . '">' . $lang['match_fightus'] . '</a>'  : '',
+#			'TO_TEAM'		=> check_sid('gallery.php?mode=view&amp;' . POST_GALLERY . '=' . $teams[$j]['team_id']),
 		));
 	}
 }	

@@ -35,13 +35,28 @@ $template->set_filenames(array(
 
 main_header();
 
-$sort_order	= request('order', 1);
-$by_letter	= request('letter', 2) ? request('letter', 2) : 'all';
+if(isset($HTTP_POST_VARS['order']))
+{
+	$sort_order = ($HTTP_POST_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
+}
+else if(isset($HTTP_GET_VARS['order']))
+{
+	$sort_order = ($HTTP_GET_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
+}
+else
+{
+	$sort_order = 'ASC';
+}
 
+$by_letter = request('letter', 2) ? request('letter', 2) : 'all';
+
+//
+// Memberlist sorting
+//
 $mode_types_text = array($lang['Sort_Joined'], $lang['Sort_Username'], $lang['Sort_Location'], $lang['Sort_Posts'], $lang['Sort_Email'],  $lang['Sort_Website'], $lang['Sort_Top_Ten']);
 $mode_types = array('joined', 'username', 'location', 'posts', 'email', 'website', 'topten');
 
-$select_sort_mode = '<select name="mode" class="postselect">';
+$select_sort_mode = '<select name="mode">';
 for($i = 0; $i < count($mode_types_text); $i++)
 {
 	$selected = ( $mode == $mode_types[$i] ) ? ' selected="selected"' : '';
@@ -49,7 +64,7 @@ for($i = 0; $i < count($mode_types_text); $i++)
 }
 $select_sort_mode .= '</select>';
 
-$select_sort_order = '<select name="order" class="postselect">';
+$select_sort_order = '<select name="order">';
 if($sort_order == 'ASC')
 {
 	$select_sort_order .= '<option value="ASC" selected="selected">' . $lang['Sort_Ascending'] . '</option><option value="DESC">' . $lang['Sort_Descending'] . '</option>';
@@ -77,11 +92,10 @@ $template->assign_vars(array(
 	'L_POSTS' => $lang['Posts'], 
 	'L_PM' => $lang['Private_Message'], 
 
-	'S_MODE' => $select_sort_mode,
-	'S_ORDER' => $select_sort_order,
-	
-	'S_ACTION' => check_sid($file),
-));
+	'S_MODE_SELECT' => $select_sort_mode,
+	'S_ORDER_SELECT' => $select_sort_order,
+	'S_MODE_ACTION' => check_sid("memberlist.$phpEx"))
+);
 
 switch( $mode )
 {
@@ -167,56 +181,50 @@ else
 			$groups[$row['user_id']][] = array('group_id' => $row['group_id'], 'group_name' => $row['group_name']);
 		}
 	}
+	
 
-if ( !$users )
+$count = count($users);
+
+for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $count); $i++ )
 {
-	$template->assign_block_vars('_entry_empty', array());
-}
-else
-{
-	$count = count($users);
+	$user_id = $users[$i]['user_id'];
+
+	gen_userinfo($users[$i], $username);
 	
-	for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $count); $i++ )
+	$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
+	$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
+
+    $uteams = $ugroups = '';
+
+    if ( isset($teams[$user_id]) )
 	{
-		$user_id = $users[$i]['user_id'];
-	
-		gen_userinfo($users[$i], $username);
-		
-		$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
-		$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
-	
-		$uteams = $ugroups = '';
-	
-		if ( isset($teams[$user_id]) )
+		foreach ( $teams[$user_id] as $row )
 		{
-			foreach ( $teams[$user_id] as $row )
-			{
-				$game = display_gameicon($row['game_size'], $row['game_image']);
-				$t_ary[$user_id][] =  $game . ' <a href="' . check_sid('teams.php?' . POST_TEAMS . '=' . $row['team_id']) . '">' . $row['team_name'] . '</a>';
-			}
-	
-			$uteams = implode('<br />', $t_ary[$user_id]);
+			$game = display_gameicon($row['game_size'], $row['game_image']);
+			$t_ary[$user_id][] =  $game . ' <a href="' . check_sid('teams.php?' . POST_TEAMS . '=' . $row['team_id']) . '">' . $row['team_name'] . '</a>';
 		}
-	
-		if ( isset($groups[$user_id]) )
-		{
-			foreach ( $groups[$user_id] as $row )
-			{
-				$g_ary[$user_id][] =  '<a href="' . check_sid('groups.php?' . POST_GROUPS . '=' . $row['group_id']) . '">' . $row['group_name'] . '</a>';
-			}
-	
-			$ugroups = implode('<br />', $g_ary[$user_id]);
-		}
-	
-		$template->assign_block_vars('_row', array(
-			'ROW_COLOR'	=> '#' . $row_color,
-			'ROW_CLASS'	=> $row_class,
-			'USERNAME'	=> $username,
-	
-			'TEAMS'		=> $uteams,
-			'GROUPS'	=> $ugroups,
-		));
+
+		$uteams = implode('<br />', $t_ary[$user_id]);
 	}
+
+	if ( isset($groups[$user_id]) )
+	{
+		foreach ( $groups[$user_id] as $row )
+		{
+			$g_ary[$user_id][] =  '<a href="' . check_sid('groups.php?' . POST_GROUPS . '=' . $row['group_id']) . '">' . $row['group_name'] . '</a>';
+		}
+
+		$ugroups = implode('<br />', $g_ary[$user_id]);
+	}
+
+	$template->assign_block_vars('memberrow', array(
+		'ROW_COLOR'	=> '#' . $row_color,
+		'ROW_CLASS'	=> $row_class,
+		'USERNAME'	=> $username,
+
+		'TEAMS'		=> $uteams,
+		'GROUPS'	=> $ugroups,
+	));
 }
 
 #$pagination = generate_pagination("memberlist.php?mode=$mode&amp;order=$sort_order&amp;letter=$by_letter", $total_members, $config['site_entry_per_page'], $start). '&nbsp;';

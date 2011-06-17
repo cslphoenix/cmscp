@@ -33,7 +33,7 @@ $template->set_filenames(array('body' => 'body_rss.tpl'));
 $l_topic_replies = $lang['Topic'] . ' ' . $lang['Replies'];
 $template->assign_vars(array(
 	'S_CONTENT_ENCODING' => $lang['ENCODING'],
-	'PAGE_URL' => $index_url,
+	'PAGE' => $index_url,
 	'PAGE_TITLE' => $site_name,
 	'PAGE_DESCRIPTION' => $page_desc,
 	'PAGE_MANAGING_EDITOR' => $config['page_email'],
