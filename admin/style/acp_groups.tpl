@@ -1,45 +1,46 @@
 <!-- BEGIN _display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+		<li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
+	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
-	<td class="rowHead" width="99%">{L_NAME}</td>
-	<td class="rowHead">{L_COUNT}</td>
-	<td class="rowHead" colspan="4" align="center">{L_SETTINGS}</td>
+	<th>{L_NAME}</th>
+	<th>{L_COUNT}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _row_groups -->
 <tr>
-	<td class="row_class1" align="left">{_display._row_groups.NAME}</td>
-	<td class="row_class1" align="center" width="1%">{_display._row_groups.COUNT}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._row_groups.MOVE_UP} {_display._row_groups.MOVE_DOWN} <a href="{_display._row_groups.U_MEMBER}">{I_MEMBER}</a> <a href="{_display._row_groups.U_UPDATE}">{I_UPDATE}</a> {_display._row_groups.DELETE}</td>
+	<td>{_display._row_groups.NAME}</td>
+	<td>{_display._row_groups.COUNT}</td>
+	<td>{_display._row_groups.MOVE_UP} {_display._row_groups.MOVE_DOWN} <a href="{_display._row_groups.U_MEMBER}">{I_MEMBER}</a> <a href="{_display._row_groups.U_UPDATE}">{I_UPDATE}</a> {_display._row_groups.DELETE}</td>
 </tr>
 <!-- END _row_groups -->
 <!-- BEGIN _no_groups -->
 <tr>
-	<td class="row_class1" align="center" colspan="7">{NO_GROUPS}</td>
+	<td class="entry_empty" colspan="3">{NO_GROUPS}</td>
 </tr>
 <!-- END _no_groups -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="group_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td><input type="text" class="post" name="group_name" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -109,24 +110,24 @@ function deactivated()
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_DATA}</a></li>
 				<li><a href="#" id="right">{L_AUTH}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td valign="top">
@@ -184,9 +185,9 @@ function deactivated()
 				<ul id="navlist">
 					<li id="active"><a href="#" id="current">{L_IMAGE}</a></li>
 				</ul>
-				</div>
-			</th>
-		</tr>
+		</div>
+	</td>
+</tr>
 		<tbody class="trhover">
 		<!-- BEGIN _image -->
 		<tr>
@@ -238,9 +239,9 @@ function deactivated()
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -251,7 +252,7 @@ function deactivated()
 	<li id="active"><a href="#" id="current">{L_MODERATOR}</a></li>
 </ul>
 </div>
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" align="left" width="100%">{L_USERNAME}</td>
 	<td class="rowHead" align="center">{L_REGISTER}</td>
@@ -278,7 +279,7 @@ function deactivated()
 	<li id="active"><a href="#" id="current">{L_MEMBER}</a></li>
 </ul>
 </div>
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" align="left" width="100%">{L_USERNAME}</td>
 	<td class="rowHead" align="center">{L_REGISTER}</td>
@@ -314,7 +315,7 @@ function deactivated()
 	<li id="active"><a href="#" id="current">{L_PENDING}</a></li>
 </ul>
 </div>
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" align="left" width="98%">{L_USERNAME}</td>
 	<td class="rowHead" align="center">{L_REGISTER}</td>
@@ -347,7 +348,7 @@ function deactivated()
 				<li id="active"><a href="#" id="current">{L_ADD_MEMBER}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2"><span class="small">{L_ADD_MEMBER_EX}</span></td>
@@ -417,7 +418,7 @@ function deactivated()
 </tr>
 <!-- END _grp_auth -->
 <tr>
-	<td colspan="{COLSPAN}" class="row4 small"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
+	<td colspan="{COLSPAN}" class="row5 small"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
 </tr>
 <tr>
 	<td colspan="{COLSPAN}" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>

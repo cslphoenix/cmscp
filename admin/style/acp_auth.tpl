@@ -15,7 +15,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_AUTH_SELECT}</td>
+	<th>{L_AUTH_SELECT}</td>
 </tr>
 <tr>
 	<td class="row2">{S_FIELDS}{S_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
@@ -35,7 +35,7 @@
 				<li id="active"><a href="#" id="current">{L_FORUM}: {FORUM_NAME}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_AUTH_EXPLAIN}</td>

@@ -17,27 +17,27 @@
 
 <table class="rows">
 <tr>
-	<th>{L_NAME}</th>
+	<td class="rowHead" width="99%" colspan="2">{L_NAME}</td>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _game_row -->
+<!-- BEGIN _style_row -->
 <tr>
-	<td><span style="float:right">{_display._game_row.TAG}</span>{_display._game_row.GAME} {_display._game_row.NAME}</td>
-	<td>{_display._game_row.MOVE_UP}{_display._game_row.MOVE_DOWN}{_display._game_row.UPDATE} {_display._game_row.DELETE}</td>
+	<td class="row_class1" align="left">{_display._style_row.NAME_STYLE}</td>
+	<td class="row_class1" align="left">{_display._style_row.NAME_TEMPLATE}</td>
+	<td class="row_class2" align="center">{_display._style_row.UPDATE} {_display._style_row.DELETE}</td>
 </tr>
-<!-- END _game_row -->
+<!-- END _style_row -->
 <!-- BEGIN _entry_empty -->
 <tr>
-	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
+	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty -->
 </table>
 
-<table class="footer">
+<table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td></td>
-	<td><input type="text" class="post" name="game_name" /></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td align="right"><input type="text" class="post" name="game_name"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}

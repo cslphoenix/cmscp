@@ -1,16 +1,16 @@
 <!-- BEGIN _display -->
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a href="{S_CREATE_USER}">{L_CREATE_USER}</a></li>
-	<li><a id="setting" href="{S_BANKDATA}">{L_CREATE_BANK}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+		<li><a href="{S_CREATE_USER}">{L_CREATE_USER}</a></li>
+		<li><a id="setting" href="{S_BANKDATA}">{L_CREATE_BANK}</a></li>
+	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -18,7 +18,7 @@
 
 <!-- BEGIN _bank -->
 <form action="{S_ACTION}" method="post">
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" colspan="2" width="100%">{L_CASH}</td>
 </tr>
@@ -42,7 +42,7 @@
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td align="right"><input type="hidden" name="mode" value="_bank_delete"><input type="submit" class="button" value="{L_DELETE}"></td>
+	<td align="right"><input type="hidden" name="mode" value="_bank_delete" /><input type="submit" class="button" value="{L_DELETE}" /></td>
 </tr>
 </table>
 </form>
@@ -78,11 +78,11 @@
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td align="right"><input type="text" class="post" name="cash_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td align="right"><input type="text" class="post" name="cash_name" /></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}" /></td>
 </tr>
 </table>
-<input type="hidden" name="mode" value="_create">
+<input type="hidden" name="mode" value="_create" />
 </form>
 
 <br />
@@ -120,10 +120,10 @@
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right">{S_CREATE_USER_BOX}</td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE_USER}"></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE_USER}" /></td>
 </tr>
 </table>
-<input type="hidden" name="mode" value="_create_user">
+<input type="hidden" name="mode" value="_create_user" />
 </form>
 <!-- END _display -->
 
@@ -136,32 +136,32 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
 	<td class="row1"><label for="cash_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="cash_name" id="cash_name" value="{NAME}"></td>
+	<td class="row2"><input type="text" class="post" name="cash_name" id="cash_name" value="{NAME}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="cash_amount">{L_AMOUNT}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="cash_amount" id="cash_amount" value="{AMOUNT}"></td>
+	<td class="row2"><input type="text" class="post" name="cash_amount" id="cash_amount" value="{AMOUNT}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="cash_type">{L_TYPE}:</label></td>
@@ -184,7 +184,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -200,23 +200,23 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row1" width="155">{L_USER}: *</td>
@@ -224,7 +224,7 @@
 </tr>
 <tr>
 	<td class="row1">{L_USER_AMOUNT}: *</td>
-	<td class="row2"><input type="text" class="post" name="user_amount" value="{AMOUNT}"></td>
+	<td class="row2"><input type="text" class="post" name="user_amount" value="{AMOUNT}" /></td>
 </tr>
 <tr>
 	<td class="row1">{L_USER_MONTH}:</td>
@@ -239,7 +239,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -255,50 +255,50 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row1" width="155"><label for="bank_holder">{L_HOLDER}:</label></td>
-	<td class="row2"><input type="text" class="post" name="bank_holder" id="bank_holder" value="{HOLDER}"></td>
+	<td class="row2"><input type="text" class="post" name="bank_holder" id="bank_holder" value="{HOLDER}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="bank_name">{L_NAME}:</label></td>
-	<td class="row2"><input type="text" class="post" name="bank_name" id="bank_name" value="{NAME}"></td>
+	<td class="row2"><input type="text" class="post" name="bank_name" id="bank_name" value="{NAME}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="bank_blz">{L_BLZ}:</label></td>
-	<td class="row2"><input type="text" class="post" name="bank_blz" id="bank_blz" value="{BLZ}"></td>
+	<td class="row2"><input type="text" class="post" name="bank_blz" id="bank_blz" value="{BLZ}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="bank_number">{L_NUMBER}:</label></td>
-	<td class="row2"><input type="text" class="post" name="bank_number" id="bank_number" value="{NUMBER}"></td>
+	<td class="row2"><input type="text" class="post" name="bank_number" id="bank_number" value="{NUMBER}" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="bank_reason">{L_REASON}:</label></td>
-	<td class="row2"><input type="text" class="post" name="bank_reason" id="bank_reason" value="{REASON}"></td>
+	<td class="row2"><input type="text" class="post" name="bank_reason" id="bank_reason" value="{REASON}" /></td>
 </tr>
 </tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
 </tr>
 </table>
 {S_FIELDS}

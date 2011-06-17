@@ -8,7 +8,7 @@
 				<li id="active"><a href="#" id="current">{L_AUTH_TITLE}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_AUTH_EXPLAIN}</td>
@@ -19,7 +19,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_AUTH_SELECT}</td>
+	<th>{L_AUTH_SELECT}</td>
 </tr>
 <tr>
 	<td class="row2">{S_AUTH_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
@@ -39,7 +39,7 @@
 				<li id="active"><a href="#" id="current">{L_GROUP_TITLE}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_GROUP_EXPLAIN}</td>
@@ -50,7 +50,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_GROUP_SELECT}</td>
+	<th>{L_GROUP_SELECT}</td>
 </tr>
 <tr>
 	<td class="row2">{S_GROUPS_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
@@ -70,7 +70,7 @@
 				<li id="active"><a href="#" id="current">{L_USER_TITLE}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_USER_EXPLAIN}</td>
@@ -81,7 +81,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_USER_SELECT}</td>
+	<th>{L_USER_SELECT}</td>
 </tr>
 <tr>
 	<td class="row2">

@@ -1,12 +1,12 @@
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_WELCOME}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_WELCOME}</a></li>
+	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_WELCOME_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -24,14 +24,14 @@
 				</ul>
 			</div>
 		</th>
-		<!-- BEGIN row_news -->
+		<!-- BEGIN _news_row -->
 		<tr class="hover">
-			<td>{row_news.GAME}</td>
-			<td>{row_news.TITLE}</td>
-			<td>{row_news.DATE}</td>
-			<td>{row_news.PUBLIC} {row_news.UPDATE} {row_news.DELETE}</td>
+			<td>{_news_row.GAME}</td>
+			<td>{_news_row.TITLE}</td>
+			<td>{_news_row.DATE}</td>
+			<td>{_news_row.PUBLIC} {_news_row.UPDATE} {_news_row.DELETE}</td>
 		</tr>
-		<!-- END row_news -->
+		<!-- END _news_row -->
 		<!-- BEGIN _entry_empty_news -->
 		<tr>
 			<td class="entry_empty" colspan="4" align="center">{L_ENTRY_NO}</td>
@@ -87,11 +87,11 @@
 			<td>{_match_row.DETAIL} {_match_row.UPDATE} {_match_row.DELETE}</td>
 		</tr>
 		<!-- END _match_row -->
-		<!-- BEGIN no_entry_match -->
+		<!-- BEGIN _entry_empty_match -->
 		<tr>
 			<td class="entry_empty" colspan="4" align="center">{L_ENTRY_NO}</td>
 		</tr>
-		<!-- END no_entry_match -->
+		<!-- END _entry_empty_match -->
 		</table>
 	</td>
 	<td class="top" width="49%">
@@ -147,28 +147,8 @@
 	</td>
 </tr>
 </table>
-
 <!--
-<table class="head" cellspacing="0">
-<tr>
-	<th>{L_VERSION_INFORMATION}</th>
-</tr>
-<tr>
-	<td>{VERSION_INFO}</td>
-</tr>
-</table>
-
-<table class="head" cellspacing="0">
-<tr>
-	<th>{L_STATISTIC}</th>
-</tr>
-<tr>
-	<td></td>
-</tr>
-</table>
--->
-<!--
-<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
+<table border="0" cellspacing="0" cellpadding="0">
   <tr> 
 	<th width="25%" nowrap="nowrap" height="25" class="thCornerL">{L_STATISTIC}</th>
 	<th width="25%" height="25" class="thTop">{L_VALUE}</th>
@@ -206,50 +186,4 @@
 	<td class="row2"><b>{GZIP_COMPRESSION}</b></td>
   </tr>
 </table>
-
-
-<br>
-
-<table class="head" cellspacing="0">
-<tr>
-	<th></th>
-</tr>
-<tr>
-	<td></td>
-</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td><a href="{U_NEWS}">{ICON_NEWS}</a></td>
-		<td><a href="{U_TEAM}">{ICON_TEAM}</a></td>
-		<td><a href="{U_USER}">{ICON_USER}</a></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-</table>
 -->
-<br>

@@ -10,14 +10,40 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
+<table class="rows">
+<tr>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN _teamspeak_row -->
+<tr class="hover">
+	<td class="row_class1" align="left">{_display._teamspeak_row.NAME}</td>
+	<td class="row_class2" align="center">{_display._teamspeak_row.UPDATE} {_display._teamspeak_row.DELETE}</td>		
+</tr>
+<!-- END _teamspeak_row -->
+<!-- BEGIN _entry_empty -->
+<tr>
+	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _entry_empty -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="teamspeak_name" value=""></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
 <!-- BEGIN _server -->
 <table class="edit" width="100%" cellspacing="1">
 <tr>
@@ -30,7 +56,7 @@
 				<li id="active"><a href="#" id="current">{L_CURRENT}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <!-- BEGIN _off -->
 <tr>
@@ -154,65 +180,76 @@
 	<td>{_display._server._on.SERVER_NUM_CHANNELS}</td>
 </tr>
 <!-- END _on -->
-<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td align="right" colspan="2"><input class="button" type="submit" value="{L_TEAMSPEAK_EDIT}"></td>
-</tr>
 </table>
-{S_FIELDS}
-</form>
 <!-- END _server -->
-
-<table class="info" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="rowHead" width="99%">{L_NAME}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
-</tr>
-<!-- BEGIN _servers_row -->
-<tr class="hover">
-	<td class="row_class1" align="left">{_display._servers_row.NAME}</td>
-	<td class="row_class2" align="center"><a href="{_display._servers_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._servers_row.U_DELETE}">{I_DELETE}</a></td>		
-</tr>
-<!-- END _servers_row -->
-</table>
-
-<table border="0" cellspacing="1" cellpadding="2">
-<tr>
-	<td align="right"><input type="text" class="post" name="authlist_name" value=""></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
 <!-- END _display -->
 
 <!-- BEGIN _input -->
-<form action="{S_TEAMSPEAK_ACTION}" method="post">
-<table class="head" cellspacing="0">
-<tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="{S_TEAMSPEAK_ACTION}">{L_HEAD}</a></li>
-				<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-				<!-- BEGIN user -->
-				<li id="active"><a href="{S_TEAMSPEAK_MEMBER}">{L_USER}</a></li>
-				<!-- END user -->
+<form action="{S_ACTION}" method="post">
+<div id="navcontainer">
+<ul id="navlist">
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
+</ul>
+</div>
 
-			</ul>
-		</div>
-	</th>
-</tr>
+<table class="header">
 <tr>
-	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
-<br>
+<br /><div align="center">{ERROR_BOX}</div>
 
+<table class="update">
+<tr>
+	<td colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
+			</ul>
+		</div>
+	</td>
+</tr>
+<tbody class="trhover">
+<tr>
+	<td class="row1"><label for="teamspeak_type">{L_TYPE}:</label></td>
+	<td class="row2"><label><input type="radio" name="teamspeak_type" value="0" {S_TYPE_TS2} />&nbsp;{L_TS2}</label><span style="padding:4px;"></span><label><input type="radio" name="teamspeak_type" value="1" {S_TYPE_TS3} />&nbsp;{L_TS3}</label></td>
+</tr>
+<tr>
+	<td class="row1"><label for="teamspeak_name">{L_NAME}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="teamspeak_name" id="teamspeak_name" value="{NAME}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="teamspeak_ip">{L_IP}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="teamspeak_ip" id="teamspeak_ip" value="{IP}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="teamspeak_port" title="{L_PORT_EXPLAIN}">{L_PORT}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="teamspeak_port" id="teamspeak_port" value="{PORT}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="teamspeak_qport" title="{L_QPORT_EXPLAIN}">{L_QPORT}: *</label></td>
+	<td class="row2"><input type="text" class="post" name="teamspeak_qport" id="teamspeak_qport" value="{QPORT}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="teamspeak_pass">{L_PASS}:</label></td>
+	<td class="row2"><input type="text" class="post" name="teamspeak_pass" id="teamspeak_pass" value="{PASS}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="teamspeak_show">{L_SHOW}:</label></td>
+	<td class="row2"><label><input type="radio" name="teamspeak_show" value="1" {S_SHOW_YES} />&nbsp;{L_SHOW}</label><span style="padding:4px;"></span><label><input type="radio" name="teamspeak_show" value="0" {S_SHOW_NO} />&nbsp;{L_NOSHOW}</label></td>
+</tr>
+</tbody>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+<!--
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="row1" width="20%">{L_NAME}: *</td>
@@ -273,65 +310,7 @@
 		<input type="radio" name="teamspeak_show" value="0" {S_VIEWER_NO} /> {L_NOSHOW}
 	</td>
 </tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
-</tr>
 </table>
-{S_FIELDS}
+-->
 </form>
 <!-- END _input -->
-
-<!-- BEGIN teamspeak_member -->
-<form action="{S_TEAMSPEAK_ACTION}" method="post">
-<table class="head" cellspacing="0">
-
-<tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="{S_TEAMSPEAK_ACTION}">{L_TITLE}</a></li>
-				<li><a href="{S_TEAMSPEAK_EDIT}">{L_INPUT}</a></li>
-				<li id="active"><a href="#" id="current">{L_USER}</a></li>
-			</ul>
-		</div>
-	</th>
-</tr>
-<tr>
-	<td class="row2">&nbsp;</td>
-</tr>
-</table>
-
-<br>
-
-<table class="row" cellspacing="1">
-<tr>
-	<td class="rowHead" colspan="4">{L_USERNAME}</td>
-	<td class="rowHead" colspan="2">{L_SETTINGS}</td>
-</tr>
-<!-- BEGIN member_row -->
-<tr>
-	<td class="{teamspeak_member.member_row.CLASS}" align="left" width="100%">{teamspeak_member.member_row.USERNAME}</td>
-	<td class="{teamspeak_member.member_row.CLASS}" align="center" nowrap="nowrap">{teamspeak_member.member_row.USER_LEVEL}</td>
-	<td class="{teamspeak_member.member_row.CLASS}" align="center" nowrap="nowrap">{teamspeak_member.member_row.REGISTER}</td>
-	<td class="{teamspeak_member.member_row.CLASS}" align="center" nowrap="nowrap">{teamspeak_member.member_row.LASTVIEW}</td>
-	<td class="{teamspeak_member.member_row.CLASS}" align="center" width="1%">{teamspeak_member.member_row.EDIT}</td>
-	<td class="{teamspeak_member.member_row.CLASS}" align="center" width="1%">{teamspeak_member.member_row.DELETE}</td>
-</tr>
-<!-- END member_row -->
-	</table>
-
-<table class="footer" cellspacing="4">
-<tr>
-	<td width="50%" align="left">{PAGE_NUMBER}</td>
-	<td width="50%" align="right">{PAGINATION}</td>
-</tr>
-</table>
-
-<table class="footer" cellspacing="2">
-<tr>
-	<td width="100%" align="right">{S_TEAMS}</td>
-	<td><input class="button" type="submit" name="add" value="{L_MATCH_CREATE}"></td>
-</tr>
-</table>
-</form>
-<!-- END teamspeak_member -->

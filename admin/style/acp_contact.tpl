@@ -15,15 +15,15 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" colspan="5" width="100%">{L_CONTACT_DETAILS}</td>
 	<td class="rowHead" colspan="3">{L_CONTACT_SETTINGS}</td>
@@ -99,7 +99,7 @@
 				<!-- END fightus -->
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_CONTACT_EXPLAIN}</td>

@@ -7,24 +7,24 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" width="99%" colspan="2">{L_TITLE}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _news_row -->
 <tr>
 	<td class="row_class1" align="center" width="1%"><img src="{_display._news_row.STATUS}" alt=""></td>
-	<td class="row_class1" align="left">{_display._news_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._news_row.LINKS}</td>		
+	<td class="row_class1"><span style="float:right;">{_display._news_row.DATE}</span>{_display._news_row.TITLE}</td>
+	<td class="row_class2" align="center">{_display._news_row.PUBLIC} {_display._news_row.UPDATE} {_display._news_row.DELETE}</td>		
 </tr>
 <!-- END _news_row -->
 <!-- BEGIN _entry_empty -->
@@ -34,10 +34,28 @@
 <!-- END _entry_empty -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<br />
+
+<table class="rows">
 <tr>
-	<td align="right"><input type="text" class="post" name="news_title"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td class="rowHead" width="99%" colspan="2">{L_TITLE}</td>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN _send_row -->
+<tr>
+	<td class="row_class1" align="center" width="1%"><img src="{_display._send_row.STATUS}" alt=""></td>
+	<td class="row_class1"><span style="float:right;">{_display._send_row.SEND} {_display._send_row.DATE}</span>{_display._send_row.TITLE}</td>
+	<td class="row_class2" align="center">{_display._send_row.PUBLIC} {_display._send_row.UPDATE} {_display._send_row.DELETE}</td>		
+</tr>
+<!-- END _send_row -->
+</table>
+
+<table class="footer">
+<tr>
+	<td>{PAGE_NUMBER}</td>
+	<td>{PAGE_PAGING}</td>
+	<td><input type="text" class="post" name="news_title"></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -55,9 +73,9 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 

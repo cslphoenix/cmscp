@@ -8,7 +8,7 @@
 				<li id="active"><a href="#" id="current">{L_NL_TITLE}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2">{L_NL_EXPLAIN}</td>
@@ -19,7 +19,7 @@
 
 <table class="row" cellspacing="1">
 <tr>
-	<td class="rowHead">{L_NL_EMAIL}</td>
+	<th>{L_NL_EMAIL}</td>
 	<td class="rowHead" colspan="4">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN newsletter_row -->
@@ -58,7 +58,7 @@
 				<li id="active"><a href="#" id="current">{L_NL_INPUT}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tr>
 	<td class="row2"><span class="small">{L_REQUIRED}</span></td>
