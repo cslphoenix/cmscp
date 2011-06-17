@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_01_main']['_submenu_settings'] = $root_file;
+		$module['hm_main']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -16,7 +16,7 @@ else
 	define('IN_CMS', true);
 
 	$root_path	= './../';
-	$current	= '_submenu_settings';
+	$current	= 'sm_settings';
 	
 	include('./pagestart.php');
 	

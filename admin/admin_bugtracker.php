@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == 6 )
 	{
-		$module['_headmenu_07_development']['_submenu_bugtracker'] = $root_file;
+		$module['hm_dev']['sm_bugtracker'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_games';
+	$current	= 'sm_games';
 	
 	include('./pagestart.php');
 	
@@ -27,8 +27,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_GAMES;
-	$url	= POST_GAMES_URL;
+	$log	= SECTION_GAMES;
+	$url	= POST_GAMES;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -46,7 +46,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_bugtracker';
+	$current	= 'sm_bugtracker';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
@@ -68,8 +68,8 @@ else
 	$fields	= '';
 	$file		= basename(__FILE__);
 	
-	$log	= LOG_SEK_GAMES;
-	$url	= POST_BUGTRACKER_URL;
+	$log	= SECTION_GAMES;
+	$url	= POST_BUGTRACKER;
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
@@ -237,7 +237,7 @@ else
 			}
 			else
 			{
-				$template->assign_block_vars('_display._no_entry', array());
+				$template->assign_block_vars('_display._entry_empty', array());
 				$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 			}
 			
@@ -253,7 +253,7 @@ else
 				'L_SETTINGS'	=> $lang['common_settings'],
 				
 				'PAGINATION'	=> generate_pagination("admin_bugtracker.php?sort=$sort", count($bugtracker_data), $settings['site_entry_per_page'], $start),
-				'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 				
 				'S_SORT'		=> $s_sort,
 				'S_ACTION'		=> check_sid($file),

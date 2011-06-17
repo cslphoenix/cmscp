@@ -4,9 +4,9 @@ if( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userauth['auth_forum_perm'] || $userdata['user_level'] == ADMIN )
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_perm'] )
 	{
-		$module['_headmenu_02_forum']['_submenu_perm'] = $root_file;
+		$module['hm_forum']['sm_perm'] = $root_file;
 	}
 
 	return;
@@ -77,9 +77,9 @@ else
 	$forum_auth_levels	= array('all', 'reg', 'trial', 'member', 'moderator', 'private', 'admin');
 	$forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
 	
-	if(isset($HTTP_GET_VARS[POST_FORUM_URL]) || isset($HTTP_POST_VARS[POST_FORUM_URL]))
+	if(isset($HTTP_GET_VARS[POST_FORUM]) || isset($HTTP_POST_VARS[POST_FORUM]))
 	{
-		$forum_id = (isset($HTTP_POST_VARS[POST_FORUM_URL])) ? intval($HTTP_POST_VARS[POST_FORUM_URL]) : intval($HTTP_GET_VARS[POST_FORUM_URL]);
+		$forum_id = (isset($HTTP_POST_VARS[POST_FORUM])) ? intval($HTTP_POST_VARS[POST_FORUM]) : intval($HTTP_GET_VARS[POST_FORUM]);
 		$forum_sql = "AND forum_id = $forum_id";
 	}
 	else
@@ -153,7 +153,7 @@ else
 		}
 	
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id) . '">')
+			'META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('admin_forumauth.php?' . POST_FORUM . '=' . $forum_id) . '">')
 		);
 		$message = $lang['Forum_auth_updated'] . '<br><br>' . sprintf($lang['Click_return_forumauth'],  '<a href="' . check_sid('admin_forumauth.php') . '">', "</a>");
 		message(GENERAL_MESSAGE, $message);
@@ -190,7 +190,7 @@ else
 //			'body' => './../admin/style/auth_select_body.tpl')
 //		);
 	
-		$select_list = '<select name="' . POST_FORUM_URL . '" class="post">';
+		$select_list = '<select name="' . POST_FORUM . '" class="post">';
 		for($i = 0; $i < count($forum_rows); $i++)
 		{
 			$select_list .= '<option value="' . $forum_rows[$i]['forum_id'] . '">' . $forum_rows[$i]['forum_name'] . '</option>';
@@ -300,11 +300,11 @@ else
 		}
 		
 		$adv_mode = ( empty($adv) ) ? '1' : '0';
-		$switch_mode = check_sid('admin_forumauth.php?' . POST_FORUM_URL . '=' . $forum_id . "&adv=". $adv_mode);
+		$switch_mode = check_sid('admin_forumauth.php?' . POST_FORUM . '=' . $forum_id . "&adv=". $adv_mode);
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
-		$fields = '<input type="hidden" name="' . POST_FORUM_URL . '" value="' . $forum_id . '">';
+		$fields = '<input type="hidden" name="' . POST_FORUM . '" value="' . $forum_id . '">';
 	
 		$template->assign_vars(array(
 			'FORUM_NAME' => $forum_name,

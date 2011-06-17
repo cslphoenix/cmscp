@@ -7,15 +7,15 @@ if ( !defined('IN_CMS') )
 
 define('IN_ADMIN', true);
 
+$root_path = './../';
+
 include($root_path . 'common.php');
-require($root_path . 'includes/acp/acp_upload.php');
-require($root_path . 'includes/acp/acp_selects.php');
+include($root_path . 'includes/acp/acp_upload.php');
+include($root_path . 'includes/acp/acp_selects.php');
 include($root_path . 'includes/acp/acp_functions.php');
 
 $userdata = session_pagestart($user_ip, PAGE_ADMIN);
 init_userprefs($userdata);
-
-#$oCache -> sCachePath = './../cache/';
 
 $userauth = auth_acp_check($userdata['user_id']);
 

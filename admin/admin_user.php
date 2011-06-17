@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user'])
 	{
-		$module['_headmenu_04_users']['_submenu_settings'] = $root_file;
+		$module['hm_users']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_settings';
+	$current	= 'sm_settings_user';
 	
 	include('./pagestart.php');
 	
@@ -26,8 +26,8 @@ else
 	$error	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_USER;
-	$url	= POST_USER_URL;
+	$log	= SECTION_USER;
+	$url	= POST_USER;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -105,9 +105,27 @@ else
 		$s_mode = '';
 	}
 	
+	function bday($date)
+	{
+		if ( strstr($date, '-') )
+		{
+			$elements = explode('-', $date);
+			
+			$return = sprintf("%s.%s.%s", $elements[2], $elements[1], $elements[0]);
+		}
+		else
+		{
+			$elements = explode('.', $date);
+			
+			$return = sprintf("%s-%s-%s", $elements[2], $elements[1], $elements[0]);
+		}
+		
+		return $return;
+	}
+	
 	$template->set_filenames(array(
-		'body'		=> 'style/acp_user.tpl',
-		'error'		=> 'style/info_error.tpl',
+		'body'	=> 'style/acp_user.tpl',
+		'error'	=> 'style/info_error.tpl',
 	));
 	
 	$template->assign_block_vars($temp, array());
@@ -128,6 +146,7 @@ else
 							'user_founder'		=> '0',
 							'user_level'		=> '0',
 							'user_active'		=> '0',
+							'user_birthday'		=> '',
 						);
 			}
 			else if ( $mode == '_update' && !request('submit', 1) )
@@ -142,136 +161,82 @@ else
 			else
 			{
 				$data = array(
-							'user_name'				=> request('user_name', 2),
-							'user_regdate'			=> request('user_regdate', 0),
-							'user_lastvisit'		=> request('user_lastvisit', 0),
-							'user_email'			=> request('user_email', 2),
-							'user_founder'			=> request('user_founder', 0),
-							'user_level'			=> request('user_level', 0),
-							'user_active'			=> request('user_active', 0),
+							'user_name'			=> request('user_name', 2),
+							'user_regdate'		=> request('user_regdate', 0),
+							'user_lastvisit'	=> request('user_lastvisit', 0),
+							'user_email'		=> request('user_email', 2),
+							'user_password'		=> request('user_password', 2),
+							'user_founder'		=> request('user_founder', 0),
+							'user_level'		=> request('user_level', 0),
+							'user_active'		=> request('user_active', 0),
+							'user_birthday'		=> request('user_birthday', 2),
 						);
-			}
-			
-			( $mode == '_update' ) ? $template->assign_block_vars($temp . '._update', array()) : '';
-	
-			
-			if ( $userdata['user_founder'] )
-			{
-				$check_founder_no	= (!$data['user_founder'] ) ? ' checked="checked"' : '';
-				$check_founder_yes	= ( $data['user_founder'] ) ? ' checked="checked"' : '';
-			}
-			else
-			{
-				$check_founder_no	= (!$data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
-				$check_founder_yes	= ( $data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
-			}
-			
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-			$fields .= "<input type=\"hidden\" name=\"user_regdate\" value=\"" . $data['user_regdate'] . "\" />";
-			$fields .= "<input type=\"hidden\" name=\"user_lastvisit\" value=\"" . $data['user_lastvisit'] . "\" />";
-			
-			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['user'], $data['user_name']),
-				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['user']),
-				'L_EMAIL'	=> $lang['email'],
-				'L_CONFIRM'	=> $lang['email_confirm'],
-				
-				'L_REGISTER'	=> $lang['register'],
-				'L_LASTLOGIN'	=> $lang['lastlogin'],
-				'L_FOUNDER'		=> $lang['founder'],
-				'L_ACTIVE'		=> $lang['active'],
-				'L_LEVEL'		=> $lang['common_userlevel'],
-				
-				'L_PASSWORD'			=> $lang['password'],
-				'L_PASSWORD_CONFIRM'	=> $lang['password_confirm'],
-				'L_PASSWORD_INPUT'	=> $lang['password_input'],
-				'L_PASSWORD_RANDOM'	=> $lang['password_generate'],
-				
-				'PASS_1'	=> sprintf($lang['password_random'], $password_random[0]),
-				'PASS_2'	=> sprintf($lang['password_random'], $password_random[1]),
-				'PASS_3'	=> sprintf($lang['password_random'], $password_random[2]),
-				'PASS_4'	=> sprintf($lang['password_random'], $password_random[3]),
-				'PASS_5'	=> sprintf($lang['password_random'], $password_random[4]),
-				'PASS_6'	=> sprintf($lang['password_random'], $password_random[5]),
-				
-				'USERNAME'	=> $data['user_name'],
-				
-				'REGISTER'	=> create_date($userdata['user_dateformat'], $data['user_regdate'], $userdata['user_timezone']),
-				'LASTLOGIN'	=> create_date($userdata['user_dateformat'], $data['user_lastvisit'], $userdata['user_timezone']),
-				
-				'USEREMAIL' => $data['user_email'],
-				
-				'S_INPUT'	=> request('s_pass', 0) ? 'checked="checked"' : '',
-				'S_RANDOM'	=> request('s_pass', 0) ? '' : 'checked="checked"',
-				
-				'RANDOM'	=> request('s_pass', 0) ? '' : 'none',
-				'INPUT'		=> request('s_pass', 0) ? 'none' : '',
-				
-				'S_FOUNDER_NO'	=> $check_founder_no,
-				'S_FOUNDER_YES'	=> $check_founder_yes,
-				
-				'S_ACTIVE_NO'	=> (!$data['user_active'] ) ? ' checked="checked"' : '',
-				'S_ACTIVE_YES'	=> ( $data['user_active'] ) ? ' checked="checked"' : '',
-				
-				'S_LEVEL'	=> select_level('select', 'user_level', 'user_level', $data['user_level'], 0),
-				
-				'S_MODE'	=> $s_mode,
-				
-				'S_ACTION'	=> check_sid($file),
-				'S_FIELDS'	=> $fields,
-			));
-			
-			debug($mode);
-			debug($_POST);
-			
-			if ( request('submit', 1) )
-			{
-				$gens =	request('password', 0);
-				$newp = request('password_new', 1);
-				$pass = request('password_confirm', 1);
-				$mail = request('user_email_confirm', 2);
+						
+				$pass_gen =	request('password', 0);
+				$pass_new = request('password_new', 2);
+				$pass_con = request('password_confirm', 2);
+				$mail_con = request('user_email_confirm', 2);
+				$pass_switch = request('pass_switch', 0);
 				
 				$error .= check(USERS, array('user_name' => $data['user_name'], 'user_email' => $data['user_email'], 'user_id' => $data_id), $error);
 			#	$error .= valid(user_name, user_email);
-				$error .= ( $data['user_email'] != $mail ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_email_mismatch'] : '';
-				
-				if ( request('s_pass', 0) )
+			
+				if ( $mode == '_create' || $mode == '_update' && $mail_con )
 				{
-					if ( $gens || $gens == '0' )
+					$error .= ( $data['user_email'] != $mail_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_email_mismatch'] : '';
+				}
+				
+				if ( $pass_switch )
+				{
+					if ( $pass_gen || $pass_gen == '0' )
 					{
-						$gens = $password_random[$gens];
+						$pass_rnd = $password_random[$pass_gen];
 					}
 					else
 					{
 						$error .= ( $error ? '<br />' : '' ) . $lang['msg_select_pass'];
 					}
 					
-					$data['user_password'] = md5($gens);
+					$password		= $pass_rnd;
+					$password_md5	= md5($pass_rnd);
 				}
 				else
 				{
-					$error .= isset($newp) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass'] : '';
-					$error .= isset($pass) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_confirm'] : '';
-					
-					$error .= ( $newp != $pass ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
-					
-					$data['user_password'] = md5($pass);
+					if ( $mode == '_create' )
+					{
+						$error .= !$pass_new ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass'] : '';
+						$error .= !$pass_con ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_confirm'] : '';
+						$error .= ( $pass_new != $pass_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
+						
+						$password		= $pass_new;
+						$password_md5	= md5($pass_new);
+					}
+					else if ( $mode == '_update' && ( !$pass_new && $data['user_password'] != $pass_new ) )
+					{
+						$password_md5 = $data['user_password'];
+					}
+					else
+					{
+						$error .= ( $pass_new != $pass_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
+						
+						$password		= $pass_new;
+						$password_md5	= md5($pass_new);
+					}
 				}
-			
-				/* demo zwecke, für das direkte anzeigen eines pws */	
-			#	$data['user_password'] = ( $pass ) ? md5($pass) : md5($gens);
-			#	$pw = ( $pass ) ? $pass : $gens;
 				
 				if ( !$error )
 				{
+					$data['user_password'] = $password_md5;
+					$data['user_birthday'] = bday($data['user_birthday']);
+						
 					if ( $mode == '_create' )
 					{
 						$sql = sql(USERS, $mode, $data);
 						$uid = $db->sql_nextid();
+						
 						$grp = sql(GROUPS, $mode, array('group_name' => $data['user_name'], 'group_type' => '2', 'group_desc' => 'Personal User', 'group_single_user' => '1'));
 						$gid = $db->sql_nextid();						
+						
 						$gus = sql(GROUPS_USERS, $mode, array('user_id' => $uid, 'group_id' => $gid, 'user_pending' => '0'));
 						$gus = sql(GROUPS_USERS, $mode, array('user_id' => $uid, 'group_id' => '5', 'user_pending' => '0'));
 					#	$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title . $pw);
@@ -305,8 +270,8 @@ else
 					}
 					else
 					{
-					#	$sql = sql(GAMES, $mode, $data, 'game_id', $data_id);
-					#	$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(USERS, $mode, $data, 'user_id', $data_id);
+						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -314,12 +279,157 @@ else
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, $mode, $error);
-					
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'error');
+					
+					log_add(LOG_ADMIN, $log, 'error', $error);
 				}
 			}
+			
+			( $mode == '_update' ) ? $template->assign_block_vars($temp . '._update', array()) : '';
+	
+			
+			if ( $userdata['user_founder'] )
+			{
+				$check_founder_no	= (!$data['user_founder'] ) ? ' checked="checked"' : '';
+				$check_founder_yes	= ( $data['user_founder'] ) ? ' checked="checked"' : '';
+			}
+			else
+			{
+				$check_founder_no	= (!$data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
+				$check_founder_yes	= ( $data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
+			}
+			
+			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"user_regdate\" value=\"" . $data['user_regdate'] . "\" />";
+			$fields .= "<input type=\"hidden\" name=\"user_password\" value=\"" . $data['user_password'] . "\" />";
+			$fields .= "<input type=\"hidden\" name=\"user_lastvisit\" value=\"" . $data['user_lastvisit'] . "\" />";
+			
+			$template->assign_vars(array(
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['user'], $data['user_name']),
+				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['user']),
+				'L_EMAIL'	=> $lang['email'],
+				'L_CONFIRM'	=> $lang['email_confirm'],
+				
+				'L_REGISTER'	=> $lang['register'],
+				'L_LASTLOGIN'	=> $lang['lastlogin'],
+				'L_FOUNDER'		=> $lang['founder'],
+				'L_ACTIVE'		=> $lang['active'],
+				'L_LEVEL'		=> $lang['common_userlevel'],
+				'L_BIRTHDAY'	=> $lang['birthday'],
+				
+				'L_PASSWORD'			=> $lang['password'],
+				'L_PASSWORD_CONFIRM'	=> $lang['password_confirm'],
+				'L_PASSWORD_INPUT'		=> $lang['password_input'],
+				'L_PASSWORD_RANDOM'		=> $lang['password_generate'],
+				
+				'PASS_1'	=> sprintf($lang['password_random'], $password_random[0]),
+				'PASS_2'	=> sprintf($lang['password_random'], $password_random[1]),
+				'PASS_3'	=> sprintf($lang['password_random'], $password_random[2]),
+				'PASS_4'	=> sprintf($lang['password_random'], $password_random[3]),
+				'PASS_5'	=> sprintf($lang['password_random'], $password_random[4]),
+				'PASS_6'	=> sprintf($lang['password_random'], $password_random[5]),
+				
+				'USERNAME'	=> $data['user_name'],
+				
+				'REGISTER'	=> create_date($userdata['user_dateformat'], $data['user_regdate'], $userdata['user_timezone']),
+				'LASTLOGIN'	=> create_date($userdata['user_dateformat'], $data['user_lastvisit'], $userdata['user_timezone']),
+				
+				'USEREMAIL' => $data['user_email'],
+				
+				'BIRTHDAY'	=> bday($data['user_birthday']),
+				
+				'S_INPUT'	=> request('pass_switch', 0) ? 'checked="checked"' : '',
+				'S_RANDOM'	=> request('pass_switch', 0) ? '' : 'checked="checked"',
+				
+				'RANDOM'	=> request('pass_switch', 0) ? '' : 'none',
+				'INPUT'		=> request('pass_switch', 0) ? 'none' : '',
+				
+				'S_FOUNDER_NO'	=> $check_founder_no,
+				'S_FOUNDER_YES'	=> $check_founder_yes,
+				
+				'S_ACTIVE_NO'	=> (!$data['user_active'] ) ? ' checked="checked"' : '',
+				'S_ACTIVE_YES'	=> ( $data['user_active'] ) ? ' checked="checked"' : '',
+				
+				'S_LEVEL'	=> select_level('select', 'user_level', 'user_level', $data['user_level'], 0),
+				
+				'S_MODE'	=> $s_mode,
+				
+				'S_ACTION'	=> check_sid($file),
+				'S_FIELDS'	=> $fields,
+			));
+			
+			if ( request('submit', 1) )
+			{
+				
+			}
+		
+			break;
+			
+		case '_settings':
+		
+			$data = data(USERS, $data_id, false, 1, 1);
+			
+			$viewemail	= $data['user_viewemail'];
+			
+			$show_sig		= $data['user_show_sig'];
+			
+			$notify			= $data['user_notify'];
+			$notify_pm		= $data['user_notify_pm'];
+			$popup_pm		= $data['user_popup_pm'];
+			
+			$allow_sig			= $data['user_allow_sig'];
+			$allow_avatar		= $data['user_allow_avatar'];
+			$allow_pm			= $data['user_allow_pm'];
+			$allow_viewonline	= $data['user_allow_viewonline'];
+			
+			$rank_page	= $data['user_rank_page'];
+			$rank_forum	= $data['user_rank_forum'];
+			
+			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			
+			$template->assign_vars(array(
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['sprintf_update'], $lang['user'], $data['user_name']),
+				
+				'ALLOW_AVATAR_NO'		=> (!$data['user_allow_avatar'] ) ? ' checked="checked"' : '',
+				'ALLOW_AVATAR_YES'		=> ( $data['user_allow_avatar'] ) ? ' checked="checked"' : '',
+				
+				'ALLOW_PM_NO'			=> (!$data['user_allow_pm'] ) ? ' checked="checked"' : '',
+				'ALLOW_PM_YES'			=> ( $data['user_allow_pm'] ) ? ' checked="checked"' : '',
+				
+				'ALLOW_SIG_NO'			=> (!$data['user_allow_sig'] ) ? ' checked="checked"' : '',
+				'ALLOW_SIG_YES'			=> ( $data['user_allow_sig'] ) ? ' checked="checked"' : '',
+				
+				'ALLOW_VIEWONLINE_NO'	=> (!$data['user_allow_viewonline'] ) ? ' checked="checked"' : '',
+				'ALLOW_VIEWONLINE_YES'	=> ( $data['user_allow_viewonline'] ) ? ' checked="checked"' : '',
+				
+				
+				
+				
+				
+				
+				'VIEW_EMAIL_NO'		=> (!$data['user_view_email'] ) ? ' checked="checked"' : '',
+				'VIEW_EMAIL_YES'	=> ( $data['user_view_email'] ) ? ' checked="checked"' : '',
+				
+				'SHOW_SIG_NO'		=> (!$data['user_show_sig'] ) ? ' checked="checked"' : '',
+				'SHOW_SIG_YES'		=> ( $data['user_show_sig'] ) ? ' checked="checked"' : '',
+				
+				
+				
+				
+				
+				'S_LANG'		=> select_language($data['user_lang']),
+			 	'S_STYLE'		=> select_style($data['user_style'], 'user_style'),
+				'S_TIMEZONE'	=> select_tz($data['user_timezone'], 'page_timezone'),
+				
+				
+				'S_ACTION'	=> check_sid($file),
+				'S_FIELDS'	=> $fields
+			));
 		
 			break;
 		
@@ -346,7 +456,7 @@ else
 					
 					if ( !$profile )
 					{
-						$template->assign_block_vars($temp . '._cat_row._no_entry', array());
+						$template->assign_block_vars($temp . '._cat_row._entry_empty', array());
 					}
 					else
 					{
@@ -421,7 +531,7 @@ else
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, $mode, $error);
+					log_add(LOG_ADMIN, $log, 'error', $error);
 					
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -429,77 +539,6 @@ else
 			}
 			
 			break;
-		
-		case 'settings':
-		
-			$user = get_data('user', $data_id, 0);
-			
-			$template->set_filenames(array('body' => 'style/acp_user.tpl'));
-			$template->assign_block_vars('user_settings', array());
-			
-			$user_timezone			= $data['user_timezone'];
-			$user_style				= $data['user_style'];
-			$user_lang				= $data['user_lang'];
-			$user_dateformat		= $data['user_dateformat'];
-			$user_viewemail			= $data['user_viewemail'];
-			$user_birthday			= $data['user_birthday'];
-			$user_sig				= $data['user_sig'];
-			
-			$user_notify			= $data['user_notify'];
-			$user_notify_pm			= $data['user_notify_pm'];
-			$user_popup_pm			= $data['user_popup_pm'];
-			
-			
-			
-			
-			
-			
-			
-			$user_allow_avatar		= $data['user_allow_avatar'];
-			$user_allow_pm			= $data['user_allow_pm'];
-			$user_allow_viewonline	= $data['user_allow_viewonline'];
-			
-			$user_rank				= $data['user_rank'];
-			
-			$fields = '<input type="hidden" name="mode" value="update_settings" />';
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-			
-			$template->assign_vars(array(
-				'L_HEAD'			=> $lang['user_head'],
-				'L_INPUT'		=> ($mode == 'add') ? $lang['user_new_add'] : $lang['user_regedit'],
-				'L_GROUP'			=> $lang['user_group'],
-				'L_AUTHS'			=> $lang['user_auths'],
-				'L_REQUIRED'			=> $lang['required'],
-				
-				'L_REGISTER'		=> $lang['user_register'],
-				'L_FIELDS'			=> $lang['user_fields'],
-				'L_SETTINGS'		=> $lang['user_settings'],
-				'L_IMAGES'			=> $lang['user_images'],
-				
-				'L_SUBMIT'				=> $lang['common_submit'],
-				'L_RESET'				=> $lang['common_reset'],
-				'L_YES'					=> $lang['common_yes'],
-				'L_NO'					=> $lang['common_no'],
-				
-				'S_FIELDS'			=> check_sid("$file?mode=fields&amp;$url=$data_id"),
-				'S_SETTINGS'		=> check_sid("$file?mode=settings&amp;$url=$data_id"),
-				'S_IMAGES'			=> check_sid("$file?mode=images&amp;$url=$data_id"),
-				
-				
-				'S_EDIT'			=> check_sid("$file?mode=edit&amp;$url=$data_id"),
-				'S_GROUP'			=> check_sid("$file?mode=groups&amp;$url=$data_id"),
-				'S_AUTHS'			=> check_sid("$file?mode=auths&amp;$url=$data_id"),
-				'S_ACTION'			=> check_sid($file),
-				'S_FIELDS'		=> $fields
-			));
-		
-		break;
-		
-		case 'update_settings':
-		
-			debug($_POST);
-		
-		break;
 		
 		case 'delete':
 		
@@ -1237,7 +1276,7 @@ else
 				'L_NAME'	=> $lang['user'],
 				'L_EXPLAIN'	=> $lang['explain'],
 				
-				'PAGE_NUMBER'	=> ( count($data) ) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
+				'PAGE_NUMBER'	=> ( count($data) ) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
 				'PAGE_PAGING'	=> ( count($data) ) ? generate_pagination($file . '?', count($data), $settings['site_entry_per_page'], $start ) : '',
 
 				
@@ -1251,7 +1290,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	include('./page_footer.php');
 }
 
 ?>

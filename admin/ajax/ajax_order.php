@@ -1,5 +1,9 @@
 <?php
 
+/*
+ *	require: acp_navi, acp_network, acp_profile, acp_ranks
+ */
+
 header('content-type: text/html; charset=ISO-8859-1');
 
 define('IN_CMS', true);
@@ -12,75 +16,60 @@ require($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-debug($_POST);
-
-if ( isset($_POST['mode']) || isset($_POST['option']) )
+if ( isset($_POST['new_mode']) )
 {
-	$mode	= (string) $_POST['mode'];
-	$option	= (string) $_POST['option'];
+	$s_select	= '';
+	$new_mode	= $_POST['new_mode'];
+	$new_opt	= $_POST['new_opt'];
+	$cur_mode	= $_POST['cur_mode'];
+	$cur_opt	= $_POST['cur_opt'];
 	
-	switch ( $mode )
+	
+	switch ( $new_mode )
 	{
-		case 'map':
-			
-			$sql = "SELECT cat_id AS cat_type, cat_name FROM " . MAPS_CAT . " WHERE cat_id = $option ORDER BY cat_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$cats = $db->sql_fetchrowset($result);
-			
-			$sql = "SELECT map_name, map_order, cat_id AS map_type FROM " . MAPS . " WHERE cat_id = $option ORDER BY cat_id, map_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
+		case 'navi':
 		
+			$cats = array(
+				'0' => array('cat_type' => NAVI_MAIN,	'cat_name' => $lang['main']),
+				'1' => array('cat_type' => NAVI_CLAN,	'cat_name' => $lang['clan']),
+				'2' => array('cat_type' => NAVI_COM,	'cat_name' => $lang['com']),
+				'3' => array('cat_type' => NAVI_MISC,	'cat_name' => $lang['misc']),
+				'4' => array('cat_type' => NAVI_USER,	'cat_name' => $lang['user']),
+			);
+			
+			$sql = "SELECT * FROM " . NAVI . " WHERE navi_type = $new_opt ORDER BY navi_type, navi_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
 			break;
 			
 		case 'network':
 			
 			$cats = array(
-				'0' => array('cat_type' => NETWORK_LINK, 'cat_name' => $lang['link']),
-				'1' => array('cat_type' => NETWORK_PARTNER, 'cat_name' => $lang['partner']),
-				'2' => array('cat_type' => NETWORK_SPONSOR, 'cat_name' => $lang['sponsor']),
+				'0' => array('cat_type' => NETWORK_LINK,	'cat_name' => $lang['link']),
+				'1' => array('cat_type' => NETWORK_PARTNER,	'cat_name' => $lang['partner']),
+				'2' => array('cat_type' => NETWORK_SPONSOR,	'cat_name' => $lang['sponsor']),
 			);
 			
-			$sql = "SELECT * FROM " . NETWORK . " WHERE network_type = $option ORDER BY network_type, network_order ASC";
+			$sql = "SELECT * FROM " . NETWORK . " WHERE network_type = $new_opt ORDER BY network_type, network_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
 			break;
-			
-		case 'navi':
 		
-			$cats = array(
-				'0' => array('cat_type' => NAVI_MAIN, 'cat_name' => $lang['main']),
-				'1' => array('cat_type' => NAVI_CLAN, 'cat_name' => $lang['clan']),
-				'2' => array('cat_type' => NAVI_COM, 'cat_name' => $lang['com']),
-				'3' => array('cat_type' => NAVI_MISC, 'cat_name' => $lang['misc']),
-				'4' => array('cat_type' => NAVI_USER, 'cat_name' => $lang['user']),
-			);
-			
-			$sql = "SELECT * FROM " . NAVI . " WHERE navi_type = $option ORDER BY navi_type, navi_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-			
 		case 'rank':
 		
 			$cats = array(
-				'0' => array('cat_type' => RANK_PAGE, 'cat_name' => $lang['page']),
-				'1' => array('cat_type' => RANK_FORUM, 'cat_name' => $lang['forum']),
-				'2' => array('cat_type' => RANK_TEAM, 'cat_name' => $lang['team']),
+				'0' => array('cat_type' => RANK_PAGE,	'cat_name' => $lang['page']),
+				'1' => array('cat_type' => RANK_FORUM,	'cat_name' => $lang['forum']),
+				'2' => array('cat_type' => RANK_TEAM,	'cat_name' => $lang['team']),
 			);
 			
-			$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = $option ORDER BY rank_type, rank_order ASC";
+			$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = $new_opt ORDER BY rank_type, rank_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -90,14 +79,14 @@ if ( isset($_POST['mode']) || isset($_POST['option']) )
 			
 		case 'profile':
 		
-			$sql = "SELECT cat_id AS cat_type, cat_name FROM " . PROFILE_CAT . " WHERE cat_id = $option ORDER BY cat_order ASC";
+			$sql = "SELECT cat_id AS cat_type, cat_name FROM " . PROFILE_CAT . " WHERE cat_id = $new_opt ORDER BY cat_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$cats = $db->sql_fetchrowset($result);
 			
-			$sql = "SELECT profile_name, profile_order, profile_cat AS profile_type FROM " . PROFILE . " WHERE profile_cat = $option ORDER BY profile_cat, profile_order ASC";
+			$sql = "SELECT profile_name, profile_order, profile_cat AS profile_type FROM " . PROFILE . " WHERE profile_cat = $new_opt ORDER BY profile_cat, profile_order ASC";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -109,11 +98,13 @@ if ( isset($_POST['mode']) || isset($_POST['option']) )
 	
 	$s_select = '';
 	
-	$s_select .= ( $mode == 'map' ) ? "<tr><td class=\"row1\"><label for=\"map_order\">" . $lang['common_order'] . ":</label></td><td class=\"row2\">" : '';
-	
-	if ( $entries )	
+	if ( !$entries )
 	{
-		$s_select .= "<select class=\"select\" name=\"$mode order_new\" id=\"$mode order\">";
+		$s_select = $lang['common_entry_empty'];
+	}
+	else
+	{
+		$s_select .= "<select class=\"select\" name=\"$new_mode order_new\" id=\"$new_mode order\">";
 		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($cats); $i++ )
@@ -125,14 +116,16 @@ if ( isset($_POST['mode']) || isset($_POST['option']) )
 			
 			for ( $j = 0; $j < count($entries); $j++ )
 			{
-				$name = $entries[$j][$mode . '_name'];
-				$type = $entries[$j][$mode . '_type'];
-				$order = $entries[$j][$mode . '_order'];
+				$name = $entries[$j][$new_mode . '_name'];
+				$type = $entries[$j][$new_mode . '_type'];
+				$order = $entries[$j][$new_mode . '_order'];
 				
 				if ( $cat_type == $type )
 				{
-					$entry .= ( $order == 10 ) ? "<option value=\"5\">" . sprintf($lang['sprintf_select_before'], $name) . "</option>" : '';
-					$entry .= "<option value=\"" . ( $order + 5 ) . "\">" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
+					$disabled = ( $order == $cur_opt && $cat_type == $cur_mode ) ? ' disabled="disabled"' : '';
+					
+					$entry .= ( $order == 10 ) ? "<option value=\"5\"$disabled>" . sprintf($lang['sprintf_select_before'], $name) . "</option>" : '';
+					$entry .= "<option value=\"" . ( $order + 5 ) . "\"$disabled>" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
 				}
 			}
 			
@@ -141,18 +134,12 @@ if ( isset($_POST['mode']) || isset($_POST['option']) )
 		
 		$s_select .= "</select>";
 	}
-	else
-	{
-		$s_select = $lang['no_entry'];
-	}
-	
-	$s_select .= ( $mode == 'map' ) ? "</td></tr>" : '';
 	
 	echo $s_select;
 }
 else
 {
-	echo '';
+	echo $lang['common_entry_empty'];
 }
 
 ?>

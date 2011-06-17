@@ -1,5 +1,9 @@
 <?php
 
+/*
+ *	require: acp_match, acp_train
+ */
+
 header('content-type: text/html; charset=ISO-8859-1');
 
 define('IN_CMS', true);

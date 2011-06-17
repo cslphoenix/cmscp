@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] || $userauth['auth_news_public'] )
 	{
-		$module['_headmenu_03_news']['_submenu_news'] = $root_file;
+		$module['hm_news']['sm_news'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_news';
+	$current	= 'sm_news';
 	
 	include('./pagestart.php');
 	
@@ -27,8 +27,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_NEWS;
-	$url	= POST_NEWS_URL;
+	$log	= SECTION_NEWS;
+	$url	= POST_NEWS;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -148,7 +148,7 @@ else
 					for ( $i = 0; $i < count($data['news_url']); $i++ )
 					{
 						$template->assign_block_vars('_input._link_row', array(
-							'NEWS_URL'	=> $data['news_url'][$i],
+							'NEWS'	=> $data['news_url'][$i],
 							'NEWS_LINK'	=> $data['news_link'][$i],
 						));
 					}
@@ -268,7 +268,7 @@ else
 							$sql = sql(NEWS, $mode, $data);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 							
-							sql(NEWS_COMMENTS_READ, 'create', array('news_id' => $db->sql_nextid(), 'user_id' => $userdata['user_id'], 'read_time' => time()));
+							sql(COMMENT_READ, 'create', array('type_id' => $db->sql_nextid(), 'user_id' => $userdata['user_id'], 'type' => READ_MATCH, 'read_time' => time()));
 						}
 						else
 						{
@@ -278,6 +278,7 @@ else
 							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
+						$oCache->deleteCache('data_news');
 						$oCache->deleteCache('dsp_news');
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);						
@@ -285,7 +286,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -304,6 +305,7 @@ else
 				
 				sql(NEWS, 'update', array('news_public' => $public), 'news_id', $data_id);
 				
+				$oCache->deleteCache('data_news');
 				$oCache->deleteCache('dsp_news');
 				
 				log_add(LOG_ADMIN, $log, $mode);
@@ -321,6 +323,7 @@ else
 					$sql = sql(NEWS, $mode, $data, 'news_id', $data_id);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
+					$oCache->deleteCache('data_news');
 					$oCache->deleteCache('dsp_news');
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -365,7 +368,7 @@ else
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['news']),
 		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['news']),
-		'L_NAME'	=> sprintf($lang['sprintf_title'], $lang['news']),
+		'L_TITLE'	=> sprintf($lang['sprintf_title'], $lang['news']),
 		
 		'L_EXPLAIN'	=> $lang['explain'],
 		
@@ -374,7 +377,8 @@ else
 		'S_FIELDS'	=> $fields,
 	));
 	
-	$news = data(NEWS, false, 'news_time_create ASC', 1, false);
+	$news	= data(NEWS, false, 'news_time_public DESC, news_id DESC', 1, false);
+	$count	= count($news);
 	
 	if ( !$news )
 	{
@@ -382,42 +386,68 @@ else
 	}
 	else
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($news)); $i++ )
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $count); $i++ )
 		{
 			$news_id = $news[$i]['news_id'];
 			
 			if ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )
 			{
-				$name = ( $news[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="" />' : '<img src="' . $images['icon_acp_privat'] . '" alt="" />';
-				$link = ' <a href="' . check_sid("$file?mode=_switch&amp;$url=$news_id") .'">' . $name . '</a>';
+				$image	= ( $news[$i]['news_public'] ) ? '<img src="' . $images['icon_acp_public'] . '" alt="" />' : '<img src="' . $images['icon_acp_privat'] . '" alt="" />';
+				$public = '<a href="' . check_sid("$file?mode=_switch&amp;$url=$news_id") .'">' . $image . '</a>';
 			}
 			else
 			{
-				$name = '<img src="' . $images['icon_acp_denied'] . '" alt="" />';
-				$link = $name;
+				$public = '<img src="' . $images['icon_acp_denied'] . '" alt="" />';
 			}
 			
 			if ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] || $news[$i]['user_id'] == $userdata['user_id'] )
 			{
-				$update	= ' <a href="' . check_sid("$file?mode=_update&amp;$url=$news_id") . '"><img src="' . $images['icon_option_update'] . '" alt="" ></a>';
-				$delete	= ' <a href="' . check_sid("$file?mode=_delete&amp;$url=$news_id") . '"><img src="' . $images['icon_option_delete'] . '" alt="" ></a>';
+				$update	= '<a href="' . check_sid("$file?mode=_update&amp;$url=$news_id") . '"><img src="' . $images['icon_option_update'] . '" alt="" ></a>';
+				$delete	= '<a href="' . check_sid("$file?mode=_delete&amp;$url=$news_id") . '"><img src="' . $images['icon_option_delete'] . '" alt="" ></a>';
 			}
 			else
 			{
-				$update	= $lang['common_update'];
-				$delete	= $lang['common_delete'];
+				$update	= '';
+				$delete	= '';
 			}
 			
 			$title	= $news[$i]['news_intern'] ? sprintf($lang['sprintf_news_title'], $news[$i]['news_title']) : $news[$i]['news_title'];
-			$public	= $news[$i]['news_public'] ? $images['icon_acp_public'] : $images['icon_acp_privat'];
+			$status	= $news[$i]['news_public'] ? $images['icon_acp_public'] : $images['icon_acp_privat'];
 			
-			$template->assign_block_vars('_display._news_row', array(
-				'TITLE'		=> "<a href=\"" . check_sid("$file?mode=_update&amp;$url=$news_id") . "\">$title</a>",
-				'STATUS'	=> $public,
+			if ( $news[$i]['in_send'] )
+			{
+				$list = explode('; ', $news[$i]['in_send']);
+				$send = '<a href="javascript:linkTo_UnCryptMailto(\'nbjmup;' . $list[1] . '\');">' . $list[0] . '</a>';
 				
-				'LINKS'		=> $link . $update . $delete,
-			));
+				$template->assign_block_vars('_display._send_row', array(
+					'TITLE'		=> "<a href=\"" . check_sid("$file?mode=_update&amp;$url=$news_id") . "\">$title</a>",
+					'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_time_public'], $userdata['user_timezone']),
+					'SEND'		=> $send,
+					'STATUS'	=> $status,
+					'PUBLIC'	=> $public,
+					'UPDATE'	=> $update,
+					'DELETE'	=> $delete,
+				));
+			}
+			else
+			{
+				$template->assign_block_vars('_display._news_row', array(
+					'TITLE'		=> "<a href=\"" . check_sid("$file?mode=_update&amp;$url=$news_id") . "\">$title</a>",
+					'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_time_public'], $userdata['user_timezone']),
+					'STATUS'	=> $status,
+					'PUBLIC'	=> $public,
+					'UPDATE'	=> $update,
+					'DELETE'	=> $delete,
+				));
+			}
 		}
+		
+		$current_page = ( !$count ) ? 1 : ceil( $count / $settings['site_entry_per_page'] );
+			
+			$template->assign_vars(array(
+				'PAGE_PAGING' => generate_pagination("$file?", $count, $settings['site_entry_per_page'], $start),
+				'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+			));
 	}
 	
 	$template->pparse('body');

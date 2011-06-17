@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_01_main']['_submenu_profile'] = $root_file;
+		$module['hm_main']['sm_profile'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_profile';
+	$current	= 'sm_profile';
 	
 	include('./pagestart.php');
 
@@ -27,9 +27,9 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_PROFILE;
-	$url	= POST_PROFILE_URL;
-	$url_c	= POST_CAT_URL;
+	$log	= SECTION_PROFILE;
+	$url	= POST_PROFILE;
+	$url_c	= POST_CAT;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -55,7 +55,7 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_profile.tpl',
-		'ajax'		=> 'style/inc_requests.tpl',
+		'ajax'		=> 'style/ajax_order.tpl',
 		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
@@ -97,7 +97,7 @@ else
 								'profile_show_guest'	=> '0',
 								'profile_show_member'	=> '0',
 								'profile_show_register'	=> '0',
-								'profile_order'			=> '',
+								'profile_order'			=> maxa(PROFILE, 'profile_order', $cat_id),
 							);
 				}
 				else if ( $mode == '_update' && !(request('submit', 1)) )
@@ -127,14 +127,14 @@ else
 					$template->assign_block_vars('_input._cat', array(
 						'CAT_ID'	=> $data_cat[$i]['cat_id'],
 						'CAT_NAME'	=> $data_cat[$i]['cat_name'],
-						
+
 						'S_MARK'	=> ( $data_cat[$i]['cat_id'] == $data['profile_cat'] ) ? 'checked="checked"' : '',
 					));
 				}
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				$fields .= "<input type=\"hidden\" name=\"old_field\" value=\"" . $data['profile_field'] . "\" />";
+				$fields .= "<input type=\"hidden\" name=\"current_field\" value=\"" . $data['profile_field'] . "\" />";
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
@@ -157,6 +157,10 @@ else
 					'L_TYPE_AREA'	=> $lang['type_area'],
 					
 					'NAME'			=> $data['profile_name'],
+					
+					'CUR_CAT'	=> $data['profile_cat'],
+					'CUR_ORDER'	=> $data['profile_order'],
+					
 					'FIELD'			=> str_replace('profile_', '', $data['profile_field']),
 					
 					'S_TYPE_AREA'	=> (!$data['profile_type'] ) ? ' checked="checked"' : '',
@@ -181,14 +185,13 @@ else
 				
 				if ( request('submit', 1) )
 				{
-					$data['profile_order'] = ( !$data['profile_order'] ) ? maxa(PROFILE, 'profile_order', $data['profile_cat']) : $data['profile_order'];
-					
 					$error .= ( !$data['profile_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
 					$error .= ( !$data['profile_field'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_profilefield'] : '';
 					
 					if ( !$error )
 					{
 						$data['profile_field'] = 'profile_' . $data['profile_field'] . '';
+						$data['profile_order'] = ( !$data['profile_order'] ) ? maxa(PROFILE, 'profile_order', $data['profile_cat']) : $data['profile_order'];
 						
 						if ( $mode == '_create' )
 						{
@@ -208,7 +211,7 @@ else
 						{
 							$db_data = sql(PROFILE, $mode, $data, 'profile_id', $data_id);
 							
-							$sql = "ALTER TABLE " . PROFILE_DATA . " CHANGE `" . request('old_field', 1) . "` `" . $data['profile_field'] . "`";
+							$sql = "ALTER TABLE " . PROFILE_DATA . " CHANGE `" . request('current_field', 1) . "` `" . $data['profile_field'] . "`";
 							$sql .= ( $data['profile_type'] ) ? " VARCHAR ( 255 ) NOT NULL;" : " TEXT NOT NULL;";
 							if ( !$db->sql_query($sql) )
 							{
@@ -225,7 +228,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -373,7 +376,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -447,7 +450,6 @@ else
 		}
 	}
 	
-	$template->set_filenames(array('body' => 'style/acp_profile.tpl'));
 	$template->assign_block_vars('_display', array());
 			
 	$template->assign_vars(array(
@@ -493,7 +495,11 @@ else
 				'S_SUBMIT'	=> "add_field[$cat_id]",
 			));
 			
-			if ( $profile )
+			if ( !$profile )
+			{
+				$template->assign_block_vars('_display._cat_row._entry_empty', array());
+			}
+			else
 			{
 				for ( $j = 0; $j < count($profile); $j++ )
 				{
@@ -514,10 +520,6 @@ else
 						));
 					}
 				}
-			}
-			else
-			{
-				$template->assign_block_vars('_display._cat_row._no_entry', array());
 			}
 		}
 	}

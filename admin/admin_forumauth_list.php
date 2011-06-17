@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_perm'] )
 	{
-		$module['_headmenu_02_forum']['_submenu_perm_list'] = $root_file;
+		$module['hm_forum']['sm_perm_list'] = $root_file;
 	}
 
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_perm_list';
+	$current	= 'sm_perm_list';
 	
 	include('./pagestart.php');
 	
@@ -29,9 +29,9 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_GAMES;
-	$url	= POST_FORUM_URL;
-	$url_c	= POST_CATEGORY_URL;
+	$log	= SECTION_GAMES;
+	$url	= POST_FORUM;
+	$url_c	= POST_CATEGORY;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -408,7 +408,7 @@ else
 		
 		$template->assign_block_vars('cat_row', array(
 			'CAT_NAME'	=> $cat_name,
-			'CAT_URL'	=> check_sid('admin_forumauth_list.php?' . $url_c . '=' .$cat_id)
+			'CAT'	=> check_sid('admin_forumauth_list.php?' . $url_c . '=' .$cat_id)
 		));
 		
 		for ( $i = 0; $i < count($forum_auth_fields); $i++ )

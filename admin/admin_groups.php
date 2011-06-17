@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_groups'] )
 	{
-		$module['_headmenu_06_groups']['_submenu_settings'] = $root_file;
+		$module['hm_groups']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_group';
+	$current	= 'sm_settings_groups';
 	
 	include('./pagestart.php');
 		
@@ -27,8 +27,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_GROUPS;
-	$url	= POST_GROUPS_URL;
+	$log	= SECTION_GROUPS;
+	$url	= POST_GROUPS;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -361,7 +361,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -758,7 +758,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -841,7 +841,7 @@ else
 					
 					'COLSPAN'		=> $colspan,
 					
-					'PAGE_NUMBER'	=> $count ? sprintf($lang['Page_of'], ( floor( $start / 5 ) + 1 ), $current_page ) : '',
+					'PAGE_NUMBER'	=> $count ? sprintf($lang['common_page_of'], ( floor( $start / 5 ) + 1 ), $current_page ) : '',
 					'PAGE_PAGING'	=> $count ? generate_pagination("$file?mode=$mode", $count, 5, $start ) : '',
 					
 					'S_CREATE'	=> check_sid("$file?mode=_create"),

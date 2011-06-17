@@ -6,11 +6,8 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['_headmenu_07_development']['_submenu_logs']		= $root_file;
-		$module['_headmenu_07_development']['_submenu_logs_error']	= $root_file . "?mode=error";
-	//	$module['logs']['logs_admin']	= $root_file . "?mode=admin";
-	//	$module['logs']['logs_member']	= $root_file . "?mode=member";
-	//	$module['logs']['logs_user']	= $root_file . "?mode=user";
+		$module['hm_dev']['sm_logs']		= $root_file;
+		$module['hm_dev']['sm_logs_error']	= $root_file . "?mode=_error";
 	}
 
 	return;
@@ -21,23 +18,23 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_logs';
+	$current	= 'sm_logs';
 	
 	include('./pagestart.php');
 
+	load_lang('games');
 	load_lang('logs');
 	
 	$start		= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start		= ( $start < 0 ) ? 0 : $start;
 	
-	$log_id		= request(POST_LOG_URL, 0);
+	$log_id		= request(POST_LOGS, 0);
 	$mode		= request('mode', 1);
 	$confirm	= request('confirm', 1);
 	
 	$fields	= '';
-	$file		= basename(__FILE__);
-	
-	$log	= LOG_SEK_LOG;
+	$file	= basename(__FILE__);
+	$log	= SECTION_LOG;
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
@@ -47,77 +44,75 @@ else
 	
 	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_logs.tpl',
+		'error'		=> 'style/info_error.tpl',
+		'confirm'	=> 'style/info_confirm.tpl',
+	));
+	
 	switch ( $mode )
 	{
-		case 'error':
+		case '_error':
 			
-			$template->set_filenames(array('body' => 'style/acp_logs.tpl'));
-			$template->assign_block_vars('error', array());
+			$template->assign_block_vars('_error', array());
+			
+			$logs = data(ERROR, false, 'error_id ASC', 1, false);
 		
-			$sql = 'SELECT * FROM ' . ERROR . ' ORDER BY error_id DESC';
-			if (!($result = $db->sql_query($sql)))
+			if ( !$logs )
 			{
-				message(GENERAL_ERROR, 'Could not obtain list', '', __LINE__, __FILE__, $sql);
-			}
-			$log_entry = $db->sql_fetchrowset($result); 
-			$db->sql_freeresult($result);
-			
-			if ( !$log_entry )
-			{
-				$template->assign_block_vars('error.no_entry', array());
-				$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
+				$template->assign_block_vars('_error._entry_empty', array());
 			}
 			else
 			{
-				for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($log_entry)); $i++)
+				for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($logs)); $i++)
 				{
 					$class = ($i % 2) ? 'row_class1' : 'row_class2';
 					
-					$error_id			= $log_entry[$i]['error_id'];
-					$error_userid		= $log_entry[$i]['error_userid'];
-					$error_msg_title	= $log_entry[$i]['error_msg_title'];
-					$error_msg_text		= $log_entry[$i]['error_msg_text'];
-					$error_sql_code		= $log_entry[$i]['error_sql_code'];
-					$error_sql_text		= $log_entry[$i]['error_sql_text'];
-					$error_sql_store	= $log_entry[$i]['error_sql_store'];
-					$error_file			= str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $log_entry[$i]['error_file']);
-					$error_file_line	= $log_entry[$i]['error_file_line'];
-					$error_time			= create_date($config['default_dateformat'], $log_entry[$i]['error_time'], $config['page_timezone']);
+					$error_id			= $logs[$i]['error_id'];
+					$error_user			= $logs[$i]['error_userid'];
+					$error_msg_title	= $logs[$i]['error_msg_title'];
+					$error_msg_text		= $logs[$i]['error_msg_text'];
+					$error_sql_code		= $logs[$i]['error_sql_code'];
+					$error_sql_text		= $logs[$i]['error_sql_text'];
+					$error_sql_store	= $logs[$i]['error_sql_store'];
+					$error_file			= str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $logs[$i]['error_file']);
+					$error_file_line	= $logs[$i]['error_file_line'];
+					$error_time			= create_date($config['default_dateformat'], $logs[$i]['error_time'], $config['page_timezone']);
 					
-					$template->assign_block_vars('error.error_row', array(
-						'CLASS'		=> $class,
+					$template->assign_block_vars('_error._error_row', array(
+						'CLASS'	=> $class,
 						
-						'TIME' => $error_time,
-						'ERROR_ID' => $error_id,
-						'ERROR_FILE' => $error_file,
-						'ERROR_FILE_LINE' => $error_file_line,
-						'ERROR_USERID' => $error_userid,
-						'ERROR_MSG_TITLE' => $error_msg_title,
-						'ERROR_MSG_TEXT' => $error_msg_text,
-						'ERROR_SQL_CODE' => $error_sql_code,
-						'ERROR_SQL_TEXT' => $error_sql_text,
-						'ERROR_SQL_STORE' => $error_sql_store,
+						'ID'		=> $error_id,
+						'USER'		=> $error_user,
+						'TIME'		=> $error_time,
+						'FILE'		=> $error_file,
+						'FILE_LINE'	=> $error_file_line,
+						'MSG_TITLE'	=> $error_msg_title,
+						'MSG_TEXT'	=> $error_msg_text,
+						'SQL_CODE'	=> $error_sql_code,
+						'SQL_TEXT'	=> $error_sql_text,
+						'SQL_STORE'	=> $error_sql_store,
 					));
 				}
 			}
 		
-			$current_page = ( !count($log_entry) ) ? 1 : ceil( count($log_entry) / $settings['site_entry_per_page'] );
+			$current_page = ( !count($logs) ) ? 1 : ceil( count($logs) / $settings['site_entry_per_page'] );
 		
 			$template->assign_vars(array(
-				'L_LOG_TITLE'		=> $lang['log_head'],
-				'L_LOG_EXPLAIN'		=> $lang['log_explain'],
-				'L_LOG_ERROR'		=> $lang['log_error'],
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+				'L_ERROR'	=> sprintf($lang['sprintf_head'], $lang['title_error']),
+				'L_EXPLAIN'	=> $lang['explain_error'],
 				
 				'L_DELETE'			=> $lang['Delete'],
 				'L_MARK_ALL'		=> $lang['mark_all'],
 				'L_MARK_DEALL'		=> $lang['mark_deall'],
 				'L_GOTO_PAGE'		=> $lang['Goto_page'],
 				
-				'PAGINATION'		=> generate_pagination('admin_logs.php?', count($log_entry), $settings['site_entry_per_page'], $start),
-				'PAGE_NUMBER'		=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+				'PAGINATION'		=> generate_pagination('admin_logs.php?', count($logs), $settings['site_entry_per_page'], $start),
+				'PAGE_NUMBER'		=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 				
-				'S_LOG_ERROR'		=> check_sid('admin_logs.php?mode=error'),
-				'S_LOG_ACTION'		=> check_sid($file),
+				
+				'S_ACTION'		=> check_sid($file),
 			));
 			
 			$template->pparse('body');
@@ -268,23 +263,27 @@ else
 			$template->assign_block_vars('_display', array());
 					
 			$template->assign_vars(array(
-		#		'L_LOG_TITLE'		=> $lang['log_head'],
-		#		'L_LOG_EXPLAIN'		=> $lang['log_explain'],
-		#		'L_LOG_ERROR'		=> $lang['log_error'],
+				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+				'L_ERROR'	=> sprintf($lang['sprintf_head'], $lang['title_error']),
+				'L_EXPLAIN'	=> $lang['explain'],
+		
+		#		'L_LOGS_TITLE'		=> $lang['log_head'],
+		#		'L_LOGS_EXPLAIN'		=> $lang['log_explain'],
+		#		'L_LOGS_ERROR'		=> $lang['log_error'],
 				
-		#		'L_LOG_USERNAME'	=> $lang['log_user_name'],
-		#		'L_LOG_IP'			=> $lang['log_ip'],
-		#		'L_LOG_TIME'		=> $lang['log_time'],
-		#		'L_LOG_SEKTION'		=> $lang['log_sektion'],
-		#		'L_LOG_MESSAGE'		=> $lang['log_message'],
-		#		'L_LOG_CHANGE'		=> $lang['log_change'],
+		#		'L_LOGS_USERNAME'	=> $lang['log_user_name'],
+		#		'L_LOGS_IP'			=> $lang['log_ip'],
+		#		'L_LOGS_TIME'		=> $lang['log_time'],
+		#		'L_LOG_SEKTION'		=> $lang['log_section'],
+		#		'L_LOGS_MESSAGE'		=> $lang['log_message'],
+		#		'L_LOGS_CHANGE'		=> $lang['log_change'],
 				
 		#		'L_MARK_ALL'		=> $lang['mark_all'],
 		#		'L_MARK_DEALL'		=> $lang['mark_deall'],
 		#		'L_DELETE'			=> $lang['common_delete'],
 		
-				'S_LOG_ERROR'		=> check_sid('admin_logs.php?mode=error'),
-				'S_LOG_ACTION'		=> check_sid($file),
+				'S_ERROR'		=> check_sid('admin_logs.php?mode=_error'),
+				'S_ACTION'		=> check_sid($file),
 			));
 			
 			$sql = 'SELECT l.*, u.user_name
@@ -300,17 +299,17 @@ else
 			
 			if ( !$log_entry )
 			{
-				$template->assign_block_vars('_display._no_entry', array());
+				$template->assign_block_vars('_display._entry_empty', array());
 				$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 			}
 			else
 			{
-				for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($log_entry)); $i++ )
+				for ( $i = $start; $i < min(($settings['site_entry_per_page']*2) + $start, count($log_entry)); $i++ )
 				{
 					$class = ($i % 2) ? 'row_class1' : 'row_class2';
 					
 					// Log Sektion
-				#	switch ( $log_entry[$i]['log_sektion'] )
+				#	switch ( $log_entry[$i]['log_section'] )
 				#	{
 				#		case 0:
 				#			$sektion = 'news';
@@ -325,7 +324,7 @@ else
 				#			$sektion = 'user';
 				#			break;
 				#		default:
-				#			$sektion = $log_entry[$i]['log_sektion'];
+				#			$sektion = $log_entry[$i]['log_section'];
 				#			break;
 				#	}
 				
@@ -333,18 +332,45 @@ else
 					
 					if ( strstr($msg, 'create') )		{ $msg = $lang['common_create']; }
 					else if ( strstr($msg, 'update') )	{ $msg = $lang['common_update']; }
+					else if ( strstr($msg, 'error') )	{ $msg = $lang['common_error'];		$class = 'row_error'; }
 					else if ( strstr($msg, 'delete') )	{ $msg = $lang['common_delete']; }
 					else								{ $msg = $lang['common_default']; }
 					
 					$log_data = unserialize($log_entry[$i]['log_data']);
-									
+					
 					if ( is_array($log_data) )
 					{
-						$log_data = "<pre>" . print_r($log_data, true) . "</pre>";
+						for ( $j = 0; $j < count($log_data); $j++ )
+						{
+							$field	= $log_data[$j]['field'];
+							$data	= isset($log_data[$j]['data']) ? $log_data[$j]['data'] : '';
+							$post	= isset($log_data[$j]['post']) ? $log_data[$j]['post'] : '';
+							
+							$field_lang	= isset($lang[$log_data[$j]['field']]) ? $lang[$log_data[$j]['field']] : $log_data[$j]['field'];
+						
+							if ( $data && $post )
+							{
+								$msg_data = sprintf($lang['sprintf_log_change'], $field_lang, $data, $post);
+							}
+							else if ( !$data && $post )
+							{
+								$msg_data = sprintf($lang['sprintf_log_create'], $field_lang, $post);
+							}
+							else if ( $data && !$post )
+							{
+								$msg_data = sprintf($lang['sprintf_log_delete'], $field_lang, $data);
+							}
+						}
+						
+					#	$msg_data .= "<pre>" . print_r($log_data, true) . "</pre>";
+					}
+					else if ( !$log_data )
+					{
+						$msg_data = $lang['common_entry_empty'];
 					}
 					else
 					{
-						$log_data = $log_data;
+						$msg_data = $log_data;
 					}
 					
 			
@@ -352,29 +378,27 @@ else
 						'CLASS'		=> $class,
 						
 						'LOG_ID'	=> $log_entry[$i]['log_id'],
-						'USERNAME'	=> $log_entry[$i]['user_name'],
-						'IP'		=> decode_ip($log_entry[$i]['user_ip']),
-						'DATE'		=> create_date($userdata['user_dateformat'], $log_entry[$i]['log_time'], $userdata['user_timezone']),
-						'SEKTION'	=> $log_entry[$i]['log_sektion'],
-						'MESSAGE'	=> $msg,
-						'DATA'		=> $log_data,
+						'USERNAME'      => $log_entry[$i]['user_name'],
+						'IP'            => decode_ip($log_entry[$i]['user_ip']),
+						'DATE'          => create_date($userdata['user_dateformat'], $log_entry[$i]['log_time'], $userdata['user_timezone']),
+						'SEKTION'       => isset($lang['section'][$log_entry[$i]['log_section']]) ? $lang['section'][$log_entry[$i]['log_section']] : $log_entry[$i]['log_section'],
+						'MESSAGE'       => $msg,
+						'DATA'          => $msg_data,
 					));
 				}
 			}
-		
-			
 			
 			$current_page = ( !count($log_entry) ) ? 1 : ceil( count($log_entry) / $settings['site_entry_per_page'] );
-		
+			
 			$template->assign_vars(array(
-				'L_GOTO_PAGE'	=> $lang['Goto_page'],
-				'PAGINATION'	=> generate_pagination('admin_logs.php?', count($log_entry), $settings['site_entry_per_page'], $start),
-				'PAGE_NUMBER'	=> sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+				'L_GOTO_PAGE'   => $lang['Goto_page'],
+				'PAGINATION'    => generate_pagination('admin_logs.php?', count($log_entry), $settings['site_entry_per_page'], $start),
+				'PAGE_NUMBER'   => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 			));
 			
 			$template->pparse('body');
 			
-			break;
+		break;
 	}
 	
 	include('./page_footer_admin.php');

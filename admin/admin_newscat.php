@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_newscat'] )
 	{
-		$module['_headmenu_03_news']['_submenu_newscat'] = $root_file;
+		$module['hm_news']['sm_newscat'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_newscat';
+	$current	= 'sm_newscat';
 	
 	include('./pagestart.php');
 	
@@ -27,8 +27,8 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_NEWSCAT;
-	$url	= POST_CAT_URL;
+	$log	= SECTION_NEWSCAT;
+	$url	= POST_CAT;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -121,7 +121,7 @@ else
 					'IMAGE'			=> $data['cat_image'] ? $path_dir . $data['cat_image'] : $images['icon_acp_spacer'],
 					
 					'S_ORDER'		=> simple_order(NEWSCAT, false, 'select', $data['cat_order']),
-					'S_IMAGE'		=> $cat_image,
+					'S_IMAGE'		=> select_box_files('post', 'cat_image', $path_dir, $data['cat_image']),
 										
 					'S_ACTION'		=> check_sid($file),
 					'S_FIELDS'		=> $fields,
@@ -129,12 +129,7 @@ else
 				
 				if ( request('submit', 1) )
 				{
-					$_ary = array(
-								'cat_name'	=> $data['cat_name'],
-								'cat_id'	=> $data_id,
-							);
-					
-					$error .= check(NEWSCAT, $_ary, $error);
+					$error .= check(NEWSCAT, array('cat_name'	=> $data['cat_name'], 'cat_id'	=> $data_id), $error);
 					
 					if ( !$error )
 					{
@@ -158,7 +153,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -189,7 +184,6 @@ else
 					sql(NEWS, 'update', array('news_cat' => ''), 'news_cat', $data_id);
 				
 					$sql = sql(NEWSCAT, $mode, $data, 'cat_id', $data_id);
-					
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -252,7 +246,7 @@ else
 	}
 	else
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($cats)); $i++ )
+		for ( $i = 0; $i < count($cats); $i++ )
 		{
 			$cat_id		= $cats[$i]['cat_id'];
 			$cat_name	= $cats[$i]['cat_name'];

@@ -4,9 +4,9 @@ if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
-	if ( $userdata['user_level'] == 6 && $userdata['user_founder'] )
+	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['_headmenu_07_development']['_submenu_changelog'] = $root_file;
+		$module['hm_dev']['sm_changelog'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_games';
+	$current	= 'sm_games';
 	
 	include('./pagestart.php');
 	
@@ -25,8 +25,8 @@ else
 
 	$error	= '';
 	$index	= '';
-	$log	= LOG_SEK_GAMES;
-	$url	= POST_GAMES_URL;
+	$log	= SECTION_GAMES;
+	$url	= POST_GAMES;
 	$file	= basename(__FILE__);
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
@@ -42,18 +42,21 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
-		log_add(LOG_ADMIN, LOG_SEK_CASH, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, SECTION_CASH, 'auth_fail' . $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
 	( $header ) ? redirect('admin/' . check_sid('admin_changelog.php', true)) : false;
+	
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_changelog.tpl',
+	));
 
 	switch ( $mode )
 	{
 		case '_create':
 		case '_update':
 	
-			$template->set_filenames(array('body' => 'style/acp_changelog.tpl'));
 			$template->assign_block_vars('_input', array());
 			
 			if ( $mode == '_create' )
@@ -70,7 +73,7 @@ else
 			}
 			
 			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
-			$fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $authlist_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_AUTHLIST . '" value="' . $authlist_id . '" />';
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
@@ -113,7 +116,7 @@ else
 			#$oCache -> deleteCache('authlist');
 			
 			$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php'));
-			log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'create_authlist');
+			log_add(LOG_ADMIN, SECTION_AUTHLIST, 'create_authlist');
 			message(GENERAL_MESSAGE, $message);
 
 			break;
@@ -145,8 +148,8 @@ else
 						
 			$message = $lang['update_authlist']
 				. sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php') . '">', '</a>')
-				. sprintf($lang['return_update'], '<a href="' . check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"));
-			log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'update_authlist');
+				. sprintf($lang['return_update'], '<a href="' . check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST . '=' . $authlist_id"));
+			log_add(LOG_ADMIN, SECTION_AUTHLIST, 'update_authlist');
 			message(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -173,14 +176,14 @@ else
 				#$oCache -> deleteCache('authlist');
 				
 				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php'));
-				log_add(LOG_ADMIN, LOG_SEK_AUTHLIST, 'delete_authlist');
+				log_add(LOG_ADMIN, SECTION_AUTHLIST, 'delete_authlist');
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $authlist_id && !$confirm )
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_AUTHLIST_URL . '" value="' . $authlist_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_AUTHLIST . '" value="' . $authlist_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -200,10 +203,9 @@ else
 			
 		default:
 		
-			$template->set_filenames(array('body' => 'style/acp_changelog.tpl'));
 			$template->assign_block_vars('_display', array());
 			
-			$fields = '<input type="hidden" name="mode" value="_create" />';
+			$fields .= '<input type="hidden" name="mode" value="_create" />';
 					
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['changelog']),
@@ -211,9 +213,9 @@ else
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['changelog']),
 				'L_EXPLAIN'		=> $lang['changelog_explain'],
 				
+				'S_CREATE'		=> check_sid("$file?mode=_create"),
+				'S_ACTION'		=> check_sid($file),
 				'S_FIELDS'		=> $fields,
-				'S_CREATE'		=> check_sid('admin_changelog.php?mode=_create'),
-				'S_ACTION'		=> check_sid('admin_changelog.php'),
 			));
 			
 			$authlist_data = get_data_array(AUTHLIST, '', 'authlist_id', 'ASC');
@@ -227,8 +229,8 @@ else
 					
 					'AUTHLIST_NAME'	=> $authlist_data[$i]['authlist_name'],
 					
-					'U_UPDATE'		=> check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"),
-					'U_DELETE'		=> check_sid("admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST_URL . '=' . $authlist_id"),
+					'U_UPDATE'		=> check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST . '=' . $authlist_id"),
+					'U_DELETE'		=> check_sid("admin_authlist.php?mode=_delete&amp;' . POST_AUTHLIST . '=' . $authlist_id"),
 				));
 			}
 			

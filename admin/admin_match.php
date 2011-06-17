@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] )
 	{
-		$module['_headmenu_05_teams']['_submenu_match'] = $root_file;
+		$module['hm_teams']['sm_match'] = $root_file;
 	}
 
 	return;
@@ -15,9 +15,8 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= '_submenu_match';
+	$current	= 'sm_match';
 	
 	include('./pagestart.php');
 	
@@ -27,12 +26,12 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= LOG_SEK_MATCH;
+	$log	= SECTION_MATCH;
 	$file	= basename(__FILE__);
 	
-	$url		= POST_MATCH_URL;
-	$url_pic	= POST_MATCH_PIC_URL;
-	$url_team	= POST_TEAMS_URL;
+	$url		= POST_MATCH;
+	$url_pic	= POST_MATCH_PIC;
+	$url_team	= POST_TEAMS;
 	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
@@ -117,7 +116,7 @@ else
 				}
 				else if ( $mode == '_update' && !request('submit', 1) )
 				{
-					$data = data(MATCH, $data_id, false, 1, 1);
+					$data = data(MATCH, $data_id, false, 1, true);
 					
 					( $data['match_date'] > time() ) ? $template->assign_block_vars('_input._reset', array()) : false;
 				}
@@ -159,8 +158,6 @@ else
 									'training_maps'			=> request('training_maps', 4),
 									'training_text'			=> request('training_text', 2),
 								);
-								
-						debug($d_train);
 					}
 				}
 				
@@ -258,11 +255,11 @@ else
 					'L_TYPE'			=> $lang['type'],
 					'L_WAR'				=> $lang['war'],
 					'L_LEAGUE'			=> $lang['league'],
-					'L_LEAGUE_URL'		=> $lang['league_url'],
+					'L_LEAGUE'		=> $lang['league_url'],
 					'L_LEAGUE_MATCH'	=> $lang['league_match'],
 					'L_RIVAL_NAME'		=> $lang['rival_name'],
 					'L_RIVAL_TAG'		=> $lang['rival_tag'],
-					'L_RIVAL_URL'		=> $lang['rival_url'],
+					'L_RIVAL'		=> $lang['rival_url'],
 					'L_RIVAL_LOGO'		=> $lang['rival_logo'],
 					'L_RIVAL_LINEUP'	=> $lang['rival_lineup'],
 					'L_RIVAL_LINEUP_EXP'=> $lang['rival_lineup_exp'],
@@ -285,12 +282,12 @@ else
 					'L_TRAINING_MAPS'	=> $lang['train_maps'],
 					'L_TRAINING_TEXT'	=> $lang['train_text'],
 				
-					'LEAGUE_URL'		=> $data['match_league_url'],
+					'LEAGUE'		=> $data['match_league_url'],
 					'LEAGUE_MATCH'		=> $data['match_league_match'],
 					
 					'RIVAL_NAME'		=> $data['match_rival_name'],
 					'RIVAL_TAG'			=> $data['match_rival_tag'],
-					'RIVAL_URL'			=> $data['match_rival_url'],
+					'RIVAL'			=> $data['match_rival_url'],
 					'RIVAL_LOGO'		=> $data['match_rival_logo'],
 					'RIVAL_LINEUP'		=> $data['match_rival_lineup'],
 					
@@ -370,7 +367,7 @@ else
 						{
 							$data['match_path'] = create_folder($path_dir, $day . $month . $year . '_', true);
 							
-							$db_data = sql(MATCH, $mode, $data);
+							$sql = sql(MATCH, $mode, $data);
 							
 							if ( $s_train )
 							{
@@ -382,40 +379,26 @@ else
 								$db_train = sql(TRAINING, $mode, $d_train);
 							}
 							
-							$message = $lang['create']
-								. sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$db_data = sql(MATCH, $mode, $data, 'match_id', $data_id);
+							$sql = sql(MATCH, $mode, $data, 'match_id', $data_id);
 							
 							if ( $reset )
 							{
 								sql(MATCH_USERS, 'delete', false, 'match_id', $data_id);
 							}
 							
-							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));;
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));;
 						}
-							
-					#	$monat = request('month', 0);
-					#	$oCache -> sCachePath = './../cache/';
-					#	$oCache -> deleteCache('match_list_open_member');
-					#	$oCache -> deleteCache('match_list_open_guest');
-					#	$oCache -> deleteCache('match_list_close_member');
-					#	$oCache -> deleteCache('match_list_close_guest');
-					#	$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
-					#	$oCache -> deleteCache('calendar_' . $monat . '_match_member');
-					#	$oCache -> deleteCache('calendar_' . $monat . '_guest');
-					#	$oCache -> deleteCache('calendar_' . $monat . '_member');
-					#	$oCache -> deleteCache('display_subnavi_matchs_guest');
-					#	$oCache -> deleteCache('display_subnavi_matchs_member');
-	
-						log_add(LOG_ADMIN, $log, $mode, $db_data);
-						message(GENERAL_MESSAGE, $message);
+						
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, $mode, $error);
+						log_add(LOG_ADMIN, $log, 'error', $error);
 						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
@@ -428,80 +411,19 @@ else
 			
 			case '_delete':
 			
-				$data = data(MATCH, $data_id, '', 1, 1);
+				$data = data(MATCH, $data_id, false, 1, true);
 				
 				if ( $data_id && $confirm )
 				{
-	//				$sql = 'SELECT * FROM ' . MATCH . " WHERE match_id = $data_id";
-	//				if (!($result = $db->sql_query($sql)))
-	//				{
-	//					message(GENERAL_ERROR, 'Error getting match information', '', __LINE__, __FILE__, $sql);
-	//				}
-	//		
-	//				if (!($match_info = $db->sql_fetchrow($result)))
-	//				{
-	//					message(GENERAL_MESSAGE, $lang['match_not_exist']);
-	//				}
-	//				
-	//				$picture_file	= $match_info['match_picture'];
-	//				$picture_type	= $match_info['match_picture_type'];
-	//				$pictures_file	= $match_info['match_pictures'];
-	//				$pictures_type	= $match_info['match_pictures_type'];
-	//				
-	//				$picture_file = basename($picture_file);
-	//				$pictures_file = basename($pictures_file);
-	//				
-	//				if ( $picture_type == LOGO_UPLOAD && $picture_file != '' )
-	//				{
-	//					if ( @file_exists(@cms_realpath($root_path . $settings['path_match_picture'] . '/' . $picture_file)) )
-	//					{
-	//						@unlink($root_path . $settings['path_match_picture'] . '/' . $picture_file);
-	//					}
-	//				}
-	//				
-	//				if ( $pictures_type == LOGO_UPLOAD && $pictures_file != '' )
-	//				{
-	//					if ( @file_exists(@cms_realpath($root_path . $settings['match_pictures_path'] . '/' . $pictures_file)) )
-	//					{
-	//						@unlink($root_path . $settings['match_pictures_path'] . '/' . $pictures_file);
-	//					}
-	//				}
-				
-					$sql = 'DELETE FROM ' . MATCH . " WHERE match_id = $data_id";
-					if (!($result = $db->sql_query($sql, BEGIN_TRANSACTION)))
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
+					$sql = sql(MATCH, $mode, $data, 'match_id', $data_id);
+					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
-					$sql = 'DELETE FROM ' . MATCH_COMMENTS . " WHERE match_id = $data_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
+					sql(MATCH_MAPS, $mode, $data, 'match_id', $data_id);
+					sql(MATCH_USERS, $mode, $data, 'match_id', $data_id);
+					sql(MATCH_LINEUP, $mode, $data, 'match_id', $data_id);
 					
-					$sql = 'DELETE FROM ' . MATCH_LINEUP . " WHERE match_id = $data_id";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					$sql = 'DELETE FROM ' . MATCH_USERS . " WHERE match_id = $data_id";
-					if (!($result = $db->sql_query($sql, END_TRANSACTION)))
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-				#	monat = date("m", time());
-				#	$oCache -> sCachePath = './../cache/';
-				#	$oCache -> deleteCache('calendar_' . $monat . '_match_guest');
-				#	$oCache -> deleteCache('calendar_' . $monat . '_match_member');
-				#	$oCache -> deleteCache('calendar_' . $monat . '_member');
-				#	$oCache -> deleteCache('display_subnavi_matchs_guest');
-				#	$oCache -> deleteCache('display_subnavi_matchs_member');
-					
-					$message = $lang['delete_match'] . sprintf($lang['click_return_match'], '<a href="' . check_sid($file));
-					log_add(LOG_ADMIN, $log, 'delete_match');
-					message(GENERAL_MESSAGE, $message);
+					log_add(LOG_ADMIN, $log, $mode, $sql);
+					message(GENERAL_MESSAGE, $msg);
 				}
 				else if ( $data_id && !$confirm )
 				{
@@ -517,7 +439,10 @@ else
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['match'])); }
+				else
+				{
+					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['match']));
+				}
 			
 				$template->pparse('confirm');
 				
@@ -627,17 +552,21 @@ else
 					{
 						$map_id = $match_maps[$i]['map_id'];
 						
+						$fields .= "<input type=\"hidden\" name=\"pic_picture[$map_id]\" value=\"" . $match_maps[$i]['map_picture'] . "\" />";
+						$fields .= "<input type=\"hidden\" name=\"pic_preview[$map_id]\" value=\"" . $match_maps[$i]['map_preview'] . "\" />";
+						
 						$template->assign_block_vars('_detail._maps._map_row', array(
 							'MAP_ID'	=> $map_id,
 							'MAP_HOME'	=> $match_maps[$i]['map_points_home'],
 							'MAP_RIVAL'	=> $match_maps[$i]['map_points_rival'],
 							
-							'PIC_URL'	=> '<a href="' . $path_dir . $detail['match_path'] . '/' . $match_maps[$i]['map_picture'] . '" rel="lightbox"><img src="' . $path_dir . $detail['match_path'] . '/' . $match_maps[$i]['map_preview'] . '" alt="" /></a>',
+							'PIC'	=> '<a href="' . $path_dir . $detail['match_path'] . '/' . $match_maps[$i]['map_picture'] . '" rel="lightbox"><img src="' . $path_dir . $detail['match_path'] . '/' . $match_maps[$i]['map_preview'] . '" alt="" /></a>',
 							
 							'MOVE_UP'	=> ( $match_maps[$i]['map_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_detail&amp;$url=$data_id&amp;order=1&amp;move=-15&amp;$url_pic=$map_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 							'MOVE_DOWN'	=> ( $match_maps[$i]['map_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_detail&amp;$url=$data_id&amp;order=1&amp;move=+15&amp;$url_pic=$map_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 							
-							'S_MAP'		=> select_map($detail['team_id'], $match_maps[$i]['map_name']),
+							'S_MAP'		=> select_map($detail['team_id'], $match_maps[$i]['map_id'], $match_maps[$i]['map_name']),
+							'S_ROUND'	=> match_round('selectsmall', $map_id, $match_maps[$i]['map_round']),
 						));
 						
 						( $match_maps[$i]['map_picture'] ) ? $template->assign_block_vars('_detail._maps._map_row._delete', array()) : '';
@@ -679,12 +608,14 @@ else
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
+				$create = "<input type=\"hidden\" name=\"smode\" value=\"_map_create\" />";
+				$update = "<input type=\"hidden\" name=\"smode\" value=\"_map_update\" />";
+				
 				$template->assign_vars(array(
-			#		'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['match']),
-			#		'L_INPUT'			=> sprintf($lang['sprintf_update'], $lang['match'], $detail['match_rival_name']),
-			#		'L_DETAIL'			=> $lang['match_details'],
-			#		'L_EXPLAIN'			=> $lang['match_details_explain'],
-					
+				#	'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['match']),
+				#	'L_INPUT'			=> sprintf($lang['sprintf_update'], $lang['match'], $detail['match_rival_name']),
+				#	'L_DETAIL'			=> $lang['match_details'],
+				#	'L_EXPLAIN'			=> $lang['match_details_explain'],
 			
 					'L_LINEUP'			=> $lang['lineup'],
 					'L_LINEUP_ADD'		=> $lang['lineup_add'],
@@ -696,113 +627,32 @@ else
 					'L_NO_MEMBER'	=> $lang['no_users'],
 					'L_NO_STORE'	=> $lang['no_users_store'],
 					
-			#		'L_MAPS'			=> $lang['details_maps'],
-			#		'L_MAPS_PIC'		=> $lang['details_maps_pic'],
-			#		'L_MAPS_OVERVIEW'	=> $lang['details_maps_overview'],
-		
-				
-					
-					
-					
-					
-			#		'L_DETAIL_MAP'		=> $lang['details_map'],
-			#		'L_DETAIL_MAPPIC'	=> $lang['details_mappic'],
-			#		'L_DETAIL_POINTS'	=> $lang['details_points'],
-					
-			#		'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
-					
-				#	
+				#	'L_MAPS'			=> $lang['details_maps'],
+				#	'L_MAPS_PIC'		=> $lang['details_maps_pic'],
+				#	'L_MAPS_OVERVIEW'	=> $lang['details_maps_overview'],
+				#	'L_DETAIL_MAP'		=> $lang['details_map'],
+				#	'L_DETAIL_MAPPIC'	=> $lang['details_mappic'],
+				#	'L_DETAIL_POINTS'	=> $lang['details_points'],
+				#	'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
 				#	'L_LINEUP_PLAYER'	=> $lang['status_player'],
 				#	'L_LINEUP_REPLACE'	=> $lang['status_replace'],
-				#	
-					
 				#	'L_LINEUP_PLAYER'	=> $lang['lineup_player'],
-				#	
-				
-					'L_ADD'				=> $lang['common_add'],
 					
-					'S_MAP'				=> $s_maps,
+					'L_ADD'		=> $lang['common_add'],
+					'S_MAP'		=> $s_maps,
+					'S_USERS'	=> $s_team_users,
+					'S_OPTIONS'	=> $s_options,
+					'S_INPUT'	=> check_sid("$file?mode=_update&amp;$url=$data_id"),
 					
-					'S_USERS'		=> $s_team_users,
-					
-					
-					'S_OPTIONS'			=> $s_options,
-					'S_INPUT'			=> check_sid("$file?mode=_update&amp;$url=$data_id"),
-					
-					'S_ACTION'			=> check_sid($file),
-					'S_FIELDS'			=> $fields,
+					'S_ACTION'	=> check_sid($file),
+					'S_CREATE'	=> $create,
+					'S_UPDATE'	=> $update,
+					'S_FIELDS'	=> $fields,
 				));
 				
-				if ( $smode == '_details_map' || $smode == '_detail_mappic' || $smode == '_details_update' )
+				if ( $smode == '_map_create' || $smode == '_map_update' )
 				{
-				#	$max_row	= get_data_max(MATCH_MAPS, 'map_order', 'match_id = ' . $data_id);
-				#	$next_order = ( !$max_row ) ? 10 : $max_row['max'] + 10;
-						
-					if ( $smode == '_details_map' )
-					{
-						$map_name			= request('map_name', 4);
-						$map_points_home	= request('map_points_home', 4);
-						$map_points_rival	= request('map_points_rival', 4);
-						
-						if ( $map_name )
-						{						
-							for ( $i = 0; $i < count($map_name); $i++ )
-							{
-								if ( $map_name[$i] == '' )
-								{
-									unset($map_name[$i], $map_points_home[$i], $map_points_rival[$i]);
-								}
-							}
-						
-							if ( $map_name )
-							{
-								array_multisort($map_name, $map_points_home, $map_points_rival);
-								
-								for ( $j = 0; $j < count($map_name); $j++ )
-								{
-									$pic_ary[] = array(
-										'match_id'			=> $data_id,
-										'map_name'			=> "'" . $map_name[$j] . "'",
-										'map_points_home'	=> intval($map_points_home[$j]),
-										'map_points_rival'	=> intval($map_points_rival[$j]),
-										'upload_user'		=> $userdata['user_id'],
-										'upload_time'		=> time(),
-										'map_order'			=> $next_order,
-									);
-									$next_order += 10;
-								}
-								
-								foreach ( $pic_ary as $id => $_pic_ary )
-								{
-									$values = array();
-									foreach ( $_pic_ary as $key => $var )
-									{
-										$values[] = $var;
-									}
-									$db_ary[] = "(" . implode(', ', $values) . ")";
-								}
-								
-								$sql = "INSERT INTO " . MATCH_MAPS . " (" . implode(', ', array_keys($pic_ary[0])) . ") VALUES " . implode(', ', $db_ary);
-								if ( !$db->sql_query($sql) )
-								{
-									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-								}
-								
-								$message = $lang['update_match'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_details&amp;$url=$data_id"));
-								log_add(LOG_ADMIN, $log, 'update_match_map');
-							}
-							else
-							{
-								$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_details&amp;$url=$data_id"));
-							}
-						}
-						else
-						{
-							$message = $lang['msg_select_match_map'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_details&amp;$url=$data_id"));
-							message(GENERAL_ERROR, $message);
-						}
-					}
-					else if ( $smode == '_detail_mappic' )
+					if ( $smode == '_map_create' )
 					{
 						$map_name	= request('map_name', 4);
 						$map_home	= request('map_points_home', 4);
@@ -834,7 +684,7 @@ else
 										'map_name'			=> $map_name[$i],
 										'map_points_home'	=> $map_home[$i],
 										'map_points_rival'	=> $map_rival[$i],
-										'map_picture'		=> isset($pic_ary[$map_name[$i]]['pic_filename']) ? $pic_ary[$map_name[$i]]['pic_filename'] : '',
+										'map_picture'		=> isset($pic_ary[$map_name[$i]]['pic_picture']) ? $pic_ary[$map_name[$i]]['pic_picture'] : '',
 										'map_preview'		=> isset($pic_ary[$map_name[$i]]['pic_preview']) ? $pic_ary[$map_name[$i]]['pic_preview'] : '',
 										'upload_user'		=> $userdata['user_id'],
 										'upload_time'		=> time(),
@@ -865,123 +715,107 @@ else
 							}
 							else
 							{
-								log_add(LOG_ADMIN, $log, $mode, $error);
+								log_add(LOG_ADMIN, $log, 'error', $error);
 						
 								$template->assign_vars(array('ERROR_MESSAGE' => $error));
 								$template->assign_var_from_handle('ERROR_BOX_UPLOAD', 'error');
 							}
 						}
 					}
-				/*
-					else if ( request('_details_update') )
+					else
 					{
-						if ( request('delete') )
+						$map	= request('map_id', 4);
+						$pic	= request('map_pic', 4);
+						$delete	= request('map_delete', 4);
+						$round	= request('map_round', 4);
+						
+						$name	= request('map_name', 4);
+						$home	= request('map_points_home', 4);
+						$rival	= request('map_points_rival', 4);
+						$files	= request_file('ufile');
+						
+						$picture	= request('pic_picture', 4);
+						$preview	= request('pic_preview', 4);
+						
+						$ary_del = '';
+						
+						/*
+						 *	Maps filtern um gelöscht Maps vorab zulöschen,
+						 *	um unnötiges Speichern zuverhindern!
+						 */					
+						for ( $i = 0; $i < count($map); $i++ )
 						{
-							$delete = request('delete');
-					
-							$sql_in = implode(', ', $delete);
-							
-							$sql = "SELECT map_id, map_picture, map_preview FROM " . MATCH_MAPS . " WHERE map_id IN ($sql_in) AND match_id = $data_id";
-							if (!($result_users = $db->sql_query($sql)))
+							if ( isset($delete[$map[$i]]) )
 							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								$ary_del[] = $map[$i];
 							}
-							$delete_data = $db->sql_fetchrowset($result_users);
-							
-							for ( $i = 0; $i < count($delete_data); $i++ )
+							else
 							{
-								if ( $delete_data[$i]['map_picture'] )
-								{
-									image_delete($delete_data[$i]['map_picture'], $delete_data[$i]['map_picture'], $path_dir, 'map_picture, map_preview');
-								}
+								$ary_map[] = $map[$i];
+								$ary_pic[$map[$i]] = isset($pic[$map[$i]]) ? 1 : 0;
+								$ary_name[$map[$i]] = $name[$map[$i]];
+								$ary_home[$map[$i]] = $home[$map[$i]];
+								$ary_rival[$map[$i]] = $rival[$map[$i]];
+								$ary_round[$map[$i]] = $round[$map[$i]];
+								$ary_file[$map[$i]] = array($files['temp'][$map[$i]], $files['name'][$map[$i]], $files['size'][$map[$i]], $files['type'][$map[$i]]);
 							}
-							
-							$sql = "DELETE FROM " . MATCH_MAPS . " WHERE map_id IN ($sql_in) AND match_id = $data_id";
-							if (!($result = $db->sql_query($sql, BEGIN_TRANSACTION)))
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							orders(MATCH_MAPS);
 						}
 						
-						if ( request('mappic_delete') )
+						if ( $ary_del )
 						{
-							$mappic = request('mappic_delete');
-							
-							$sql_in = implode(', ', $mappic);
-							
-							$sql = "SELECT map_id, map_picture, map_preview FROM " . MATCH_MAPS . " WHERE map_id IN ($sql_in) AND match_id = $data_id";
-							if (!($result_users = $db->sql_query($sql)))
+							$sql = sql(MATCH_MAPS, 'delete', false, 'map_id', $ary_del);
+						}
+						
+						if ( $ary_map )
+						{
+							for ( $i = 0; $i < count($ary_map); $i++ )
 							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							$delete_data = $db->sql_fetchrowset($result_users);
-							
-							for ( $i = 0; $i < count($delete_data); $i++ )
-							{
-								if ( $delete_data[$i]['map_picture'] )
+								if ( $ary_file[$ary_map[$i]][0] )
 								{
-									$sql_qry = image_delete($delete_data[$i]['map_picture'], $delete_data[$i]['map_picture'], $path_dir, 'map_picture, map_preview');
-								
-									$sql = "UPDATE " . MATCH_MAPS . " SET $sql_qry WHERE map_id = " . $delete_data[$i]['map_id'] . " AND match_id = $data_id";
-									if (!($result = $db->sql_query($sql, BEGIN_TRANSACTION)))
+									$pic_ary[$ary_map[$i]] = image_upload('', 'image_match', '', '1', $picture[$ary_map[$i]], $preview[$ary_map[$i]], $path_dir . $detail['match_path'], $ary_file[$ary_map[$i]][0], $ary_file[$ary_map[$i]][1], $ary_file[$ary_map[$i]][2], $ary_file[$ary_map[$i]][3], $error);
+								}
+								else
+								{
+									if ( $ary_pic[$ary_map[$i]] )
 									{
-										message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+										image_delete($picture[$ary_map[$i]], $preview[$ary_map[$i]], $path_dir . $detail['match_path']);
+										
+										$picture[$ary_map[$i]] = '';
+										$preview[$ary_map[$i]] = '';
 									}
 								}
 							}
-							
 						}
 						
-						if ( request('_details_update') )
+						if ( !$error )
 						{
-							$pic_info = request_files('ufile');
-							$pic_count = count($pic_info['temp']);
-						
-							for ( $i = 0; $i < $pic_count; $i++ )
+							for ( $i = 0; $i < count($ary_map); $i++ )
 							{
-								$sql_pic[] = image_upload('', 'image_match', '', '1', '', '', $path_dir, $pic_info['temp'][$i], $pic_info['name'][$i], $pic_info['size'][$i], $pic_info['type'][$i]);
-							}
-							
-							$db_ary = array();
-							$pic_ary = array();
-							
-							for ( $i = 0; $i < $pic_count; $i++ )
-							{
-								$pic_ary[] = array(
-									'match_id'			=> $data_id,
-									'map_name'			=> "'" . $_POST['map_name'][$i] . "'",
-									'map_points_home'	=> "'" . $_POST['map_points_home'][$i] . "'",
-									'map_points_rival'	=> "'" . $_POST['map_points_rival'][$i] . "'",
-									'map_picture'		=> "'" . $sql_pic[$i]['pic_filename'] . "'",
-									'map_preview'		=> "'" . $sql_pic[$i]['pic_preview'] . "'",
-									'upload_user'		=> $userdata['user_id'],
-									'upload_time'		=> time(),
-									'map_order'			=> $next_order,
+								$ary = array(
+									'map_name'			=> $ary_name[$ary_map[$i]],
+									'map_round'			=> $ary_round[$ary_map[$i]],
+									'map_points_home'	=> $ary_home[$ary_map[$i]],
+									'map_points_rival'	=> $ary_rival[$ary_map[$i]],
+									'map_picture'		=> isset($pic_ary[$ary_map[$i]]['map_picture']) ? $pic_ary[$ary_map[$i]]['map_picture'] : $picture[$ary_map[$i]],
+									'map_preview'		=> isset($pic_ary[$ary_map[$i]]['pic_preview']) ? $pic_ary[$ary_map[$i]]['pic_preview'] : $preview[$ary_map[$i]],
 								);
-								$next_order += 10;
+								
+								sql(MATCH_MAPS, $smode, $ary, 'map_id', $ary_map[$i]);
 							}
-							
-							foreach ( $pic_ary as $id => $_pic_ary )
-							{
-								$values = array();
-								foreach ( $_pic_ary as $key => $var )
-								{
-									$values[] = $var;
-								}
-								$db_ary[] = '(' . implode(', ', $values) . ')';
-							}
-							
-							$sql = "INSERT INTO " . MATCH_MAPS . " (" . implode(', ', array_keys($pic_ary[0])) . ") VALUES " . implode(', ', $db_ary);
-							if ( !($result = $db->sql_query($sql)) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+						
+							$msg = $lang['update_map'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+									
+							log_add(LOG_ADMIN, $log, $smode);
+							message(GENERAL_MESSAGE, $msg);
+						}
+						else
+						{
+							log_add(LOG_ADMIN, $log, 'error', $error);
+					
+							$template->assign_vars(array('ERROR_MESSAGE' => $error));
+							$template->assign_var_from_handle('ERROR_BOX_MAPS', 'error');
 						}
 					}
-				*/
-				#	log_add(LOG_ADMIN, $log, 'update_match');
-				#	message(GENERAL_MESSAGE, $message);
 				}
 				
 				if ( $smode == '_user_add' || $smode == '_user_player' || $smode == '_user_replace' || $smode == '_user_delete' || $smode == 'option' )
@@ -1111,61 +945,7 @@ else
 				$template->pparse('body');
 				
 				break;
-				
-			case '_details_upload':
-			
-				$pic_info = request_files('ufile');
-				$pic_count = count($pic_info['temp']);
-			
-				for ( $i = 0; $i < $pic_count; $i++ )
-				{
-					$sql_pic[] = image_upload('', 'image_match', '', '1', '', '', $path_dir, $pic_info['temp'][$i], $pic_info['name'][$i], $pic_info['size'][$i], $pic_info['type'][$i]);
-				}
-				
-				$pic_ary = array();
-				$db_ary = array();
-				
-				$max_row	= get_data_max(MATCH_MAPS, 'map_order', 'match_id = ' . $data_id);
-				$next_order = ( !$max_row ) ? 10 : $max_row['max'] + 10;
-				
-				for ( $i = 0; $i < $pic_count; $i++ )
-				{
-					$pic_ary[] = array(
-						'match_id'			=> $data_id,
-						'map_name'			=> "'" . $_POST['map_name'][$i] . "'",
-						'map_points_home'	=> "'" . $_POST['map_points_home'][$i] . "'",
-						'map_points_rival'	=> "'" . $_POST['map_points_rival'][$i] . "'",
-						'map_picture'		=> "'" . $sql_pic[$i]['pic_filename'] . "'",
-						'map_preview'		=> "'" . $sql_pic[$i]['pic_preview'] . "'",
-						'upload_user'		=> $userdata['user_id'],
-						'upload_time'		=> time(),
-						'map_order'			=> $next_order,
-					);
-					$next_order += 10;
-				}
-				
-				foreach ( $pic_ary as $id => $_pic_ary )
-				{
-					$values = array();
-					foreach ( $_pic_ary as $key => $var )
-					{
-						$values[] = $var;
-					}
-					$db_ary[] = '(' . implode(', ', $values) . ')';
-				}
-				
-				$sql = 'INSERT INTO ' . MATCH_MAPS . ' (' . implode(', ', array_keys($pic_ary[0])) . ') VALUES ' . implode(', ', $db_ary);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$message = $lang['upload_match'] . sprintf($lang['click_return_match_details'], '<a href="' . check_sid("$file?mode=_detail&amp;$url=$data_id"));
-				log_add(LOG_ADMIN, $log, 'update_match_upload');
-				message(GENERAL_MESSAGE, $message);
-	
-				break;
-	
+		
 			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
@@ -1174,7 +954,7 @@ else
 			include('./page_footer_admin.php');
 			exit;
 		}
-	} // if end
+	}
 	
 	$template->assign_block_vars('_display', array());
 	
@@ -1195,7 +975,12 @@ else
 	
 	$data_new = $data_old = '';
 	
-	if ( $data )
+	if ( !$data )
+	{
+		$template->assign_block_vars('_display._entry_empty_new', array());
+		$template->assign_block_vars('_display._entry_empty_old', array());
+	}
+	else
 	{
 		foreach ( $data as $match => $row )
 		{
@@ -1215,7 +1000,7 @@ else
 		}
 		else
 		{
-			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data_new)); $i++ )
+			for ( $i = $start; $i < count($data_new); $i++ )
 			{
 				$team_id		= $data_new[$i]['team_id'];
 				$match_id		= $data_new[$i]['match_id'];
@@ -1261,13 +1046,8 @@ else
 			}
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._entry_empty_new', array());
-		$template->assign_block_vars('_display._entry_empty_old', array());
-	}
-	
-	$current_page = !count($data) ? 1 : ceil( count($data) / $settings['site_entry_per_page'] );
+		
+	$current_page = !count($data_old) ? 1 : ceil( count($data_old) / $settings['site_entry_per_page'] );
 	
 	$fields = '<input type="hidden" name="mode" value="_create" />';
 	
@@ -1281,8 +1061,8 @@ else
 		'L_EXPIRED'		=> $lang['expired'],
 		'L_DETAILS'		=> $lang['common_details'],
 		
-		'PAGE_NUMBER'	=> count($data) ? sprintf($lang['Page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
-		'PAGE_PAGING'	=> count($data) ? generate_pagination('admin_match.php?', count($data), $settings['site_entry_per_page'], $start ) : '',
+		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+		'PAGE_PAGING'	=> generate_pagination('admin_match.php?', count($data_old), $settings['site_entry_per_page'], $start ),
 		
 		'S_SORT'		=> select_team('selectsmall', 'sort_team', 'submit', $url_team, $data_team),
 		'S_TEAM'		=> select_team('selectsmall', 'team', false, 'team_id', false),
