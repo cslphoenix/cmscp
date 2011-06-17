@@ -4,9 +4,9 @@
 </tr>
 <!-- BEGIN days -->
 <tr>
-	<td class="{days.CLASS} row4 mid" align="center" width="3%"><a name="{days.CAL_ID}"></a>{days.CAL_DAY}</td>
-	<td class="{days.CLASS} row4 mid" align="center" width="3%"></a>{days.CAL_WEEKDAY}</td>
-	<td class="{days.CLASS} row4 top" width="95%">{days.CAL_EVENT}</td>
+	<td class="{days.CLASS} row4 top" align="center" width="3%"><a name="{days.CAL_ID}"></a>{days.CAL_DAY}</td>
+	<td class="{days.CLASS} row4 top" align="center" width="3%"></a>{days.CAL_WEEKDAY}</td>
+	<td class="{days.CLASS} row4" width="95%">{days.CAL_EVENT}</td>
 </tr>
 <!-- END days -->
 <tr>

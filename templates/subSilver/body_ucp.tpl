@@ -1,6 +1,6 @@
 <table class="out" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head" colspan="3">{L_HEAD_UCP}</td>
+	<td class="info_head" colspan="3">{L_HEAD}</td>
 </tr>
 <!-- BEGIN lobby -->
 <tr>
@@ -28,7 +28,7 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<td>{U_ALL_UNREAD}</td>
 			<td>&nbsp;</td>
 		</tr>
 		</table>
@@ -37,58 +37,103 @@
 <tr>
 	<td>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<!-- BEGIN _news -->
 		<tr>
-			<td width="20%" valign="top" nowrap="nowrap">News:</td>
+			<td valign="top">{L_NEWS}</td>
 			<td align="left">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN news_new_row -->
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _news_row -->
 				<tr>
-					<td width="30%" nowrap="nowrap">{lobby.news_new_row.NEWS_NAME}</td>
-					<td align="left">{lobby.news_new_row.NEWS_COMMENTS}</td>
-					
+					<td>{lobby._news._news_row.DATE}</td>
+					<td>{lobby._news._news_row.TITLE}</td>
+					<td>{lobby._news._news_row.COMMENT}</td>
+					<td>&nbsp;</td>
 				</tr>
-				<!-- END news_new_row -->
-				</table>			
+				<!-- END _news_row -->
+				</table>		
 			</td>
 		</tr>
+		<tr>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+		<!-- END _news -->
+		<!-- BEGIN _event_new -->
+		<tr>
+			<td valign="top">{L_UP_EVENT}:</td>
+			<td align="left">
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _event_new_row -->
+				<tr>
+					<td>{lobby._event_new._event_new_row.DATE}</td>
+					<td>{lobby._event_new._event_new_row.TITLE}</td>
+					<td>{lobby._event_new._event_new_row.COMMENT}</td>
+					<td>{lobby._event_new._event_new_row.OPTION}</td>
+				</tr>
+				<!-- END _event_new_row -->
+				</table>
+			</td>
+		</tr>
+		<!-- END _event_new -->
+		<!-- BEGIN _event_old -->
+		<tr>
+			<td valign="top">{L_EX_EVENT}:</td>
+			<td align="left">
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _event_old_row -->
+				<tr>
+					<td>{lobby._event_old._event_old_row.DATE}</td>
+					<td>{lobby._event_old._event_old_row.TITLE}</td>
+					<td>{lobby._event_old._event_old_row.COMMENT}</td>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END _event_old_row -->
+				</table>
+			</td>
+		</tr>
+		<!-- END _event_old -->
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
+		<!-- BEGIN _match_new -->
 		<tr>
-			<td width="20%" valign="top" nowrap="nowrap">Aktuelle Clanwars:</td>
+			<td valign="top">{L_UP_MATCH}:</td>
 			<td align="left">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN match_new_row -->
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _match_new_row -->
 				<tr>
-					<td width="30%" nowrap="nowrap">{match_new_row.MATCH_NAME}</td>
-					<td align="left">{match_new_row.MATCH_COMMENTS}</td>
-					
+					<td>{lobby._match_new._match_new_row.DATE}</td>
+					<td>{lobby._match_new._match_new_row.TITLE}</td>
+					<td>{lobby._match_new._match_new_row.COMMENT}</td>
+					<td>{lobby._match_new._match_new_row.OPTION}</td>
 				</tr>
-				<!-- END match_new_row -->
+				<!-- END _match_new_row -->
 				</table>			
 			</td>
 		</tr>
-		<!-- BEGIN match_old -->
+		<!-- END _match_new -->
+		<!-- BEGIN _match_old -->
 		<tr>
-			<td width="20%" valign="top" nowrap="nowrap">Abelaufene Clanwars:</td>
+			<td valign="top">{L_EX_MATCH}:</td>
 			<td align="left">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN match_old_row -->
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _match_old_row -->
 				<tr>
-					<td width="30%" nowrap="nowrap">{match_old.match_old_row.MATCH_NAME}</td>
-					<td align="left">{match_old.match_old_row.MATCH_COMMENTS}</td>
+					<td>{lobby._match_old._match_old_row.DATE}</td>
+					<td>{lobby._match_old._match_old_row.TITLE}</td>
+					<td>{lobby._match_old._match_old_row.COMMENT}</td>
+					<td>&nbsp;</td>
 				</tr>
-				<!-- END match_old_row -->
+				<!-- END _match_old_row -->
 				</table>			
 			</td>
 		</tr>
-		<!-- END match_old -->
+		<!-- END _match_old -->
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<!-- BEGIN training -->
 		<tr>
-			<td width="20%" valign="top" nowrap="nowrap">Aktuelle Trainings:</td>
+			<td valign="top">Aktuelle Trainings:</td>
 			<td align="left">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<!-- BEGIN training_new_row -->
@@ -102,7 +147,7 @@
 		</tr>
 		<!-- BEGIN training_old -->
 		<tr>
-			<td valign="top" nowrap="nowrap">Abelaufene Trainings:</td>
+			<td valign="top">Abelaufene Trainings:</td>
 			<td align="left">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<!-- BEGIN training_old_row -->

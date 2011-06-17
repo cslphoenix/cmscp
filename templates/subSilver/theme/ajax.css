@@ -1,0 +1,26 @@
+.suggestionsBox {
+	position: relative;
+	left: 0px;
+	margin: 2px;
+	width: 160px;
+	background-color: #212427;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border: 2px solid #000;
+	color: #fff;
+}
+	
+.suggestionList {
+	margin: 0px;
+	padding: 0px;
+}
+
+.suggestionList li {
+	margin: 0px 0px 3px 0px;
+	padding: 3px;
+	cursor: pointer;
+}
+
+.suggestionList li:hover {
+	background-color: #659CD8;
+}

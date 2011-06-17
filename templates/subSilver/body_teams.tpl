@@ -1,37 +1,35 @@
-<!-- BEGIN select -->
+<!-- BEGIN _list -->
 <table class="info" width="100%" cellspacing="0">
-<!-- BEGIN game_row -->
+<!-- BEGIN _game_row -->
 <tr>
 	<td colspan="5" class="info_head">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="15">{select.game_row.GAME_IMAGE}</td>
-			<td>{select.game_row.L_GAME_NAME}</td>
+			<td>{_list._game_row.L_GAME}</td>
 		</tr>
 		</table>
 	</td>
 </td>
 </tr>
-<!-- BEGIN team_row -->
+<!-- BEGIN _team_row -->
 <tr>
-	<td class="row1" align="left" style="vertical-align:middle">{select.game_row.team_row.TEAM_NAME}</td>
-	<td class="row1" align="right" nowrap="nowrap" width="1%">{select.game_row.team_row.TEAM_FIGHTUS}</td>
-	<td class="row1" align="right" nowrap="nowrap" width="1%">{select.game_row.team_row.TEAM_JOINUS}</td>
-	<td class="row1" align="right" nowrap="nowrap" width="1%">{select.game_row.team_row.TEAM_MATCH}</td>
-	<td class="row1" align="right" nowrap="nowrap" width="1%"><a href="{select.game_row.team_row.TO_TEAM}">{L_TO_TEAM}</a></td>
+	<td>{_list._game_row._team_row.GAME} {_list._game_row._team_row.NAME}</td>
+	<td>{_list._game_row._team_row.FIGHTUS}</td>
+	<td>{_list._game_row._team_row.JOINUS}</td>
+	<td>{_list._game_row._team_row.MATCH}</td>
 </tr>
-<!-- END team_row -->
+<!-- END _team_row -->
 <tr>
 	<td colspan="5">&nbsp;</td>
 </tr>
-<!-- END game_row -->
+<!-- END _game_row -->
 <!-- BEGIN no_entry_team -->
 <tr>
 	<td class="row1" align="center" colspan="5">{L_ENTRY_NO}</td>
 </tr>
 <!-- END no_entry_team -->
 </table>
-<!-- END select -->
+<!-- END _list -->
 
 <!-- BEGIN details -->
 <form action="{S_GROUPS_ACTION}" method="post" name="post">

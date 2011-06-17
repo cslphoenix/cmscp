@@ -1,374 +1,158 @@
-<!-- BEGIN list -->
-<table class="out" width="100%" cellspacing="0">
+<!-- BEGIN _list -->
+<table class="match" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head" colspan="4">{L_UPCOMING}</td>
+	<td class="header" colspan="3">{L_UPCOMING}</td>
 </tr>
-<!-- BEGIN match_row_new -->
+<!-- BEGIN _new_row -->
 <tr>
-	<td class="{list.match_row_new.CLASS}" align="center" width="1%">{list.match_row_new.MATCH_GAME}</td>
-	<td class="{list.match_row_new.CLASS}" align="left" width="100%">{list.match_row_new.MATCH_NAME}</td>
-	<td class="{list.match_row_new.CLASS}" align="center" nowrap="nowrap">{list.match_row_new.MATCH_DATE}</td>
-	<td class="{list.match_row_new.CLASS}" align="center" width="1%"><a href="{list.match_row_new.U_DETAILS}">{L_DETAILS}</a></td>
+	<td class="{_list._new_row.CLASS}">{_list._new_row.GAME} {_list._new_row.NAME}</td>
+	<td class="{_list._new_row.CLASS}">{_list._new_row.DATE}</td>
+	<td class="{_list._new_row.CLASS}"><span class="{_list._new_row.CSS}">{_list._new_row.STATUS}</span></td>
 </tr>
-<!-- END match_row_new -->
-<!-- BEGIN no_entry_new -->
+<!-- END _new_row -->
+<!-- BEGIN _entry_empty_new -->
 <tr>
-	<td class="noentry" colspan="4" align="center">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
 </tr>
-<!-- END no_entry_new -->
+<!-- END _entry_empty_new -->
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+	<td class="header" colspan="3">{L_EXPIRED}</td>
+</tr>
+<!-- BEGIN _old_row -->
+<tr>
+	<td class="{_list._old_row.CLASS}">{_list._old_row.GAME} {_list._old_row.NAME}</td>
+	<td class="{_list._old_row.CLASS}">{_list._old_row.DATE}</td>
+	<td class="{_list._old_row.CLASS}"><span class="{_list._old_row.CSS}">{_list._old_row.STATUS}</span></td>
+</tr>
+<!-- END _old_row -->
+<!-- BEGIN _entry_empty_old -->
+<tr>
+	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _entry_empty_old -->
 </table>
 
-<br>
+<br />
 
-<table class="out" width="100%" cellspacing="0">
+<table class="news" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head" colspan="4">{L_EXPIRED}</td>
-</tr>
-<!-- BEGIN match_row_old -->
-<tr>
-	<td class="{list.match_row_old.CLASS}" align="center" width="1%">{list.match_row_old.MATCH_GAME}</td>
-	<td class="{list.match_row_old.CLASS}" align="left" width="100%">{list.match_row_old.MATCH_NAME}</td>
-	<td class="{list.match_row_old.CLASS}" align="center" nowrap="nowrap">{list.match_row_old.MATCH_DATE}</td>
-	<td class="{list.match_row_old.CLASS}" align="center" width="1%"><a href="{list.match_row_old.U_DETAILS}">{L_DETAILS}</a></td>
-</tr>
-<!-- END match_row_old -->
-<!-- BEGIN no_entry_old -->
-<tr>
-	<td class="noentry" colspan="4" align="center">{L_ENTRY_NO}</td>
-</tr>
-<!-- END no_entry_old -->
-</table>
-
-<table class="foot" cellspacing="4">
-<tr>
-	<td width="50%" align="left">{PAGE_NUMBER}</td>
-	<td width="50%" align="right">{PAGINATION}</td>
+	<td class="footer"><span class="right">{PAGE_NUMBER}</span>{PAGE_PAGING}</td>
 </tr>
 </table>
+<!-- END _list -->
 
-<br>
-
-<table class="info" width="60%" cellspacing="0">
-<tr>
-	<td class="info_head" colspan="4">{L_TEAMS}</td>
-</tr>
-<!-- BEGIN teams_row -->
-<tr>
-	<td class="{list.teams_row.CLASS}" align="center" width="1%">{list.teams_row.TEAM_GAME}</td>
-	<td class="{list.teams_row.CLASS}" align="left" width="97%">{list.teams_row.TEAM_NAME}</td>
-	<td class="{list.teams_row.CLASS}" align="right" width="1%" nowrap="nowrap">{list.teams_row.FIGHTUS}</td>
-	<td class="{list.teams_row.CLASS}" align="right" width="1%" nowrap="nowrap">{list.teams_row.MATCHES}</td>
-</tr>
-<!-- END teams_row -->
-<!-- BEGIN no_entry_team -->
-<tr>
-	<td class="noentry" colspan="4" align="center">{L_ENTRY_NO}</td>
-</tr>
-<!-- END no_entry_team -->
-</table>
-<!-- END list -->
-
-<!-- BEGIN details -->
+<!-- BEGIN _view -->
 <table class="out" width="100%" cellspacing="0">
 <tr>
 	<td class="info_head" colspan="2">
-		<!-- BEGIN match_edit -->
-		<span class="small" style="float:right;">{details.match_edit.EDIT_MATCH}{details.match_edit.EDIT_MATCH_DETAILS}</span>
-		<!-- END match_edit -->
-		<span class="small" style="float:right;">{MATCH_MAIN}</span>
-		{L_MATCH_INFO}
+		<!-- BEGIN _update -->
+		<span class="small" style="float:right;">&nbsp;&bull;&nbsp;{_view._update.UPDATE}&nbsp;&bull;&nbsp;{_view._update.UPDATE_DETAIL}</span>
+		<!-- END _update -->
+		<span class="small" style="float:right;">{OVERVIEW}</span>
+		{L_MAIN}
 	</td>
 </tr>
 <tr>
 	<td class="row4r" align="center">
 		<table class="info" width="55%" cellspacing="2">
 		<tr>
-			<td width="35%">{L_RIVAL}Gegner:</td>
-			<td width="65%">{MATCH_RIVAL} <a href="{U_MATCH_RIVAL_URL}">{MATCH_RIVAL_URL}</a></td>
+			<td width="35%">{L_NAME}</td>
+			<td width="65%">{RIVAL_NAME} <a href="{U_RIVAL_URL}">{RIVAL_URL}</a></td>
 		</tr>
 		<tr>
-			<td>{L_RIVAL_TAG}Clantag Gegner:</td>
-			<td>{MATCH_RIVAL_TAG}</td>
+			<td>{L_TAG}</td>
+			<td>{RIVAL_TAG}</td>
 		</tr>
 		<tr>
-			<td>{L_MATCH_DETAILS}Matchdetails:</td>
-			<td>{MATCH_CATEGORIE}: {MATCH_TYPE} - Liga: {MATCH_LEAGUE_INFO}</td>
+			<td>{L_DETAILS}</td>
+			<td>{MATCH_CATEGORIE}: {MATCH_TYPE} - {MATCH_LEAGUE_INFO}</td>
 		</tr>
 		<tr>
-			<td>{L_SERVER}Server</td>
+			<td>{L_SERVER}</td>
 			<td>{SERVER} {SERVER_PW}</td>
 		</tr>
 		<!-- BEGIN hltv -->
 		<tr>
-			<td>{L_HLTV}HLTV-Server</td>
+			<td>{L_HLTV}</td>
 			<td>{HLTV} {HLTV_PW}</td>
 		</tr>
 		<!-- END hltv -->
-		<!-- BEGIN clan -->
+		<!-- BEGIN _lineup -->
+		<!-- BEGIN _clan -->
 		<tr>
-			<td>{L_HLTV}Clanlineup</td>
-			<td>
-				<!-- BEGIN clan_lineup -->
-					{clan.clan_lineup.PLAYERS}
-				<!-- END clan_lineup -->
-			</td>
+			<td>{L_LINEUP_CLAN}</td>
+			<td>{CLAN}</td>
 		</tr>
-		<!-- END clan -->
-		<!-- BEGIN rival -->
+		<!-- END _clan -->
+		<!-- BEGIN _rival -->
 		<tr>
-			<td>{L_HLTV}Gegnerlineup</td>
-			<td>
-				<!-- BEGIN rival_lineup -->
-					{rival.rival_lineup.PLAYERS}
-				<!-- END rival_lineup -->
-			</td>
+			<td>{L_LINEUP_RIVAL}</td>
+			<td>{RIVAL}</td>
 		</tr>
-		<!-- END rival -->
+		<!-- END _rival -->
+		<!-- END _lineup -->
 		</table>
 	</td>
 </tr>
-<tr>
-	<td class="row4r" align="center">
-		<table class="info" width="55%" cellspacing="2">
-		<!-- BEGIN map_details_a -->
-		<tr>
-			<td colspan="5">&nbsp;</td>
-		</tr>
-		<tr>
-			<td width="35%">{DETAILS_MAPA}</td>
-			<td width="1%" align="right"><span class="{CLASSA}">{DETAILS_SOCRE_A}</span></td>
-			<td width="1%" align="center">:</td>
-			<td width="1%"><span class="{CLASSA}">{DETAILS_SOCRE_B}</span></td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_A}</td>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_B}</td>
-			<td>&nbsp;</td>
-		</tr>
-		<!-- END map_details_a -->
-		<!-- BEGIN map_details_b -->
-		<tr>
-			<td>{DETAILS_MAPB}</td>
-			<td align="right"><span class="{CLASSB}">{DETAILS_SOCRE_C}</span></td>
-			<td align="center">:</td>
-			<td><span class="{CLASSB}">{DETAILS_SOCRE_D}</span></td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_C}</td>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_D}</td>
-			<td>&nbsp;</td>
-		</tr>
-		<!-- END map_details_b -->
-		<!-- BEGIN map_details_c -->
-		<tr>
-			<td>{DETAILS_MAPC}</td>
-			<td align="right"><span class="{CLASSC}">{DETAILS_SOCRE_E}</span></td>
-			<td align="center">:</td>
-			<td><span class="{CLASSC}">{DETAILS_SOCRE_F}</span></td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_E}</td>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_F}</td>
-			<td>&nbsp;</td>
-		</tr>
-		<!-- END map_details_c -->
-		<!-- BEGIN map_details_d -->
-		<tr>
-			<td>{DETAILS_MAPD}</td>
-			<td align="right"><span class="{CLASSD}">{DETAILS_SOCRE_G}</span></td>
-			<td align="center">:</td>
-			<td><span class="{CLASSD}">{DETAILS_SOCRE_H}</span></td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_G}</td>
-			<td>&nbsp;</td>
-			<td>{DETAILS_PIC_H}</td>
-			<td>&nbsp;</td>
-		</tr>
-		<!-- END map_details_d -->
-		</table>
-	
-	</td>
-</tr>
-<!-- BEGIN match_users -->
+<!-- BEGIN _status -->
 <tr>
 	<td colspan="2" align="center">
+		<form action="{S_ACTION}" method="post" name="post">
 		<table class="info" width="55%" cellspacing="2">
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
+		<!-- BEGIN _entry -->
 		<tr>
-			<td class="info_head" colspan="2">{L_MATCH_INFO}Teilnahmeinfos</td>
+			<td class="info_head" colspan="2">{L_ENTRY}</td>
 		</tr>
 		<tr>
 			<td valign="top">
-				<form action="{S_ACTION}" method="post" id="list" name="post">
 				<table class="out" width="100%" cellspacing="0">
 				<tr>
-					<td class="rowHead" width="30%">{L_USERNAME}</td>
-					<td class="rowHead" width="70%" colspan="2">{L_STATUS}</td>
+					<td class="rowHead"><span class="right">{L_STATUS}</span>{L_USERNAME}</td>
 				</tr>
-				<!-- BEGIN match_users_status -->
+				<!-- BEGIN _status_row -->
 				<tr>
-					<td width="30%" align="left" nowrap="nowrap">{details.match_users.match_users_status.USERNAME}</td>
-					<td width="20%" align="left" nowrap="nowrap"><span class="{details.match_users.match_users_status.CLASS}">{details.match_users.match_users_status.STATUS}</span></td>
-					<td width="50%" align="left" nowrap="nowrap">{details.match_users.match_users_status.DATE}</td>
+					<td><span class="right">{_view._status._entry._status_row.DATE}<span class="{_view._status._entry._status_row.CLASS}">{_view._status._entry._status_row.STATUS}</span></span><a href="{_view._status._entry._status_row.LINK}">{_view._status._entry._status_row.USER}</a></td>
+				<!--
+					<td width="40%" align="left" nowrap="nowrap"><a href="{_view._status._entry._status_row.LINK}">{_view._status._entry._status_row.USER}</a></td>
+					<td width="60%" align="left" nowrap="nowrap"><span class="small">{_view._status._entry._status_row.DATE}</span></td>
+					<td width="10%" align="left" nowrap="nowrap"><span class="{_view._status._entry._status_row.CLASS}">{_view._status._entry._status_row.STATUS}</span></td>
+				-->
 				</tr>
-				<!-- END match_users_status -->
-				<!-- BEGIN no_entry_status -->
-				<tr>
- 					<td align="center" colspan="3">{L_ENTRY_NO}</td>
-				</tr>
-				<!-- END no_entry -->
+				<!-- END _status_row -->
 				</table>
-				</form>
 			</td>
 		</tr>
-		<!-- BEGIN users_status -->
+		<!-- END _entry -->
+		<!-- BEGIN _switch -->
 		<tr>
 			<td valign="top" align="center">
-				<form action="{S_MATCH_ACTION}" method="post" name="post">
 				<table class="out" cellspacing="0">
 				<tr>
-					<td colspan="3">&nbsp;</td>
-				</tr>
-				<tr align="center">
-					<td width="33%" nowrap="nowrap"><input type="radio" value="1" name="match_users_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
-					<td width="34%" nowrap="nowrap"><input type="radio" value="2" name="match_users_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
-					<td width="33%" nowrap="nowrap"><input type="radio" value="3" name="match_users_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
+					<td colspan="2">&nbsp;</td>
 				</tr>
 				<tr>
-					<td class="row4" colspan="3" align="center"><input class="button" type="submit" value="{L_SET_STATUS}"></td>
+					<td class="row4"align="center"><input class="button" type="submit" name="submit" value="{L_SET_STATUS}" /></td>
+					<td>
+						<label><input type="radio" value="1" name="user_status" {S_YES} /> {L_STATUS_YES}</label><br />
+						<label><input type="radio" value="2" name="user_status" {S_NO} /> {L_STATUS_NO}</label><br />
+						<label><input type="radio" value="3" name="user_status" {S_REPLACE} /> {L_STATUS_REPLACE}</label>
+					</td>
 				</tr>
-				</table>
-				{S_HIDDEN_FIELDA}
-				</form>
-			</td>
-		</tr>
-		<!-- END users_status -->
-		<!-- BEGIN no_entry -->
-		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
-		</tr>
-		<!-- END no_entry -->
-		</table>
-	</td>
-</tr>
-<!-- END match_users -->
-<!-- BEGIN match_comments -->
-<tr>
-	<td colspan="2" align="center">
-		<form action="{S_MATCH_ACTION}" method="post" name="form" onSubmit="javascript:return checkForm()">
-		<table class="info" width="55%" cellspacing="0">
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<tr>
-			<td class="info_head" colspan="2">Kommentar einfügen</td>
-		</tr>
-		<tr>
-			<td colspan="2">{ERROR_BOX}<div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div></td>
-		</tr>
-		<!-- BEGIN match_comments_guest -->
-		<tr>
-			<td class="row1_form" width="30%">Nickname: *</td>
-			<td class="row2" width="70%"><input id="poster_nick" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
-		</tr>
-		<tr>
-			<td class="row1_form">Mail: *</td>
-			<td class="row2"><input id="poster_mail" onBlur="javascript:checkEntry(this)" class="post" type="text" value="{POSTER_MAIL}" name="poster_mail"></td>
-		</tr>
-		<tr>
-			<td class="row1_form">Homepage:</td>
-			<td class="row2"><input class="post" type="text" value="{POSTER_HP}" name="poster_hp"></td>
-		</tr>
-		<tr>
-			<td class="row1_form" valign="top">Cpatcha:<br><span class="small">Reload des Captchas per Klick aufs Bild</span></td>
-			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden." /></td>
-		</tr>
-		<tr>
-			<td class="row1_form">Captcha-Code: *</td>
-			<td class="row2"><input id="captcha" onBlur="javascript:checkEntry(this)" class="post" type="text" name="captcha" /></td>
-		</tr>
-		<tr>
-			<td class="row1_form" width="25%" valign="top">Kommentar:</td>
-			<td class="row2" width="75%"><textarea class="textarea" name="poster_msg" cols="30" rows="5">{POSTER_MSG}</textarea></td>
-		</tr>
-		<tr>
-			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>
-		</tr>
-		<!-- END match_comments_guest -->
-		<!-- BEGIN match_comments_member -->
-		<tr>
-			<td class="row1_form" width="30%" valign="top">Kommentar:</td>
-			<td class="row2" width="70%"><textarea class="textarea" name="poster_msg" cols="30" rows="5">{POSTER_MSG}</textarea></td>
-		</tr>
-		<tr>
-			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>
-		</tr>
-		<!-- END match_comments_member -->
-		</table>
-		{S_HIDDEN_FIELDB}
-		</form>
-	</td>
-</tr>
-<tr>
-	<td colspan="2" align="center">
-		<form action="{S_MATCH_ACTION}" method="post" name="post">
-		<table class="info" width="55%" cellspacing="0">
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<tr>
-			<td class="info_head">Kommentare</td>
-		</tr>
-		<!-- BEGIN comments -->
-		<tr>
-			<td class="{details.match_comments.comments.CLASS}">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				
-				<tr>
-					<td nowrap="nowrap">{details.match_comments.comments.DATE}</td>
-					<td align="right">{details.match_comments.comments.IP}{details.match_comments.comments.EDIT}{details.match_comments.comments.DELETE}{details.match_comments.comments.ID} <img src="{details.match_comments.comments.ICON}" alt=""></td>
-				</tr>
-				<tr>
-					<td nowrap="nowrap" valign="top" width="25%">{details.match_comments.comments.USERNAME}</td>
-					<td width="75%">{details.match_comments.comments.MESSAGE}</td>
-				</tr>
-				
 				</table>
 			</td>
 		</tr>
-		<!-- END comments -->
-		<!-- BEGIN no_entry -->
-		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
-		</tr>
-		<!-- END no_entry -->
-		</table>
-		
-		<table class="info" width="55%" cellspacing="4">
-		<tr>
-			<td width="100%" align="left"><span style="float:right;">{PAGE_NUMBER}</span>{PAGINATION}</td>
-		</tr>
-		</table>
+		<!-- END _switch -->
+  		</table>
+		{S_FIELDE}
 		</form>
 	</td>
 </tr>
-<!-- END match_comments -->
+<!-- END _status -->
 </table>
-<!-- END details -->
-
-<!-- BEGIN matches -->
-<!-- END matches -->
+<!-- END _view -->
