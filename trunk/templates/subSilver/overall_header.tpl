@@ -2,21 +2,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
-<title>{SITENAME} :: {PAGE_TITLE}</title>
-	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
+	<title>{SITENAME} :: {PAGE_TITLE}</title>
 	
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php">
-
-
 	
-	<script type="text/javascript" src="includes/teamspeak/overlib.js"></script>
-	<!--<link rel="stylesheet" type="text/css" href="includes/teamspeak/stylesheet.css">-->
-
-	<!--[if lte IE 6]>
-	<link rel="stylesheet" media="all" type="text/css" href="templates/subSilver/theme/dropdown_ie.css" />
-	<![endif]-->
-
+	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
 	
 	<script type="text/javascript">
 	// <![CDATA[
@@ -106,13 +97,129 @@
 	*
 	***/ 
 	-->
-	<script type="text/javascript" src="templates/subSilver/lightbox.js"></script>
+	<script type="text/javascript" src="./includes/js/lightbox.js"></script>
+	
+	<script type="text/javascript" src="./includes/js/jquery-1.5.2.min.js"></script>
+	<!--<script type="text/javascript" src="jquery.min.js"></script>-->
+	<script type="text/javascript" src="./includes/js/jquery.atooltip.min.js"></script>  
+	
+	<script type="text/javascript" language="javascript">
+	
+	$(document).ready(function()
+	{
+		$('span.today').hover(function()
+		{
+			$(this).find('span.todaytext').show("slow");
+		},
+		
+		function()
+		{
+			$(this).find('span.todaytext').hide("slow");
+		});
+	});
+	
+	$(function(){  
+    // basic usage  
+		$('a.normalTip').aToolTip();  
+		  
+		// fixed tooltip  
+		$('a.fixedTip').aToolTip({  
+			fixed: true  
+		});  
+		  
+		// on click tooltip with custom content  
+		$('a.clickTip').aToolTip({  
+			clickIt: true,  
+			tipContent: 'Hello I am aToolTip with content from param'  
+		});   
+		  
+		// on click tooltip that has callback functions  
+		$('a.callBackTip').aToolTip({  
+			clickIt: true,  
+			onShow: function(){alert('I fired OnShow')},  
+			onHide: function(){alert('I fired OnHide')}  
+		});   
+		  
+		// List of all parameters and their default values:  
+		$('a').aToolTip({  
+			// no need to change/override  
+			closeTipBtn: 'aToolTipCloseBtn',  
+			toolTipId: 'aToolTip',  
+			// ok to override  
+			fixed: false,                   // Set true to activate fixed position  
+			clickIt: false,                 // set to true for click activated tooltip  
+			inSpeed: 200,                   // Speed tooltip fades in  
+			outSpeed: 100,                  // Speed tooltip fades out  
+			tipContent: '',                 // Pass in content or it will use objects 'title' attribute  
+			toolTipClass: 'defaultTheme',   // Set class name for custom theme/styles  
+			xOffset: 5,                     // x position  
+			yOffset: 5,                     // y position  
+			onShow: null,                   // callback function that fires after atooltip has shown  
+			onHide: null                    // callback function that fires after atooltip has faded out      
+		});  
+		  
+	});  
+	
+	</script>
+	
+	<style>
+	
+	/*
+Required Styles
+*/
+#aToolTip {
+position: absolute;
+display: none;
+z-index: 50000;
+}
 
+#aToolTip .aToolTipContent {
+position:relative;
+margin:0;
+padding:0;
+}
+/*
+END: Required Styles
+*/
+/**
+Default Theme
+*/
+.defaultTheme {
+border:2px solid #444;
+background:#555;
+color:#fff;
+margin:0;
+padding:6px 12px;
+
+-moz-border-radius: 12px 12px 12px 0;
+-webkit-border-radius: 12px 12px 12px 0;
+-khtml-border-radius: 12px 12px 12px 0;
+border-radius: 12px 12px 12px 0;
+
+-moz-box-shadow: 2px 2px 5px #111; /* for Firefox 3.5+ */
+-webkit-box-shadow: 2px 2px 5px #111; /* for Safari and Chrome */
+box-shadow: 2px 2px 5px #111; /* for Safari and Chrome */
+}
+
+.defaultTheme #aToolTipCloseBtn {
+display:block;
+height:18px;
+width:18px;
+background:url(../images/closeBtn.png) no-repeat;
+text-indent:-9999px;
+outline:none;
+position:absolute;
+top:-50px;
+right:-30px;
+margin:2px;
+padding:4px;
+}
+
+</style>
 	
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
 <a name="top"></a>
-
 <div align="center">
 <table width="986" border="0" cellspacing="0" cellpadding="0" align="center" class="table">
 <tr>
@@ -290,17 +397,16 @@
 				<tr>
 					<td class="info_head" colspan="4">{L_SUBNAVI_NEWS}</td>
 				</tr>
-				<!-- BEGIN _news_subnavi_row -->
+				<!-- BEGIN _sn_news_row -->
 				<tr>
-					<td class="{_news_subnavi_row.CLASS}" align="left" width="1%">{_news_subnavi_row.NEWS_GAME}</td>
-					<td class="{_news_subnavi_row.CLASS}" align="left" width="99%"><a href="{_news_subnavi_row.U_DETAILS}">{_news_subnavi_row.NEWS_TITLE}</a></td>
+					<td class="{_sn_news_row.CLASS}" align="left" width="100%">{_sn_news_row.GAME} <a href="{_sn_news_row.DETAILS}">{_sn_news_row.TITLE}</a></td>
 				</tr>
-				<!-- END _news_subnavi_row -->
-				<!-- BEGIN _news_subnavi_empty -->
+				<!-- END _sn_news_row -->
+				<!-- BEGIN _news_sn_empty -->
 				<tr>
 					<td colspan="3" align="center">{L_ENTRY_NO}</td>
 				</tr>
-				<!-- END _news_subnavi_empty -->
+				<!-- END _news_sn_empty -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -309,18 +415,17 @@
 				<tr>
 					<td class="info_head" colspan="4" style="text-align:center;">{L_SUBNAVI_MATCH}</td>
 				</tr>
-				<!-- BEGIN _match_subnavi_row -->
+				<!-- BEGIN _sn_match_row -->
 				<tr>
-					<td class="{_match_subnavi_row.CLASS}" align="center" width="1%">{_match_subnavi_row.MATCH_GAME}</td>
-					<td class="{_match_subnavi_row.CLASS}" align="left" width="100%"><a href="{_match_subnavi_row.U_DETAILS}">{_match_subnavi_row.MATCH_NAME}</a></td>
-					<td class="{_match_subnavi_row.CLASS}" align="center" nowrap="nowrap"><span class="{_match_subnavi_row.CLASS_RESULT}">{_match_subnavi_row.MATCH_RESULT}</span></td>
+					<td class="{_sn_match_row.CLASS}" align="left" width="100%">{_sn_match_row.GAME} <a href="{_sn_match_row.DETAILS}">{_sn_match_row.NAME}</a></td>
+					<td class="{_sn_match_row.CLASS}" align="center" nowrap="nowrap"><span class="{_sn_match_row.CSS}">{_sn_match_row.RESULT}</span></td>
 				</tr>
-				<!-- END _match_subnavi_row -->
-				<!-- BEGIN _match_subnavi_empty -->
+				<!-- END _sn_match_row -->
+				<!-- BEGIN _sn_match_empty -->
 				<tr>
 					<td colspan="3" align="center">{L_ENTRY_NO}</td>
 				</tr>
-				<!-- END _match_subnavi_empty -->
+				<!-- END _sn_match_empty -->
 				</table>
 			</td>
 			<td style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_23.png); height:189px; width:4px;"></td>
@@ -354,47 +459,46 @@
 		<tr>
 			<td width="15%" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN _subnavi_newusers -->
+				<!-- BEGIN _sn_newusers -->
 				<tr>
 					<td class="info_head"><span style="float: right;">{NEW_USERS_CACHE}</span>{L_NEW_USERS}</td>
 				</tr>
 				<!-- BEGIN _user_row -->
 				<tr>
-					<td><a class="small" href="{_subnavi_newusers._user_row.U_USERNAME}" {_subnavi_newusers._user_row.C_USERNAME}>{_subnavi_newusers._user_row.L_USERNAME}</a></td>
+					<td><a class="small" href="{_sn_newusers._user_row.U_USERNAME}" {_sn_newusers._user_row.C_USERNAME}>{_sn_newusers._user_row.L_USERNAME}</a></td>
 				</tr>
 				<!-- END _user_row -->
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _subnavi_newusers -->
+				<!-- END _sn_newusers -->
 				
-				<!-- BEGIN _subnavi_teams -->
+				<!-- BEGIN _sn_teams -->
 				<tr>
 					<td class="info_head">{L_SUBNAVI_TEAMS}</td>
 				</tr>
 				<tr>
 					<td>
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-						<!-- BEGIN _teams_row -->
+						<!-- BEGIN _team_row -->
 						<tr>
-							<td width="90%" align="left" style="vertical-align:top;"><a href="{_subnavi_teams._teams_row.U_TEAM}">&raquo;&nbsp;{_subnavi_teams._teams_row.L_TEAM}</a></td>
-							<td width="10%">{_subnavi_teams._teams_row.I_TEAM}</td>
+							<td align="left">{_sn_teams._team_row.I_GAME} <a href="{_sn_teams._team_row.U_TEAM}">{_sn_teams._team_row.L_TEAM}</a></td>
 						</tr>
-						<!-- END _teams_row -->
-						<!-- BEGIN _teams_subnavi_empty -->
+						<!-- END _team_row -->
+						<!-- BEGIN _teams_sn_empty -->
 						<tr>
 							<td>{L_ENTRY_NO}</td>
 						</tr>
-						<!-- END _teams_subnavi_empty -->
+						<!-- END _teams_sn_empty -->
 						</table>
 					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _subnavi_teams -->
+				<!-- END _sn_teams -->
 				
-				<!-- BEGIN _subnavi_links -->
+				<!-- BEGIN _sn_links -->
 				<tr>
 					<td class="info_head">{L_NETWORK_LINKS}</td>
 				</tr>
@@ -403,7 +507,7 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN _links_row -->
 						<tr>
-							<td width="100%" align="left"><a href="{_subnavi_links._links_row.U_URL}">&raquo;&nbsp;{_subnavi_links._links_row.L_URL}</a></td>
+							<td width="100%" align="left"><a href="{_sn_links._links_row.U_URL}">&raquo;&nbsp;{_sn_links._links_row.L_URL}</a></td>
 						</tr>
 						<!-- END _links_row -->
 						</table>
@@ -412,9 +516,9 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _subnavi_links -->
+				<!-- END _sn_links -->
 				
-				<!-- BEGIN _subnavi_partner -->
+				<!-- BEGIN _sn_partner -->
 				<tr>
 					<td class="info_head">{L_NETWORK_PARTNER}</td>
 				</tr>
@@ -423,7 +527,7 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN _partner_row -->
 						<tr>
-							<td width="100%" align="left"><a href="{_subnavi_partner._partner_row.U_URL}">&raquo;&nbsp;{_subnavi_partner._partner_row.L_URL}</a></td>
+							<td width="100%" align="left"><a href="{_sn_partner._partner_row.U_URL}">&raquo;&nbsp;{_sn_partner._partner_row.L_URL}</a></td>
 						</tr>
 						<!-- END _partner_row -->
 						</table>
@@ -432,8 +536,8 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _subnavi_partner -->
-				<!-- BEGIN _subnavi_sponsor -->
+				<!-- END _sn_partner -->
+				<!-- BEGIN _sn_sponsor -->
 				<tr>
 					<td class="info_head">{L_NETWORK_SPONSOR}</td>
 				</tr>
@@ -442,7 +546,7 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN _sponsor_row -->
 						<tr>
-							<td width="100%" align="left"><a href="{_subnavi_sponsor._sponsor_row.U_URL}">&raquo;&nbsp;{_subnavi_sponsor._sponsor_row.L_URL}</a></td>
+							<td width="100%" align="left"><a href="{_sn_sponsor._sponsor_row.U_URL}">&raquo;&nbsp;{_sn_sponsor._sponsor_row.L_URL}</a></td>
 						</tr>
 						<!-- END _sponsor_row -->
 						</table>
@@ -451,7 +555,7 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _subnavi_sponsor -->
+				<!-- END _sn_sponsor -->
 				
 				<!-- BEGIN statsonline -->
 				<tr>

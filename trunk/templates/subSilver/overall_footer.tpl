@@ -1,7 +1,7 @@
 			</td>
 			<td width="15%" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN _subnavi_minical -->
+				<!-- BEGIN _sn_minical -->
 				<tr>
 					<td class="info_head"><span style="float:right">{CAL_CACHE}</span><span style="float:right;">{MONTH}&nbsp;</span>Kalender</td>
 				</tr>
@@ -20,9 +20,9 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _subnavi_minical -->
+				<!-- END _sn_minical -->
 				
-				<!-- BEGIN _next_match -->
+				<!-- BEGIN _sn_next_match -->
 				<tr>
 					<td class="info_head"><span style="float:right;">{MONTH}</span>Wars</td>
 				</tr>
@@ -31,9 +31,8 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN _match_row -->
 						<tr>
-							<td width="1%">{_next_match._match_row.IMAGE}</td>
-							<td width="99%">&nbsp;<a href="{_next_match._match_row.NAME}">{_next_match._match_row.NAME}</a></td>
-							<td width="1%" nowrap="nowrap">{_next_match._match_row.DATE}</td>
+							<td width="99%">{_sn_next_match._match_row.GAME} {_sn_next_match._match_row.NAME}</td>
+							<td width="1%" nowrap="nowrap">{_sn_next_match._match_row.DATE}</td>
 						</tr>
 						<!-- END _match_row -->
 						<tr>
@@ -42,9 +41,8 @@
 						</table>
 					</td>
 				</tr>
-				<!-- END _next_match -->
-				
-				<!-- BEGIN _next_training -->
+				<!-- END _sn_next_match -->
+				<!-- BEGIN _sn_next_training -->
 				<tr>
 					<td class="info_head"><span style="float:right;">{MONTH}</span>Trainings</td>
 				</tr>
@@ -53,8 +51,9 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<!-- BEGIN _training_row -->
 						<tr>
-							<td width="99%"><a href="{_next_training._training_row.U_NAME}">{_next_training._training_row.L_NAME}</a></td>
-							<td width="1%" nowrap="nowrap">{_next_training._training_row.DATE}</td>
+							<td width="1%">{_sn_next_training._training_row.GAME}</td>
+							<td width="99%">&nbsp;{_sn_next_training._training_row.NAME}</td>
+							<td width="1%" nowrap="nowrap">{_sn_next_training._training_row.DATE}</td>
 						</tr>
 						<!-- END _training_row -->
 						</table>
@@ -63,11 +62,7 @@
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
-				<!-- END _next_training -->
-				
-				<tr>
-					<td>&nbsp;</td>
-				</tr>
+				<!-- END _sn_next_training -->
 				</table>
 			</td>
 		</tr>

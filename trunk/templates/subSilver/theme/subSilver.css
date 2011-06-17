@@ -122,7 +122,7 @@ td.rowHead {
 	height:21px;
 	font-weight:bold;
 	padding: 0px 3px;
-	text-align:left;
+	
 }
 
 
@@ -143,11 +143,6 @@ td.row {
 .win { color:#0F0; }
 .lose { color:#F00; }
 .draw { color:#FC0; }
-
-.yes { color:#0F0; }
-.no { color:#FF4500; }
-.replace { color:#FC0; }
-
 
 /*	für Debug */
 .gensmall { font-size : 10px; }
@@ -180,8 +175,10 @@ td.row1_form:hover {
 	
 }
 
-.right {
-	float:right;
+span.right { float: right; }
+
+img.icon {
+    vertical-align: middle;
 }
 
 
@@ -193,3 +190,66 @@ p {
   margin: 0px;
   padding: 0px;
 }
+
+table.lobby { border:0px; width: 100%; }
+table.lobby th { padding: 0px; }
+table.lobby td { padding: 1px 2px;  }
+table.lobby td:first-child	{ text-align: left; width: 15%; white-space: nowrap; }
+table.lobby td:nth-child(2)	{ text-align: left; width: 35%; white-space: nowrap; }
+table.lobby td:nth-child(3)	{ text-align: left; width: 25%; white-space: nowrap; }
+table.lobby td:last-child	{ text-align: right; width: 25%; white-space: nowrap; }
+
+table.comments { border:0px; width: 100%; }
+table.comments td { padding: 1px 2px;  }
+table.comments td:first-child	{ text-align: left; vertical-align: top; width: 75%; white-space: nowrap; }
+table.comments td:last-child	{ text-align: left; vertical-align: top; width: 25%; white-space: nowrap; }
+
+
+td.lobby_title { text-align: left; width: 15%; white-space: nowrap; vertical-align:top; padding-left:2px; }
+
+td.top { vertical-align:top; }
+td.mid { vertical-align:middle; }
+
+/* news css */
+table.news { font-size: 11px; padding: 0px; text-align:left; width:100%; }
+table.news td { padding: 0px; }
+table.news td:first-child	{ text-align: left; padding: 0px 1px; }
+table.news td.header { font-size:10px;	color:#fff;	text-align:left;	border-bottom:1px #B22222 solid; font-weight:bold; }
+table.news td.footer { font-size:10px;	color:#fff;	text-align:left;	border-top:1px #B22222 solid; }
+
+table.news_match { font-size: 10px; padding: 0px; text-align:center; border: none; border-collapse: collapse; border-spacing: 0; text-align:center; width:80%; }
+table.news_match td { padding: 5px; }
+table.news_match td:first-child	{ text-align: center; padding-right: 10px; }
+table.news_match td:nth-child	{ text-align: center; }
+table.news_match td:last-child	{ text-align: center; padding-left: 10px; }
+
+/* event css */
+table.event					{ padding: 0px; text-align:left; }
+table.event td:first-child	{ padding: 2px; text-align: left; }
+table.event td:nth-child(2)	{ padding: 2px; text-align: center; width: 35%; white-space: nowrap; }
+table.event td:last-child	{ padding: 2px; text-align: center; width: 20%; white-space: nowrap; }
+table.event td.header		{ padding: 0px;	text-align: left;	font-size: 10px;	border-bottom:1px #B22222 solid; font-weight: bold; }
+table.event td.footer		{ padding: 0px;	text-align: left;	font-size: 8px;		border-top:1px #B22222 solid; }
+
+/* match css */
+table.match					{ padding: 0px; text-align: left; }
+table.match td:first-child	{ padding: 2px; text-align: left; }
+table.match td:nth-child(2)	{ padding: 2px; text-align: center; width: 35%; white-space: nowrap; }
+table.match td:last-child	{ padding: 2px; text-align: center; width: 20%; white-space: nowrap; }
+table.match td.header		{ padding: 0px;	text-align: left;	font-size: 10px;	border-bottom:1px #B22222 solid; font-weight: bold; }
+table.match td.footer		{ padding: 0px;	text-align: left;	font-size: 8px;		border-top:1px #B22222 solid; }
+
+/* comments row css */
+table.comment			{ text-align:left; font-size: 10px; padding: 0px; border: none; border-collapse: collapse; border-spacing: 0; width: 450px; }
+table.comment td.footer	{ text-align:left; padding: 2px; font-size: 9px;	border-top:1px #B22222 solid; }
+
+table.comment_create				{ text-align:left; font-size: 10px; padding: 0px; border: none; border-collapse: collapse; border-spacing: 0; width:450px; }
+table.comment_create td				{ text-align: left; padding: 2px; white-space: nowrap; }
+table.comment_create td:first-child	{ background-color: #444; font-weight: bold; }
+table.comment_create td:last-child	{ background-color: #666; }
+table.comment_create td.header		{ text-align: left;		font-size: 10px;	border-bottom:1px #B22222 solid; font-weight: bold; padding: 0px; }
+table.comment_create td.footer		{ text-align: center;	font-size: 9px;		border-top:1px #B22222 solid; background-color:transparent;  padding: 2px;}
+
+table.comment_row		{ font-size: 10px; padding: 0px; text-align:center; border: none; border-collapse: collapse; border-spacing: 0; width:450px; }
+table.comment_row td	{ text-align: left; padding: 2px; }
+

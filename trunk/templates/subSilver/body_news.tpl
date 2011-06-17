@@ -1,179 +1,100 @@
-<!-- BEGIN show -->
-<table class="out" width="100%" cellspacing="0">
+<!-- BEGIN _list -->
+<table class="news">
 <tr>
-	<td class="info_head" colspan="4">News-&Uuml;bersicht</td>
+	<td class="header">{L_MAIN}</td>
+</tr>
+<!-- BEGIN _row -->
+<tr>
+	<td><span class="right">{_list._row.AUTHOR}, {_list._row.DATE}</span><a href="{_list._row.U_NEWS}"><b>{_list._row.TITLE}</b></a></td>
 </tr>
 <tr>
-	<td>&nbsp;</td>
-	<td colspan="2">&nbsp;</td>
-	<td>&nbsp;</td>
-</tr>
-<!-- BEGIN news_row -->
-<tr>
-	<td width="2%">&nbsp;</td>
-	<td width="96%" colspan="2" align="center"><img src="{show.news_row.NEWSCAT_IMAGE}" alt="{show.news_row.NEWSCAT_TITLE}" title="{show.news_row.NEWSCAT_TITLE}"></td>
-	<td width="2%">&nbsp;</td>
-</tr>
-<tr>
-	<td width="2%">&nbsp;</td>
-	<td width="96%" colspan="2" align="left">
-		<a href="{show.news_row.U_NEWS}"><b>{show.news_row.NEWS_TITLE}</b></a>
-		Kommentare: {show.news_row.NEWS_COMMENTS}
-	</td>
-	<td width="2%">&nbsp;</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td colspan="2">{show.news_row.NEWS_TEXT}</td>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
 	<td>
-		<!-- BEGIN links -->
-		{show.news_row.links.L_LINK}{show.news_row.links.NEWS_LINK}
-		<!-- END links -->
-	</td>
-	<td align="right" nowrap="nowrap">{show.news_row.NEWS_AUTHOR}, {show.news_row.NEWS_PUBLIC_TIME}&nbsp;</td>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td colspan="2">&nbsp;</td>
-	<td>&nbsp;</td>
-</tr>
-<!-- END news_row -->
-<tr>
-	<td>&nbsp;</td>
-	<td colspan="2"><span style="float:right;">{PAGE_NUMBER}</span>{PAGINATION}</td>
-	<td>&nbsp;</td>
-</tr>
-<!-- BEGIN no_entry -->
-<tr>
-	<td colspan="4" align="center">{L_ENTRY_NO}</td>
-</tr>
-<!-- END no_entry -->
-</table>
-<!-- END show -->
-
-<!-- BEGIN details -->
-<table class="out" width="100%" cellspacing="0">
-<tr>
-	<td class="info_head" colspan="3">{NEWS_TITLE}</td>
-</tr>
-<tr>
-	<td colspan="3">&nbsp;</td>
-</tr>
-<tr>
-	<td width="2%">&nbsp;</td>
-	<td width="96%">{NEWS_TEXT}</td>
-	<td width="2%">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="3">&nbsp;</td>
-</tr>
-<!-- BEGIN news_comments -->
-<tr>
-	<td colspan="3" align="center">
-		<form action="{S_NEWS_ACTION}" method="post" name="form">
-		<table class="info" width="55%" cellspacing="0">
+		<img src="{_list._row.NC_IMAGE}" title="{_list._row.NC_TITLE}" alt="{_list._row.NC_TITLE}" style="float:left; padding-right:5px;" />
+		<!-- BEGIN _match -->
+		<table class="news_match">
 		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<tr>
-			<td class="info_head" colspan="2">Kommentar einfügen</td>
-		</tr>
-		</table>
-
-		{ERROR_BOX}<div align="center" id="msg" style="font-weight:bold; font-size:12px; color:#F00;"></div>
-
-		<table class="info" width="55%" cellspacing="0">
-		<!-- BEGIN news_comments_guest -->
-		<tr>
-			<td class="row1_form" width="30%">Nickname: *</td>
-			<td class="row2" width="70%"><input id="poster_nick" class="post" type="text" value="{POSTER_NICK}" name="poster_nick"></td>
-		</tr>
-		<tr>
-			<td class="row1_form">Mail: *</td>
-			<td class="row2"><input id="poster_mail" class="post" type="text" value="{POSTER_MAIL}" name="poster_mail"></td>
-		</tr>
-		<tr>
-			<td class="row1_form">Homepage:</td>
-			<td class="row2"><input class="post" type="text" value="{POSTER_HP}" name="poster_hp"></td>
-		</tr>
-		<tr>
-			<td class="row1_form" valign="top">Cpatcha:<br><span class="small">Reload des Captchas per Klick aufs Bild</span></td>
-			<td class="row2"><img style="background:#FFF; padding:1px;" src="includes/captcha.php" onclick="javascript:this.src='includes/captcha.php?'+Math.random();" border="0"  alt="Das Captcha konnte nicht erstellt werden."></td>
-		</tr>
-		<tr>
-			<td class="row1_form">Captcha-Code: *</td>
-			<td class="row2"><input id="captcha" class="post" type="text" name="captcha"></td>
-		</tr>
-		<tr>
-			<td class="row1_form" width="25%" valign="top">Kommentar:</td>
-			<td class="row2" width="75%"><textarea class="textarea" name="comment" cols="30" rows="5">{COMMENT}</textarea></td>
-		</tr>
-		<tr>
-			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>
-		</tr>
-		<!-- END news_comments_guest -->
-		<!-- BEGIN news_comments_member -->
-		<tr>
-			<td class="row1_form" width="30%" valign="top">Kommentar:</td>
-			<td class="row2" width="70%"><textarea class="textarea" name="comment" cols="30" rows="5">{COMMENT}</textarea></td>
-		</tr>
-		<tr>
-			<td class="row4" colspan="2" align="center"><input class="button2" name="submit" type="submit" value="Absenden"> <input class="button" type="reset" value="Zurücksetzen"></td>
-		</tr>
-		<!-- END news_comments_member -->
-		</table>
-		{S_HIDDEN_FIELDB}
-		</form>
-	</td>
-</tr>
-<tr>
-	<td colspan="3" align="center">
-		<form action="{S_MATCH_ACTION}" method="post" name="post">
-		<table class="info" width="75%" cellspacing="1">
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<tr>
-			<td class="info_head">Kommentare</td>
-		</tr>
-		<!-- BEGIN comments -->
-		<tr>
-			<td class="{details.news_comments.comments.CLASS}">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				
-				<tr>
-					<td width="25%">{details.news_comments.comments.DATE}</td>
-					<td width="75%" align="right">{details.news_comments.comments.IP}{details.news_comments.comments.EDIT}{details.news_comments.comments.DELETE}{details.news_comments.comments.ID} <img src="{details.news_comments.comments.ICON}" alt=""></td>
-				</tr>
-				<tr>
-					<td valign="top"><a {details.news_comments.comments.COLOR} href="{details.news_comments.comments.U_USERNAME}">{details.news_comments.comments.L_USERNAME}</a></td>
-					<td valign="top">{details.news_comments.comments.MESSAGE}</td>
-				</tr>
-				
-				</table>
+			<td>{_list._row._match.TEAM_LOGO}</td>
+			<td>
+				{_list._row._match.GAME} {_list._row._match.TEAM} vs. {_list._row._match.RIVAL}<br />
+				{_list._row._match.WAR}: {_list._row._match.TYPE} {_list._row._match.LEAGUE}<br />
+				{_list._row._match.MAPS}<br />
+				<span class="{_list._row._match.CSS}">{_list._row._match.RESULT}</span>
 			</td>
-		</tr>
-		<!-- END comments -->
-		<!-- BEGIN no_entry -->
-		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
-		</tr>
-		<!-- END no_entry -->
-		</table>
-		
-		<table class="info" width="75%" cellspacing="4">
-		<tr>
-			<td width="100%" align="left"><span style="float:right;">{PAGE_NUMBER}</span>{PAGINATION}</td>
+			<td>{_list._row._match.RIVAL_LOGO}</td>
 		</tr>
 		</table>
-		</form>
+		<!-- END _match -->
+		{_list._row.TEXT}
 	</td>
 </tr>
-<!-- END news_comments -->
+<tr>
+	<td>{_list._row.COMMENTS}<br />
+		<!-- BEGIN _urls -->
+		{_list._row._urls.LINK}{_list._row._urls.URLS}
+		<!-- END _urls -->
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<!-- END _row -->
+<!-- BEGIN _entry_empty -->
+<tr>
+	<td align="center">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _entry_empty -->
 </table>
-<!-- END details -->
+
+<table class="news">
+<tr>
+	<td class="footer"><span class="right">{PAGE_NUMBER}</span>{PAGE_PAGING}</td>
+</tr>
+</table>
+<!-- END _list -->
+
+<!-- BEGIN _view -->
+<form action="{S_ACTION}" method="post" name="post">
+<table class="news" width="100%" cellspacing="0">
+<tr>
+	<td class="header">
+		<!-- BEGIN _update -->
+		<span class="small" style="float:right;">&nbsp;&bull;&nbsp;{_view._update.UPDATE}</span>
+		<!-- END _update -->
+		<span class="small" style="float:right;">{OVERVIEW}</span>
+		{L_MAIN}</td>
+</tr>
+<tr>
+	<td>{TEXT}</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+</table>
+
+{COMMENTS}
+
+{S_FIELDS}
+</form>
+<!-- END _view -->
+
+<!-- BEGIN _archiv -->
+<table class="news">
+<tr>
+	<td class="header" colspan="5">{L_MAIN}</td>
+</tr>
+<!-- BEGIN _row -->
+<tr>
+	<td>{_archiv._row.TITLE}</td>
+    <td>{_archiv._row.NC_CAT}</td>
+    <td>{_archiv._row.AUTHOR}</td>
+	<td>{_archiv._row.COMMENT}</td>
+    <td>{_archiv._row.DATE}</td>
+</tr>
+<!-- END _row -->
+<!-- BEGIN _entry_empty -->
+<tr>
+	<td align="center">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _entry_empty -->
+</table>
+<!-- END _archiv -->

@@ -18,31 +18,33 @@
 </table>
 
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
+<!-- BEGIN type_icon -->
 <tr> 
-	<td class="row1" width="22%">{L_SUBJECT}</td>
-	<td class="row2" width="78%"><input type="text" name="subject" size="45" maxlength="60" style="width:450px" tabindex="2" class="post" value="{SUBJECT}" /></td>
+	<td>{L_ICON}icon</td>
+	<td>{S_ICON}</td>
 </tr>
-<!-- BEGIN switch_type_toggle -->
+<!-- END type_icon -->
 <tr> 
-	<td class="row1" width="22%">{L_SUBJECT}</td>
-	<td class="row2" width="78%">{S_TYPE_TOGGLE}</td>
+	<td>{L_SUBJECT}subject</td>
+	<td><input type="text" name="post_subject" value="{POST_SUBJECT}" /></td>
 </tr>
-<!-- END switch_type_toggle -->
 <tr> 
-	<td class="row1" valign="top">{L_MESSAGE_BODY}</td>
-	<td class="row2"><textarea name="message" rows="15" cols="35" wrap="virtual" style="width:450px" tabindex="3" class="post" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">{MESSAGE}</textarea></td>
+	<td>{L_MESSAGE}message</td>
+	<td><textarea name="post_message" rows="15" cols="35">{POST_MESSAGE}</textarea></td>
+</tr>
+<!-- BEGIN type_toggle -->
+<tr> 
+	<td>{L_TYPE}type</td>
+	<td>{S_TYPE}</td>
+</tr>
+<!-- END type_toggle -->
+<tr> 
+	<td>{L_OPTION}option</td>
+	<td><input name="post_notify" type="checkbox" value="on" {S_NOTIFY} /> {L_NOTIFY}Benachrichten, wenn geantwortet wird auf diesen Beitrag<br /></td>
+</tr>
+<tr> 
+	<td colspan="2" align="center"><input type="submit" name="submit" class="button" value="Absenden"></td>
 </tr>
 </table>
-<!--{POLLBOX}-->
-		 
-{S_HIDDEN_FORM_FIELDS}	
-<input type="submit" tabindex="5" name="preview" class="mainoption" value="{L_PREVIEW}">
-<input type="submit" accesskey="s" tabindex="6" name="post" class="mainoption" value="{L_SUBMIT}">
-	
-
-  <table width="100%" cellspacing="2" border="0" align="center" cellpadding="2">
-	<tr> 
-	  <td align="right" valign="top"><span class="gensmall">{S_TIMEZONE}</span></td>
-	</tr>
-  </table>
+{S_FIELDS}	
 </form>
