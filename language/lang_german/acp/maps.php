@@ -7,10 +7,10 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'map'		=> 'Karte',
-	'cat'		=> 'Kategorie',
-	'maps'		=> 'Karten',
-	'explain'	=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
+	'title'			=> 'Karte',
+	'title_cat'		=> 'Kategorie',
+	'title_maps'	=> 'Karten',
+	'explain'		=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
 
 	'create'	=> 'Neue Karte hinzugefügt.',
 	'update'	=> 'Kartendaten erfolgreich geändert.',
@@ -22,7 +22,11 @@ $lang = array_merge($lang, array(
 	'delete_cat'	=> 'Die Kategorie wurde gelöscht!',
 	'confirm_cat'	=> 'dass diese Kategorie:',
 	
+	'map_name'	=> 'Kartenname',
 	'tag'		=> 'Tag',
+	
+	'cat_name'	=> 'Kategoriename',
+	'cat_tag'	=> 'Kategorietag',	
 
 ));
 

@@ -85,9 +85,9 @@
 		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 	</ul>
 </div>
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small"colspan="2">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 

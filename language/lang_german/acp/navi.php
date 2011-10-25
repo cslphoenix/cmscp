@@ -8,6 +8,7 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Navigation',
+	'field'		=> 'Navi-Link',
 	'explain'	=> 'Hier kannst du die Navigation Verwalten. Einträge die wie das <em><strong>Beispiel</strong></em> aussehen sind Intern, also nur für eingeloggte Personen.',
 	
 	'create'	=> 'Neuen Navi-Link hinzugefügt.',
@@ -15,24 +16,20 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Der Navi-Link wurde gelöscht!',
 	'confirm'	=> 'das der Navi-Link:',
 	
-	'title_s'	=> 'Subnavieinstellungen',
-	'update_s'	=> 'Subnavigation erfolgreich geändert.',
-	
-	'return_s'	=> '<br /><br /><strong>%s&laquo; Subnavigations Administration%s</strong>',
-	
-	'field'		=> 'Navi-Link',
-	'settings'	=> 'Subnavieinstellungen',
-	
-	'main'	=> 'Main Navi',
-	'clan'	=> 'Clan Navi',
-	'com'	=> 'Community Navi',
-	'misc'	=> 'Misc Navi',
-	'user'	=> 'Benutzer Navi',
+	'navi_main'	=> 'Main Navi',
+	'navi_clan'	=> 'Clan Navi',
+	'navi_com'	=> 'Community Navi',
+	'navi_misc'	=> 'Misc Navi',
+	'navi_user'	=> 'Benutzer Navi',
 	
 	'url'			=> 'Navi-Link URL',
 	'target'		=> 'Ziel',
 	'target_new'	=> 'Neue Seite',
 	'target_self'	=> 'Selbe Seite',
+	
+	'title_s'	=> 'Subnavieinstellungen',
+	'update_s'	=> 'Subnavigation erfolgreich geändert.',
+	'return_s'	=> '<br /><br /><strong>%s&laquo; Subnavigations Administration%s</strong>',
 	
 	
 	'news_limit'			=> 'Anzahl an Nachrichtentiteln',

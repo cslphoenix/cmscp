@@ -21,7 +21,6 @@ $lang = array_merge($lang, array(
 	'hm_groups'		=> 'Gruppen',
 	'hm_main'		=> 'Allgemein',	
 	'hm_news'		=> 'News',
-	'hm_server'		=> 'Server',
 	'hm_teams'		=> 'Teams',
 	'hm_template'	=> 'Themes/Template',	
 	'hm_users'		=> 'Benutzer',
@@ -74,8 +73,7 @@ $lang = array_merge($lang, array(
 	'sm_newsletter'		=> '!Newsletter',		
 	'sm_profile'			=> 'Profilefelder',
 	'sm_ranks'			=> 'Ränge',
-	'sm_teamspeak'		=> 'Teamspeak',
-	'sm_gameserver'		=> 'Gameserver',
+	'sm_server'		=> 'Server',
 	
 	
 	'sm_settings'		=> 'Einstellungen',

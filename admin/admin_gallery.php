@@ -43,15 +43,15 @@ else
 	$order		= request('order', 0);
 	
 	$path_dir	= $root_path . $settings['path_gallery'] . '/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['gallery']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	$auth_fields	= array('auth_view', 'auth_edit', 'auth_delete', 'auth_rate', 'auth_upload');
 	$auth_levels	= array('guest', 'user', 'trial', 'member', 'coleader', 'leader', 'uploader');
 	$auth_constants	= array(AUTH_GUEST, AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOADER);
-	/* values for rights form uoload */
+	/* values for rights form upload */
 	$auth_lvl_ul	= array('user', 'trial', 'member', 'coleader', 'leader');
 	$auth_con_ul	= array(AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER);
-	/* values for rights form no guest */
+	/* values for rights form no guests */
 	$auth_lvl_gn	= array('user', 'trial', 'member', 'coleader', 'leader', 'uploader');
 	$auth_con_gn	= array(AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOADER);
 	
@@ -131,27 +131,79 @@ else
 								'preview_height'	=> request('preview_height', 0) ? request('preview_height', 0) : $gallery_settings['preview_height'],
 								'gallery_order'		=> request('gallery_order', 0) ? request('gallery_order', 0) : request('gallery_order_new', 0),
 							);
+					
+					$error .= ( !$data['gallery_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error .= ( !$data['gallery_desc'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_desc'] : '';
+					
+					if ( !$error )
+					{
+						$data['gallery_order'] = $data['gallery_order'] ? $data['gallery_order'] : maxa(GALLERY, 'gallery_order', false);
+						
+						if ( $mode == '_create' )
+						{
+							$data['gallery_path'] = create_folder($path_dir, 'gallery_', true);
+							
+							$sql = sql(GALLERY, $mode, $data);
+							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						}
+						else
+						{
+							$sql = sql(GALLERY, $mode, $data, 'gallery_id', $data_id);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						}
+						
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
+					}
+					else
+					{
+						log_add(LOG_ADMIN, $log, 'error', $error);
+						
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'error');
+					}
 				}
 				
 				for ( $j = 0; $j < count($auth_fields); $j++ )
 				{
-					$custom_auth[$j] = '<select class="selectsmall" name="' . $auth_fields[$j] . '" id="' . $auth_fields[$j] . '">';
+					$drop_box[$j] = '';
+					$drop_box[$j] .= "<select class=\"selectsmall\" name=\"" . $auth_fields[$j] . "\" id=\"" . $auth_fields[$j] . "\">";
+					$drop_box[$j] .= "<option value=\"\">" . $lang['msg_select_item'] . "</option>";
 					
-					for ( $k = 0; $k < count($auth_levels); $k++ )
+					if ( $auth_fields[$j] == 'auth_view' || $auth_fields[$j] == 'auth_rate' )
 					{
-						$disabled = ( $j == '4' && ( $k == '0' || $k == '6' ) ) ? ' disabled' : '';
-						$selected = ( $data[$auth_fields[$j]] == $auth_constants[$k] ) ? ' selected="selected"' : '';
-						$custom_auth[$j] .= '<option value="' . $auth_constants[$k] . '"' . $selected . $disabled . '>' . sprintf($lang['sprintf_select_format'], $lang['auth_gallery_' . $auth_levels[$k]]) . '</option>';
+						for ( $k = 0; $k < count($auth_levels); $k++ )
+						{
+							$selected = ( $data[$auth_fields[$j]] == $auth_constants[$k] ) ? ' selected="selected"' : '';
+							$drop_box[$j] .= "<option value=\"" . $auth_constants[$k] . "\"$selected>" . sprintf($lang['sprintf_select_format'], $lang['auth_gallery_' . $auth_levels[$k]]) . "</option>";
+						}
 					}
-					$custom_auth[$j] .= '</select>';
-			
+					else if ( $auth_fields[$j] == 'auth_edit' || $auth_fields[$j] == 'auth_delete' )
+					{
+						for ( $l = 0; $l < count($auth_lvl_gn); $l++ )
+						{
+							$selected = ( $data[$auth_fields[$j]] == $auth_con_gn[$l] ) ? ' selected="selected"' : '';
+							$drop_box[$j] .= "<option value=\"" . $auth_con_gn[$l] . "\"$selected>" . sprintf($lang['sprintf_select_format'], $lang['auth_gallery_' . $auth_lvl_gn[$l]]) . "</option>";
+						}
+					}
+					else if ( $auth_fields[$j] == 'auth_upload' )
+					{
+						for ( $m = 0; $m < count($auth_lvl_ul); $m++ )
+						{
+							$selected = ( $data[$auth_fields[$j]] == $auth_con_ul[$m] ) ? ' selected="selected"' : '';
+							$drop_box[$j] .= "<option value=\"" . $auth_con_ul[$m] . "\"$selected>" . sprintf($lang['sprintf_select_format'], $lang['auth_gallery_' . $auth_lvl_ul[$m]]) . "</option>";
+						}
+					}
+					
+					$drop_box[$j] .= "</select>";
+					
 					$template->assign_block_vars('_input._auth', array(
-						'TITLE'		=> $lang['auth_gallery'][$auth_fields[$j]],
+						'TITLE'	=> $lang['auth_gallery'][$auth_fields[$j]],
 						'INFO'		=> $auth_fields[$j],
-						'SELECT'	=> $custom_auth[$j],
+						'SELECT'	=> $drop_box[$j],
 					));
 				}
-				
+			
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
@@ -203,40 +255,6 @@ else
 					'S_FIELDS'			=> $fields,
 				));
 				
-				if ( request('submit', 1) )
-				{
-					$error .= ( !$data['gallery_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					$error .= ( !$data['gallery_desc'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_desc'] : '';
-					
-					if ( !$error )
-					{
-						$data['gallery_order'] = ( !$data['gallery_order'] ) ? maxa(GALLERY, 'gallery_order', false) : $data['gallery_order'];
-						
-						if ( $mode == '_create' )
-						{
-							$data['gallery_path'] = create_folder($path_dir, 'gallery_', true);
-							
-							$sql = sql(GALLERY, $mode, $data);
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
-						}
-						else
-						{
-							$sql = sql(GALLERY, $mode, $data, 'gallery_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
-						}
-						
-						log_add(LOG_ADMIN, $log, $mode, $sql);
-						message(GENERAL_MESSAGE, $msg);
-					}
-					else
-					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-					}
-				}
-				
 				$template->pparse('body');
 				
 				break;
@@ -253,7 +271,6 @@ else
 					log_add(LOG_ADMIN, $log, '_order_pic');
 				}
 				
-			
 				$data_gallery	= data(GALLERY, $data_id, false, 1, true);
 				$data_pics		= data(GALLERY_PIC, $data_id, 'pic_order ASC', 1, false);
 				
@@ -529,64 +546,7 @@ else
 				$template->pparse('body');
 			
 				break;
-			/*
-			case '_upload_save':
-			
-				$gallery = get_data(GALLERY, $data_id, 1);
-				$gallery_image = request_files('ufile');
-	
-				$image_num = count($gallery_image['temp']);
-			
-				for ( $i = 0; $i < $image_num; $i++ )
-				{
-					$sql_pic[] = gallery_upload($data['gallery_path'], $gallery_image['temp'][$i], $gallery_image['name'][$i], $gallery_image['size'][$i], $gallery_image['type'][$i], $data['max_width'], $data['max_height'], $data['max_filesize'], $data['preview_widht'], $data['preview_height']);
-				}
 				
-				$sql = "UPDATE " . GALLERY . " SET gallery_pics = gallery_pics + $image_num WHERE gallery_id = $data_id";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$db_ary = array();
-				$pic_ary = array();
-				
-				for ( $i = 0; $i < $image_num; $i++ )
-				{
-					$pic_ary[] = array(
-						'pic_title'		=> "'" . $_POST['title'][$i] . "'",
-						'pic_size'		=> "'" . $sql_pic[$i]['pic_size'] . "'",
-						'gallery_id'	=> $data_id,
-						'pic_filename'	=> "'" . $sql_pic[$i]['pic_filename'] . "'",
-						'pic_preview'	=> "'" . $sql_pic[$i]['pic_preview'] . "'",
-						'upload_user'	=> $userdata['user_id'],
-						'upload_time'	=> time(),
-					);
-				}
-								
-				foreach ( $pic_ary as $id => $_pic_ary )
-				{
-					$values = array();
-					foreach ( $_pic_ary as $key => $var )
-					{
-						$values[] = $var;
-					}
-					$db_ary[] = '(' . implode(', ', $values) . ')';
-				}
-				
-				$sql = "INSERT INTO " . GALLERY_PIC . " (" . implode(', ', array_keys($pic_ary[0])) . ") VALUES " . implode(', ', $db_ary);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$msg = $lang['update_u'] . sprintf($lang['return'], check_sid($file), $acp_title);
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				message(GENERAL_MESSAGE, $msg);
-	
-				break;
-			*/	
 			case '_default':
 				
 				$template->assign_block_vars('_default', array());
@@ -616,8 +576,8 @@ else
 				
 				for ( $j = 0; $j < count($auth_fields); $j++ )
 				{
-					$drop_box[$j] = "<select class=\"selectsmall\" name=\"$auth_fields[$j]\" id=\"$auth_fields[$j]\">";
-					
+					$drop_box[$j] = '';
+					$drop_box[$j] .= "<select class=\"selectsmall\" name=\"$auth_fields[$j]\" id=\"$auth_fields[$j]\">";
 					$drop_box[$j] .= "<option value=\"\">" . $lang['msg_select_item'] . "</option>";
 					
 					if ( $auth_fields[$j] == 'auth_view' || $auth_fields[$j] == 'auth_rate' )
@@ -848,35 +808,25 @@ else
 	
 	$template->assign_block_vars('_display', array());
 	
-	$fields .= '<input type="hidden" name="mode" value="_create" />';
-	
-	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
-		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['gallery']),
-		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['gallery']),
-		'L_EXPLAIN'		=> $lang['explain'],
-		'L_DEFAULT'		=> $lang['common_default'],
-		
-		'S_DEFAULT'	=> check_sid("$file?mode=_default"),
-		'S_CREATE'	=> check_sid("$file?mode=_create"),
-		'S_ACTION'	=> check_sid($file),
-		'S_FIELDS'	=> $fields,
-	));
-	
-	$max	= maxi(GALLERY, 'gallery_order', '');
-	$data	= data(GALLERY, false, 'gallery_order ASC', 1, false);
+	$max = maxi(GALLERY, 'gallery_order', '');
+	$tmp = data(GALLERY, false, 'gallery_order ASC', 1, false);
+	$cnt = count($tmp);
 
-	if ( $data )
+	if ( !$tmp )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data)); $i++ )
+		$template->assign_block_vars('_display._entry_empty', array());
+	}
+	else
+	{
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $cnt); $i++ )
 		{
-			$gallery_id		= $data[$i]['gallery_id'];
-			$gallery_name	= $data[$i]['gallery_name'];
-			$gallery_order	= $data[$i]['gallery_order'];
+			$gallery_id		= $tmp[$i]['gallery_id'];
+			$gallery_name	= $tmp[$i]['gallery_name'];
+			$gallery_order	= $tmp[$i]['gallery_order'];
 			
 			$size_pics = '';
 			
-			if ( $data[$i]['gallery_pics'] )
+			if ( $tmp[$i]['gallery_pics'] )
 			{
 				$pics = data(GALLERY_PIC, $gallery_id, false, 1, false);
 				
@@ -892,18 +842,19 @@ else
 			}
 			else
 			{
-				$size_pics = size_dir($path_dir . $data[$i]['gallery_path'] . '/');
+				$size_pics = size_dir($path_dir . $tmp[$i]['gallery_path'] . '/');
 			}
 			
-			$template->assign_block_vars('_display._gallery_row', array(
-				'NAME'	=> ( $data[$i]['gallery_pics'] ) ? '<a href="' . check_sid("$file?mode=_overview&amp;$url=$gallery_id") . '">' . $gallery_name . '</a>' : $gallery_name,
-				'INFO'	=> sprintf($lang['sprintf_size-pic'], $size_pics, $data[$i]['gallery_pics']),
-				'DESC'	=> html_entity_decode($data[$i]['gallery_desc'], ENT_QUOTES),
+			$template->assign_block_vars('_display._row', array(
+				'NAME'	=> "<a href=\"" . check_sid("$file?mode=_update&amp;$url=$gallery_id") . "\">$gallery_name</a>",
+				'INFO'	=> sprintf($lang['sprintf_size-pic'], $size_pics, $tmp[$i]['gallery_pics']),
+				'DESC'	=> $tmp[$i]['gallery_desc'],
+			#	'DESC'	=> html_entity_decode($tmp[$i]['gallery_desc'], ENT_QUOTES),
 				
 				'MOVE_UP'	=> ( $gallery_order != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$gallery_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $gallery_order != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url=$gallery_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
 				
-				'OVERVIEW'	=> ( $data[$i]['gallery_pics'] ) ? '<a href="' . check_sid("$file?mode=_overview&amp;$url=$gallery_id") . '"><img src="' . $images['option_overview'] . '" title="' . $lang['common_overview'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_spacer'] . '" width="16" alt="" />',
+				'OVERVIEW'	=> $tmp[$i]['gallery_pics'] ? '<a href="' . check_sid("$file?mode=_overview&amp;$url=$gallery_id") . '"><img src="' . $images['option_overview'] . '" title="' . $lang['common_overview'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_spacer'] . '" width="16" alt="" />',
 				'RESYNC'	=> '<a href="' . check_sid("$file?mode=_resync&amp;$url=$gallery_id") . '" alt="" /><img src="' . $images['refresh'] . '" title="" alt="" /></a>',
 				'UPLOAD'	=> '<a href="' . check_sid("$file?mode=_upload&amp;$url=$gallery_id") . '" alt="" /><img src="' . $images['option_upload'] . '" title="' . $lang['common_upload'] . '" alt="" /></a>',
 				'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$gallery_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
@@ -911,10 +862,26 @@ else
 			));
 		}
 	}
-	else
-	{
-		$template->assign_block_vars('_display._entry_empty', array());
-	}
+	
+	$current_page = ( !$cnt ) ? 1 : ceil( $cnt / $settings['site_entry_per_page'] );
+		
+	$fields .= '<input type="hidden" name="mode" value="_create" />';
+	
+	$template->assign_vars(array(
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_create'], $lang['gallery']),
+		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['gallery']),
+		'L_EXPLAIN'		=> $lang['explain'],
+		'L_DEFAULT'		=> $lang['common_default'],
+		
+		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page),
+		'PAGE_PAGING'	=> generate_pagination("$file?", $cnt, $settings['site_entry_per_page'], $start ),
+		
+		'S_DEFAULT'	=> check_sid("$file?mode=_default"),
+		'S_CREATE'	=> check_sid("$file?mode=_create"),
+		'S_ACTION'	=> check_sid($file),
+		'S_FIELDS'	=> $fields,
+	));
 	
 	$template->pparse('body');
 

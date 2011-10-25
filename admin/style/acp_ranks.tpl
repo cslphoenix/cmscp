@@ -3,7 +3,6 @@
 <div id="navcontainer">
 <ul id="navlist">
 	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
 </div>
 

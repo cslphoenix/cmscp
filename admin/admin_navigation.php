@@ -41,7 +41,7 @@ else
 	$move		= request('move', 1);
 	
 	$path_dir	= $root_path . $settings['path_games'] . '/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['navi']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_navi'] )
 	{
@@ -161,10 +161,10 @@ else
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
+					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
 					'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['field'], $data['navi_name']),
 					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['field']),
-					'L_SET'			=> $lang['navi_s'],
+					'L_SET'			=> $lang['title_s'],
 					'L_URL'			=> $lang['url'],
 					'L_TYPE'		=> sprintf($lang['sprintf_type'], $lang['field']),
 					'L_LANGUAGE'	=> $lang['common_language'],
@@ -385,11 +385,11 @@ else
 		
 		'L_EXPLAIN'	=> $lang['explain'],
 		
-		'L_MAIN'	=> $lang['main'],
-		'L_CLAN'	=> $lang['clan'],
-		'L_COM'		=> $lang['com'],
-		'L_MISC'	=> $lang['misc'],
-		'L_USER'	=> $lang['user'],
+		'L_MAIN'	=> $lang['navi_main'],
+		'L_CLAN'	=> $lang['navi_clan'],
+		'L_COM'		=> $lang['navi_com'],
+		'L_MISC'	=> $lang['navi_misc'],
+		'L_USER'	=> $lang['navi_user'],
 		
 		'S_SET'		=> check_sid("$file?mode=_settings"),
 		'S_ACTION'	=> check_sid($file),

@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'gallery'	=> 'Galerie',
+	'title'		=> 'Galerie',
 	'explain'	=> 'Hier werden alle Galerien verwaltet. Die Ordnergröße und Anzahl wird immer nur auf die Eigentlichen Bilder bezogen nicht auf die Vorschaubilder, diese werden nicht mit einberechnet!',
 	'explain_d'	=> 'Standarteinstellungen für das erstellen neuer Galerien, es kann aber jede Galerie eingenständig verwaltet werden von den Rechten. Die Rechte sind nur mit den vorhergesehen Gruppen verbunden, Leader Rechte beziehen sich nur auf die Benutzer die in der Gruppe Leader sind. Für weitere Infos einfach auf der Entwicklerhauptseite informieren.',
 	

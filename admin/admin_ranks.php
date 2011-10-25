@@ -40,7 +40,7 @@ else
 	$move		= request('move', 1);
 	
 	$path_dir	= $root_path . $settings['path_ranks'] . '/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['rank']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_ranks'] )
 	{
@@ -102,52 +102,7 @@ else
 								'rank_standard'	=> request('rank_standard', 0),
 								'rank_order'	=> request('rank_order', 0) ? request('rank_order', 0) : request('rank_order_new', 0),
 							);
-				}
-				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-
-				$template->assign_vars(array(
-					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['rank']),
-					'L_INPUT'			=> sprintf($lang['sprintf' . $mode], $lang['rank'], $data['rank_name']),
-					'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['rank']),
-					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['rank']),
-					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['rank']),
-					'L_TYPE_PAGE'		=> $lang['page'],
-					'L_TYPE_FORUM'		=> $lang['forum'],
-					'L_TYPE_TEAM'		=> $lang['team'],
-					'L_SPECIAL'			=> $lang['special'],
-					'L_MIN'				=> $lang['min'],
-					'L_STANDARD'		=> $lang['standard'],
 					
-					'NAME'				=> $data['rank_name'],
-					'MIN'				=> $data['rank_min'],
-					'PIC'				=> ( $data['rank_image'] ) ? $path_dir . $data['rank_image'] : $images['icon_acp_spacer'],
-					
-					'CUR_TYPE'			=> $data['rank_type'],
-					'CUR_ORDER'			=> $data['rank_order'],
-					
-					'S_TYPE_PAGE'		=> ( $data['rank_type'] == RANK_PAGE ) ? 'checked="checked"' : '',
-					'S_TYPE_FORUM'		=> ( $data['rank_type'] == RANK_FORUM ) ? 'checked="checked"' : '',
-					'S_TYPE_TEAM'		=> ( $data['rank_type'] == RANK_TEAM ) ? 'checked="checked"' : '',
-					'S_SPECIAL_YES'		=> ( $data['rank_special'] ) ? 'checked="checked"' : '',
-					'S_SPECIAL_NO'		=> ( !$data['rank_special'] ) ? 'checked="checked"' : '',
-					'S_STANDARD_YES'	=> ( $data['rank_standard'] ) ? 'checked="checked"' : '',
-					'S_STANDARD_NO'		=> ( !$data['rank_standard'] ) ? 'checked="checked"' : '',
-					
-					'SHOW_FORMS'		=> ( $data['rank_type'] == '2' ) ? '' : 'none',
-					'SHOW_NORMAL'		=> ( $data['rank_type'] == '2' ) ? 'none' : '',
-					'SHOW_SPECIAL'		=> ( $data['rank_special'] ) ? 'none' : '',
-					
-					'S_LIST'	=> select_box_files('post', 'ranks', $path_dir, $data['rank_image']),
-					'S_ORDER'	=> simple_order(RANKS, $data['rank_type'], 'select', $data['rank_order']),
-					
-					'S_ACTION'	=> check_sid($file),
-					'S_FIELDS'	=> $fields,
-				));
-				
-				if ( request('submit', 1) )
-				{
 					$error .= check(RANKS, array('rank_name' => $data['rank_name'], 'rank_id' => $data_id), $error);
 					
 					if ( !$error )
@@ -179,7 +134,49 @@ else
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
 					}
 				}
-			
+				
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+
+				$template->assign_vars(array(
+					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_INPUT'			=> sprintf($lang['sprintf' . $mode], $lang['title'], $data['rank_name']),
+					'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['title']),
+					'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['title']),
+					'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['title']),
+					'L_TYPE_PAGE'		=> $lang['rank_page'],
+					'L_TYPE_FORUM'		=> $lang['rank_forum'],
+					'L_TYPE_TEAM'		=> $lang['rank_team'],
+					'L_SPECIAL'			=> $lang['rank_special'],
+					'L_MIN'				=> $lang['rank_min'],
+					'L_STANDARD'		=> $lang['rank_standard'],
+					
+					'NAME'				=> $data['rank_name'],
+					'MIN'				=> $data['rank_min'],
+					'PIC'				=> ( $data['rank_image'] ) ? $path_dir . $data['rank_image'] : $images['icon_acp_spacer'],
+					
+					'CUR_TYPE'			=> $data['rank_type'],
+					'CUR_ORDER'			=> $data['rank_order'],
+					
+					'S_TYPE_PAGE'		=> ( $data['rank_type'] == RANK_PAGE ) ? 'checked="checked"' : '',
+					'S_TYPE_FORUM'		=> ( $data['rank_type'] == RANK_FORUM ) ? 'checked="checked"' : '',
+					'S_TYPE_TEAM'		=> ( $data['rank_type'] == RANK_TEAM ) ? 'checked="checked"' : '',
+					'S_SPECIAL_YES'		=> ( $data['rank_special'] ) ? 'checked="checked"' : '',
+					'S_SPECIAL_NO'		=> ( !$data['rank_special'] ) ? 'checked="checked"' : '',
+					'S_STANDARD_YES'	=> ( $data['rank_standard'] ) ? 'checked="checked"' : '',
+					'S_STANDARD_NO'		=> ( !$data['rank_standard'] ) ? 'checked="checked"' : '',
+					
+					'SHOW_FORMS'		=> ( $data['rank_type'] == '2' ) ? '' : 'none',
+					'SHOW_NORMAL'		=> ( $data['rank_type'] == '2' ) ? 'none' : '',
+					'SHOW_SPECIAL'		=> ( $data['rank_special'] ) ? 'none' : '',
+					
+					'S_LIST'	=> select_box_files('post', 'ranks', $path_dir, $data['rank_image']),
+					'S_ORDER'	=> simple_order(RANKS, $data['rank_type'], 'select', $data['rank_order']),
+					
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+				
 				$template->pparse('body');
 				
 				break;
@@ -259,18 +256,17 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['rank']),
-		'L_CREATE'		=> sprintf($lang['sprintf_new_createn'], $lang['rank']),
-		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['rank']),
-		
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_CREATE'		=> sprintf($lang['sprintf_new_createn'], $lang['title']),
+		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['title']),
 		'L_EXPLAIN'		=> $lang['explain'],
 		
-		'L_PAGE'		=> $lang['page'],
-		'L_FORUM'		=> $lang['forum'],
-		'L_TEAM'		=> $lang['team'],
-		'L_SPECIAL'		=> $lang['special'],
-		'L_STANDARD'	=> $lang['standard'],
-		'L_MIN'			=> $lang['min'],
+		'L_PAGE'		=> $lang['rank_page'],
+		'L_FORUM'		=> $lang['rank_forum'],
+		'L_TEAM'		=> $lang['rank_team'],
+		'L_SPECIAL'		=> $lang['rank_special'],
+		'L_STANDARD'	=> $lang['rank_standard'],
+		'L_MIN'			=> $lang['rank_min'],
 		
 		'S_CREATE'		=> check_sid("$file?mode=_create"),
 		'S_ACTION'		=> check_sid($file),
@@ -325,7 +321,7 @@ else
 				
 			$template->assign_block_vars('_display._page_row', array(
 				'NAME'		=> $rank_name,
-				'STANDARD'	=> $tmp_page[$i]['rank_standard'] ? $lang['standard'] : '',
+				'STANDARD'	=> $tmp_page[$i]['rank_standard'] ? $lang['rank_standard'] : '',
 				
 				'MOVE_UP'	=> ( $rank_order != '10' )		? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $rank_order != $max_p )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
@@ -350,7 +346,7 @@ else
 				
 			$template->assign_block_vars('_display._team_row', array(
 				'NAME'		=> $rank_name,
-				'STANDARD'	=> $tmp_team[$i]['rank_standard'] ? $lang['standard'] : '',
+				'STANDARD'	=> $tmp_team[$i]['rank_standard'] ? $lang['rank_standard'] : '',
 				
 				'MOVE_UP'	=> ( $rank_order != '10' )		? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $rank_order != $max_t )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',

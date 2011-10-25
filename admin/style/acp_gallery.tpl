@@ -21,12 +21,12 @@
 	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _gallery_row -->
+<!-- BEGIN _row -->
 <tr>
-	<td><span style="float:right;">{_display._gallery_row.INFO}&nbsp;</span><b>{_display._gallery_row.NAME}</b><br />{_display._gallery_row.DESC}</td>
-	<td>{_display._gallery_row.MOVE_UP}{_display._gallery_row.MOVE_DOWN}{_display._gallery_row.RESYNC} {_display._gallery_row.VIEW}{_display._gallery_row.UPLOAD} {_display._gallery_row.UPDATE} {_display._gallery_row.DELETE}</td>
+	<td><span style="float:right;">{_display._row.INFO}&nbsp;</span><b>{_display._row.NAME}</b><br />{_display._row.DESC}</td>
+	<td>{_display._row.MOVE_UP}{_display._row.MOVE_DOWN}{_display._row.RESYNC} {_display._row.VIEW}{_display._row.UPLOAD} {_display._row.UPDATE} {_display._row.DELETE}</td>
 </tr>
-<!-- END _gallery_row -->
+<!-- END _row -->
 <!-- BEGIN _entry_empty -->
 <tr>
 	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
@@ -36,7 +36,7 @@
 
 <table class="footer">
 <tr>
-	<td></td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 	<td><input type="text" class="post" name="gallery_name"></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
@@ -79,7 +79,7 @@
 	</td>
 </tr>
 <tr>
-	<td class="row1" width="155"><label for="gallery_name">{L_NAME}: *</label></td>
+	<td class="row1"><label for="gallery_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="gallery_name" id="gallery_name" value="{NAME}"></td>
 </tr>
 <tr>
@@ -180,7 +180,6 @@
 	<td class="row1">{L_UPLOAD}:</td>
 	<td class="row3">
 		<div><div>
-			
 			<input class="post" name="title[]" type="text" id="title[]">&nbsp;<input class="post" name="ufile[]" type="file" id="ufile[]" size="25" />&nbsp;<input class="button2" type="button" value="mehr"onclick="clone(this)">
 		</div></div>
 	</td>

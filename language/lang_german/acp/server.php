@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'server'	=> 'Gameserver',
+	'title'		=> 'Server',
 	'explain'	=> 'Verwaltung der Gameserver.',
 
 	'create'	=> 'Neuen Server hinzugefügt.',
@@ -19,10 +19,12 @@ $lang = array_merge($lang, array(
 	'server_pw'		=> 'Passwort',
 	'server_port'	=> 'Port',
 	'server_qport'	=> 'QPort',
-	
-	'list'		=> 'Auflisten',
-	'show'		=> 'Anzeigen',
-	'own'		=> 'eigener Server',
+	'server_type'	=> 'Servertyp',
+	'server_game'	=> 'Server Spiel/Voice',
+	'server_live'	=> 'Live',
+	'server_list'	=> 'Auflisten',
+	'server_show'	=> 'Anzeigen',
+	'server_own'	=> 'eigener Server',
 	
 	'cur_max'	=> '%s / %s',
 	

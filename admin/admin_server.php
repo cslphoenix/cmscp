@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_server'] )
 	{
-		$module['hm_server']['sm_gameserver'] = $root_file;
+		$module['hm_main']['sm_server'] = $root_file;
 	}
 	
 	return;
@@ -17,7 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_gameserver';
+	$current	= 'sm_server';
 	
 	include('./pagestart.php');
 	
@@ -39,7 +39,7 @@ else
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['server']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_server'] )
 	{
@@ -51,6 +51,7 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_server.tpl',
+		'ajax'		=> 'style/inc_request.tpl',
 		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
@@ -61,7 +62,9 @@ else
 		
 		$data = data(SERVER_TYPE, "type_sort = $type", false, 1, false);
 		
-		$return = "<select class=\"$css\" name=\"server_game\">";
+	#	$s_select .= "<select class=\"$css\" name=\"$name\" id=\"$name\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
+		
+		$return = "<select class=\"$css\" name=\"server_game\" id=\"server_game\">";
 		
 		foreach ( $data as $row )
 		{
@@ -70,7 +73,7 @@ else
 		}
 		$return .= "</select>";
 		
-		return $return;	
+		return $return;
 	}
 	
 	
@@ -82,6 +85,9 @@ else
 			case '_update':
 			
 				$template->assign_block_vars('_input', array());
+				
+				$template->assign_vars(array('FILE' => 'ajax_server_type'));
+				$template->assign_var_from_handle('AJAX', 'ajax');
 				
 				if ( $mode == '_create' && !request('submit', 1) )
 				{
@@ -161,17 +167,20 @@ else
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['server']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['server'], $data['server_name']),
-					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['server']),
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['title'], $data['server_name']),
+					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
 					
 					'L_IP'		=> $lang['server_ip'],
 					'L_PORT'	=> $lang['server_port'],
 					'L_QPORT'	=> $lang['server_qport'],
 					'L_PW'		=> $lang['server_pw'],
-					'L_LIST'	=> $lang['list'],
-					'L_SHOW'	=> $lang['show'],
-					'L_OWN'		=> $lang['own'],
+					'L_LIST'	=> $lang['server_list'],
+					'L_SHOW'	=> $lang['server_show'],
+					'L_OWN'		=> $lang['server_own'],
+					'L_LIVE'	=> $lang['server_live'],
+					'L_GAME'	=> $lang['server_game'],
+					'L_TYPE'	=> $lang['server_type'],
 					
 					'L_GAMESERVER'	=> $lang['gameserver'],
 					'L_VOICESERVER'	=> $lang['voiceserver'],
@@ -267,9 +276,9 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['server']),
-		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['server']),
-		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['server']),
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
+		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 		
 		'S_CREATE'	=> check_sid("$file?mode=_create"),
