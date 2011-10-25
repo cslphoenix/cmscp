@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'network'	=> 'Network',
+	'title'		=> 'Network',
 	'field'		=> 'Link',
 	'explain'	=> 'Hier kannst Du Links, Partner und Sponsoren verwalten.',
 
@@ -16,10 +16,10 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Den %s wurde gelöscht!',
 	'confirm'	=> 'das der %s:',
 	
-	'url'		=> 'Network Link',
-	'link'		=> 'Link',
-	'partner'	=> 'Partner',
-	'sponsor'	=> 'Sponsor',
+	'network_url'		=> 'Network Link',
+	'network_link'		=> 'Link',
+	'network_partner'	=> 'Partner',
+	'network_sponsor'	=> 'Sponsor',
 	
 ));
 

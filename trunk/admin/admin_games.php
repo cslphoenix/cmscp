@@ -15,7 +15,6 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= 'sm_games';
 	
@@ -40,7 +39,7 @@ else
 	$move		= request('move', 1);
 	
 	$path_dir	= $root_path . $settings['path_games'] . '/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
 	{
@@ -57,9 +56,7 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	debug($_POST);
-	
-#	$mode = ( in_array($mode, array('_create', '_update', '_order', '_delete')) ) ? $mode : '';
+	$mode = ( in_array($mode, array('_create', '_update', '_order', '_delete')) ) ? $mode : '';
 	
 	if ( $mode )
 	{
@@ -102,7 +99,7 @@ else
 					
 					if ( !$error )
 					{
-						$data['game_order'] = ( !$data['game_order'] ) ? maxa(GAMES, 'game_order', 'game_id != -1') : $data['game_order'];
+						$data['game_order'] = $data['game_order'] ? $data['game_order'] : maxa(GAMES, 'game_order', 'game_id != -1');
 												
 						if ( $mode == '_create' )
 						{
@@ -122,10 +119,10 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						
+						log_add(LOG_ADMIN, $log, 'error', $error);
 					}
 				}
 				
@@ -133,8 +130,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['game'], $data['game_name']),
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['title'], $data['game_name']),
 					'L_NAME'	=> $lang['game_name'],
 					'L_TAG'		=> $lang['game_tag'],
 					'L_IMAGE'	=> $lang['game_image'],
@@ -196,7 +193,7 @@ else
 				}
 				else
 				{
-					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['game']));
+					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['title']));
 				}
 				
 				$template->pparse('confirm');
@@ -218,11 +215,10 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
-		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['game']),
-		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['game']),
-		
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
+		'L_NAME'	=> $lang['game_name'],
 		
 		'S_CREATE'	=> check_sid("$file?mode=_create"),
 		'S_ACTION'	=> check_sid($file),
@@ -238,7 +234,9 @@ else
 	}
 	else
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($games)); $i++ )
+		$cnt = count($games);
+		
+		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $cnt); $i++ )
 		{
 			$game_id	= $games[$i]['game_id'];
 			$game_size	= $games[$i]['game_size'];
@@ -249,7 +247,6 @@ else
 				'GAME'		=> display_gameicon($games[$i]['game_size'], $game_image),
 				'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$game_id") . '">' . $games[$i]['game_name'] . '</a>',
 				'TAG'		=> $games[$i]['game_tag'],
-				
 				
 				'MOVE_UP'	=> ( $game_order != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $game_order != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',

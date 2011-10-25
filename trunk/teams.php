@@ -102,7 +102,7 @@ else if ( $mode == 'view' && $data )
 	$sql = 'SELECT user_id
 				FROM ' . TEAMS_USERS . '
 				WHERE team_mod = 1
-					AND team_id = ' . $team_id;
+					AND team_id = ' . $data;
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
@@ -112,7 +112,7 @@ else if ( $mode == 'view' && $data )
 	$sql = 'SELECT t.*, g.game_size, g.game_image
 				FROM ' . TEAMS . ' t
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
-				WHERE t.team_id = ' . $team_id;
+				WHERE t.team_id = ' . $data;
 //	$team = _cached($sql, 'team_details_' . $team_id . '_member', 1);
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -366,7 +366,7 @@ else if ( $mode == 'view' && $data )
 	
 	$sql = 'SELECT u.user_name, u.user_id, u.user_viewemail, u.user_posts, u.user_regdate, u.user_email, tu.team_mod
 				FROM ' . USERS . ' u, ' . TEAMS_USERS . ' tu
-				WHERE tu.team_id = ' . $team_id . '
+				WHERE tu.team_id = ' . $data . '
 					AND u.user_id = tu.user_id
 				ORDER BY u.user_name';
 	if ( !($result = $db->sql_query($sql)) )

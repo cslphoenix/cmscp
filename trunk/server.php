@@ -169,6 +169,8 @@ else if ( $mode == 'view' && $data )
 	$gq->setFilter('sortplayers', 'gq_name');
 	$serv = $gq->requestData();
 	
+	debug($serv);
+	
 	$cl = $serv[0]['teams'];
 	$pl = $serv[0]['players'];
 	

@@ -15,7 +15,6 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= 'sm_event';
 	
@@ -31,8 +30,6 @@ else
 	$url	= POST_EVENT;
 	$file	= basename(__FILE__);
 	
-	$oCache -> sCachePath = $root_path . 'cache/';
-	
 	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
@@ -40,8 +37,6 @@ else
 	$confirm	= request('confirm', 1);
 	$mode		= request('mode', 1);
 	$move		= request('move', 1);
-	
-	$path_dir	= $root_path . $settings['path_games'] . '/';
 	
 	$acp_main	= request('acp_main', 0);
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
@@ -128,10 +123,10 @@ else
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, 'error', $error);
-
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'error');
+					
+					log_add(LOG_ADMIN, $log, 'error', $error);
 				}
 			}
 			
@@ -141,13 +136,13 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['event'], $data['event_title']),
-				'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['event']),
-				'L_DESC'		=> sprintf($lang['sprintf_desc'], $lang['event']),
-				'L_DATE'		=> $lang['common_date'],
-				'L_LEVEL'		=> $lang['common_userlevel'],
-				'L_DURATION'	=> $lang['common_duration'],
-				'L_COMMENTS'	=> $lang['common_comments'],
+				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['title'], $data['event_title']),
+				'L_TITLE'		=> $lang['event_title'],
+				'L_DESC'		=> $lang['event_desc'],
+				'L_DATE'		=> $lang['event_date'],
+				'L_LEVEL'		=> $lang['event_userlevel'],
+				'L_DURATION'	=> $lang['event_duration'],
+				'L_COMMENTS'	=> $lang['event_comments'],
 				
 				'TITLE'			=> $data['event_title'],
 				'DESC'			=> $data['event_desc'],
@@ -173,7 +168,6 @@ else
 		case '_delete':
 			
 			$data = data(EVENT, $data_id, false, 1, 1);
-			
 			
 			if ( $data_id && $confirm )
 			{
@@ -301,13 +295,12 @@ else
 					
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['event']),
-				
-				'L_UPCOMING'	=> $lang['upcoming'],
-				'L_EXPIRED'		=> $lang['expired'],
-				
+				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
 				'L_EXPLAIN'	=> $lang['explain'],
-				'L_DATE'	=> $lang['common_date'],
+				
+				'L_DATE'		=> $lang['event_date'],
+				'L_UPCOMING'	=> $lang['event_upcoming'],
+				'L_EXPIRED'		=> $lang['event_expired'],
 				
 				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page),
 				'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_old, $settings['site_entry_per_page'], $start ),

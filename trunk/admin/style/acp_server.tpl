@@ -45,6 +45,7 @@
 <!-- END _display -->
 
 <!-- BEGIN _input -->
+{AJAX}
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 	<ul id="navlist">
@@ -78,11 +79,13 @@
 </tr>
 <tr>
 	<td class="row1"><label for="server_type">{L_TYPE}:</label></td>
-	<td class="row2"><label><input type="radio" name="server_type" id="server_type" value="0" {S_GAMESERVER} />&nbsp;{L_GAMESERVER}</label><span style="padding:4px;"></span><label><input type="radio" name="server_type" value="1" {S_VOICESERVER} />&nbsp;{L_VOICESERVER}</label></td>
+	<td class="row2">
+		<label><input type="radio" name="server_type" onclick="setRequest('0')" id="server_type" value="0" {S_GAMESERVER} />&nbsp;{L_GAMESERVER}</label><span style="padding:4px;"></span>
+		<label><input type="radio" name="server_type" onclick="setRequest('1')" value="1" {S_VOICESERVER} />&nbsp;{L_VOICESERVER}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_game">{L_GAME}: *</label></td>
-	<td class="row2">{S_GAME}</td>
+	<td class="row2"><div id="close">{S_GAME}</div><div id="content"></div></td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_ip">{L_IP}: *</label></td>

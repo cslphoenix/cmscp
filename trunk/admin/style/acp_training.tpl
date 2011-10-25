@@ -1,31 +1,35 @@
 <!-- BEGIN _display -->
+<form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
+	<ul id="navlist">
+		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+	</ul>
 </div>
 
 <table class="header">
 <tr>
 	<td>{L_EXPLAIN}</td>
 </tr>
+<tr>
+	<td align="right">{L_SORT}: {S_SORT}</td>
+</tr>
 </table>
+</form>
 
 <br />
 
 <table class="rows">
 <tr>
-	<td class="rowHead" width="99%" colspan="2">{L_UPCOMING}</td>
+	<th>{L_UPCOMING}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _training_new_row -->
+<!-- BEGIN _new_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._training_new_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_new_row.DATE}</span>{_display._training_new_row.NAME}</td>
-	<td class="row_class2" align="center">{_display._training_new_row.UPDATE} {_display._training_new_row.DELETE}</td>		
+	<td><span style="float:right;">{_display._new_row.DATE}</span>{_display._new_row.GAME} {_display._new_row.NAME}</td>
+	<td>{_display._new_row.UPDATE} {_display._new_row.DELETE}</td>		
 </tr>
-<!-- END _training_new_row -->
+<!-- END _new_row -->
 <!-- BEGIN _entry_empty_new -->
 <tr>
 	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
@@ -37,42 +41,33 @@
 
 <table class="rows">
 <tr>
-	<td class="rowHead" width="99%" colspan="2">{L_EXPIRED}</td>
+	<th>{L_EXPIRED}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _training_old_row -->
+<!-- BEGIN _old_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._training_old_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_old_row.DATE}</span>{_display._training_old_row.NAME}</td>
-	<td class="row_class2" align="center">{_display._training_old_row.UPDATE} {_display._training_old_row.DELETE}</td>		
+	<td><span style="float:right;">{_display._old_row.DATE}</span>{_display._old_row.GAME} {_display._old_row.NAME}</td>
+	<td>{_display._old_row.UPDATE} {_display._old_row.DELETE}</td>		
 </tr>
-<!-- END _training_old_row -->
+<!-- END _old_row -->
 <!-- BEGIN _entry_empty_old -->
 <tr>
-	<td class="entry_empty" colspan="3" align="center">{L_ENTRY_NO}</td>
+	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty_old -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<form action="{S_ACTION}" method="post">
+<table class="footer">
 <tr>
-	<form action="{S_ACTION}" method="post">
-	<td align="left">{S_SORT}</td>
-	</form>
-	<form action="{S_ACTION}" method="post">
-	<td align="right"><input type="text" class="post" name="training_vs"></td>
-	<td class="top" align="right" width="1%">{S_TEAMS}</td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
-	{S_FIELDS}
-	</form>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+	<td><input type="text" class="post" name="training_vs"> {S_TEAMS}</td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	
 </tr>
 </table>
-
-<table border="0" cellspacing="1" cellpadding="2">
-<tr>
-	<td class="row5 small"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
-</tr>
-</table>
+{S_FIELDS}
+</form>
 <!-- END _display -->
 
 <!-- BEGIN _input -->
@@ -85,9 +80,10 @@
 		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
 	</ul>
 </div>
-<table border="0" cellspacing="0" cellpadding="0">
+
+<table class="header">
 <tr>
-	<td class="row4 small"colspan="2">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
@@ -128,14 +124,16 @@
 	<td class="row1"><label>{L_MAPS}: *</label></td>
 	<td class="row2">
 		<div id="close">
-		<table border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN _maps_row -->
-		<tr>
-			<td>{_input._maps_row.MAPS}<input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
-		</tr>
-		<!-- END _maps_row -->
-		</table>
-		{S_MAPS}</div><div id="content"></div>
+			<table border="0" cellspacing="0" cellpadding="0">
+			<!-- BEGIN _maps_row -->
+			<tr>
+				<td>{_input._maps_row.MAPS}<input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
+			</tr>
+			<!-- END _maps_row -->
+			</table>
+			{S_MAPS}
+		</div>
+		<div id="content"></div>
 	</td>
 </tr>
 <tr>

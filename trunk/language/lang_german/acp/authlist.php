@@ -15,7 +15,8 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Das Berechtigungsfeld wurde gelöscht!',
 	'confirm'	=> 'dass dieses Berechtigunsfeld:',
 	
-	'field'		=> 'Feld',
+	'authlist_name'		=> 'Feldname',
+	'authlist_field'	=> 'Feld',
 
 ));
 

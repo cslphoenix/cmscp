@@ -15,7 +15,6 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= 'sm_authlist';
 	
@@ -30,8 +29,6 @@ else
 	$log	= SECTION_AUTHLIST;
 	$url	= POST_AUTHLIST;
 	$file	= basename(__FILE__);
-	
-	$oCache -> sCachePath = $root_path . 'cache/';
 	
 	$data_id	= request($url, 0);
 	$confirm	= request('confirm', 1);
@@ -109,8 +106,8 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['field'], $data['authlist_name']),
-				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['field']),
+				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['authlist_field'], $data['authlist_name']),
+				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
 				'NAME'		=> str_replace('auth_', '', $data['authlist_name']),
 				
@@ -165,8 +162,8 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['field']),
-				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['field']),
+				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['authlist_field']),
+				'L_NAME'	=> $lang['authlist_name'],
 				'L_EXPLAIN'	=> $lang['explain'],
 				
 				'S_CREATE'	=> check_sid("$file?mode=_create"),
@@ -176,7 +173,9 @@ else
 			
 			$authlist = data(AUTHLIST, false, 'authlist_id ASC', 0, false);
 			
-			for ( $i = 0; $i < count($authlist); $i++ )
+			$cnt = count($authlist);
+			
+			for ( $i = 0; $i < $cnt; $i++ )
 			{
 				$authlist_id = $authlist[$i]['authlist_id'];
 

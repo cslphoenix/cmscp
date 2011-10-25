@@ -15,7 +15,6 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= 'sm_maps';
 	
@@ -43,7 +42,7 @@ else
 	$move		= request('move', 1);
 	
 	$path_dir	= $root_path . $settings['path_maps'] . '/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['maps']);
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_maps'] )
 	{
@@ -309,38 +308,14 @@ else
 								'cat_tag'	=> strtolower(request('cat_tag', 2)),
 								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
 							);
-				}
-
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
-				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data['cat_tag'] . "\" />";
-				
-				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['maps']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode) ], $lang['cat'], $data['cat_name']),
-					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['cat']),
-					'L_TAG'		=> $lang['tag'],
 					
-					'L_ORDER'	=> $lang['common_order'],
-
-					'NAME'		=> $data['cat_name'],
-					'TAG'		=> $data['cat_tag'],
-					
-					'S_ORDER'	=> simple_order(MAPS_CAT, '', 'select', $data['cat_order']),
-
-					'S_ACTION'	=> check_sid($file),
-					'S_FIELDS'	=> $fields,
-				));
-				
-				if ( request('submit', 1) )
-				{
 					$cur_tag = request('current_tag', 1);
 					
 					$error .= check(MAPS_CAT, array('cat_name' => $data['cat_name'], 'cat_tag' => $data['cat_tag'], 'cat_id' => $data_cat), $error);
 					
 					if ( !$error )
 					{
-						$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(MAPS_CAT, 'cat_order', '') : $data['cat_order'];
+						$data['cat_order'] = $data['cat_order'] ? $data['cat_order'] : maxa(MAPS_CAT, 'cat_order', '');
 						
 						if ( $mode == '_create_cat' )
 						{
@@ -367,12 +342,32 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
-					}
+						
+						log_add(LOG_ADMIN, $log, 'error', $error);
+					}							
 				}
+
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
+				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data['cat_tag'] . "\" />";
+				
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title_maps']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode) ], $lang['title_cat'], $data['cat_name']),
+					'L_NAME'	=> $lang['cat_name'],
+					'L_TAG'		=> $lang['cat_tag'],
+					'L_ORDER'	=> $lang['common_order'],
+
+					'NAME'		=> $data['cat_name'],
+					'TAG'		=> $data['cat_tag'],
+					
+					'S_ORDER'	=> simple_order(MAPS_CAT, '', 'select', $data['cat_order']),
+
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
 				
 				$template->pparse('body');
 
@@ -420,7 +415,7 @@ else
 				}
 				else
 				{
-					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['cat']));
+					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['title_cat']));
 				}
 				
 				$template->pparse('confirm');
@@ -442,10 +437,10 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['maps']),
-		'L_CREATE_MAP'	=> sprintf($lang['sprintf_new_create'], $lang['map']),
-		'L_CREATE_CAT'	=> sprintf($lang['sprintf_new_create'], $lang['cat']),
-		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['map']),
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title_maps']),
+		'L_CREATE_MAP'	=> sprintf($lang['sprintf_new_create'], $lang['title']),
+		'L_CREATE_CAT'	=> sprintf($lang['sprintf_new_create'], $lang['title_cat']),
+		'L_NAME'		=> $lang['map_name'],
 		'L_EXPLAIN'		=> $lang['explain'],
 		
 		'S_CREATE_MAP'	=> check_sid("$file?mode=_create_map"),

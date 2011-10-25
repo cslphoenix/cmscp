@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'rank'		=> 'Rang',
+	'title'		=> 'Rang',
 	'explain'	=> 'Verwalten von Rängen.',
 
 	'create'	=> 'Neuer Rang hinzugefügt.',
@@ -15,14 +15,14 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Der Rang wurde gelöscht!',
 	'confirm'	=> 'dass dieser Rang:',
 	
-	'page'		=> 'Seitenrang',
-	'forum'		=> 'Forumrang',
-	'team'		=> 'Teamrang',
-	'special'	=> 'Spezial Rang',
-	'min'		=> 'Beiträge',
-	'image'		=> 'Rangbild',
-	'type'		=> 'Rangtype',
-	'standard'	=> 'Standardrang',
+	'rank_page'		=> 'Seitenrang',
+	'rank_forum'	=> 'Forumrang',
+	'rank_team'		=> 'Teamrang',
+	'rank_special'	=> 'Spezial Rang',
+	'rank_min'		=> 'Beiträge',
+	'rank_image'	=> 'Rangbild',
+	'rank_type'		=> 'Rangtype',
+	'rank_standard'	=> 'Standardrang',
 
 ));
 
