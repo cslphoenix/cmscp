@@ -18,6 +18,34 @@
 
 <br />
 
+<<<<<<< .mine
+<table class="info" border="0" cellspacing="1" cellpadding="0">
+<tr>
+	<td class="rowHead" width="99%">{L_NAME}</td>
+	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+</tr>
+<!-- BEGIN _teamspeak_row -->
+<tr class="hover">
+	<td class="row_class1" align="left">{_display._teamspeak_row.NAME}</td>
+	<td class="row_class2" align="center">{_display._teamspeak_row.UPDATE} {_display._teamspeak_row.DELETE}</td>		
+</tr>
+<!-- END _teamspeak_row -->
+<!-- BEGIN _entry_empty -->
+<tr>
+	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
+</tr>
+<!-- END _entry_empty -->
+</table>
+
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+	<td align="right"><input type="text" class="post" name="teamspeak_name" value=""></td>
+	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+=======
 <table class="rows">
 <tr>
 	<th>{L_NAME}</th>
@@ -44,6 +72,7 @@
 </table>
 {S_FIELDS}
 </form>
+>>>>>>> .r85
 <!-- BEGIN _server -->
 <table class="edit" width="100%" cellspacing="1">
 <tr>
@@ -193,17 +222,35 @@
 </ul>
 </div>
 
+<<<<<<< .mine
+<table border="0" cellspacing="0" cellpadding="0">
+=======
 <table class="header">
+>>>>>>> .r85
 <tr>
+<<<<<<< .mine
+	<td class="row4 small">{L_REQUIRED}</td>
+=======
 	<td>{L_REQUIRED}</td>
+>>>>>>> .r85
 </tr>
 </table>
 
+<<<<<<< .mine
+<br /><div align="center">{ERROR_BOX}</div>
+
+<table class="update" border="0" cellspacing="0" cellpadding="0">
+=======
 <br /><div align="center">{ERROR_BOX}</div>
 
 <table class="update">
+>>>>>>> .r85
 <tr>
+<<<<<<< .mine
+	<th colspan="2">
+=======
 	<td colspan="2">
+>>>>>>> .r85
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>

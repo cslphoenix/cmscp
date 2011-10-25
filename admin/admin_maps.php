@@ -304,13 +304,51 @@ else
 				else
 				{
 					$data = array(
+<<<<<<< .mine
 								'cat_name'	=> request('cat_name', 2),
 								'cat_tag'	=> strtolower(request('cat_tag', 2)),
 								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
 							);
+				}
+
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
+				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data['cat_tag'] . "\" />";
+				
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['maps']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode) ], $lang['cat'], $data['cat_name']),
+					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['cat']),
+					'L_TAG'		=> $lang['tag'],
 					
+					'L_ORDER'	=> $lang['common_order'],
+
+					'NAME'		=> $data['cat_name'],
+					'TAG'		=> $data['cat_tag'],
+					
+					'S_ORDER'	=> simple_order(MAPS_CAT, '', 'select', $data['cat_order']),
+
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+				
+				if ( request('submit', 1) )
+				{
 					$cur_tag = request('current_tag', 1);
 					
+					$error .= check(MAPS_CAT, array('cat_name' => $data['cat_name'], 'cat_tag' => $data['cat_tag'], 'cat_id' => $data_cat), $error);
+=======
+								'cat_name'	=> request('cat_name', 2),
+								'cat_tag'	=> strtolower(request('cat_tag', 2)),
+								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
+							);
+>>>>>>> .r85
+					
+<<<<<<< .mine
+=======
+					$cur_tag = request('current_tag', 1);
+					
+>>>>>>> .r85
 					$error .= check(MAPS_CAT, array('cat_name' => $data['cat_name'], 'cat_tag' => $data['cat_tag'], 'cat_id' => $data_cat), $error);
 					
 					if ( !$error )
@@ -342,6 +380,11 @@ else
 					}
 					else
 					{
+<<<<<<< .mine
+						log_add(LOG_ADMIN, $log, 'error', $error);
+
+=======
+>>>>>>> .r85
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
 						

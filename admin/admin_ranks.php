@@ -177,6 +177,43 @@ else
 					'S_FIELDS'	=> $fields,
 				));
 				
+<<<<<<< .mine
+				if ( request('submit', 1) )
+				{
+					$error .= check(RANKS, array('rank_name' => $data['rank_name'], 'rank_id' => $data_id), $error);
+					
+					if ( !$error )
+					{
+						$data['rank_order'] = !$data['rank_order'] ? maxa(RANKS, 'rank_order', 'rank_type = ' . $data['rank_type']) : $data['rank_order'];
+						( $data['rank_standard'] ) ? sql(RANKS, 'update', array('rank_standard' => '0'), 'rank_type', $data['rank_type']) : '';
+												
+						if ( $mode == '_create' )
+						{
+							$sql = sql(RANKS, $mode, $data);
+							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						}
+						else
+						{
+							$sql = sql(RANKS, $mode, $data, 'rank_id', $data_id);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						}
+						
+						orders(RANKS, $data['rank_type']);
+						
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
+					}
+					else
+					{
+						log_add(LOG_ADMIN, $log, 'error', $error);
+						
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'error');
+					}
+				}
+			
+=======
+>>>>>>> .r85
 				$template->pparse('body');
 				
 				break;
@@ -320,8 +357,13 @@ else
 			$rank_order	= $tmp_page[$i]['rank_order'];
 				
 			$template->assign_block_vars('_display._page_row', array(
+<<<<<<< .mine
+				'NAME'		=> $rank_name,
+				'STANDARD'	=> $tmp_page[$i]['rank_standard'] ? $lang['standard'] : '',
+=======
 				'NAME'		=> $rank_name,
 				'STANDARD'	=> $tmp_page[$i]['rank_standard'] ? $lang['rank_standard'] : '',
+>>>>>>> .r85
 				
 				'MOVE_UP'	=> ( $rank_order != '10' )		? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $rank_order != $max_p )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
@@ -345,8 +387,13 @@ else
 			$rank_order	= $tmp_team[$i]['rank_order'];
 				
 			$template->assign_block_vars('_display._team_row', array(
+<<<<<<< .mine
+				'NAME'		=> $rank_name,
+				'STANDARD'	=> $tmp_team[$i]['rank_standard'] ? $lang['standard'] : '',
+=======
 				'NAME'		=> $rank_name,
 				'STANDARD'	=> $tmp_team[$i]['rank_standard'] ? $lang['rank_standard'] : '',
+>>>>>>> .r85
 				
 				'MOVE_UP'	=> ( $rank_order != '10' )		? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $rank_order != $max_t )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',

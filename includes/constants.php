@@ -23,6 +23,7 @@ define('WIN',	'win');
 define('LOSE',	'lose');
 define('DRAW',	'draw');
 
+
 define('TYPE_GAME',		0);
 define('TYPE_VOICE',	1);
 define('TYPE_OTHER',	2);
@@ -45,6 +46,36 @@ define('LOG_USERS',		1);
 define('LOG_MOD',		2);
 define('LOG_ADMIN',		3);
 
+<<<<<<< .mine
+/* Log Sektion */
+define('SECTION_AUTHLIST',		0);
+define('SECTION_COMMENT',		1);
+define('SECTION_EVENT',			2);
+define('SECTION_FORUM',			3);
+define('SECTION_GAMES',			4);
+define('SECTION_GAMESSERVER',	5);
+define('SECTION_GROUPS',		6);
+define('SECTION_LOG',			7);
+define('SECTION_LOGIN',			8);
+define('SECTION_MATCH',			9);
+define('SECTION_NAVI',			10);
+define('SECTION_NETWORK',		11);
+define('SECTION_NEWS',			12);
+define('SECTION_NEWSCAT',		13);
+define('SECTION_NEWSLETTER',	14);
+define('SECTION_PROFILE',		15);
+define('SECTION_RANK',			16);
+define('SECTION_TEAM',			17);
+define('SECTION_TEAMSPEAK',		18);
+define('SECTION_TRAINING',		19);
+define('SECTION_USER',			20);
+define('SECTION_CASH',			21);
+define('SECTION_GALLERY',		22);
+define('SECTION_MAPS',			23);
+define('SECTION_SERVER',		24);
+define('SECTION_DOWNLOADS',		25);
+define('SECTION_CALENDAR',		100);
+=======
 /* Log Sektion */
 define('SECTION_AUTHLIST',		0);
 define('SECTION_COMMENT',		1);
@@ -74,7 +105,42 @@ define('SECTION_DOWNLOADS',		25);
 define('SECTION_CALENDAR',		100);
 define('SECTION_USERS',			200);
 define('SECTION_VOTES',			300);
+>>>>>>> .r85
 
+<<<<<<< .mine
+define('SECTION_CHANGELOG',		998);
+define('SECTION_BUGTRACKER',	999);
+
+/* Page Numbers for session handling */
+define('PAGE_INDEX',		0);
+define('PAGE_ADMIN',		-1);
+define('PAGE_LOGIN',		-2);
+define('PAGE_REGISTER',		-3);
+define('PAGE_PROFILE',		-4);
+define('PAGE_POSTING',		-5);
+define('PAGE_GROUPS',		-6);
+define('PAGE_MATCH',		-11);
+define('PAGE_TRAINING',		-12);
+define('PAGE_CONTACT',		-13);
+define('PAGE_FORUM',		-14);
+define('PAGE_TEAMSPEAK',	-15);
+define('PAGE_TEAMS',		-17);
+define('PAGE_NEWSLETTER',	-18);
+define('PAGE_UCP',			-19);
+define('PAGE_RSS',			-20);
+define('PAGE_EVENT',		-21);
+define('PAGE_CASH',			-22);
+define('PAGE_GALLERY',		-23);
+define('PAGE_IMPRINT',		-24);
+define('PAGE_NEWS',			1);
+define('PAGE_CALENDAR',		100);
+
+define('PAGE_BUGTRACKER',	-98);
+define('PAGE_CHANGELOG',	-99);
+
+
+/* Navi Types */
+=======
 define('SECTION_CHANGELOG',		998);
 define('SECTION_BUGTRACKER',	999);
 
@@ -109,6 +175,7 @@ define('PAGE_CHANGELOG',	-99);
 
 
 /* Navi Types */
+>>>>>>> .r85
 define('NAVI_MAIN',		1);
 define('NAVI_CLAN',		2);
 define('NAVI_COM',		3);
@@ -268,6 +335,25 @@ define('POST_FORUM_CAT',	'fc');
 define('POST_FORUM_SUB',	'fs');
 define('POST_CALENDAR',		'cal');
 
+<<<<<<< .mine
+define('POST_SERVER',		's');
+define('POST_LOGS',			'l');
+define('POST_MATCH',		'm');
+define('POST_MATCH_PIC',	'mp');
+define('POST_NAVI',			'n');
+define('POST_NETWORK',		'n');
+define('POST_NEWSLETTER',	'nl');
+define('POST_POST',			'p');
+define('POST_PROFILE',		'p');
+define('POST_RANKS',		'r');
+define('POST_TEAMS',		't');
+define('POST_TEAMSPEAK',	't');
+define('POST_TOPIC',		't');
+define('POST_TRAINING',		'tr');
+define('POST_USER',			'u');
+define('POST_CASH',			'c');
+define('POST_CASH_USER',	'cu');
+=======
 define('POST_SERVER',		's');
 define('POST_LOGS',			'l');
 define('POST_MATCH',		'm');
@@ -288,8 +374,14 @@ define('POST_CASH_USER',	'cu');
 define('POST_USERS',		'user');
 define('POST_BUGTRACKER',	'bt');
 define('POST_CHANGELOGS',	'cl');
+>>>>>>> .r85
 
+<<<<<<< .mine
+define('POST_BUGTRACKER',	'bt');
+define('POST_CHANGELOGS',	'cl');
+=======
 define('POST_VOTES',		'vote');
+>>>>>>> .r85
 
 define('POST_DOWNLOAD',		'd');
 define('POST_DOWNLOAD_CAT',	'cat');

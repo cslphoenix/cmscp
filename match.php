@@ -14,6 +14,28 @@ init_userprefs($userdata);
 $start	= ( request('start', 0) ) ? request('start', 0) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
+<<<<<<< .mine
+$log	= SECTION_MATCH;
+$url	= POST_MATCH;
+
+$time	= time();
+$file	= basename(__FILE__);
+$user	= $userdata['user_id'];
+
+$data	= request($url, 0);	
+$mode	= request('mode', 1);
+
+$error	= '';
+$fields	= '';
+
+$template->set_filenames(array(
+	'body'		=> 'body_match.tpl',
+	'comments'	=> 'body_comments.tpl',
+	'error'		=> 'error_body.tpl',
+));
+
+if ( $mode == '' )
+=======
 $log	= SECTION_MATCH;
 $url	= POST_MATCH;
 
@@ -47,28 +69,271 @@ $sql = "SELECT m.*, m.match_rival_lineup AS lineup_rival, t.team_id, t.team_name
 $tmp = _cached($sql, 'data_match');
 
 if ( $data && $tmp )
+>>>>>>> .r85
 {
+<<<<<<< .mine
+	$template->assign_block_vars('_list', array());
+=======
 	$template->assign_block_vars('_view', array());
+>>>>>>> .r85
 	
+<<<<<<< .mine
+	$sql = "SELECT m.*, m.match_rival_lineup AS lineup_rival, t.team_id, t.team_name, g.game_image, g.game_size, ml.match_id AS lineup_clan
+				FROM " . MATCH . " m
+					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+					LEFT JOIN " . MATCH_LINEUP . " ml ON m.match_id = ml.match_id
+			ORDER BY m.match_date DESC";
+#	if ( !($result = $db->sql_query($sql)) )
+#	{
+#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+#	}
+#	$matches = $db->sql_fetchrowset($result);
+	$matches = _cached($sql, 'data_match');
+	
+	$page_title = $lang['match'];
+	
+	main_header();
+
+	if ( !$matches )
+=======
 	foreach ( $tmp as $key => $row )
+>>>>>>> .r85
 	{
+<<<<<<< .mine
+		$template->assign_block_vars('_list._entry_empty_new', array());
+		$template->assign_block_vars('_list._entry_empty_old', array());
+	}
+	else
+	{
+		$new = $old = array();
+			
+		foreach ( $matches as $match => $row )
+=======
 		if ( $row['match_id'] == $data )
+>>>>>>> .r85
 		{
+<<<<<<< .mine
+			if ( $userdata['user_level'] >= TRIAL )
+			{
+				if ( $row['match_date'] > time() )
+				{
+					$new[]		= $row;
+					$new_ids[]	= $row['match_id'];
+				}
+				else if ( $row['match_date'] < time() )
+				{
+					$old[]		= $row;
+					$old_ids[]	= $row['match_id'];
+				}
+			}
+			else if ( $row['match_public'] == '1' )
+			{
+				if ( $row['match_date'] > time() )
+				{
+					$new[]		= $row;
+					$new_ids[]	= $row['match_id'];
+				}
+				else if ( $row['match_date'] < time() )
+				{
+					$old[]		= $row;
+					$old_ids[]	= $row['match_id'];
+				}
+			}
+=======
 			$info = $row;
+>>>>>>> .r85
 		}
+<<<<<<< .mine
+		
+		$count = isset($old) ? count($old) : 0;
+		
+		if ( !$new )
+		{
+			$template->assign_block_vars('_list._entry_empty_new', array());
+		}
+		else
+		{
+			$sql = "SELECT * FROM " . MATCH_USERS . " WHERE match_id IN (" . implode(', ', $new_ids) . ")";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$in_ary[$row['match_id']][$row['user_id']] = $row['user_status'];
+			}
+			
+			for ( $i = 0; $i < count($new); $i++ )
+			{
+				$match_id = $new[$i]['match_id'];
+				
+				$name	= ( $new[$i]['match_public'] ) ? sprintf($lang['sprintf_match_name'], $new[$i]['match_rival_name']) : sprintf($lang['sprintf_match_intern'], $new[$i]['match_rival_name']);
+				$css	= 'none';
+				$pos	= $lang['join_none'];
+				
+				if ( isset($in_ary[$match_id][$userdata['user_id']]) )
+				{
+					switch ( $in_ary[$match_id][$userdata['user_id']] )
+					{
+						case STATUS_NO:			$css = 'no';		$pos = $lang['no'];			break;
+						case STATUS_YES:		$css = 'yes';		$pos = $lang['yes'];		break;
+						case STATUS_REPLACE:	$css = 'replace';	$pos = $lang['replace'];	break;
+					}
+				}
+				
+				$template->assign_block_vars('_list._new_row', array(
+					'CLASS'	=> ( $i % 2 ) ? 'row1r' : 'row2r',
+					
+					'GAME'	=> display_gameicon($new[$i]['game_size'], $new[$i]['game_image']),
+					'NAME'	=> "<a href=\"" . check_sid("$file?mode=view&amp;$url=$match_id") . "\" >$name</a>",
+					'DATE'	=> create_date($userdata['user_dateformat'], $new[$i]['match_date'], $userdata['user_timezone']),
+					
+					'CSS'		=> $css,
+					'STATUS'	=> $pos,
+				));
+			}
+		}
+		
+		if ( $old )
+		{
+			$template->assign_block_vars('_list._entry_empty_old', array());
+		}
+		else
+		{
+			$sql = "SELECT * FROM " . MATCH_USERS . " WHERE match_id IN (" . implode(', ', $old_ids) . ")";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$in_ary[$row['match_id']][$row['user_id']] = $row['user_status'];
+			}
+			
+			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $count); $i++ )
+			{
+				$match_id = $old[$i]['match_id'];
+				
+				$name	= ( $old[$i]['match_public'] ) ? sprintf($lang['sprintf_match_name'], $old[$i]['match_rival_name']) : sprintf($lang['sprintf_match_intern'], $old[$i]['match_rival_name']);
+				$css	= 'none';
+				$pos	= $lang['join_none'];
+				
+				if ( isset($in_ary[$match_id][$userdata['user_id']]) )
+				{
+					switch ( $in_ary[$match_id][$userdata['user_id']] )
+					{
+						case STATUS_NO:			$css = 'no';		$pos = $lang['no'];			break;
+						case STATUS_YES:		$css = 'yes';		$pos = $lang['yes'];		break;
+						case STATUS_REPLACE:	$css = 'replace';	$pos = $lang['replace'];	break;
+					}
+				}
+				
+				$template->assign_block_vars('_list._old_row', array(
+					'CLASS'	=> ( $i % 2 ) ? 'row1r' : 'row2r',
+					
+					'GAME'	=> display_gameicon($old[$i]['game_size'], $old[$i]['game_image']),
+					'NAME'	=> "<a href=\"" . check_sid("$file?mode=view&amp;$url=$match_id") . "\" >$name</a>",
+					'DATE'	=> create_date($userdata['user_dateformat'], $old[$i]['match_date'], $userdata['user_timezone']),
+					
+					'CSS'		=> $css,
+					'STATUS'	=> $pos,
+				));
+			}
+		}
+=======
+>>>>>>> .r85
 	}
 	
+<<<<<<< .mine
+	$current_page = ( !$count ) ? 1 : ceil( $count / $settings['site_entry_per_page'] );
+	
+	$template->assign_vars(array(
+		'L_DETAILS'		=> $lang['match_details'],
+		'L_TEAMS'		=> $lang['teams'],
+		'L_UPCOMING'	=> $lang['match_upcoming'],
+		'L_EXPIRED'		=> $lang['match_expired'],
+		'L_GOTO_PAGE'	=> $lang['Goto_page'],
+		
+		'PAGE_PAGING'	=> generate_pagination($file, $count, $settings['site_entry_per_page'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+	));
+}
+else if ( $mode == 'view' && $data )
+{
+	$template->assign_block_vars('_view', array());
+=======
 	if ( !$info )
 	{
 		message(GENERAL_ERROR, $lang['msg_match_fail']);
 	}
 	
 	$page_title = sprintf($lang['news_head_info'], $info['match_rival_name']);
+>>>>>>> .r85
 	
+<<<<<<< .mine
+	$sql = "SELECT m.*, m.match_rival_lineup AS lineup_rival, t.team_id, t.team_name, g.game_image, g.game_size, ml.match_id AS lineup_clan
+				FROM " . MATCH . " m
+					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+					LEFT JOIN " . MATCH_LINEUP . " ml ON m.match_id = ml.match_id
+			ORDER BY m.match_date DESC";
+#	if ( !($result = $db->sql_query($sql)) )
+#	{
+#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+#	}
+#	$match = $db->sql_fetchrowset($result);
+	$match = _cached($sql, 'data_match');
+=======
 	main_header();
+>>>>>>> .r85
 	
+<<<<<<< .mine
+	foreach ( $match as $key => $row )
+=======
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] )
+>>>>>>> .r85
 	{
+<<<<<<< .mine
+		if ( $row['match_id'] == $data )
+		{
+			$view = $row;
+		}
+	}
+	
+	if ( !$view )
+	{
+		message(GENERAL_ERROR, $lang['msg_match_fail']);
+	}
+	
+	$page_title = sprintf($lang['news_head_info'], $view['match_rival_name']);
+=======
+		$template->assign_block_vars('_view._update', array(
+			'UPDATE'		=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_update&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_update'] . "</a>",
+			'UPDATE_DETAIL'	=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_detail&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_detail'] . "</a>",
+		));
+	}
+>>>>>>> .r85
+	
+<<<<<<< .mine
+	main_header();
+=======
+#	if ( !$userdata['session_logged_in'] )
+#	{
+#		session_start();
+#	}
+>>>>>>> .r85
+	
+<<<<<<< .mine
+	if ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] )
+=======
+	/* Lineup Clan und Lineup Gegner - es fehlt noch der clantag vom clan selber */
+	if ( $info['lineup_clan'] || $info['lineup_rival'] )
+>>>>>>> .r85
+	{
+<<<<<<< .mine
 		$template->assign_block_vars('_view._update', array(
 			'UPDATE'		=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_update&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_update'] . "</a>",
 			'UPDATE_DETAIL'	=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_detail&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_detail'] . "</a>",
@@ -81,7 +346,7 @@ if ( $data && $tmp )
 #	}
 	
 	/* Lineup Clan und Lineup Gegner - es fehlt noch der clantag vom clan selber */
-	if ( $info['lineup_clan'] || $info['lineup_rival'] )
+	if ( $view['lineup_clan'] || $view['lineup_rival'] )
 	{
 		$template->assign_block_vars('_view._lineup', array());
 
@@ -89,6 +354,14 @@ if ( $data && $tmp )
 					FROM " . MATCH_LINEUP . " ml, " . USERS . " u
 					WHERE match_id = $data AND u.user_id = ml.user_id
 				ORDER BY ml.status";
+=======
+		$template->assign_block_vars('_view._lineup', array());
+
+		$sql = "SELECT ml.user_id, ml.status, u.user_name, u.user_color
+					FROM " . MATCH_LINEUP . " ml, " . USERS . " u
+					WHERE match_id = $data AND u.user_id = ml.user_id
+				ORDER BY ml.status";
+>>>>>>> .r85
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -121,16 +394,31 @@ if ( $data && $tmp )
 			$clan = ( $player && $replace ) ? sprintf($lang['lineup_players'], $player, $replace) : sprintf($lang['lineup_player'], $player);
 		}
 		
+<<<<<<< .mine
+		/* Filter beim eintragen noch bearbeiten damit alle gleich eingetragen sind mit syntax ', ' */
+		if ( $view['lineup_rival'] )
+=======
 		/* Filter beim eintragen noch bearbeiten damit alle gleich eingetragen sind mit syntax ', ' */
 		if ( $info['lineup_rival'] )
+>>>>>>> .r85
 		{
 			$template->assign_block_vars('_view._lineup._rival', array());
 			
+<<<<<<< .mine
+			$rivals = explode(', ', $view['lineup_rival']);
+			
+			foreach ( $rivals as $key => $row )
+=======
 			$rivals = explode(', ', $info['lineup_rival']);
 			
 			foreach ( $rivals as $key => $row )
+>>>>>>> .r85
 			{
+<<<<<<< .mine
+				$ary[] = $view['match_rival_tag'] . " $row";
+=======
 				$ary[] = $info['match_rival_tag'] . " $row";
+>>>>>>> .r85
 			}
 
 			$rival = sprintf($lang['lineup_player'], implode(', ', $ary));
@@ -184,9 +472,17 @@ if ( $data && $tmp )
 	        }
 	    }
 		
+<<<<<<< .mine
+		if ( $view['match_date'] > $time )
+=======
 		if ( $info['match_date'] > $time )
+>>>>>>> .r85
 		{
+<<<<<<< .mine
+			$sql = "SELECT * FROM " . TEAMS_USERS . " WHERE user_id = $user AND team_id = " . $view['team_id'];
+=======
 			$sql = "SELECT * FROM " . TEAMS_USERS . " WHERE user_id = $user AND team_id = " . $info['team_id'];
+>>>>>>> .r85
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -252,8 +548,13 @@ if ( $data && $tmp )
 		}
 	}
 	
+<<<<<<< .mine
+	/* Kommentarfunktion - Nur wenn die Generelle Funktion aktiviert ist und für das Match selber */
+	if ( $settings['comments_matches'] && $view['match_comments'] )
+=======
 	/* Kommentarfunktion - Nur wenn die Generelle Funktion aktiviert ist und für das Match selber */
 	if ( $settings['comments_matches'] && $info['match_comments'] )
+>>>>>>> .r85
 	{
 		$template->assign_block_vars('_view._comment', array());
 
@@ -446,11 +747,27 @@ if ( $data && $tmp )
 		'CLAN'	=> $clan,
 		'RIVAL'	=> $rival,
 		
+<<<<<<< .mine
+		'RIVAL_NAME'		=> $view['match_rival_name'],
+		'RIVAL_TAG'			=> $view['match_rival_tag'],
+	#	'U_MATCH_RIVAL'		=> $view['match_rival_url'],
+	#	'MATCH_RIVAL'		=> $view['match_rival_url'],
+=======
 		'RIVAL_NAME'		=> $info['match_rival_name'],
 		'RIVAL_TAG'			=> $info['match_rival_tag'],
 	#	'U_MATCH_RIVAL'		=> $info['match_rival_url'],
 	#	'MATCH_RIVAL'		=> $info['match_rival_url'],
+>>>>>>> .r85
 
+<<<<<<< .mine
+	#	'MATCH_CATEGORIE'		=> $match_cat,
+	#	'MATCH_TYPE'			=> $match_type,
+	#	'MATCH_LEAGUE_INFO'		=> $match_league,
+	#	'SERVER'				=> ($view['server']) ? '<a href="hlsw://' . $view['server'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
+	#	'SERVER_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $view['server_pw'] : '',
+	#	'HLTV'					=> ($view['server']) ? '<a href="hlsw://' . $view['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
+	#	'HLTV_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $view['server_hltv_pw'] : '',
+=======
 	#	'MATCH_CATEGORIE'		=> $match_cat,
 	#	'MATCH_TYPE'			=> $match_type,
 	#	'MATCH_LEAGUE_INFO'		=> $match_league,
@@ -458,11 +775,22 @@ if ( $data && $tmp )
 	#	'SERVER_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $info['server_pw'] : '',
 	#	'HLTV'					=> ($info['server']) ? '<a href="hlsw://' . $info['server_hltv'] . '">' . $lang['hlsw'] . '</a>' : ' - ',
 	#	'HLTV_PW'				=> ( $userdata['user_level'] >= TRIAL ) ? $info['server_hltv_pw'] : '',
+>>>>>>> .r85
 		
+<<<<<<< .mine
+	#	'DETAILS_COMMENT'		=> $view['details_comment'],
+=======
 	#	'DETAILS_COMMENT'		=> $info['details_comment'],
+>>>>>>> .r85
 		
 		'MATCH_MAIN'			=> '<a href="' . check_sid('match.php') . '">Übersicht</a>',
 	
+<<<<<<< .mine
+		'S_FIELDE'		=> $fielde,
+		'S_FIELDS'		=> $fields,
+		'S_ACTION'		=> check_sid('match.php?mode=detail&amp;' . POST_MATCH . '=' . $data),
+	));
+=======
 		'S_FIELDE'		=> $fielde,
 		'S_FIELDS'		=> $fields,
 		'S_ACTION'		=> check_sid('match.php?mode=detail&amp;' . POST_MATCH . '=' . $data),
@@ -576,7 +904,13 @@ if ( $data && $tmp )
 else
 {
 	$template->assign_block_vars('_list', array());
+>>>>>>> .r85
 	
+<<<<<<< .mine
+	if ( request('submit', 1) )
+	{
+		if ( $smode == 'change' )
+=======
 #	$sql = "SELECT m.*, m.match_rival_lineup AS lineup_rival, t.team_id, t.team_name, g.game_image, g.game_size, ml.match_id AS lineup_clan
 #				FROM " . MATCH . " m
 #					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
@@ -604,7 +938,12 @@ else
 		$new = $old = array();
 			
 		foreach ( $tmp as $keys => $row )
+>>>>>>> .r85
 		{
+<<<<<<< .mine
+			$status		= request('status', 0);
+			$ustatus	= request('user_status', 1);
+=======
 			if ( $userdata['user_level'] >= TRIAL )
 			{
 				if ( $row['match_date'] > $time )
@@ -650,7 +989,45 @@ else
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
+>>>>>>> .r85
 			
+<<<<<<< .mine
+			if ( $status == -1 )
+			{
+				$sql = sql(MATCH_USERS, 'create', array('match_id' => $data, 'user_id' => $user, 'user_status' => $ustatus, 'status_create' => $time));
+				$msg = $lang['msg_change_status_create'];
+				
+			#	$sql = 'INSERT INTO ' . MATCH_USERS . " (match_id, user_id, user_status, match_users_create, user_update)
+			#		VALUES ($data, " . $userdata['user_id'] . ", '" . intval($HTTP_POST_VARS['user_status']) . "', '" . time() . "', 0)";
+			#	if ( !($result = $db->sql_query($sql)) )
+			#	{
+			#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			#	}
+			}
+			else if ( $ustatus != $status )
+			{
+				$sql = sql(MATCH_USERS, 'update', array('user_status' => $ustatus, 'status_update' => $time), array('user_id', 'match_id'), array($user, $data));
+				$msg = $lang['msg_change_status_update'];
+				
+			#	$sql = "UPDATE " . MATCH_USERS . " SET
+			#				user_status		= '" . intval($HTTP_POST_VARS['user_status']) . "',
+			#				user_update		= '" . time() . "'
+			#			WHERE match_id = $data AND user_id = " . $userdata['user_id'];
+			#	if ( !$db->sql_query($sql) )
+			#	{
+			#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			#	}
+			}
+			else
+			{
+				$msg = $lang['msg_change_status_none'];
+			}
+			
+			$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . check_sid('match.php?mode=detail&amp;' . POST_MATCH . '=' . $data) . '">'));
+			
+			log_add(LOG_USERS, SECTION_MATCH, 'uchange');
+			message(GENERAL_MESSAGE, $msg);
+=======
 			while ( $row = $db->sql_fetchrow($result) )
 			{
 				$in_ary[$row['match_id']][$row['user_id']] = $row['user_status'];
@@ -685,7 +1062,70 @@ else
 					'STATUS'	=> $pos,
 				));
 			}
+>>>>>>> .r85
 		}
+<<<<<<< .mine
+		else if ( $smode == 'msg' )
+		{
+			if ( $last_entry['poster_ip'] != $userdata['session_ip'] || ($last_entry['time_create'] + $settings['spam_comment_match']) < $time )
+			{
+				include($root_path . 'includes/functions_post.php');
+				
+				if ( !$userdata['session_logged_in'] )
+				{
+					$sql = "SELECT captcha FROM " . CAPTCHA . " WHERE session_id = '" . $userdata['session_id'] . "' AND captcha_id = '" . md5($user_ip) . "'";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$cp = $db->sql_fetchrow($result);
+					$captcha = $cp['captcha'];
+				
+				#	$captcha = $_SESSION['captcha'];
+					
+					$poster_nick	= request('poster_nick', 2) ? request('poster_nick', 2) : '';
+					$poster_mail	= request('poster_mail', 2) ? request('poster_mail', 2) : '';
+					$poster_hp		= request('poster_hp', 2) ? request('poster_hp', 2) : '';
+					$poster_captcha	= request('captcha', 3) ? request('captcha', 3) : '';
+					
+					$error .= !$poster_nick ? ( $error ? '<br />' : '' ) . $lang['msg_empty_nick'] : '';
+					$error .= !$poster_mail ? ( $error ? '<br />' : '' ) . $lang['msg_empty_mail'] : '';
+					$error .= ( $poster_captcha != $captcha  ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_captcha'] : '';
+				}
+				else
+				{
+					$poster_nick = $poster_mail = $poster_hp = $poster_captcha = '';
+				}
+				
+				$poster_msg = request('poster_msg', 3) ? request('poster_msg', 3) : '';
+				
+				$error .= !$poster_msg ? ( $error ? '<br />' : '' ) . $lang['msg_empty_text'] : '';
+				
+				$template->assign_vars(array(
+					'POSTER_NICK'	=> $poster_nick,
+					'POSTER_MAIL'	=> $poster_mail,
+					'POSTER_HP'		=> $poster_hp,
+					'POSTER_MSG'	=> $poster_msg,
+				));
+				
+				if ( !$error )
+				{
+					$oCache->deleteCache('detail_match_comments_' . $data);
+					
+					$sql = sql(COMMENT_READ, 'update', array('read_time' => $time), array('type', 'type_id', 'user_id'), array(READ_MATCH, $data, $user));
+					$msg = $lang['add_comment'] . sprintf($lang['click_return_match'],  '<a href="' . check_sid('match.php?mode=details&amp;' . POST_MATCH . '=' . $data) . '">', '</a>');
+					
+					msg_add('match', $data, $user, $poster_msg, $poster_nick, $poster_mail, $poster_hp);
+					message(GENERAL_MESSAGE, $msg);
+				}
+				else
+				{
+					$template->assign_vars(array('ERROR_MESSAGE' => $error));
+					$template->assign_var_from_handle('ERROR_BOX', 'error');
+				}
+			}
+		}
+=======
 		
 		if ( !$old )
 		{
@@ -735,7 +1175,10 @@ else
 				));
 			}
 		}
+>>>>>>> .r85
 	}
+<<<<<<< .mine
+=======
 	
 	$current_page = ( !$cntold ) ? 1 : ceil( $cntold / $settings['site_entry_per_page'] );
 	
@@ -748,7 +1191,15 @@ else
 		'PAGE_PAGING'	=> generate_pagination($file, $cntold, $settings['site_entry_per_page'], $start),
 		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 	));
+>>>>>>> .r85
 }
+<<<<<<< .mine
+else
+{
+	redirect(check_sid($file, true));
+}
+=======
+>>>>>>> .r85
 
 $template->pparse('body');
 

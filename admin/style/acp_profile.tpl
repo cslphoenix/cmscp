@@ -47,7 +47,10 @@
 	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="{_display._cat_row.S_SUBMIT}" value="{L_CREATE_FIELD}"></td>
 </tr>
 </table>
+<<<<<<< .mine
+=======
 <br />
+>>>>>>> .r85
 <!-- END _cat_row -->
 </form>
 <!-- END _display -->

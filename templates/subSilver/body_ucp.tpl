@@ -39,7 +39,11 @@
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<!-- BEGIN _news -->
 		<tr>
+<<<<<<< .mine
+			<td class="lobby_title">{L_NEWS}</td>
+=======
 			<td valign="top">{L_NEWS}</td>
+>>>>>>> .r85
 			<td align="left">
 				<table cellspacing="0" cellpadding="0" class="lobby">
 				<!-- BEGIN _news_row -->
@@ -54,6 +58,46 @@
 			</td>
 		</tr>
 		<tr>
+<<<<<<< .mine
+			<td colspan="3">&nbsp;</td>
+		</tr>
+		<!-- END _news -->
+		<!-- BEGIN _event_new -->
+		<tr>
+			<td class="lobby_title">{L_UP_EVENT}:</td>
+			<td align="left">
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _event_new_row -->
+				<tr>
+					<td>{lobby._event_new._event_new_row.DATE}</td>
+					<td>{lobby._event_new._event_new_row.TITLE}</td>
+					<td>{lobby._event_new._event_new_row.COMMENT}</td>
+					<td>{lobby._event_new._event_new_row.OPTION}</td>
+				</tr>
+				<!-- END _event_new_row -->
+				</table>
+			</td>
+		</tr>
+		<!-- END _event_new -->
+		<!-- BEGIN _event_old -->
+		<tr>
+			<td valign="top" nowrap="nowrap">{L_EX_EVENT}:</td>
+			<td align="left">
+				<table cellspacing="0" cellpadding="0" class="lobby">
+				<!-- BEGIN _event_old_row -->
+				<tr>
+					<td>{lobby._event_old._event_old_row.DATE}</td>
+					<td>{lobby._event_old._event_old_row.TITLE}</td>
+					<td>{lobby._event_old._event_old_row.COMMENT}</td>
+					<td>&nbsp;</td>
+				</tr>
+				<!-- END _event_old_row -->
+				</table>
+			</td>
+		</tr>
+		<!-- END _event_old -->
+		<tr>
+=======
 			<td colspan="3">&nbsp;</td>
 		</tr>
 		<!-- END _news -->
@@ -92,11 +136,16 @@
 		</tr>
 		<!-- END _event_old -->
 		<tr>
+>>>>>>> .r85
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<!-- BEGIN _match_new -->
 		<tr>
+<<<<<<< .mine
+			<td valign="top" nowrap="nowrap">{L_UP_MATCH}:</td>
+=======
 			<td valign="top">{L_UP_MATCH}:</td>
+>>>>>>> .r85
 			<td align="left">
 				<table cellspacing="0" cellpadding="0" class="lobby">
 				<!-- BEGIN _match_new_row -->
@@ -113,7 +162,11 @@
 		<!-- END _match_new -->
 		<!-- BEGIN _match_old -->
 		<tr>
+<<<<<<< .mine
+			<td valign="top" nowrap="nowrap">{L_EX_MATCH}:</td>
+=======
 			<td valign="top">{L_EX_MATCH}:</td>
+>>>>>>> .r85
 			<td align="left">
 				<table cellspacing="0" cellpadding="0" class="lobby">
 				<!-- BEGIN _match_old_row -->
@@ -133,7 +186,11 @@
 		</tr>
 		<!-- BEGIN training -->
 		<tr>
+<<<<<<< .mine
+			<td valign="top" nowrap="nowrap">Aktuelle Trainings:</td>
+=======
 			<td valign="top">Aktuelle Trainings:</td>
+>>>>>>> .r85
 			<td align="left">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<!-- BEGIN training_new_row -->

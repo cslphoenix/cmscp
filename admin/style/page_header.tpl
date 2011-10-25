@@ -9,8 +9,21 @@
 	
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	
+<<<<<<< .mine
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="./../includes/js/jquery.ui.core.min.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery.ui.datepicker.min.js"></script>
+	
+	<script type="text/javascript" src="style/lightbox.js">
+	/*
+		http://www.lokeshdhakar.com/projects/lightbox/ <- aktiv
+		http://www.lokeshdhakar.com/projects/lightbox2/
+	*/	
+	</script>
+=======
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.custom.css">
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.lightbox.css" media="screen" />
+>>>>>>> .r85
 	
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.min.js"></script>
 	<!--
@@ -43,6 +56,27 @@
 	// <![CDATA[
 	
 	/*	
+<<<<<<< .mine
+		require:	acp_logs.tpl
+					acp_match.tpl
+	*/
+	function checked(id)
+	{
+		if ( document.getElementById('check_'+id).checked == true )
+		{
+			document.getElementById('check_'+id).checked = false;
+		}
+		else
+		{
+			document.getElementById('check_'+id).checked = true;
+		}
+	}
+	
+	</script>
+		
+	<script type="text/javascript">
+	/*	
+=======
 		require:	acp_logs.tpl
 					acp_match.tpl
 	*/
@@ -59,6 +93,7 @@
 	}
 	
 	/*	
+>>>>>>> .r85
 		require:	acp_training.tpl
 					acp_news.tpl
 					acp_gallery.tpl

@@ -17,6 +17,15 @@
 
 <table>
 <tr>
+<<<<<<< .mine
+	<td class="rowHead" align="center">{L_LOGS_USERNAME}</td>
+	<td class="rowHead" align="center">{L_LOGS_IP}</td>
+	<td class="rowHead" align="center">{L_LOGS_TIME}</td>
+	<td class="rowHead" align="center">{L_LOG_SEKTION}</td>
+	<td class="rowHead" align="center">{L_LOGS_MESSAGE}</td>
+	<td class="rowHead" align="center">{L_LOGS_CHANGE}</td>
+	<td class="rowHead" align="center">{L_DELETE}</td>
+=======
 	<th>{L_LOGS_USERNAME}</th>
 	<th>{L_LOGS_IP}</th>
 	<th>{L_LOGS_TIME}</th>
@@ -24,6 +33,7 @@
 	<th>{L_LOGS_MESSAGE}</th>
 	<th>{L_LOGS_CHANGE}</th>
 	<th>{L_DELETE}</th>
+>>>>>>> .r85
 </tr>
 <!-- BEGIN _logs_row -->
 <tr class="{_display._logs_row.CLASS}" onclick="checked({_display._logs_row.LOG_ID})">
@@ -60,6 +70,18 @@
 </form>
 <!-- END _display -->
 
+<<<<<<< .mine
+<!-- BEGIN _error -->
+<form action="{S_ACTION}" method="post" id="list" name="post">
+<div id="navcontainer">
+	<ul id="navlist">
+		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+		<li id="active"><a href="#" id="current">{L_ERROR}</a></li>
+	</ul>
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0">
+=======
 <!-- BEGIN _error -->
 <form action="{S_ACTION}" method="post" id="list" name="post">
 <div id="navcontainer">
@@ -70,8 +92,13 @@
 </div>
 
 <table class="header">
+>>>>>>> .r85
 <tr>
+<<<<<<< .mine
+	<td class="row4 small">{L_EXPLAIN}</td>
+=======
 	<td>{L_EXPLAIN}</td>
+>>>>>>> .r85
 </tr>
 </table>
 

@@ -59,9 +59,13 @@ function display_navi()
 	$template->assign_block_vars('_navi_misc', array());
 	$template->assign_block_vars('_navi_user', array());
 	
+<<<<<<< .mine
+	for ( $i = 0; $i < count($ary); $i++ )
+=======
 	$cnt = count($ary);
 	
 	for ( $i = 0; $i < $cnt; $i++ )
+>>>>>>> .r85
 	{
 		switch ( $ary[$i]['navi_type'] )
 		{
@@ -72,10 +76,21 @@ function display_navi()
 			case NAVI_USER:	$row_type = '_navi_user._navi_user_row';	break;
 		}
 		
+<<<<<<< .mine
+		$navi_lang = ( $ary[$i]['navi_lang'] ) ? $lang[$ary[$i]['navi_name']] : $ary[$i]['navi_name'];
+		
+=======
+>>>>>>> .r85
 		$template->assign_block_vars($row_type, array(
+<<<<<<< .mine
+			'NAVI_NAME'		=> $navi_lang,
+			'NAVI_URL'		=> $ary[$i]['navi_url'],
+			'NAVI_TARGET'	=> ( $ary[$i]['navi_target'] == '0' ) ? '_self' : '_blank',
+=======
 			'NAVI_URL'		=> $ary[$i]['navi_url'],
 			'NAVI_NAME'		=> ( $ary[$i]['navi_lang'] ) ? $lang[$ary[$i]['navi_name']] : $ary[$i]['navi_name'],
 			'NAVI_TARGET'	=> ( $ary[$i]['navi_target'] == '0' ) ? '_self' : '_blank',			
+>>>>>>> .r85
 		));
 	}
 }
@@ -118,16 +133,35 @@ function display_navi_news()
 			}
 		}
 		
+<<<<<<< .mine
+		$i = 0; 
+		
+		while ( $i < count($ary) )
+=======
 		$cnt = count($ary);
 	
 		for ( $i = 0; $i < $cnt; $i++ )
+>>>>>>> .r85
 		{
+<<<<<<< .mine
+			$class	= ( $i % 2 ) ? 'row1r' : 'row2r';
+			
+			$template->assign_block_vars('_sn_news_row', array(
+				'CLASS' 	=> $class,
+				'TITLE'		=> cut_string($ary[$i]['news_title'], $settings['subnavi_news_length']),
+				'GAME'		=> ( $ary[$i]['match_id'] ) ? display_gameicon($ary[$i]['game_size'], $ary[$i]['game_image']) : '',
+				'DETAILS'	=> check_sid('news.php?mode=view&amp;' . POST_NEWS . '=' . $ary[$i]['news_id']),
+			));
+			
+			$i++;
+=======
 			$template->assign_block_vars('_sn_news_row', array(
 				'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
 				'TITLE'		=> cut_string($ary[$i]['news_title'], $settings['subnavi_news_length']),
 				'GAME'		=> ( $ary[$i]['match_id'] ) ? display_gameicon($ary[$i]['game_size'], $ary[$i]['game_image']) : '',
 				'DETAILS'	=> check_sid('news.php?' . POST_NEWS . '=' . $ary[$i]['news_id']),
 			));
+>>>>>>> .r85
 		}
 	}
 	
@@ -214,6 +248,15 @@ function display_navi_match()
 				$css	= ( $result_clan[$i] != $result_rival[$i] ) ? ( $result_clan[$i] > $result_rival[$i] ) ? WIN : LOSE : DRAW;
 				$name	= $match_last[$i]['match_public'] ? sprintf($lang['sprintf_subnavi_match'], cut_string($match_last[$i]['match_rival_name'], $settings['subnavi_match_length'])) : sprintf($lang['sprintf_subnavi_match_i'], cut_string($match_last[$i]['match_rival_name'], $settings['subnavi_match_length']));
 				
+<<<<<<< .mine
+				$template->assign_block_vars('_sn_match_row', array(
+					'CSS'		=> $css,
+					'CLASS' 	=> $class,
+					'GAME'		=> display_gameicon($match_last[$i]['game_size'], $match_last[$i]['game_image']),
+					'NAME'		=> $name,
+					'RESULT'	=> sprintf($lang['sprintf_subnavi_match_result'], $result_clan[$i], $result_rival[$i]),
+					'DETAILS'	=> check_sid('match.php?mode=detail&amp;' . POST_MATCH . '=' . $match_last[$i]['match_id']),
+=======
 				$template->assign_block_vars('_sn_match_row', array(
 					'CSS'		=> $css,
 					'CLASS' 	=> $class,
@@ -221,6 +264,7 @@ function display_navi_match()
 					'NAME'		=> $name,
 					'RESULT'	=> sprintf($lang['sprintf_subnavi_match_result'], $result_clan[$i], $result_rival[$i]),
 					'DETAILS'	=> check_sid('match.php?' . POST_MATCH . '=' . $match_last[$i]['match_id']),
+>>>>>>> .r85
 				));
 			}
 		}
@@ -257,7 +301,11 @@ function display_navi_newusers()
 		{
 			$template->assign_block_vars('_sn_newusers._user_row', array(
 				'L_USERNAME'	=> '<b>' . cut_string($users[$i]['user_name'], $settings['subnavi_newusers_length']) . '</b>',
+<<<<<<< .mine
+				'U_USERNAME'	=> check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $users[$i]['user_id']),
+=======
 				'U_USERNAME'	=> check_sid('profile.php?' . POST_USER . '=' . $users[$i]['user_id']),
+>>>>>>> .r85
 				'C_USERNAME'	=> 'style="color:' . $users[$i]['user_color'] . '"',
 			));
 		}
@@ -686,7 +734,11 @@ function display_next_match()
 		$template->assign_block_vars('_sn_next_match', array());
 	}
 
+<<<<<<< .mine
+	$match	= '';
+=======
 	$ary	= '';
+>>>>>>> .r85
 	$time	= time() - 86400;
 	$month	= date("m", time());
 	$cache	= 'dsp_sn_next_match';
@@ -718,11 +770,19 @@ function display_next_match()
 		}
 	}
 	
+<<<<<<< .mine
+	if ( isset($ary) )
+=======
 	if ( $ary )
+>>>>>>> .r85
 	{
+<<<<<<< .mine
+		for ( $i = 0; $i < count($ary); $i++ )
+=======
 		$cnt = count($ary);
 		
 		for ( $i = 0; $i < $cnt; $i++ )
+>>>>>>> .r85
 		{
 			$team_name	= $ary[$i]['team_name'];
 			$game_size	= $ary[$i]['game_size'];
@@ -730,16 +790,28 @@ function display_next_match()
 			
 			$name = ( strlen($ary[$i]['match_rival_name']) < 10 ) ? $ary[$i]['match_rival_name'] : substr($ary[$i]['match_rival_name'], 0, 9) . ' ...';
 			
+<<<<<<< .mine
+			$template->assign_block_vars('_sn_next_match._match_row', array(
+				'GAME'	=>  display_gameicon($ary[$i]['game_size'], $ary[$i]['game_image']),
+				'NAME'	=> "<a href=\"" . check_sid("match.php?mode=detail&amp;" . POST_MATCH . "=" . $ary[$i]['match_id']) . "\">$name</a>",
+				'DATE'	=> create_date('d H:i', $ary[$i]['match_date'], $userdata['user_timezone']),
+=======
 			$template->assign_block_vars('_sn_next_match._match_row', array(
 				'GAME'	=>  display_gameicon($ary[$i]['game_size'], $ary[$i]['game_image']),
 				'NAME'	=> "<a href=\"" . check_sid("match.php?" . POST_MATCH . "=" . $ary[$i]['match_id']) . "\">$name</a>",
 				'DATE'	=> create_date('d H:i', $ary[$i]['match_date'], $userdata['user_timezone']),
+>>>>>>> .r85
 			));
 		}
 	}
 }
 
+<<<<<<< .mine
+
 /* next Training */
+=======
+/* next Training */
+>>>>>>> .r85
 function display_next_training()
 {
 	global $db, $oCache, $root_path, $settings, $template, $userdata, $lang;
@@ -748,6 +820,27 @@ function display_next_training()
 	{
 		$template->assign_block_vars('_sn_next_training', array());
 
+<<<<<<< .mine
+		$time	= time() - 86400;
+		$month	= date("m", time());
+		$cache	= 'dsp_sn_next_training';
+		
+		$sql = "SELECT tr.*, t.team_name, g.game_image, g.game_size
+					FROM " . TRAINING . "  tr
+						LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
+						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+				WHERE training_date > $time AND DATE_FORMAT(FROM_UNIXTIME(training_date), '%m') = '$month' ORDER BY training_date";
+	#	if ( !($result = $db->sql_query($sql)) )
+	#	{
+	#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	#	}
+	#	$train = $db->sql_fetchrowset($result);
+		$train = _cached($sql, $cache);
+		
+		$i = 0;
+		
+		while ( $i < count($train) )
+=======
 		$time	= time() - 86400;
 		$month	= date("m", time());
 		$cache	= 'dsp_sn_next_training';
@@ -765,15 +858,32 @@ function display_next_training()
 		$train = _cached($sql, $cache);
 		
 		if ( $train )
+>>>>>>> .r85
 		{
+<<<<<<< .mine
+			$team_name	= $train[$i]['team_name'];
+			$game_size	= $train[$i]['game_size'];
+			$game_image	= $train[$i]['game_image'];
+=======
 			$cnt = count($train);
+>>>>>>> .r85
 			
+<<<<<<< .mine
+			$game = "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" >";
+			$name = ( strlen($train[$i]['training_vs']) < 10 ) ? $train[$i]['training_vs'] : substr($train[$i]['training_vs'], 0, 9) . '...';
+	
+			$template->assign_block_vars('_sn_next_training._training_row', array(
+				'GAME'	=> $game,
+				'NAME'	=> "<a href=\"" . check_sid('training.php?mode=detail&amp;' . POST_TRAINING . '=' . $train[$i]['training_id']) . "\">$name</a>",
+				'DATE'	=> create_date('d H:i', $train[$i]['training_date'], $userdata['user_timezone']),
+=======
 			for ( $i = 0; $i < $cnt; $i++ )
 			{
 				$team_name	= $train[$i]['team_name'];
 				$game_size	= $train[$i]['game_size'];
 				$game_image	= $train[$i]['game_image'];
 				
+>>>>>>> .r85
 				$game = "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" >";
 				$name = ( strlen($train[$i]['training_vs']) < 10 ) ? $train[$i]['training_vs'] : substr($train[$i]['training_vs'], 0, 9) . '...';
 		

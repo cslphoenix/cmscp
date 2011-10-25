@@ -6,7 +6,11 @@
 
 <table class="header">
 <tr>
+<<<<<<< .mine
+	<td class="row4 small">{L_EXPLAIN}</td>
+=======
 	<td>{L_EXPLAIN}</td>
+>>>>>>> .r85
 </tr>
 </table>
 

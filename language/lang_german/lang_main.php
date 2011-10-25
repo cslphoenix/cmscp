@@ -6,10 +6,15 @@ include('lang_teamspeak.php');
 
 $lang = array_merge($lang, array(
 
+<<<<<<< .mine
+	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
+
+=======
 	'cur_max'	=> '%s / %s',
 
 	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
 
+>>>>>>> .r85
 	'main'	=> 'Main Navi',
 	'clan'	=> 'Clan Navi',
 	'com'	=> 'Community Navi',
@@ -26,6 +31,33 @@ $lang = array_merge($lang, array(
 	
 	'maps'	=> 'Karten',
 	
+<<<<<<< .mine
+	'match_update'	=> 'bearbeiten',
+	'match_detail'	=> 'Details bearbeiten',
+	
+	'lineup_player'		=> 'Spieler: %s',
+	'lineup_players'	=> 'Spieler: %s<br />Ersatz: %s',
+	
+	'msg_change_status_none'	=> 'Status nicht verändert.',
+	'msg_change_status_create'	=> 'Status hinzugefügt.',
+	'msg_change_status_update'	=> 'Status geändert.',
+	
+	'msg_empty_nick'	=> 'Bitte ein Nickname eintragen!',
+	'msg_empty_mail'	=> 'Bitte ein Mail eintragen!',
+	'msg_empty_text'	=> 'Bitte ein Nachricht eintragen!',
+	'msg_empty_captcha'	=> 'Bitte ein Captcha richtig eintragen!',
+	
+	'post_normal'	=> 'Normal',
+	'post_sticky'	=> 'Wichtig',
+	'post_announce'	=> 'Ankündigung',
+	'post_global'	=> 'Globaleankündigung',
+	
+	'msg_empty_subject'	=> 'Bitte Thementitel eintragen!',
+	'msg_empty_message'	=> 'Bitte Themennachricht eintragen!',
+	
+	'newtopic'	=> 'Thema erstellt',
+	
+=======
 	'match_update'	=> 'bearbeiten',
 	'match_detail'	=> 'Details bearbeiten',
 	
@@ -55,8 +87,69 @@ $lang = array_merge($lang, array(
     'sort_others'		=> 'andere',
 	'sort_by_letter'	=> 'Nur Benutzernamen beginnend mit',
 
+>>>>>>> .r85
 ));
 
+<<<<<<< .mine
+$lang = array_merge($lang, array(
+	'language' => array(
+		'german' => 'Deutsch',
+	),
+));
+
+/* server error */
+$lang = array_merge($lang, array(
+	'unknown_error'	=> 'Unknown Error',
+	'code_404'	=> '404 - Not Found',
+	'desc_404'	=> 'The page you are trying to reach does not exist on this server.<br>You can browse the forum by following one of the links above.<br><br>We apologise for the inconvenience.',
+	'code_401'	=> '401 - Incorrect Password',
+	'desc_401'	=> 'The user_name or password you supplied is not correct.<br>You can browse the forum by following one of the links above.',
+	'code_403'	=> '403 - Access Denied',
+	'desc_403'	=> 'You don\'t have the proper rights to view this page.<br>You can browse the forum by following one of the links above.',
+	'code_500'	=> '500 - Internal Server Error',
+	'desc_500'	=> 'An Internal Server Error occurred.<br>If reloading the page doens\'t help, please contact the system administrator.',
+));
+
+$lang['msg_match_fail'] = 'Match nicht vorhanden oder Match nicht freigegeben!';
+$lang['at_today'] = "Heute %s"; // %s is the time
+$lang['at_yesterday'] = "Gestern %s"; // %s is the time
+$lang['at_tomorrow'] = "Morgen %s"; // %s is the time
+
+$lang['news'] = 'News';
+$lang['lobby_news'] = 'News';
+
+$lang['comment']	= '%s neuer Kommentar';
+$lang['comments']	= '%s neue Kommentare';
+
+$lang['sprintf_comment']	= 'Kommentar: 1 Kommentar';
+$lang['sprintf_comments']	= 'Kommentare: %s Kommentare';
+$lang['sprintf_comment_no']	= 'Kommentar: keine Kommentare';
+
+/* event */
+$lang = array_merge($lang, array(
+
+	'event_upcoming'	=> 'Ereignis: Aktuelle',
+	'event_expired'		=> 'Ereignis: Abgelaufen',
+
+	'sprintf_event'	=> 'am: %s von %s - %s',
+	
+	'join_not'	=> 'keine Teilnahme',
+	'join_yes'	=> 'Teilnahme',
+	'join_none'	=> 'Unbekannt',
+));
+
+$lang = array_merge($lang, array(
+	'header_sprintf'	=> '%s: %s',
+	'update_sprintf'	=> '%s bearbeiten',
+	
+	'header_overview'	=> 'Übersicht',
+	'header_news'		=> 'News',
+	'header_event'		=> 'Ereignis',
+	'header_match'		=> 'Begegnung',
+	'header_calendar'	=> 'Kalender',
+));
+
+=======
 $lang = array_merge($lang, array(
 	'language' => array(
 		'german' => 'Deutsch',
@@ -117,6 +210,7 @@ $lang = array_merge($lang, array(
 	'header_group'			=> 'Benutzergruppe',
 ));
 
+>>>>>>> .r85
 $lang['current_time'] = 'Aktuelles Datum und Uhrzeit: %s';
 
 $lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';

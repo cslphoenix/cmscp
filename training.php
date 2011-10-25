@@ -11,16 +11,53 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
+<<<<<<< .mine
+$url	= POST_TRAINING;
+=======
 $start	= ( request('start', 0) ) ? request('start', 0) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
+>>>>>>> .r85
 
+<<<<<<< .mine
+$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( $start < 0 ) ? 0 : $start;
+=======
 $log	= SECTION_TRAINING;
 $url	= POST_TRAINING;
+>>>>>>> .r85
 
+<<<<<<< .mine
+$team	= request(POST_TEAMS, 0);
+$data	= request(POST_MATCH, 0);
+$mode	= request('mode', 1);
+$smode	= request('smode', 1);
+=======
 $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
+>>>>>>> .r85
 
+<<<<<<< .mine
+$time	= time();
+$user	= $userdata['user_id'];
+
+$error	= '';
+$fielde	= '';
+$fields	= '';
+
+$page_title = $mode ? $lang['match_details'] : $lang['match'];
+
+$template->set_filenames(array(
+	'body'		=> 'body_training.tpl',
+	'error'		=> 'error_body.tpl',
+));
+
+
+
+main_header();
+
+if ( !$mode && $userdata['session_logged_in'] )
+=======
 $data	= request($url, 0);
 $mode	= request('mode', 1);
 
@@ -36,6 +73,7 @@ $template->set_filenames(array(
 main_header();
 
 if ( !$mode && $userdata['session_logged_in'] )
+>>>>>>> .r85
 {
 	$template->assign_block_vars('_list', array());
 	
