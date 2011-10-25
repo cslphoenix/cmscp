@@ -41,8 +41,13 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 		case CASH_BANK:		$field_id = '';				break;
 		case CONTACT:		$field_id = 'contact_id';	break;
 		case DISALLOW:		$field_id = 'disallow_id';	break;
+<<<<<<< .mine
+		case DOWNLOAD:		$field_id = 'file_id';		break;
+		case DOWNLOAD_CAT:	$field_id = 'download_id';	break;
+=======
 		case DOWNLOAD:		$field_id = 'file_id';		break;
 		case DOWNLOAD_CAT:	$field_id = 'cat_id';		break;
+>>>>>>> .r85
 		case EVENT:			$field_id = 'event_id';		break;
 		case ERROR:			$field_id = 'error_id';		break;
 		case FORUM:			$field_id = 'forum_id';		break;		
@@ -187,6 +192,15 @@ function simple_order($mode, $option, $css, $default)
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
+<<<<<<< .mine
+			break;
+		*/
+		case GAMES:
+		
+			$field = 'game';
+		
+			$sql = "SELECT * FROM " . GAMES . " WHERE $option ORDER BY game_order ASC";
+=======
 			break;
 		*/
 		
@@ -195,6 +209,7 @@ function simple_order($mode, $option, $css, $default)
 			$field = 'server';
 		
 			$sql = "SELECT * FROM " . SERVER . " WHERE server_type = $option ORDER BY server_order ASC";
+>>>>>>> .r85
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -202,20 +217,33 @@ function simple_order($mode, $option, $css, $default)
 			
 			break;
 			
+<<<<<<< .mine
+		case GROUPS:
+=======
 		case GAMES:
+>>>>>>> .r85
 		
+<<<<<<< .mine
+			$field = 'group';
+		
+			$sql = "SELECT * FROM " . GROUPS . " WHERE $option ORDER BY group_order ASC";
+=======
 			$field = 'game';
 		
 			$sql = "SELECT * FROM " . GAMES . " WHERE $option ORDER BY game_order ASC";
+>>>>>>> .r85
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
+<<<<<<< .mine
+=======
 			break;
 			
 		case GROUPS:
 		
+>>>>>>> .r85
 			$field = 'group';
 		
 			$sql = "SELECT * FROM " . GROUPS . " WHERE $option ORDER BY group_order ASC";

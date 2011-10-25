@@ -50,8 +50,13 @@
 </tr>
 <!-- BEGIN _clan_row -->
 <tr>
+<<<<<<< .mine
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._clan_row.URL}</span>{_display._clan_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._clan_row.LANG} {_display._clan_row.SHOW} {_display._clan_row.INTERN}{_display._clan_row.MOVE_UP}{_display._clan_row.MOVE_DOWN}{_display._clan_row.UPDATE} {_display._clan_row.DELETE}</td>
+=======
 	<td><span style="float:right;">{_display._clan_row.URL}</span>{_display._clan_row.NAME}</td>
 	<td>{_display._clan_row.LANG} {_display._clan_row.SHOW} {_display._clan_row.INTERN}{_display._clan_row.MOVE_UP}{_display._clan_row.MOVE_DOWN}{_display._clan_row.UPDATE} {_display._clan_row.DELETE}</td>
+>>>>>>> .r85
 </tr>
 <!-- END _clan_row -->
 <!-- BEGIN _no_entry_clan -->
@@ -78,8 +83,13 @@
 </tr>
 <!-- BEGIN _com_row -->
 <tr>
+<<<<<<< .mine
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._com_row.URL}</span>{_display._com_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._com_row.LANG} {_display._com_row.SHOW} {_display._com_row.INTERN}{_display._com_row.MOVE_UP}{_display._com_row.MOVE_DOWN}{_display._com_row.UPDATE} {_display._com_row.DELETE}</td>
+=======
 	<td><span style="float:right;">{_display._com_row.URL}</span>{_display._com_row.NAME}</td>
 	<td>{_display._com_row.LANG} {_display._com_row.SHOW} {_display._com_row.INTERN}{_display._com_row.MOVE_UP}{_display._com_row.MOVE_DOWN}{_display._com_row.UPDATE} {_display._com_row.DELETE}</td>
+>>>>>>> .r85
 </tr>
 <!-- END _com_row -->
 <!-- BEGIN _no_entry_com -->
@@ -106,8 +116,13 @@
 </tr>
 <!-- BEGIN _misc_row -->
 <tr>
+<<<<<<< .mine
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._misc_row.URL}</span>{_display._misc_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._misc_row.LANG} {_display._misc_row.SHOW} {_display._misc_row.INTERN}{_display._misc_row.MOVE_UP}{_display._misc_row.MOVE_DOWN}{_display._misc_row.UPDATE} {_display._misc_row.DELETE}</td>
+=======
 	<td><span style="float:right;">{_display._misc_row.URL}</span>{_display._misc_row.NAME}</td>
 	<td>{_display._misc_row.LANG} {_display._misc_row.SHOW} {_display._misc_row.INTERN}{_display._misc_row.MOVE_UP}{_display._misc_row.MOVE_DOWN}{_display._misc_row.UPDATE} {_display._misc_row.DELETE}</td>
+>>>>>>> .r85
 </tr>
 <!-- END _misc_row -->
 <!-- BEGIN _no_entry_misc -->
@@ -134,8 +149,13 @@
 </tr>
 <!-- BEGIN _user_row -->
 <tr>
+<<<<<<< .mine
+	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._user_row.URL}</span>{_display._user_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._user_row.LANG} {_display._user_row.SHOW} {_display._user_row.INTERN}{_display._user_row.MOVE_UP}{_display._user_row.MOVE_DOWN}{_display._user_row.UPDATE} {_display._user_row.DELETE}</td>
+=======
 	<td><span style="float:right;">{_display._user_row.URL}</span>{_display._user_row.NAME}</td>
 	<td>{_display._user_row.LANG} {_display._user_row.SHOW} {_display._user_row.INTERN}{_display._user_row.MOVE_UP}{_display._user_row.MOVE_DOWN}{_display._user_row.UPDATE} {_display._user_row.DELETE}</td>
+>>>>>>> .r85
 </tr>
 <!-- END _user_row -->
 <!-- BEGIN _no_entry_user -->

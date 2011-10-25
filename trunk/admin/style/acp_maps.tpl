@@ -29,11 +29,21 @@
 </tr>
 <!-- BEGIN _map_row -->
 <tr>
+<<<<<<< .mine
+	<td class="row_class1"><span class="gen">{_display._cat_row._map_row.NAME}</span><span style="float:right;">{_display._cat_row._map_row.FILE} :: {_display._cat_row._map_row.TYPE}</span></td>
+	<td class="row_class2" align="center" valign="middle" nowrap="nowrap">{_display._cat_row._map_row.MOVE_UP}{_display._cat_row._map_row.MOVE_DOWN} {_display._cat_row._map_row.UPDATE} {_display._cat_row._map_row.DELETE}</td>
+=======
 	<td><span style="float:right;">{_display._cat_row._map_row.FILE} :: {_display._cat_row._map_row.TYPE}</span>{_display._cat_row._map_row.NAME}</td>
 	<td>{_display._cat_row._map_row.MOVE_UP}{_display._cat_row._map_row.MOVE_DOWN}{_display._cat_row._map_row.UPDATE} {_display._cat_row._map_row.DELETE}</td>
+>>>>>>> .r85
 </tr>
 <!-- END _map_row -->
+<<<<<<< .mine
+<!-- </tbody> -->
 <!-- BEGIN _entry_empty -->
+=======
+<!-- BEGIN _entry_empty -->
+>>>>>>> .r85
 <tr>
 	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
 </tr>

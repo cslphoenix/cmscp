@@ -136,12 +136,73 @@ function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $p
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
+<<<<<<< .mine
+		log_add(LOGS_USER, $userdata['user_id'], $userdata['session_ip'], SECTION_COMMENT, 'comment_' . $table);
+=======
 		log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_COMMENT, 'comment_' . $table);
+>>>>>>> .r85
 	}
 	
 	return;
 }
 
+<<<<<<< .mine
+function msg_add($table, $type_id, $user_id, $poster_msg, $poster_nick = '', $poster_mail = '', $poster_hp = '')
+{
+	global $config, $settings, $lang, $userdata, $user_ip, $db;
+	
+	$time = time();
+	
+	if ( $user_id == ANONYMOUS )
+	{
+		$poster_nick	= $poster_nick;
+		$poster_email	= $poster_mail;
+		$poster_hp		= $poster_hp;
+		$sql_fields		= 'poster_nick, poster_email, poster_hp, ';
+		$sql_data		= "'$poster_nick', '$poster_mail', '$poster_hp', ";
+	}
+	else
+	{
+		$poster_nick	= '';
+		$poster_email	= '';
+		$poster_hp		= '';
+		$sql_fields		= '';
+		$sql_data		= '';
+	}
+	
+	$poster_id = $userdata['user_id'];
+	$poster_ip = $userdata['session_ip'];
+	
+	switch ( $table )
+	{
+		case 'news':	$table_name = NEWS;		$table_read = READ_NEWS;	break;
+		case 'match':	$table_name = MATCH;	$table_read	= READ_MATCH;	break;
+		case 'train':	$table_name = TRAINING;	$table_read	= READ_TRAIN;	break;
+		
+		case 'tracker':	$table_name = TRACKER;	$table_read	= READ_TRACKER;	break;
+				
+		default:	message(GENERAL_ERROR, 'No Table given');	break;
+	}
+	
+	$sql = "INSERT INTO " . COMMENT . " (type, type_id, poster_id, $sql_fields poster_ip, poster_text, time_create)
+				VALUES ($table_read, $type_id, $poster_id, $sql_data '$poster_ip', '$poster_msg', $time)";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$sql = "UPDATE $table_name SET " . $table . "_comment = " . $table . "_comment + 1 WHERE " . $table . "_id = $type_id";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	log_add(LOGS_USER, SECTION_COMMENT, 'comment_' . $table);
+	
+	return;
+}
+
+=======
 function msg_add($table, $type_id, $user_id, $poster_msg, $poster_nick = '', $poster_mail = '', $poster_hp = '')
 {
 	global $config, $settings, $lang, $userdata, $user_ip, $db;
@@ -197,4 +258,5 @@ function msg_add($table, $type_id, $user_id, $poster_msg, $poster_nick = '', $po
 	return;
 }
 
+>>>>>>> .r85
 ?>

@@ -414,6 +414,15 @@ else
 			$title	= $news[$i]['news_intern'] ? sprintf($lang['sprintf_news_title'], $news[$i]['news_title']) : $news[$i]['news_title'];
 			$status	= $news[$i]['news_public'] ? $images['icon_acp_public'] : $images['icon_acp_privat'];
 			
+<<<<<<< .mine
+			$template->assign_block_vars('_display._news_row', array(
+				'TITLE'		=> "<a href=\"" . check_sid("$file?mode=_update&amp;$url=$news_id") . "\">$title</a>",
+				'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_time_public'], $userdata['user_timezone']),
+				'STATUS'	=> $status,
+				'PUBLIC'	=> $public,
+				'UPDATE'	=> $update,
+				'DELETE'	=> $delete,
+=======
 			if ( $news[$i]['in_send'] )
 			{
 				$list = explode('; ', $news[$i]['in_send']);
@@ -441,6 +450,14 @@ else
 				));
 			}
 		}
+		
+		$current_page = ( !$count ) ? 1 : ceil( $count / $settings['site_entry_per_page'] );
+			
+			$template->assign_vars(array(
+				'PAGE_PAGING' => generate_pagination("$file?", $count, $settings['site_entry_per_page'], $start),
+				'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+>>>>>>> .r85
+			));
 		
 		$current_page = ( !$count ) ? 1 : ceil( $count / $settings['site_entry_per_page'] );
 			

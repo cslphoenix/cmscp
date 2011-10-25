@@ -127,11 +127,19 @@
 	<td colspan="2">
 		<table class="rows">
 		<tr>
+<<<<<<< .mine
+			<td class="rowHead" align="center">{L_NAME}</td>
+			<td class="rowHead" align="center">{L_ROWS}</td>
+			<td class="rowHead" align="center">{L_SIZE}</td>
+			<td class="rowHead" align="center">{L_STATUS}</td>
+			<td class="rowHead" align="center">#</td>
+=======
 			<th align="center">{L_NAME}</th>
 			<th align="center">{L_ROWS}</th>
 			<th align="center">{L_SIZE}</th>
 			<th align="center">{L_STATUS}</th>
 			<th align="center">#</th>
+>>>>>>> .r85
 		</tr>	
 		<!-- BEGIN _optimize_row -->
 		<tr>
@@ -143,11 +151,19 @@
 		</tr>
 		<!-- END _optimize_row -->
 		<tr>
+<<<<<<< .mine
+			<td class="rowHead" align="left">{TOTAL_TBLS}</td>
+			<td class="rowHead" align="right">{TOTAL_ROWS}</td>
+			<td class="rowHead" align="right">{TOTAL_SIZE}</td>
+			<td class="rowHead" align="center">{TOTAL_FREE}</td>
+			<td class="rowHead" align="center">&nbsp;</td>
+=======
 			<td class="rowHead" align="left">{TOTAL_TBLS}</td>
 			<td class="rowHead" align="right">{TOTAL_ROWS}</td>
 			<td class="rowHead" align="right">{TOTAL_SIZE}</th>
 	<th>{TOTAL_FREE}</td>
 			<td class="rowHead" align="center">&nbsp;</td>
+>>>>>>> .r85
 		</tr>
 		</table>
 	</td>

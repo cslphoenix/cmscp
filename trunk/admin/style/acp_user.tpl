@@ -100,6 +100,24 @@ function fill(thisValue)
 <!-- END _head -->
 
 <!-- BEGIN _input -->
+<<<<<<< .mine
+<script>
+
+$(function()
+{
+//	var date = $('#datepicker').datepicker({ dateFormat: 'd.m.yy' });
+	
+	$( "#datepicker" ).datepicker(
+	{
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'd.m.yy'
+	});
+});
+
+</script>
+<table class="update" border="0" cellspacing="0" cellpadding="0">
+=======
 <script>
 
 $(function()
@@ -116,6 +134,7 @@ $(function()
 
 </script>
 <table class="update">
+>>>>>>> .r85
 <tr>
 	<td colspan="2">
 		<div id="navcontainer">
@@ -206,6 +225,83 @@ $(function()
 </form>
 <!-- END _input -->
 
+<<<<<<< .mine
+<!-- BEGIN _settings -->
+<table class="update" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<th colspan="2">
+		<div id="navcontainer">
+			<ul id="navlist">
+				<li id="active"><a href="#" id="current">{L_SETTINGS}</a></li>
+			</ul>
+		</div>
+	</th>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_PUBLIC_VIEW_EMAIL}</span></td>
+	<td class="row2"><label><input type="radio" name="user_viewemail" value="1" {VIEWEMAIL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="user_viewemail" value="0" {VIEWEMAIL_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_HIDE_USER}</span></td>
+	<td class="row2"><label><input type="radio" name="hideonline" value="1" {HIDE_USER_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="hideonline" value="0" {HIDE_USER_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_NOTIFY_ON_REPLY}</span></td>
+	<td class="row2"><label><input type="radio" name="notifyreply" value="1" {NOTIFY_REPLY_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="notifyreply" value="0" {NOTIFY_REPLY_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_NOTIFY_ON_PRIVMSG}</span></td>
+	<td class="row2"><label><input type="radio" name="notifypm" value="1" {NOTIFY_PM_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="notifypm" value="0" {NOTIFY_PM_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_POPUP_ON_PRIVMSG}</span></td>
+	<td class="row2"><label><input type="radio" name="popup_pm" value="1" {POPUP_PM_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="popup_pm" value="0" {POPUP_PM_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ADD_SIGNATURE}</span></td>
+	<td class="row2"><label><input type="radio" name="attachsig" value="1" {ALWAYS_ADD_SIGNATURE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="attachsig" value="0" {ALWAYS_ADD_SIGNATURE_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ALLOW_BBCODE}</span></td>
+	<td class="row2"><label><input type="radio" name="allowbbcode" value="1" {ALWAYS_ALLOW_BBCODE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="allowbbcode" value="0" {ALWAYS_ALLOW_BBCODE_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ALLOW_HTML}</span></td>
+	<td class="row2"><label><input type="radio" name="allowhtml" value="1" {ALWAYS_ALLOW_HTML_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="allowhtml" value="0" {ALWAYS_ALLOW_HTML_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_ALWAYS_ALLOW_SMILIES}</span></td>
+	<td class="row2"><label><input type="radio" name="allowsmilies" value="1" {ALWAYS_ALLOW_SMILIES_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="allowsmilies" value="0" {ALWAYS_ALLOW_SMILIES_NO} />&nbsp;{L_NO}</label></td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_BOARD_LANGUAGE}</span></td>
+	<td class="row2">{S_LANG}</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_BOARD_STYLE}</span></td>
+	<td class="row2">{S_STYLE}</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_TIMEZONE}</span></td>
+	<td class="row2">{S_TIMEZONE}</td>
+</tr>
+<tr> 
+	<td class="row1"><span class="gen">{L_DATE_FORMAT}</span><br /><span class="gensmall">{L_DATE_FORMAT_EXPLAIN}</span></td>
+	<td class="row2"><input class="post" type="text" name="dateformat" value="{DATE_FORMAT}" maxlength="16" /></td>
+</tr>
+
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END _settings -->
+
+=======
 <!-- BEGIN _settings -->
 <table class="update">
 <tr>
@@ -281,6 +377,7 @@ $(function()
 </form>
 <!-- END _settings -->
 
+>>>>>>> .r85
 <!-- BEGIN _fields -->
 <table class="update">
 <tr>

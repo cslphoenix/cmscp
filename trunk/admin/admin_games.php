@@ -119,6 +119,11 @@ else
 					}
 					else
 					{
+<<<<<<< .mine
+						log_add(LOG_ADMIN, $log, 'error', $error);
+						
+=======
+>>>>>>> .r85
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
 						
@@ -126,6 +131,31 @@ else
 					}
 				}
 				
+<<<<<<< .mine
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['game']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['game'], $data['game_name']),
+					'L_NAME'	=> $lang['game_name'],
+					'L_TAG'		=> $lang['game_tag'],
+					'L_IMAGE'	=> $lang['game_image'],
+					'L_SIZE'	=> $lang['image_size'],
+					
+					'NAME'		=> $data['game_name'],
+					'TAG'		=> $data['game_tag'],
+					'SIZE'		=> $data['game_size'],
+					'IMAGE'		=> $data['game_image'] ? $path_dir . $data['game_image'] : $images['icon_acp_spacer'],
+					
+					'S_ORDER'	=> simple_order(GAMES, 'game_id != -1', 'select', $data['game_order']),
+					'S_IMAGE'	=> select_box_files('post', 'game_image', $path_dir, $data['game_image']),
+										
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+				
+=======
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
@@ -149,6 +179,7 @@ else
 					'S_FIELDS'	=> $fields,
 				));
 				
+>>>>>>> .r85
 				$template->pparse('body');
 				
 				break;
@@ -191,10 +222,17 @@ else
 						'S_FIELDS'	=> $fields,
 					));
 				}
+<<<<<<< .mine
+				else
+				{
+					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['game']));
+				}
+=======
 				else
 				{
 					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['title']));
 				}
+>>>>>>> .r85
 				
 				$template->pparse('confirm');
 				
@@ -244,8 +282,12 @@ else
 			$game_image	= $games[$i]['game_image'] ? $games[$i]['game_image'] : $images['icon_acp_spacer'];
 			
 			$template->assign_block_vars('_display._game_row', array(
+<<<<<<< .mine
+				'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$game_id") . '">' . $games[$i]['game_name'] . '</a>',
+=======
 				'GAME'		=> display_gameicon($games[$i]['game_size'], $game_image),
 				'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$game_id") . '">' . $games[$i]['game_name'] . '</a>',
+>>>>>>> .r85
 				'TAG'		=> $games[$i]['game_tag'],
 				
 				'MOVE_UP'	=> ( $game_order != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$game_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',

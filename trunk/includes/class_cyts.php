@@ -142,7 +142,7 @@ class cyts {
 		if ($this->isSAdmin) {
 			$this->wiCookie = false;
 			$this->wiPort   = $wiPort;
-			$sRet = $this->_wipost("/login.tscmd", array("username" => $this->user, "password" => $this->pass, "superadmin" => 1), $sTimeout);
+			$sRet = $this->_wipost("/login.tscmd", array("user_name" => $this->user, "password" => $this->pass, "superadmin" => 1), $sTimeout);
 			if (!$sRet || !isset($sRet[0]["Location"]) || $sRet[0]["Location"] != "index.html" || !isset($sRet[0]["Set-Cookie"])) {
 				$this->wiPort = false;
 				return false;
@@ -156,7 +156,7 @@ class cyts {
 		} elseif ($this->isAdmin) {
 			$this->wiCookie = false;
 			$this->wiPort   = $wiPort;
-			$sRet = $this->_wipost("/login.tscmd", array("username" => $this->user, "password" => $this->pass, "serverport" => $this->udp), $sTimeout);
+			$sRet = $this->_wipost("/login.tscmd", array("user_name" => $this->user, "password" => $this->pass, "serverport" => $this->udp), $sTimeout);
 			if (!$sRet || !isset($sRet[0]["Location"]) || $sRet[0]["Location"] != "index.html" || !isset($sRet[0]["Set-Cookie"])) {
 				$this->wiPort = false;
 				return false;
@@ -745,7 +745,7 @@ class cyts {
   * @version    2.0
   * @access		public
   * @param      integer	$pID	The player ID
-  * @see		info_getPlayerByName(), to get a player's id from its username
+  * @see		info_getPlayerByName(), to get a player's id from its user_name
   * @return     boolean True at success, False at failure
   */
 	function admin_kickFromChannel($pID) {
@@ -761,7 +761,7 @@ class cyts {
   * @access		public
   * @param      integer	$pID The player ID
   * @param      string	$reason	Reason for kick
-  * @see		info_getPlayerByName(), to get a player's id from its username
+  * @see		info_getPlayerByName(), to get a player's id from its user_name
   * @return     boolean True at success, False at failure
   */
 	function admin_kick($pID, $reason="") {
@@ -775,7 +775,7 @@ class cyts {
   * @version    2.0
   * @access		public
   * @param      integer	$pID	The player ID
-  * @see		info_getPlayerByName(), to get a player's id from its username
+  * @see		info_getPlayerByName(), to get a player's id from its user_name
   * @return     boolean True at success, False at failure
   */
 	function admin_remove($pID) {
@@ -790,7 +790,7 @@ class cyts {
   * @access		public
   * @param      integer	$pID	The Player ID
   * @param      integer	$cID	The Channel ID
-  * @see		info_getPlayerByName(), to get a player's id from its username
+  * @see		info_getPlayerByName(), to get a player's id from its user_name
   * @see		info_getChannelByName(), to get a channel's id from its name
   * @return     boolean True at success, False at failure
   */

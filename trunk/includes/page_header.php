@@ -141,6 +141,21 @@ if ( $settings['site_counter'] == '1' )
 	{
 		$list = array();
 		
+<<<<<<< .mine
+		for ( $i = 0; $i < count($groups); $i++ )
+		{
+			$groups_id		= $groups[$i]['group_id'];
+			$groups_name	= $groups[$i]['group_name'];
+			$groups_style	= $groups[$i]['group_color'];
+			
+			if ( $groups[$i]['group_legend'] == 1 )
+			{
+				$list[] = "<a href=\"" . check_sid("groups.php?mode=view&amp;" . POST_GROUPS . "=$groups_id") . "\" style=\"color:#$groups_style\"><b>$groups_name</b></a>";
+			}
+		}
+		
+		$groups_list = implode(', ', $list);
+=======
 		for ( $i = 0; $i < count($groups); $i++ )
 		{
 			$groups_id		= $groups[$i]['group_id'];
@@ -154,6 +169,7 @@ if ( $settings['site_counter'] == '1' )
 		}
 		
 		$groups_list = implode(', ', $list);
+>>>>>>> .r85
 	}
 	else
 	{

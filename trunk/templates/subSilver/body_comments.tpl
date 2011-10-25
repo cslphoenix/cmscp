@@ -40,7 +40,7 @@
 			<td class="row2"><textarea class="textarea" name="poster_msg" id="poster_msg" cols="30" rows="5">{POSTER_MSG}</textarea></td>
 		</tr>
 		<tr>
-			<td class="footer" colspan="2"><input type="submit" class="button2" name="submit" value="as{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
+			<td class="footer" colspan="2"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
 		</tr>
 		</table>
 	</td>

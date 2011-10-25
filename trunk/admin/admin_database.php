@@ -53,7 +53,24 @@ else
 			$Val = floor($Val / 256);
 		}
 		return $return;
+<<<<<<< .mine
+	} 
+
+=======
 	}
+>>>>>>> .r85
+	
+<<<<<<< .mine
+=======
+	$template->set_filenames(array(
+		'body' => 'style/acp_database.tpl',
+	));
+>>>>>>> .r85
+	
+<<<<<<< .mine
+	
+	
+	
 	
 	$template->set_filenames(array(
 		'body' => 'style/acp_database.tpl',
@@ -64,6 +81,13 @@ else
 		case '_backup':
 		
 			if ( !(request('submit', 1)) )
+=======
+	switch ( $mode )
+	{
+		case '_backup':
+		
+			if ( !(request('submit', 1)) )
+>>>>>>> .r85
 			{
 				include('./page_header_admin.php');
 				

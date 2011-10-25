@@ -33,27 +33,192 @@ $template->set_filenames(array(
 	'error'		=> 'error_body.tpl',
 ));
 
-$sql = "SELECT * FROM " . EVENT . " ORDER BY event_date DESC, event_id DESC";
-$tmp = _cached($sql, 'data_event');
-
-if ( $data && $tmp )
+if ( $mode == '' )
+{
+	$template->assign_block_vars('_list', array());
+	
+	$sql = "SELECT * FROM " . EVENT . " ORDER BY event_date DESC, event_id DESC";
+#	if ( !($result = $db->sql_query($sql)) )
+#	{
+#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+#	}
+#	$events = $db->sql_fetchrowset($result);
+	$events = _cached($sql, 'data_event');
+	
+	$page_title = $lang['event'];
+	
+	main_header();
+	
+	if ( !$events )
+	{
+		$template->assign_block_vars('_list._entry_empty_new', array());
+		$template->assign_block_vars('_list._entry_empty_old', array());
+	}
+	else
+	{
+		foreach ( $events as $event => $row )
+		{
+			if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] > time() )
+			{
+				$new[]		= $row;
+				$new_ids[]	= $row['event_id'];
+				
+			}
+			else if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] < time() )
+			{
+				$old[]		= $row;
+				$old_ids[]	= $row['event_id'];
+			}
+		}
+		
+		$count = isset($old) ? count($old) : 0;
+		
+		if ( !$new )
+		{
+			$template->assign_block_vars('_list._entry_empty_new', array());
+		}
+		else
+		{
+			$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $new_ids) . ")";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$in_ary[$row['event_id']][$row['user_id']] = $row['user_status'];
+			}
+			
+			for ( $i = 0; $i < count($new); $i++ )
+			{
+				$event_id	= $new[$i]['event_id'];
+				$event_date	= create_date('d.m.Y', $new[$i]['event_date'], $userdata['user_timezone']);
+				$event_time	= create_date('H:i', $new[$i]['event_date'], $userdata['user_timezone']);
+				$event_dura	= create_date('H:i', $new[$i]['event_duration'], $userdata['user_timezone']);
+				
+				$css	= 'none';
+				$status	= $lang['join_none'];
+				
+				if ( isset($in_ary[$event_id]) )
+				{
+					foreach ( $in_ary[$event_id] as $key => $row )
+					{
+						if ( $key == $userdata['user_id'] )
+						{
+							switch ( $row )
+							{
+								case STATUS_NO:		$css = 'no';	$status = $lang['join_not'];	break;
+								case STATUS_YES:	$css = 'yes';	$status = $lang['join_yes'];	break;
+							}
+						}
+					}
+				}
+				
+				$template->assign_block_vars('_list._new_row', array(
+					'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
+					'CSS'		=> $css,
+					'STATUS'	=> $status,
+					'TITLE'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$event_id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
+					'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
+					
+				));
+			}
+		}
+		
+		if ( !$old )
+		{
+			$template->assign_block_vars('_list._entry_empty_old', array());
+		}
+		else
+		{
+			$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $old_ids) . ")";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$in_ary[$row['event_id']][$row['user_id']] = $row['user_status'];
+			}
+			
+			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $count); $i++ )
+			{
+				$event_id	= $old[$i]['event_id'];
+				$event_date	= create_date('d.m.Y', $old[$i]['event_date'], $userdata['user_timezone']);
+				$event_time	= create_date('H:i', $old[$i]['event_date'], $userdata['user_timezone']);
+				$event_dura	= create_date('H:i', $old[$i]['event_duration'], $userdata['user_timezone']);
+				
+				$css	= 'none';
+				$status	= $lang['join_none'];
+					
+				if ( isset($in_ary[$event_id]) )
+				{
+					foreach ( $in_ary[$event_id] as $key => $row )
+					{
+						if ( $key == $userdata['user_id'] )
+						{
+							switch ( $row )
+							{
+								case STATUS_NO:		$css = 'no';	$status = $lang['join_not'];	break;
+								case STATUS_YES:	$css = 'yes';	$status = $lang['join_yes'];	break;
+							}
+						}
+					}
+				}
+				
+				$template->assign_block_vars('_list._old_row', array(
+					'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
+					'CSS'		=> $css,
+					'STATUS'	=> $status,
+					'TITLE'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$event_id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
+					'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
+				));
+			}
+		}
+		
+		$current_page = !$count ? 1 : ceil( $count / $settings['site_entry_per_page'] );
+		
+		$template->assign_vars(array(
+			'L_HEAD'	=> $lang['event'],
+			
+			'L_UPCOMING'	=> $lang['event_upcoming'],
+			'L_EXPIRED'		=> $lang['event_expired'],
+			
+			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+			'PAGE_PAGING'	=> generate_pagination("$file?", $count, $settings['site_entry_per_page'], $start ),
+			
+			'S_ACTION'	=> check_sid($file),
+		));
+	}
+}
+else if ( $mode == 'view' && $data )
 {
 	$template->assign_block_vars('_view', array());
 	
-	foreach ( $tmp as $key => $row )
+	$sql = "SELECT * FROM " . EVENT . " ORDER BY event_date DESC, event_id DESC";
+#	if ( !($result = $db->sql_query($sql)) )
+#	{
+#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+#	}
+#	$event = $db->sql_fetchrowset($result);
+	$event = _cached($sql, 'data_event');
+	
+	foreach ( $event as $key => $row )
 	{
 		if ( $userdata['user_level'] >= $row['event_level'] && $row['event_id'] == $data )
 		{
-			$info = $row;
+			$view = $row;
 		}
 	}
 	
-	if ( !$info )
+	if ( !$view )
 	{
 		message(GENERAL_ERROR, $lang['msg_event_fail']);
 	}
 	
-	$page_title = sprintf($lang['news_head_info'], $info['event_title']);
+	$page_title = sprintf($lang['news_head_info'], $view['event_title']);
 	
 	main_header();
 	
@@ -91,8 +256,23 @@ if ( $data && $tmp )
 		{
 			for ( $i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comments)); $i++ )
 			{
-				$class	= ($i % 2) ? 'row1' : 'row2';
-				$icon	= ( $userdata['session_logged_in'] ) ? ( $unreads || $unread['read_time'] < $comments[$i]['time_create'] ) ? $images['icon_minipost_new'] : $images['icon_minipost'] : $images['icon_minipost'];
+				$class = ($i % 2) ? 'row1' : 'row2';
+				
+				if ( $userdata['session_logged_in'] )
+				{
+					if ( $unreads || $unread['read_time'] < $comment_entry[$i]['time_create'])
+					{
+						$icon = 'images/forum/icon_minipost_new.gif';
+					}
+					else
+					{
+						$icon = 'images/forum/icon_minipost.gif';
+					}
+				}
+				else
+				{
+					$icon = 'images/forum/icon_minipost.gif';
+				}
 				
 				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
 				
@@ -284,150 +464,7 @@ if ( $data && $tmp )
 }
 else
 {
-	$template->assign_block_vars('_list', array());
-	
-	$page_title = $lang['header_event'];
-	
-	main_header();
-	
-	
-	
-	if ( !$tmp )
-	{
-		$template->assign_block_vars('_list._entry_empty_new', array());
-		$template->assign_block_vars('_list._entry_empty_old', array());
-	}
-	else
-	{
-		foreach ( $tmp as $keys => $row )
-		{
-			if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] > time() )
-			{
-				$new[]		= $row;
-				$new_ids[]	= $row['event_id'];
-				
-			}
-			else if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] < time() )
-			{
-				$old[]		= $row;
-				$old_ids[]	= $row['event_id'];
-			}
-		}
-		
-		$cntnew = count($new);
-		$cntold = count($old);
-		
-		if ( !$new )
-		{
-			$template->assign_block_vars('_list._entry_empty_new', array());
-		}
-		else
-		{
-			$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $new_ids) . ")";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$in_ary[$row['event_id']][$row['user_id']] = $row['user_status'];
-			}
-			
-			for ( $i = 0; $i < $cntnew; $i++ )
-			{
-				$event_id	= $new[$i]['event_id'];
-				$event_date	= create_date('d.m.Y', $new[$i]['event_date'], $userdata['user_timezone']);
-				$event_time	= create_date('H:i', $new[$i]['event_date'], $userdata['user_timezone']);
-				$event_dura	= create_date('H:i', $new[$i]['event_duration'], $userdata['user_timezone']);
-				
-				$css	= 'none';
-				$status	= $lang['join_none'];
-
-				if ( isset($in_ary[$event_id][$userdata['user_id']]) )
-				{
-					switch ( $in_ary[$event_id][$userdata['user_id']] )
-					{
-						case STATUS_NO:		$css = 'no';	$status = $lang['join_not'];	break;
-						case STATUS_YES:	$css = 'yes';	$status = $lang['join_yes'];	break;
-					}
-				}
-
-				$template->assign_block_vars('_list._new_row', array(
-					'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
-
-					'TITLE'		=> '<a href="' . check_sid("$file?$url=$event_id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
-					'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
-					
-					'CSS'		=> $css,
-					'STATUS'	=> $status,
-					
-				));
-			}
-		}
-		
-		if ( !$old )
-		{
-			$template->assign_block_vars('_list._entry_empty_old', array());
-		}
-		else
-		{
-			$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $old_ids) . ")";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$in_ary[$row['event_id']][$row['user_id']] = $row['user_status'];
-			}
-			
-			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $cntold); $i++ )
-			{
-				$event_id	= $old[$i]['event_id'];
-				$event_date	= create_date('d.m.Y', $old[$i]['event_date'], $userdata['user_timezone']);
-				$event_time	= create_date('H:i', $old[$i]['event_date'], $userdata['user_timezone']);
-				$event_dura	= create_date('H:i', $old[$i]['event_duration'], $userdata['user_timezone']);
-				
-				$css	= 'none';
-				$status	= $lang['join_none'];
-					
-				if ( isset($in_ary[$event_id][$userdata['user_id']]) )
-				{
-					switch ( $in_ary[$event_id][$userdata['user_id']] )
-					{
-						case STATUS_NO:		$css = 'no';	$status = $lang['join_not'];	break;
-						case STATUS_YES:	$css = 'yes';	$status = $lang['join_yes'];	break;
-					}
-				}
-				
-				$template->assign_block_vars('_list._old_row', array(
-					'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
-
-					'TITLE'		=> '<a href="' . check_sid("$file?$url=$event_id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
-					'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
-					
-					'CSS'		=> $css,
-					'STATUS'	=> $status,
-				));
-			}
-		}
-		
-		$current_page = !$cntold ? 1 : ceil( $cntold / $settings['site_entry_per_page'] );
-		
-		$template->assign_vars(array(
-			'L_HEAD'		=> $page_title,
-			
-			'L_UPCOMING'	=> $lang['event_upcoming'],
-			'L_EXPIRED'		=> $lang['event_expired'],
-			
-			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
-			'PAGE_PAGING'	=> generate_pagination("$file?", $cntold, $settings['site_entry_per_page'], $start ),
-			
-			'S_ACTION'		=> check_sid($file),
-		));
-	}
+	redirect(check_sid($file, true));
 }
 
 $template->pparse('body');
