@@ -7,18 +7,8 @@
 </tr>
 <!-- BEGIN _row -->
 <tr>
-<<<<<<< .mine
-	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.member.grouprow.GROUP_NAME}" title="{select.joined.member.grouprow.GROUP_NAME}"></td>
-	<td class="row1" height="50">
-		<span class="forumlink">
-			<a href="{select.joined.member.grouprow.U_GROUP}" class="forumlink">{select.joined.member.grouprow.NAME}</a><br>
-			</span> <span class="genmed">{select.joined.member.grouprow.DESC}</span>
-	</td>
-	<td class="row2" align="center" valign="middle" height="50" nowrap="nowrap"> <span class="gensmall">{select.joined.member.grouprow.TYPE}</span></td>
-=======
 	<td><img class="icon" src="images/get_info.png" alt=""> {_list._in_groups._is_member._row.NAME}{_list._in_groups._is_member._row.DESC}</td>
 	<td>{_list._in_groups._is_member._row.TYPE}</td>
->>>>>>> .r85
 </tr>
 <!-- END _row -->
 <tr>
@@ -31,19 +21,8 @@
 </tr>
 <!-- BEGIN _row -->
 <tr>
-<<<<<<< .mine
-	<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.joined.pending.grouprow.GROUP_NAME}" title="{select.joined.pending.grouprow.GROUP_NAME}"></td>
-	<td class="row1" height="50">
-		<span class="forumlink">
-			<a href="{select.joined.pending.grouprow.U_GROUP}" class="forumlink">{select.joined.pending.grouprow.NAME}</a><br>
-			</span> <span class="genmed">{select.joined.pending.grouprow.DESC}
-		</span>
-	</td>
-	<td class="row2" align="center" valign="middle" height="50" nowrap="nowrap"> <span class="gensmall">{select.joined.pending.grouprow.TYPE}</span></td>
-=======
 	<td><img class="icon" src="images/get_info.png" alt=""> {_list._in_groups._is_pending._row.NAME}{_list._in_groups._is_pending._row.DESC}</td>
 	<td>{_list._in_groups._is_pending._row.TYPE}</td>
->>>>>>> .r85
 </tr>
 <!-- END _row -->
 <!-- END pending -->
@@ -55,20 +34,6 @@
 <tr>
 	<td class="info_head" colspan="2">{L_NON}</td>
 </tr>
-<<<<<<< .mine
-      <!-- BEGIN grouprow -->
-	  <tr>
-		<td class="row1" align="center" valign="middle" height="50" width="5%"><img src="images/get_info.png" alt="{select.remaining.grouprow.GROUP_NAME}" title="{select.remaining.grouprow.GROUP_NAME}"></td>
-	   <td class="row1" height="50"><span class="forumlink">
- 			<a href="{select.remaining.grouprow.U_GROUP}" class="forumlink">{select.remaining.grouprow.NAME}</a><br>
-		  </span> <span class="genmed">{select.remaining.grouprow.DESC}
-		  </span>
-	   </td>
-	<td class="row2" align="center" valign="middle" height="50" nowrap="nowrap"> <span class="gensmall">{select.remaining.grouprow.TYPE}</span></td>
-	  </tr>
-      <!-- END grouprow -->
-  <!-- END remaining -->
-=======
 <!-- BEGIN _row -->
 <tr>
 	<td><img class="icon" src="images/get_info.png" alt=""> {_list._no_group._row.NAME}{_list._no_group._row.DESC}</td>
@@ -76,7 +41,6 @@
 </tr>
 <!-- END _row -->
 <!-- END _no_group -->
->>>>>>> .r85
 </table>
 <!-- END _list -->
 

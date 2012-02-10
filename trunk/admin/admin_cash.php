@@ -17,11 +17,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-<<<<<<< .mine
-	$current	= 'sm_cash';
-=======
 	$current	= 'sm_authlist';
->>>>>>> .r85
 	
 	include('./pagestart.php');
 	

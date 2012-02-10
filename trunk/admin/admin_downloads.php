@@ -71,17 +71,10 @@ else
 			$name = trim(htmlentities(str_replace("\'", "'", $_POST['file_name'][$cat_id]), ENT_COMPAT));
 		}
 	}
-<<<<<<< .mine
-	
-	debug($mode);
-	debug($_GET);
-	debug($_POST);
-=======
 	
 #	debug($mode);
 #	debug($_GET);
 #	debug($_POST);
->>>>>>> .r85
 #	debug($_FILES);
 	
 	if ( $mode )
@@ -240,144 +233,6 @@ else
 				$template->pparse('body');
 				
 				break;
-<<<<<<< .mine
-				
-			case '_create_cat':
-			case '_update_cat':
-			
-				$template->assign_block_vars('_input_cat', array());
-				
-				$template->assign_var_from_handle('TINYMCE', 'tiny_mce');
-				
-				if ( $mode == '_create_cat' && !(request('submit', 1)) )
-				{
-					$data = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_icon'	=> request('cat_icon', 0),
-								'cat_desc'	=> request('cat_desc', 2),
-								'cat_order'	=> '',
-							);
-				}
-				else if ( $mode == '_update_cat' && !(request('submit', 1)) )
-				{
-					$data = data(DOWNLOAD_CAT, $data_cat, false, 1, true);
-				}
-				else
-				{
-					$data = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_icon'	=> request('cat_icon', 0),
-								'cat_desc'	=> request('cat_desc', 2),
-								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
-							);
-				}
-				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
-				
-				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode)], $lang['title_cat'], $data['cat_name']),
-					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title_cat']),
-					
-					'NAME'		=> $data['cat_name'],
-					'ICON'		=> $data['cat_icon'],
-					'DESC'		=> $data['cat_desc'],
-					
-					'S_ORDER'	=> simple_order(DOWNLOAD_CAT, false, 'select', $data['cat_order']),
-					
-					'S_ACTION'	=> check_sid($file),
-					'S_FIELDS'	=> $fields,
-				));
-				
-				if ( request('submit', 1) )
-				{
-					$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(DOWNLOAD_CAT, 'cat_order', '') : $data['cat_order'];
-					
-					$error .= ( !$data['cat_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					
-					if ( !$error )
-					{
-						if ( $mode == '_create_cat' )
-						{
-							$sql = sql(DOWNLOAD_CAT, $mode, $data);
-							$msg = $lang['create_cat'] . sprintf($lang['return'], check_sid($file), $acp_title);
-						}
-						else
-						{
-							$sql = sql(DOWNLOAD_CAT, $mode, $data, 'cat_id', $data_cat);
-							$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url_c=$data_cat"));
-						}
-						
-						orders(DOWNLOAD_CAT);
-						
-						log_add(LOG_ADMIN, $log, $mode, $sql);
-						message(GENERAL_MESSAGE, $msg);
-					}
-					else
-					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
-					}
-				}
-				
-				$template->pparse('body');
-			
-				break;
-				
-			case '_order_cat':
-				
-				update(FORUM_CAT, 'cat', $move, $data_cat);
-				orders(FORUM_CAT);
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				
-				$index = true;
-				
-				break;
-				
-			case '_delete_cat':
-			
-				$data = data(FORUM_CAT, $data_cat, false, 1, 1);
-			
-				if ( $data_cat && $confirm )
-				{
-					$db_data = sql(FORUM_CAT, $mode, $data, 'cat_id', $data_cat);
-					
-					$message = $lang['delete_c']
-						. sprintf($lang['return'], check_sid($file), $acp_title);
-					
-				#	$oCache -> sCachePath = './../cache/';
-				#	$oCache -> deleteCache('_display_navi_news');
-					
-					orders(PROFILE_CAT);
-					
-					log_add(LOG_ADMIN, $log, $mode, $db_data);
-					message(GENERAL_MESSAGE, $message);
-				}
-				else if ( $data_cat && !$confirm )
-				{
-					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
-		
-					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
-		
-					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm_c'], $data['cat_name']),
-
-						'S_ACTION'	=> check_sid($file),
-						'S_FIELDS'	=> $fields,
-					));
-				}
-				else { message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['forum_cat'])); }
-				
-				$template->pparse('body');
-				
-				break;
-=======
 				
 			case '_create_cat':
 			case '_update_cat':
@@ -509,7 +364,6 @@ else
 				$template->pparse('body');
 				
 				break;
->>>>>>> .r85
 	
 		#	default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
@@ -540,35 +394,10 @@ else
 	$max = maxi(DOWNLOAD_CAT, 'cat_order', '');
 	$cats = data(DOWNLOAD_CAT, false, 'cat_order ASC', 1, false);
 	
-<<<<<<< .mine
-	if ( !$cats )
-=======
 	if ( $cats )
->>>>>>> .r85
-	{
-<<<<<<< .mine
-		$template->assign_block_vars('_display._entry_empty', array());
-		echo 'test';
-	}
-	else
 	{
 		for ( $i = 0; $i < count($cats); $i++ )
-=======
-		for ( $i = 0; $i < count($cats); $i++ )
->>>>>>> .r85
 		{
-<<<<<<< .mine
-			$cat_id = $cats[$i]['cat_id'];
-			
-			$file = data(DOWNLOAD, 'cat_id = ' . $cat_id, 'cat_id, file_order ASC', 1, false);
-			
-			$sql = "SELECT MAX(file_order) AS max$cat_id FROM " . DOWNLOAD . " WHERE cat_id = $cat_id";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$max_file = $db->sql_fetchrow($result);
-=======
 			$cat_id = $cats[$i]['cat_id'];
 			
 			$files = data(DOWNLOAD, 'cat_id = ' . $cat_id, 'cat_id, file_order ASC', 1, false);
@@ -579,19 +408,12 @@ else
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$max_file = $db->sql_fetchrow($result);
->>>>>>> .r85
 				
 			$template->assign_block_vars('_display._cat_row', array(
 				'ID'		=> $cat_id,													   
-<<<<<<< .mine
-				'TITLE'		=> $cats[$i]['cat_title'],
-				'FILES'		=> $cats[$i]['cat_files'],
-				'DESC'		=> $cats[$i]['cat_desc'],
-=======
 				'NAME'		=> $cats[$i]['cat_name'],
 				'FILES'		=> $cats[$i]['cat_files'],
 				'DESC'		=> $cats[$i]['cat_desc'],
->>>>>>> .r85
 				
 				'MOVE_UP'	=> ( $cats[$i]['cat_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $cats[$i]['cat_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',

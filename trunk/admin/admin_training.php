@@ -86,16 +86,9 @@ else
 			}
 			else if ( $mode == '_update' && !request('submit', 1) )
 			{
-<<<<<<< .mine
-				$data = data(TRAINING, $data_id, false, 1, true);
-				
-			#	$data['training_maps'] = isset($data['training_maps']) ? unserialize($data['training_maps']) : array();
-				$data['training_maps'] = unserialize($data['training_maps']);
-=======
 				$data = data(TRAINING, $data_id, false, 1, true);
 				
 				$data['training_maps'] = unserialize($data['training_maps']);
->>>>>>> .r85
 			}
 			else
 			{
@@ -112,29 +105,6 @@ else
 							'training_create'	=> request('training_create', 0),
 							'training_duration'	=> ( $training_dura - $training_date ) / 60,
 						);
-<<<<<<< .mine
-				
-				if ( $data['training_maps'] )
-				{
-					$ary_maps = '';
-					
-					$maps = $data['training_maps'];
-					
-					for ( $i = 0; $i < count($maps); $i++ )
-					{
-						if ( empty($maps[$i]) || $maps[$i] == '0' )
-						{
-							false;
-						}
-						else
-						{
-							$ary_maps[] = $maps[$i];
-						}
-					}
-					
-					$data['training_maps'] = is_array($ary_maps) ? $ary_maps : array();
-				}
-=======
 						
 				$error .= ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
 				$error .= ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
@@ -191,7 +161,6 @@ else
 					
 					$data['training_maps'] = is_array($ary_maps) ? $ary_maps : array();
 				}
->>>>>>> .r85
 			}
 		
 			$sql = 'SELECT team_id, team_name FROM ' . TEAMS . ' ORDER BY team_order';
@@ -362,47 +331,6 @@ else
 				'S_FIELDS'		=> $fields,
 			));
 			
-<<<<<<< .mine
-			if ( request('submit', 1) )
-			{
-				$error .= ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
-				$error .= ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
-				$error .= ( !$data['training_maps'] )			? ( $error ? '<br />' : '' ) . $lang['msg_select_map'] : '';
-				$error .= ( time() >= $data['training_date'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
-				$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
-				
-				if ( !$error )
-				{
-					$data['training_maps'] = is_array($data['training_maps']) ? serialize($data['training_maps']) : array();
-					
-					if ( $mode == '_create' )
-					{
-						$sql = sql(TRAINING, $mode, $data);
-						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
-					}
-					else
-					{
-						$sql = sql(TRAINING, $mode, $data, 'training_id', $data_id);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
-					}
-					
-				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');
-				#	$oCache -> deleteCache('subnavi_training_' . request('month', 0));
-					
-					log_add(LOG_ADMIN, $log, $mode, $sql);
-					message(GENERAL_MESSAGE, $msg);
-				}
-				else
-				{
-					log_add(LOG_ADMIN, $log, 'error', $error);
-					
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
-				}
-			}
-			
-=======
->>>>>>> .r85
 			break;
 			
 		case '_delete':
@@ -461,26 +389,6 @@ else
 			}
 			$s_sort .= "</select>";
 			
-<<<<<<< .mine
-			$fields .= '<input type="hidden" name="mode" value="_create" />';
-			
-			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
-				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['training']),
-				'L_EXPLAIN'		=> $lang['explain'],
-				'L_UPCOMING'	=> $lang['upcoming'],
-				'L_EXPIRED'		=> $lang['expired'],
-				
-				'S_SORT'	=> $s_sort,
-				'S_TEAMS'	=> select_box('team', 'selectsmall', 0),
-				
-				'S_CREATE'	=> check_sid("$file?mode=_create"),
-				'S_ACTION'	=> check_sid($file),
-				'S_FIELDS'	=> $fields,
-			));
-			
-=======
->>>>>>> .r85
 			$select_id = ( $team_id >= '1' ) ? "AND tr.team_id = $team_id" : '';
 			
 			$sql = "SELECT tr.*, g.game_image, g.game_size
@@ -495,21 +403,12 @@ else
 			
 			if ( !$training )
 			{
-<<<<<<< .mine
-				$template->assign_block_vars('_display._entry_empty_new', array());
-				$template->assign_block_vars('_display._entry_empty_old', array());
-			}
-			else
-			{
-				$training_new = $training_old = array();
-=======
 				$template->assign_block_vars('_display._entry_empty_new', array());
 				$template->assign_block_vars('_display._entry_empty_old', array());
 			}
 			else
 			{
 				$new = $old = array();
->>>>>>> .r85
 					
 				foreach ( $training as $training => $row )
 				{
@@ -523,55 +422,31 @@ else
 					}
 				}
 				
-<<<<<<< .mine
-				if ( !$training_new )
-=======
 				$cnt_new = count($new);
 				$cnt_old = count($old);
 				
 				if ( !$new )
->>>>>>> .r85
 				{
-<<<<<<< .mine
-					$template->assign_block_vars('_display._entry_empty_new', array());
-				}
-				else
-				{
-					for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_new)); $i++ )
-=======
 					$template->assign_block_vars('_display._entry_empty_new', array());
 				}
 				else
 				{
 					for ( $i = 0; $i < $cnt_new; $i++ )
->>>>>>> .r85
 					{
 						$training_id = $new[$i]['training_id'];
 						
-<<<<<<< .mine
-						$template->assign_block_vars('_display._training_new_row', array(
-							'NAME'	=> $training_new[$i]['training_vs'],
-							'GAME'	=> display_gameicon($training_new[$i]['game_size'], $training_new[$i]['game_image']),
-							'DATE'	=> create_date($userdata['user_dateformat'], $training_new[$i]['training_date'], $userdata['user_timezone']),
-=======
 						$template->assign_block_vars('_display._new_row', array(
 							'NAME'	=> $new[$i]['training_vs'],
 							'GAME'	=> display_gameicon($new[$i]['game_size'], $new[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $new[$i]['training_date'], $userdata['user_timezone']),
->>>>>>> .r85
 							
 							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
 							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
 						));
 					}
 				}
-<<<<<<< .mine
-				
-				if ( !$training_old )
-=======
 				
 				if ( !$old )
->>>>>>> .r85
 				{
 					$template->assign_block_vars('_display._entry_empty_old', array());
 				}
@@ -581,17 +456,10 @@ else
 					{
 						$training_id = $old[$i]['training_id'];
 						
-<<<<<<< .mine
-						$template->assign_block_vars('_display._training_old_row', array(
-							'NAME'	=> $training_old[$i]['training_vs'],
-							'GAME'	=> display_gameicon($training_old[$i]['game_size'], $training_old[$i]['game_image']),
-							'DATE'	=> create_date($userdata['user_dateformat'], $training_old[$i]['training_date'], $userdata['user_timezone']),
-=======
 						$template->assign_block_vars('_display._old_row', array(
 							'NAME'	=> $old[$i]['training_vs'],
 							'GAME'	=> display_gameicon($old[$i]['game_size'], $old[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $old[$i]['training_date'], $userdata['user_timezone']),
->>>>>>> .r85
 							
 							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
 							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
@@ -599,20 +467,12 @@ else
 					}
 				}
 			}
-<<<<<<< .mine
-					
-=======
 					
 			$current_page = ( !$cnt_old ) ? 1 : ceil( $cnt_old / $settings['site_entry_per_page'] );
 			
->>>>>>> .r85
 			$fields .= '<input type="hidden" name="mode" value="_create" />';
 			
 			$template->assign_vars(array(
-<<<<<<< .mine
-				'PAGE_NUMBER' => ( count($training) ) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
-				'PAGE_PAGING' => ( count($training) ) ? generate_pagination('admin_match.php?', count($training), $settings['site_entry_per_page'], $start) : '',
-=======
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
 				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['training']),
 				'L_EXPLAIN'		=> $lang['explain'],
@@ -628,7 +488,6 @@ else
 				'S_CREATE'	=> check_sid("$file?mode=_create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
->>>>>>> .r85
 			));
 		
 			break;

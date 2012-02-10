@@ -128,13 +128,8 @@ if ( $mode == 'list' )
 			{ 
 				$time = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $bugtracker_data[$i]['bugtracker_create'], $userdata['user_timezone'])); 
 			}
-<<<<<<< .mine
-			$user	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
-			$user2	= '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
-=======
 			$user	= '<a href="' . check_sid('profile.php?' . POST_USER . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
 			$user2	= '<a href="' . check_sid('profile.php?' . POST_USER . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
->>>>>>> .r85
 			
 			foreach ( $lang['bt_error'] as $key_t => $value_t )
 			{

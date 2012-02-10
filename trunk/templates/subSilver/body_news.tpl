@@ -1,10 +1,5 @@
-<<<<<<< .mine
-<!-- BEGIN _list -->
-<table class="news" width="100%" cellspacing="0">
-=======
 <!-- BEGIN _list -->
 <table class="news">
->>>>>>> .r85
 <tr>
 	<td class="header">{L_MAIN}</td>
 </tr>
@@ -47,17 +42,10 @@
 <tr>
 	<td align="center">{L_ENTRY_NO}</td>
 </tr>
-<<<<<<< .mine
-<!-- END _entry_empty -->
-</table>
-
-<table class="news" width="100%" cellspacing="0">
-=======
 <!-- END _entry_empty -->
 </table>
 
 <table class="news">
->>>>>>> .r85
 <tr>
 	<td class="footer"><span class="right">{PAGE_NUMBER}</span>{PAGE_PAGING}</td>
 </tr>
@@ -81,14 +69,6 @@
 <tr>
 	<td>&nbsp;</td>
 </tr>
-<<<<<<< .mine
-</table>
-<!-- END _view -->
-
-{COMMENTS}
-
-{S_FIELDS}
-</form>=======
 </table>
 
 {COMMENTS}
@@ -117,4 +97,4 @@
 </tr>
 <!-- END _entry_empty -->
 </table>
-<!-- END _archiv -->>>>>>>> .r85
+<!-- END _archiv -->

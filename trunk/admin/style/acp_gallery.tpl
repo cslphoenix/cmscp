@@ -23,13 +23,8 @@
 </tr>
 <!-- BEGIN _row -->
 <tr>
-<<<<<<< .mine
-	<td class="row_class1" align="left"><span style="float:right;">{_display._gallery_row.INFO}&nbsp;</span><b>{_display._gallery_row.NAME}</b><br />{_display._gallery_row.DESC}</td>
-	<td class="row_class2" align="left" nowrap="nowrap">{_display._gallery_row.MOVE_UP}{_display._gallery_row.MOVE_DOWN}{_display._gallery_row.RESYNC} {_display._gallery_row.VIEW}{_display._gallery_row.UPLOAD} {_display._gallery_row.UPDATE} {_display._gallery_row.DELETE}</td>
-=======
 	<td><span style="float:right;">{_display._row.INFO}&nbsp;</span><b>{_display._row.NAME}</b><br />{_display._row.DESC}</td>
 	<td>{_display._row.MOVE_UP}{_display._row.MOVE_DOWN}{_display._row.RESYNC} {_display._row.VIEW}{_display._row.UPLOAD} {_display._row.UPDATE} {_display._row.DELETE}</td>
->>>>>>> .r85
 </tr>
 <!-- END _row -->
 <!-- BEGIN _entry_empty -->

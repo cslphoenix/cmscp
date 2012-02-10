@@ -2,20 +2,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
-<<<<<<< .mine
 	<title>{SITENAME} :: {PAGE_TITLE}</title>
-	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
-=======
-	<title>{SITENAME} :: {PAGE_TITLE}</title>
->>>>>>> .r85
 	
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php">
-<<<<<<< .mine
-
-=======
 	
->>>>>>> .r85
 	<link rel="stylesheet" href="templates/subSilver/theme/stylesheet.css" type="text/css">
 	
 	<script type="text/javascript">
@@ -107,80 +98,6 @@
 	***/ 
 	-->
 	<script type="text/javascript" src="./includes/js/lightbox.js"></script>
-	
-	<script type="text/javascript" src="./includes/js/jquery-1.5.2.min.js"></script>
-	<!--<script type="text/javascript" src="jquery.min.js"></script>-->
-	<script type="text/javascript" src="./includes/js/jquery.atooltip.min.js"></script>  
-	
-	<script type="text/javascript" language="javascript">
-	
-	$(document).ready(function()
-	{
-		$('span.today').hover(function()
-		{
-			$(this).find('span.todaytext').show("slow");
-		},
-		
-		function()
-		{
-			$(this).find('span.todaytext').hide("slow");
-		});
-	});
-	
-	$(function(){  
-    // basic usage  
-		$('a.normalTip').aToolTip();  
-		  
-		// fixed tooltip  
-		$('a.fixedTip').aToolTip({  
-			fixed: true  
-		});  
-		  
-		// on click tooltip with custom content  
-		$('a.clickTip').aToolTip({  
-			clickIt: true,  
-			tipContent: 'Hello I am aToolTip with content from param'  
-		});   
-		  
-		// on click tooltip that has callback functions  
-		$('a.callBackTip').aToolTip({  
-			clickIt: true,  
-			onShow: function(){alert('I fired OnShow')},  
-			onHide: function(){alert('I fired OnHide')}  
-		});   
-		  
-		// List of all parameters and their default values:  
-		$('a').aToolTip({  
-			// no need to change/override  
-			closeTipBtn: 'aToolTipCloseBtn',  
-			toolTipId: 'aToolTip',  
-			// ok to override  
-			fixed: false,                   // Set true to activate fixed position  
-			clickIt: false,                 // set to true for click activated tooltip  
-			inSpeed: 200,                   // Speed tooltip fades in  
-			outSpeed: 100,                  // Speed tooltip fades out  
-			tipContent: '',                 // Pass in content or it will use objects 'title' attribute  
-			toolTipClass: 'defaultTheme',   // Set class name for custom theme/styles  
-			xOffset: 5,                     // x position  
-			yOffset: 5,                     // y position  
-			onShow: null,                   // callback function that fires after atooltip has shown  
-			onHide: null                    // callback function that fires after atooltip has faded out      
-		});  
-		  
-	});  
-	
-	</script>
-	
-	<style>
-	
-	/*
-Required Styles
-*/
-#aToolTip {
-position: absolute;
-display: none;
-z-index: 50000;
-}
 	
 	<script type="text/javascript" src="./includes/js/jquery-1.5.2.min.js"></script>
 	<!--<script type="text/javascript" src="jquery.min.js"></script>-->
