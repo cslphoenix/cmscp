@@ -11,22 +11,6 @@ $lang = array_merge($lang, array(
 	
 	'content_encoding'	=> 'iso-8859-1',
 	'content_direction'	=> 'ltr',
-<<<<<<< .mine
-	
-	/* Hauptmenü */
-	'hm_contact'	=> 'Kontakt',	
-	'hm_database'	=> 'Datenbank',	
-	'hm_dev'		=> 'Entwicklung',
-	'hm_forum'		=> 'Forum',
-	'hm_games'		=> 'Spiele',
-	'hm_groups'		=> 'Gruppen',
-	'hm_main'		=> 'Allgemein',	
-	'hm_news'		=> 'News',
-	'hm_server'		=> 'Server',
-	'hm_teams'		=> 'Teams',
-	'hm_template'	=> 'Themes/Template',	
-	'hm_users'		=> 'Benutzer',
-=======
 	
 	/* Hauptmenü */
 	'hm_contact'	=> 'Kontakt',	
@@ -40,73 +24,10 @@ $lang = array_merge($lang, array(
 	'hm_teams'		=> 'Teams',
 	'hm_template'	=> 'Themes/Template',	
 	'hm_users'		=> 'Benutzer',
->>>>>>> .r85
 
 	/* Hauptmenü */
 	
 	/* Submenü */
-<<<<<<< .mine
-	/* Styles */
-	'sm_themes'			=> 'Themes',
-	'sm_addnew'			=> 'Hinzufügen',
-	'sm_create'			=> 'Erstellen',
-	'sm_manage'			=> 'Eingestellungen',
-	'sm_export'			=> 'Exportieren',
-	
-	'sm_settings_groups'	=> 'Gruppeneinstellung',
-	
-	
-	'sm_teams_match'	=> 'Begegnungen',
-	'sm_teams_training'	=> 'Training',
-	'sm_teams_settings'	=> 'Einstellung',
-	'sm_news'		=> 'News',
-	'sm_news_cat'	=> 'Kategorie',
-	'sm_index'		=> 'Übersicht',
-	'sm_training'	=> 'Training',
-	'sm_authlist'			=> 'Berechtigungsfelder',
-	'sm_bugtracker'		=> 'Bugtracker',
-	'sm_cash'				=> 'Clankasse',
-	'sm_changelog'		=> 'Changelog',
-	'sm_downloads'		=> 'Downloads',
-	'sm_overview'			=> 'Übersicht',
-	'sm_fightus'			=> 'Fight us',
-	'sm_joinus'			=> 'Join us',
-	'sm_contact'			=> 'Kontakt',
-	'sm_database'			=> 'Datenbank',
-	'sm_backup'			=> 'Backup',
-	'sm_restore'			=> 'Wiederherstellen',
-	'sm_optimize'			=> 'Optimieren',
-	'sm_event'			=> 'Ereignisse',
-	'sm_perm'				=> 'Berechtigung',
-	'sm_perm_list'		=> 'Berechtigungsliste',
-	'sm_logs'				=> 'Protokoll',
-	'sm_logs_error'		=> 'Fehlerprotokoll',		
-	'sm_maps'				=> 'Karten',
-	'sm_match'			=> 'Begegnungen',
-	'sm_navi'				=> 'Navigation',
-	'sm_news'				=> 'News',
-	'sm_newscat'			=> 'Kategorie',
-	'sm_network'			=> 'Netzwerk',
-	'sm_newsletter'		=> '!Newsletter',		
-	'sm_profile'			=> 'Profilefelder',
-	'sm_ranks'			=> 'Ränge',
-	'sm_teamspeak'		=> 'Teamspeak',
-	'sm_gameserver'		=> 'Gameserver',
-	
-	
-	'sm_settings'		=> 'Einstellungen',
-	'sm_settings_teams'	=> 'Teameinstellungen',
-	'sm_settings_user'	=> 'Benutzereinstellungen',
-	
-	'sm_games'			=> 'Spiele',
-	'sm_gallery'			=> 'Galerie',
-	'sm_group'			=> 'Gruppe',
-	'sm_forum'			=> 'Forum',
-	'sm_index'			=> 'Übersicht',
-	'sm_users'			=> 'Benutzer',
-	'sm_group'			=> 'Gruppe',
-	'sm_teams'			=> 'Teams',
-=======
 	/* Styles */
 	'sm_themes'			=> 'Themes',
 	'sm_addnew'			=> 'Hinzufügen',
@@ -167,7 +88,6 @@ $lang = array_merge($lang, array(
 	'sm_users'			=> 'Benutzer',
 	'sm_group'			=> 'Gruppe',
 	'sm_teams'			=> 'Teams',
->>>>>>> .r85
 	/* Submenü */
 	
 	/* Sektion */

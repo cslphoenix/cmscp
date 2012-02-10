@@ -1,21 +1,37 @@
 <?php
 
 define('IN_CMS', true);
+
 $root_path = './';
+
 include($root_path . 'common.php');
 
-//	Start session management
 $userdata = session_pagestart($user_ip, PAGE_TEAMS);
+$userauth = auth_acp_check($userdata['user_id']);
+
 init_userprefs($userdata);
 
+$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( $start < 0 ) ? 0 : $start;
 
-$log	= SECTION_NEWS;
+$log	= SECTION_TEAM;
 $url	= POST_TEAMS;
 
+$time	= time();
 $file	= basename(__FILE__);
+$user	= $userdata['user_id'];
 
 $data	= request($url, 0);	
 $mode	= request('mode', 1);
+
+$error	= '';
+$fields	= '';
+
+$template->set_filenames(array(
+	'body'		=> 'body_teams.tpl',
+	'error'		=> 'info_error.tpl',
+));
+
 /*
 $sid		= ( isset($HTTP_POST_VARS['sid']) ) ? $HTTP_POST_VARS['sid'] : '';
 $start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -32,10 +48,6 @@ $start		= ( $start < 0 ) ? 0 : $start;
 $is_moderator = FALSE;
 
 //if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS]) )
-
-$template->set_filenames(array(
-	'body' => 'body_teams.tpl'
-));
 
 if ( !$mode )
 {

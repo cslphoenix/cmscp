@@ -42,7 +42,7 @@ $month	= request('month', 1);
 
 if ( $month && $year )
 {
-	$tag	= ( $month == date('m') ) ? date("d", time()) : '';
+	$tag	= ( $month == date('m') ) ? date("d", $time) : '';
 	$jahr	= ( $year ) ? $year : date('Y');
 	$monat	= ( $month ) ? $month : date('m');
 	$monat	= ( $monat < 10 ) ? '0' . $monat : $monat;
@@ -52,9 +52,9 @@ if ( $month && $year )
 else
 {
 	$tage	= date("t");
-	$tag	= date("d", time());
-	$jahr	= date("Y", time());
-	$monat	= date("m", time());
+	$tag	= date("d", $time);
+	$jahr	= date("Y", $time);
+	$monat	= date("m", $time);
 	$erster	= date("w", mktime(0, 0, 0, $monat, 1, $jahr));
 }
 
@@ -228,15 +228,16 @@ for ( $i = 1; $i < $tage + 1; $i++ )
 			{
 				$alter	= 0;
 				$gebdt	= explode("-", $monat_data['bday'][$i][$j]['user_birthday']);
-				$gebdt	= $gebdt[0].$gebdt[1].$gebdt[2];
-				$now	= date("Ymd", time());
+				$gebdt	= $gebdt[0] . $gebdt[1] . $gebdt[2];
+				$date	= mktime(0, 0, 0, (int)$monat, (int)$tag, (int)$jahr+1);
+				$now	= date("Ymd", $date);
 				
 				while ($gebdt < $now - 9999)
 				{
 					$alter++;
 					$gebdt = $gebdt + 10000;
 				}
-
+			
 				$list[] = sprintf($lang['cal_birth'], $monat_data['bday'][$i][$j]['user_name'], $alter);
 			}
 			

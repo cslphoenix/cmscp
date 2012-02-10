@@ -86,22 +86,13 @@ else
 						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 					}
 					
-<<<<<<< .mine
-					$oCache -> deleteCache('data_authlist');
-=======
 					$oCache->deleteCache('data_authlist');
->>>>>>> .r85
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
 				}
 				else
 				{
-<<<<<<< .mine
-					log_add(LOG_ADMIN, $log, 'error', $error);
-					
-=======
->>>>>>> .r85
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'error');
 					
@@ -133,19 +124,7 @@ else
 			if ( $data_id && $confirm )
 			{
 				$sql = sql(AUTHLIST, $mode, $data, 'authlist_id', $data_id);
-<<<<<<< .mine
-				
-				$_ary = array(
-							'part'	=> "DROP ",
-							'type'	=> $data['authlist_name'],
-						);
-				$add = sql(GROUPS, 'alter', $_ary);
-				
-				$oCache->deleteCache('data_authlist');
-				
-=======
 				$add = sql(GROUPS, 'alter', array('part' => "DROP ", 'type'	=> $data['authlist_name']));
->>>>>>> .r85
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				$oCache->deleteCache('data_authlist');

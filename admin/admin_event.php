@@ -113,27 +113,16 @@ else
 					
 					$month = date('m', $data['event_date']);
 					
-<<<<<<< .mine
-					$oCache->deleteCache('data_event');
-					$oCache->deleteCache('dsp_sn_minical');
-					$oCache->deleteCache('data_calendar_' . $month);
-=======
 					$oCache->deleteCache('data_event');
 					$oCache->deleteCache('data_calendar_' . $month);
 					$oCache->deleteCache('dsp_sn_minical');
 					$oCache->deleteCache('ly_event');
->>>>>>> .r85
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
 				}
 				else
 				{
-<<<<<<< .mine
-					log_add(LOG_ADMIN, $log, 'error', $error);
-
-=======
->>>>>>> .r85
 					$template->assign_vars(array('ERROR_MESSAGE' => $error));
 					$template->assign_var_from_handle('ERROR_BOX', 'error');
 					
@@ -195,13 +184,6 @@ else
 				$oCache->deleteCache('dsp_sn_minical');
 				$oCache->deleteCache('ly_event');
 				
-<<<<<<< .mine
-				$oCache->deleteCache('data_event');
-				$oCache->deleteCache('dsp_sn_minical');
-				$oCache->deleteCache('data_calendar_' . $month);
-				
-=======
->>>>>>> .r85
 				log_add(LOG_ADMIN, $log, $mode, $sql);
 				message(GENERAL_MESSAGE, $msg);
 			}
@@ -232,15 +214,9 @@ else
 		
 			$template->assign_block_vars('_display', array());
 			
-<<<<<<< .mine
-			$lvl = isset($_POST['level']) ? $_POST['level'] : -1;
-			$level = ( $lvl >= 0 ) ? "event_level = $lvl" : '';
-			$event = data(EVENT, $level, 'event_date', 1, false);
-=======
 			$lvl	= isset($_POST['level']) ? $_POST['level'] : -1;
 			$level	= ( $lvl >= 0 ) ? "event_level = $lvl" : '';
 			$event	= data(EVENT, $level, 'event_date', 1, false);
->>>>>>> .r85
 			
 			$new = $old = '';
 					
@@ -312,13 +288,9 @@ else
 					}
 				}
 			}
-<<<<<<< .mine
-						
-=======
 						
 			$current_page = ( !$cnt_old ) ? 1 : ceil( $cnt_old / $settings['site_entry_per_page'] );
 			
->>>>>>> .r85
 			$fields .= '<input type="hidden" name="mode" value="_create" />';
 					
 			$template->assign_vars(array(
@@ -326,23 +298,14 @@ else
 				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
 				'L_EXPLAIN'	=> $lang['explain'],
 				
-<<<<<<< .mine
-				'PAGE_NUMBER'	=> count($event) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
-				'PAGE_PAGING'	=> count($event) ? generate_pagination("$file?", count($event), $settings['site_entry_per_page'], $start ) : '',
-=======
 				'L_DATE'		=> $lang['event_date'],
 				'L_UPCOMING'	=> $lang['event_upcoming'],
 				'L_EXPIRED'		=> $lang['event_expired'],
->>>>>>> .r85
 				
-<<<<<<< .mine
-				'S_LEVEL'	=> select_level('selectsmall', 'user_level', 'level', $lvl),
-=======
 				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page),
 				'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_old, $settings['site_entry_per_page'], $start ),
 				
 				'S_LEVEL'	=> select_level('selectsmall', 'user_level', 'level', $lvl),
->>>>>>> .r85
 				'S_CREATE'	=> check_sid("$file?mode=_create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,

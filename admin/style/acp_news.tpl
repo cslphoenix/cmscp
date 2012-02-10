@@ -23,13 +23,8 @@
 <!-- BEGIN _news_row -->
 <tr>
 	<td class="row_class1" align="center" width="1%"><img src="{_display._news_row.STATUS}" alt=""></td>
-<<<<<<< .mine
-	<td class="row_class1"><span style="float: right;">{_display._news_row.DATE}</span>{_display._news_row.TITLE}</td>
-	<td class="row_class2" align="center">{_display._news_row.PUBLIC} {_display._news_row.UPDATE} {_display._news_row.DELETE}</td>		
-=======
 	<td class="row_class1"><span style="float:right;">{_display._news_row.DATE}</span>{_display._news_row.TITLE}</td>
 	<td class="row_class2" align="center">{_display._news_row.PUBLIC} {_display._news_row.UPDATE} {_display._news_row.DELETE}</td>		
->>>>>>> .r85
 </tr>
 <!-- END _news_row -->
 <!-- BEGIN _entry_empty -->
@@ -39,23 +34,12 @@
 <!-- END _entry_empty -->
 </table>
 
-<<<<<<< .mine
-<table class="footer">
-=======
 <br />
 
 <table class="rows">
->>>>>>> .r85
 <tr>
-<<<<<<< .mine
-	<td>{PAGE_NUMBER}</td>
-	<td>{PAGE_PAGING}</td>
-	<td><input type="text" class="post" name="news_title"></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-=======
 	<td class="rowHead" width="99%" colspan="2">{L_TITLE}</td>
 	<th>{L_SETTINGS}</th>
->>>>>>> .r85
 </tr>
 <!-- BEGIN _send_row -->
 <tr>

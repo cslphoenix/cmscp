@@ -7,18 +7,18 @@
 	</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_EXPLAIN}</td>
+	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="info" border="0" cellspacing="1" cellpadding="0">
+<table class="rows">
 <tr>
 	<td class="rowHead" width="99%" colspan="2">{L_NAME}</td>
-	<td class="rowHead" align="center" nowrap="nowrap">{L_SETTINGS}</td>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN _style_row -->
 <tr>
@@ -54,23 +54,23 @@
 </ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="header">
 <tr>
-	<td class="row4 small">{L_REQUIRED}</td>
+	<td>{L_REQUIRED}</td>
 </tr>
 </table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
+<table class="update">
 <tr>
-	<th colspan="2">
+	<td colspan="2">
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
 			</ul>
 		</div>
-	</th>
+	</td>
 </tr>
 <tbody class="trhover">
 <tr>
