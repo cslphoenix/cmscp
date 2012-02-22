@@ -98,6 +98,8 @@ else
 								'network_order'	=> request('network_order', 0) ? request('network_order', 0) : request('network_order_new', 0),
 							);
 							
+					debug($data);
+							
 					$_pic = request_file('network_image');
 					$info = ( $data['network_type'] != NETWORK_LINK ) ? ( $data['network_type'] == NETWORK_PARTNER ) ? $lang['partner'] : $lang['sponsor'] : $lang['link'];
 					
@@ -111,10 +113,12 @@ else
 					{
 						$data['network_order'] = !$data['network_order'] ? maxa(NETWORK, 'network_order', 'network_type = ' . $data['network_type']) : $data['network_order'];
 						
+						debug($data);
+						
 						if ( $mode == '_create' )
 						{
 							$sql = sql(NETWORK, $mode, $data);
-							$msg = sprintf($lang['create'], $network_info) . sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = sprintf($lang['create'], $info) . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
@@ -122,7 +126,7 @@ else
 							$msg = sprintf($lang['update'], $info) . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&$url=$data_id"));
 						}
 						
-						orders(NETWORK, $data_type);
+						orders(NETWORK, $data['network_type']);
 						
 						$oCache->deleteCache('dsp_sn_network');
 						

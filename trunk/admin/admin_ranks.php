@@ -166,9 +166,9 @@ else
 					'S_STANDARD_YES'	=> ( $data['rank_standard'] ) ? 'checked="checked"' : '',
 					'S_STANDARD_NO'		=> ( !$data['rank_standard'] ) ? 'checked="checked"' : '',
 					
-					'SHOW_FORMS'		=> ( $data['rank_type'] == '2' ) ? '' : 'none',
-					'SHOW_NORMAL'		=> ( $data['rank_type'] == '2' ) ? 'none' : '',
-					'SHOW_SPECIAL'		=> ( $data['rank_special'] ) ? 'none' : '',
+					'SHOW_FORMS'		=> ( $data['rank_type'] == RANK_FORUM ) ? '' : 'none',
+					'SHOW_NORMAL'		=> ( $data['rank_type'] == RANK_FORUM ) ? 'none' : '',
+					'SHOW_POSTS'		=> ( $data['rank_type'] == RANK_FORUM && !$data['rank_special'] ) ? '' : 'none',
 					
 					'S_LIST'	=> select_box_files('post', 'ranks', $path_dir, $data['rank_image']),
 					'S_ORDER'	=> simple_order(RANKS, $data['rank_type'], 'select', $data['rank_order']),
@@ -194,11 +194,7 @@ else
 				
 			case '_delete':
 			
-				/*
-				 *	im moment wird der rang einfach gelöscht,
-				 *	sollte aber meldung geben falls rang verwendet
-				 *	wird und löschung sperren!
-				 */
+				/*	im moment wird der rang einfach gelöscht, sollte aber meldung geben falls rang verwendet wird und löschung sperren!	*/
 			
 				$data = data(RANKS, $data_id, false, 1, true);
 			
@@ -294,9 +290,11 @@ else
 			$rank_order	= $tmp_forum[$i]['rank_order'];
 				
 			$template->assign_block_vars('_display._forum_row', array(
-				'NAME'		=> $rank_name,
+				'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$rank_id") . '" alt="" />' . $rank_name . '</a>',
 				'MIN'		=> ( $tmp_forum[$i]['rank_special'] == '0' ) ? $tmp_forum[$i]['rank_min'] : ' - ',
 				'SPECIAL'	=> ( $tmp_forum[$i]['rank_special'] == '1' ) ? $lang['common_yes'] : $lang['common_no'],
+				
+				'IMAGE'		=> ( $tmp_forum[$i]['rank_image'] ) ? '<img src="' . $images['icon_image'] . '" title="" alt="" />' : '<img src="' . $images['icon_no_image'] . '" title="" alt="" />',
 				
 				'MOVE_UP'	=> ( $tmp_forum[$i]['rank_special'] && $rank_order != '10' )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_FORUM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $tmp_forum[$i]['rank_special'] && $rank_order != $max_f )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_FORUM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
@@ -320,8 +318,10 @@ else
 			$rank_order	= $tmp_page[$i]['rank_order'];
 				
 			$template->assign_block_vars('_display._page_row', array(
-				'NAME'		=> $rank_name,
+				'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$rank_id") . '" alt="" />' . $rank_name . '</a>',
 				'STANDARD'	=> $tmp_page[$i]['rank_standard'] ? $lang['rank_standard'] : '',
+				
+				'IMAGE'		=> ( $tmp_forum[$i]['rank_image'] ) ? '<img src="' . $images['icon_image'] . '" title="" alt="" />' : '<img src="' . $images['icon_no_image'] . '" title="" alt="" />',
 				
 				'MOVE_UP'	=> ( $rank_order != '10' )		? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $rank_order != $max_p )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_PAGE . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
@@ -345,8 +345,10 @@ else
 			$rank_order	= $tmp_team[$i]['rank_order'];
 				
 			$template->assign_block_vars('_display._team_row', array(
-				'NAME'		=> $rank_name,
+				'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$rank_id") . '" alt="" />' . $rank_name . '</a>',
 				'STANDARD'	=> $tmp_team[$i]['rank_standard'] ? $lang['rank_standard'] : '',
+				
+				'IMAGE'		=> $tmp_team[$i]['rank_image'] ? '<img src="' . $images['icon_image'] . '" title="" alt="" />' : '<img src="' . $images['icon_no_image'] . '" title="" alt="" />',
 				
 				'MOVE_UP'	=> ( $rank_order != '10' )		? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=-15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
 				'MOVE_DOWN'	=> ( $rank_order != $max_t )	? '<a href="' . check_sid("$file?mode=_order&amp;type=" . RANK_TEAM . "&amp;move=+15&amp;$url=$rank_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',

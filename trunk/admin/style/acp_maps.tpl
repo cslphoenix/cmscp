@@ -42,9 +42,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="{_display._cat_row.S_NAME}" /></td>
 	<td><input type="submit" class="button2" name="{_display._cat_row.S_SUBMIT}" value="{L_CREATE_MAP}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 

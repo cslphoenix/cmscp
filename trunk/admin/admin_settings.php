@@ -23,6 +23,7 @@ else
 	load_lang('settings');
 
 	$sort = ( request('sort', 1) ) ? request('sort', 1) : '_default';
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 
 	if ( $userdata['user_level'] != ADMIN )
 	{
@@ -65,7 +66,14 @@ else
 	$s_sort .= '</select>';
 	
 	$template->set_filenames(array('body' => 'style/acp_settings.tpl'));
-	$template->assign_block_vars($sort, array());
+	$template->assign_block_vars($sort, array(
+	
+		$template->assign_vars(array(
+			'L_HEADING'			=> $lang['site' . $sort],
+			'L_HEADING_EXPLAIN'	=> $lang['site' . $sort . '_explain'],
+		)),
+	
+	));
 	
 	$sql = 'SELECT * FROM ' . CONFIG;
 	if ( !($result = $db->sql_query($sql)) )
@@ -146,10 +154,10 @@ else
 	if ( isset($_POST['submit']) )
 	{
 		#$oCache -> sCachePath = './../cache/';
-		#$oCache -> deleteCache('config');
-		#$oCache -> deleteCache('settings');
+		$oCache -> deleteCache('cfg_config');
+		$oCache -> deleteCache('cfg_setting');
 
-		$message = $lang['Config_updated'] . sprintf($lang['click_return_set'], '<a href="' . check_sid('admin_settings.php'));
+		$message = $lang['update'] . sprintf($lang['return'], check_sid($file), $acp_title);
 		message(GENERAL_MESSAGE, $message);
 	}
 	
@@ -220,16 +228,9 @@ else
 	
 	$template->assign_vars(array(
 								 
-		'L_HEAD'				=> $lang['set_head'],
-		'L_EXPLAIN'				=> $lang['set_explain'],
+		'L_HEAD'	=> $lang['title'],
+		'L_EXPLAIN'	=> $lang['explain'],
 								 
-		'L_DEFAULT'					=> $lang['site_default'],
-		'L_DEFAULT_EXPLAIN'			=> $lang['site_default_explain'],
-		'L_UPLOAD'					=> $lang['site_upload'],
-		'L_UPLOAD_EXPLAIN'			=> $lang['site_upload_explain'],
-		'L_SESSION'					=> $lang['site_session'],
-		'L_SESSION_EXPLAIN'			=> $lang['site_session_explain'],
-		
 		'L_SERVER_NAME'				=> $lang['server_name'],
 		'L_SERVER_NAME_EXPLAIN'		=> $lang['server_name_explain'],
 		'L_SERVER_PORT'				=> $lang['server_port'],

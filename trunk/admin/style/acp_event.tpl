@@ -60,9 +60,10 @@
 <form action="{S_ACTION}" method="post">
 <table class="footer">
 <tr>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 	<td><input type="text" class="post" name="event_title" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}" /></td>
+    <td></td>
+    <td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>
 {S_FIELDS}

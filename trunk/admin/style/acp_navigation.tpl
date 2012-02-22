@@ -35,9 +35,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="navi_name[1]"></td>
 	<td><input type="submit" class="button2" name="navi_type[1]" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 
@@ -63,9 +64,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="navi_name[2]"></td>
 	<td><input type="submit" class="button2" name="navi_type[2]" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 
@@ -91,9 +93,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="navi_name[3]"></td>
 	<td><input type="submit" class="button2" name="navi_type[3]" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 
@@ -119,9 +122,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="navi_name[4]"></td>
 	<td><input type="submit" class="button2" name="navi_type[4]" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 
@@ -147,9 +151,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="navi_name[5]"></td>
 	<td><input type="submit" class="button2" name="navi_type[5]" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 
@@ -250,6 +255,12 @@
 	</ul>
 </div>
 
+<table class="header">
+<tr>
+	<td>{L_REQUIRED}</td>
+</tr>
+</table>
+
 <br />
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
@@ -263,6 +274,7 @@
 		</div>
 	</td>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1_1" nowrap="nowrap"><label for="subnavi_news_limit" title="{L_NEWS_LIMIT_EXPLAIN}">{L_NEWS_LIMIT}:</label></td>
 	<td class="row2"><input class="post" type="text" name="subnavi_news_limit" id="subnavi_news_limit" value="{NEWS_LIMIT}" size="2"></td>
@@ -271,6 +283,7 @@
 	<td class="row1"><label for="subnavi_news_length" title="{L_NEWS_LENGTH_EXPLAIN}">{L_NEWS_LENGTH}:</label></td>
 	<td class="row2"><input class="post" type="text" name="subnavi_news_length" id="subnavi_news_length" value="{NEWS_LENGTH}" size="2"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -293,6 +306,7 @@
 	<td class="row1"><label for="subnavi_match_length" title="{L_MATCH_LENGTH_EXPLAIN}">{L_MATCH_LENGTH}:</label></td>
 	<td class="row2"><input class="post" type="text" name="subnavi_match_length" id="subnavi_match_length" value="{MATCH_LENGTH}" size="2"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -306,9 +320,10 @@
 		</div>
 	</td>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1_1" nowrap="nowrap"><label for="subnavi_newusers_show" title="{L_NEWUSERS_SHOW_EXPLAIN}">{L_NEWUSERS_SHOW}:</label></td>
-	<td class="row2"><label><input type="radio" name="subnavi_newusers_show" id="subnavi_newusers_show" value="1" {NEWUSERS_ON} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_newusers_show" value="0" {NEWUSERS_OFF} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="subnavi_newusers_show" id="subnavi_newusers_show" value="1" {NEWUSERS_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_newusers_show" value="0" {NEWUSERS_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="subnavi_newusers_limit" title="{L_NEWUSERS_LIMIT_EXPLAIN}">{L_NEWUSERS_LIMIT}:</label></td>
@@ -322,6 +337,7 @@
 	<td class="row1"><label for="subnavi_newusers_cache" title="{L_NEWUSERS_CACHE_EXPLAIN}">{L_NEWUSERS_CACHE}:</label></td>
 	<td class="row2"><input class="post" type="text" size="4" name="subnavi_newusers_cache" value="{NEWUSERS_CACHE}"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
@@ -338,7 +354,7 @@
 <tbody class="trhover">
 <tr>
 	<td class="row1"><label for="subnavi_teams_show" title="{L_TEAMS_SHOW_EXPLAIN}">{L_TEAMS_SHOW}:</label></td>
-	<td class="row2"><label><input type="radio" name="subnavi_teams_show" value="1" {TEAMS_ON} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_teams_show" value="0" {TEAMS_OFF} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="subnavi_teams_show" value="1" {TEAMS_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="subnavi_teams_show" value="0" {TEAMS_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="subnavi_teams_limit" title="{L_TEAMS_LIMIT_EXPLAIN}">{L_TEAMS_LIMIT}:</label></td>

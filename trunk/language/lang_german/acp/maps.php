@@ -7,10 +7,11 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'			=> 'Karte',
-	'title_cat'		=> 'Kategorie',
-	'title_maps'	=> 'Karten',
-	'explain'		=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
+	'title'		=> 'Karte',
+	'titles'	=> 'Karten',
+	'cat'		=> 'Kategorie',
+	
+	'explain'	=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
 
 	'create'	=> 'Neue Karte hinzugefügt.',
 	'update'	=> 'Kartendaten erfolgreich geändert.',

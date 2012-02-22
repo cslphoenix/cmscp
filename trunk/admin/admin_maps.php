@@ -175,12 +175,12 @@ else
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['maps']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . $mode ], $lang['map'], $data['map_name']),
-					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['maps']),
-					'L_FILE'	=> sprintf($lang['sprintf_image'], $lang['maps']),
-					'L_TYPE'	=> sprintf($lang['sprintf_type'], $lang['maps']),
-					'L_CAT'		=> sprintf($lang['sprintf_cat'], $lang['maps']),
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['titles']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . $mode ], $lang['title'], $data['map_name']),
+					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
+					'L_FILE'	=> sprintf($lang['sprintf_image'], $lang['title']),
+					'L_TYPE'	=> sprintf($lang['sprintf_type'], $lang['title']),
+					'L_CAT'		=> sprintf($lang['sprintf_cat'], $lang['title']),
 					
 					'NAME'		=> $data['map_name'],
 					'TYPE'		=> $data['map_type'],
@@ -354,8 +354,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data['cat_tag'] . "\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title_maps']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode) ], $lang['title_cat'], $data['cat_name']),
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['titles']),
+					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode) ], $lang['cat'], $data['cat_name']),
 					'L_NAME'	=> $lang['cat_name'],
 					'L_TAG'		=> $lang['cat_tag'],
 					'L_ORDER'	=> $lang['common_order'],
@@ -415,7 +415,7 @@ else
 				}
 				else
 				{
-					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['title_cat']));
+					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['cat']));
 				}
 				
 				$template->pparse('confirm');
@@ -437,9 +437,9 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title_maps']),
+		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['titles']),
 		'L_CREATE_MAP'	=> sprintf($lang['sprintf_new_create'], $lang['title']),
-		'L_CREATE_CAT'	=> sprintf($lang['sprintf_new_create'], $lang['title_cat']),
+		'L_CREATE_CAT'	=> sprintf($lang['sprintf_new_create'], $lang['cat']),
 		'L_NAME'		=> $lang['map_name'],
 		'L_EXPLAIN'		=> $lang['explain'],
 		
@@ -472,8 +472,8 @@ else
 				'MOVE_UP'	=> ( $cats[$i]['cat_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" border="0" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" border="0" />',
 				'MOVE_DOWN'	=> ( $cats[$i]['cat_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" border="0" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" border="0" />',
 				
-				'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update_cat&amp;$url=$cat_id") . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-				'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete_cat&amp;$url=$cat_id") . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+				'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update_cat&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+				'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete_cat&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
 				
 				'S_NAME'	=> "map_name[$cat_id]",
 				'S_SUBMIT'	=> "add_map[$cat_id]",

@@ -35,9 +35,10 @@
 
 <table class="footer">
 <tr>
-	<td></td>
 	<td><input type="text" class="post" name="game_name" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 {S_FIELDS}

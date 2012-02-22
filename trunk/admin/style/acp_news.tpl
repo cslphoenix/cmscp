@@ -18,7 +18,7 @@
 <table class="rows">
 <tr>
 	<td class="rowHead" width="99%" colspan="2">{L_TITLE}</td>
-	<th>{L_SETTINGS}</th>
+	<td class="rowHead">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _news_row -->
 <tr>
@@ -39,7 +39,7 @@
 <table class="rows">
 <tr>
 	<td class="rowHead" width="99%" colspan="2">{L_TITLE}</td>
-	<th>{L_SETTINGS}</th>
+	<td class="rowHead">{L_SETTINGS}</td>
 </tr>
 <!-- BEGIN _send_row -->
 <tr>
@@ -52,10 +52,10 @@
 
 <table class="footer">
 <tr>
-	<td>{PAGE_NUMBER}</td>
-	<td>{PAGE_PAGING}</td>
 	<td><input type="text" class="post" name="news_title"></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>
 {S_FIELDS}
