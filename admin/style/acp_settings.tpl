@@ -9,26 +9,26 @@
 	<td>{L_EXPLAIN}</td>
 </tr>
 </table>
-<form action="{S_ACTION}" method="post" name="sort" id="sort">
-<div align="right">{S_SORT}</div>
-</form>
+<form action="{S_ACTION}" method="post" name="sort" id="sort"><div align="right">{S_SORT}</div></form>
 <form action="{S_ACTION}" method="post">
-<!-- BEGIN _default -->
+
 <div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_DEFAULT}</a></li>
+	<li id="active"><a href="#" id="current">{L_HEADING}</a></li>
 </ul>
 </div>
 
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row4 small">{L_DEFAULT_EXPLAIN}</td>
+	<td class="row4 small">{L_HEADING_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
-<table class="update" border="0" cellspacing="1" cellpadding="0">
+<table class="update">
+<tbody class="trhover">
+<!-- BEGIN _default -->
 <tr>
 	<td class="row1_1" nowrap="nowrap"><label for="server_name" title="{L_SERVER_NAME_EXPLAIN}">{L_SERVER_NAME}</label><span style="padding:4px;">:</span><label for="server_port" title="{L_SERVER_PORT_EXPLAIN}">{L_SERVER_PORT}</label></td>
 	<td class="row2"><input type="text" class="post" size="25" name="server_name" id="server_name" value="{SERVER_NAME}" /><span style="padding:4px;">:</span><input type="text" class="post" size="5" name="server_port" id="server_port" value="{SERVER_PORT}"></td>
@@ -58,26 +58,10 @@
 	<td class="row1"><label for="page_disable_mode">{L_DISABLE_PAGE_MODE}:</label></td>
 	<td class="row2">{PAGE_DISABLE_MODE}</td>
 </tr>
-</table>
 <!-- END _default -->
 <!-- BEGIN _upload -->
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_SORT_NAME}</a></li>
-</ul>
-</div>
-
-<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row4 small">{L_SORT_EXPLAIN}</td>
-</tr>
-</table>
-
-<br />
-
-<table class="update" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="row1"><label for="path_games" title="{L_PATH_GAMES_EXPLAIN}">{L_PATH_GAMES}:</label></td>
+	<td class="row1_1"><label for="path_games" title="{L_PATH_GAMES_EXPLAIN}">{L_PATH_GAMES}:</label></td>
 	<td class="row2"><input type="text" class="post" size="20" maxlength="50" name="path_games" id="path_games" value="{PATH_GAMES}" />&nbsp;{PATH_GAMES_CHECKED}</td>
 </tr>
 <tr>
@@ -152,35 +136,16 @@
 	<td class="row1"><label title="{L_TEAMS_SIZE_EXPLAIN}">{L_TEAMS_SIZE}:</label></td>
 	<td class="row2"><input type="text" class="post" size="3" name="teams_max_heigt" value="{TEAMS_MAX_HEIGHT}" /> x <input type="text" class="post" size="3" name="team_max_width" value="{TEAMS_MAX_WIDTH}"></td>
 </tr>
-</table>
 <!-- END _upload -->
 <!-- BEGIN _session -->
-<table class="update" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="row1"><label for="email_enabled" title="{L_EMAIL_ON-OFF_EXPLAIN}">{L_EMAIL_ON-OFF}:</label></td>
+	<td class="row1_1"><label for="email_enabled" title="{L_EMAIL_ON-OFF_EXPLAIN}">{L_EMAIL_ON-OFF}:</label></td>
 	<td class="row2"><label><input type="radio" name="email_enabled" id="email_enabled" value="1" {EMAIL_ON} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_enabled" value="0" {EMAIL_OFF} />&nbsp;{L_NO}</label></td>
 </tr>
-</table>
 <!-- END _session -->
-
 <!-- BEGIN _display -->
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_DISPLAY}</a></li>
-</ul>
-</div>
-
-<table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row4 small">{L_DISPLAY_EXPLAIN}</td>
-</tr>
-</table>
-
-<br />
-
-<table class="update" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="row1"><label for="subnavi_news_limit">{L_NEWS_LIMIT}:</label></td>
+	<td class="row1_1"><label for="subnavi_news_limit">{L_NEWS_LIMIT}:</label></td>
 	<td class="row2"><input type="text" class="post" name="subnavi_news_limit" id="subnavi_news_limit" value="{NEWS_LIMIT}" size="5" /></td>
 </tr>
 <tr>
@@ -227,11 +192,8 @@
 	<td class="row1"><label for="subnavi_newusers_length">{L_NEWUSERS_LENGTH}:</label></td>
 	<td class="row2"><input type="text" class="post" name="subnavi_newusers_length" id="subnavi_newusers_length" value="{NEWUSERS_LENGTH}" size="5" /></td>
 </tr>
-
-</table>
 <!-- END _display -->
-
-<table class="update" border="0" cellspacing="1" cellpadding="0">
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

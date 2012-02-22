@@ -750,7 +750,7 @@ function select_date($class, $default, $var, $value, $create = '')
 	{
 		case 'day':
 		
-			if ( $create > $time )
+			if ( $create <= ( $time - 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
@@ -773,7 +773,7 @@ function select_date($class, $default, $var, $value, $create = '')
 		
 		case 'month':
 		
-			if ( $create <= ( time()- 86400 ) )
+			if ( $create <= ( $time - 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
@@ -811,7 +811,7 @@ function select_date($class, $default, $var, $value, $create = '')
 				'12'	=> $lang['datetime']['month_12'],
 			);
 			
-			if ( $create <= ( time()- 86400 ) )
+			if ( $create <= ( $time - 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
@@ -870,7 +870,7 @@ function select_date($class, $default, $var, $value, $create = '')
 		
 		case 'year':
 		
-			if ( $create <= ( time()- 86400 ) )
+			if ( $create <= ( $time - 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
@@ -891,7 +891,7 @@ function select_date($class, $default, $var, $value, $create = '')
 		
 		case 'hour':
 		
-			if ( $create <= ( time()- 86400 ) )
+			if ( $create <= ( $time - 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}
@@ -912,7 +912,7 @@ function select_date($class, $default, $var, $value, $create = '')
 		
 		case 'min':
 		
-			if ( $create <= ( time()- 86400 ) )
+			if ( $create <= ( $time - 86400 ) )
 			{
 				$select = $value . "<input type=\"hidden\" name=\"$var\" value=\"$value\">";
 			}

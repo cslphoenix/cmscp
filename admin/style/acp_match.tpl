@@ -192,7 +192,7 @@ function set_site(name, text)
 		</div>
 	</td>
 </tr>
-<tbody id="settings" style="display:">
+<tbody id="settings" style="display:" class="trhover">
 <tr>
 	<td class="row1"><label for="team_id">{L_TEAM}: *</label></td>
 	<td class="row2">{S_TEAM}</td>
@@ -260,7 +260,7 @@ function set_site(name, text)
 		</div>
 	</td>
 </tr>
-<tbody id="show_server" style="display:">
+<tbody id="show_server" style="display:" class="trhover">
 <tr>
 	<td class="row1"><label for="input_rival">{L_RIVAL_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="match_rival_name" id="input_rival" value="{RIVAL_NAME}" onkeyup="look_rival(this.value);" onblur="set_rival();" autocomplete="off"><div class="suggestionsBox" id="rival" style="display:none;"><div class="suggestionList" id="auto_rival"></div></div></td>
@@ -310,7 +310,7 @@ function set_site(name, text)
 		</div>
 	</td>
 </tr>
-<tbody id="msg" style="display:">
+<tbody id="msg" style="display:" class="trhover">
 <tr>
 	<td class="row1"><label for="match_comment" title="{L_COMMENT_EXP}">{L_COMMENT}:</label></td>
 	<td class="row2"><textarea class="post" rows="5" cols="50" name="match_comment" id="match_comment" title="{L_COMMENT_EXP}">{MATCH_COMMENT}</textarea></td>

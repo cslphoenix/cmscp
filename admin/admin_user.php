@@ -1290,7 +1290,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer.php');
+	include('./page_footer_admin.php');
 }
 
 ?>

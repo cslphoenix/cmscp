@@ -114,22 +114,24 @@
 <!-- END no_entry -->
 </table>
 
-<table class="footer" width="100%" cellspacing="2">
+<table class="footer">
 <tr>
-	<td width="49%" align="left">{PAGINATION}</td>
-	<td width="49%" align="right">{PAGE_NUMBER}</td>
+	<td><input type="submit" name="send" value="{L_DELETE}" class="button" /><input type="hidden" name="mode" value="deleteerror" /></td>
+	<td></td>
+    <td></td>
+    <td>{PAGE_NUMBER}<br />{PAGE_PAGING}<br /><a href="#" onclick="marklist('list', 'log_id', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'log_id', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
 </tr>
 </table>
 
 <table class="footer" cellspacing="2">
 <tr>
 	<td colspan="2" align="right">
-		<input type="hidden" name="mode" value="deleteerror" />
-		<input type="submit" name="send" value="{L_DELETE}" class="button" />
+		
+		
 	</td>
 </tr>
 <tr>
-	<td colspan="2" align="right"><a href="#" onclick="marklist('list', 'log_id', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'log_id', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
+	<td colspan="2" align="right"></td>
 </tr>
 </table>
 {S_FIELDS}

@@ -272,8 +272,8 @@ else
 				$fields .= '<input type="hidden" name="mode" value="_settings" />';
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['navi']),
-					'L_SET'			=> $lang['settings'],
+					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_SET'			=> $lang['common_settings'],
 					
 					'L_NEWS'		=> $lang['subnavi_news'],
 					'L_MATCH'		=> $lang['subnavi_match'],
@@ -353,7 +353,7 @@ else
 					
 					$oCache->deleteCache('cfg_setting');
 									
-					$message = $lang['update_navi_set'] . sprintf($lang['click_return_navi_set'], '<a href="' . check_sid("$file?mode=_settings"));
+					$message = $lang['update_s'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=_settings"));
 					
 					log_add(LOG_ADMIN, $log, $mode);
 					message(GENERAL_MESSAGE, $message);
@@ -378,10 +378,10 @@ else
 	$fields .= '<input type="hidden" name="mode" value="_create" />';
 			
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['navi']),
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
 		'L_CREATE'	=> sprintf($lang['sprintf_new_create'], $lang['field']),
 		
-		'L_SET'		=> $lang['settings'],
+		'L_SET'		=> $lang['common_settings'],
 		
 		'L_EXPLAIN'	=> $lang['explain'],
 		

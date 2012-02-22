@@ -15,7 +15,7 @@
 
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="top" width="49%">
+	<td class="top" width="50%">
 		<table class="index" border="0" cellspacing="0" cellpadding="0">
 		<th colspan="4">
 			<div id="navcontainer">
@@ -39,7 +39,7 @@
 		<!-- END _entry_empty_news -->
 		</table>
 	</td>
-	<td class="top" width="49%">
+	<td class="top" width="50%">
 		<table class="index" border="0" cellspacing="0" cellpadding="0">
 		<th colspan="4">
 			<div id="navcontainer">
@@ -75,7 +75,7 @@
 		<th colspan="4">
 			<div id="navcontainer">
 				<ul id="navlist">
-					<li><a href="{U_MATCH}" id="current">{L_MATCH}&nbsp;<img src="{I_MATCH}" width="12" height="12" alt="" /></a></li>
+					<li><a href="{U_MATCH}" id="current"><img src="{I_MATCH}" width="12" height="12" alt="" />&nbsp;{L_MATCH}</a></li>
 				</ul>
 			</div>
 		</th>
@@ -99,7 +99,7 @@
 		<th colspan="4">
 			<div id="navcontainer">
 				<ul id="navlist">
-					<li><a href="{U_TRAIN}" id="right">{L_TRAIN}&nbsp;<img src="{I_TRAIN}" width="12" height="12" alt="" /></a></li>
+					<li><a href="{U_TRAIN}" id="right"><img src="{I_TRAIN}" width="12" height="12" alt="" />&nbsp;{L_TRAIN}</a></li>
 				</ul>
 			</div>
 		</th>
@@ -131,7 +131,7 @@
 		<th colspan="4">
 			<div id="navcontainer">
 				<ul id="navlist">
-					<li><a href="{U_USERS}" id="right">{L_USERS}&nbsp;<img src="{I_USERS}" width="12" height="12" alt="" /></a></li>
+					<li><a href="{U_USERS}" id="right"><img src="{I_USERS}" width="12" height="12" alt="" />&nbsp;{L_USERS}</a></li>
 				</ul>
 			</div>
 		</th>
@@ -147,6 +147,9 @@
 	</td>
 </tr>
 </table>
+<br />
+
+{VERSION_INFO}
 <!--
 <table border="0" cellspacing="0" cellpadding="0">
   <tr> 

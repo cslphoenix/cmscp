@@ -56,32 +56,32 @@ else
 			
 			$template->assign_block_vars('_error', array());
 			
-			$logs = data(ERROR, false, 'error_id ASC', 1, false);
-		
-			if ( !$logs )
+			$errors	= data(ERROR, false, 'error_id ASC', 1, false);
+			$error	= count($errors);
+			
+			if ( !$errors )
 			{
 				$template->assign_block_vars('_error._entry_empty', array());
 			}
 			else
 			{
-				for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($logs)); $i++)
+				for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $error); $i++ )
 				{
-					$class = ($i % 2) ? 'row_class1' : 'row_class2';
+					$class = ( $i % 2 ) ? 'row_class1' : 'row_class2';
 					
-					$error_id			= $logs[$i]['error_id'];
-					$error_user			= $logs[$i]['error_userid'];
-					$error_msg_title	= $logs[$i]['error_msg_title'];
-					$error_msg_text		= $logs[$i]['error_msg_text'];
-					$error_sql_code		= $logs[$i]['error_sql_code'];
-					$error_sql_text		= $logs[$i]['error_sql_text'];
-					$error_sql_store	= $logs[$i]['error_sql_store'];
-					$error_file			= str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $logs[$i]['error_file']);
-					$error_file_line	= $logs[$i]['error_file_line'];
-					$error_time			= create_date($config['default_dateformat'], $logs[$i]['error_time'], $config['page_timezone']);
+					$error_id			= $errors[$i]['error_id'];
+					$error_user			= $errors[$i]['error_userid'];
+					$error_msg_title	= $errors[$i]['error_msg_title'];
+					$error_msg_text		= $errors[$i]['error_msg_text'];
+					$error_sql_code		= $errors[$i]['error_sql_code'];
+					$error_sql_text		= $errors[$i]['error_sql_text'];
+					$error_sql_store	= $errors[$i]['error_sql_store'];
+					$error_file			= str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $errors[$i]['error_file']);
+					$error_file_line	= $errors[$i]['error_file_line'];
+					$error_time			= create_date($config['default_dateformat'], $errors[$i]['error_time'], $config['page_timezone']);
 					
 					$template->assign_block_vars('_error._error_row', array(
 						'CLASS'	=> $class,
-						
 						'ID'		=> $error_id,
 						'USER'		=> $error_user,
 						'TIME'		=> $error_time,
@@ -96,20 +96,20 @@ else
 				}
 			}
 		
-			$current_page = ( !count($logs) ) ? 1 : ceil( count($logs) / $settings['site_entry_per_page'] );
+			$current_page = ( !$error ) ? 1 : ceil( $error / $settings['site_entry_per_page'] );
 		
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
 				'L_ERROR'	=> sprintf($lang['sprintf_head'], $lang['title_error']),
 				'L_EXPLAIN'	=> $lang['explain_error'],
 				
-				'L_DELETE'			=> $lang['Delete'],
-				'L_MARK_ALL'		=> $lang['mark_all'],
-				'L_MARK_DEALL'		=> $lang['mark_deall'],
-				'L_GOTO_PAGE'		=> $lang['Goto_page'],
+				'L_DELETE'		=> $lang['Delete'],
+				'L_MARK_ALL'	=> $lang['mark_all'],
+				'L_MARK_DEALL'	=> $lang['mark_deall'],
+				'L_GOTO_PAGE'	=> $lang['Goto_page'],
 				
-				'PAGINATION'		=> generate_pagination('admin_logs.php?', count($logs), $settings['site_entry_per_page'], $start),
-				'PAGE_NUMBER'		=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+				'PAGE_PAGING'	=> generate_pagination('admin_logs.php?mode=_error', $error, $settings['site_entry_per_page'], $start),
+				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
 				
 				
 				'S_ACTION'		=> check_sid($file),

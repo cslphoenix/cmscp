@@ -1558,5 +1558,18 @@ $lang['gallery_rule_cannot_rate']	= 'Du <b>kannst keine</b> Bilder bewerten.';
 $lang['gallery_rule_can_upload']	= 'Du <b>kannst</b> Bilder hochladen.';
 $lang['gallery_rule_cannot_upload']	= 'Du <b>kannst keine</b> Bilder hochladen.';
 
+//
+// Version Check
+//
+$lang['Version_up_to_date'] = 'Die Seite ist auf dem neuesten Stand.';
+$lang['Version_not_up_to_date'] = 'Seite <b>nicht</b> auf dem neuesten Stand. Es sind Updates verfügbar.';
+$lang['Latest_version_info'] = 'Die neueste verfügbare Version ist <b>%s</b>.';
+$lang['Current_version_info'] = 'Du verwendest <b>%s</b>.';
+$lang['Connect_socket_error'] = 'Die Verbindung zum phpBB-Server konnte nicht aufgebaut werden. Es trat folgender Fehler auf:<br>%s';
+$lang['Socket_functions_disabled'] = 'Die Socket-Funktionen konnten nicht benutzt werden.';
+$lang['Mailing_list_subscribe_reminder'] = 'Um immer die neuesten Informationen zu Updates von phpBB zu erhalten, solltest du dich <a href="http://www.phpbb.com/support/" target="_new">beim phpBB Newsletter anmelden</a>.';
+$lang['Version_information'] = 'Versions-Information';
+
+
 
 ?>

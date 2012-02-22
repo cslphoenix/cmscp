@@ -473,6 +473,7 @@ else
 					'L_OVERVIEW'	=> $lang['common_overview'],
 					
 					'S_INPUT'		=> check_sid("$file?mode=_update&amp;$url=$data_id"),
+					'S_UPDATE'		=> check_sid("$file?mode=_update&amp;$url=$data_id"),
 					'S_OVERVIEW'	=> check_sid("$file?mode=_overview&amp;$url=$data_id"),
 					
 					'S_ACTION'		=> check_sid($file),

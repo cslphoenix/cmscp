@@ -44,10 +44,12 @@ function update_image(newimage)
 <!-- END _entry_empty -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="team_name"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td><input type="text" class="post" name="team_name"></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 {S_FIELDS}
@@ -87,6 +89,7 @@ function update_image(newimage)
 		</div>
 	</td>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1" width="155"><label for="team_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="team_name" id="team_name" value="{NAME}"></td>
@@ -103,6 +106,7 @@ function update_image(newimage)
 	<td class="row1"><label for="team_order">{L_ORDER}:</label></td>
 	<td class="row2">{S_ORDER}</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

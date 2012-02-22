@@ -13,38 +13,44 @@
 </table>
 
 <br />
-<table border="0" cellspacing="1" cellpadding="2">
+
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="cat_name" /></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
+	<td><input type="text" class="post" name="cat_name" /></td>
+	<td><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}" /></td>
+	<td></td>
+    <td></td>
 </tr>
 </table>
 <br />
+<br />
+
 
 <!-- BEGIN _cat_row -->
 <table class="rows">
 <tr>
-	<td class="rowHead" align="left" width="99%" colspan="2">{_display._cat_row.NAME}</td>
+	<td class="rowHead" align="left" width="99%">{_display._cat_row.NAME}</td>
 	<td class="rowHead" align="center" nowrap="nowrap">{_display._cat_row.MOVE_UP}{_display._cat_row.MOVE_DOWN} <a href="{_display._cat_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._cat_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- BEGIN _profile_row -->
 <tr> 
-	<td class="row_class1" nowrap="nowrap"><b>{_display._cat_row._profile_row.NAME}</b></td>
-	<td class="row_class1" width="99%">{_display._cat_row._profile_row.FIELD}</td>
+	<td class="row_class1" nowrap="nowrap">{_display._cat_row._profile_row.NAME}<span style="float:right;"><span style="font-size:10px;">{_display._cat_row._profile_row.FIELD}</span></span></td>
 	<td class="row_class2" align="center">{_display._cat_row._profile_row.MOVE_UP}{_display._cat_row._profile_row.MOVE_DOWN} <a href="{_display._cat_row._profile_row.U_UPDATE}">{I_UPDATE}</a> <a href="{_display._cat_row._profile_row.U_DELETE}">{I_DELETE}</a></td>
 </tr>
 <!-- END _profile_row -->
 <!-- BEGIN _entry_empty -->
 <tr>
-	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
+	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
 </tr>
 <!-- END _entry_empty -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="{_display._cat_row.S_NAME}" /></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="{_display._cat_row.S_SUBMIT}" value="{L_CREATE_FIELD}"></td>
+	<td><input type="text" class="post" name="{_display._cat_row.S_NAME}" /></td>
+	<td><input type="submit" class="button2" name="{_display._cat_row.S_SUBMIT}" value="{L_CREATE_FIELD}" /></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
 <br />
@@ -117,9 +123,11 @@
 	<td class="row1"><label for="profile_necessary">{L_NECESSARY}:</label></td>
 	<td class="row2"><label><input type="radio" name="profile_necessary" value="1" id="profile_necessary" {S_NECESSARY_YES} onclick="set_right('profile_show_register');" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="profile_necessary" value="0" {S_NECESSARY_NO} />&nbsp;{L_NO}</label></td>
 </tr>
+</tbody>
 <tr>
-	<td class="row4" colspan="2"><strong>{L_SHOW}</strong></td>
+	<td class="row1" colspan="2">{L_SHOW}</td>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="profile_show_guest">{L_GUEST}:</label></td>
 	<td class="row2"><label><input type="radio" name="profile_show_guest" value="1" id="profile_show_guest" {S_GUEST_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="profile_show_guest" value="0" {S_GUEST_NO} />&nbsp;{L_NO}</label></td>

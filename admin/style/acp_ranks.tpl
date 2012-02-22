@@ -26,7 +26,7 @@
 	<td class="row_class1" align="left" width="98%">{_display._forum_row.NAME}</td>
 	<td class="row_class1" align="center" width="1%">{_display._forum_row.SPECIAL}</td>
 	<td class="row_class1" align="center" width="1%">{_display._forum_row.MIN}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._forum_row.MOVE_UP}{_display._forum_row.MOVE_DOWN} {_display._forum_row.UPDATE} {_display._forum_row.DELETE}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._forum_row.IMAGE} {_display._forum_row.MOVE_UP}{_display._forum_row.MOVE_DOWN} {_display._forum_row.UPDATE} {_display._forum_row.DELETE}</td>
 </tr>
 <!-- END _forum_row -->
 <!-- BEGIN _entry_empty_forum -->
@@ -36,10 +36,12 @@
 <!-- END _entry_empty_forum -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="rank_name[2]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="rank_type[2]" value="{L_CREATE}"></td>
+	<td><input type="text" class="post" name="rank_name[2]"></td>
+	<td><input type="submit" class="button2" name="rank_type[2]" value="{L_CREATE}"></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
 
@@ -53,7 +55,7 @@
 <!-- BEGIN _page_row -->
 <tr>
 	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._page_row.STANDARD}</span>{_display._page_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._page_row.MOVE_UP}{_display._page_row.MOVE_DOWN} {_display._page_row.UPDATE} {_display._page_row.DELETE}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._page_row.IMAGE} {_display._page_row.MOVE_UP}{_display._page_row.MOVE_DOWN} {_display._page_row.UPDATE} {_display._page_row.DELETE}</td>
 </tr>
 <!-- END _page_row -->
 <!-- BEGIN _entry_empty_page -->
@@ -63,10 +65,12 @@
 <!-- END _entry_empty_page -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="rank_name[1]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="rank_type[1]" value="{L_CREATE}"></td>
+	<td><input type="text" class="post" name="rank_name[1]"></td>
+	<td><input type="submit" class="button2" name="rank_type[1]" value="{L_CREATE}"></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
 
@@ -80,7 +84,7 @@
 <!-- BEGIN _team_row -->
 <tr>
 	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._team_row.STANDARD}</span>{_display._team_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._team_row.MOVE_UP}{_display._team_row.MOVE_DOWN} {_display._team_row.UPDATE} {_display._team_row.DELETE}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{_display._team_row.IMAGE} {_display._team_row.MOVE_UP}{_display._team_row.MOVE_DOWN} {_display._team_row.UPDATE} {_display._team_row.DELETE}</td>
 </tr>
 <!-- END _team_row -->
 <!-- BEGIN _entry_empty_team -->
@@ -90,12 +94,15 @@
 <!-- END _entry_empty_team -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="rank_name[3]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="rank_type[3]" value="{L_CREATE}"></td>
+	<td><input type="text" class="post" name="rank_name[3]"></td>
+	<td><input type="submit" class="button2" name="rank_type[3]" value="{L_CREATE}"></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
+
 {S_FIELDS}
 </form>
 <!-- END _display -->
@@ -141,19 +148,19 @@
 <tr>
 	<td class="row1"><label>{L_TYPE}:</label></td>
 	<td class="row2">
-		<label><input type="radio" name="rank_type" value="1" onclick="setRequest('rank', 1, {CUR_TYPE}, {CUR_ORDER}); document.getElementById('forms').style.display = 'none'; document.getElementById('normal').style.display = ''; document.getElementById('special').style.display = 'none';" {S_TYPE_PAGE} />&nbsp;{L_TYPE_PAGE}</label><br />
-		<label><input type="radio" name="rank_type" value="2" onclick="setRequest('rank', 2, {CUR_TYPE}, {CUR_ORDER}); document.getElementById('forms').style.display = ''; document.getElementById('normal').style.display = 'none'; document.getElementById('special').style.display = '';" {S_TYPE_FORUM} />&nbsp;{L_TYPE_FORUM}</label><br />
-		<label><input type="radio" name="rank_type" value="3" onclick="setRequest('rank', 3, {CUR_TYPE}, {CUR_ORDER}); document.getElementById('forms').style.display = 'none'; document.getElementById('normal').style.display = ''; document.getElementById('special').style.display = 'none';" {S_TYPE_TEAM} />&nbsp;{L_TYPE_TEAM}</label>
+		<label><input type="radio" name="rank_type" value="2" onclick="setRequest('rank', 2, {CUR_TYPE}, {CUR_ORDER}); document.getElementById('forms').style.display = ''; document.getElementById('normal').style.display = 'none'; document.getElementById('posts').style.display = '';" {S_TYPE_FORUM} />&nbsp;{L_TYPE_FORUM}</label><br />
+		<label><input type="radio" name="rank_type" value="1" onclick="setRequest('rank', 1, {CUR_TYPE}, {CUR_ORDER}); document.getElementById('forms').style.display = 'none'; document.getElementById('normal').style.display = ''; document.getElementById('posts').style.display = 'none';" {S_TYPE_PAGE} />&nbsp;{L_TYPE_PAGE}</label><br />
+		<label><input type="radio" name="rank_type" value="3" onclick="setRequest('rank', 3, {CUR_TYPE}, {CUR_ORDER}); document.getElementById('forms').style.display = 'none'; document.getElementById('normal').style.display = ''; document.getElementById('posts').style.display = 'none';" {S_TYPE_TEAM} />&nbsp;{L_TYPE_TEAM}</label>
 	</td> 
 </tr>
 </tbody>
 <tbody class="trhover" id="forms" style="display:{SHOW_FORMS};">
 <tr>
 	<td class="row1"><label for="rank_special">{L_SPECIAL}:</label></td>
-	<td class="row2"><label><input type="radio" name="rank_special" value="1" id="rank_special" onClick="this.form.rank_min.value=''; document.getElementById('special').style.display = 'none';" {S_SPECIAL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_special" value="0" onclick="document.getElementById('special').style.display = '';" {S_SPECIAL_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="rank_special" value="1" id="rank_special" onClick="this.form.rank_min.value=''; document.getElementById('posts').style.display = 'none';" {S_SPECIAL_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="rank_special" value="0" onclick="document.getElementById('posts').style.display = '';" {S_SPECIAL_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 </tbody>
-<tbody class="trhover" id="special" style="display:{SHOW_SPECIAL};">
+<tbody class="trhover" id="posts" style="display:{SHOW_POSTS};">
 <tr>
 	<td class="row1"><label for="rank_min">{L_MIN}:</label></td>
 	<td class="row2"><input type="text" class="post" name="rank_min" id="rank_min" value="{MIN}"></td>

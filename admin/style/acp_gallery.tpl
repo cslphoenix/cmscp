@@ -36,9 +36,10 @@
 
 <table class="footer">
 <tr>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 	<td><input type="text" class="post" name="gallery_name"></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>
 {S_FIELDS}
@@ -47,6 +48,7 @@
 
 <!-- BEGIN _input -->
 <form action="{S_ACTION}" method="post">
+{TINYMCE}
 <div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
@@ -78,6 +80,7 @@
 		</div>
 	</td>
 </tr>
+<tbody class="trhover">
 <tr>
 	<td class="row1"><label for="gallery_name">{L_NAME}: *</label></td>
 	<td class="row2"><input type="text" class="post" name="gallery_name" id="gallery_name" value="{NAME}"></td>
@@ -85,7 +88,7 @@
 <tr>
 	<td class="row1"><label>{L_AUTH}:</label></td>
 	<td class="row3">
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
+		<table class="update">
 		<!-- BEGIN _auth -->
 		<tr>
 			<td nowrap="nowrap">{_input._auth.SELECT}</td>
@@ -96,12 +99,12 @@
 	</td>
 </tr>
 <tr>
-	<td class="row1"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
-</tr>
-<tr>
 	<td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
 	<td class="row2"><input type="text" class="post" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
+</tr>
+<tr>
+	<td class="row1"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
@@ -139,6 +142,7 @@
 	<td class="row1"><label for="gallery_rate">{L_RATE}:</label></td>
 	<td class="row2"><label><input type="radio" name="gallery_rate" id="gallery_rate" value="1" {S_RATE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="gallery_rate" value="0" {S_RATE_NO} />&nbsp;{L_NO}</label></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
@@ -163,6 +167,12 @@
 </ul>
 </div>
 
+<table class="header">
+<tr>
+	<td>&nbsp;</td>
+</tr>
+</table>
+
 <br /><div align="center">{ERROR_BOX}</div>
 
 <table class="update">
@@ -184,6 +194,7 @@
 		</div></div>
 	</td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>
@@ -393,13 +404,14 @@
 		</div>
 	</td>
 </tr>
-<tr>
-    <td class="row1" width="155"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
-</tr>
+<tbody class="trhover">
 <tr>
     <td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
 	<td class="row2"><input type="text" class="post" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
+</tr>
+<tr>
+    <td class="row1" width="155"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
+	<td class="row2"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
 </tr>
 <tr>
     <td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
@@ -438,6 +450,7 @@
     <td class="row1"><label for="preview_height">{L_PREVIEW_HEIGHT}:</label></td>
 	<td class="row2"><input type="text" class="post" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
 </tr>
+</tbody>
 <tr>
 	<td colspan="2" align="center">&nbsp;</td>
 </tr>

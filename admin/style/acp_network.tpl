@@ -32,10 +32,12 @@
 <!-- END _no_entry_link -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="network_name[1]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE_LINK}"></td>
+	<td><input type="text" class="post" name="network_name[1]"></td>
+	<td><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE_LINK}"></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
 
@@ -59,13 +61,15 @@
 <!-- END _no_entry_partner -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="network_name[2]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE_PARTNER}"></td>
+	<td><input type="text" class="post" name="network_name[2]"></td>
+	<td><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE_PARTNER}"></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
-	
+
 <br />
 
 <table class="rows">
@@ -86,10 +90,12 @@
 <!-- END _no_entry_sponsor -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="footer">
 <tr>
-	<td align="right"><input type="text" class="post" name="network_name[3]"></td>
-	<td class="top" align="right" width="1%"><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE_SPONSOR}"></td>
+	<td><input type="text" class="post" name="network_name[3]"></td>
+	<td><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE_SPONSOR}"></td>
+    <td></td>
+    <td></td>
 </tr>
 </table>
 {S_FIELDS}
