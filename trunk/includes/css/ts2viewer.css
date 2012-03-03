@@ -1,0 +1,85 @@
+body  {
+background:#2e2e2e;color:#e7e7e7;
+ margin: 0px;
+ margin-top: 0px;
+ margin-bottom: 0px;
+ margin-left: 0px;
+ margin-right: 0px;
+ font-family: Arial;
+ font-size: 10px;
+scrollbar-3dlight-color:#6a6a6a;
+scrollbar-arrow-color:#fc9b00;
+scrollbar-darkshadow-color:#000000;
+scrollbar-face-color:#1f1f1f;
+scrollbar-highlight-color:#1f1f1f;
+scrollbar-shadow-color:#000000;
+scrollbar-track-color:#2e2e2e;
+}
+/*       Überschrift       */
+.teamspeak  {
+ font-weight: bold;
+ font-family: Verdana,Arial;
+ font-size: 11px;
+ color: #fc9b00;
+}
+/*       Channel       */
+.channel  {
+ font-weight: bold;
+ font-family: Verdana, Arial;
+ font-size: 10px;
+ color: #6666CC;
+}
+/*       Channellink       */
+a.channellink:link,
+a.channellink:hover,
+a.channellink:visited,
+a.channellink:active {
+ text-decoration: none;
+ font-weight: bold;
+ font-family: Verdana, Arial;
+ font-size: 10px;
+ color: #d0a700;
+}
+/*       Player       */
+.player  {
+ font-family: Verdana,Arial;
+ font-size: 9px;
+ color: #FFFFFF;
+}
+/*       Refreshlink       */
+a.refresh:link,
+a.refresh:hover,
+a.refresh:visited,
+a.refresh:active {
+ text-decoration: none;
+ font-family: Verdana, Arial;
+ font-size: 9px;
+ color: #FFFFFF;
+}
+/*       Refresh       */
+.refresh  {
+ font-family: Verdana,Arial;
+ font-size: 9px;
+ color: #FFFFFF;
+}
+/*       Offline       */
+.offline  {
+ font-weight: bold;
+ font-family: Verdana,Arial;
+ font-size: 11px;
+ color: #FF3333;
+}
+a.created:link,
+a.created:hover,
+a.created:visited,
+a.created:active {
+ text-decoration: none;
+ font-family: Verdana, Arial;
+ font-size: 9px;
+ color: #d0a700;
+}
+.created  {
+ font-family: Verdana,Arial;
+ font-size: 9px;
+ color: #FFFFFF;
+}
