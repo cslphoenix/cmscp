@@ -1,0 +1,221 @@
+<?php
+//
+// **      Configuration file for subSilver template       **
+//
+// **         copyright (C) 2001 The phpBB Group           **
+// **             Created by subBlue design                **
+// **                  www.subBlue.com                     **
+//
+// **    subSilver dev. forum: www.subSky.com/phpBB2/      **
+//
+// $Id: subSilver.cfg 5266 2005-10-08 19:41:31Z grahamje $
+//
+// Please note that to enable support of different languages
+// the {LANG} place holder is available. This will be replaced
+// with xxx where xxx is the users selected language. If
+// that language isn't available it will default to english. 
+// Therefore you MUST ensure you have at least a english 
+// directory if you choose to localise your template
+//
+
+//
+// Do not alter this line!
+//
+define(TEMPLATE_CONFIG, TRUE);
+
+$current_template_images = $current_template_path . "/images";
+$current_template_images_admin = "./../admin/style/images";
+
+$images['icon_quote'] = "$current_template_images/{LANG}/icon_quote.gif";
+$images['icon_edit'] = "$current_template_images/{LANG}/icon_edit.gif";
+$images['icon_search'] = "$current_template_images/{LANG}/icon_search.gif";
+$images['icon_profile'] = "$current_template_images/{LANG}/icon_profile.gif";
+$images['icon_pm'] = "$current_template_images/{LANG}/page_edit.png";
+$images['icon_email'] = "$current_template_images/{LANG}/email.png";
+$images['icon_delpost'] = "$current_template_images/icon_delete.gif";
+$images['icon_ip'] = "$current_template_images/{LANG}/icon_ip.gif";
+$images['icon_www'] = "$current_template_images/{LANG}/icon_www.gif";
+$images['icon_icq'] = "$current_template_images/{LANG}/icon_icq_add.gif";
+$images['icon_aim'] = "$current_template_images/{LANG}/icon_aim.gif";
+$images['icon_yim'] = "$current_template_images/{LANG}/icon_yim.gif";
+$images['icon_msnm'] = "$current_template_images/{LANG}/icon_msnm.gif";
+$images['icon_minipost'] = "$current_template_images/icon_minipost.gif";
+$images['icon_gotopost'] = "$current_template_images/icon_minipost.gif";
+$images['icon_minipost_new'] = "$current_template_images/icon_minipost_new.gif";
+$images['icon_latest_reply'] = "$current_template_images/icon_latest_reply.gif";
+$images['icon_newest_reply'] = "$current_template_images/icon_newest_reply.gif";
+
+$images['forum'] = "$current_template_images/folder_big.gif";
+$images['forum_new'] = "$current_template_images/folder_new_big.gif";
+$images['forum_locked'] = "$current_template_images/folder_locked_big.gif";
+
+$images['folder'] = "$current_template_images/folder.gif";
+$images['folder_new'] = "$current_template_images/folder_new.gif";
+$images['folder_hot'] = "$current_template_images/folder_hot.gif";
+$images['folder_hot_new'] = "$current_template_images/folder_new_hot.gif";
+$images['folder_locked'] = "$current_template_images/folder_lock.gif";
+$images['folder_locked_new'] = "$current_template_images/folder_lock_new.gif";
+$images['folder_sticky'] = "$current_template_images/folder_sticky.gif";
+$images['folder_sticky_new'] = "$current_template_images/folder_sticky_new.gif";
+$images['folder_announce'] = "$current_template_images/folder_announce.gif";
+$images['folder_announce_new'] = "$current_template_images/folder_announce_new.gif";
+
+$images['post_new'] = "$current_template_images/{LANG}/post.gif";
+$images['post_locked'] = "$current_template_images/{LANG}/reply-locked.gif";
+$images['reply_new'] = "$current_template_images/{LANG}/reply.gif";
+$images['reply_locked'] = "$current_template_images/{LANG}/reply-locked.gif";
+
+$images['pm_inbox'] = "$current_template_images/msg_inbox.gif";
+$images['pm_outbox'] = "$current_template_images/msg_outbox.gif";
+$images['pm_savebox'] = "$current_template_images/msg_savebox.gif";
+$images['pm_sentbox'] = "$current_template_images/msg_sentbox.gif";
+$images['pm_readmsg'] = "$current_template_images/folder.gif";
+$images['pm_unreadmsg'] = "$current_template_images/folder_new.gif";
+$images['pm_replymsg'] = "$current_template_images/{LANG}/reply.gif";
+$images['pm_postmsg'] = "$current_template_images/{LANG}/msg_newpost.gif";
+$images['pm_quotemsg'] = "$current_template_images/{LANG}/icon_quote.gif";
+$images['pm_editmsg'] = "$current_template_images/{LANG}/icon_edit.gif";
+$images['pm_new_msg'] = "";
+$images['pm_no_new_msg'] = "";
+
+$images['Topic_watch'] = "";
+$images['topic_un_watch'] = "";
+$images['topic_mod_lock'] = "$current_template_images/topic_lock.gif";
+$images['topic_mod_unlock'] = "$current_template_images/topic_unlock.gif";
+$images['topic_mod_split'] = "$current_template_images/topic_split.gif";
+$images['topic_mod_move'] = "$current_template_images/topic_move.gif";
+$images['topic_mod_delete'] = "$current_template_images/topic_delete.gif";
+
+$images['voting_graphic'][0] = "$current_template_images/voting_bar.gif";
+$images['voting_graphic'][1] = "$current_template_images/voting_bar.gif";
+$images['voting_graphic'][2] = "$current_template_images/voting_bar.gif";
+$images['voting_graphic'][3] = "$current_template_images/voting_bar.gif";
+$images['voting_graphic'][4] = "$current_template_images/voting_bar.gif";
+
+//
+// Vote graphic length defines the maximum length of a vote result
+// graphic, ie. 100% = this length
+//
+$board_config['vote_graphic_length'] = 205;
+$board_config['privmsg_graphic_length'] = 175;
+
+$images['icon_spacer'] = $current_template_images_admin . "/spacer.gif";
+
+$images['icon_accept']		= "$current_template_images_admin/icon_accept.png";
+$images['icon_cancel']		= "$current_template_images_admin/icon_cancel.png";
+
+$images['icon_update']		= "$current_template_images_admin/icon_update.png";
+$images['icon_resync']		= "$current_template_images_admin/arrow_circle_double.png";
+$images['icon_resync2']		= "$current_template_images_admin/arrow_circle_double_gray.png";
+
+$images['icon_arrow_d']		= "$current_template_images_admin/arrow_down.png";
+$images['icon_arrow_d2']	= "$current_template_images_admin/arrow_down_gray.png";
+$images['icon_arrow_u']		= "$current_template_images_admin/arrow_up.png";
+$images['icon_arrow_u2']	= "$current_template_images_admin/arrow_up_gray.png";
+
+
+// $images['option_update']		= "$current_template_images_admin/_new/option_update.png";
+// $images['option_delete']		= "$current_template_images_admin/_new/option_delete.png";
+// $images['option_upload']		= "$current_template_images_admin/_new/option_upload.png";
+// $images['option_details']		= "$current_template_images_admin/_new/option_details.png";
+// $images['option_overview']		= "$current_template_images_admin/_new/option_overview.png";
+
+// $images['icon_option_member']	= "$current_template_images_admin/_new/option_member.png";
+// $images['icon_option_update']	= "$current_template_images_admin/_new/option_update.png";
+// $images['icon_option_delete']	= "$current_template_images_admin/_new/option_delete.png";
+// $images['icon_option_details']	= "$current_template_images_admin/_new/option_details.png";
+
+// $images['icon_acp_yes']			= "$current_template_images_admin/icon_yes.png";
+// $images['icon_acp_no']			= "$current_template_images_admin/icon_no.png";
+
+// $images['icon_acp_arrow_d']		= "$current_template_images_admin/icon_arrow_down.png";
+// $images['icon_acp_arrow_d2']		= "$current_template_images_admin/icon_arrow_down2.png";
+// $images['icon_acp_arrow_u']		= "$current_template_images_admin/icon_arrow_up.png";
+// $images['icon_acp_arrow_u2']		= "$current_template_images_admin/icon_arrow_up2.png";
+// $images['icon_acp_public']		= "$current_template_images_admin/icon_news_public.png";
+// $images['icon_acp_privat']		= "$current_template_images_admin/icon_news_privat.png";
+// $images['icon_acp_denied']		= "$current_template_images_admin/icon_news_denied.png";
+
+// $images['icon_add']				= "$current_template_images_admin/icon_add.png";
+// $images['icon_add_photo']		= "$current_template_images_admin/icon_add_photo.png";
+// $images['icon_edit']			= "$current_template_images_admin/icon_edit.png";
+// $images['icon_overview']		= "$current_template_images_admin/icon_overview.png";
+
+// $images['icon_image']			= "$current_template_images_admin/icon_image.png";
+// $images['icon_no_image']		= "$current_template_images_admin/icon_no_image.png";
+
+// $images['event']			= "$current_template_images_admin/_new/calendar.png";
+// $images['user']				= "$current_template_images_admin/_new/user.png";
+// $images['match']			= "$current_template_images_admin/_new/controller.png";
+// $images['match_add']		= "$current_template_images_admin/_new/controller_add.png";
+// $images['match_delete']		= "$current_template_images_admin/_new/controller_delete.png";
+// $images['match_error']		= "$current_template_images_admin/_new/controller_error.png";
+// $images['news']				= "$current_template_images_admin/_new/newspaper.png";
+
+// $images['refresh']			= "$current_template_images_admin/_new/arrow_refresh.png";
+
+// $images['option_update']	= "$current_template_images_admin/_new/option_update.png";
+// $images['option_delete']	= "$current_template_images_admin/_new/option_delete.png";
+// $images['option_upload']	= "$current_template_images_admin/_new/option_upload.png";
+// $images['option_details']	= "$current_template_images_admin/_new/option_details.png";
+// $images['option_overview']	= "$current_template_images_admin/_new/option_overview.png";
+
+// $images['icon_option_member']	= "$current_template_images_admin/_new/option_member.png";
+// $images['icon_option_update']	= "$current_template_images_admin/_new/option_update.png";
+// $images['icon_option_delete']	= "$current_template_images_admin/_new/option_delete.png";
+// $images['icon_option_details']	= "$current_template_images_admin/_new/option_details.png";
+
+// $images['icon_option_auth']		= "$current_template_images_admin/_new/option_auth.png";
+// $images['icon_option_field']	= "$current_template_images_admin/_new/option_field.png";
+// $images['icon_option_group']	= "$current_template_images_admin/_new/option_group.png";
+// $images['icon_option_lang']		= "$current_template_images_admin/_new/option_lang.png";
+// $images['icon_option_lang2']	= "$current_template_images_admin/_new/option_lang2.png";
+// $images['icon_option_show']		= "$current_template_images_admin/_new/option_show.png";
+// $images['icon_option_show2']	= "$current_template_images_admin/_new/option_show2.png";
+// $images['icon_option_intern']	= "$current_template_images_admin/_new/icon_option_intern.png";
+// $images['icon_option_intern2']	= "$current_template_images_admin/_new/icon_option_intern2.png";
+
+// $images['sound']		= "$current_template_images_admin/_new/sound.png";
+// $images['other']		= "$current_template_images_admin/_new/cog.png";
+
+// $images['auth_admin']		= "$current_template_images_admin/forum/auth_admin.png";
+// $images['auth_all']			= "$current_template_images_admin/forum/auth_all.png";
+// $images['auth_member']		= "$current_template_images_admin/forum/auth_member.png";
+// $images['auth_moderator']	= "$current_template_images_admin/forum/auth_moderator.png";
+// $images['auth_private']		= "$current_template_images_admin/forum/auth_private.png";
+// $images['auth_register']	= "$current_template_images_admin/forum/auth_register.png";
+// $images['auth_trial']		= "$current_template_images_admin/forum/auth_trial.png";
+
+// $images['forms_view']			= "$current_template_images_admin/forum/forms_view.png";
+// $images['forms_read']			= "$current_template_images_admin/forum/forms_read.png";
+// $images['forms_post']			= "$current_template_images_admin/forum/forms_post.png";
+// $images['forms_reply']			= "$current_template_images_admin/forum/forms_reply.png";
+// $images['forms_edit']			= "$current_template_images_admin/forum/forms_edit.png";
+// $images['forms_delete']			= "$current_template_images_admin/forum/forms_delete.png";
+// $images['forms_sticky']			= "$current_template_images_admin/forum/forms_sticky.png";
+// $images['forms_announce']		= "$current_template_images_admin/forum/forms_announce.png";
+// $images['forms_globalannounce']	= "$current_template_images_admin/forum/forms_globalannounce.png";
+// $images['forms_poll']			= "$current_template_images_admin/forum/forms_poll.png";
+// $images['forms_pollcreate']		= "$current_template_images_admin/forum/forms_pollcreate.png";
+
+// $images['lvl_guest']	= "$current_template_images_admin/_new/lvl_guest.png";
+// $images['lvl_user']		= "$current_template_images_admin/_new/lvl_user.png";
+// $images['lvl_trial']	= "$current_template_images_admin/_new/lvl_trial.png";
+// $images['lvl_member']	= "$current_template_images_admin/_new/lvl_member.png";
+// $images['lvl_mod']		= "$current_template_images_admin/_new/lvl_mod.png";
+// $images['lvl_admin']	= "$current_template_images_admin/_new/lvl_admin.png";
+
+// $images['folder']			= "$current_template_images_admin/_new/folder.png";
+// $images['folder_add']		= "$current_template_images_admin/_new/folder_add.png";
+// $images['folder_bug']		= "$current_template_images_admin/_new/folder_bug.png";
+// $images['folder_edit']		= "$current_template_images_admin/_new/folder_edit.png";
+// $images['folder_error']		= "$current_template_images_admin/_new/folder_error.png";
+// $images['folder_explore']	= "$current_template_images_admin/_new/folder_explore.png";
+
+// $images['image']			= "$current_template_images_admin/_new/image.png";
+// $images['image_add']		= "$current_template_images_admin/_new/image_add.png";
+// $images['image_delete']		= "$current_template_images_admin/_new/image_delete.png";
+// $images['image_edit']		= "$current_template_images_admin/_new/image_edit.png";
+// $images['image_link']		= "$current_template_images_admin/_new/image_link.png";
+
+?>
