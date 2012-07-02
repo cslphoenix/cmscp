@@ -30,7 +30,20 @@ $lang = array_merge($lang, array(
 	'head_server'	=> 'Server Infos',
 	'head_message'	=> 'Kommentar / Report',
 	'head_training'	=> 'Training',
-
+	
+	'type_unknown'	=> 'unbekannt',
+	'type_two'		=> '2on2',
+	'type_three'	=> '3on3',
+	'type_four'		=> '4on4',
+	'type_five'		=> '5on5',
+	'type_six'		=> '6on6',
+	
+	'msg_select_mtype'		=> 'Bitte Typ auswählen',
+	'msg_select_mwar'		=> 'Bitte Wartype auswählen',
+	'msg_select_mleague'	=> 'Bitte Liga auswählen',
+	
+	
+/*
 	'match_type' => array(
 		'type_unknown'	=> 'unbekannt',
 		'type_two'		=> '2on2',
@@ -57,13 +70,13 @@ $lang = array_merge($lang, array(
 		'league_xgc'	=> array('name' => 'XGC', 'url' => 'http://www.xgc-online.de/'),
 		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
 	),
-
+*/
 	'team'				=> 'Team',
 	'type'				=> 'Typ',
 	'war'				=> 'Begegnungstyp',
 	'league'			=> 'Liga',
-	'league_url'		=> 'Ligawebsite',
-	'league_match'		=> 'Ligaegegnungslink / ID',
+	'match_league_url'	=> 'Ligawebsite',
+	'league_match'		=> 'Match-ID',
 	'rival_name'		=> 'Gegner Name',
 	'rival_tag'			=> 'Gegner Clantag',
 	'rival_url'			=> 'Gegner Homepage',
@@ -105,8 +118,63 @@ $lang = array_merge($lang, array(
 	
 	'sprintf_round'		=> 'Runde: %s',
 	
+	
+	/* error msg */
+	'msg_select_team'			=> 'Bitte ein Team auswählen!',
+	'msg_select_type'			=> 'Bitte ein Type auswählen!',
+	'msg_select_war'			=> 'Bitte ein Wartype auswählen!',
+	'msg_select_league'			=> 'Bitte eine Liga auswählen!',
+	
+	'msg_select_team_first'		=> 'Bitte ein Team zuerst auswählen!',
+	
+	'msg_empty_rival_name'		=> 'Bitte einen Gegnernamen eintragen!',
+	'msg_empty_rival_tag'		=> 'Bitte einen Gegnerclantag eintragen!',
+	'msg_empty_server'			=> 'Bitte einen Gameserver eintragen!',
+	
+	/* details maps */
+	'detail_maps'			=> 'Maps hinzufügen',
+	'detail_maps_pic'		=> 'Maps mit Bildern hinzufügen',
+	'detail_maps_overview'	=> 'Maps Übersicht',
+	
+	'detail_map'			=> 'Map',
+	'detail_points'			=> 'Punkte',
+	'detail_mappic'			=> 'Bild',
+
+	
 ));
 
+$lang = array_merge($lang, array(
+	'match_type' => array(
+		'type_unknown'	=> $lang['type_unknown'],
+		'type_two'		=> $lang['type_two'],
+		'type_three'	=> $lang['type_three'],
+		'type_four'		=> $lang['type_four'],
+		'type_five'		=> $lang['type_five'],
+		'type_six'		=> $lang['type_six'],
+	),
+));
+
+$lang = array_merge($lang, array(
+	'match_war' => array(
+		'war_fun'		=> 'Fun War',
+		'war_training'	=> 'Training War',
+		'war_clan'		=> 'Clan War',
+		'war_league'	=> 'Liga War',
+	),
+));
+
+$lang = array_merge($lang, array(
+	'match_league' => array(
+		'league_nope'	=> array('name' => 'keine Liga', 'url' => 'leer'),
+		'league_esl'	=> array('name' => 'ESL', 'url' => 'http://www.esl.eu/'),
+		'league_sk'		=> array('name' => 'Stammkneipe', 'url' => 'http://www.stammkneipe.eu/'),
+		'league_liga'	=> array('name' => '0815 Liga', 'url' => 'http://www.0815liga.eu/'),
+		'league_lgz'	=> array('name' => 'Leaguez', 'url' => 'http://www.lgz.eu/'),
+		'league_te'		=> array('name' => 'TE', 'url' => 'http://www.tactical-esports.de/'),
+		'league_xgc'	=> array('name' => 'XGC', 'url' => 'http://www.xgc-online.de/'),
+		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
+	),
+));
 
 
 

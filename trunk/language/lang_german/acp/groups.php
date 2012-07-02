@@ -7,8 +7,9 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'group'		=> 'Gruppe',
-	'groups'	=> 'Gruppen',
+	'title'		=> 'Gruppe',
+	'titles'	=> 'Gruppen',
+	
 	'explain'	=> 'Hier kannst du die Gruppen Verwalten.',
 	'explain_o'	=> 'Hier sind alle Gruppen aufgelistet die es gibt.',
 	
@@ -19,21 +20,19 @@ $lang = array_merge($lang, array(
 	
 	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
 	
-	'auth'		=> 'Gruppenrechte',
 	'data'		=> 'Gruppendaten',
-	'image'		=> 'Gruppenbild',
-
-	'access'	=> 'Gruppenrechte',
-	'mod'		=> 'Moderator',
-
-	'type'		=> 'Gruppentyp',
-	'legend'	=> 'Legende',
-	'color'		=> 'Gruppenfarbe',
-	'rank'		=> 'Gruppenrang',
-	'upload'	=> 'Hochladen',
-	'current'	=> 'Aktuelles Gruppenbild',
-
-
+	'auth'		=> 'Gruppenrechte',
+	
+	'group_name'	=> 'Name',
+	'group_mod'		=> 'Moderator',
+	'group_access'	=> 'Level',
+	'group_type'	=> 'Type',
+	'group_desc'	=> 'Beschreibung',
+	'group_color'	=> 'Farbe',
+	'group_legend'	=> 'Legende',
+	'group_rank'	=> 'Rang',
+	'group_image'	=> 'Bild',
+	
 	'count'		=> 'Mitgliederanzahl',
 	'view_member'	=> 'Mitglieder Übersicht',
 	
@@ -57,7 +56,13 @@ $lang = array_merge($lang, array(
 	
 	'pending_members'	=> 'wartende Mitglieder',
 	
-	'group_access'		=> array(
+	
+
+));
+
+$lang = array_merge($lang, array(
+	
+	'group_access_ary'	=> array(
 		USER	=> 'Benutzer',
 		TRIAL	=> 'Trial',
 		MEMBER	=> 'Member',
@@ -65,19 +70,14 @@ $lang = array_merge($lang, array(
 		ADMIN	=> 'Administrator',
 	),
 	
-	'group_type'	=> array(
-		GROUP_OPEN		=> 'Gruppe: ohne Anfrage',
-		GROUP_REQUEST	=> 'Gruppe: mit Anfrage',
-		GROUP_CLOSED	=> 'Gruppe: geschlossen',
-		GROUP_HIDDEN	=> 'Gruppe: versteckt',
-		GROUP_SYSTEM	=> 'Gruppe: System',
+	'group_type_ary'	=> array(
+		GROUP_OPEN		=> $lang['group_open'],
+		GROUP_REQUEST	=> $lang['group_request'],
+		GROUP_CLOSED	=> $lang['group_closed'],
+		GROUP_HIDDEN	=> $lang['group_hidden'],
+		GROUP_SYSTEM	=> $lang['group_system'],
 	),
-
 ));
-
-
-
-
 
 /*
 $lang['group_member']			= 'Gruppenmitglieder';

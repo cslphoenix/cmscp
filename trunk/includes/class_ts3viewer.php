@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * TS3 Web Viewer Class - PHP 5.2.2 or higher is required!
  * only use with beta23 or higher!
  *
@@ -10,129 +10,82 @@
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @package    ts3.web.viewer.class
  * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $
+ *
  */
-class TS3Viewer {
-
-    /**
-     * @var recource socket connection
-     */
+class TS3Viewer
+{
+	/* @var recource socket connection */
     protected $socket = null;
 
-    /**
-     * @var integer socket timeout in seconds
-     */
+    /* @var integer socket timeout in seconds */
     public $socket_timeout = 5;
 
-    /**
-     * @var array player list
-     */
+    /* @var array player list */
     private $plist = array();
 
-    /**
-     * @var array channel list
-     */
+    /* @var array channel list */
     private $clist = array();
 
-    /**
-     * @var array server information
-     */
+    /* @var array server information */
     private $sinfo = array();
 
-    /**
-     * @var string image directory
-     */
+    /* @var string image directory */
     public $img_path = './images/';
 
-    /**
-     * @var array group data with Name and Icon
-     */
+    /* @var array group data with Name and Icon */
     public $groups = array();
 
-    /**
-     * @var array player status (muted, away etc.)
-     */
+    /* @var array player status (muted, away etc.) */
     public $icons = array();
 
-    /**
-     * @var object cache handler
-     */
+    /* @var object cache handler */
     public $cache = null;
 
-    /**
-     * @var array possible cache handler
-     */
+    /* @var array possible cache handler */
     public $cache_handler = array('Memcache', 'XCache', 'APC', 'File');
 
-    /**
-     * @var string cache path for file cache if used
-     */
+    /* @var string cache path for file cache if used */
     public $cache_path = './cache/';
 
-    /**
-     * @var integer cache timeout to re-create
-     */
+    /* @var integer cache timeout to re-create */
     public $cache_timeout = 60;
 
-    /**
-     * @var string ts3 host address
-     */
+    /* @var string ts3 host address */
     private $ts3_host = null;
 
-    /**
-     * @var integer ts3 query port
-     */
+    /* @var integer ts3 query port */
     private $ts3_query = null;
 
-    /**
-     * @var integer ts3 virtual server id
-     */
+    /* @var integer ts3 virtual server id */
     private $ts3_sid = null;
 
-    /**
-     * @var integer ts3 udp port
-     */
+    /* @var integer ts3 udp port */
     private $ts3_port = null;
 
-    /**
-     * @var string serveradmin password
-     */
+    /* @var string serveradmin password */
     public $serverlogin = array();
 
-    /**
-     * @var string html content for first wildcard in tree
-     */
+    /* @var string html content for first wildcard in tree */
     public $wildcard = '<div class="ts3spacer">&nbsp;</div>';
 
-    /**
-     * @var array channel names to hide
-     */
+    /* @var array channel names to hide */
     public $chide = array();
 
-    /**
-     * @var array language data
-     */
+    /* @var array language data */
     public $lang = array();
 
-    /**
-     * @var array errors
-     */
+    /* @var array errors */
     private $errors = array();
 
-    /**
-     * @var integer spacer repeat
-     */
+    /* @var integer spacer repeat */
     public $spacer_multi = 50;
     
-    /**
-     * @var integer characters when will the name is shortened 
-     */
+    /* @var integer characters when will the name is shortened  */
     public $player_trim = 0;
 
-    /**
-     * constructor - setup default data and arrays
+    /* constructor - setup default data and arrays
      *
-     * @return void
-     */
+     * @return void */
     public function __construct($host=null, $query=null, $sid=null, $port=null) {
 
         if ($host === null || $query === null || ($sid === null && $port === null)) {
@@ -169,22 +122,20 @@ class TS3Viewer {
         $this->lang['stats']['cache'] = 'Cache time:';
     }
 
-    /**
-     * destructor - close socket connection if still open
+    /* destructor - close socket connection if still open
      *
-     * @return void
-     */
-    public function __destruct() {
-        if (is_resource($this->socket)) {
-            fclose($this->socket);
-        }
-    }
+     * @return void */
+    public function __destruct()
+	{
+		if (is_resource($this->socket))
+		{
+			fclose($this->socket);
+		}
+	}
 
-    /**
-     * select storage handler
+    /* select storage handler
      *
-     * @return void
-     */
+     * @return void */
     private function set_storage() {
         if (!is_array($this->cache_handler) && !empty($this->cache_handler)) {
             $this->cache_handler = array($this->cache_handler);
@@ -213,11 +164,9 @@ class TS3Viewer {
         $this->cache->timeout = $this->cache_timeout;
     }
 
-    /**
-     * check cache and (re)build the data arrays
+    /* check cache and (re)build the data arrays
      *
-     * @return bool
-     */
+     * @return bool */
     public function build() {
 
         $this->set_storage();
@@ -246,11 +195,9 @@ class TS3Viewer {
         return $this->cache->set($cache);
     }
 
-    /**
-     * refresh data from server
+    /* refresh data from server
      *
-     * @return bool
-     */
+     * @return bool */
     private function refresh() {
 
         // try & catch wär zwar besser, funktioniert aber bei fsockopen leider nicht.. deshalb das unschöne @
@@ -348,29 +295,23 @@ class TS3Viewer {
         return true;
     }
 
-    /**
+    /* @param  array
      * @param  array
-     * @param  array
-     * @return integer
-     */
+     * @return integer */
     private function cmp1($a, $b) {
         return strcmp($b["s_admin"], $a["s_admin"]);
     }
 
-    /**
+    /* @param  array
      * @param  array
-     * @param  array
-     * @return integer
-     */
+     * @return integer */
     private function cmp2($a, $b) {
         return strcmp($b["client_channel_group_id"], $a["client_channel_group_id"]);
     }
 
-    /**
-     * close socket connection
+    /* close socket connection
      *
-     * @return bool false if no socket present, otherwise true if socket closed
-     */
+     * @return bool false if no socket present, otherwise true if socket closed */
     private function close() {
         if (is_resource($this->socket)) {
             fclose($this->socket);
@@ -379,12 +320,10 @@ class TS3Viewer {
         return false;
     }
 
-    /**
-     * send given cmd to the TS3 Server
+    /* send given cmd to the TS3 Server
      *
      * @param  string command
-     * @return mixed  false if an error occurred otherwise the server response
-     */
+     * @return mixed  false if an error occurred otherwise the server response */
     private function sendCmd($cmd, $params='') {
 
         if (!is_resource($this->socket)) {
@@ -411,12 +350,10 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * cleanup the serverinfo and put it into an array
+    /* cleanup the serverinfo and put it into an array
      *
      * @param string serverinfo response
-     * @return array
-     */
+     * @return array */
     private function splitInfo($info) {
         $info = trim(str_replace('error id=0 msg=ok', '', $info));
         $info = explode(' ', $info);
@@ -433,24 +370,20 @@ class TS3Viewer {
         return $return;
     }
 
-    /**
-     * cleanup the given info and put it into an array
+    /* cleanup the given info and put it into an array
      *
      * @param string serverinfo response
-     * @return array
-     */
+     * @return array */
     private function splitInfo2($info) {
         $info = trim(str_replace('error id=0 msg=ok', '', $info));
         $info = explode('|', $info);
         return $info;
     }
 
-    /**
-     * cleanup escaped string
+    /* cleanup escaped string
      *
      * @param  string
-     * @return string
-     */
+     * @return string */
     private function rep($var) {
         $search[] = chr(194);
         $replace[] = '';
@@ -478,12 +411,10 @@ class TS3Viewer {
         return str_replace($search, $replace, $var);
     }
 
-    /**
-     * converts a bytevalue into the highest possible unit
+    /* converts a bytevalue into the highest possible unit
      *
      * @param  integer byte number
-     * @return string  human readable byte string
-     */
+     * @return string  human readable byte string */
     private function convert_bytes($byte) {
         $bz = array(" B", " kB", " MB", " GB", " TB");
         $count = 0;
@@ -494,12 +425,10 @@ class TS3Viewer {
         return number_format($byte, 2, ',', '.') . $bz[$count];
     }
 
-    /**
-     * return the current player icon
+    /* return the current player icon
      *
      * @param  string  current player flag
-     * @return string  the icon filename
-     */
+     * @return string  the icon filename */
     private function player_icon($var) {
         foreach ($this->icons as $key => $opt) {
             if (isset($var[$key]) && $var[$key] == $opt) {
@@ -509,12 +438,10 @@ class TS3Viewer {
         return 'client_player.png';
     }
     
-    /**
-     * return the trimed player name if required
+    /* return the trimed player name if required
      *
      * @param  string  current player name
-     * @return string  trimed player name
-     */
+     * @return string  trimed player name */
     private function player_trim($var) {
     	$var = $this->rep($var);
     	
@@ -525,34 +452,28 @@ class TS3Viewer {
     	return $var;
     }
 
-    /**
-     * return the Server Uptime
+    /* return the Server Uptime
      *
      * @param  integer  server uptime in seconds
-     * @return string   human readable Server Uptime
-     */
+     * @return string   human readable Server Uptime */
     private function uptime($sec) {
         $sec = abs($sec);
 
         return sprintf("%d Days %02d Hours %02d Min", $sec / 60 / 60 / 24, ($sec / 60 / 60) % 24, ($sec / 60) % 60);
     }
 
-    /**
-     * output debug data
+    /* output debug data
      *
      * @param  mixed  string, array or object
      * @return echo   array or object as html output
-     * @example self::debug($this->sinfo);
-     */
+     * @example self::debug($this->sinfo); */
     public function debug($str) {
         if (!empty($str)) {
             echo '<pre>' . (is_array($str) ? print_r($str, true) : $str) . '</pre>';
         }
     }
 
-    /**
-     * @return mixed html with formated channel spacer
-     */
+    /* @return mixed html with formated channel spacer */
     private function spacer($matches) {
         if (!isset($matches[1]) || !isset($matches[2])) {
             return;
@@ -570,9 +491,7 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * @return mixed string with the number or false if empty
-     */
+    /* @return mixed string with the number or false if empty */
     public function useron() {
         if (isset($this->sinfo['virtualserver_clientsonline'])) {
             return ($this->sinfo['virtualserver_clientsonline'] - $this->sinfo['virtualserver_queryclientsonline']) . '/' . $this->sinfo['virtualserver_maxclients'];
@@ -582,9 +501,7 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * @return mixed string with the html tag or false if empty
-     */
+    /* @return mixed string with the html tag or false if empty */
     public function website() {
         if (!empty($this->sinfo['virtualserver_hostbutton_url'])) {
             return '<a href="' . $this->rep($this->sinfo['virtualserver_hostbutton_url']) . '" ' . (empty($this->sinfo['virtualserver_hostbutton_tooltip']) ? '' : 'title="' . $this->rep($this->sinfo['virtualserver_hostbutton_tooltip']) . '"') . ' target="_blank">' . (empty($this->sinfo['virtualserver_hostbutton_tooltip']) ? $this->rep($this->sinfo['virtualserver_hostbutton_url']) : $this->rep($this->sinfo['virtualserver_hostbutton_tooltip'])) . '</a>';
@@ -594,9 +511,7 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * @return mixed string with the html tag or false if empty
-     */
+    /* @return mixed string with the html tag or false if empty */
     public function banner() {
         if (!empty($this->sinfo['virtualserver_hostbanner_gfx_url'])) {
             return '<img class="ts3banner" src="' . $this->rep($this->sinfo['virtualserver_hostbanner_gfx_url']) . '" alt="" />';
@@ -606,9 +521,7 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * @return string html content with legend of Groups
-     */
+    /* @return string html content with legend of Groups */
     public function legend() {
         $return = '<div class="ts3legend">';
         foreach ($this->groups as $group) {
@@ -620,10 +533,8 @@ class TS3Viewer {
         return $return;
     }
 
-    /**
-     * @param  string  statistics options that should be hidden, e.g. "cache, created"
-     * @return string  html content with an overview of server statistics
-     */
+    /* @param  string  statistics options that should be hidden, e.g. "cache, created"
+     * @return string  html content with an overview of server statistics */
     public function stats($hide=null) {
         if (empty($this->sinfo)) {
             return false;
@@ -654,9 +565,7 @@ class TS3Viewer {
         return $return;
     }
 
-    /**
-     * @return mixed string with the servername or false if empty
-     */
+    /* @return mixed string with the servername or false if empty */
     public function title() {
         if (!empty($this->sinfo['virtualserver_name'])) {
             return $this->rep($this->sinfo['virtualserver_name']);
@@ -666,9 +575,7 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * @return mixed html with serverimage and servername or false if empty
-     */
+    /* @return mixed html with serverimage and servername or false if empty */
     public function tree_head() {
         if (!empty($this->sinfo['virtualserver_name'])) {
             return '<span class="ts3head"><img src="' . $this->img_path . 'serverimg.png" alt="" title="' . $this->rep($this->sinfo['virtualserver_welcomemessage']) . '"/>&nbsp;' . $this->rep($this->sinfo['virtualserver_name']) . "</span>\n";
@@ -678,9 +585,7 @@ class TS3Viewer {
         }
     }
 
-    /**
-     * @return mixed html with complete channel and playerlist or false if channellist empty
-     */
+    /* @return mixed html with complete channel and playerlist or false if channellist empty */
     public function tree($channel=0, $wildcard='') {
         if ($this->error_handler()) {
             return false;
@@ -755,9 +660,7 @@ class TS3Viewer {
         return $return;
     }
 
-    /**
-     * @return mixed html with error context if exists
-     */
+    /* @return mixed html with error context if exists */
     private function error_handler() {
         if (!empty($this->errors)) {
             echo '<ul class="ts3error">';
@@ -772,45 +675,33 @@ class TS3Viewer {
 
 }
 
-/**
- * TS3 Web Viewer Storage File Class
+/* TS3 Web Viewer Storage File Class
  *
  * @author     Branko Wilhelm <mail@nerd-zone.de>
  * @link       http://www.nerd-zone.de
  * @copyright  2010 - 2011 Branko Wilhelm
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @package    ts3.web.viewer.class
- * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $
- */
+ * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $ */
 final class TS3ViewerStorageFile {
 
-    /**
-     * @var string cachename
-     */
+    /* @var string cachename */
     public $key = null;
 
-    /**
-     * @var string cache path
-     */
+    /* @var string cache path */
     public $path = null;
 
-    /**
-     * @var string cachefile extension
-     */
+    /* @var string cachefile extension */
     public $ext = '.php';
 
-    /**
-     * @var integer timeout to re-create
-     */
+    /* @var integer timeout to re-create */
     public $timeout = 60;
 
-    /**
-     * store given data serialized into a file
+    /* store given data serialized into a file
      *
      * @param  string  filename
      * @param  array   data array
-     * @return bool    false if an error occurred otherwise true
-     */
+     * @return bool    false if an error occurred otherwise true */
     public function set($data) {
         if ($this->path === null) {
             trigger_error('TS3Viewer: no cache path given', E_USER_WARNING);
@@ -825,12 +716,10 @@ final class TS3ViewerStorageFile {
         return file_put_contents($this->path . $this->key . $this->ext, serialize($data));
     }
 
-    /**
-     * get unserialized data from cachefile
+    /* get unserialized data from cachefile
      *
      * @param  string filename
-     * @return mixed  false or array
-     */
+     * @return mixed  false or array */
     public function get() {
 
         if (!file_exists($this->path . $this->key . $this->ext)) {
@@ -845,60 +734,44 @@ final class TS3ViewerStorageFile {
 
 }
 
-/**
- * TS3 Web Viewer Storage Memcache Class
+/* TS3 Web Viewer Storage Memcache Class
  *
  * @author     Branko Wilhelm <mail@nerd-zone.de>
  * @link       http://www.nerd-zone.de
  * @copyright  2010 - 2011 Branko Wilhelm
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @package    ts3.web.viewer.class
- * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $
- */
+ * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $ */
 final class TS3ViewerStorageMemcache {
 
-    /**
-     * @var resource kann overwrite with own memcache obj if exists
-     */
+    /* @var resource kann overwrite with own memcache obj if exists */
     public $_db = null;
 
-    /**
-     * @var string cachename
-     */
+    /* @var string cachename */
     public $key = null;
 
-    /**
-     * @var string memcache host
-     */
+    /* @var string memcache host */
     public $host = 'localhost';
 
-    /**
-     * @var integer memcache port
-     */
+    /* @var integer memcache port */
     public $port = 11211;
 
-    /**
-     * @var integer timeout to re-create
-     */
+    /* @var integer timeout to re-create */
     public $timeout = 60;
 
-    /**
-     * connect the memcache server
+    /* connect the memcache server
      *
-     * @return bool
-     */
+     * @return bool */
     private function connect() {
         $this->_db = new memcache;
         return $this->_db->connect($this->host, $this->port);
     }
 
-    /**
-     * store given data into memcache
+    /* store given data into memcache
      *
      * @param  string filename
      * @param  array  data array
-     * @return bool   false if an error occurred otherwise true
-     */
+     * @return bool   false if an error occurred otherwise true */
     public function set($data) {
         if ($this->_db == null) {
             $this->connect();
@@ -907,11 +780,9 @@ final class TS3ViewerStorageMemcache {
         return $this->_db->set($this->key, $data, MEMCACHE_COMPRESSED, $this->timeout);
     }
 
-    /**
-     * get data from memcache
+    /* get data from memcache
      *
-     * @return mixed false or array
-     */
+     * @return mixed false or array */
     public function get() {
         if ($this->_db == null) {
             $this->connect();
@@ -921,88 +792,68 @@ final class TS3ViewerStorageMemcache {
 
 }
 
-/**
- * TS3 Web Viewer Storage APC Class
+/* TS3 Web Viewer Storage APC Class
  *
  * @author     Branko Wilhelm <mail@nerd-zone.de>
  * @link       http://www.nerd-zone.de
  * @copyright  2010 - 2011 Branko Wilhelm
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @package    ts3.web.viewer.class
- * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $
- */
+ * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $ */
 final class TS3ViewerStorageAPC {
 
-    /**
-     * @var string cachename
-     */
+    /* @var string cachename */
     public $key = null;
 
-    /**
-     * @var integer timeout to re-create
-     */
+    /* @var integer timeout to re-create */
     public $timeout = 60;
 
-    /**
-     * store given data into apc
+    /* store given data into apc
      *
      * @param  string filename
      * @param  array  data array
-     * @return bool   false if an error occurred otherwise true
-     */
+     * @return bool   false if an error occurred otherwise true */
     public function set($data) {
         return apc_store($this->key, $data, $this->timeout);
     }
 
-    /**
-     * get data from apc
+    /* get data from apc
      *
-     * @return mixed false or array
-     */
+     * @return mixed false or array */
     public function get() {
         return apc_fetch($this->key);
     }
 
 }
 
-/**
- * TS3 Web Viewer Storage XCache Class
+/* TS3 Web Viewer Storage XCache Class
  *
  * @author     Branko Wilhelm <mail@nerd-zone.de>
  * @link       http://www.nerd-zone.de
  * @copyright  2010 - 2011 Branko Wilhelm
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @package    ts3.web.viewer.class
- * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $
- */
+ * @version    $Id: class.ts3viewer.php 42 2011-12-09 09:33:32Z bRunO $ */
 final class TS3ViewerStorageXCache {
 
-    /**
-     * @var string cachename
-     */
+    /* @var string cachename */
     public $key = null;
 
-    /**
-     * @var integer timeout to re-create
-     */
+    /* @var integer timeout to re-create */
     public $timeout = 60;
 
-    /**
-     * store given data into xcache
+    /* store given data into xcache
      *
      * @param  string filename
      * @param  array  data array
-     * @return bool   false if an error occurred otherwise true
-     */
+     * @return bool   false if an error occurred otherwise true */
     public function set($data) {
         return xcache_set($this->key, $data, $this->timeout);
     }
 
-    /**
-     * get data from xcache
+    /* get data from xcache
      *
-     * @return mixed false or array
-     */
+     * @return mixed false or array */
     public function get() {
         if (!xcache_isset($this->key)) {
             return false;

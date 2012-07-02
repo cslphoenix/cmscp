@@ -11,7 +11,7 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_EVENT;
@@ -21,8 +21,9 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);	
-$mode	= request('mode', 1);
+$data	= request($url, INT);	
+$mode	= request('mode', TXT);
+$smode	= request('smode', 1);
 
 $error	= '';
 $fields	= '';
@@ -33,41 +34,44 @@ $template->set_filenames(array(
 	'error'		=> 'error_body.tpl',
 ));
 
+#add_lang('lang_event');
+
 $sql = "SELECT * FROM " . EVENT . " ORDER BY event_date DESC, event_id DESC";
 $tmp = _cached($sql, 'data_event');
 
 if ( $data && $tmp )
 {
-	$template->assign_block_vars('_view', array());
+	$template->assign_block_vars('view', array());
 	
-	foreach ( $tmp as $key => $row )
+	foreach ( $tmp as $row )
 	{
 		if ( $userdata['user_level'] >= $row['event_level'] && $row['event_id'] == $data )
 		{
-			$info = $row;
+			$view = $row;
 		}
 	}
 	
-	if ( !$info )
+	if ( !$view )
 	{
 		message(GENERAL_ERROR, $lang['msg_event_fail']);
 	}
 	
-	$page_title = sprintf($lang['news_head_info'], $info['event_title']);
+	$page_title = sprintf($lang['news_head_info'], $view['event_title']);
 	
-	main_header();
-	
+	main_header($page_title);
+/*	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] )
 	{
-		$template->assign_block_vars('_view._update', array(
+		$template->assign_block_vars('view._update', array(
 			'UPDATE'		=> "<a href=\"" . check_sid("admin/admin_event.php?mode=_update&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['event_update'] . "</a>",
 			'UPDATE_DETAIL'	=> "<a href=\"" . check_sid("admin/admin_event.php?mode=_detail&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['event_detail'] . "</a>",
 		));
 	}
+*/
 	
-	if ( $settings['comments_event'] && $info['event_comments'] )
+	if ( $settings['comments']['event'] && $view['event_comments'] )
 	{
-		$template->assign_block_vars('_view._comment', array());
+		$template->assign_block_vars('view._comment', array());
 		
 		$sql = "SELECT c.*, u.user_id, u.user_name, u.user_color, u.user_email
 					FROM " . COMMENT . " c
@@ -79,251 +83,190 @@ if ( $data && $tmp )
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$comments = $db->sql_fetchrowset($result);
-#		$comments = _cached($sql, 'detail_match_comments_' . $data);
 		
 		if ( !$comments )
 		{
-			$template->assign_block_vars('_view._comment._entry_empty', array());
+			$template->assign_block_vars('view._comment._empty', array());
 			
 			$last_entry = array('poster_ip' => '', 'time_create' => '');
 		}
 		else
 		{
-			for ( $i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comments)); $i++ )
+			$cnt = count($comments);
+			
+			$sql = "SELECT read_time FROM " . COMMENT_READ . " WHERE user_id = $user AND type_id = $data AND type = " . READ_EVENT;
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				$class	= ($i % 2) ? 'row1' : 'row2';
-				$icon	= ( $userdata['session_logged_in'] ) ? ( $unreads || $unread['read_time'] < $comments[$i]['time_create'] ) ? $images['icon_minipost_new'] : $images['icon_minipost'] : $images['icon_minipost'];
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$unread = $db->sql_fetchrow($result);
+			
+			$unreads = ( !$unread ) ? true : false;
+			
+			for ( $i = $start; $i < min($settings['ppec'] + $start, $cnt); $i++ )
+			{
+				$icon = ( $userdata['session_logged_in'] ) ? ( $unreads || ( $unread['read_time'] < $comments[$i]['time_create'] ) ) ? $images['icon_minipost_new'] : $images['icon_minipost'] : $images['icon_minipost'];
+				$name = $comments[$i]['poster_nick'] ? $comments[$i]['poster_nick'] : '<font color="' . $comments[$i]['user_color'] . '">' . $comments[$i]['user_name'] . '</font>';
+				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;' . POST_USER . '=' . $comments[$i]['poster_id'];
 				
-				$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
+				$s_option = '';
 				
-				$user_id = $comment_entry[$i]['user_id'];
-	
-				$template->assign_block_vars('_view._comments.comments', array(
-					'CLASS' 		=> $class,
-					'ID' 			=> $comment_entry[$i]['news_comments_id'],
-					'COLOR'			=> ( $comment_entry[$i]['user_color'] ) ? 'style="color:' . $comment_entry[$i]['user_color'] . '"' : '',
-					'L_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_nick'] : $comment_entry[$i]['user_name'],
-					'U_USERNAME'	=> ($comment_entry[$i]['poster_nick']) ? $comment_entry[$i]['poster_email'] : check_sid("profile.php?mode=view&u=$user_id"),
-					'MESSAGE'		=> $comment,
-					'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
-					
-					'ICON'			=> $icon,
-	
-					'U_EDIT'		=> check_sid('news.php?mode=edit&amp;' . POST_NEWS . '=' . $comment_entry[$i]['news_id']),
-					'U_DELETE'		=> check_sid('news.php?mode=delete&amp;' . POST_NEWS . '=' . $comment_entry[$i]['news_id'])
+				$template->assign_block_vars('view._comment._row', array(
+					'CLASS'	=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
+					'ICON'	=> $icon,
+
+					'DATE'		=> create_shortdate($userdata['user_dateformat'], $comments[$i]['time_create'], $userdata['user_timezone']),
+					'POSTER'	=> "<a href=\"$link\">$name</a>",
+					'MESSAGE'	=> $comments[$i]['poster_text'],
+
+					'OPTIONS'	=> $s_option,
 				));
 			}
 		
-			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
+			$current_page = $cnt ? ceil($cnt/$settings['ppec']) : 1;
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination('news.php?mode=view&amp;' . POST_NEWS . '=' . $news_id, count($comment_entry), $settings['site_comment_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
-			
-				'L_GOTO_PAGE' => $lang['Goto_page'])
-			);
+				'PAGE_PAGING' => generate_pagination("$file?$url=$data", $cnt, $settings['ppec'], $start),
+				'PAGE_NUMBER' => sprintf($lang['common_page_of'], (floor($start/$settings['ppec'])+1), $current_page),
+			));
 			
 			//	Letzter Kommentareintrag
 			//	sort (Sortiert ein Array)
 			//	array_pop (Liefert das letzte Element eines Arrays)
-			sort($comment_entry);
-			$last_entry = array_pop($comment_entry);
-		
+			sort($comments);
+			$last_entry = array_pop($comments);
 		}
 		
-		//	Wer darf Kommentare schreiben?!?
-		if ($settings['comments_news_guest'] && !$userdata['session_logged_in'])
+		/* Kommentare für Gäste */
+		if ( $settings['comments']['news_guest'] && !$userdata['session_logged_in'] )
 		{
-			$template->assign_block_vars('_view.news_comments.news_comments_guest', array());
+			$template->assign_block_vars('view._comment._guest', array());
 		}
 		
-		//	Eingeloggte Benutzer können immer kommentieren
-		if ($userdata['session_logged_in'])
+		if ( request('submit', TXT) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || ($last_entry['time_create'] + $settings['spam_comments']['event']) < $time ) )
 		{
-			$template->assign_block_vars('_view.news_comments.news_comments_member', array());
-		}
-		
-		$error = '';
-		$error_msg = '';
-		
-		//	Erlaubt nach Absenden kein Doppelbeitrag erst nach 20 Sekunden
-		if ( isset($HTTP_POST_VARS['submit']) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || $last_entry['time_create']+20 < time() ) )
-		{
-			//	Laden der Funktion zum eintragen von Kommentaren
-			include($root_path . 'includes/functions_post.php');
+			if ( !$userdata['session_logged_in'] )
+			{
+				$sql = "SELECT captcha FROM " . CAPTCHA . " WHERE session_id = '" . $userdata['session_id'] . "' AND captcha_id = '" . md5($user_ip) . "'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$cp = $db->sql_fetchrow($result);
+				$captcha = $cp['captcha'];
 			
-			//	Bei Fehlern wird der Text erneut in die Felder eingetragen
-			$poster_nick	= (!$userdata['session_logged_in']) ? trim(stripslashes($HTTP_POST_VARS['poster_nick'])) : '';
-			$poster_mail	= (!$userdata['session_logged_in']) ? trim(stripslashes($HTTP_POST_VARS['poster_mail'])) : '';
-			$poster_hp		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['poster_hp']) : '';
-			$comment		= (!$userdata['session_logged_in']) ? trim($HTTP_POST_VARS['comment']) : '';
+				$poster_nick	= request('poster_nick', 2) ? request('poster_nick', 2) : '';
+				$poster_mail	= request('poster_mail', 2) ? request('poster_mail', 2) : '';
+				$poster_hp		= request('poster_hp', 2) ? request('poster_hp', 2) : '';
+				$poster_captcha	= request('captcha', 3) ? request('captcha', 3) : '';
+				
+				$error .= !$poster_nick ? ( $error ? '<br />' : '' ) . $lang['msg_empty_nick'] : '';
+				$error .= !$poster_mail ? ( $error ? '<br />' : '' ) . $lang['msg_empty_mail'] : '';
+				$error .= ( $poster_captcha != $captcha  ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_captcha'] : '';
+			}
+			else
+			{
+				$poster_nick = $poster_mail = $poster_hp = $poster_captcha = '';
+			}
+			
+			$poster_msg = request('poster_msg', 3) ? request('poster_msg', 3) : '';
+			
+			$error .= !$poster_msg ? ( $error ? '<br />' : '' ) . $lang['msg_empty_text'] : '';
 			
 			$template->assign_vars(array(
 				'POSTER_NICK'	=> $poster_nick,
 				'POSTER_MAIL'	=> $poster_mail,
 				'POSTER_HP'		=> $poster_hp,
-				'COMMENT'		=> $comment,
+				'POSTER_MSG'	=> $poster_msg,
 			));
 			
-			if (!$userdata['session_logged_in'])
-			{
-				
-				$captcha = $HTTP_POST_VARS['captcha'];
-				
-				if ($captcha != $HTTP_SESSION_VARS['captcha'])
-				{
-					$error = true;
-					$error_msg = 'captcha';
-				}
-					
-				if ( empty($HTTP_POST_VARS['poster_nick']) )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'user_nick';
-				}
-				
-				if ( empty($HTTP_POST_VARS['poster_mail']) )
-				{
-					$error = true;
-					$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'poster_mail';
-				}
-				
-				unset($_SESSION['captcha']);
-			}
-				
-			if ( empty($HTTP_POST_VARS['comment']) )
-			{
-				$error = true;
-				$error_msg .= ( ( isset($error_msg) ) ? '<br>' : '' ) . 'comment';
-			}
-	
-			if ( $error )
-			{
-				$template->set_filenames(array('reg_header' => 'error_body.tpl'));
-				$template->assign_vars(array('ERROR_MESSAGE' => $error_msg));
-				$template->assign_var_from_handle('ERROR_BOX', 'reg_header');
-			}
-	
 			if ( !$error )
 			{
-				//	Test: hier werden/sollen Kommentare als gelesen markiert werden
-				$sql = "SELECT * FROM " . COMMENT_READ . " WHERE user_id = " . $userdata['user_id'] . " AND type_id = $news_id AND type = " . READ_NEWS;
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
+				$template->assign_vars(array('META' => "<meta http-equiv=\"refresh\" content=\"3;url=$file?$url=$data\">"));
 				
-				if ( $db->sql_numrows($result) )
-				{
-					$sql = "UPDATE " . COMMENT_READ . " SET read_time = " . time() . " WHERE type_id = $news_id AND user_id = " . $userdata['user_id'];					
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				}
-				else
-				{				
-					$sql = "INSERT INTO " . COMMENT_READ . " (type, type_id, user_id, read_time) VALUES (" . READ_NEWS . ", $news_id, " .  $userdata['user_id'] . ", " . time() . ")";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				}
+				$msg = $lang['add_comment'] . sprintf($lang['click_return_news'],  '<a href="' . check_sid("$file?$url=$data") . '">', '</a>');
 				
-				//	Keine Fehler?
-				//	Cache löschung und eintragung des Kommentars
-				
-				$oCache -> deleteCache('news_details_' . $news_id . '_comments');
-				
-				_comment_message('add', 'news', $news_id, $userdata['user_id'], $user_ip, $HTTP_POST_VARS['comment'], $poster_nick, $poster_mail, '');
-				
-				$message = $lang['add_comment'] . sprintf($lang['click_return_news'],  '<a href="' . check_sid('news.php?mode=view&amp;' . POST_NEWS . '=' . $news_id) . '">', '</a>');
-				message(GENERAL_MESSAGE, $message);
+				sql(COMMENT_READ, 'update', array('read_time' => $time), array('type', 'type_id', 'user_id'), array(READ_EVENT, $data, $user));
+				msg_add(EVENT, $data, $user, $poster_msg, $poster_nick, $poster_mail, $poster_hp);
+				message(GENERAL_MESSAGE, $msg);
+			}
+			else
+			{
+				$template->assign_vars(array('ERROR_MESSAGE' => $error));
+				$template->assign_var_from_handle('ERROR_BOX', 'error');
 			}
 		}
+		
+		$template->assign_vars(array(
+			'L_COMMENT'		=> $lang['common_comment'],
+			'L_SUBMIT'		=> $lang['common_submit'],
+			'L_RESET'		=> $lang['common_reset'],
+		));
+		
+		$template->assign_var_from_handle('COMMENTS', 'comments');
 	}
 	
 	if ( $userdata['session_logged_in'] )
 	{
-		$sql = "SELECT read_time FROM " . COMMENT_READ . " WHERE type_id = $data AND type = " . READ_EVENT . " AND user_id = $user";
+		$sql = "SELECT read_time FROM " . COMMENT_READ . " WHERE user_id = $user AND type_id = $data AND type = " . READ_EVENT;
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$unread = $db->sql_fetchrow($result);
-
-		if ( $unread )
-		{
-			$sql = "UPDATE " . COMMENT_READ . " SET read_time = " . time() . " WHERE type_id = $data AND type = " . READ_EVENT . " AND user_id = $user";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			$unreads = false;
-		}
-		else
-		{
-			$sql = "INSERT INTO " . COMMENT_READ . " (type, type_id, user_id, read_time) VALUES (" . READ_EVENT . ", $data, $user, $time)";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			$unreads = true;
-		}
+		
+		( $unread ) ? sql(COMMENT_READ, 'update', array('read_time' => $time), array('type', 'type_id', 'user_id'), array(READ_EVENT, $data, $user)) : sql(COMMENT_READ, 'create', array('user_id' => $user, 'type_id' => $data, 'type' => READ_EVENT, 'read_time' => $time));
 	}
 	
 	$template->assign_vars(array(
+	
+		'L_EVENT_TEXT'	=> html_entity_decode($view['event_desc'], ENT_QUOTES),
 		
-		'NEWS_TITLE'	=> $page_title,
-		'NEWS_TEXT'		=> html_entity_decode($info['news_text'], ENT_QUOTES),
+	#	'NEWS_TITLE'	=> $page_title,
+	#	'NEWS_TEXT'		=> html_entity_decode($event['news_text'], ENT_QUOTES),
 								 
 	));
 
 }
 else
 {
-	$template->assign_block_vars('_list', array());
+	$template->assign_block_vars('list', array());
 	
 	$page_title = $lang['header_event'];
 	
-	main_header();
-	
-	$new = $old = '';
+	main_header($page_title);
 	
 	if ( !$tmp )
 	{
-		$template->assign_block_vars('_list._entry_empty_new', array());
-		$template->assign_block_vars('_list._entry_empty_old', array());
+		$template->assign_block_vars('list._empty_new', array());
+		$template->assign_block_vars('list._empty_old', array());
 	}
 	else
 	{
-		foreach ( $tmp as $keys => $row )
+		$new = $old = '';
+		
+		foreach ( $tmp as $row )
 		{
-			if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] > time() )
+			if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] > $time )
 			{
 				$new[]		= $row;
 				$new_ids[]	= $row['event_id'];
 				
 			}
-			else if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] < time() )
+			else if ( $userdata['user_level'] >= $row['event_level'] && $row['event_date'] < $time )
 			{
 				$old[]		= $row;
 				$old_ids[]	= $row['event_id'];
 			}
+			
+			$ids[] = $row['event_id'];
 		}
 		
-		$cntnew = $new ? count($new) : '';
-		$cntold = $old ? count($old) : '';
+		/* event comments
 		
-		if ( !$new )
+		if ( $ids )
 		{
-			$template->assign_block_vars('_list._entry_empty_new', array());
-		}
-		else
-		{
-			$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $new_ids) . ")";
+			$sql = "SELECT event_id, event_comment AS count FROM " . EVENT . " WHERE event_id IN (" . implode(', ', $ids) . ")";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -331,48 +274,64 @@ else
 			
 			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$in_ary[$row['event_id']][$row['user_id']] = $row['user_status'];
+				$cnt_comment[$row['event_id']] = $row['count'];
+			}
+		}
+		*/
+		
+		if ( !$new )
+		{
+			$template->assign_block_vars('list._empty_new', array());
+		}
+		else
+		{
+			$cnt_new = count($new);
+			
+			/* event users */
+			$sql = "SELECT * FROM " . LISTS . " WHERE type = " . TYPE_EVENT . " AND type_id IN (" . implode(', ', $new_ids) . ")";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			for ( $i = 0; $i < $cntnew; $i++ )
+			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$event_id	= $new[$i]['event_id'];
-				$event_date	= create_date('d.m.Y', $new[$i]['event_date'], $userdata['user_timezone']);
-				$event_time	= create_date('H:i', $new[$i]['event_date'], $userdata['user_timezone']);
-				$event_dura	= create_date('H:i', $new[$i]['event_duration'], $userdata['user_timezone']);
+				$in_new[$row['type_id']][$row['user_id']] = $row['user_status'];
+			}
+			
+			for ( $i = 0; $i < $cnt_new; $i++ )
+			{
+				$id		= $new[$i]['event_id'];
+				$date	= create_date('d.m.Y', $new[$i]['event_date'], $userdata['user_timezone']);
+				$time	= create_date('H:i', $new[$i]['event_date'], $userdata['user_timezone']);
+				$dura	= create_date('H:i', $new[$i]['event_duration'], $userdata['user_timezone']);
 				
-				$css	= 'none';
-				$status	= $lang['join_none'];
+				$css	= isset($in_new[$id][$user]) ? ( $in_new[$id][$user] == STATUS_NO ) ? 'no' : 'yes' : 'none';
+				$pos	= isset($in_new[$id][$user]) ? ( $in_new[$id][$user] == STATUS_NO ) ? $lang['join_not'] : $lang['join_yes'] : $lang['join_none'];
 
-				if ( isset($in_ary[$event_id][$userdata['user_id']]) )
-				{
-					switch ( $in_ary[$event_id][$userdata['user_id']] )
-					{
-						case STATUS_NO:		$css = 'no';	$status = $lang['join_not'];	break;
-						case STATUS_YES:	$css = 'yes';	$status = $lang['join_yes'];	break;
-					}
-				}
+				$template->assign_block_vars('list._new_row', array(
+					'CLASS' => ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 
-				$template->assign_block_vars('_list._new_row', array(
-					'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
-
-					'TITLE'		=> '<a href="' . check_sid("$file?$url=$event_id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
-					'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
+					'TITLE'	=> '<a href="' . check_sid("$file?$url=$id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
+					'DATE'	=> sprintf($lang['sprintf_event'], $date, $time, $dura),
 					
-					'CSS'		=> $css,
-					'STATUS'	=> $status,
-					
+					'CSS'	=> $css,
+					'POS'	=> $pos,
 				));
 			}
 		}
 		
 		if ( !$old )
 		{
-			$template->assign_block_vars('_list._entry_empty_old', array());
+			$template->assign_block_vars('list._empty_old', array());
 		}
 		else
 		{
-			$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $old_ids) . ")";
+			$cnt_old = count($old);
+			
+			/* event users */
+		#	$sql = "SELECT * FROM " . EVENT_USERS . " WHERE event_id IN (" . implode(', ', $old_ids) . ")";
+			$sql = "SELECT * FROM " . LISTS . " WHERE type = " . TYPE_EVENT . " AND type_id IN (" . implode(', ', $new_ids) . ")";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -380,41 +339,32 @@ else
 			
 			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$in_ary[$row['event_id']][$row['user_id']] = $row['user_status'];
+				$in_old[$row['type_id']][$row['user_id']] = $row['user_status'];
 			}
 			
-			for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $cntold); $i++ )
+			for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, $cnt_old); $i++ )
 			{
-				$event_id	= $old[$i]['event_id'];
-				$event_date	= create_date('d.m.Y', $old[$i]['event_date'], $userdata['user_timezone']);
-				$event_time	= create_date('H:i', $old[$i]['event_date'], $userdata['user_timezone']);
-				$event_dura	= create_date('H:i', $old[$i]['event_duration'], $userdata['user_timezone']);
+				$id		= $old[$i]['event_id'];
+				$date	= create_date('d.m.Y', $old[$i]['event_date'], $userdata['user_timezone']);
+				$time	= create_date('H:i', $old[$i]['event_date'], $userdata['user_timezone']);
+				$dura	= create_date('H:i', $old[$i]['event_duration'], $userdata['user_timezone']);
 				
-				$css	= 'none';
-				$status	= $lang['join_none'];
-					
-				if ( isset($in_ary[$event_id][$userdata['user_id']]) )
-				{
-					switch ( $in_ary[$event_id][$userdata['user_id']] )
-					{
-						case STATUS_NO:		$css = 'no';	$status = $lang['join_not'];	break;
-						case STATUS_YES:	$css = 'yes';	$status = $lang['join_yes'];	break;
-					}
-				}
+				$css	= isset($in_old[$id][$user]) ? ( $in_old[$id][$user] == STATUS_NO ) ? 'no' : 'yes' : 'none';
+				$pos	= isset($in_old[$id][$user]) ? ( $in_old[$id][$user] == STATUS_NO ) ? $lang['join_not'] : $lang['join_yes'] : $lang['join_none'];
 				
-				$template->assign_block_vars('_list._old_row', array(
-					'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
+				$template->assign_block_vars('list._old_row', array(
+					'CLASS' => ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 
-					'TITLE'		=> '<a href="' . check_sid("$file?$url=$event_id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
-					'DATE'		=> sprintf($lang['sprintf_event'], $event_date, $event_time, $event_dura),
+					'TITLE'	=> '<a href="' . check_sid("$file?$url=$id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
+					'DATE'	=> sprintf($lang['sprintf_event'], $date, $time, $dura),
 					
-					'CSS'		=> $css,
-					'STATUS'	=> $status,
+					'CSS'	=> $css,
+					'POS'	=> $pos,
 				));
 			}
 		}
 		
-		$current_page = !$cntold ? 1 : ceil( $cntold / $settings['site_entry_per_page'] );
+		$current_page = $cnt_old ? ceil($cnt_old/$settings['per_page_entry_site']) : 1;
 		
 		$template->assign_vars(array(
 			'L_HEAD'		=> $page_title,
@@ -422,8 +372,8 @@ else
 			'L_UPCOMING'	=> $lang['event_upcoming'],
 			'L_EXPIRED'		=> $lang['event_expired'],
 			
-			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
-			'PAGE_PAGING'	=> generate_pagination("$file?", $cntold, $settings['site_entry_per_page'], $start ),
+			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ),
+			'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_old, $settings['per_page_entry_site'], $start ),
 			
 			'S_ACTION'		=> check_sid($file),
 		));

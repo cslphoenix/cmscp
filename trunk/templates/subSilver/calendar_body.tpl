@@ -32,7 +32,7 @@
 </tr>
 <!-- END days -->
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
 <tr>
 	<td class="info_foot" colspan="2">Legende: <span style="font-weight:normal;"><span class="today">Heute</span>, <span class="birthday">Geburtstage</span>, <span class="events">Ereignisse</span>, <span class="wars">Wars</span>, <span class="trains">Trainings</span>, <span class="more">mehrere Ereignisse an einem Tag</span></span></td>

@@ -7,13 +7,17 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'team'		=> 'Team',
+	'title'		=> 'Team',
 	'explain'	=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
 
 	'create'	=> 'Neues Team hinzugefügt.',
 	'update'	=> 'Teamdaten erfolgreich geändert.',
 	'delete'	=> 'Das Team wurde gelöscht!',
 	'confirm'	=> 'dass dieses Team:',
+	
+	'data'		=> 'Teamdaten',
+	'option'	=> 'Teamoptionen',
+	'image'		=> 'Teambild',
 	
 	'count'		=> 'Anzahl',
 	'members'	=> 'Mitglieder',

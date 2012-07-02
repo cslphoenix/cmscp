@@ -1,191 +1,193 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-		<li><a href="{S_CREATE_CAT}">{L_CREATE_CAT}</a></li>
-	</ul>
-</div>
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE_CAT}">{L_CREATE_CAT}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
-<table class="header">
+<table class="rfooter">
 <tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
-<table border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td align="right"><input type="text" class="post" name="cat_name" /></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
+	<td><input type="text" name="cat_name" /></td>
+	<td><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
 </tr>
 </table>
 
 <br />
 
-<!-- BEGIN _cat_row -->
+<!-- BEGIN cat -->
 <table class="rows">
 <tr>
-	<th>{_display._cat_row.CAT_NAME}<span style="float:right;">{_display._cat_row.CAT_TAG}</span></th>
-	<th>{_display._cat_row.MOVE_UP}{_display._cat_row.MOVE_DOWN}{_display._cat_row.UPDATE} {_display._cat_row.DELETE}</th>
+	<th onclick="clip('{display.cat.TAG}')">{display.cat.NAME} - <em>{display.cat.TAG} - {display.cat.MAPS}</em></th>
+	<th>{display.cat.MOVE_UP}{display.cat.MOVE_DOWN}{display.cat.UPDATE}{display.cat.DELETE}</th>
 </tr>
-<!-- BEGIN _map_row -->
+<!-- BEGIN maps -->
 <tr>
-	<td><span style="float:right;">{_display._cat_row._map_row.FILE} :: {_display._cat_row._map_row.TYPE}</span>{_display._cat_row._map_row.NAME}</td>
-	<td>{_display._cat_row._map_row.MOVE_UP}{_display._cat_row._map_row.MOVE_DOWN}{_display._cat_row._map_row.UPDATE} {_display._cat_row._map_row.DELETE}</td>
+	<td><span class="right">{display.cat.maps.FILE} :: {display.cat.maps.TYPE}</span>{display.cat.maps.NAME}</td>
+	<td>{display.cat.maps.MOVE_UP}{display.cat.maps.MOVE_DOWN}{display.cat.maps.UPDATE}{display.cat.maps.DELETE}</td>
 </tr>
-<!-- END _map_row -->
-<!-- BEGIN _entry_empty -->
+<!-- END maps -->
+<!-- BEGIN empty -->
 <tr>
-	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty -->
+<!-- END empty -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td><input type="text" class="post" name="{_display._cat_row.S_NAME}" /></td>
-	<td><input type="submit" class="button2" name="{_display._cat_row.S_SUBMIT}" value="{L_CREATE_MAP}"></td>
-	<td></td>
-	<td></td>
+	<td><input type="text" name="{display.cat.S_NAME}" /></td>
+	<td><input type="submit" class="button2" name="{display.cat.S_SUBMIT}" value="{L_CREATE_MAP}"></td>
 </tr>
 </table>
 
 <br />
-<!-- END _cat_row -->
+<!-- END cat -->
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input_cat -->
+<!-- BEGIN input_cat -->
+<script type="text/javascript">
+function look_cat(input_cat)
+{
+	if ( input_cat.length == 0 )
+	{
+		// Hide the suggestion box.
+		$('#cat').hide();
+	}
+	else
+	{
+		$.post("./ajax/ajax_maps_cat.php", {string: ""+input_cat+""}, function(data) {
+				if ( data.length > 0 )
+				{
+					$('#cat').show();
+					$('#auto_cat').html(data);
+				}
+			}
+		);
+	}
+}
+
+function set_cat(thisValue)
+{
+	$('#input_cat').val(thisValue);
+	setTimeout("$('#cat').hide();", 200);
+}
+</script>
+
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
+<ul id="navinfo">
+	<li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <table class="update">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
-	<td class="row1"><label for="cat_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="cat_name" id="cat_name" value="{NAME}"></td>
+	<td class="row1r"><label for="cat_name">{L_NAME}:</label></td>
+	<td class="row2"><input type="text" name="cat_name" id="cat_name" value="{NAME}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="cat_tag">{L_TAG}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="cat_tag" id="cat_tag" value="{TAG}"></td>
+	<td class="row1r"><label for="input_cat">{L_TAG}:</label></td>
+	<td class="row2"><input type="text" name="cat_tag" id="input_cat" onkeyup="look_cat(this.value);" onblur="set_cat();" value="{TAG}" autocomplete="off"><div class="suggestionsBox" id="cat" style="display:none;"><div class="suggestionList" id="auto_cat"></div></div></td>
+</tr>
+<tr>
+	<td class="row1r"><label for="cat_display">{L_DISPLAY}:</label></td>
+	<td class="row2"><label><input type="radio" name="cat_display" id="cat_display" value="1" {S_DISPLAY_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="cat_display" value="0" {S_DISPLAY_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="cat_order">{L_ORDER}:</label></td>
-	<td class="row2">{S_ORDER}</td>
-</tr>
-</tbody>
-<tr>
-	<td colspan="2">&nbsp;</td>
+	<td>{S_ORDER}</td>
 </tr>
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td colspan="2"></td>
+</tr>
+</table>
+
+<br/>
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input_cat -->
+<!-- END input_cat -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 {AJAX}
 <script type="text/javascript">
-<!-- BEGIN _update_image -->
+<!-- BEGIN update_image -->
 function update_{_input._update_image.NAME}(newimage)
 {
 	document.getElementById('image').src = (newimage) ? "{_input._update_image.PATH}/" + encodeURI(newimage) : "./../admin/style/images/spacer.gif";
 }
-<!-- END _cat -->
+<!-- END update_image -->
 
-<!-- BEGIN _update_image -->
+<!-- BEGIN update_image -->
 function update_ajax_{_input._update_image.NAME}(newimage)
 {
 	document.getElementById('image2').src = (newimage) ? "{_input._update_image.PATH}/" + encodeURI(newimage) : "./../admin/style/images/spacer.gif";
 }
-<!-- END _cat -->
+<!-- END update_image -->
 </script>
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
+<ul id="navinfo">
+	<li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <table class="update">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
-	<td class="row1"><label for="map_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="map_name" id="map_name" value="{NAME}"></td>
+	<td class="row1r"><label for="map_name">{L_NAME}:</label></td>
+	<td class="row2"><input type="text" name="map_name" id="map_name" value="{NAME}"></td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_CAT}</label></td>
-	<td class="row2">
-		<!-- BEGIN _cat -->
+	<td>
+		<!-- BEGIN cat -->
 		<label><input type="radio" name="cat_id" value="{_input._cat.CAT_ID}" onclick="setRequest('{_input._cat.CAT_ID}')" {_input._cat.S_MARK} />&nbsp;{_input._cat.CAT_NAME}</label><br />
-		<!-- END _cat -->
+		<!-- END cat -->
 	</td>
 </tr>
 <tr>
-	<td class="row1"><label for="map_type">{L_TYPE}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="map_type" id="map_type" value="{TYPE}"></td>
+	<td class="row1r"><label for="map_type">{L_TYPE}:</label></td>
+	<td class="row2"><input type="text" name="map_type" id="map_type" value="{TYPE}"></td>
 </tr>
-</tbody>
-<tbody id="close" class="trhover">
+<tbody id="close">
 <tr>
-	<td class="row1"><label for="map_file">{L_FILE}: *</label></td>
-	<td class="row2">{S_FILE}<br /><img src="{IMAGE}" id="image" alt="" /></td>
+	<td class="row1r"><label for="map_file">{L_FILE}:</label></td>
+	<td>{S_FILE}<br /><img src="{IMAGE}" id="image" alt="" /></td>
 </tr>
 <tr>
 	<td class="row1"><label for="map_order">{L_ORDER}:</label></td>
-	<td class="row2">{S_ORDER}</td>
+	<td>{S_ORDER}</td>
 </tr>
 </tbody>
-<tbody id="content" class="trhover">
+<tbody id="ajax_content">
 </tbody>
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

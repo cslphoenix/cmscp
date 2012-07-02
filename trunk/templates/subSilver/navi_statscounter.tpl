@@ -1,5 +1,5 @@
 <tr>
-	<td class="info_head"><span class="right">{CACHE}</span>{L_SN_STATSCOUNTER}</td>
+	<th><span class="right">{CACHE}</span>{L_SN_STATSCOUNTER}</th>
 </tr>
 <tr>
 	<td>{SC_TODAY}</td>

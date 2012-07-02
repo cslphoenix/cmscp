@@ -21,7 +21,8 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('forum_auth');
+#	add_lang(array('forums', 'forum_auth'));
+	add_lang('forum_auth');
 
 	include($root_path . 'includes/acp/acp_constants.php');
 	
@@ -35,17 +36,17 @@ else
 	$url_s	= POST_FORUM_SUB;
 	$file	= basename(__FILE__);
 	
-	$data_cats	= request($url_c, 0);
-	$data_forms	= request($url_f, 0);
-	$data_subs	= request($url_s, 0);
+	$data_cats	= request($url_c, INT);
+	$data_forms	= request($url_f, INT);
+	$data_subs	= request($url_s, INT);
 	
-	$mode		= request('mode', 1);
+	$mode		= request('mode', TXT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['forum']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum_perm'] )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
@@ -55,7 +56,7 @@ else
 	
 	debug($_POST);
 	
-	if ( request('submit', 1) )
+	if ( request('submit', TXT) )
 	{
 		$sql = '';
 		
@@ -93,7 +94,7 @@ else
 	{
 		$cats = data(FORUM_CAT, $data_cats, 'cat_order ASC', 1, false);
 		
-		$template->assign_block_vars('_cats', array());
+		$template->assign_block_vars('cats', array());
 		
 		for ( $i = 0; $i < count($cats); $i++ )
 		{
@@ -105,19 +106,19 @@ else
 			
 			for ( $t = 0; $t < count($forum_auth_fields); $t++ )
 			{
-				$template->assign_block_vars('_cats._image', array(
+				$template->assign_block_vars('cats._image', array(
 					'TITLE' => $field_names[$forum_auth_fields[$t]],
 					'IMAGE' => $field_images[$forum_auth_fields[$t]],
 				));
 			}
 			
-			$template->assign_block_vars('_cats._cats_row', array(
+			$template->assign_block_vars('cats._cats_row', array(
 				'NAME' => "<a href=\"" . check_sid("$file?$url_c=$cat_id") . "\">$cat_name</a>",
 			));
 			
 			for ( $t = 0; $t < count($forum_auth_fields); $t++ )
 			{
-				$template->assign_block_vars('_cats._cats_row._image', array(
+				$template->assign_block_vars('cats._catsrow._image', array(
 					'TITLE' => $field_names[$forum_auth_fields[$t]],
 					'IMAGE' => $field_images[$forum_auth_fields[$t]],
 				));
@@ -133,7 +134,7 @@ else
 					
 					if ( $cat_id == $forms_cat )
 					{
-						$template->assign_block_vars('_cats._cats_row._forms_row', array(
+						$template->assign_block_vars('cats._catsrow._forms_row', array(
 							'CLASS'	=> ( !($j % 2) ) ? 'row_class1' : 'row_class2',
 							'NAME'	=> "<a href=\"" . check_sid("$file?$url_f=$forms_id") . "\">$forms_name</a>",
 						));
@@ -151,7 +152,7 @@ else
 								}
 							}
 							
-							$template->assign_block_vars('_cats._cats_row._forms_row._forms_auth', array(
+							$template->assign_block_vars('cats._catsrow._formsrow._forms_auth', array(
 								'IMAGE'		=> $images['auth_' . $item_auth_level],
 								'EXPLAIN'	=> sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$k]], $lang['auth_forum_explain_' . $item_auth_level]))
 							);
@@ -164,7 +165,7 @@ else
 		
 		for ( $i = 0; $i < count($forum_auth_levels); $i++ )
 		{
-			$template->assign_block_vars('_cats._set', array(
+			$template->assign_block_vars('cats._set', array(
 				'NAME' => $lang['auth_' . $forum_auth_levels[$i]]
 			));
 			
@@ -175,7 +176,7 @@ else
 				$checked = ( $forms[0][$forum_auth_fields[$j]] == $i ) ? ' checked="checked"' : '';
 				$custom_auth[$i] = "<label><input type=\"radio\" style=\"height:2em;\" value=\"" . $i . "\" name=\"" . $forum_auth_fields[$j] . "\" id=\"" . $forum_auth_fields[$j] . "_" . $i . "\"$checked>&nbsp;<img src=" . $images['auth_' . $forum_auth_levels[$i]] . " alt=\"\" /></label>";
 			
-				$template->assign_block_vars('_cats._set._auth', array(
+				$template->assign_block_vars('cats._set._auth', array(
 					'SELECT'	=> $custom_auth[$i],
 				));
 			}
@@ -218,7 +219,7 @@ else
 	{
 		$cats = data(FORUM_CAT, false, 'cat_order ASC', 1, false);
 		
-		$template->assign_block_vars('_display', array());
+		$template->assign_block_vars('display', array());
 		
 		for ( $i = 0; $i < count($cats); $i++ )
 		{
@@ -229,13 +230,13 @@ else
 			$subs	= data(FORUM, "forum_sub != 0", "forum_order ASC", 1, false);
 			
 			
-			$template->assign_block_vars('_display._cats_row', array(
+			$template->assign_block_vars('display.cats_row', array(
 				'NAME' => "<a href=\"" . check_sid("$file?$url_c=$cat_id") . "\">$cat_name</a>",
 			));
 			
 			for ( $t = 0; $t < count($forum_auth_fields); $t++ )
 			{
-				$template->assign_block_vars('_display._cats_row._image', array(
+				$template->assign_block_vars('display.catsrow._image', array(
 					'TITLE' => $field_names[$forum_auth_fields[$t]],
 					'IMAGE' => $field_images[$forum_auth_fields[$t]],
 				));
@@ -251,7 +252,7 @@ else
 					
 					if ( $cat_id == $forms_cat )
 					{
-						$template->assign_block_vars('_display._cats_row._forms_row', array(
+						$template->assign_block_vars('display.catsrow._forms_row', array(
 							'CLASS'	=> ( !($j % 2) ) ? 'row_class1' : 'row_class2',
 							'NAME'	=> "<a href=\"" . check_sid("$file?$url_f=$forms_id") . "\">$forms_name</a>",
 							'SUBS'	=> "<a href=\"" . check_sid("$file?$url_s=$forms_id") . "\">Subs</a>",
@@ -270,7 +271,7 @@ else
 								}
 							}
 							
-							$template->assign_block_vars('_display._cats_row._forms_row._forms_auth', array(
+							$template->assign_block_vars('display.catsrow._formsrow._forms_auth', array(
 								'IMAGE'		=> $images['auth_' . $item_auth_level],
 								'EXPLAIN'	=> sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$k]], $lang['auth_forum_explain_' . $item_auth_level]))
 							);
@@ -282,7 +283,7 @@ else
 							
 							if ( $forms_id == $subs[$l]['forum_sub'] )
 							{
-								$template->assign_block_vars('_display._cats_row._forms_row._subs_row', array(
+								$template->assign_block_vars('display.catsrow._formsrow._subs_row', array(
 									'CLASS'	=> ( !($l % 2) ) ? 'row_class2' : 'row_class1',
 									'NAME'	=> '&nbsp;&not;&nbsp;' . $subs[$l]['forum_name'],
 								));
@@ -300,7 +301,7 @@ else
 										}
 									}
 									
-									$template->assign_block_vars('_display._cats_row._forms_row._subs_row._subs_auth', array(
+									$template->assign_block_vars('display.catsrow._formsrow._subsrow._subs_auth', array(
 										'IMAGE'		=> $images['auth_' . $item_auth_level],
 										'EXPLAIN'	=> sprintf($lang['auth_forum_explain_' . $forum_auth_fields[$m]], $lang['auth_forum_explain_' . $item_auth_level]))
 									);
@@ -313,7 +314,7 @@ else
 			}
 			else
 			{
-				$template->assign_block_vars('_display._cats_row._entry_empty', array());
+				$template->assign_block_vars('display.catsrow._entry_empty', array());
 			}
 		}
 	}

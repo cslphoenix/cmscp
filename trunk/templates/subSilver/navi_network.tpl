@@ -1,40 +1,40 @@
-<!-- BEGIN _sn_links -->
+<!-- BEGIN sn_links -->
 <tr>
-	<td class="info_head">{L_SN_LINKS}</td>
+	<th>{L_SN_LINKS}</td>
 </tr>
-<!-- BEGIN _row_links -->
+<!-- BEGIN row -->
 <tr>
-	<td><a href="{_sn_links._row_links.U_URL}">&raquo;&nbsp;{_sn_links._row_links.L_URL}</a></td>
+	<td>{sn_links.row.LINK}</td>
 </tr>
-<!-- END _row_links -->
+<!-- END row -->
 <tr>
 	<td>&nbsp;</td>
 </tr>
-<!-- END _sn_links -->
+<!-- END sn_links -->
 
-<!-- BEGIN _sn_partner -->
+<!-- BEGIN sn_partner -->
 <tr>
-	<td class="info_head">{L_SN_PARTNER}</td>
+	<th>{L_SN_PARTNER}</td>
 </tr>
-<!-- BEGIN _row_partner -->
+<!-- BEGIN row -->
 <tr>
-	<td><a href="{_sn_partner._row_partner.U_URL}">&raquo;&nbsp;{_sn_partner._row_partner.L_URL}</a></td>
+	<td>{sn_partner.row.LINK}</td>
 </tr>
-<!-- END _row_partner -->
-<tr>
-	<td>&nbsp;</td>
-</tr>
-<!-- END _sn_partner -->
-<!-- BEGIN _sn_sponsor -->
-<tr>
-	<td class="info_head">{L_SN_SPONSOR}</td>
-</tr>
-<!-- BEGIN _row_sponsor -->
-<tr>
-	<td><a href="{_sn_sponsor._row_sponsor.U_URL}">&raquo;&nbsp;{_sn_sponsor._row_sponsor.L_URL}</a></td>
-</tr>
-<!-- END _row_sponsor -->
+<!-- END row -->
 <tr>
 	<td>&nbsp;</td>
 </tr>
-<!-- END _sn_sponsor -->
+<!-- END sn_partner -->
+<!-- BEGIN sn_sponsor -->
+<tr>
+	<th>{L_SN_SPONSOR}</td>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td>{sn_sponsor.row.LINK}</td>
+</tr>
+<!-- END row -->
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<!-- END sn_sponsor -->

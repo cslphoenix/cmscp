@@ -1,67 +1,65 @@
-<!-- BEGIN _list -->
-<table class="news">
+<!-- BEGIN list -->
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="header">{L_MAIN}</td>
+	<th>{L_MAIN}</th>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><span class="right">{_list._row.AUTHOR}, {_list._row.DATE}</span><a href="{_list._row.U_NEWS}"><b>{_list._row.TITLE}</b></a></td>
+	<td><span class="right">{list.row.AUTHOR}, {list.row.DATE}</span><a href="{list.row.U_NEWS}"><b>{list.row.TITLE}</b></a></td>
 </tr>
 <tr>
 	<td>
-		<img src="{_list._row.NC_IMAGE}" title="{_list._row.NC_TITLE}" alt="{_list._row.NC_TITLE}" style="float:left; padding-right:5px;" />
-		<!-- BEGIN _match -->
-		<table class="news_match">
+		<img src="{list.row.NC_IMAGE}" title="{list.row.NC_TITLE}" alt="{list.row.NC_TITLE}" style="float:left; padding-right:5px;" />
+		<!-- BEGIN match -->
+		<table>
 		<tr>
-			<td>{_list._row._match.TEAM_LOGO}</td>
+			<td>{list.row.match.TEAM_LOGO}</td>
 			<td>
-				{_list._row._match.GAME} {_list._row._match.TEAM} vs. {_list._row._match.RIVAL}<br />
-				{_list._row._match.WAR}: {_list._row._match.TYPE} {_list._row._match.LEAGUE}<br />
-				{_list._row._match.MAPS}<br />
-				<span class="{_list._row._match.CSS}">{_list._row._match.RESULT}</span>
+				{list.row.match.GAME} {list.row.match.TEAM} vs. {list.row.match.RIVAL}<br />
+				{list.row.match.WAR}: {list.row.match.TYPE} {list.row.match.LEAGUE}<br />
+				{list.row.match.MAPS}<br />
+				<span class="{list.row.match.CSS}">{list.row.match.RESULT}</span>
 			</td>
-			<td>{_list._row._match.RIVAL_LOGO}</td>
+			<td>{list.row.match.RIVAL_LOGO}</td>
 		</tr>
 		</table>
-		<!-- END _match -->
-		{_list._row.TEXT}
+		<!-- END match -->
+		{list.row.TEXT}
 	</td>
 </tr>
 <tr>
-	<td>{_list._row.COMMENTS}<br />
-		<!-- BEGIN _urls -->
-		{_list._row._urls.LINK}{_list._row._urls.URLS}
-		<!-- END _urls -->
+	<td>{list.row.COMMENTS}<br />
+		<!-- BEGIN urls -->
+		{list.row.urls.LINK}{list.row.urls.URLS}
+		<!-- END urls -->
 	</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 </tr>
-<!-- END _row -->
-<!-- BEGIN _entry_empty -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
-	<td align="center">{L_ENTRY_NO}</td>
+	<td align="center">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty -->
-</table>
-
-<table class="news">
+<!-- END empty -->
 <tr>
 	<td class="footer"><span class="right">{PAGE_NUMBER}</span>{PAGE_PAGING}</td>
 </tr>
 </table>
-<!-- END _list -->
+<!-- END list -->
 
-<!-- BEGIN _view -->
+<!-- BEGIN view -->
 <form action="{S_ACTION}" method="post" name="post">
-<table class="news" width="100%" cellspacing="0">
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="header">
-		<!-- BEGIN _update -->
+	<th>
+		<!-- BEGIN update -->
 		<span class="small" style="float:right;">&nbsp;&bull;&nbsp;{_view._update.UPDATE}</span>
-		<!-- END _update -->
+		<!-- END update -->
 		<span class="small" style="float:right;">{OVERVIEW}</span>
-		{L_MAIN}</td>
+		{L_MAIN}
+	</th>
 </tr>
 <tr>
 	<td>{TEXT}</td>
@@ -70,31 +68,29 @@
 	<td>&nbsp;</td>
 </tr>
 </table>
-
 {COMMENTS}
-
 {S_FIELDS}
 </form>
-<!-- END _view -->
+<!-- END view -->
 
-<!-- BEGIN _archiv -->
-<table class="news">
+<!-- BEGIN archiv -->
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="header" colspan="5">{L_MAIN}</td>
+	<th colspan="5">{L_MAIN}</th>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td>{_archiv._row.TITLE}</td>
-    <td>{_archiv._row.NC_CAT}</td>
-    <td>{_archiv._row.AUTHOR}</td>
-	<td>{_archiv._row.COMMENT}</td>
-    <td>{_archiv._row.DATE}</td>
+	<td class="{archiv.row.CLASS}">{archiv.row.TITLE}</td>
+    <td class="{archiv.row.CLASS}">{archiv.row.CAT}</td>
+    <td class="{archiv.row.CLASS}">{archiv.row.AUTHOR}</td>
+	<td class="{archiv.row.CLASS}">{archiv.row.COMMENTS}</td>
+    <td class="{archiv.row.CLASS}">{archiv.row.DATE}</td>
 </tr>
-<!-- END _row -->
-<!-- BEGIN _entry_empty -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
-	<td align="center">{L_ENTRY_NO}</td>
+	<td align="center">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty -->
+<!-- END empty -->
 </table>
-<!-- END _archiv -->
+<!-- END archiv -->

@@ -37,7 +37,7 @@ if ( isset($HTTP_POST_VARS['key_code']) || isset($HTTP_GET_VARS['key_code']) )
 }
 
 $page_title = $lang['page_newsletter'];
-include($root_path . 'includes/page_header.php');
+main_header();
 
 $template->set_filenames(array('body' => 'body_newsletter.tpl'));
 
@@ -198,6 +198,6 @@ else
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

@@ -26,8 +26,9 @@ $lang = array_merge($lang, array(
 	'map_name'	=> 'Kartenname',
 	'tag'		=> 'Tag',
 	
-	'cat_name'	=> 'Kategoriename',
-	'cat_tag'	=> 'Kategorietag',	
+	'cat_name'		=> 'Kategoriename',
+	'cat_tag'		=> 'Kategorietag',
+	'cat_display'	=> 'Klappmenü',
 
 ));
 

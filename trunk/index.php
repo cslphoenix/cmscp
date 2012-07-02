@@ -53,7 +53,7 @@ if ( $mode == 'cache')
 redirect(check_sid('news.php', true));
 
 
-include($root_path . 'includes/page_header.php');
+main_header();
 
 //
 //	Gruppen in der der Benutzer vertreten ist
@@ -79,8 +79,7 @@ $db->sql_freeresult($result);
 
 $sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . '
 			FROM ' . GROUPS . '
-			WHERE group_single_user = 0
-				AND group_id IN (' . implode(', ', $group_in) . ')
+			WHERE group_id IN (' . implode(', ', $group_in) . ')
 		ORDER BY group_id';
 if ( !($result = $db->sql_query($sql)) )
 {
@@ -136,6 +135,6 @@ foreach ( $usergroup_index_data as $key => $value )
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

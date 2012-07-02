@@ -12,7 +12,7 @@
 <!-- END match_teams -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_ENTRY_NO}</td>
+	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry -->
 <tr>

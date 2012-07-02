@@ -1,17 +1,10 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -20,76 +13,65 @@
 	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _cat_row -->
+<!-- BEGIN row -->
 <tr>
-	<td class="row_class1" align="left">{_display._cat_row.NAME}</td>
-	<td class="row_class2" align="center">{_display._cat_row.MOVE_UP}{_display._cat_row.MOVE_DOWN} {_display._cat_row.UPDATE} {_display._cat_row.DELETE}</td>		
+	<td>{display.row.NAME}</td>
+	<td>{display.row.MOVE_UP}{display.row.MOVE_DOWN} {display.row.UPDATE} {display.row.DELETE}</td>		
 </tr>
-<!-- END _cat_row -->
-<!-- BEGIN _entry_empty -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
-	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty -->
+<!-- END empty -->
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2">
+<table class="lfooter">
 <tr>
-	<td align="right"><input type="text" class="post" name="cat_title"></td>
-	<td align="right" class="top" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td><input type="text" name="cat_title" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 {UIMG}
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
 <table class="update">
+<!-- BEGIN tab -->
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
+<!-- BEGIN option -->
 <tr>
-	<td class="row1" width="155"><label for="cat_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="cat_name" id="cat_name" value="{NAME}"></td>
+	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
-<tr>
-	<td class="row1"><label for="cat_image">{L_IMAGE}:</label></td>
-	<td class="row2">{S_IMAGE}<br><img src="{IMAGE}" id="image" alt=""></td>
-</tr>
-<tr>
-	<td class="row1"><label for="cat_order">{L_ORDER}:</label></td>
-	<td class="row2">{S_ORDER}</td>
-</tr>
+<!-- END option -->
+<!-- END tab -->
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
+</table>
+<!-- END row -->
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

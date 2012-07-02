@@ -18,6 +18,7 @@ $lang = array_merge($lang, array(
 	'legende'			=> 'Bildlegende',
 	
 	'auth_all'			=> 'Öffentlich',
+	'auth_reg'			=> 'Registriert',
 	'auth_register'		=> 'Registriert',
 	'auth_trial'		=> 'Trial',
 	'auth_member'		=> 'Mitglieder',
@@ -30,6 +31,7 @@ $lang = array_merge($lang, array(
 	'forms_trial'		=> 'Trial',
 	'forms_member'		=> 'Mitglieder',
 	'forms_moderator'	=> 'Moderatoren',
+	'forms_mod'			=> 'Moderatoren',
 	'forms_privat'		=> 'Privat',
 	'forms_admin'		=> 'Administrator',
 	'forms_special'		=> 'Individuell',

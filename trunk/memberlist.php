@@ -11,18 +11,18 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
-$log	= SECTION_USERS;
+$log	= SECTION_USER;
 $url	= POST_USERS;
 
 $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);
-$mode	= request('mode', 1);
+$data	= request($url, INT);
+$mode	= request('mode', TXT);
 
 $error	= '';
 $fields	= '';
@@ -85,13 +85,13 @@ $template->assign_vars(array(
 
 switch( $mode )
 {
-	case 'joined':		$order_by = "user_regdate $sort_order LIMIT $start, " . $settings['site_entry_per_page'];	break;
-	case 'username':	$order_by = "user_name $sort_order LIMIT $start, " . $settings['site_entry_per_page'];		break;
-	case 'location':	$order_by = "user_from $sort_order LIMIT $start, " . $settings['site_entry_per_page'];		break;
-	case 'posts':		$order_by = "user_posts $sort_order LIMIT $start, " . $settings['site_entry_per_page'];		break;
-	case 'email':		$order_by = "user_email $sort_order LIMIT $start, " . $settings['site_entry_per_page'];		break;
-	case 'website':		$order_by = "user_website $sort_order LIMIT $start, " . $settings['site_entry_per_page'];	break;
-	default:			$order_by = "user_regdate $sort_order LIMIT $start, " . $settings['site_entry_per_page'];	break;
+	case 'joined':		$order_by = "user_regdate $sort_order LIMIT $start, " . $settings['per_page_entry_site'];	break;
+	case 'username':	$order_by = "user_name $sort_order LIMIT $start, " . $settings['per_page_entry_site'];		break;
+	case 'location':	$order_by = "user_from $sort_order LIMIT $start, " . $settings['per_page_entry_site'];		break;
+	case 'posts':		$order_by = "user_posts $sort_order LIMIT $start, " . $settings['per_page_entry_site'];		break;
+	case 'email':		$order_by = "user_email $sort_order LIMIT $start, " . $settings['per_page_entry_site'];		break;
+	case 'website':		$order_by = "user_website $sort_order LIMIT $start, " . $settings['per_page_entry_site'];	break;
+	default:			$order_by = "user_regdate $sort_order LIMIT $start, " . $settings['per_page_entry_site'];	break;
 }
 
 $others_sql = '';
@@ -135,7 +135,7 @@ else
 	}
 	$users = $db->sql_fetchrowset($result);
 
-	$sql = "SELECT t.team_id, t.team_name, tu.user_id, g.game_image, g.game_size
+	$sql = "SELECT t.team_id, t.team_name, tu.user_id, g.game_image
 				FROM " . TEAMS . " t
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
 					LEFT JOIN " . TEAMS_USERS . " tu ON tu.team_id = t.team_id
@@ -147,7 +147,7 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$teams[$row['user_id']][] = array('team_id' => $row['team_id'], 'team_name' => $row['team_name'], 'game_image' => $row['game_image'], 'game_size' => $row['game_size']);
+		$teams[$row['user_id']][] = array('team_id' => $row['team_id'], 'team_name' => $row['team_name'], 'game_image' => $row['game_image']);
 	}
 	
 	$sql = "SELECT g.group_id, g.group_name, g.group_type, gu.user_id
@@ -170,13 +170,13 @@ else
 
 if ( !$users )
 {
-	$template->assign_block_vars('_entry_empty', array());
+	$template->assign_block_vars('entry_empty', array());
 }
 else
 {
 	$count = count($users);
 	
-	for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, $count); $i++ )
+	for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, $count); $i++ )
 	{
 		$user_id = $users[$i]['user_id'];
 	
@@ -191,7 +191,7 @@ else
 		{
 			foreach ( $teams[$user_id] as $row )
 			{
-				$game = display_gameicon($row['game_size'], $row['game_image']);
+				$game = display_gameicon($row['game_image']);
 				$t_ary[$user_id][] =  $game . ' <a href="' . check_sid('teams.php?' . POST_TEAMS . '=' . $row['team_id']) . '">' . $row['team_name'] . '</a>';
 			}
 	
@@ -208,7 +208,7 @@ else
 			$ugroups = implode('<br />', $g_ary[$user_id]);
 		}
 	
-		$template->assign_block_vars('_row', array(
+		$template->assign_block_vars('row', array(
 			'ROW_COLOR'	=> '#' . $row_color,
 			'ROW_CLASS'	=> $row_class,
 			'USERNAME'	=> $username,
@@ -219,11 +219,11 @@ else
 	}
 }
 
-#$pagination = generate_pagination("memberlist.php?mode=$mode&amp;order=$sort_order&amp;letter=$by_letter", $total_members, $config['site_entry_per_page'], $start). '&nbsp;';
+#$pagination = generate_pagination("memberlist.php?mode=$mode&amp;order=$sort_order&amp;letter=$by_letter", $total_members, $config['per_page_entry_site'], $start). '&nbsp;';
 
 $template->assign_vars(array(
 #	'PAGINATION' => $pagination,
-#	'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $config['site_entry_per_page'] ) + 1 ), ceil( $total_members / $config['site_entry_per_page'] )),
+#	'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $config['per_page_entry_site'] ) + 1 ), ceil( $total_members / $config['per_page_entry_site'] )),
 
 #	'L_GOTO_PAGE' => $lang['Goto_page']
 ));

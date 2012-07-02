@@ -1,15 +1,15 @@
-<table class="out" width="100%" cellspacing="0">
+<table class="type4" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" style="text-align:right;">{L_SN_DOWNLOADS}</td>
+	<th><span class="right">{CACHE}</span>{L_SN_DOWNLOADS}</th>
 </tr>
-<!-- BEGIN _sn_downloads_row -->
+<!-- BEGIN sn_downloads_row -->
 <tr>
-	<td class="{_sn_downloads_row.CLASS}" align="left"><span class="right">{_sn_downloads_row.CLICKS}</span>{_sn_downloads_row.URL}</td>
+	<td class="{sn_downloads_row.CLASS}" align="left"><span class="right">{sn_downloads_row.CLICKS}</span>{sn_downloads_row.URL}</td>
 </tr>
-<!-- END _sn_downloads_row -->
-<!-- BEGIN _sn_downloads_empty -->
+<!-- END sn_downloads_row -->
+<!-- BEGIN sn_downloads_empty -->
 <tr>
-	<td align="center">{L_EMPTY}</td>
+	<td class="empty">{sn_downloads_empty.L_EMPTY}</td>
 </tr>
-<!-- END _sn_downloads_empty -->
+<!-- END sn_downloads_empty -->
 </table>

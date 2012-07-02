@@ -210,7 +210,7 @@ class Cache
 		flock($rHandle, LOCK_EX);
 
 		// Nun leeren wir die Datei
-		ftruncate($rHandle, 0);
+		ftruncate($rHandle, 1);
 		
 		$sSerializedData = serialize(array( (time() + $iLifetime), $mData));
 		
@@ -368,4 +368,5 @@ class Cache
 }
 
 $oCache = new Cache;
+
 ?>

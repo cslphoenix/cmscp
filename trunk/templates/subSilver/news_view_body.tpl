@@ -19,7 +19,7 @@
 		<form action="{S_NEWS_ACTION}" method="post" name="form">
 		<table class="info" width="55%" cellspacing="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head" colspan="2">Kommentar einfügen</td>
@@ -77,7 +77,7 @@
 		<form action="{S_MATCH_ACTION}" method="post" name="post">
 		<table class="info" width="75%" cellspacing="1">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head">Kommentare</td>
@@ -102,7 +102,7 @@
 		<!-- END comments -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
+			<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

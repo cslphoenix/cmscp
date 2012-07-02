@@ -1,17 +1,10 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -20,65 +13,50 @@
 	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _authlist_row -->
+<!-- BEGIN row -->
 <tr>
-	<td>{_display._authlist_row.NAME}</td>
-	<td>{_display._authlist_row.UPDATE} {_display._authlist_row.DELETE}</td>		
+	<td>{display.row.NAME}</td>
+	<td>{display.row.UPDATE}{display.row.DELETE}</td>		
 </tr>
-<!-- END _authlist_row -->
+<!-- END row -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td></td>
-	<td><input type="text" class="post" name="authlist_name" value="" /></td>
+	<td><input type="text" name="authlist_name" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}" /></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navlist">
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<table class="update">
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_DATA}</a></li></ul>
+<table class="update list">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
+	<td class="row1r"><label for="authlist_name">{L_NAME}:</label></td>
+	<td class="row2"><input type="text" name="authlist_name" id="authlist_name" value="{NAME}" /></td>
 </tr>
-<tbody class="trhover">
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td class="row1"><label for="authlist_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="authlist_name" id="authlist_name" value="{NAME}" /></td>
-</tr>
-</tbody>
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

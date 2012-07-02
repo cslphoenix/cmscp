@@ -8,11 +8,14 @@ function img_check_type($type, $error)
 	{
 		case 'jpeg':
 		case 'pjpeg':
-		case 'jpg':	return '.jpg';	break;
-		case 'gif':	return '.gif';	break;
-		case 'png':	return '.png';	break;
+		case 'jpg':	return '.jpg';
+			break;
+		case 'gif':	return '.gif';
+			break;
+		case 'png':	return '.png';
+			break;
 		
-		default:	$error = $error ? $error . '<br />' . 'dateitype' : 'dateitype';	break;
+		default:	$error = $error ? $error . '<br />' . '1dateitype' : '2dateitype';	break;
 	}
 	
 	return false;
@@ -20,6 +23,8 @@ function img_check_type($type, $error)
 
 function image_delete($image_current, $image_preview, $image_path, $mode_sql = '')
 {
+	echo $image_path . $image_current;
+	
 	if ( $image_current != '' )
 	{
 		if ( @file_exists($image_path . '/' . $image_current) )
@@ -36,6 +41,7 @@ function image_delete($image_current, $image_preview, $image_path, $mode_sql = '
 		}
 	}
 	
+	/*
 	$sql = explode(', ', $mode_sql);
 	
 	if ( !strstr($mode_sql, 'team') )
@@ -46,8 +52,67 @@ function image_delete($image_current, $image_preview, $image_path, $mode_sql = '
 	{
 		$return = '';
 	}
+	*/
+	
+	$return = '';
 	
 	return $return;
+}
+
+function upload_dl($file_info, $path, $types, $maxsize, &$error)
+{
+#	global $lang, $settings, $error;
+	global $lang, $settings;
+	
+	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
+	
+	$type = '';
+	
+	$ftemp = $file_info['temp'];
+	$fname = $file_info['name'];
+	$ftype = $file_info['type'];
+	$fsize = $file_info['size'];
+	
+	if ( file_exists(realpath($ftemp)) )
+	{
+		if ( $fsize <= $maxsize && $fsize > 0 )
+		{
+			if ( !in_array($ftype, explode(', ', $types)) )
+			{
+				$error .= ( $error ? '<br />' : '' ) . sprintf($lang['up_filetype'], $ftype);
+			
+				return;
+			}
+		}
+		else
+		{
+			$error .= ( $error ? '<br />' : '' ) . sprintf($lang['up_filesize'], round($maxsize/1024));
+			
+			return;
+		}
+	}
+	
+	$move_file = ( @$ini_val('open_basedir') != '' ) ? 'move_uploaded_file' : 'copy';
+		
+	if (!is_uploaded_file($ftemp))
+	{
+		message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
+	}
+	
+	if ( $error )
+	{
+		@unlink($ftemp);
+		return false;
+	}
+	
+	$move_file($ftemp, $path . "/$fname");
+	@chmod($path . "/$fname", 0644);
+	
+	$info['file_filename'] = $fname;
+	$info['file_type'] = $ftype;
+	$info['file_size'] = $fsize;
+	
+	return $info;
 }
 
 function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_current, $image_preview, $image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, &$error)
@@ -56,56 +121,67 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	
 	switch ( $mode_category )
 	{
+		/* system_filesize = sfz */
+		/* system_max_width = smw */
+		/* system_max_height = smh */
 		case 'image_group':
-			$system_filesize	= '10240000';
-			$system_max_width	= '100';
-			$system_max_height	= '100';
+			$sfz = $settings['path_groups']['filesize'];
+			list($smw, $smh) = explode(':', $settings['path_groups']['dimension']);
 			break;
-		case 'image_network':
-			$system_filesize	= '10240000';
-			$system_max_width	= '88';
-			$system_max_height	= '33';
+		case 'network':
+		
+			$sfz = ($settings['path_network']['filesize']*1048576);
+			
+			list($smw, $smh) = explode(':', $settings['path_network']['dimension']);
+			
 			break;
 		case 'image_match':
-			$system_filesize	= '10240000';
-			$system_max_width	= '1024';
-			$system_max_height	= '768';
+			$sfz	= '10240000';
+			$smw	= '1024';
+			$smh	= '768';
 			$system_pre_width	= '100';
 			$system_pre_height	= '75';
 			break;
-		case 'image_team_logo':
-			$system_filesize	= $settings['team_logo_filesize'];
-			$system_max_width	= $settings['team_logo_max_width'];
-			$system_max_height	= $settings['team_logo_max_height'];
+			
+		case 'team_flag':
+			$sfz	= ($settings['path_team_flag']['filesize']*1048576);
+			list($smw, $smh) = explode(':', $settings['path_team_flag']['dimension']);
+		#	$smw	= $settings['team_flag_max_width'];
+		#	$smh	= $settings['team_flag_max_height'];
 			break;
-		case 'image_team_flag':
-			$system_filesize	= $settings['team_flag_filesize'];
-			$system_max_width	= $settings['team_flag_max_width'];
-			$system_max_height	= $settings['team_flag_max_height'];
+			
+		case 'team_logo':
+			$sfz	= ($settings['path_team_logo']['filesize']*1048576);
+			list($smw, $smh) = explode(':', $settings['path_team_logo']['dimension']);
+			
+		#	$sfz	= $settings['team_logo_filesize'];
+		#	$smw	= $settings['team_logo_max_width'];
+		#	$smh	= $settings['team_logo_max_height'];
 			break;
+		
 		case 'image_network_links':
-			$system_filesize	= $settings['gallery_filesize'];
-			$system_max_width	= $settings['team_logo_max_width'];
-			$system_max_height	= $settings['team_logo_max_height'];
+			$sfz	= $settings['gallery_filesize'];
+			$smw	= $settings['team_logo_max_width'];
+			$smh	= $settings['team_logo_max_height'];
 			break;
 		case 'image_network_sponsor':
-			$system_filesize	= $settings['gallery_filesize'];
-			$system_max_width	= $settings['team_logo_max_width'];
-			$system_max_height	= $settings['team_logo_max_height'];
+			$sfz	= $settings['gallery_filesize'];
+			$smw	= $settings['team_logo_max_width'];
+			$smh	= $settings['team_logo_max_height'];
 			$system_pre_width	= $settings['team_logo_max_width'];
 			$system_pre_height	= $settings['team_logo_max_height'];
 			break;
 		case 'image_network_partner':
-			$system_filesize	= $settings['gallery_filesize'];
-			$system_max_width	= $settings['team_logo_max_width'];
-			$system_max_height	= $settings['team_logo_max_height'];
+			$sfz	= $settings['gallery_filesize'];
+			$smw	= $settings['team_logo_max_width'];
+			$smh	= $settings['team_logo_max_height'];
 			$system_pre_width	= $settings['team_logo_max_width'];
 			$system_pre_height	= $settings['team_logo_max_height'];
 			break;
 		case 'image_user':
-			$system_filesize	= $settings['gallery_filesize'];
-			$system_max_width	= $settings['team_logo_max_width'];
-			$system_max_height	= $settings['team_logo_max_height'];
+			$sfz	= $settings['gallery_filesize'];
+			$smw	= $settings['team_logo_max_width'];
+			$smh	= $settings['team_logo_max_height'];
 			$system_pre_width	= $settings['team_logo_max_width'];
 			$system_pre_height	= $settings['team_logo_max_height'];
 			break;
@@ -118,14 +194,14 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	
 	if ( ( file_exists(@cms_realpath($image_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $image_realname) )
 	{
-		if ( $image_filesize <= $system_filesize && $image_filesize > 0 )
+		if ( $image_filesize <= $sfz && $image_filesize > 0 )
 		{
 			preg_match('#image\/[x\-]*([a-z]+)#', $image_filetype, $image_filetype);
 			$image_filetype = $image_filetype[1];
 		}
 		else
 		{
-			$error .= sprintf($lang['image_filesize'], round($system_filesize / 1024));
+			$error .= sprintf($lang['image_filesize'], round($sfz / 1024));
 			
 			return;
 		}
@@ -179,7 +255,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 			break;
 	}
 	
-	if ( $width > 0 && $height > 0 && $width <= $system_max_width && $height <= $system_max_height )
+	if ( $width > 0 && $height > 0 && $width <= $smw && $height <= $smh )
 	{
 		if ( !$mode_preview )
 		{
@@ -254,7 +330,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 		if ( $mode )
 		{
 			/*
-			$sql_pic = ( $mode == '_update' ) ?  "$mode_sql = '$new_filename'," : $new_filename;
+			$sql_pic = ( $mode == 'update' ) ?  "$mode_sql = '$new_filename'," : $new_filename;
 			geändert zwecks umstellung der speichermechanismus der daten im acp
 			*/
 			$sql_pic = $new_filename;
@@ -269,7 +345,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	}
 	else
 	{
-		$error .= sprintf($lang['sprintf_imagesize'], $system_max_width, $system_max_height);
+		$error .= sprintf($lang['sprintf_imagesize'], $smw, $smh);
 		
 		return;
 	}

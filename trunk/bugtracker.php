@@ -90,7 +90,7 @@ $template->set_filenames(array('body' => 'body_bugtracker.tpl'));
 if ( $mode == 'list' )
 {
 	$page_title = $lang['bugtracker'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$template->assign_block_vars('list', array());
 	
@@ -115,7 +115,7 @@ if ( $mode == 'list' )
 	}
 	else
 	{
-		for ($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($bugtracker_data)); $i++)
+		for ($i = $start; $i < min($settings['per_page_entry_site'] + $start, count($bugtracker_data)); $i++)
 		{
 			$class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 			
@@ -169,7 +169,7 @@ if ( $mode == 'list' )
 		}
 	}
 	
-	$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['site_entry_per_page'] );
+	$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['per_page_entry_site'] );
 	
 	$template->assign_vars(array(
 		'L_GOTO_PAGE'			=> $lang['Goto_page'],
@@ -177,8 +177,8 @@ if ( $mode == 'list' )
 		'L_ASSIGNED'			=> $lang['bt_assigned'],
 		'L_STATUS_TYPE'			=> $lang['bt_status_type'],
 		
-		'PAGINATION'			=> generate_pagination("bugtracker.php?sort=$sort&amp;order=$sort_order", count($bugtracker_data), $settings['site_entry_per_page'], $start),
-		'PAGE_NUMBER'			=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+		'PAGINATION'			=> generate_pagination("bugtracker.php?sort=$sort&amp;order=$sort_order", count($bugtracker_data), $settings['per_page_entry_site'], $start),
+		'PAGE_NUMBER'			=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ),
 		
 		'S_BUGTRACKER_ORDER'	=> $s_sort_order,
 		'S_BUGTRACKER_SORT'		=> $s_sort,
@@ -196,7 +196,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 	}
 	
 	$page_title = $lang['bugtracker'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$template->assign_block_vars('entry', array());
 	
@@ -328,7 +328,7 @@ else if ( ( $mode == 'add' || ( $mode == 'edit' && $bugtracker_id ) ) )
 else if ( $mode == 'details' && $bugtracker_id )
 {
 	$page_title = $lang['bt_details'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$template->assign_block_vars('details', array());
 	
@@ -411,7 +411,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			}
 		}
 		
-		for ( $i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++ )
+		for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, count($comment_entry)); $i++ )
 		{
 			$class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 			
@@ -440,12 +440,12 @@ else if ( $mode == 'details' && $bugtracker_id )
 			));
 		}
 	
-		$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
+		$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['per_page_entry_site'] );
 		
 		$template->assign_vars(array(
 			'L_GOTO_PAGE'	=> $lang['Goto_page'],
-			'PAGINATION'	=> generate_pagination('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER . '=' . $bugtracker_id, count($comment_entry), $settings['site_comment_per_page'], $start),
-			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
+			'PAGINATION'	=> generate_pagination('bugtracker.php?mode=details&amp;' . POST_BUGTRACKER . '=' . $bugtracker_id, count($comment_entry), $settings['per_page_entry_site'], $start),
+			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ), 
 		));
 		
 		sort($comment_entry);
@@ -563,6 +563,6 @@ else
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

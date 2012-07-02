@@ -1,50 +1,50 @@
-<!-- BEGIN _list -->
+<!-- BEGIN list -->
 <table class="out" width="100%" cellspacing="0">
-<!-- BEGIN _in_groups -->
-<!-- BEGIN _is_member -->
+<!-- BEGIN in_groups -->
+<!-- BEGIN is_member -->
 <tr>
 	<td class="info_head" colspan="2">{L_CUR}</td>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><img class="icon" src="images/get_info.png" alt=""> {_list._in_groups._is_member._row.NAME}{_list._in_groups._is_member._row.DESC}</td>
-	<td>{_list._in_groups._is_member._row.TYPE}</td>
+	<td><img class="icon" src="images/get_info.png" alt=""> {_list._in_groups._is_member.row.NAME}{_list._in_groups._is_member.row.DESC}</td>
+	<td>{_list._in_groups._is_member.row.TYPE}</td>
 </tr>
-<!-- END _row -->
+<!-- END row -->
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
-<!-- END _is_member -->
-<!-- BEGIN _is_pending -->
+<!-- END is_member -->
+<!-- BEGIN is_pending -->
 <tr>
 	<td class="info_head" colspan="2">{L_PEN}</td>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><img class="icon" src="images/get_info.png" alt=""> {_list._in_groups._is_pending._row.NAME}{_list._in_groups._is_pending._row.DESC}</td>
-	<td>{_list._in_groups._is_pending._row.TYPE}</td>
+	<td><img class="icon" src="images/get_info.png" alt=""> {_list._in_groups._is_pending.row.NAME}{_list._in_groups._is_pending.row.DESC}</td>
+	<td>{_list._in_groups._is_pending.row.TYPE}</td>
 </tr>
-<!-- END _row -->
+<!-- END row -->
 <!-- END pending -->
 <tr>
 	<td colspan="3">&nbsp;</td>
 </tr>
-<!-- END _in_groups -->
-<!-- BEGIN _no_group -->
+<!-- END in_groups -->
+<!-- BEGIN no_group -->
 <tr>
 	<td class="info_head" colspan="2">{L_NON}</td>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><img class="icon" src="images/get_info.png" alt=""> {_list._no_group._row.NAME}{_list._no_group._row.DESC}</td>
-	<td>{_list._no_group._row.TYPE}</td>
+	<td><img class="icon" src="images/get_info.png" alt=""> {_list._no_group.row.NAME}{_list._no_group.row.DESC}</td>
+	<td>{_list._no_group.row.TYPE}</td>
 </tr>
-<!-- END _row -->
-<!-- END _no_group -->
+<!-- END row -->
+<!-- END no_group -->
 </table>
-<!-- END _list -->
+<!-- END list -->
 
-<!-- BEGIN _view -->
+<!-- BEGIN view -->
 <script type="text/JavaScript">
 
 function lookup(user_name)
@@ -114,21 +114,21 @@ function fill(thisValue)
 	<td class="info_head" style="text-align:center;">{L_PM}</td>
 	<td class="info_head" style="text-align:center;">{L_EMAIL}</td>
 	<td class="info_head" style="text-align:center;" {COLSPAN}>{L_JOINED}</td>
-	<!-- BEGIN _switch_admin -->
+	<!-- BEGIN switch_admin -->
 	<td class="info_head" style="text-align:center;">{L_SELECT}</td>
-	<!-- END _switch_admin -->
+	<!-- END switch_admin -->
 </tr>
-<!-- BEGIN _moderator_row -->
+<!-- BEGIN moderator_row -->
 <tr>
-	<td class="{_view._moderator_row.ROW_CLASS}" align="center"><a href="{_view._moderator_row.U_VIEWPROFILE}">{_view._moderator_row.USERNAME}</a></td>
-	<td class="{_view._moderator_row.ROW_CLASS}" align="center">{_view._moderator_row.PM_IMG} </td>
-	<td class="{_view._moderator_row.ROW_CLASS}" align="center">{_view._moderator_row.EMAIL_IMG}</td>
-	<td class="{_view._moderator_row.ROW_CLASS}" align="center" {COLSPAN}>{_view._moderator_row.JOINED}</td>
-	<!-- BEGIN _switch_admin -->
-	<td class="{_view._moderator_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_view._moderator_row.USER_ID}"></td>
-	<!-- END _switch_admin -->
+	<td class="{_view._moderatorrow.ROW_CLASS}" align="center"><a href="{_view._moderatorrow.U_VIEWPROFILE}">{_view._moderatorrow.USERNAME}</a></td>
+	<td class="{_view._moderatorrow.ROW_CLASS}" align="center">{_view._moderatorrow.PM_IMG} </td>
+	<td class="{_view._moderatorrow.ROW_CLASS}" align="center">{_view._moderatorrow.EMAIL_IMG}</td>
+	<td class="{_view._moderatorrow.ROW_CLASS}" align="center" {COLSPAN}>{_view._moderatorrow.JOINED}</td>
+	<!-- BEGIN switch_admin -->
+	<td class="{_view._moderatorrow.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_view._moderatorrow.USER_ID}"></td>
+	<!-- END switch_admin -->
 </tr>
-<!-- END _moderator_row -->
+<!-- END moderator_row -->
 <!-- BEGIN switch_no_moderators -->
 <tr>
 	<td class="row3" colspan="6" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
@@ -142,22 +142,22 @@ function fill(thisValue)
 	<td class="info_head" style="text-align:center;">{L_PM}</td>
 	<td class="info_head" style="text-align:center;">{L_EMAIL}</td>
 	<td class="info_head" style="text-align:center;">{L_JOINED}</td>
-	<!-- BEGIN _switch_moderator -->
+	<!-- BEGIN switch_moderator -->
 	<td class="info_head" style="text-align:center;">{L_SELECT}</td>
-	<!-- END _switch_moderator -->
+	<!-- END switch_moderator -->
 </tr>
 
-<!-- BEGIN _member_row -->
+<!-- BEGIN member_row -->
 <tr>
-	<td class="{_view._member_row.ROW_CLASS}" align="center"><a href="{_view._member_row.U_VIEWPROFILE}">{_view._member_row.USERNAME}</a></td>
-	<td class="{_view._member_row.ROW_CLASS}" align="center">{_view._member_row.PM_IMG} </td>
-	<td class="{_view._member_row.ROW_CLASS}" align="center">{_view._member_row.EMAIL_IMG}</td>
-	<td class="{_view._member_row.ROW_CLASS}" align="center">{_view._member_row.JOINED}</td>
-	<!-- BEGIN _switch_moderator -->
-	<td class="{_view._member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_view._member_row.USER_ID}"></td>
-	<!-- END _switch_moderator -->
+	<td class="{_view._memberrow.ROW_CLASS}" align="center"><a href="{_view._memberrow.U_VIEWPROFILE}">{_view._memberrow.USERNAME}</a></td>
+	<td class="{_view._memberrow.ROW_CLASS}" align="center">{_view._memberrow.PM_IMG} </td>
+	<td class="{_view._memberrow.ROW_CLASS}" align="center">{_view._memberrow.EMAIL_IMG}</td>
+	<td class="{_view._memberrow.ROW_CLASS}" align="center">{_view._memberrow.JOINED}</td>
+	<!-- BEGIN switch_moderator -->
+	<td class="{_view._memberrow.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_view._memberrow.USER_ID}"></td>
+	<!-- END switch_moderator -->
 </tr>
-<!-- END _member_row -->
+<!-- END member_row -->
 <!-- BEGIN switch_no_members -->
 <tr>
 	<td class="row3" colspan="6" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
@@ -173,7 +173,7 @@ function fill(thisValue)
 <table class="out" width="100%" cellspacing="3">
 <tr>
 	<td align="left" colspan="3">
-		<input type="text" class="post" name="user_name" id="user_name" onkeyup="lookup(this.value);" onblur="fill();" autocomplete="off" style="width:165px;">
+		<input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value);" onblur="fill();" autocomplete="off" style="width:165px;">
 		<div class="suggestionsBox" id="suggestions" style="display:none;">
 			<img src="style/images/upArrow.png" style="position: relative; top: -12px; left: 30px;" alt="upArrow" />
 			<div class="suggestionList" id="autoSuggestionsList"></div>
@@ -190,7 +190,7 @@ function fill(thisValue)
 </tr>
 </table>
 
-<!-- BEGIN _pending -->
+<!-- BEGIN pending -->
 <table class="out" width="100%" cellspacing="0">
 <tr>
 	<td class="row3" colspan="6">&nbsp;</td>
@@ -205,20 +205,20 @@ function fill(thisValue)
 	<td class="info_head" style="text-align:center;">{L_JOINED}</td>
 	<td class="info_head" style="text-align:center;">{L_SELECT}</td>
 </tr>
-<!-- BEGIN _pending_row -->
+<!-- BEGIN pending_row -->
 <tr>
-	<td class="{_view._pending._pending_row.ROW_CLASS}" align="center"><a href="{_view._pending._pending_row.U_VIEWPROFILE}">{_view._pending._pending_row.USERNAME}</a></td>
-	<td class="{_view._pending._pending_row.ROW_CLASS}" align="center">{_view._pending._pending_row.PM_IMG}</td>
-	<td class="{_view._pending._pending_row.ROW_CLASS}" align="center">{_view._pending._pending_row.EMAIL_IMG}</td>
-	<td class="{_view._pending._pending_row.ROW_CLASS}" align="center">{_view._pending._pending_row.JOINED}</td>
-	<td class="{_view._pending._pending_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="pending_members[]" value="{_view._pending._pending_row.USER_ID}" checked="checked"></td>
+	<td class="{_view._pending._pendingrow.ROW_CLASS}" align="center"><a href="{_view._pending._pendingrow.U_VIEWPROFILE}">{_view._pending._pendingrow.USERNAME}</a></td>
+	<td class="{_view._pending._pendingrow.ROW_CLASS}" align="center">{_view._pending._pendingrow.PM_IMG}</td>
+	<td class="{_view._pending._pendingrow.ROW_CLASS}" align="center">{_view._pending._pendingrow.EMAIL_IMG}</td>
+	<td class="{_view._pending._pendingrow.ROW_CLASS}" align="center">{_view._pending._pendingrow.JOINED}</td>
+	<td class="{_view._pending._pendingrow.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="pending_members[]" value="{_view._pending._pendingrow.USER_ID}" checked="checked"></td>
 </tr>
-<!-- END _pending_row -->
+<!-- END pending_row -->
 <tr>
 	<td class="row3" colspan="6" align="right"><input type="submit" name="approve" value="{L_APPROVE_SELECTED}" class="button2">&nbsp;<input type="submit" name="deny" value="{L_DENY_SELECTED}" class="button"></td>
 	</tr>
 </table>
-<!-- END _pending -->
+<!-- END pending -->
 {S_FIELDS}
 </form>
-<!-- END _view -->
+<!-- END view -->

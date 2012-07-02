@@ -24,7 +24,7 @@ $template->set_filenames(array('body' => 'body_forum.tpl'));
 // Start output of page
 //
 $page_title = $lang['forum'];
-include($root_path . 'includes/page_header.php');
+main_header();
 
 $template->assign_vars(array(
 	'FORUM_IMG' => $images['forum'],
@@ -97,7 +97,7 @@ if ( $cats )
 			{
 				if ( $viewcat == $cat_id || $viewcat == -1 )
 				{
-					$template->assign_block_vars('_cat_row', array(
+					$template->assign_block_vars('cat_row', array(
 						'CAT_ID' => $cat_id,
 						'CAT_DESC' => $cats[$i]['cat_name'],
 						'U_VIEWCAT' => check_sid('forum.php?' . POST_CATEGORY . '=' . $cat_id)
@@ -173,7 +173,7 @@ if ( $cats )
 	
 								if ( $forms[$j]['forum_last_post_id'] )
 								{
-									$last_post_time = create_date($config['default_dateformat'], $forms[$j]['post_time'], $config['page_timezone']);
+									$last_post_time = create_date($config['default_dateformat'], $forms[$j]['post_time'], $config['default_timezone']);
 	
 									$last_post = $last_post_time . '<br>';
 	
@@ -189,7 +189,7 @@ if ( $cats )
 								$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
 								$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 	
-								$template->assign_block_vars('_cat_row._forum_row',	array(
+								$template->assign_block_vars('catrow.forum_row',	array(
 									'ROW_COLOR' => '#' . $row_color,
 									'ROW_CLASS' => $row_class,
 									'FORUM_FOLDER_IMG' => $folder_image, 
@@ -211,7 +211,7 @@ if ( $cats )
 										
 										if ( $forum_id == $subforms[$k]['forum_sub'] )
 										{
-											$template->assign_block_vars('_cat_row._forum_row._subforum_row', array(
+											$template->assign_block_vars('catrow.forumrow._subforum_row', array(
 												'NAME' => $subforms[$k]['forum_name'],
 											));
 										}
@@ -227,18 +227,18 @@ if ( $cats )
 	else
 	{
 		$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
-		$template->assign_block_vars('_no_forums', array() );
+		$template->assign_block_vars('no_forums', array() );
 	}
 }
 else
 {
 	$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
-	$template->assign_block_vars('_no_forums', array() );
+	$template->assign_block_vars('no_forums', array() );
 }
 
 
 $template->pparse('body');
 	
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

@@ -59,7 +59,7 @@ else
 				
 				if ( $mode == 'edit' )
 				{
-					$newsletter	= get_data('newsletter', $newsletter_id, 0);
+					$newsletter	= get_data('newsletter', $newsletter_id, INT);
 					$new_mode	= 'editnewsletter';
 				}
 				else if ( $mode == 'add' )
@@ -246,7 +246,7 @@ else
 	}
 	
 	$template->set_filenames(array('body' => 'style/acp_newsletter.tpl'));
-	$template->assign_block_vars('_display', array());
+	$template->assign_block_vars('display', array());
 			
 	$template->assign_vars(array(
 		'L_NL_TITLE'		=> $lang['newsletter_head'],
@@ -271,12 +271,12 @@ else
 	
 	if ( !$newsletter_data )
 	{
-		$template->assign_block_vars('_display._entry_empty', array());
+		$template->assign_block_vars('display.entry_empty', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($newsletter_data)); $i++ )
+		for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($newsletter_data)); $i++ )
 		{
 			$newsletter_id	= $newsletter_data[$i]['newsletter_id'];
 

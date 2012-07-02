@@ -21,7 +21,7 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('games');
+	add_lang('games');
 
 	$error	= '';
 	$index	= '';
@@ -31,15 +31,15 @@ else
 	$url	= POST_GAMES;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
-	$path_dir	= $root_path . $settings['path_games'] . '/';
+	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
 	
 	define('IN_CMS', true);
@@ -52,16 +52,16 @@ else
 	include($root_path . 'includes/acp/acp_selects.php');
 	include($root_path . 'includes/acp/acp_functions.php');
 	
-	load_lang('bugtracker');
+	add_lang('bugtracker');
 	
 	$start			= ( request('start') ) ? request('start') : 0;
 	$start			= ( $start < 0 ) ? 0 : $start;
 	
 	$sort		= ( request('sort', 1) ) ? request('sort', 1) : 'bugtracker_status_all';
-	$data_id	= request(POST_BUGTRACKER_URL, 0);	
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
-	$confirm	= request('confirm', 1);
+	$data_id	= request(POST_BUGTRACKER_URL, INT);	
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
+	$confirm	= request('confirm', TXT);
 	
 	$error		= '';
 	$s_index	= '';
@@ -73,7 +73,7 @@ else
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
@@ -94,7 +94,7 @@ else
 	
 	switch ( $mode )
 	{
-		case '_detail':
+		case 'detail':
 			
 			$template->set_filenames(array('body' => 'style/acp_bugtracker.tpl'));
 			$template->assign_block_vars('detail', array());
@@ -180,7 +180,7 @@ else
 		default:
 		
 			$template->set_filenames(array('body' => 'style/acp_bugtracker.tpl'));
-			$template->assign_block_vars('_display', array());
+			$template->assign_block_vars('display', array());
 			
 			$s_sort = '<select class="postselect" name="sort" onchange="document.getElementById(\'bugtracker_sort\').submit()">';
 			foreach ( $lang['bugtracker_status'] as $key => $value )
@@ -213,7 +213,7 @@ else
 			
 			if ( $bugtracker_data )
 			{
-				for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($bugtracker_data)); $i++ )
+				for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($bugtracker_data)); $i++ )
 				{
 					$data_id = $bugtracker_data[$i]['bugtracker_id'];
 
@@ -237,11 +237,11 @@ else
 			}
 			else
 			{
-				$template->assign_block_vars('_display._entry_empty', array());
+				$template->assign_block_vars('display.entry_empty', array());
 				$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 			}
 			
-			$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['site_entry_per_page'] );
+			$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['per_page_entry']['acp'] );
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['bugtracker']),
@@ -252,8 +252,8 @@ else
 				'L_DETAIL'		=> $lang['common_details'],
 				'L_SETTINGS'	=> $lang['common_settings'],
 				
-				'PAGINATION'	=> generate_pagination("admin_bugtracker.php?sort=$sort", count($bugtracker_data), $settings['site_entry_per_page'], $start),
-				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+				'PAGINATION'	=> generate_pagination("admin_bugtracker.php?sort=$sort", count($bugtracker_data), $settings['per_page_entry']['acp'], $start),
+				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry']['acp'] ) + 1 ), $current_page ),
 				
 				'S_SORT'		=> $s_sort,
 				'S_ACTION'		=> check_sid($file),

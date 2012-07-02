@@ -66,10 +66,10 @@
                          </th>
                     </tr>
                     <tr>
-                         <td class="row1">
+                         <td>
                               <span class="forumlink">{L_CHANGE_LOGS_TITLE}&nbsp;</span>
                          </td>
-                         <td class="row1">
+                         <td>
                               <input class="post" type="text" name="change_log_title" maxlength="100" size="35"/>
                          </td>
                     </tr>
@@ -80,23 +80,23 @@
                           </td>
                     </tr>
                     <tr>
-                         <td class="row1">
+                         <td>
                               <span class="forumlink">{L_CHANGE_LOGS_REFERENCE}&nbsp;</span>
                          </td>
-                         <td class="row1">
+                         <td>
                               <select name="change_log_reference">{DD_CHANGE_LOGS_REFERENCE}</select>
                          </td>
                     </tr>
                     <tr>
-                         <td class="row1">
+                         <td>
                               <span class="forumlink">{L_CHANGE_LOGS_FILES}&nbsp;</span>
                          </td>
-                         <td class="row1">
+                         <td>
                               <input class="post" type="text" name="change_log_files" maxlength="100" size="35"/>
                          </td>
                     </tr>
                      <tr>
-                         <td class="row2" align="center" colspan="2">
+                         <td align="center" colspan="2">
                              <input type="submit" class="mainoption" name="login" value="{L_CHANGE_LOGS_ADD}" />
                          </td>
 

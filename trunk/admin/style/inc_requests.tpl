@@ -59,7 +59,7 @@ function interpretRequest()
 			{
 				var content = request.responseText;
 				// den Inhalt des Requests in das <div> schreiben
-				document.getElementById('content').innerHTML = content;
+				document.getElementById('ajax_content').innerHTML = content;
 			}
 			break;
 		

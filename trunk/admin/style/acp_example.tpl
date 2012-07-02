@@ -1,11 +1,11 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _edit -->
+<!-- BEGIN edit -->
 
-<!-- END _edit -->
+<!-- END edit -->
 
-<!-- BEGIN _other -->
+<!-- BEGIN other -->
 
-<!-- END _other -->
+<!-- END other -->

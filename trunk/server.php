@@ -11,7 +11,7 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_SERVER;
@@ -21,8 +21,8 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);	
-$mode	= request('mode', 1);
+$data	= request($url, INT);	
+$mode	= request('mode', TXT);
 
 $error	= '';
 $fields	= '';
@@ -43,7 +43,7 @@ $server = $db->sql_fetchrowset($result);
 
 if ( $mode == '' )
 {
-	$template->assign_block_vars('_list', array());
+	$template->assign_block_vars('list', array());
 	
 #	$page_title = $lang['server'];
 	
@@ -51,12 +51,12 @@ if ( $mode == '' )
 
 	if ( !$server )
 	{
-		$template->assign_block_vars('_list._entry_empty_game', array());
-		$template->assign_block_vars('_list._entry_empty_voice', array());
+		$template->assign_block_vars('list._entry_empty_game', array());
+		$template->assign_block_vars('list._entry_empty_voice', array());
 	}
 	else
 	{
-		include($root_path . 'includes/server/gameq/GameQ.php');
+		include($root_path . 'includes/class_gameq.php');
 		
 		$game = $voice = $ary = array();
 			
@@ -71,20 +71,31 @@ if ( $mode == '' )
 				$voice[] = $row;
 			}
 			
+		#	if ( $row['server_live'] == '1' )
+		#	{
+		#		$ary[$row['server_id']] = array($row['server_game'], $row['server_ip'], $row['server_port']);
+		#	}
+			
 			if ( $row['server_live'] == '1' )
 			{
-				$ary[$row['server_id']] = array($row['server_game'], $row['server_ip'], $row['server_port']);
+				$ary[] = array('id' => $row['server_name'], 'type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port']);
 			}
 		}
 		
 		$gq = new GameQ();
 		$gq->addServers($ary);
-		$gq->setOption('timeout', 200);
-		$serv = $gq->requestData();
+		$gq->setOption('timeout', 2); // Seconds
+		$gq->setFilter('normalise');
+		$gq_serv = cached_file($gq->requestData(), 'data_servers', 120);
+		
+	#	$gq = new GameQ();
+	#	$gq->addServers($ary);
+	#	$gq->setOption('timeout', 200);
+	#	$serv = $gq->requestData();
 		
 		if ( !$game )
 		{
-			$template->assign_block_vars('_list._entry_empty_game', array());
+			$template->assign_block_vars('list._entry_empty_game', array());
 		}
 		else
 		{
@@ -93,20 +104,20 @@ if ( $mode == '' )
 				$server_id	= $game[$i]['server_id'];
 				$name		= $game[$i]['server_name'];
 			
-				$template->assign_block_vars('_list._game_row', array(
+				$template->assign_block_vars('list._game_row', array(
 					'CLASS'		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					
 			#		'GAME'		=> display_gameicon($new[$i]['game_size'], $new[$i]['game_image']),
 					'NAME'		=> "<a href=\"" . check_sid("$file?mode=view&$url=$server_id") . "\" >$name</a>",
 					
-					'STATUS'	=> ( isset($serv[$server[$i]['server_id']]['gq_online']) ) ? 'Online' : 'Offline',
+					'STATUS'	=> ( isset($serv[$name]['gq_online']) ) ? 'Online' : 'Offline',
 				));
 			}
 		}
 		
 		if ( !$voice )
 		{
-			$template->assign_block_vars('_list._entry_empty_voice', array());
+			$template->assign_block_vars('list._entry_empty_voice', array());
 		}
 		else
 		{
@@ -115,7 +126,7 @@ if ( $mode == '' )
 				$server_id	= $voice[$i]['server_id'];
 				$name		= $voice[$i]['server_name'];
 			
-				$template->assign_block_vars('_list._voice_row', array(
+				$template->assign_block_vars('list._voice_row', array(
 					'CLASS'		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					
 			#		'GAME'		=> display_gameicon($old[$i]['game_size'], $old[$i]['game_image']),
@@ -142,7 +153,7 @@ else if ( $mode == 'view' && $data )
 {
 	include($root_path . 'includes/server/gameq/GameQ.php');
 	
-	$template->assign_block_vars('_view', array());
+	$template->assign_block_vars('view', array());
 	
 	foreach ( $server as $key => $row )
 	{
@@ -233,7 +244,7 @@ else if ( $mode == 'view' && $data )
 			$channel .= '<a href="teamspeak://' . $view['server_ip'] . ':' . $view['server_port'] . '?nickname=' . $userdata['user_name'] . '?channel=' . rawurlencode($name) . $spwd . '">' . $name . '</a>';
 			$channel .= ' (' . ts_cflags($channels[$i]['flags']) . ')';
 			
-			$template->assign_block_vars('_view.channel', array('CHANNEL' => $channel));
+			$template->assign_block_vars('view.channel', array('CHANNEL' => $channel));
 			
 			if ( $cl_players )
 			{
@@ -246,7 +257,7 @@ else if ( $mode == 'view' && $data )
 						$user .= trim($cl_players[$j]['name'], '"');
 						$user .= ' (' . ts_pright($cl_players[$j]['p_right']) . ts_cright($cl_players[$j]['c_right'], $cl_players[$j]['flags']) . ')';
 						
-						$template->assign_block_vars('_view.channel.user', array('USER' => $user));
+						$template->assign_block_vars('view.channel.user', array('USER' => $user));
 					}
 				}// primär players
 			}
@@ -264,7 +275,7 @@ else if ( $mode == 'view' && $data )
 					$subchannel .= '<a href="teamspeak://' . $view['server_ip'] . ':' . $view['server_port'] . '?nickname=' . $userdata['user_name'] . '?channel=' . rawurlencode($name) . $spwd . '">' . $name . '</a>';
 				#	$subchannel .= trim($subchannels[$k]['name'], '"');
 					
-					$template->assign_block_vars('_view.channel.subchannel', array('CHANNEL' => $subchannel));
+					$template->assign_block_vars('view.channel.subchannel', array('CHANNEL' => $subchannel));
 					
 					if ( $sl_players )
 					{
@@ -278,7 +289,7 @@ else if ( $mode == 'view' && $data )
 								$user .= trim($sl_players[$l]['name'], '"');
 								$user .= ' (' . ts_pright($sl_players[$l]['p_right']) . ts_cright($sl_players[$l]['c_right'], $sl_players[$l]['flags']) . ')';
 								
-								$template->assign_block_vars('_view.channel.subchannel.user', array('USER' => $user));
+								$template->assign_block_vars('view.channel.subchannel.user', array('USER' => $user));
 							}
 						}// sub players
 					}

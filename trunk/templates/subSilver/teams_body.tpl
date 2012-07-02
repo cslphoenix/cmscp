@@ -6,8 +6,8 @@
 	<td colspan="5" class="info_head">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="20">{game_row.GAME_IMAGE}</td>
-			<td>{game_row.L_GAME_NAME}</td>
+			<td width="20">{gamerow.GAME_IMAGE}</td>
+			<td>{gamerow.L_GAME_NAME}</td>
 		</tr>
 		</table>
 	</td>
@@ -15,11 +15,11 @@
 </tr>
 <!-- BEGIN team_row -->
 <tr>
-	<td class="{game_row.team_row.CLASS}" align="left" style="vertical-align:middle">{game_row.team_row.TEAM_NAME}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap">{game_row.team_row.TEAM_FIGHTUS}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap">{game_row.team_row.TEAM_JOINUS}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap">{game_row.team_row.TEAM_MATCH}</td>
-	<td class="{game_row.team_row.CLASS}" align="right" nowrap="nowrap"><a href="{game_row.team_row.TO_TEAM}">{L_TO_TEAM}</a></td>
+	<td class="{gamerow.teamrow.CLASS}" align="left" style="vertical-align:middle">{gamerow.teamrow.TEAM_NAME}</td>
+	<td class="{gamerow.teamrow.CLASS}" align="right" nowrap="nowrap">{gamerow.teamrow.TEAM_FIGHTUS}</td>
+	<td class="{gamerow.teamrow.CLASS}" align="right" nowrap="nowrap">{gamerow.teamrow.TEAM_JOINUS}</td>
+	<td class="{gamerow.teamrow.CLASS}" align="right" nowrap="nowrap">{gamerow.teamrow.TEAM_MATCH}</td>
+	<td class="{gamerow.teamrow.CLASS}" align="right" nowrap="nowrap"><a href="{gamerow.teamrow.TO_TEAM}">{L_TO_TEAM}</a></td>
 </tr>
 <!-- END team_row -->
 <tr>
@@ -28,7 +28,7 @@
 <!-- END game_row -->
 <!-- BEGIN no_entry_team -->
 <tr>
-	<td class="row1" align="center" colspan="5">{L_ENTRY_NO}</td>
+	<td class="row1" align="center" colspan="5">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry_team -->
 </table>

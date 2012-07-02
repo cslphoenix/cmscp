@@ -11,7 +11,7 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_GROUPS;
@@ -21,11 +21,11 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);
+$data	= request($url, INT);
 $sid	= request('sid', 1);
-$mode	= request('mode', 1);
+$mode	= request('mode', TXT);
 $cancel	= request('cancel', 1);
-$confirm= request('confirm', 1);
+$confirm= request('confirm', TXT);
 
 //	Link
 $script_name = preg_replace('/^\/?(.*?)\/?$/', "\\1", trim($config['page_path']));
@@ -41,7 +41,7 @@ $template->set_filenames(array('body' => 'body_groups.tpl'));
 
 if ( $data )
 {
-	$template->assign_block_vars('_view', array());
+	$template->assign_block_vars('view', array());
 	
 	$sql = "SELECT * FROM " . GROUPS . " ORDER BY group_order";
 	if ( !($result = $db->sql_query($sql)) )
@@ -379,7 +379,7 @@ if ( $data )
 	{
 		if ( $view['group_type'] != GROUP_SYSTEM )
 		{
-			$template->assign_block_vars('_view.switch_unsubscribe_group_input', array());
+			$template->assign_block_vars('view.switch_unsubscribe_group_input', array());
 		}
 		
 		$group_details = $lang['Are_group_moderator'];
@@ -389,7 +389,7 @@ if ( $data )
 	{
 		if ( $view['group_type'] != GROUP_SYSTEM )
 		{
-			$template->assign_block_vars('_view.switch_unsubscribe_group_input', array());
+			$template->assign_block_vars('view.switch_unsubscribe_group_input', array());
 		}
 
 		$group_details =  ( $is_pending ) ? $lang['Pending_this_group'] : $lang['Member_this_group'];
@@ -404,14 +404,14 @@ if ( $data )
 	{
 		if ( $view['group_type'] == GROUP_OPEN )
 		{
-			$template->assign_block_vars('_view.switch_subscribe_group_input', array());
+			$template->assign_block_vars('view.switch_subscribe_group_input', array());
 
 			$group_details =  $lang['This_open_group'];
 			$s_fields = '<input type="hidden" name="' . POST_GROUPS . '" value="' . $data . '" />';
 		}
 		else if ( $view['group_type'] == GROUP_REQUEST )
 		{
-			$template->assign_block_vars('_view.switch_subscribe_group_input', array());
+			$template->assign_block_vars('view.switch_subscribe_group_input', array());
 			
 			$group_details =  $lang['This_request_group'];
 			$s_fields = '<input type="hidden" name="' . POST_GROUPS . '" value="' . $data . '" />';
@@ -446,17 +446,17 @@ if ( $data )
 	{
 		if ( !$ary_mod )
 		{
-			$template->assign_block_vars('_view.switch_no_moderators', array());
+			$template->assign_block_vars('view.switch_no_moderators', array());
 		}
 		else
 		{
 			if ( $userdata['user_level'] == ADMIN && $view['group_type'] != GROUP_SYSTEM )
 			{
-				$template->assign_block_vars('_view._switch_admin', array());
-			#	$template->assign_block_vars('_view._switch_moderator', array());
+				$template->assign_block_vars('view._switch_admin', array());
+			#	$template->assign_block_vars('view._switch_moderator', array());
 				
-			#	$template->assign_block_vars('_view._switch_opt_adm', array());
-			#	$template->assign_block_vars('_view._switch_opt_mod', array());
+			#	$template->assign_block_vars('view._switch_opt_adm', array());
+			#	$template->assign_block_vars('view._switch_opt_mod', array());
 				
 				$colspan = '';
 			}
@@ -475,7 +475,7 @@ if ( $data )
 				$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
 				$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 	
-				$template->assign_block_vars('_view._moderator_row', array(
+				$template->assign_block_vars('view._moderator_row', array(
 					'ROW_COLOR' => '#' . $row_color,
 					'ROW_CLASS' => $row_class,
 					'USERNAME' => $user_name,
@@ -495,23 +495,23 @@ if ( $data )
 				if ( $userdata['user_level'] == ADMIN && $view['group_type'] != GROUP_SYSTEM )	
 			#	if ( ( $is_moderator || $userdata['user_level'] == ADMIN ) && $view['group_type'] != GROUP_SYSTEM )
 				{
-					$template->assign_block_vars('_view._moderator_row._switch_admin', array());
+					$template->assign_block_vars('view._moderatorrow._switch_admin', array());
 				}
 			}	
 		}
 
 		if ( !$ary_mem )
 		{
-			$template->assign_block_vars('_view.switch_no_members', array());
+			$template->assign_block_vars('view.switch_no_members', array());
 		}
 		else
 		{
 			if ( ( $is_moderator || $userdata['user_level'] == ADMIN ) && $view['group_type'] != GROUP_SYSTEM )
 			{
-				$template->assign_block_vars('_view._switch_moderator', array());
+				$template->assign_block_vars('view._switch_moderator', array());
 			}
 			
-			for ( $j = $start; $j < min($settings['site_entry_per_page'] + $start, count($ary_mem)); $j++ )
+			for ( $j = $start; $j < min($settings['per_page_entry_site'] + $start, count($ary_mem)); $j++ )
 			{
 				$user_name	= $ary_mem[$j]['user_name'];
 				$user_id	= $ary_mem[$j]['user_id'];
@@ -521,7 +521,7 @@ if ( $data )
 				$row_color = ( !($j % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
 				$row_class = ( !($j % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 				
-				$template->assign_block_vars('_view._member_row', array(
+				$template->assign_block_vars('view._member_row', array(
 					'ROW_COLOR' => '#' . $row_color,
 					'ROW_CLASS' => $row_class,
 					'USERNAME' => $user_name,
@@ -555,28 +555,28 @@ if ( $data )
 				
 				if ( ( $is_moderator || $userdata['user_level'] == ADMIN ) && $view['group_type'] != GROUP_SYSTEM )
 				{
-					$template->assign_block_vars('_view._member_row._switch_moderator', array());
+					$template->assign_block_vars('view._memberrow._switch_moderator', array());
 				}
 			}
 		}
 	
-		$current_page = ( !count($ary_mem) ) ? 1 : ceil( count($ary_mem) / $settings['site_entry_per_page'] );
+		$current_page = ( !count($ary_mem) ) ? 1 : ceil( count($ary_mem) / $settings['per_page_entry_site'] );
 
 		$template->assign_vars(array(
-			'PAGINATION' => generate_pagination('groups.php?' . POST_GROUPS . '=' . $data, count($ary_mem), $settings['site_entry_per_page'], $start),
-			'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
+			'PAGINATION' => generate_pagination('groups.php?' . POST_GROUPS . '=' . $data, count($ary_mem), $settings['per_page_entry_site'], $start),
+			'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ), 
 			'L_GOTO_PAGE' => $lang['Goto_page']
 		));
 
 		if ( $view['group_type'] == GROUP_HIDDEN && !$is_member && !$is_moderator )
 		{
-			$template->assign_block_vars('_view.switch_hidden_group', array());
+			$template->assign_block_vars('view.switch_hidden_group', array());
 			$template->assign_vars(array('L_HIDDEN_MEMBERS' => $lang['Group_hidden_members']));
 		}
 
 		if ( $ary_pen && ( $userdata['user_level'] == ADMIN || $is_moderator ) )
 		{
-			$template->assign_block_vars('_view._pending', array());
+			$template->assign_block_vars('view._pending', array());
 				
 			for ( $k = 0; $k < count($ary_pen); $k++ )
 			{
@@ -590,7 +590,7 @@ if ( $data )
 
 				$user_select = '<input type="checkbox" name="member[]" value="' . $user_id . '">';
 
-				$template->assign_block_vars('_view._pending._pending_row', array(
+				$template->assign_block_vars('view._pending._pending_row', array(
 					'ROW_CLASS' => $row_class,
 					'ROW_COLOR' => '#' . $row_color, 
 					'USERNAME' => $user_name,
@@ -626,13 +626,13 @@ if ( $data )
 
 		if ( $is_moderator || $userdata['user_level'] == ADMIN && $view['group_type'] != GROUP_SYSTEM )
 		{
-			$template->assign_block_vars('_view.switch_add_member', array());
+			$template->assign_block_vars('view.switch_add_member', array());
 		}
 	}
 	else
 	{
-		$template->assign_block_vars('_view.switch_no_moderators', array());
-		$template->assign_block_vars('_view.switch_no_members', array());
+		$template->assign_block_vars('view.switch_no_moderators', array());
+		$template->assign_block_vars('view.switch_no_members', array());
 	}
 	
 	$s_fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
@@ -845,7 +845,7 @@ else if ( $data && isset($HTTP_POST_VARS['unsubpending']) || isset($HTTP_POST_VA
 		$s_fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
 
 		$page_title = $lang['Group_Control_Panel'];
-		include($root_path . 'includes/page_header.php');
+		main_header();
 
 		$template->set_filenames(array('confirm' => 'confirm_body.tpl'));
 
@@ -860,19 +860,19 @@ else if ( $data && isset($HTTP_POST_VARS['unsubpending']) || isset($HTTP_POST_VA
 
 		$template->pparse('confirm');
 
-		include($root_path . 'includes/page_tail.php');
+		main_footer();
 	}
 }
 else
 {
-	$template->assign_block_vars('_list', array());
+	$template->assign_block_vars('list', array());
 	
 	$page_title = $lang['cp_groups'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$sql = "SELECT g.group_id, g.group_name, g.group_type, g.group_desc, gu.user_pending
 				FROM " . GROUPS . " g, " . GROUPS_USERS . " gu
-			WHERE gu.user_id = " . $userdata['user_id'] . " AND gu.group_id = g.group_id AND g.group_single_user <> 1
+			WHERE gu.user_id = " . $userdata['user_id'] . " AND gu.group_id = g.group_id
 			ORDER BY g.group_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -884,7 +884,7 @@ else
 	
 	if ( $groups )
 	{
-		$template->assign_block_vars('_list._in_groups', array());
+		$template->assign_block_vars('list._in_groups', array());
 	
 		foreach ( $groups as $group => $row )
 		{
@@ -902,7 +902,7 @@ else
 	
 		if ( $is_member )
 		{
-			$template->assign_block_vars('_list._in_groups._is_member', array());
+			$template->assign_block_vars('list._in_groups._is_member', array());
 	
 			for ( $i = 0; $i < count($is_member); $i++ )
 			{
@@ -915,7 +915,7 @@ else
 					case GROUP_SYSTEM:	$group_type = $lang['Group_system'];	break;
 				}
 				
-				$template->assign_block_vars('_list._in_groups._is_member._row', array(
+				$template->assign_block_vars('list._in_groups._is_member._row', array(
 					'NAME' => "<a href=" . check_sid("$file?" . POST_GROUPS . "=" . $is_member[$i]['group_id']) . ">" . $is_member[$i]['group_name'] . "</a>",
 					'DESC' => ( $is_member[$i]['group_desc'] ) ? ' :: ' . $is_member[$i]['group_desc'] : '',
 					'TYPE' => $group_type,
@@ -925,7 +925,7 @@ else
 	
 		if ( $is_pending )
 		{
-			$template->assign_block_vars('_list._in_groups._is_pending', array());
+			$template->assign_block_vars('list._in_groups._is_pending', array());
 		
 			for ($i = 0; $i < count($is_pending); $i++)
 			{
@@ -938,7 +938,7 @@ else
 					case GROUP_SYSTEM:	$group_type = $lang['Group_system'];	break;
 				}
 		
-				$template->assign_block_vars('_list._in_groups._is_pending._row', array(
+				$template->assign_block_vars('list._in_groups._is_pending._row', array(
 					'NAME' => "<a href=" . check_sid("$file?" . POST_GROUPS . "=" . $is_pending[$i]['group_id']) . ">" . $is_pending[$i]['group_name'] . "</a>",
 					'DESC' => ( $is_pending[$i]['group_desc'] ) ? ' :: ' . $is_pending[$i]['group_desc'] : '',
 					'TYPE' => $group_type,
@@ -947,11 +947,11 @@ else
 		}
 	}
 
-	$ignore_group = ( isset($in_group) ) ? ( count($in_group) ) ? 'AND group_id NOT IN (' . implode(', ', $in_group) . ')' : '' : '';
+	$ignore_group = ( isset($in_group) ) ? ( count($in_group) ) ? 'WHERE group_id NOT IN (' . implode(', ', $in_group) . ')' : '' : '';
 	
 	$sql = "SELECT group_id, group_name, group_type, group_desc
 				FROM " . GROUPS . "
-			WHERE group_single_user <> 1 $ignore_group
+			$ignore_group
 			ORDER BY group_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -961,7 +961,7 @@ else
 
 	if ( $no_group )
 	{
-		$template->assign_block_vars('_list._no_group', array());
+		$template->assign_block_vars('list._no_group', array());
 		
 		for ( $i = 0; $i < count($no_group); $i++ )
 		{
@@ -976,7 +976,7 @@ else
 			
 			if ( $no_group[$i]['group_type'] != GROUP_HIDDEN )
 			{
-				$template->assign_block_vars('_list._no_group._row', array(
+				$template->assign_block_vars('list._no_group._row', array(
 					'NAME' => "<a href=" . check_sid("$file?" . POST_GROUPS . "=" . $no_group[$i]['group_id']) . ">" . $no_group[$i]['group_name'] . "</a>",
 					'DESC' => ( $no_group[$i]['group_desc'] ) ? ' :: ' . $no_group[$i]['group_desc'] : '',
 					'TYPE' => $group_type,

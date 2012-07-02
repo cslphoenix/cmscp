@@ -5,45 +5,59 @@ if ( !defined('IN_CMS') )
 	exit;
 }
 
-$lang['database']		= 'Datenbank';
-$lang['optimize']		= 'Optimieren';
-$lang['backup']			= 'Backup';
-$lang['restore']		= 'Wiederherstellen';
+$lang = array_merge($lang, array(
+	
+	'title'		=> 'Datenbank',
+	'explain'	=> 'Hier können Backups erstellt werden usw.',
 
-$lang['explain']		= 'Die Datenbank kann gespeichert, optimiert oder auch wiederhergestellt werden.';
+	'create'	=> 'Neues Spiel hinzugefügt.',
+	'update'	=> 'Spieldaten erfolgreich geändert.',
+	'delete'	=> 'Das Spiel wurde gelöscht!',
+	'confirm'	=> 'dass dieses Spiel:',
+	
+	'data_backup'	=> 'Backup',
+	'data_optimize'	=> 'Optimieren',
+	'data_restore'	=> 'Wiederherstellen',
+	
+	'type'	=> 'Optionen',
+	'type_full'	=> 'Vollständig',
+	'type_structure' => 'nur Struktur',
+	'type_data'	=> 'nur Daten',
+	'gzip'	=> 'GZip Datei',
+	'download'	=> 'Download',
+	'download_file'	=> 'Rechner',
+	'download_server'	=> 'Server',
+	
+	'table'	=> 'Tabellen',
+	'table_dev'	=> 'Entwicklung',
+	'table_full'	=> 'Vollstädnig',
+	'table_min'	=> 'minimal',
+	
+	'file_select'	=> 'Backup auswählen',
+	'file_restore'	=> 'Backup einspielen',
+	
+	'opt_table'		=> 'Tabelle',
+	'opt_rows'		=> 'Einträge',
+	'opt_size'		=> 'Größe',
+	'opt_status'	=> 'Status',
+
+
+
+	'save_file'	=> 'Die Backupdatei wurde erfolgreich gespeichert.',
+	
+	/* errors */
+	'msg_empty_tables'			=> 'Bitte 1 Tabelle auswählen!',
+
+));
+
+
+/*
 
 $lang['create'] = 'DB erstellt!';
 
 
-$lang['opt_cron_enable']		= 'Automatische Optimierung';
-$lang['opt_cron_intervall']		= 'Optimierungsintervall';
 
-$lang['opt_int_month']	= 'Monatlich';
-$lang['opt_int_weeks']	= '2 Wochen';
-$lang['opt_int_week']	= '1 Woche';
-$lang['opt_int_days']	= '3 Tage';
-$lang['opt_int_day']	= '1 Tad';
-$lang['opt_int_hours']	= '6 Stunden';
-$lang['opt_int_hour']	= '1 Stunde';
-$lang['opt_int_mins']	= '30 Minuten';
-$lang['opt_int_secs']	= '20 Sekunden (nur für Tests!!!)';
 
-$lang['type']			= 'Backup-Optionen';
-$lang['type_full']		= 'Vollständig';
-$lang['type_structure']	= 'nur Struktur';
-$lang['type_data']		= 'nur Daten';
-$lang['table']			= 'Tabellen';
-$lang['table_dev']		= 'Entwicklung';
-$lang['table_full']		= 'Vollstädnig';
-$lang['table_min']		= 'minimal';
-
-$lang['table_add']		= 'weitere Tabellen';
-$lang['table_zip']		= 'GZip Datei';
-
-$lang['download']		= 'Download der Datei:';
-$lang['dl_file']		= 'Rechner';
-$lang['dl_serv']		= 'Server';
-$lang['dl_both']		= 'beides';
 
 
 $lang['Backup_options'] = 'Backup-Optionen';
@@ -98,7 +112,34 @@ $lang['Optimize_CheckAll'] = 'Check All';
 $lang['Optimize_UncheckAll'] = 'Uncheck All';
 $lang['Optimize_InvertChecked'] = 'Invert Checked';
 $lang['Optimize_return'] = 'Click %sHere%s to return to the Optimize Database';
+
 $lang['Optimize_success'] = 'The Database has been successfully optimized';
 $lang['Optimize_NoTableChecked'] = '<b>No</b> Tables Checked';
 
+$lang['Database_Utilities'] = 'Database Utilities';
+
+$lang['Restore'] = 'Restore';
+$lang['Backup'] = 'Backup';
+$lang['Restore_explain'] = 'This will perform a full restore of all phpBB tables from a saved file. If your server supports it, you may upload a gzip-compressed text file and it will automatically be decompressed. <b>WARNING</b>: This will overwrite any existing data. The restore may take a long time to process, so please do not move from this page until it is complete.';
+$lang['Backup_explain'] = 'Here you can back up all your phpBB-related data. If you have any additional custom tables in the same database with phpBB that you would like to back up as well, please enter their names, separated by commas, in the Additional Tables textbox below. If your server supports it you may also gzip-compress the file to reduce its size before download.';
+
+$lang['Backup_options'] = 'Backup options';
+$lang['Start_backup'] = 'Start Backup';
+$lang['Full_backup'] = 'Full backup';
+$lang['Structure_backup'] = 'Structure-Only backup';
+$lang['Data_backup'] = 'Data only backup';
+$lang['Additional_tables'] = 'Additional tables';
+$lang['Gzip_compress'] = 'Gzip compress file';
+$lang['Select_file'] = 'Select a file';
+$lang['Start_Restore'] = 'Start Restore';
+
+$lang['Restore_success'] = 'The Database has been successfully restored.<br /><br />Your board should be back to the state it was when the backup was made.';
+$lang['Backup_download'] = 'Your download will start shortly; please wait until it begins.';
+$lang['Backups_not_supported'] = 'Sorry, but database backups are not currently supported for your database system.';
+
+$lang['Restore_Error_uploading'] = 'Error in uploading the backup file';
+$lang['Restore_Error_filename'] = 'Filename problem; please try an alternative file';
+$lang['Restore_Error_decompress'] = 'Cannot decompress a gzip file; please upload a plain text version';
+$lang['Restore_Error_no_file'] = 'No file was uploaded';
+*/
 ?>

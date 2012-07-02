@@ -9,7 +9,7 @@ $userdata = session_pagestart($user_ip, PAGE_TEAMSPEAK);
 init_userprefs($userdata); 
 
 $page_title = $lang['teamspeak'];
-include($root_path . 'includes/page_header.php');
+main_header();
 include($root_path . 'includes/teamspeak_query.php');
 
 $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
@@ -272,6 +272,6 @@ $template->set_filenames(array('body' => 'teamspeak_dzcp_body.tpl'));
 	
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

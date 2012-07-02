@@ -1,13 +1,11 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{L_AUTH_TITLE}</a></li>
-	</ul>
+	<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_AUTH_TITLE}</a></li></ul>
 </div>
 <table class="head" cellspacing="0">
 <tr>
-	<td class="row2">{L_AUTH_EXPLAIN}</td>
+	<td>{L_AUTH_EXPLAIN}</td>
 </tr>
 </table>
 
@@ -18,11 +16,11 @@
 	<th>{L_AUTH_SELECT}</td>
 </tr>
 <tr>
-	<td class="row2">{S_FIELDS}{S_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
+	<td>{S_FIELDS}{S_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
 </tr>
 </table>
 </form>
-<!-- END _display -->
+<!-- END display -->
 
 <!-- BEGIN auth_forum -->
 <form action="{S_FORUMAUTH_ACTION}" method="post">
@@ -32,13 +30,12 @@
 		<div id="navcontainer">
 			<ul id="navlist">
 				<li><a href="{S_ACTION}">{L_AUTH_TITLE}</a></li>
-				<li id="active"><a href="#" id="current">{L_FORUM}: {FORUM_NAME}</a></li>
-			</ul>
+				<li id="active"><a href="#" id="current" onclick="return false;">{L_FORUM}: {FORUM_NAME}</a></li></ul>
 		</div>
 	</td>
 </tr>
 <tr>
-	<td class="row2">{L_AUTH_EXPLAIN}</td>
+	<td>{L_AUTH_EXPLAIN}</td>
 </tr>
 </table>
 

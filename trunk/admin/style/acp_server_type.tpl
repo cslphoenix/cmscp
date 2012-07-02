@@ -1,17 +1,10 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td class="info">{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -20,17 +13,17 @@
 	<th>{L_VOICE}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _voice_row -->
-<tr class="hover">
-	<td><span class="righti">{_display._voice_row.GAME} &bull; {_display._voice_row.DPORT}</span>{_display._voice_row.NAME}</td>
-	<td>{_display._voice_row.UPDATE} {_display._voice_row.DELETE}</td>
+<!-- BEGIN voice_row -->
+<tr>
+	<td><span class="righti">{display.voice_row.GAME} &bull; {display.voice_row.DPORT}</span>{display.voice_row.NAME}</td>
+	<td>{display.voice_row.UPDATE} {display.voice_row.DELETE}</td>
 </tr>
-<!-- END _voice_row -->
-<!-- BEGIN _game_empty -->
+<!-- END voice_row -->
+<!-- BEGIN voice_empty -->
 <tr>
 	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _game_empty -->
+<!-- END game_empty -->
 </table>
 
 <br />
@@ -40,85 +33,64 @@
 	<th>{L_GAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _game_row -->
-<tr class="hover">
-	<td><span class="righti">{_display._game_row.GAME} &bull; {_display._game_row.DPORT}</span>{_display._game_row.NAME}</td>
-	<td>{_display._game_row.UPDATE} {_display._game_row.DELETE}</td>
+<!-- BEGIN game_row -->
+<tr>
+	<td><span class="righti">{display.game_row.GAME} &bull; {display.game_row.DPORT}</span>{display.game_row.NAME}</td>
+	<td>{display.game_row.UPDATE} {display.game_row.DELETE}</td>
 </tr>
-<!-- END _game_row -->
-<!-- BEGIN _voice_empty -->
+<!-- END game_row -->
+<!-- BEGIN game_empty -->
 <tr>
 	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _voice_empty -->
+<!-- END game_empty -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td><input type="text" class="post" name="type_name" /></td>
+	<td><input type="text" name="type_name" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-	<td></td>
-	<td></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td class="info">{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
 <table class="update">
+<!-- BEGIN tab -->
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
-<tbody class="trhover">
+<!-- BEGIN option -->
 <tr>
-	<td class="row1"><label for="type_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="type_name" id="type_name" value="{NAME}"></td>
+	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
-<tr>
-	<td class="row1"><label for="type_game">{L_GAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="type_game" id="type_game" value="{GAME}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="type_dport">{L_DPORT}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="type_dport" id="type_dport" value="{DPORT}" size="4"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="type_dport">{L_SORT}:</label></td>
-	<td class="row2">
-		<label><input type="radio" name="type_dport" id="type_dport" value="0" {S_GAME} />&nbsp;{L_GAMESERVER}</label><span style="padding:4px;"></span>
-		<label><input type="radio" name="type_dport" value="1" {S_VOICE} />&nbsp;{L_VOICESERVER}</label></td>
-</tr>
-</tbody>
+<!-- END option -->
+<!-- END tab -->
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
+</table>
+<!-- END row -->
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

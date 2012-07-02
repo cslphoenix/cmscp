@@ -139,8 +139,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 		$userdata = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 	}
-
-
+	
 	//
 	// Initial ban check against user id, IP and email address
 	//
@@ -240,7 +239,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 //		$sessiondata['autologinid'] = (!$admin) ? (( $enable_autologin && $sessionmethod == SESSION_METHOD_COOKIE ) ? $auto_login_key : '') : $sessiondata['autologinid'];
 		$sessiondata['userid'] = $user_id;
 	}
-
+	
 	$userdata['session_id'] = $session_id;
 	$userdata['session_ip'] = $user_ip;
 	$userdata['session_user_id'] = $user_id;
@@ -255,7 +254,7 @@ function session_begin($user_id, $user_ip, $page_id, $auto_create = 0, $enable_a
 	setcookie($cookiename . '_sid', $session_id, 0, $cookiepath, $cookiedomain, $cookiesecure);
 
 	$SID = 'sid=' . $session_id;
-
+	
 	return $userdata;
 }
 
@@ -403,9 +402,8 @@ function session_pagestart($user_ip, $thispage_id)
 	{
 		message(CRITICAL_ERROR, 'Error creating user session', '', __LINE__, __FILE__, $sql);
 	}
-
+	
 	return $userdata;
-
 }
 
 /**

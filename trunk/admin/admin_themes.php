@@ -24,30 +24,30 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('themes');
+	add_lang('themes');
 	
 	$error	= '';
 	$index	= '';
 	$fields	= '';
 	
-	$log	= SECTION_GAMES;
-	$url	= POST_GAMES;
+	$log	= SECTION_THEMES;
+	$url	= POST_THEMES;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
-	$path_dir	= $root_path . $settings['path_themes'] . '/';
+	$dir_path	= $root_path . $settings['path_themes'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_themes'] )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
@@ -55,7 +55,6 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_themes.tpl',
-		'uimg'		=> 'style/inc_java_img.tpl',
 		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
@@ -131,10 +130,12 @@ else
 			{
 				$installable_themes = array();
 				
-				if( $dir = @opendir($root_path. "templates/") )
+				if( $dir = @opendir($root_path . "templates/") )
 				{
 					while( $sub_dir = @readdir($dir) )
 					{
+						print_r($sub_dir);
+						
 						if( !is_file(cms_realpath($root_path . 'templates/' .$sub_dir)) && !is_link(cms_realpath($root_path . 'templates/' .$sub_dir)) && $sub_dir != "." && $sub_dir != ".." && $sub_dir != "CVS" )
 						{
 							if( @file_exists(@cms_realpath($root_path. "templates/" . $sub_dir . "/theme_info.cfg")) )
@@ -145,12 +146,10 @@ else
 								{
 									$working_data = $$sub_dir;
 									
-									$theme_name = $working_data[$i]['theme_name'];
+									$style_name = $working_data[$i]['style_name'];
 															
-									$sql = "SELECT themes_id 
-										FROM " . THEMES . " 
-										WHERE theme_name = '" . str_replace("\'", "''", $theme_name) . "'";
-									if ( !($result = $db->sql_query($sql)) )
+									$sql = "SELECT themes_id FROM " . THEMES . " WHERE style_name = '" . str_replace("\'", "''", $style_name) . "'";
+									if(!$result = $db->sql_query($sql))
 									{
 										message(GENERAL_ERROR, "Could not query themes table!", "", __LINE__, __FILE__, $sql);
 									}
@@ -164,9 +163,7 @@ else
 						}
 					}
 					
-					$template->set_filenames(array(
-						"body" => "./../admin/theme/themes_addnew_body.tpl")
-					);
+					
 					
 					$template->assign_vars(array(
 						"L_STYLES_TITLE" => $lang['Styles_admin'],
@@ -891,9 +888,10 @@ else
 	
 		default:
 		
-			$template->assign_block_vars('_display', array());
+			$template->assign_block_vars('display', array());
 			
 			$themes = data(THEMES, false, false, 1, false);
+			
 			
 			$fields .= '<input type="hidden" name="mode" value="_create" />';
 			
@@ -913,12 +911,12 @@ else
 			{
 				$themes_id = $themes[$i]['themes_id'];
 	
-				$template->assign_block_vars('_display._style_row', array(
+				$template->assign_block_vars('display.style_row', array(
 					'NAME_STYLE'	=> $themes[$i]['style_name'],
 					'NAME_TEMPLATE'	=> $themes[$i]['template_name'],
 					
-					'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-					'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+					'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+					'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
 				));
 			}
 			

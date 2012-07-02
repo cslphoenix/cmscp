@@ -1,11 +1,11 @@
 <tr>
-	<td class="info_head"><span class="right">{CACHE}</span><span class="right">{MONTH}&nbsp;</span>{L_SN_NEXT_MATCH}</td>
+	<th><span class="right">{CACHE}</span><span class="right">{MONTH}&nbsp;</span>{L_SN_NEXT_MATCH}</th>
 </tr>
-<!-- BEGIN _sn_next_match_row -->
+<!-- BEGIN sn_next_match_row -->
 <tr>
-	<td><span class="right">{_sn_next_match_row.DATE}</span>{_sn_next_match_row.GAME} {_sn_next_match_row.NAME}</td>
+	<td><span class="right">{sn_next_matchrow.DATE}</span>{sn_next_matchrow.GAME} {sn_next_matchrow.NAME}</td>
 </tr>
-<!-- END _sn_next_match_row -->
+<!-- END sn_next_match_row -->
 <tr>
 	<td>&nbsp;</td>
 </tr>

@@ -164,14 +164,14 @@ class GameQ
 		// Check for Bzip2
 		if(!function_exists('bzdecompress'))
 		{
-			throw new GameQException('Bzip2 is not installed.  See http://www.php.net/manual/en/book.bzip2.php for more info.', 0);
+			throw new GameQException('Bzip2 is not installed.  See http://www.php.net/manual/en/book.bzip2.php for more info.', INT);
 			return FALSE;
 		}
 
 		// Check for Zlib
 		if(!function_exists('gzuncompress'))
 		{
-			throw new GameQException('Zlib is not installed.  See http://www.php.net/manual/en/book.zlib.php for more info.', 0);
+			throw new GameQException('Zlib is not installed.  See http://www.php.net/manual/en/book.zlib.php for more info.', INT);
 			return FALSE;
 		}
 	}
@@ -268,6 +268,8 @@ class GameQ
 	 */
 	public function addServer(Array $server_info=NULL)
 	{
+		global $root_path;
+		
 		// Check for server type
 		if(!key_exists(self::SERVER_TYPE, $server_info) || empty($server_info[self::SERVER_TYPE]))
 		{
@@ -335,14 +337,14 @@ class GameQ
 
 		// Create the class so we can reference it properly later
 		$protocol_class = 'GameQ_Protocols_'.ucfirst($server_info[self::SERVER_TYPE]);
-
+			
 		// Create the new instance and add it to the servers list
 		$this->servers[$server_id] = new $protocol_class(
 			$server_ip,
 			$server_port,
 			array_merge($this->options, $server_info[self::SERVER_OPTIONS])
 		);
-
+		
 		return $this; // Make calls chaninable
 	}
 
@@ -768,7 +770,8 @@ class GameQ
 		while ($loop_active && microtime(TRUE) < $time_stop)
 		{
 			// Now lets listen for some streams, but do not cross the streams!
-			$streams = stream_select($read, $write = NULL, $except = NULL, 0, 800000);
+		#	$streams = stream_select($read, $write = NULL, $except = NULL, 0, 800000);
+			$streams = stream_select($read, $write = NULL, $except = NULL, 1);
 
 			// We had error or no streams left
 			if($streams === FALSE || ($streams <= 0))

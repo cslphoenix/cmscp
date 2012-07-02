@@ -1,17 +1,8 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -20,88 +11,66 @@
 	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _server_row -->
+<!-- BEGIN server_row -->
 <tr>
-	<td><span style="float: right;">{_display._server_row.USERS} {_display._server_row.STATUS}</span>{_display._server_row.GAME} {_display._server_row.NAME}</td>
-	<td>{_display._server_row.MOVE_UP}{_display._server_row.MOVE_DOWN}{_display._server_row.UPDATE} {_display._server_row.DELETE}</td>
+	<td><span style="float: right;">{display.server_row.USERS} {display.server_row.STATUS}</span>{display.server_row.TYPE} {display.server_row.NAME}</td>
+	<td>{display.server_row.MOVE_UP}{display.server_row.MOVE_DOWN}{display.server_row.UPDATE} {display.server_row.DELETE}</td>
 </tr>
-<!-- END _server_row -->
-<!-- BEGIN _entry_empty -->
+<!-- END server_row -->
+<!-- BEGIN empty -->
 <tr>
-	<td class="entry_empty" align="center" colspan="3">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="3">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty -->
+<!-- END empty -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td></td>
-	<td><input type="text" class="post" name="server_name"></td>
+	<td><input type="text" name="server_name" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 {AJAX}
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navlist">
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
+<ul id="navinfo">
+	<li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <table class="update">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
-	<td class="row1"><label for="server_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="server_name" id="server_name" value="{NAME}"></td>
+	<td class="row1r"><label for="server_name">{L_NAME}:</label></td>
+	<td class="row2"><input type="text" name="server_name" id="server_name" value="{NAME}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_type">{L_TYPE}:</label></td>
-	<td class="row2">
-		<label><input type="radio" name="server_type" onclick="setRequest('0')" id="server_type" value="0" {S_GAMESERVER} />&nbsp;{L_GAMESERVER}</label><span style="padding:4px;"></span>
+	<td class="row2"><label><input type="radio" name="server_type" onclick="setRequest('0')" id="server_type" value="0" {S_GAMESERVER} />&nbsp;{L_GAMESERVER}</label><span style="padding:4px;"></span>
 		<label><input type="radio" name="server_type" onclick="setRequest('1')" value="1" {S_VOICESERVER} />&nbsp;{L_VOICESERVER}</label></td>
 </tr>
 <tr>
-	<td class="row1"><label for="server_game">{L_GAME}: *</label></td>
-	<td class="row2"><div id="close">{S_GAME}</div><div id="content"></div></td>
+	<td class="row1r"><label for="server_game">{L_GAME}:</label></td>
+	<td><div id="close">{S_GAME}</div><div id="ajax_content"></div></td>
 </tr>
 <tr>
-	<td class="row1"><label for="server_ip">{L_IP}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="server_ip" id="server_ip" value="{IP}"></td>
+	<td class="row1r"><label for="server_ip">{L_IP}:</label></td>
+	<td class="row2"><input type="text" name="server_ip" id="server_ip" value="{IP}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="server_port">{L_PORT}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="server_port" id="server_port" value="{PORT}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="server_qport">{L_QPORT}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="server_qport" id="server_qport" value="{QPORT}"></td>
+	<td class="row1r"><label for="server_port">{L_PORT}:</label></td>
+	<td class="row2"><input type="text" name="server_port" id="server_port" value="{PORT}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_pw">{L_PW}:</label></td>
-	<td class="row2"><input type="text" class="post" name="server_pw" id="server_pw" value="{PW}"></td>
+	<td class="row2"><input type="text" name="server_pw" id="server_pw" value="{PW}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="server_live">{L_LIVE}:</label></td>
@@ -121,16 +90,22 @@
 </tr>
 <tr>
 	<td class="row1"><label for="server_order">{L_ORDER}:</label></td>
-	<td class="row2">{S_ORDER}</td>
+	<td>{S_ORDER}</td>
 </tr>
 </tbody>
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

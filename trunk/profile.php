@@ -7,7 +7,7 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_PROFILE);
 init_userprefs($userdata);
 
-include($root_path . 'includes/page_header.php');
+main_header();
 
 if (!empty($HTTP_POST_VARS['sid']) || !empty($HTTP_GET_VARS['sid']))
 {
@@ -123,7 +123,7 @@ if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
 	
 	$template->pparse('body');
 	
-	include($root_path . 'includes/page_tail.php');
+	main_footer();
 }
 
 redirect(check_sid('index.php', true));

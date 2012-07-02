@@ -21,7 +21,7 @@ else
 	$root_path = './../';
 	require('./pagestart.php');
 	
-	load_lang('forum_auth');
+	add_lang('forum_auth');
 	
 	if ( !$userauth['auth_forum_perm'] && $userdata['user_level'] != ADMIN )
 	{
@@ -185,7 +185,7 @@ else
 		// specified
 		//
 		$template->set_filenames(array('body' => 'style/acp_auth.tpl'));
-		$template->assign_block_vars('_display', array());
+		$template->assign_block_vars('display', array());
 //		$template->set_filenames(array(
 //			'body' => './../admin/style/auth_select_body.tpl')
 //		);

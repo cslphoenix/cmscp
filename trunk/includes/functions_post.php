@@ -170,26 +170,36 @@ function msg_add($table, $type_id, $user_id, $poster_msg, $poster_nick = '', $po
 	
 	switch ( $table )
 	{
-		case 'news':	$table_name = NEWS;		$table_read = READ_NEWS;	break;
-		case 'match':	$table_name = MATCH;	$table_read	= READ_MATCH;	break;
-		case 'train':	$table_name = TRAINING;	$table_read	= READ_TRAIN;	break;
+		case NEWS:	$read = READ_NEWS;	$id_field = 'news_id';	break;
+		case EVENT:	$read = READ_EVENT;	$id_field = 'event_id';	break;
+		case MATCH:	$read = READ_MATCH;	$id_field = 'match_id';	break;
+		case TRAIN:	$read = READ_TRAIN;	$id_field = 'training_id';	break;
 		
 		case 'tracker':	$table_name = TRACKER;	$table_read	= READ_TRACKER;	break;
 				
 		default:	message(GENERAL_ERROR, 'No Table given');	break;
 	}
 	
-	$sql = "INSERT INTO " . COMMENT . " (type, type_id, poster_id, $sql_fields poster_ip, poster_text, time_create)
-				VALUES ($table_read, $type_id, $poster_id, $sql_data '$poster_ip', '$poster_msg', $time)";
+	$sql = "INSERT INTO " . COMMENT . " (type, type_id, poster_id, $sql_fields poster_ip, poster_text, time_create) VALUES ($read, $type_id, $poster_id, $sql_data '$poster_ip', '$poster_msg', $time)";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
-	$sql = "UPDATE $table_name SET " . $table . "_comment = " . $table . "_comment + 1 WHERE " . $table . "_id = $type_id";
+#	$sql = "UPDATE " . COMMENT_COUNT . " SET count = count + 1 WHERE type_id = $type_id AND type = $table_read";
+	$sql = "UPDATE $table SET count_comment = count_comment + 1 WHERE $id_field = $type_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	if ( $user_id != ANONYMOUS )
+	{
+		$sql = "UPDATE " . USERS . " SET user_comments = user_comments + 1 WHERE user_id = $user_id";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
 	}
 	
 	log_add(LOG_USERS, SECTION_COMMENT, 'comment_' . $table);

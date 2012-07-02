@@ -40,8 +40,8 @@
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<!-- BEGIN lobby_match_old_row -->
 				<tr>
-					<td width="20%" nowrap="nowrap">{lobby_match_old.lobby_match_old_row.MATCH_NAME}</td>
-					<td align="left">{lobby_match_old.lobby_match_old_row.MATCH_COMMENTS}</td>
+					<td width="20%" nowrap="nowrap">{lobby_match_old.lobby_matchold_row.MATCH_NAME}</td>
+					<td align="left">{lobby_match_old.lobby_matchold_row.MATCH_COMMENTS}</td>
 					
 				</tr>
 				<!-- END lobby_match_old_row -->
@@ -50,7 +50,7 @@
 		</tr>
 		<!-- END lobby_match_old -->
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<!-- BEGIN lobby_training -->
 		<tr>
@@ -73,8 +73,8 @@
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<!-- BEGIN lobby_training_old_row -->
 				<tr>
-					<td width="20%" nowrap="nowrap">{lobby_training.lobby_training_old.lobby_training_old_row.TRAINING_NAME}</td>
-					<td align="left">{lobby_training.lobby_training_old.lobby_training_old_row.TRAINING_COMMENTS}</td>
+					<td width="20%" nowrap="nowrap">{lobby_training.lobby_training_old.lobby_trainingold_row.TRAINING_NAME}</td>
+					<td align="left">{lobby_training.lobby_training_old.lobby_trainingold_row.TRAINING_COMMENTS}</td>
 					
 				</tr>
 				<!-- END lobby_training_old_row -->

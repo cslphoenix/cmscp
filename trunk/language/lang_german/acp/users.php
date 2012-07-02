@@ -21,7 +21,7 @@ $lang = array_merge($lang, array(
 	'update_fields'	=> 'Profilefelder erfolgreich geändert.',
 	
 	'_option' => array(
-		'_update'	=> 'Erforderliche Daten',
+		'update'	=> 'Erforderliche Daten',
 		'_settings'	=> '!Einstellungen',
 		'_pics'		=> '!Foto & Avatar',
 		'_auth'		=> 'Benutzerberechtigungen',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	
 	'active'		=> 'Aktiviert',
 	'birthday'		=> 'Geburtstag',
-
+	
 ));
 
-
+$lang['Membership_pending'] = '<span title="Ja für Annehmen, Nein für Ablehnen">warten auf Freigabe<sup>I</sup></span>';
 
 /*
 $lang['user_pass_random']	= 'Beispiel: %s';
@@ -117,8 +117,8 @@ $lang['password_register']		= 'Passwort eintragen';
 $lang['password_generate']		= 'Passwort generieren';
 
 $lang['user_option'] = array(
-#	'_update'		=> $lang['user_default'],
-	'_update'		=> $lang['user_regedit'],
+#	'update'		=> $lang['user_default'],
+	'update'		=> $lang['user_regedit'],
 	'user_groups'	=> $lang['user_groups'],
 	'user_auth'		=> $lang['user_auth'],
 );

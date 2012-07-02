@@ -21,7 +21,7 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('games');
+	add_lang('games');
 
 	$error	= '';
 	$index	= '';
@@ -29,14 +29,14 @@ else
 	$url	= POST_GAMES;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
-	$path_dir	= $root_path . $settings['path_games'] . '/';
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
+	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
 	$fields	= '';
 	
@@ -54,12 +54,12 @@ else
 
 	switch ( $mode )
 	{
-		case '_create':
-		case '_update':
+		case 'create':
+		case 'update':
 	
-			$template->assign_block_vars('_input', array());
+			$template->assign_block_vars('input', array());
 			
-			if ( $mode == '_create' )
+			if ( $mode == 'create' )
 			{
 				$authlist = array(
 					'authlist_name' => request('authlist_name', 2),
@@ -68,16 +68,16 @@ else
 			}
 			else
 			{
-				$authlist = get_data('authlist', $authlist_id, 0);
+				$authlist = get_data('authlist', $authlist_id, INT);
 				$new_mode = '_update_save';
 			}
 			
-			$ssprintf = ( $mode == '_create' ) ? 'sprintf_add' : 'sprintf_edit';
+			$ssprintf = ( $mode == 'create' ) ? 'sprintf_add' : 'sprintf_edit';
 			$fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_AUTHLIST . '" value="' . $authlist_id . '" />';
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['authlist_field']),
+				'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['authlist_field']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
 				'L_RESET'		=> $lang['common_reset'],
@@ -91,7 +91,7 @@ else
 			
 			break;
 		
-		case '_create_save':
+		case 'create_save':
 		
 			$authlist_name = request('authlist_name', 2);
 			
@@ -121,9 +121,9 @@ else
 
 			break;
 		
-		case '_update_save':
+		case 'update_save':
 		
-			$authlist		= get_data('authlist', $authlist_id, 0);
+			$authlist		= get_data('authlist', $authlist_id, INT);
 			$authlist_name	= request('authlist_name', 2);
 			
 			if ( !$authlist_name )
@@ -154,9 +154,9 @@ else
 			
 			break;
 		
-		case '_delete':
+		case 'delete':
 		
-			$authlist = get_data('authlist', $authlist_id, 0);
+			$authlist = get_data('authlist', $authlist_id, INT);
 		
 			if ( $authlist_id && $confirm )
 			{	
@@ -181,29 +181,29 @@ else
 			}
 			else if ( $authlist_id && !$confirm )
 			{
-				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
-	
-				$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . POST_AUTHLIST . '" value="' . $authlist_id . '" />';
-	
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				
 				$template->assign_vars(array(
-					'MESSAGE_TITLE'		=> $lang['common_confirm'],
-					'MESSAGE_TEXT'		=> $lang['confirm_delete_authlist'],
-					'L_NO'				=> $lang['common_no'],
-					'L_YES'				=> $lang['common_yes'],
+					'M_TITLE'	=> $lang['common_confirm'],
+					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['authlist_name']),
+					
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
-					'S_ACTION'	=> check_sid('admin_authlist.php'),
 				));
 			}
 			else
 			{
-				message(GENERAL_MESSAGE, $lang['msg_must_select_authlist']);
+				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 			}
+			
+			$template->pparse('confirm');
 			
 			break;
 			
 		default:
 		
-			$template->assign_block_vars('_display', array());
+			$template->assign_block_vars('display', array());
 			
 			$fields .= '<input type="hidden" name="mode" value="_create" />';
 					

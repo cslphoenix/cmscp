@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'news'		=> 'News',
+	'title'		=> 'News',
 	'explain'	=> 'Hier kannst du die News Verwalten äö',
 
 	'create'	=> 'Neue News hinzugefügt.',

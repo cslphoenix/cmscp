@@ -1,18 +1,10 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-		<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -21,22 +13,22 @@
 	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><span style="float:right;">{_display._row.INFO}&nbsp;</span><b>{_display._row.NAME}</b><br />{_display._row.DESC}</td>
-	<td>{_display._row.MOVE_UP}{_display._row.MOVE_DOWN}{_display._row.RESYNC} {_display._row.VIEW}{_display._row.UPLOAD} {_display._row.UPDATE} {_display._row.DELETE}</td>
+	<td><span class="right">{display.row.INFO}&nbsp;</span><b>{display.row.NAME}</b><br />{display.row.DESC}</td>
+	<td>{display.row.MOVE_UP}{display.row.MOVE_DOWN}{display.row.RESYNC}{display.row.OVERVIEW}{display.row.UPLOAD}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
-<!-- END _row -->
-<!-- BEGIN _entry_empty -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
-	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty -->
+<!-- END empty -->
 </table>
 
 <table class="footer">
 <tr>
-	<td><input type="text" class="post" name="gallery_name"></td>
+	<td><input type="text" name="gallery_name"></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 	<td></td>
 	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
@@ -44,79 +36,80 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
 {TINYMCE}
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	<!-- BEGIN _upload -->
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
+	<!-- BEGIN upload -->
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
-	<!-- END _upload -->
-	<!-- BEGIN _overview -->
+	<!-- END upload -->
+	<!-- BEGIN overview -->
 	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
-	<!-- END _overview -->
+	<!-- END overview -->
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
+<table class="update">
+<!-- BEGIN tab -->
+<tr>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{_input.row._tab.L_LANG}</a></li></ul></th>
+</tr>
+<!-- BEGIN option -->
+<tr>
+	<td class="row1{_input.row.tab.option.CSS}"><label for="{_input.row.tab.option.LABEL}" {_input.row.tab.option.EXPLAIN}>{_input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{_input.row.tab.option.OPTION}</td>
+</tr>
+<!-- END option -->
+<!-- END tab -->
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<!-- END row -->
+
+
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <table class="update">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
-	<td class="row1"><label for="gallery_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="gallery_name" id="gallery_name" value="{NAME}"></td>
+	<td class="row1r"><label for="gallery_name">{L_NAME}:</label></td>
+	<td class="row2"><input type="text" name="gallery_name" id="gallery_name" value="{NAME}"></td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_AUTH}:</label></td>
-	<td class="row3">
-		<table class="update">
-		<!-- BEGIN _auth -->
-		<tr>
-			<td nowrap="nowrap">{_input._auth.SELECT}</td>
-			<td width="99%">&nbsp;<label for="{_input._auth.INFO}">{_input._auth.TITLE}</label></td>
-		</tr>
-		<!-- END _auth -->
-		</table>
+	<td class="row2">
+		<div>
+			<!-- BEGIN auth -->
+			<ul>{_input._auth.SELECT} <label for="{_input._auth.INFO}">{_input._auth.TITLE}</label></ul>
+			<!-- END auth -->
+		</div>
 	</td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
+	<td class="row2"><input type="text" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
+	<td class="row2"><input type="text" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
+	<td class="row2"><input type="text" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="per_rows">{L_PER_ROWS}:</label></td>
-	<td class="row2"><input type="text" class="post" name="per_rows" id="per_rows" value="{PER_ROWS}"></td>
+	<td class="row2"><input type="text" name="per_rows" id="per_rows" value="{PER_ROWS}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="per_cols">{L_PER_COLS}:</label></td>
-	<td class="row2"><input type="text" class="post" name="per_cols" id="per_cols" value="{PER_COLS}"></td>
+	<td class="row2"><input type="text" name="per_cols" id="per_cols" value="{PER_COLS}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="preview_list">{L_PREVIEW_LIST}:</label></td>
@@ -124,14 +117,14 @@
 </tr>
 <tr>
 	<td class="row1"><label for="preview_widht">{L_PREVIEW_WIDHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="preview_widht" id="preview_widht" value="{PREVIEW_WIDHT}"></td>
+	<td class="row2"><input type="text" name="preview_widht" id="preview_widht" value="{PREVIEW_WIDHT}"></td>
 </tr>
 <tr>
 	<td class="row1"><label for="preview_height">{L_PREVIEW_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
+	<td class="row2"><input type="text" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
 </tr>
 <tr>
-	<td class="row1"><label>{L_DESC}: *</label></td>
+	<td class="row1r"><label>{L_DESC}:</label></td>
 	<td class="row2"><textarea class="textarea" name="gallery_desc" rows="5" style="width:50%">{DESC}</textarea></td>
 </tr>
 <tr>
@@ -142,128 +135,104 @@
 	<td class="row1"><label for="gallery_rate">{L_RATE}:</label></td>
 	<td class="row2"><label><input type="radio" name="gallery_rate" id="gallery_rate" value="1" {S_RATE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="gallery_rate" value="0" {S_RATE_NO} />&nbsp;{L_NO}</label></td>
 </tr>
-</tbody>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->
 
-<!-- BEGIN _upload -->
+<!-- BEGIN upload -->
 <form action="{S_ACTION}" method="post" name="form" id="form" enctype="multipart/form-data">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current">{L_UPLOAD}</a></li>
-	<!-- BEGIN _overview -->
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_UPLOAD}</a></li>
+	<!-- BEGIN overview -->
 	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
-	<!-- END _overview -->
+	<!-- END overview -->
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>&nbsp;</td>
-</tr>
-</table>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <table class="update">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
 	<td class="row1">{L_UPLOAD}:</td>
-	<td class="row3">
+	<td class="row2">
 		<div><div>
-			<input class="post" name="title[]" type="text" id="title[]">&nbsp;<input class="post" name="ufile[]" type="file" id="ufile[]" size="25" />&nbsp;<input class="button2" type="button" value="mehr"onclick="clone(this)">
+			<input class="post" name="title[]" type="text" id="title[]">&nbsp;<input class="post" name="ufile[]" type="file" id="ufile[]" size="25" />&nbsp;<input class="more" type="button" value="{L_MORE}" onclick="clone(this)">
 		</div></div>
 	</td>
 </tr>
-</tbody>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _upload -->
+<!-- END upload -->
 
-<!-- BEGIN _overview -->
+<!-- BEGIN overview -->
 <form action="{S_ACTION}" method="post" id="list" name="form">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_OVERVIEW}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_OVERVIEW}</a></li>
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br />
 
-<table class="update" border="0" cellspacing="0" cellpadding="0">
-<!-- BEGIN _list -->
-<!-- BEGIN _gallery_row -->
+<table>
+<!-- BEGIN list -->
+<!-- BEGIN gallery_row -->
 <tr>
     <td>
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current"><span class="middle">{_overview._list._gallery_row.TITLE}</span></a></li>
-		</ul>
-		</div>
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
-        <tr class="hover">
-        	<td class="row1"><a href="{_overview._list._gallery_row.IMAGE}" class="lightbox"><img src="{_overview._list._gallery_row.PREV}" alt="" border="0" /></a></td>
-			<td class="row3" nowrap="nowrap">
-				<table class="update" border="0" cellspacing="0" cellpadding="0">
+		<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;"><span class="middle">{_overview._list._galleryrow.TITLE}</span></a></li></ul>
+		<table>
+        <tr>
+        	<td><a href="{_overview._list._galleryrow.IMAGE}" rel="lightbox"><img src="{_overview._list._galleryrow.PREV}" alt="" /></a></td>
+			<td>
+				<table class="update2">
 				<tr>
-					<td class="small" align="right"><label for="pic_title[{_overview._list._gallery_row.PIC_ID}]">{L_TITLE}:&nbsp;</label></td>
-					<td class="small" align="left"><input type="text" class="postsmall" name="pic_title[{_overview._list._gallery_row.PIC_ID}]" id="pic_title[{_overview._list._gallery_row.PIC_ID}]" value="{_overview._list._gallery_row.TITLE}"></td>
+					<td class="row1"><label for="pic_title[{_overview._list._galleryrow.PIC_ID}]">{L_TITLE}:&nbsp;</label></td>
+					<td class="row2"><input type="text" class="postsmall" name="pic_title[{_overview._list._galleryrow.PIC_ID}]" id="pic_title[{_overview._list._galleryrow.PIC_ID}]" value="{_overview._list._galleryrow.TITLE}"></td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_WIDTH}:&nbsp;</td>
-					<td class="small" align="left">{_overview._list._gallery_row.WIDTH}</td>
+					<td class="row1">{L_WIDTH}:&nbsp;</td>
+					<td class="row2">{_overview._list._galleryrow.WIDTH}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_HEIGHT}:&nbsp;</td>
-					<td class="small" align="left">{_overview._list._gallery_row.HEIGHT}</td>
+					<td class="row1">{L_HEIGHT}:&nbsp;</td>
+					<td class="row2">{_overview._list._galleryrow.HEIGHT}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_SIZE}:&nbsp;</td>
-					<td class="small" align="left">{_overview._list._gallery_row.SIZE}</td>
+					<td class="row1">{L_SIZE}:&nbsp;</td>
+					<td class="row2">{_overview._list._galleryrow.SIZE}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_NAME}:&nbsp;</td>
-					<td class="small" align="left">{_overview._list._gallery_row.NAME}</td>
+					<td class="row1">{L_NAME}:&nbsp;</td>
+					<td class="row2">{_overview._list._galleryrow.NAME}</td>
 				</tr>
 				</table>
 			</td>
-			<td class="row2" width="100%">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<td width="100%">
+				<table class="update2">
 				<tr>
 					<td>Bewertung</td>
 				</tr>
@@ -272,26 +241,22 @@
 				</tr>
 				</table>
 			</td>
-			<td class="row2 small" nowrap="nowrap"><input type="text" class="postsmall" name="pic_order[{_overview._list._gallery_row.PIC_ID}]" id="pic_title[{_overview._list._gallery_row.PIC_ID}]" value="{_overview._list._gallery_row.ORDER}" size="2"></td>
-			<td class="row2 small" nowrap="nowrap">{_overview._list._gallery_row.MOVE_UP}{_overview._list._gallery_row.MOVE_DOWN}</td>
-			<td class="row2 small" nowrap="nowrap"><input type="checkbox" name="pics[]" value="{_overview._list._gallery_row.PIC_ID}"></td>
+			<td class="row2" nowrap="nowrap"><input type="text" class="postsmall" name="pic_order[{_overview._list._galleryrow.PIC_ID}]" id="pic_title[{_overview._list._galleryrow.PIC_ID}]" value="{_overview._list._galleryrow.ORDER}" size="2"></td>
+			<td class="row2" nowrap="nowrap">{_overview._list._galleryrow.MOVE_UP}{_overview._list._galleryrow.MOVE_DOWN}</td>
+			<td class="row2" nowrap="nowrap"><input type="checkbox" name="pics[]" value="{_overview._list._galleryrow.PIC_ID}"></td>
 		</tr>
         </table>
     </td>
 </tr>
-<!-- END _gallery_row -->
-<!-- END _list -->
-<!-- BEGIN _preview -->
-<!-- BEGIN _gallery_row -->
+<!-- END gallery_row -->
+<!-- END list -->
+<!-- BEGIN preview -->
+<!-- BEGIN gallery_row -->
 <tr>
-	<!-- BEGIN _gallery_col -->
+	<!-- BEGIN gallery_col -->
     <td>
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li id="active"><a href="#" id="current"><span class="middle">{_overview._preview._gallery_row._gallery_col.TITLE}</span></a></li>
-		</ul>
-		</div>
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
+		<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;"><span class="middle">{_overview._preview._galleryrow._gallery_col.TITLE}</span></a></li></ul>
+		<table class="update">
         <tr>
 			<td class="row3" nowrap="nowrap">
 				<table class="update" border="0" cellspacing="0" cellpadding="0">
@@ -299,43 +264,43 @@
 					<td colspan="2">
 						<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td width="100%"><a href="{_overview._preview._gallery_row._gallery_col.IMAGE}" rel="lightbox"><img src="{_overview._preview._gallery_row._gallery_col.PREV}" alt="" border="0" /></a></td>
-							<td nowrap="nowrap"><input type="text" class="postsmall" name="pic_order[{_overview._preview._gallery_row._gallery_col.PIC_ID}]" id="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]" value="{_overview._preview._gallery_row._gallery_col.ORDER}" size="2"></td>
-							<td nowrap="nowrap">{_overview._preview._gallery_row._gallery_col.MOVE_UP}{_overview._preview._gallery_row._gallery_col.MOVE_DOWN}</td>
-							<td><input type="checkbox" name="pics[]" value="{_overview._preview._gallery_row._gallery_col.PIC_ID}"></td>
+							<td width="100%"><a href="{_overview._preview._galleryrow._gallery_col.IMAGE}" rel="lightbox"><img src="{_overview._preview._galleryrow._gallery_col.PREV}" alt="" border="0" /></a></td>
+							<td nowrap="nowrap"><input type="text" class="postsmall" name="pic_order[{_overview._preview._galleryrow._gallery_col.PIC_ID}]" id="pic_title[{_overview._preview._galleryrow._gallery_col.PIC_ID}]" value="{_overview._preview._galleryrow._gallery_col.ORDER}" size="2"></td>
+							<td nowrap="nowrap">{_overview._preview._galleryrow._gallery_col.MOVE_UP}{_overview._preview._galleryrow._gallery_col.MOVE_DOWN}</td>
+							<td><input type="checkbox" name="pics[]" value="{_overview._preview._galleryrow._gallery_col.PIC_ID}"></td>
 						</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_TITLE}:&nbsp;<label for="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]"></label></td>
-					<td class="small" align="left"><input type="text" class="postsmall" name="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]" id="pic_title[{_overview._preview._gallery_row._gallery_col.PIC_ID}]" value="{_overview._preview._gallery_row._gallery_col.TITLE}" /></td>
+					<td class="row1">{L_TITLE}:&nbsp;<label for="pic_title[{_overview._preview._galleryrow._gallery_col.PIC_ID}]"></label></td>
+					<td class="row2"><input type="text" class="postsmall" name="pic_title[{_overview._preview._galleryrow._gallery_col.PIC_ID}]" id="pic_title[{_overview._preview._galleryrow._gallery_col.PIC_ID}]" value="{_overview._preview._galleryrow._gallery_col.TITLE}" /></td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_WIDTH}:&nbsp;</td>
-					<td class="small" align="left">{_overview._preview._gallery_row._gallery_col.WIDTH}</td>
+					<td class="row1">{L_WIDTH}:&nbsp;</td>
+					<td class="row2">{_overview._preview._galleryrow._gallery_col.WIDTH}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_HEIGHT}:&nbsp;</td>
-					<td class="small" align="left">{_overview._preview._gallery_row._gallery_col.HEIGHT}</td>
+					<td class="row1">{L_HEIGHT}:&nbsp;</td>
+					<td class="row2">{_overview._preview._galleryrow._gallery_col.HEIGHT}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_SIZE}:&nbsp;</td>
-					<td class="small" align="left">{_overview._preview._gallery_row._gallery_col.SIZE}</td>
+					<td class="row1">{L_SIZE}:&nbsp;</td>
+					<td class="row2">{_overview._preview._galleryrow._gallery_col.SIZE}</td>
 				</tr>
 				<tr>
-					<td class="small" align="right">{L_NAME}:&nbsp;</td>
-					<td class="small" align="left">{_overview._preview._gallery_row._gallery_col.NAME}</td>
+					<td class="row1">{L_NAME}:&nbsp;</td>
+					<td class="row2">{_overview._preview._galleryrow._gallery_col.NAME}</td>
 				</tr>
 				</table>
 			</td>
 		</tr>
         </table>
     </td>
-	<!-- END _gallery_col -->
+	<!-- END gallery_col -->
 </tr>
-<!-- END _gallery_row -->
-<!-- END _preview -->
+<!-- END gallery_row -->
+<!-- END preview -->
 </table>
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
@@ -346,118 +311,31 @@
 <tr>
 	<td colspan="2" align="right"><a class="small" onclick="marklist('list', 'pic', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a class="small" onclick="marklist('list', 'pic', false); return false;">{L_MARK_DEALL}</a></td>
 </tr>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _overview -->
+<!-- END overview -->
 
 <!-- BEGIN gallery_resync -->
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li>
-</ul>
-</div>
+	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li></ul>
 
 <table class="header">
 <tr>
-	<td>{L_EXPLAIN}</td>
+	<td class="info">{L_EXPLAIN}</td>
 </tr>
 </table>
 
 <br />
 
 <!-- END gallery_resync -->
-
-<!-- BEGIN _default -->
-<form action="{S_ACTION}" method="post" name="form">
-<div id="navcontainer">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li id="active"><a href="#" id="right">{L_DEFAULT}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
-
-<br />
-
-<table class="update">
-<tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
-    <td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
-</tr>
-<tr>
-    <td class="row1" width="155"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
-</tr>
-<tr>
-    <td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
-	<td class="row2"><input type="text" class="post" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
-</tr>
-<tr>
-	<td class="row1"><label>{L_AUTH}:</label></td>
-	<td class="row3">
-		<table class="update" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN _auth_gallery -->
-		<tr>
-			<td nowrap="nowrap">{_default._auth_gallery.S_DROP}</td>
-			<td width="99%">&nbsp;<label for="{_default._auth_gallery.FIELD}">{_default._auth_gallery.L_NAME}</label></td>
-		</tr>
-		<!-- END _auth_gallery -->
-		</table>
-	</td>
-</tr>
-<tr>
-    <td class="row1"><label for="per_rows">{L_PER_ROWS}:</label></td>
-	<td class="row2"><input type="text" class="post" name="per_rows" id="per_rows" value="{PER_ROWS}"></td>
-</tr>
-<tr>
-    <td class="row1"><label for="per_cols">{L_PER_COLS}:</label></td>
-	<td class="row2"><input type="text" class="post" name="per_cols" id="per_cols" value="{PER_COLS}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="preview_list">{L_PREVIEW_LIST}:</label></td>
-	<td class="row2"><label><input type="radio" name="preview_list" id="preview_list" value="1" {S_LIST_YES} />&nbsp;{L_LIST}</label><span style="padding:4px;"></span><label><input type="radio" name="preview_list" value="0" {S_LIST_NO} />&nbsp;{L_PREVIEW}</label></td>
-</tr>
-<tr>
-    <td class="row1"><label for="preview_widht">{L_PREVIEW_WIDHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="preview_widht" id="preview_widht" value="{PREVIEW_WIDHT}"></td>
-</tr>
-<tr>
-    <td class="row1"><label for="preview_height">{L_PREVIEW_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" class="post" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
-</tr>
-</tbody>
-<tr>
-	<td colspan="2" align="center">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END _default -->

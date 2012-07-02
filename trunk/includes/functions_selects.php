@@ -93,7 +93,7 @@ function _select_newscat($default)
 {
 	global $db;
 		
-	$sql = 'SELECT * FROM ' . NEWSCAT . " ORDER BY cat_order";
+	$sql = 'SELECT * FROM ' . NEWS_CAT . " ORDER BY cat_order";
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -303,29 +303,5 @@ function select_date($default, $var, $value)
 	
 	return $select;
 }
-
-//
-// Disable modes
-//
-function page_mode_select($default, $select_name = 'page_disable_mode')
-{
-	global $lang;
-
-	if (!is_array($default))
-	{
-		$default = explode(',', $default);
-	}
-
-	$disable_select = '<select class="select" name="' . $select_name . '[]" id="' . $select_name . '" multiple="multiple">';
-	foreach ( $lang['page_disable_mode_opt'] as $const => $name)
-	{
-		$selected = (in_array($const, $default)) ? ' selected="selected"' : '';
-		$disable_select .= '<option value="' . $const . '"' . $selected . '>' . $name . '</option>';
-	}
-	$disable_select .= '</select>';
-
-	return $disable_select;
-}
-
 
 ?>

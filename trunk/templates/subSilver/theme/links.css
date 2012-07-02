@@ -11,7 +11,7 @@ a:hover										{ color: #F00; text-decoration: underline; }
 
 a.copyright			{ color: #999; text-decoration: none;}
 a.copyright:hover	{ color: #fff; text-decoration: underline;}
-
+/*
 a.f_popup				{ text-decoration: none; color: #39F;}
 a.f_popup:hover			{ cursor: default; text-decoration: none; }
 a.f_popup span			{ text-align: left; visibility: hidden; position: absolute; right:40%; left:40%;  margin-top: 1em; padding: 1em; text-decoration: none; }
@@ -30,7 +30,7 @@ a.today span, a.more span, a.birthday span, a.events span, a.wars span, a.trains
 a.today:hover span, a.more:hover span, a.birthday:hover span, a.events:hover span, a.wars:hover span, a.trains:hover span {
 	text-decoration: none; visibility: visible; border: 1px #B22222 solid; background: #000; color:#FFF;
 }
-
+*/
 .no, a.no:link, a.no:visited, a.no:active { color:#F00; text-decoration: none; }
 a.no:hover { color:#F00;  text-decoration: underline; }
 .yes, a.yes:link, a.yes:visited, a.yes:active { color:#0F0;  text-decoration: none; }
@@ -39,22 +39,41 @@ a.yes:hover { color:#0F0;  text-decoration: underline; }
 a.replace:hover { color:#F60;  text-decoration: underline; }
 
 
-a.test {
-text-decoration: none; /* definition for the link that will display the layer */
+/*a.test {
+text-decoration: none;  definition for the link that will display the layer 
 }
 a.test:hover {
-background: none; /* correction for an IE bug*/
+background: none;  correction for an IE bug
 }
-a.test span { /* definition of <span> tag included in <a> */
+a.test span {  definition of <span> tag included in <a> 
 display: none;
 }
-a.test:hover span { /* definition of <span> tag when hovering */
+a.test:hover span {  definition of <span> tag when hovering 
 display: inline;
 position: absolute;
-top: 200px; /* layer's place and dimension that you can change at will */
+top: 200px;  layer's place and dimension that you can change at will 
 left: 100px;
 width: 200px;
 height: 100px;
 background: green;
 text-align: center;
 color: white;}
+
+a.info{
+    position:relative; this is the key
+    z-index:24; background-color:#000;
+    color:#red;
+    text-decoration:none}
+
+a.info:hover{z-index:25; background-color:#ff0}
+
+a.info span{display: none}
+
+a.info:hover span{ the span will display just on :hover state
+    display:block;
+    position:absolute;
+    top:2em; left:2em; width:15em;
+    border:1px solid #F00;
+    background-color:#000; color:#FFF;
+    text-align: left;
+	padding: 5px;}*/

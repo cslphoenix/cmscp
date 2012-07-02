@@ -7,10 +7,10 @@
 <!-- BEGIN stat_run -->
 <tr>
 	<!-- BEGIN light -->
-	<td class="row1">
+	<td>
 	<!-- END light -->
 	<!-- BEGIN light_ELSE -->
-	<td class="row1">
+	<td>
 	<!-- END light_ELSE -->
 			{stat_run.STAT_FILE}<br />
 			{stat_run.STAT_LINE}<br />

@@ -26,7 +26,7 @@ $lang = array_merge($lang, array(
 	'info'	=> 'Info',
 	'value'	=> 'Werte',
 	
-	'sprintf_dbsize'	=> 'Einträge: %s<br />Tabellen: %s',
+	'sprintf_dbsize'	=> 'Name: %s<br />Einträge: %s<br />Tabellen: %s',
 	'sprintf_backup'	=> 'Größe: %s',
 	'backup_na'			=> 'Nicht Vorhanden!',
 	

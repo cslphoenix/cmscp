@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'])
 	{
-		$module['hm_contact']['sm_overview'] = $root_file;
+		$module['hm_contact']['sm_overview'] = $root_file . "?mode=overview";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] )
@@ -36,7 +36,7 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('contact');
+	add_lang('contact');
 	
 	$error	= '';
 	$index	= '';
@@ -46,15 +46,15 @@ else
 	$url	= POST_CONTACT;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
-	$path_dir	= $root_path . $settings['path_games'] . '/';
+	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['contact']);
 	
 	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
@@ -73,7 +73,7 @@ else
 			
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_contact'] )
 			{
-				log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+				log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 				message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 			}
 			
@@ -85,7 +85,7 @@ else
 			
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_joinus'] )
 			{
-				log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+				log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 				message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 			}
 			
@@ -97,7 +97,7 @@ else
 			
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_fightus'] )
 			{
-				log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+				log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 				message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 			}
 			
@@ -107,33 +107,33 @@ else
 		
 			if ( $userdata['user_level'] != ADMIN && !$userauth['auth_contact'] && !$userauth['auth_joinus'] && !$userauth['auth_fightus'] )
 			{
-				log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+				log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 				message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 			}
 		
 			break;
 	}
 	
-	$template->assign_block_vars('_display', array());
+	$template->assign_block_vars('display', array());
 	
 	$where = '';
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] )
 	{
 		$where .= ' WHERE contact_type IN (' . CONTACT_NORMAL;
-		$template->assign_block_vars('_display._contact', array());
+		$template->assign_block_vars('display.contact', array());
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_fightus'] )
 	{
 		$where .= ( $where ) ? ', ' . CONTACT_FIGHTUS : ' WHERE contact_type IN (' . CONTACT_FIGHTUS;
-		$template->assign_block_vars('_display._fightus', array());
+		$template->assign_block_vars('display.fightus', array());
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_joinus'] )
 	{
 		$where .= ( $where ) ? ', ' . CONTACT_JOINUS : ' WHERE contact_type IN (' . CONTACT_JOINUS;
-		$template->assign_block_vars('_display._joinus', array());
+		$template->assign_block_vars('display.joinus', array());
 	}
 	
 	$where .= ')';
@@ -179,7 +179,7 @@ else
 		$tab_aktiv3	= '><a ';
 	}
 	
-	$sql = "SELECT c.*, t.team_name, g.game_image, g.game_size
+	$sql = "SELECT c.*, t.team_name, g.game_image
 			FROM " . CONTACT . " c
 				LEFT JOIN " . TEAMS . " t ON c.contact_team = t.team_id
 				LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -193,18 +193,18 @@ else
 	
 	if ( !$data )
 	{
-		$template->assign_block_vars('_display._entry_empty', array());
+		$template->assign_block_vars('display.empty', array());
 	}
 	else
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($data)); $i++ )
+		for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($data)); $i++ )
 		{
 			$class = ($i % 2) ? 'row_class1' : 'row_class2';
 			
 			$game_size	= $data[$i]['game_size'];
 			$game_image	= '<img src="' . $root_path . $settings['path_games'] . '/' . $data[$i]['game_image'] . '" alt="" width="' . $game_size . '" height="' . $game_size . '" >';
 				
-			$template->assign_block_vars('_display._contact_row', array(
+			$template->assign_block_vars('display.contact_row', array(
 				'CLASS' 			=> $class,
 				'CONTACT_ID' 		=> $data[$i]['contact_id'],
 				'CONTACT_GAME'		=> $game_image,
@@ -219,7 +219,7 @@ else
 		}
 	}
 	
-	$current_page = ( !count($data) ) ? 1 : ceil( count($data) / $settings['site_entry_per_page'] );
+	$current_page = ( !count($data) ) ? 1 : ceil( count($data) / $settings['per_page_entry']['acp'] );
 	
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['contact']),
@@ -233,8 +233,8 @@ else
 		'TAB_AKTIV2'	=> $tab_aktiv2,
 		'TAB_AKTIV3'	=> $tab_aktiv3,
 		
-		'PAGINATION' => ( count($data) ) ? generate_pagination('admin_contact.php?', count($data), $settings['site_entry_per_page'], $start) : '',
-		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION' => ( count($data) ) ? generate_pagination('admin_contact.php?', count($data), $settings['per_page_entry']['acp'], $start) : '',
+		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry']['acp'] ) + 1 ), $current_page ), 
 		
 		'S_NORMAL'	=> check_sid("$file?mode=contact"),
 		'S_JOINUS'	=> check_sid("$file?mode=joinus"),
@@ -246,4 +246,5 @@ else
 			
 	include('./page_footer_admin.php');
 }
+
 ?>

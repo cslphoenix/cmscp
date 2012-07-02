@@ -11,7 +11,7 @@ $userdata = session_pagestart($user_ip, PAGE_INDEX);
 init_userprefs($userdata);
 
 $page_title = $lang['Index'];
-include($root_path . 'includes/page_header.php');
+main_header();
 
 $template->set_filenames(array('body' => 'counter_body.tpl'));
 
@@ -295,7 +295,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 		// Werte - also Balken - ausgeben
 		foreach($verhaeltnis as $key => $wert)
 		{
-			$template->assign_block_vars('table_row.balken_row', array(
+			$template->assign_block_vars('tablerow.balken_row', array(
 				'WERT1'		=> floor( $daten['Breite'] / count($daten['Werte']) ),
 				'WERT2'		=> floor( $daten['Breite'] * $wert),
 				'WERT3'		=> '100%',
@@ -310,7 +310,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
         // Stellen - also Balkenzuordnung - ausgeben
 		foreach($daten['Stellen'] as $stelle)
 		{
-			$template->assign_block_vars('table_row.stellen_row', array(
+			$template->assign_block_vars('tablerow.stellen_row', array(
 				'STELLE'		=> $stelle,
 			));
 		}
@@ -337,6 +337,6 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

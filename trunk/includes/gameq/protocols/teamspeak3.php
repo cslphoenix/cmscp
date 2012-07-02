@@ -342,20 +342,24 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 		$this->verify_response(trim($buffer->readString("\n")));
 
 		$return = array();
-
+		
 		foreach ($data as $part)
 		{
 			$variables = explode (' ', $part);
-
+			
 			$info = array();
-
+			
 			foreach ($variables as $variable)
 			{
-				list($key, $value) = explode('=', $variable, 2);
+			#	if ( explode('=', $variable) )
+				if ( strpos($variable, "=") !== false )
+				{
+					list($key, $value) = explode('=', $variable, 2);
+				}
 
 				$info[$key] = str_replace(array_keys($this->string_replace), array_values($this->string_replace), $value);
 			}
-
+			
 			// Add this to the return
 			$return[] = $info;
 		}

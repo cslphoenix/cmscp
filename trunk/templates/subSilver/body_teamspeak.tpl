@@ -45,7 +45,7 @@
 		<!-- BEGIN show_userist -->
 		<table class="out" width="100%" cellspacing="0" cellpadding="0" border="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head" colspan="2">{L_TS_PLIST}</td>
@@ -57,7 +57,7 @@
 		</tr>
 		<!-- END userlist -->
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		</table>
 		<!-- END show_userist -->

@@ -6,353 +6,288 @@ $current = 'sm_index';
 
 include('./pagestart.php');
 
-$num	= request('num', 0);
-$mode	= request('mode', 1);
+add_lang('index');
 
-$template->set_filenames(array('body' => 'style/acp_index.tpl'));
+$num	= request('num', INT);
+$mode	= request('mode', TXT);
+$index	= '';
 
-if ( $mode )
+$file	= basename(__FILE__);
+
+$template->set_filenames(array(
+	'body'	=> 'style/acp_index.tpl',
+	'error'	=> 'style/info_error.tpl',
+));
+
+$mode = ( in_array($mode, array('switch')) ) ? $mode : '';
+
+switch ( $mode )
 {
-	switch ( $mode )
-	{
-		case '_switch':
-		
-			$data = data(NEWS, $num, false, 1, true);
-			
-			$switch = ( $data['news_public'] ) ? 0 : 1;
-			
-			sql(NEWS, 'update', array('news_public' => $switch), 'news_id', $num);
-			
-			$oCache->deleteCache('dsp_news');
-			
-			log_add(LOG_ADMIN, SECTION_NEWS, $mode);
-			
-			$index = true;
-						
-			break;
-			
-		default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
-	}
+	case 'switch':
 	
-	if ( $index != true )
-	{
-		include('./page_footer_admin.php');
-		exit;
-	}
-}
+		$data = data(NEWS, $num, false, 1, true);
+		
+		$switch = ( $data['news_public'] ) ? 0 : 1;
+		
+		sql(NEWS, 'update', array('news_public' => $switch), 'news_id', $num);
+		
+		$oCache->deleteCache('dsp_news');
+		
+		log_add(LOG_ADMIN, SECTION_NEWS, $mode);
 	
-$url_news	= POST_NEWS;
-$url_event	= POST_EVENT;
-$url_match	= POST_MATCH;
-$url_train	= POST_TRAINING;
-
-$news	= data(NEWS, false, 'news_time_public DESC, news_id DESC', 1, false);
-$cnt	= count($news);
-$count	= ( $cnt < 5 ) ? $cnt : 5;
-
+	default:
 	
-if ( !$news )
-{
-	$template->assign_block_vars('_entry_empty_news', array());
-}
-else
-{
-	for ( $i = 0; $i < $count; $i++ )
-	{
-		$id		= $news[$i]['news_id'];
-		$typ	= $news[$i]['news_intern'] ? 'sprintf_intern' : 'sprintf_normal';
-		$public	= $news[$i]['news_public'] ? '<img src="' . $images['icon_acp_public'] . '" alt="" />' : '<img src="' . $images['icon_acp_privat'] . '" alt="" />';
-		
-		$title	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? "<a href=\"" . check_sid("admin_news.php?mode=_update&amp;$url_news=$id") . "\">" . sprintf($lang[$typ], $news[$i]['news_title']) . "</a>" : sprintf($lang[$typ], $news[$i]['news_title']);
-		$update	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? "<a href=\"" . check_sid("admin_news.php?mode=_update&amp;$url_news=$id") . "\"><img src=\"" . $images['icon_option_update'] . "\" title=\"" . $lang['common_update'] . "\" alt=\"\" /></a>" : '';
-		$delete	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? "<a href=\"" . check_sid("admin_news.php?mode=_delete&amp;$url_news=$id") . "\"><img src=\"" . $images['icon_option_delete'] . "\" title=\"" . $lang['common_delete'] . "\" alt=\"\" /></a>" : '';
-		$public	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] ) ? "<a href=\"" . check_sid("index.php?mode=_switch&amp;num=$id") . "\">$public</a>" : "<img src=\"" . $images['icon_acp_denied'] . "\" alt=\"\" />";
-		
-		$date	= create_date($userdata['user_dateformat'], $news[$i]['news_time_public'], $userdata['user_timezone']);
-	
-		$template->assign_block_vars('_news_row', array(
-			'TITLE'		=> $title,
-			'DATE'		=> $date,
-			'PUBLIC'	=> $public,
-			'UPDATE'	=> $update,
-			'DELETE'	=> $delete,
-		));
-	}
-}
-
-$event	= data(EVENT, "WHERE event_date > " . time(), 'event_date ASC', 1, false);
-$cnt	= count($event);
-$count	= ( $cnt < 5 ) ? $cnt : 5;
-
-if ( !$event )
-{
-	$template->assign_block_vars('_entry_empty_event', array());
-}
-else
-{
-	for ( $i = 0; $i < $count; $i++ )
-	{
-		$id		= $event[$i]['event_id'];
-		$title	= '<a href="' . check_sid("admin_event.php?mode=_update&amp;$url_event=$id") . '">' . $event[$i]['event_title'] . '</a>';
-		
-		$update = ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] ) ? '<a href="' . check_sid("admin_event.php?mode=_update&amp;$url_event=$id") . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>' : '';
-		$delete = ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] ) ? '<a href="' . check_sid("admin_event.php?mode=_delete&amp;$url_event=$id&amp;acp_main=1") . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>' : '';
-		
-		$date	= create_date($userdata['user_dateformat'], $event[$i]['event_date'], $config['page_timezone']);
-		
-		switch ( $event[$i]['event_level'] )
+		if ( request('vchk', 1) )
 		{
-			case '0': $level = $images['lvl_guest'];	$level_exp = $lang['auth_guest'];	break;
-			case '1': $level = $images['lvl_user'];		$level_exp = $lang['auth_user'];	break;
-			case '2': $level = $images['lvl_trial'];	$level_exp = $lang['auth_trial'];	break;
-			case '3': $level = $images['lvl_member'];	$level_exp = $lang['auth_member'];	break;
-			case '4': $level = $images['lvl_mod'];		$level_exp = $lang['auth_mod'];		break;
-			case '5': $level = $images['lvl_admin'];	$level_exp = $lang['auth_admin'];	break;
+			$oCache->deleteCache('version_cms');
 		}
-			
-		$template->assign_block_vars('_event_row', array(
-			'TITLE'		=> $title,
-			'DATE'		=> $date,
-			'LEVEL'		=> $level,
-			'LEVEL_EXP'	=> $level_exp,
-			'UPDATE'	=> $update,
-			'DELETE'	=> $delete,
-		));
-	}
-}
-
-$sql = "SELECT m.match_id, m.match_rival_name, m.match_public, m.match_date, t.team_name, g.game_image, g.game_size
-			FROM " . MATCH . " m
-				LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
-				LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-		ORDER BY m.match_date DESC LIMIT 0, 5";
-if ( !($result = $db->sql_query($sql)) )
-{
-	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-}
-$match	= $db->sql_fetchrowset($result);
-$cnt	= count($match);
-$count	= ( $cnt < 5 ) ? $cnt : 5;
-
-if ( !$match )
-{
-	$template->assign_block_vars('_entry_empty_match', array());
-}
-else
-{
-	for ( $i = 0; $i < $count; $i++ )
-	{
-		$id		= $match[$i]['match_id'];
-		$typ	= $match[$i]['match_public'] ? 'sprintf_match_name' : 'sprintf_match_intern';
-				
-		$update = ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? '<a href="' . check_sid("admin_match.php?mode=_update&amp;$url_match=$id") . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>' : '';
-		$detail = ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? '<a href="' . check_sid("admin_match.php?mode=_detail&amp;$url_match=$id") . '"><img src="' . $images['icon_option_details'] . '" title="' . $lang['common_details'] . '" alt="" /></a>' : '';
-		$delete = ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? '<a href="' . check_sid("admin_match.php?mode=_delete&amp;$url_match=$id&amp;acp_main=1") . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>' : '';
 		
-		$date	= create_date($userdata['user_dateformat'], $match[$i]['match_date'], $userdata['user_timezone']);
-		
-		$template->assign_block_vars('_match_row', array(
-			'GAME'		=> display_gameicon($match[$i]['game_size'], $match[$i]['game_image']),
-			'RIVAL'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? '<a href="' . check_sid("admin_match.php?mode=_update&amp;$url_match=$id") . '">' . sprintf($lang[$typ], $match[$i]['match_rival_name']) . '</a>' : sprintf($lang[$typ], $match[$i]['match_rival_name']),
-			'DATE'		=> $date,
-			'UPDATE'	=> $update,
-			'DETAIL'	=> $detail,
-			'DELETE'	=> $delete,				
-		));
-	}
-}
-	
-	$train = data(TRAINING, "WHERE training_date > " . time(), 'training_date DESC', 1, false);
-	$count = ( count($train) < 5 ) ? count($train) : 5;
-
-	if ( !$train )
-	{
-		$template->assign_block_vars('_entry_empty_training', array());
-	}
-	else
-	{
-		for ( $i = 0; $i < $count; $i++ )
+		if ( request('delc', 1) )
 		{
-			$training_id	= $train[$i]['training_id'];
-			$training_date	= create_date($userdata['user_dateformat'], $train[$i]['training_date'], $userdata['user_timezone']);
-			
-			if ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] )
-			{
-				$link_update = '<a href="' . check_sid('admin_training.php?mode=_update&amp;' . POST_TRAINING . '=' . $training_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
-				$link_delete = '<a href="' . check_sid('admin_training.php?mode=_delete&amp;' . POST_TRAINING . '=' . $training_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
-			}
-			else
-			{
-				$link_update = '';
-				$link_delete = '';
-			}
-				
-			$template->assign_block_vars('row_training', array(
-				'VS'		=> $train[$i]['training_vs'],
-				'DATE'		=> $training_date,
-				'UPDATE'	=> $link_update,
-				'DELETE'	=> $link_delete,
-			));
+			$oCache->truncateCache();
 		}
-	}
 	
-	$users = data(USERS, "user_id != 1", 'user_regdate DESC', 1, false);
-	$count = ( count($users) < 5 ) ? count($users) : 5;
-	
-	if ( $users )
-	{
-		for ( $i = 0; $i < $count; $i++ )
+		$url_news	= POST_NEWS;
+		$url_event	= POST_EVENT;
+		$url_match	= POST_MATCH;
+		$url_train	= POST_TRAINING;
+		$url_user	= POST_USER;
+		
+		$news	= data(NEWS, false, 'news_time_public DESC, news_id DESC', 1, false);
+		$event	= data(EVENT, "WHERE event_date > " . time(), 'event_date ASC', 1, false);
+		$match	= data(MATCH, false, 'match_date DESC', 4, false);
+		$train	= data(TRAINING, "WHERE training_date > " . time(), 'training_date DESC', 0, false);
+		$users	= data(USERS, "user_id != 1", 'user_regdate DESC', 1, false);
+		
+		if ( !$news )
 		{
-			$user_id		= $users[$i]['user_id'];
-			$user_regdate	= create_date($userdata['user_dateformat'], $users[$i]['user_regdate'], $config['page_timezone']);
-			
-			if ( $userauth['auth_user'] || $userdata['user_level'] == ADMIN )
-			{
-				$link_update = '<a href="' . check_sid('admin_user.php?mode=_update&amp;' . POST_USER . '=' . $user_id) . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>';
-				$link_delete = '<a href="' . check_sid('admin_user.php?mode=_delete&amp;' . POST_USER . '=' . $user_id) . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>';
-			}
-			else
-			{
-				$link_update = '';
-				$link_delete = '';
-			}
-			
-			switch ( $users[$i]['user_level'] )
-			{
-				case '0': $level = $images['lvl_guest'];	$level_exp = $lang['auth_guest'];	break;
-				case '1': $level = $images['lvl_user'];		$level_exp = $lang['auth_user'];	break;
-				case '2': $level = $images['lvl_trial'];	$level_exp = $lang['auth_trial'];	break;
-				case '3': $level = $images['lvl_member'];	$level_exp = $lang['auth_member'];	break;
-				case '4': $level = $images['lvl_mod'];		$level_exp = $lang['auth_mod'];		break;
-				case '5': $level = $images['lvl_admin'];	$level_exp = $lang['auth_admin'];	break;
-			}
-				
-			$template->assign_block_vars('_user_row', array(
-				'NAME'		=> $users[$i]['user_name'],
-				
-				'LEVEL'		=> $level,
-				'LEVEL_EXP'	=> $level_exp,
-				
-				'REGDATE'	=> $user_regdate,
-				'UPDATE'	=> $link_update,
-				'DELETE'	=> $link_delete,
-			));
-		}
-	}
-
-	$template->assign_vars(array(
-	
-		'L_WELCOME'	=> $lang['index'],
-		'L_EXPLAIN'	=> $lang['explain'],
-		
-		'L_NEWS'	=> $lang['sm_news'],
-		'L_EVENT'	=> $lang['sm_event'],
-		'L_MATCH'	=> $lang['sm_match'],
-		'L_TRAIN'	=> $lang['sm_training'],
-		'L_USERS'	=> $lang['sm_users'],
-		
-		'I_ADD'		=> $images['icon_add'],
-		
-		'I_NEWS'	=> $images['news'],
-		'I_EVENT'	=> $images['event'],
-		'I_MATCH'	=> $images['match'],
-		'I_TRAIN'	=> $images['match'],
-		'I_USERS'	=> $images['user'],
-		
-		'U_NEWS'		=> check_sid('admin_news.php'),
-		'U_NEWS_ADD'	=> check_sid('admin_news.php?mode=_create'),
-		'U_MATCH'		=> check_sid('admin_match.php'),
-		'U_TRAIN'		=> check_sid('admin_training.php'),
-		'U_EVENT'		=> check_sid('admin_event.php'),
-		'U_USERS'		=> check_sid('admin_user.php'),
-		
-	));
-
-	/* stats
-	$start_date = create_date($config['default_dateformat'], $config['page_startdate'], $config['page_timezone']);
-	
-	$boarddays = ( time() - $config['page_startdate'] ) / 86400;
-	
-	$avatar_dir_size = 0;
-	
-	if ($avatar_dir = @opendir($root_path . $config['avatar_path']))
-	{
-		while( $file = @readdir($avatar_dir) )
-		{
-			if( $file != "." && $file != ".." )
-			{
-				$avatar_dir_size += @filesize($root_path . $config['avatar_path'] . "/" . $file);
-			}
-		}
-		@closedir($avatar_dir);
-	
-		//
-		// This bit of code translates the avatar directory size into human readable format
-		// Borrowed the code from the PHP.net annoted manual, origanally written by:
-		// Jesse (jesse@jess.on.ca)
-		//
-		if($avatar_dir_size >= 1048576)
-		{
-			$avatar_dir_size = round($avatar_dir_size / 1048576 * 100) / 100 . " MB";
-		}
-		else if($avatar_dir_size >= 1024)
-		{
-			$avatar_dir_size = round($avatar_dir_size / 1024 * 100) / 100 . " KB";
+			$template->assign_block_vars('news_empty', array());
 		}
 		else
 		{
-			$avatar_dir_size = $avatar_dir_size . " Bytes";
-		}
-	}
-	else
-	{
-		// Couldn't open Avatar dir.
-		$avatar_dir_size = $lang['Not_available'];
-	}
-	
-	//
-	// DB size ... MySQL only
-	//
-	// This code is heavily influenced by a similar routine
-	// in phpMyAdmin 2.2.0
-	//
-	if( preg_match("/^mysql/", SQL_LAYER) )
-	{
-		$sql = "SELECT VERSION() AS mysql_version";
-		if($result = $db->sql_query($sql))
-		{
-			$row = $db->sql_fetchrow($result);
-			$version = $row['mysql_version'];
-	
-			if( preg_match("/^(3\.23|4\.|5\.)/", $version) )
+			$cnt = count($news);
+			$cnt = ( $cnt < $settings['per_page_entry']['index'] ) ? $cnt : $settings['per_page_entry']['index'];
+			
+			for ( $i = 0; $i < $cnt; $i++ )
 			{
-				$db_name = ( preg_match("/^(3\.23\.[6-9])|(3\.23\.[1-9][1-9])|(4\.)|(5\.)/", $version) ) ? "$db_name" : $db_name;
-	
-				$sql = "SHOW TABLE STATUS 
-					FROM " . $db_name;
-				if($result = $db->sql_query($sql))
-				{
-					$tabledata_ary = $db->sql_fetchrowset($result);
+				$id		= $news[$i]['news_id'];
+				$typ	= $news[$i]['news_intern'] ? 'sprintf_intern' : 'sprintf_normal';
+				$title	= sprintf($lang[$typ], $news[$i]['news_title']);
+				$public	= $news[$i]['news_public'] ? img('i_icon', 'icon_news_public', '') : img('i_icon', 'icon_news_privat', '');
+				
+				$template->assign_block_vars('news_row', array(
+					'TITLE'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', 'admin_news.php', array('mode' => 'update', $url_news => $id), $title, $title) : $title : $title,
 					
-					$dbsize = 0;
-					for($i = 0; $i < count($tabledata_ary); $i++)
+					'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_time_public'], $userdata['user_timezone']),
+					
+					'PUBLIC'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )	? href('a_txt', 'index.php', array('mode' => 'switch', 'num' => $id), $public, '') : img('i_icon', 'icon_news_denied', ''),
+					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php', array('mode' => 'update', $url_news => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php', array('mode' => 'delete', $url_news => $id, 'acp_main' => 1), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+				));
+			}
+		}
+		
+		if ( !$event )
+		{
+			$template->assign_block_vars('event_empty', array());
+		}
+		else
+		{
+			$cnt = count($event);
+			$cnt = ( $cnt < $settings['per_page_entry']['index'] ) ? $cnt : $settings['per_page_entry']['index'];
+			
+			for ( $i = 0; $i < $cnt; $i++ )
+			{
+				$id		= $event[$i]['event_id'];
+				$title	= $event[$i]['event_title'];
+				
+				switch ( $event[$i]['event_level'] )
+				{
+					case GUEST:	$level = img('i_icon', 'icon_level_guest', 'auth_guest');	break;
+					case USER:	$level = img('i_icon', 'icon_level_user', 'auth_user');		break;
+					case TRIAL:	$level = img('i_icon', 'icon_level_trial', 'auth_trial');	break;
+					case MEMBER:$level = img('i_icon', 'icon_level_member', 'auth_member');	break;
+					case MOD:	$level = img('i_icon', 'icon_level_mod', 'auth_mod');		break;
+					case ADMIN:	$level = img('i_icon', 'icon_level_admin', 'auth_admin');	break;
+				}
+					
+				$template->assign_block_vars('event_row', array(
+					'TITLE'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] ) ? href('a_txt', 'admin_event.php', array('mode' => 'update', $url_event => $id), $title, $title) : $title,
+					
+					'LEVEL'		=> $level,
+					'DATE'		=> create_date($userdata['user_dateformat'], $event[$i]['event_date'], $config['default_timezone']),
+					
+					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] ) ? href('a_img', 'admin_event.php', array('mode' => 'update', $url_event => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] ) ? href('a_img', 'admin_event.php', array('mode' => 'delete', $url_event => $id, 'acp_main' => 1), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+				));
+			}
+		}
+		
+		if ( !$match )
+		{
+			$template->assign_block_vars('match_empty', array());
+		}
+		else
+		{
+			$cnt = count($match);
+			$cnt = ( $cnt < $settings['per_page_entry']['index'] ) ? $cnt : $settings['per_page_entry']['index'];
+			
+			for ( $i = 0; $i < $cnt; $i++ )
+			{
+				$id		= $match[$i]['match_id'];
+				$typ	= $match[$i]['match_public'] ? 'sprintf_match_name' : 'sprintf_match_intern';
+				$name	= $match[$i]['match_rival_name'];
+				$rival	= sprintf($lang[$typ], $name);
+				
+				$template->assign_block_vars('match_row', array(
+					'RIVAL'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? href('a_txt', 'admin_match.php', array('mode' => 'update', $url_match => $id), $rival, $rival) : $rival,
+					
+					'GAME'		=> display_gameicon($match[$i]['game_image']),
+					'DATE'		=> create_date($userdata['user_dateformat'], $match[$i]['match_date'], $userdata['user_timezone']),
+					
+					'DETAIL'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? href('a_img', 'admin_match.php', array('mode' => 'detail', $url_match => $id), 'icon_details', 'common_details') : img('i_icon', 'icon_details2', 'common_details'),
+					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? href('a_img', 'admin_match.php', array('mode' => 'update', $url_match => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] ) ? href('a_img', 'admin_match.php', array('mode' => 'delete', $url_match => $id, 'acp_main' => 1), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+				));
+			}
+		}
+			
+		if ( !$train )
+		{
+			$template->assign_block_vars('training_empty', array());
+		}
+		else
+		{
+			$cnt = count($train);
+			$cnt = ( $cnt < $settings['per_page_entry']['index'] ) ? $cnt : $settings['per_page_entry']['index'];
+			
+			for ( $i = 0; $i < $cnt; $i++ )
+			{
+				$id	= $train[$i]['training_id'];
+				$vs = $train[$i]['training_vs'];
+				
+				$template->assign_block_vars('training_row', array(
+					'VS'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] ) ? href('a_txt', 'admin_training.php', array('mode' => 'update', $url_train => $id), $vs, $vs) : $vs,
+					
+					'DATE'		=> create_date($userdata['user_dateformat'], $train[$i]['training_date'], $userdata['user_timezone']),
+					
+					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] ) ? href('a_img', 'admin_training.php', array('mode' => 'update', $url_train => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] ) ? href('a_img', 'admin_training.php', array('mode' => 'delete', $url_train => $id, 'acp_main' => 1), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+				));
+			}
+		}
+			
+		if ( $users )
+		{
+			$cnt = count($users);
+			$cnt = ( $cnt < $settings['per_page_entry']['index'] ) ? $cnt : $settings['per_page_entry']['index'];
+		
+			for ( $i = 0; $i < $cnt; $i++ )
+			{
+				$id		= $users[$i]['user_id'];
+				$name	= $users[$i]['user_name'];
+				
+				switch ( $users[$i]['user_level'] )
+				{
+					case GUEST:	$level = img('i_icon', 'icon_level_guest', 'auth_guest');	break;
+					case USER:	$level = img('i_icon', 'icon_level_user', 'auth_user');		break;
+					case TRIAL:	$level = img('i_icon', 'icon_level_trial', 'auth_trial');	break;
+					case MEMBER:$level = img('i_icon', 'icon_level_member', 'auth_member');	break;
+					case MOD:	$level = img('i_icon', 'icon_level_mod', 'auth_mod');		break;
+					case ADMIN:	$level = img('i_icon', 'icon_level_admin', 'auth_admin');	break;
+				}
+				
+				$template->assign_block_vars('user_row', array(
+					'NAME'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] ) ? href('a_txt', 'admin_user.php', array('mode' => 'update', $url_user => $id), $name, $name) : $name,
+					
+					'LEVEL'		=> $level,
+					'REGDATE'	=> create_date($userdata['user_dateformat'], $users[$i]['user_regdate'], $config['default_timezone']),
+					
+					'AUTH'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_user'] ) ? href('a_img', 'admin_user.php', array('mode' => 'auth', $url_user => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
+					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_user'] ) ? href('a_img', 'admin_user.php', array('mode' => 'update', $url_user => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_user'] ) ? href('a_img', 'admin_user.php', array('mode' => 'delete', $url_user => $id, 'acp_main' => 1), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+				));
+			}
+		}
+		
+		if ( $config['page_disable'] == 1 )
+		{
+			$template->assign_vars(array('ERROR_MESSAGE' => $lang['msg_page_disable']));
+			$template->assign_var_from_handle('ERROR_BOX', 'error');
+		}
+		
+		$errstr = '';
+		$errno = 0;
+				
+		$lastest_checked = get_version('cms-phoenix.de', '/updatecheck', 'version.txt', $errstr, $errno);
+		$lastest_version = implode('.', $lastest_checked);
+		
+		$cache_time = $oCache->readCacheTime('version_cms');
+		$cache_time = sprintf($lang['cache_valid'], create_date($userdata['user_dateformat'], $cache_time, $userdata['user_timezone']));
+		
+		/*		
+		if ( version_compare($lastest_version, $config['page_version'], '<=') )
+		{
+			$version_info = sprintf($lang['version_info_green'], $config['page_version'], check_sid("$file?vchk=1"), $cache_time, $lang['version_check']);
+		}
+		else
+		{
+			$version_info = sprintf($lang['version_info_red'], $config['page_version'], check_sid("$file?vchk=1"), $cache_time, $lang['version_check'], $lastest_version);
+		}
+		*/
+		$version_info = ( version_compare($lastest_version, $config['page_version'], '<=') ) ? 'green' : 'red';
+		$version_info = sprintf($lang["version_info_$version_info"], $config['page_version'], check_sid("$file?vchk=1"), $cache_time, $lang['version_check'], $lastest_version);
+		
+		if ( preg_match("/^mysql/", SQL_LAYER) )
+		{
+			$sql = "SELECT VERSION() AS mysql_version";
+			
+			if ( $result = $db->sql_query($sql) )
+			{
+				$row = $db->sql_fetchrow($result);
+				$version = $row['mysql_version'];
+				
+				if ( preg_match("/^(3\.23|4\.|5\.)/", $version) )
+				{
+					$db_name = ( preg_match("/^(3\.23\.[6-9])|(3\.23\.[1-9][1-9])|(4\.)|(5\.)/", $version) ) ? "$db_name" : $db_name;
+					
+					$sql = "SHOW TABLE STATUS FROM " . $db_name;
+					
+					if ( $result = $db->sql_query($sql) )
 					{
-						if( $tabledata_ary[$i]['Engine'] != "MRG_MyISAM" )
+						$tabledata_ary = $db->sql_fetchrowset($result);
+						
+						$dbsize = 0;
+						$dbrows = 0;
+						$tables = 0;
+						
+						for ( $i = 0; $i < count($tabledata_ary); $i++ )
 						{
-							if( $db_prefix != "" )
+							if ( $tabledata_ary[$i]['Engine'] != "MRG_MyISAM" )
 							{
-								if( strstr($tabledata_ary[$i]['Name'], $db_prefix) )
+								if ( $db_prefix != "" )
+								{
+									if ( strstr($tabledata_ary[$i]['Name'], $db_prefix) )
+									{
+										$dbsize += $tabledata_ary[$i]['Data_length'] + $tabledata_ary[$i]['Index_length'];
+									}
+								}
+								else
 								{
 									$dbsize += $tabledata_ary[$i]['Data_length'] + $tabledata_ary[$i]['Index_length'];
 								}
+								
+								$dbrows += $tabledata_ary[$i]['Rows'];
 							}
-							else
-							{
-								$dbsize += $tabledata_ary[$i]['Data_length'] + $tabledata_ary[$i]['Index_length'];
-							}
+							
+							$tables++;
 						}
 					}
-				} // Else we couldn't get the table status.
+				}
+				else
+				{
+					$dbsize = $lang['Not_available'];
+				}
 			}
 			else
 			{
@@ -363,124 +298,102 @@ else
 		{
 			$dbsize = $lang['Not_available'];
 		}
-	}
-	else if( preg_match("/^mssql/", SQL_LAYER) )
-	{
-		$sql = "SELECT ((SUM(size) * 8.0) * 1024.0) as dbsize 
-			FROM sysfiles"; 
-		if( $result = $db->sql_query($sql) )
+		
+		$backup_file = $backup_time = $backup_size = '';
+		
+		if ( is_dir("{$root_path}files/") )
 		{
-			$dbsize = ( $row = $db->sql_fetchrow($result) ) ? intval($row['dbsize']) : $lang['Not_available'];
-		}
-		else
-		{
-			$dbsize = $lang['Not_available'];
-		}
-	}
-	else
-	{
-		$dbsize = $lang['Not_available'];
-	}
-	
-	if ( is_integer($dbsize) )
-	{
-		if( $dbsize >= 1048576 )
-		{
-			$dbsize = sprintf("%.2f MB", ( $dbsize / 1048576 ));
-		}
-		else if( $dbsize >= 1024 )
-		{
-			$dbsize = sprintf("%.2f KB", ( $dbsize / 1024 ));
-		}
-		else
-		{
-			$dbsize = sprintf("%.2f Bytes", $dbsize);
-		}
-	}
-	
-	$bytes = array_sum(array_map('filesize', glob('*')));
-	
-	$template->assign_vars(array(
-		"AVATAR_DIR_SIZE" => $avatar_dir_size,
-		"DB_SIZE" => $dbsize, 
-		"GZIP_COMPRESSION" => ( $config['gzip_compress'] ) ? $lang['ON'] : $lang['OFF'])
-	);
-	//
-	// End forum statistics
-	//
-	
-	*/
-	// Check for new version
-	$current_version = explode('.', '1' . $config['page_version']);
-	$minor_revision = $current_version[2];
-	
-	$errno = 0;
-	$errstr = $version_info = '';
-	
-	if ($fsock = @fsockopen('www.cms-phoenix.de', 80, $errno, $errstr, 10))
-	{
-		@fputs($fsock, "GET /updatecheck/version.txt HTTP/1.1\r\n");
-		@fputs($fsock, "HOST: www.cms-phoenix.de\r\n");
-		@fputs($fsock, "Connection: close\r\n\r\n");
-	
-		$get_info = false;
-		while (!@feof($fsock))
-		{
-			if ($get_info)
+			$files = array_diff(scandir("{$root_path}files/", 1), array('.', '..', '.htaccess'));
+			
+			if ( is_array($files) )
 			{
-				$version_info .= @fread($fsock, 1024);
-			}
-			else
-			{
-				if (@fgets($fsock, 1024) == "\r\n")
+				foreach ( $files as $_file )
 				{
-					$get_info = true;
+					if ( strpos($_file, 'full_') !== false && strpos($_file, '.sql.gz') !== false )
+					{
+						$backup_file = preg_replace('/^full_|.sql.gz$/', '', $_file);
+						$backup_time = create_date($userdata['user_dateformat'], $backup_file, $userdata['user_timezone']);
+						$backup_size = size_round(@filesize("{$root_path}files/$_file"), 2);
+						
+						break;
+					}
 				}
 			}
 		}
-		@fclose($fsock);
-	
-		$version_info = explode("\n", $version_info);
-		$latest_head_revision = $version_info[0];
-		$latest_minor_revision = $version_info[2];
-
-	#	$latest_version = $version_info[0] . $version_info[1] . $version_info[2];
-		$latest_version = $version_info[0] . '.' . $version_info[1] . '.' . $version_info[2];
 		
-	#	debug($version_info[2]);
-	#	debug($latest_head_revision);
-	#	debug($minor_revision);
-	#	debug($latest_minor_revision);
+	#	$cache_dir_tmp = array_diff(scandir($root_path . $settings['path_cache']), array('.', '..', '.htaccess'));
+	#	$cache_dir_tmp = implode(', ', $cache_dir_tmp);
 	
-		if ( $latest_head_revision == '1' && $minor_revision == $latest_minor_revision )
-		{
-			$version_info = '<p style="color:green">' . $lang['Version_up_to_date'] . '</p>';
-		}
-		else
-		{
-			$version_info = '<p style="color:red">' . $lang['Version_not_up_to_date'];
-			$version_info .= '<br>' . sprintf($lang['Latest_version_info'], $latest_version) . sprintf($lang['Current_version_info'], '1' . $config['page_version']) . '</p>';
-		}
-	}
-	else
-	{
-		if ($errstr)
-		{
-			$version_info = '<p style="color:red">' . sprintf($lang['Connect_socket_error'], $errstr) . '</p>';
-		}
-		else
-		{
-			$version_info = '<p>' . $lang['Socket_functions_disabled'] . '</p>';
-		}
-	}
+		$template->assign_vars(array(
+			'L_WELCOME'	=> $lang['index'],
+			'L_EXPLAIN'	=> $lang['explain'],
+			
+			'L_DIR'		=> $lang['dir'],
+			'L_SIZE'	=> $lang['size'],
+			'L_INFO'	=> $lang['info'],
+			'L_VALUE'	=> $lang['value'],
+			
+			'L_PAGE_STARTED'	=> $lang['page_start'],
+			'L_PAGE_VERSION'	=> $lang['page_version'],
+			'L_PAGE_BACKUP'		=> $lang['page_backup'],
+			'L_PAGE_GZIP'		=> $lang['page_gzip'],
+			'L_SERVER'			=> $lang['server_info'],
+			'L_DB_INFO'			=> $lang['page_dbinfo'],
+			
+			'L_SIZE_CACHE'		=> $lang['path_cache'],
+			'L_SIZE_FILES'		=> $lang['path_files'],
+			'L_SIZE_DOWNLOADS'	=> $lang['path_downloads'],
+			'L_SIZE_GALLERY'	=> $lang['path_gallery'],
+			'L_SIZE_MATCH'		=> $lang['path_matchs'],
+			'L_SIZE_USER'		=> $lang['path_users'],
+			
+			'L_NEWS'		=> $lang['sm_news'],
+			'L_EVENT'		=> $lang['sm_event'],
+			'L_MATCH'		=> $lang['sm_match'],
+			'L_TRAIN'		=> $lang['sm_training'],
+			'L_USERS'		=> $lang['sm_users'],
+			
+			'PAGE_STARTED'		=> create_date($config['default_dateformat'], $config['page_startdate'], $config['default_timezone']),
+			'PAGE_VERSION'		=> $version_info,
+			'PAGE_BACKUP'		=> ( $backup_file != '' ) ? $backup_time : $lang['backup_na'],
+			'PAGE_BACKUP_INFO'	=> ( $backup_file != '' ) ? sprintf($lang['sprintf_backup'], $backup_size) : '',
+			'PAGE_GZIP'			=> $config['page_gzip'] ? $lang['common_on'] : $lang['common_off'],
+			'SERVER'			=> sprintf('%s / %s [ %s ]', phpversion(), mysql_get_server_info(), '<a href="' . check_sid('admin_phpinfo.php') . '">phpInfo</a>'),
+			'DB_INFO'			=> size_round($dbsize, 2),
+			'DB_INFO_INFO'		=> sprintf($lang['sprintf_dbsize'], $db_name, $dbrows, $tables),
+			
+			'SIZE_CACHE'		=> sprintf('%s [ %s ]', size_dir2("cache/"), href('a_txt', $file, array('delc' => 1), $lang['cache_clear'])),
+			'SIZE_FILES'		=> size_dir2("files/"),
+			'SIZE_DOWNLOADS'	=> size_dir2($settings['path_downloads']),
+			'SIZE_GALLERY'		=> size_dir2($settings['path_gallery']),
+			'SIZE_MATCH'		=> size_dir2($settings['path_matchs']['path']),
+			'SIZE_USER'			=> size_dir2($settings['path_users']['path']),
+			
+			'I_NEWS'		=> $images['icon_news'],
+			'I_EVENT'		=> $images['icon_event'],
+			'I_MATCH'		=> $images['icon_match'],
+			'I_TRAIN'		=> $images['icon_match'],
+			'I_USERS'		=> $images['icon_user'],
+			
+			'U_NEWS'		=> check_sid('admin_news.php'),
+			'U_NEWS_ADD'	=> check_sid('admin_news.php?mode=_create'),
+			'U_MATCH'		=> check_sid('admin_match.php'),
+			'U_TRAIN'		=> check_sid('admin_training.php'),
+			'U_EVENT'		=> check_sid('admin_event.php'),
+			'U_USERS'		=> check_sid('admin_user.php'),
+		));
 	
-	$template->assign_vars(array(
-		'VERSION_INFO'	=> $version_info,
-		'L_VERSION_INFORMATION'	=> $lang['Version_information'])
-	);
+		$template->pparse('body');
+	
+	break;
+}
+	
+if ( $index != true )
+{
+	include('./page_footer_admin.php');
+	exit;
+}
 
-$template->pparse('body');
-	
 include('./page_footer_admin.php');
 
 ?>

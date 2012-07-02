@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="de" xml:lang="de">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">
 <head>
 	{META}
 	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
@@ -8,38 +8,31 @@
 	<link rel="icon" href="./../favicon.ico" type="image/x-icon">
 	
 	<link rel="stylesheet" type="text/css" href="style/style.css">
-	
-	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.custom.css">
+	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.atooltip.css">
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.lightbox.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.maxlength.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.custom.css" media="screen" />
 	
-	<script type="text/javascript" src="./../includes/js/jquery/jquery.min.js"></script>
-	<!--
-			Name:		JQuery
-			Version:	1.6.1
-			require:	acp_user.tpl
+	<!--	
+		Name:		JSColor
+		Version:	1.3.3
+		WebSite:	http://jscolor.com/
 	-->
-	
-	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.core.min.js"></script>
-	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.datepicker.min.js"></script>
-	<!--
-			Name:		JQuery.UI
-			Version:	1.8.13
-	-->
-	
-	<script type="text/javascript" src="./../includes/js/jquery/jquery.lightbox.min.js"></script>
-	<!--
-			Name:		JQuery Lightbox
-			Version:	0.5
-	-->
-	
 	<script type="text/javascript" src="./../includes/js/jscolor.js"></script>
-	<!--
-			Name:		JSColor
-			Version:	1.3.3
-			WebSite:	jscolor.com
-	-->
 	
-	<script type="text/javascript">
+	<!--	
+		JQuery // 1.7.1
+		JQuery Lightbox // 0.5
+		JQuery UI // 1.8.18 (datepicker acp_user.tpl)
+	-->
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.atooltip.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.exptextarea.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.lightbox.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.custom.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.maxlength.js"></script>
+	
+	<script language="javascript" type="text/javascript">
 	// <![CDATA[
 	
 	/*	
@@ -62,6 +55,7 @@
 		require:	acp_training.tpl
 					acp_news.tpl
 					acp_gallery.tpl
+					acp_match.tpl
 	*/
 	function clone(objButton)
 	{
@@ -176,10 +170,6 @@
 			}
 		}
 	}
-	// ]]>
-	</script>
-	
-	<script type="text/javascript">
 	
 	function UnCryptMailto( s )
 	{
@@ -203,29 +193,68 @@
 		location.href=UnCryptMailto( s );
 	}
 	
-	</script>
+	function checkbox(checkboxname, checkboxvalue)
+	{
+		var count = document.getElementsByName(checkboxname).length;
+		
+		for (var i = 0; i < count; i++)
+		{
+			document.getElementsByName(checkboxname)[i].checked = checkboxvalue;
+		}
+	}
 	
-	<script type="text/javascript">
-	$(function() {
-		$('a.lightbox').lightBox({
-			overlayBgColor: '#FFF',
-			overlayOpacity: 0.6,
-			imageLoading: './../images/jquery/lightbox-ico-loading.gif',
-			imageBtnClose: './../images/jquery/lightbox-btn-close.gif',
-			imageBtnPrev: './../images/jquery/lightbox-btn-prev.gif',
-			imageBtnNext: './../images/jquery/lightbox-btn-next.gif',
-			imageBlank: './../images/jquery/lightbox-blank.gif',
-			containerResizeSpeed: 350,
-			txtImage: 'Imagem',
-			txtOf: 'de'
+	/* acp_database, acp_match, acp_settings */
+	function selector(bool)
+	{
+		var table = document.getElementById('table');
+	
+		for (var i = 0; i < table.options.length; i++)
+		{
+			table.options[i].selected = bool;
+		}
+	}
+
+	$(function()
+	{
+		$('a').aToolTip();
+		$('img').aToolTip();
+		$('span').aToolTip();
+		$('label').aToolTip();
+		$('textarea').aToolTip();
+		
+		$("#datepicker").datepicker(
+		{
+			changeMonth: true,
+			changeYear: true,
+		//	minDate: 0,
+		//	numberOfMonths: 2,
+			dateFormat: 'dd.mm.yy'
 		});
+		
+		
+		$("#date_event").datepicker(
+		{
+			minDate: 0,
+			numberOfMonths: 3,
+			dateFormat: 'dd.mm.yy'
+		});
+		
+		$('a[rel*=lightbox]').lightBox();	/* match, gallery */
+		
+		$('textarea').expandingTextArea();
+		
+		$('#config_page_desc').maxlength({max: 255});
+		$('#config_page_disable_msg').maxlength({max: 255});
+		
 	});
-	</script>
 	
+	// ]]>
+	</script>
 </head>
 <body>
-<div id="acp_head">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:5px;" id="hover">
+<a name="#top"></a>
+<div id="head">
+	<table style="padding:5px;" id="hover">
 	<tr>
 		<td width="35%" align="left"><span class="small">{L_TIME}</span></td>
 		<td width="30%" align="center"><a href="{U_ACP}">{L_ACP}</a><span class="small">&nbsp;&bull;&nbsp;</span><a href="{U_SITE}">{L_SITE}</a></td>
@@ -233,7 +262,7 @@
 	</tr>
 	</table>
 </div>
-<div id="acp_cont">
+<div id="cont">
 <div id="wrap">
 	<div class="border-left">
 	<div class="border-right">
@@ -241,14 +270,8 @@
 	<div class="border-top-left">
 	<div class="border-top-right">
 	<div class="inside">
-		<div id="page-header">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<td><img src="style/images/logo.png" width="189" height="32" alt="" /></td>
-			</tr>
-			</table>
-		</div>
+		<div id="page-header"></div>
 		<div id="page-body">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			<tr>
-				<td width="150" valign="top">			
+				<td width="150" valign="top">

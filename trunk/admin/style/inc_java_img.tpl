@@ -3,7 +3,7 @@
 
 function update_image(newimage)
 {
-	document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./images/spacer.gif";
+	document.getElementById('image').src = (newimage) ? "{PATH}" + encodeURI(newimage) : "./../images/spacer.gif";
 }
 
 // ]]>

@@ -1,15 +1,15 @@
-<table class="out" width="100%" cellspacing="0">
+<table class="type4" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" style="text-align:center;">{L_SN_TOPICS}</td>
+	<th><span class="right">{CACHE}</span>{L_SN_TOPICS}</th>
 </tr>
-<!-- BEGIN _sn_topics_row -->
+<!-- BEGIN sn_topics_row -->
 <tr>
-	<td class="{_sn_topics_row.CLASS}" align="left"><span class="right">{_sn_topics_row.POSTS}</span>{_sn_topics_row.URL}</td>
+	<td class="{sn_topicsrow.CLASS}" align="left"><span class="right">{sn_topicsrow.POSTS}</span>{sn_topicsrow.URL}</td>
 </tr>
-<!-- END _sn_topics_row -->
-<!-- BEGIN _sn_topics_empty -->
+<!-- END sn_topics_row -->
+<!-- BEGIN sn_topics_empty -->
 <tr>
-	<td align="center">{L_EMPTY}</td>
+	<td class="empty">{sn_topics_empty.L_EMPTY}</td>
 </tr>
-<!-- END _sn_topics_empty -->
+<!-- END sn_topics_empty -->
 </table>
