@@ -1,16 +1,7 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post" id="bugtracker_sort" name="bugtracker_sort">
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -22,7 +13,7 @@
 <!-- BEGIN row_bugtracker -->
 <tr>
 	<td class="{_display.row_bugtracker.CLASS}" nowrap="nowrap">{_display.row_bugtracker.STATUS}</td>
-	<td class="{_display.row_bugtracker.CLASS}" width="97%"><span style="float:right;">{_display.row_bugtracker.CREATOR} {_display.row_bugtracker.DATE}</span>{_display.row_bugtracker.TITLE}</td>
+	<td class="{_display.row_bugtracker.CLASS}" width="97%"><span class="right">{_display.row_bugtracker.CREATOR} {_display.row_bugtracker.DATE}</span>{_display.row_bugtracker.TITLE}</td>
 	<td class="{_display.row_bugtracker.CLASS}" nowrap="nowrap">{_display.row_bugtracker.TYPE}</td>
 	<td class="{_display.row_bugtracker.CLASS}"><a href="{_display.row_bugtracker.U_DETAIL}">{L_DETAIL}</a></td>
 	<td class="{_display.row_bugtracker.CLASS}"><a href="{_display.row_bugtracker.U_DELETE}">{L_DELETE}</a></td>
@@ -30,7 +21,7 @@
 <!-- END row_bugtracker -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_noentry2" align="center" colspan="5">{L_ENTRY_NO}</td>
+	<td class="row_noentry2" align="center" colspan="5">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -45,20 +36,17 @@
 </tr>
 </table>
 </form>
-<!-- END _display -->
+<!-- END display -->
 
 <!-- BEGIN detail -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_PROC}</a></li>
-</ul>
-</div>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_PROC}</a></li></ul>
 
 <table class="header">
 <tr>
-	<td>{L_REQUIRED}</td>
+	<td class="info">{L_REQUIRED}</td>
 </tr>
 </table>
 
@@ -66,50 +54,56 @@
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1" width="155">{L_TITLE}:</td>
-	<td class="row2">{TITLE}</td>
+	<td>{L_TITLE}:</td>
+	<td>{TITLE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_CREATOR}:</td>
-	<td class="row2">{CREATOR} / {DATE} {DATE_CHANGE}</td>
+	<td>{L_CREATOR}:</td>
+	<td>{CREATOR} / {DATE} {DATE_CHANGE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_EDITOR}:</td>
-	<td class="row2">{EDITOR}</td>
+	<td>{L_EDITOR}:</td>
+	<td>{EDITOR}</td>
 </tr>
 <tr>
-	<td class="row1">{L_STATUS}:</td>
-	<td class="row2"><span style="float:right;">{S_STATUS}</span>{STATUS}</td>
+	<td>{L_STATUS}:</td>
+	<td><span class="right">{S_STATUS}</span>{STATUS}</td>
 </tr>
 <tr>
-	<td class="row1">{L_TYPE}:</td>
-	<td class="row2"><span style="float:right;">{S_TYPE}</span>{TYPE}</td>
+	<td>{L_TYPE}:</td>
+	<td><span class="right">{S_TYPE}</span>{TYPE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_DESC}:</td>
-	<td class="row2">{DESC}</td>
+	<td>{L_DESC}:</td>
+	<td>{DESC}</td>
 </tr>
 <tr>
-	<td class="row1">{L_MESSAGE}:</td>
-	<td class="row2">{MESSAGE}</td>
+	<td>{L_MESSAGE}:</td>
+	<td>{MESSAGE}</td>
 </tr>
 <tr>
-	<td class="row1">{L_PHP_SQL}:</td>
-	<td class="row2">{PHP_SQL}</td>
+	<td>{L_PHP_SQL}:</td>
+	<td>{PHP_SQL}</td>
 </tr>
 <tr>
-	<td class="row1">{L_VERSION}:</td>
-	<td class="row2">{VERSION}</td>
+	<td>{L_VERSION}:</td>
+	<td>{VERSION}</td>
 </tr>
 <tr>
-	<td class="row1">{L_REPORT}:</td>
-	<td class="row2"><textarea class="textarea" name="report" rows="5" style="width:100%">{REPORT}</textarea></td>
+	<td>{L_REPORT}:</td>
+	<td><textarea class="textarea" name="report" rows="5" style="width:100%">{REPORT}</textarea></td>
 </tr>
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}

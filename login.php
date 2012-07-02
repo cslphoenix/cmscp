@@ -83,11 +83,16 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					// Reset login tries
 					$db->sql_query('UPDATE ' . USERS . ' SET user_login_tries = 0, user_last_login_try = 0 WHERE user_id = ' . $row['user_id']);
 					
-					if (isset($HTTP_POST_VARS['admin']))
+					if ( isset($HTTP_POST_VARS['admin']) )
 					{
 //						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
 //						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['user_name'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
 					#	log_add(LOG_USERS, SECTION_LOGIN, 'ucp_acp_login');
+						log_add(LOG_ADMIN, SECTION_LOGIN, 'login_acp', 'login true');
+					}
+					else
+					{
+						log_add(LOG_USERS, SECTION_LOGIN, 'login', 'login true');
 					}
 
 					if( $session_id )
@@ -114,9 +119,12 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 					
 					if (isset($HTTP_POST_VARS['admin']))
 					{
-//						$login = ($userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
-//						log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['user_name'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
+						$login = ( $userdata['user_level'] == ADMIN ) ? ACP_LOGIN : MCP_LOGIN;
+					#	log_add($login, $user_ip, time(), $userdata['user_id'], $userdata['user_name'], $forum_id, $topic_id, $rule_id, $fight_id, $report_id, $cat_id, $lang['Login_Log_True'], '');
 					#	log_add(LOG_USERS, $userdata['user_id'], $userdata['session_ip'], SECTION_LOGIN, UCP_ACP_LOGIN_FALSE, '');
+					#	log_add(LOG_ADMIN, $log, $mode);
+					#	log_add($type, $log, $message, $data = '');
+						log_add(LOG_ADMIN, SECTION_LOGIN, 'ucp_acp_login2');
 					}
 				}
 
@@ -229,7 +237,7 @@ else
 	if ( !$userdata['session_logged_in'] || ( isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && ( $userdata['user_level'] == ADMIN || $auth ) ) )
 	{
 		$page_title = $lang['Login'];
-		include($root_path . 'includes/page_header.php');
+		main_header();
 
 		$template->set_filenames(array('body' => 'login_body.tpl'));
 
@@ -285,7 +293,7 @@ else
 
 		$template->pparse('body');
 
-		include($root_path . 'includes/page_tail.php');
+		main_footer();
 	}
 	else
 	{

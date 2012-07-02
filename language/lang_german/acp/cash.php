@@ -7,31 +7,32 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'cash'		=> 'Clankasse',
+	'title'		=> 'Clankasse',
 	'explain'	=> 'Clankassen verwaltung!',
 	
 	'cash_bank'		=> 'Bank',
 	'cash_reason'	=> 'Kosten',
 	'cash_user'		=> 'Benutzer',
 	
-	'bank_holder'	=> 'Inhaber',
+	'bank_data'		=> 'Kontodaten',
+	
+	'bank_holder'	=> 'Kontoinhaber',
 	'bank_name'		=> 'Bankname',
 	'bank_blz'		=> 'Bankleitzahl',
 	'bank_number'	=> 'Kontonummer',
 	'bank_reason'	=> 'Verwendungszweck',
 	'bank_delete'	=> 'Bankdaten löschen',
 	
-	'msg_select_holder'	=> 'Bitte Inhaber des Kontos eintragen!',
-	'msg_select_name'	=> 'Bitte Bankname eintragen!',
-	'msg_select_blz'	=> 'Bitte Bankleitzahl eintragen!',
-	'msg_select_number'	=> 'Bitte Kontonummer eintragen!',
-	'msg_select_reason'	=> 'Bitte Verwendungszweck eintragen!',
+	'msg_empty_holder'	=> 'Bitte Inhaber des Kontos eintragen!',
+	'msg_empty_name'	=> 'Bitte Bankname eintragen!',
+	'msg_empty_blz'		=> 'Bitte Bankleitzahl eintragen!',
+	'msg_empty_number'	=> 'Bitte Kontonummer eintragen!',
+	'msg_empty_reason'	=> 'Bitte Verwendungszweck eintragen!',
 	
-	'create_bank'		=> 'Bankdaten erfolgreich eingetragen.',
-	'update_bank'		=> 'Bankdaten erfolgreich geändert.',
-	'delete_bank'		=> 'Die Bankdaten wurden gelöscht!',
-	'confirm'			=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
-	
+	'create_bank'	=> 'Bankdaten erfolgreich eingetragen.',
+	'update_bank'	=> 'Bankdaten erfolgreich geändert.',
+	'delete_bank'	=> 'Die Bankdaten wurden gelöscht!',
+	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
 	
 	'create_user'	=> 'Neuen Benutzereintrag hinzugefügt.',
 	'update_user'	=> 'Benutzereintrag erfolgreich geändert.',
@@ -39,7 +40,6 @@ $lang = array_merge($lang, array(
 	'confirm_user'	=> 'das der Benutzereintrag:',
 	
 	'user'		=> 'Benutzer',
-	
 	
 	'amount'	=> 'Betrag',
 	'month'		=> 'Monat',
@@ -56,6 +56,16 @@ $lang = array_merge($lang, array(
 	
 	'postage' => 'Gesammtbetrag',
 	
+	'cash_received'		=> 'Bezahlt',
+	'cast_notreceived'	=> 'nicht Bezahlt',
+	
+	/* error msg */
+	'msg_select_amount'		=> 'Bitte einen Betrag eintragen!',
+	
+));
+
+$lang = array_merge($lang, array(	
+	'radio:interval'	=> array(0 => $lang['interval_only'], 1 => $lang['interval_month']),
 ));
 
 /*

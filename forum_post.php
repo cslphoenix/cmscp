@@ -18,11 +18,11 @@ $page_title = $lang['match_details'];
 
 $url	= POST_MATCH;
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
-$data	= request(POST_MATCH, 0);
-$mode	= request('mode', 1);
+$data	= request(POST_MATCH, INT);
+$mode	= request('mode', TXT);
 $smode	= request('smode', 1);
 
 $time	= time();
@@ -32,11 +32,11 @@ $error	= '';
 $fielde	= '';
 $fields	= '';
 
-include($root_path . 'includes/page_header.php');
+main_header();
 
 if ( $mode == 'newtopic' )
 {
-	if ( $mode == 'newtopic' && !request('submit', 1) )
+	if ( $mode == 'newtopic' && !request('submit', TXT) )
 	{
 		$post = array(
 					'post_subject'	=> '',
@@ -99,7 +99,7 @@ if ( $mode == 'newtopic' )
 		'S_FIELDS'		=> $fields,
 	));
 	
-	if ( request('submit', 1) )
+	if ( request('submit', TXT) )
 	{
 		$error .= !$post['post_subject'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_subject'] : '';
 		$error .= !$post['post_message'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_message'] : '';
@@ -130,6 +130,6 @@ if ( $mode == 'newtopic' )
 	$template->pparse('body');
 }
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

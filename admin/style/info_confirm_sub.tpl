@@ -1,9 +1,5 @@
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
-</ul>
-</div>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{MESSAGE_TITLE}</a></li></ul>
 
 <br />
 

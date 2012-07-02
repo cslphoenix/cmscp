@@ -70,7 +70,7 @@
 		</tr>
 		<tr> 
 		  <td valign="middle" nowrap="nowrap" align="right"><span class="gen">{L_ICQ_NUMBER}:</span></td>
-		  <td class="row1"><script language="JavaScript" type="text/javascript"><!-- 
+		  <td><script language="JavaScript" type="text/javascript"><!-- 
 
 		if ( navigator.userAgent.toLowerCase().indexOf('mozilla') != -1 && navigator.userAgent.indexOf('5.') == -1 && navigator.userAgent.indexOf('6.') == -1 )
 			document.write(' {ICQ_IMG}');

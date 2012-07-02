@@ -11,7 +11,7 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_TRAINING;
@@ -21,8 +21,8 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);
-$mode	= request('mode', 1);
+$data	= request($url, INT);
+$mode	= request('mode', TXT);
 
 $error	= '';
 $fields	= '';
@@ -37,9 +37,9 @@ main_header();
 
 if ( !$mode && $userdata['session_logged_in'] )
 {
-	$template->assign_block_vars('_list', array());
+	$template->assign_block_vars('list', array());
 	
-	$sql = "SELECT tr.*, t.team_name, g.game_image, g.game_size, m.match_rival_name
+	$sql = "SELECT tr.*, t.team_name, g.game_image, m.match_rival_name
 				FROM " . TRAINING . " tr
 					LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -56,8 +56,8 @@ if ( !$mode && $userdata['session_logged_in'] )
 	
 	if ( !$training )
 	{
-		$template->assign_block_vars('_list._entry_empty_new', array());
-		$template->assign_block_vars('_list._entry_empty_old', array());
+		$template->assign_block_vars('list._entry_empty_new', array());
+		$template->assign_block_vars('list._entry_empty_old', array());
 	}
 	else
 	{
@@ -81,18 +81,18 @@ if ( !$mode && $userdata['session_logged_in'] )
 		$cnt_new = count($new);
 		$cnt_old = count($old);
 		
-		$new_sepp = $settings['site_entry_per_page'];
+		$new_sepp = $settings['per_page_entry_site'];
 		$new_start = ( $start != 0 ) ? $start - $cnt_new : $start;
-		$old_sepp = $settings['site_entry_per_page'] - $cnt_new;
+		$old_sepp = $settings['per_page_entry_site'] - $cnt_new;
 		$old_start = ( $start != 0 ) ? $start - $cnt_new : $start;
 		
 		if ( !$new )
 		{
-			$template->assign_block_vars('_list._entry_empty_new', array());
+			$template->assign_block_vars('list._entry_empty_new', array());
 		}
 		else
 		{
-		#	for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($new)); $i++ )
+		#	for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, count($new)); $i++ )
 			for ( $i = $new_start; $i < min($new_sepp + $start, $cnt_new); $i++ )
 			{
 				$training_id = $new[$i]['training_id'];
@@ -129,11 +129,11 @@ if ( !$mode && $userdata['session_logged_in'] )
 					$status	= $lang['join_none'];
 				}
 				
-				$template->assign_block_vars('_list._new_row', array(
+				$template->assign_block_vars('list._new_row', array(
 					'CLASS' 		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					'CSS'			=> $css,
 					'STATUS'		=> $status,
-					'GAME'	=> display_gameicon($new[$i]['game_size'], $new[$i]['game_image']),
+					'GAME'	=> display_gameicon($new[$i]['game_image']),
 					'NAME'	=> sprintf($lang[$match_typ], $new[$i]['match_rival_name']),
 					'DATE'	=> create_date($userdata['user_dateformat'], $new[$i]['match_date'], $userdata['user_timezone']),
 					'U_DETAILS'		=> check_sid('match.php?mode=detail&amp;' . POST_MATCH . '=' . $new[$i]['match_id']),
@@ -143,11 +143,11 @@ if ( !$mode && $userdata['session_logged_in'] )
 		
 		if ( !$old )
 		{
-			$template->assign_block_vars('_list._entry_empty_old', array());
+			$template->assign_block_vars('list._entry_empty_old', array());
 		}
 		else
 		{
-		#	for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($old)); $i++ )
+		#	for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, count($old)); $i++ )
 			for ( $i = $old_start; $i < min($old_sepp + $start, $cnt_old); $i++ )
 			{
 				$training_id = $old[$i]['training_id'];
@@ -184,11 +184,11 @@ if ( !$mode && $userdata['session_logged_in'] )
 					$status	= $lang['join_none'];
 				}
 				
-				$template->assign_block_vars('_list._old_row', array(
+				$template->assign_block_vars('list._old_row', array(
 					'CLASS' 		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					'CSS'			=> $css,
 					'STATUS'		=> $status,
-					'GAME'	=> display_gameicon($old[$i]['game_size'], $old[$i]['game_image']),
+					'GAME'	=> display_gameicon($old[$i]['game_image']),
 					'NAME'	=> $old[$i]['match_rival_name'],
 					'DATE'	=> create_date($userdata['user_dateformat'], $old[$i]['training_date'], $userdata['user_timezone']),
 					'U_DETAILS'		=> check_sid('match.php?mode=detail&amp;' . POST_MATCH . '=' . $old[$i]['match_id'])
@@ -197,7 +197,7 @@ if ( !$mode && $userdata['session_logged_in'] )
 		}
 	}
 	
-	$current_page = ( !$cnt_all ) ? 1 : ceil( $cnt_all / $settings['site_entry_per_page'] );
+	$current_page = ( !$cnt_all ) ? 1 : ceil( $cnt_all / $settings['per_page_entry_site'] );
 	
 	$template->assign_vars(array(
 		'L_DETAILS'		=> $lang['match_details'],
@@ -206,14 +206,14 @@ if ( !$mode && $userdata['session_logged_in'] )
 		'L_EXPIRED'		=> $lang['match_expired'],
 		'L_GOTO_PAGE'	=> $lang['Goto_page'],
 		
-		'PAGE_PAGING'	=> generate_pagination('match.php?', $cnt_all, $settings['site_entry_per_page'], $start),
-		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ),
+		'PAGE_PAGING'	=> generate_pagination('match.php?', $cnt_all, $settings['per_page_entry_site'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ),
 	));
 }
 else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING]))
 {	
 //	$page_title = $lang['training_details'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$template->set_filenames(array('body' => 'training_details_body.tpl'));
 	
@@ -359,7 +359,7 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING]))
 				$result = $db->sql_query($sql);
 			}
 			
-			for($i = $start; $i < min($settings['site_comment_per_page'] + $start, count($comment_entry)); $i++)
+			for($i = $start; $i < min($settings['per_page_entry_site'] + $start, count($comment_entry)); $i++)
 			{
 				$class = ($i % 2) ? 'row1' : 'row2';
 				
@@ -396,11 +396,11 @@ else if ( $mode == 'trainingdetails' && isset($HTTP_GET_VARS[POST_TRAINING]))
 				));
 			}
 		
-			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['site_comment_per_page'] );
+			$current_page = ( !count($comment_entry) ) ? 1 : ceil( count($comment_entry) / $settings['per_page_entry_site'] );
 			
 			$template->assign_vars(array(
-				'PAGINATION' => generate_pagination('training.php?mode=trainingdetails&amp;' . POST_TRAINING . '=' . $training_id, count($comment_entry), $settings['site_comment_per_page'], $start),
-				'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_comment_per_page'] ) + 1 ), $current_page ), 
+				'PAGINATION' => generate_pagination('training.php?mode=trainingdetails&amp;' . POST_TRAINING . '=' . $training_id, count($comment_entry), $settings['per_page_entry_site'], $start),
+				'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ), 
 			
 				'L_GOTO_PAGE' => $lang['Goto_page'])
 			);
@@ -555,7 +555,7 @@ else if ($mode == 'change')
 else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS]))
 {
 	$page_title = $lang['training'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$template->set_filenames(array('body' => 'training_teams_body.tpl'));
 	
@@ -575,7 +575,7 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS]))
 	//
 	//	List Matches von Team
 	//
-	$sql = 'SELECT m.training_id, m.training_date, m.training_public, m.training_rival, t.team_name, g.game_image, g.game_size
+	$sql = 'SELECT m.training_id, m.training_date, m.training_public, m.training_rival, t.team_name, g.game_image
 				FROM ' . MATCH . ' m
 					LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
@@ -590,13 +590,13 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS]))
 	}
 	else
 	{
-		for($i = $start; $i < min($settings['site_entry_per_page'] + $start, count($trainings_entry)); $i++)
+		for($i = $start; $i < min($settings['per_page_entry_site'] + $start, count($trainings_entry)); $i++)
 		{
 			$class = ($i % 2) ? 'row1r' : 'row2r';
 			
 			$template->assign_block_vars('training_teams', array(
 				'CLASS' 		=> $class,
-				'MATCH_GAME'	=> display_gameicon($trainings_entry[$i]['game_size'], $trainings_entry[$i]['game_image']),
+				'MATCH_GAME'	=> display_gameicon($trainings_entry[$i]['game_image']),
 				'MATCH_NAME'	=> ($trainings_entry[$i]['training_public']) ? 'vs. ' . $trainings_entry[$i]['training_rival'] : 'vs. <span style="font-style:italic;">' . $trainings_entry[$i]['training_rival'] . '</span>',
 				'MATCH_DATE'	=> create_date($userdata['user_dateformat'], $trainings_entry[$i]['training_date'], $userdata['user_timezone']),
 				'U_DETAILS'		=> check_sid('training.php?mode=trainingdetails&amp;' . POST_MATCH . '=' . $trainings_entry[$i]['training_id'])
@@ -604,12 +604,12 @@ else if ($mode == 'teamtrainings' && isset($HTTP_GET_VARS[POST_TEAMS]))
 		}
 	}
 	
-	$current_page = ( !count($trainings_entry) ) ? 1 : ceil( count($trainings_entry) / $settings['site_entry_per_page'] );
+	$current_page = ( !count($trainings_entry) ) ? 1 : ceil( count($trainings_entry) / $settings['per_page_entry_site'] );
 
 	$template->assign_vars(array(
 		'TEAM_NAME'		=> $teams['team_name'],
-		'PAGINATION'	=> generate_pagination('training.php?', count($trainings_entry), $settings['site_entry_per_page'], $start),
-		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION'	=> generate_pagination('training.php?', count($trainings_entry), $settings['per_page_entry_site'], $start),
+		'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE'	=> $lang['Goto_page'],
 	));
 }

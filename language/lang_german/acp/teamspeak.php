@@ -23,7 +23,7 @@ $lang = array_merge($lang, array(
 	'qport_explain'	=> 'Standard QueryPort für TS2: 51234 und für TS3: 10011',
 	'pass'			=> 'Teamspeak Passwort',
 	'type'			=> 'Teamspeaktype',
-	'viewer'		=> 'Viewerdetails',
+	'viewer'		=> 'Teamspeakviewer',
 	
 	'ts2'		=> 'Teamspeak 2',
 	'ts3'		=> 'Teamspeak 3',
@@ -60,6 +60,16 @@ $lang = array_merge($lang, array(
 	'server_currentchannels'			=> 'momentane Channelanzahl',
 	'codec_on'			=> 'Aktiviert',
 	'codec_off'			=> 'Deaktiviert',
+	
+	
+	'viewer_cyts'				=> 'Cyts Class Viewer',
+	'viewer_cyts_explain'		=> 'Ein Viewer der auf einer Class Datei funktioniert.',
+	'viewer_tsstatus'			=> 'TSStatus Viewer',
+	'viewer_tsstatus_explain'	=> 'Ein Viewer für Teamspeak 3 Server.',
+	'viewer_viewer'				=> 'Simpler Teamspeak Viewer',
+	'viewer_viewer_explain'		=> 'Teamspeak Viewer in Standaloneversion.',
+	'viewer_gameq'				=> 'GameQ TS Viewer',
+	'viewer_gameq_explain'		=> 'Viewer basierend auf einem Gameserver Class Script.',
 
 ));
 

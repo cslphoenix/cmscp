@@ -324,7 +324,7 @@ function query_one($ip, $port, $game, $request)
 		return FALSE;
 	}
 	
-	stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+	stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 	
 	if ($request == "players")
 	{
@@ -436,7 +436,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 
@@ -512,7 +512,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 
@@ -618,7 +618,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 
@@ -720,7 +720,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     if ($request == "players")
     {
@@ -825,7 +825,7 @@ function query_one($ip, $port, $game, $request)
 			return FALSE; 
 		}
 		
-		stream_set_timeout($fp, 1, 0);
+		stream_set_timeout($fp, 1, INT);
 		stream_set_blocking($fp, true);
 		
 		$challenge_code = '';
@@ -1017,7 +1017,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 
@@ -1095,7 +1095,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 
@@ -1197,7 +1197,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 
@@ -1266,7 +1266,7 @@ function query_one($ip, $port, $game, $request)
 
     if (!$fp) { return FALSE; }
 
-    stream_set_timeout($fp, 1, 0); stream_set_blocking($fp, true);
+    stream_set_timeout($fp, 1, INT); stream_set_blocking($fp, true);
 
     fwrite($fp, $challenge);
 

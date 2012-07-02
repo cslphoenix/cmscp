@@ -220,7 +220,8 @@ class stat_run_class
 
 				// for mysql & postgresql, explain request
 				$request_explain = '';
-				if ( !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER)/i', $trc_sql[$i]['sql']) )
+				
+				if ( !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER|OPTIMIZE|DROP|CREATE)/i', $trc_sql[$i]['sql']) )
 				{
 					// get explainations
 					$sql = 'EXPLAIN ' . $trc_sql[$i]['sql'];
@@ -237,9 +238,7 @@ class stat_run_class
 							{
 								if ( !is_integer($key) )
 								{
-									$template->assign_block_vars('stat_run.explain.cell', array(
-										'STAT_LEGEND' => isset($lang['Stat_' . $key]) ? $lang['Stat_' . $key] : str_replace('_', ' ', $key),
-									));
+									$template->assign_block_vars('stat_run.explain.cell', array('STAT_LEGEND' => isset($lang['Stat_' . $key]) ? $lang['Stat_' . $key] : str_replace('_', ' ', $key)));
 								}
 							}
 						}
@@ -252,9 +251,7 @@ class stat_run_class
 						{
 							if ( !is_integer($key) )
 							{
-								$template->assign_block_vars('stat_run.explain.table.cell', array(
-									'STAT_VALUE' => $value,
-								));
+								$template->assign_block_vars('stat_run.explain.table.cell', array('STAT_VALUE' => $value));
 								$template->assign_block_vars('stat_run.explain.table.cell.light' . ($explain_color ? '' : '_ELSE'), array());
 							}
 						}
@@ -286,7 +283,7 @@ class stat_run_class
 
 		// setup
 		$setup = array();
-		if ( $config['gzip_compress'] )
+		if ( $config['page_gzip'] )
 		{
 			$setup[] = $lang['Stat_gzip_enable'];
 		}
@@ -305,8 +302,10 @@ class stat_run_class
 		));
 		$template->assign_block_vars('stat_run_table', array());
 		
+		$tpl = defined('IN_ADMIN') ? 'style/info_sql.tpl' : 'run_stats_box.tpl';
+		
 		// display actually
-		$template->set_filenames(array('run_stats' => 'run_stats_box.tpl'));
+		$template->set_filenames(array('run_stats' => $tpl));
 		$template->assign_var_from_handle('RUN_STATS_BOX', 'run_stats');
 	}
 }

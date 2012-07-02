@@ -6,7 +6,7 @@
 	</div>
 	<div class="border-bottom">
 		<span>
-			<span><div class="copyright">powered by <a class="copyright" href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a> &copy; 2009, 2010, 2011 Phoenix - Version: {CMS_VERSION}</div></span>
+			<span>{CONTENT_FOOTER}</span>
 		</span>
 	</div>
 	</div>

@@ -36,33 +36,29 @@ if ( $mode == '' )
 	}
 	
 	$page_title = $lang['head_cash'];
-	include($root_path . 'includes/page_header.php');
+	main_header();
 	
 	$template->set_filenames(array('body' => 'body_cash.tpl'));
-	$template->assign_block_vars('_display', array());
+	$template->assign_block_vars('display', array());
 	
 	//
 	//	Bankdaten
 	//
-	$sql = 'SELECT * FROM ' . CASH_BANK;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$cash_bankdata = $db->sql_fetchrow($result);
+	
+	debug($settings['bank_data']);
 	
 	$template->assign_vars(array(
-		'L_BD_NAME'		=> $lang['cash_bd_name'],
-		'L_BD_BANK'		=> $lang['cash_bd_bank'],
-		'L_BD_BLZ'		=> $lang['cash_bd_blz'],
-		'L_BD_NUMBER'	=> $lang['cash_bd_number'],
-		'L_BD_REASON'	=> $lang['cash_bd_reason'],
+#		'L_BD_NAME'		=> $lang['cash_bd_name'],
+#		'L_BD_BANK'		=> $lang['cash_bd_bank'],
+#		'L_BD_BLZ'		=> $lang['cash_bd_blz'],
+#		'L_BD_NUMBER'	=> $lang['cash_bd_number'],
+#		'L_BD_REASON'	=> $lang['cash_bd_reason'],
 		
-		'BD_NAME'		=> $cash_bankdata['bank_name'],
-		'BD_BANK'		=> $cash_bankdata['bank_bank'],
-		'BD_BLZ'		=> $cash_bankdata['bank_blz'],
-		'BD_NUMBER'		=> $cash_bankdata['bank_number'],
-		'BD_REASON'		=> $cash_bankdata['bank_reason'],
+		'BD_NAME'		=> $settings['bank_data']['bank_holder'],
+		'BD_BANK'		=> $settings['bank_data']['bank_name'],
+		'BD_BLZ'		=> $settings['bank_data']['bank_blz'],
+		'BD_NUMBER'		=> $settings['bank_data']['bank_number'],
+		'BD_REASON'		=> $settings['bank_data']['bank_reason'],
 	));
 	
 	//
@@ -77,14 +73,14 @@ if ( $mode == '' )
 	
 	if ( !$cash_data )
 	{
-		$template->assign_block_vars('_display._entry_empty', array());
+		$template->assign_block_vars('display.entry_empty', array());
 		$template->assign_vars(array('NO_ENTRY' => $lang['no_entry']));
 	}
 	else
 	{
 		$total_amount = '';
 		
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($cash_data)); $i++ )
+		for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, count($cash_data)); $i++ )
 		{
 			$class = ($i % 2) ? 'row1' : 'row2';
 			
@@ -93,15 +89,15 @@ if ( $mode == '' )
 			switch ( $cash_data[$i]['cash_interval'] )
 			{
 				case '0':
-					$cash_interval	= $lang['cash_interval_month'];
+			#		$cash_interval	= $lang['cash_interval_month'];
 					$cash_amount	= $cash_data[$i]['cash_amount'];
 					break;
 				case '1':
-					$cash_interval	= $lang['cash_interval_weeks'];
+			#		$cash_interval	= $lang['cash_interval_weeks'];
 					$cash_amount	= 2 * str_replace(',', '.', $cash_data[$i]['cash_amount']);
 					break;
 				case '2':
-					$cash_interval	= $lang['cash_interval_weekly'];
+			#		$cash_interval	= $lang['cash_interval_weekly'];
 					$cash_amount	= 4 * str_replace(',', '.', $cash_data[$i]['cash_amount']);
 					break;
 			}
@@ -110,7 +106,7 @@ if ( $mode == '' )
 				'CLASS' 		=> $class,
 				'CASH_NAME'		=> $cash_data[$i]['cash_name'],
 				'CASH_AMOUNT'	=> $cash_data[$i]['cash_amount'],
-				'CASH_DATE'		=> $cash_interval,
+		#		'CASH_DATE'		=> $cash_interval,
 			));
 			
 			$total_amount += $cash_amount;
@@ -120,11 +116,11 @@ if ( $mode == '' )
 	//
 	//	Benutzereinträge
 	//
-	$sql = 'SELECT cu.*, u.user_name, u.user_color
-				FROM ' . CASH_USER . ' cu
-					LEFT JOIN ' . USERS . ' u ON cu.user_id = u.user_id
-				WHERE u.user_id <> ' . ANONYMOUS . '
-			ORDER BY cu.user_id, cu.user_interval';
+	$sql = "SELECT cu.*, u.user_name, u.user_color
+				FROM " . CASH_USER . " cu
+					LEFT JOIN " . USERS . " u ON cu.user_id = u.user_id
+				WHERE u.user_id <> " . ANONYMOUS . "
+			ORDER BY cu.user_id, cu.user_interval";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -140,7 +136,7 @@ if ( $mode == '' )
 	{
 		$total_users_amount = $cash_count = '';
 		
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($cash_user_data)); $i++ )
+		for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, count($cash_user_data)); $i++ )
 		{
 			$class = ($i % 2) ? 'row1' : 'row2';
 			
@@ -256,6 +252,6 @@ if ( $userdata['user_level'] <= TRIAL )
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

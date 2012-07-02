@@ -26,7 +26,7 @@
 			<td class="row2r" align="center">{user}</td>
 		</tr>
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		</table>
 		

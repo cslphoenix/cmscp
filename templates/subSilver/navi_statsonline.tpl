@@ -1,5 +1,5 @@
 <tr>
-	<td class="info_head">{L_SN_STATSONLINE}</td>
+	<th>{L_SN_STATSONLINE}</th>
 </tr>
 <tr>
 	<td>{SO_TOTAL}</td>

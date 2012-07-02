@@ -15,7 +15,7 @@
 		<form action="{S_CONTACT_ACTION}" method="post" name="form">
 		<table class="info" cellspacing="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head" colspan="2">Informationen eintragen</td>

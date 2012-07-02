@@ -24,6 +24,11 @@ $lang = array_merge($lang, array(
 	
 	'serv_game'		=> 'Gameserver',
 	'serv_voice'	=> 'Voiceserver',
+));
+
+$lang = array_merge($lang, array(
+
+	'radio:types' => array(0 => $lang['serv_game'], 1 => $lang['serv_voice']),
 
 ));
 

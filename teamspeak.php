@@ -11,7 +11,7 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_TEAMSPEAK;
@@ -21,8 +21,8 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);
-$mode	= request('mode', 1);
+$data	= request($url, INT);
+$mode	= request('mode', TXT);
 
 $error	= '';
 $fields	= '';
@@ -422,10 +422,10 @@ if ( $ts )
 
 
 
-include($root_path . 'includes/page_header.php');
+main_header();
 		
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

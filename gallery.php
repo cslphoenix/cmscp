@@ -8,11 +8,11 @@ include($root_path . 'includes/acp/acp_functions.php');
 $userdata = session_pagestart($user_ip, PAGE_GALLERY);
 init_userprefs($userdata);
 
-$start		= ( request('start', 0) ) ? request('start', 0) : 0;
+$start		= ( request('start', INT) ) ? request('start', INT) : 0;
 $start		= ( $start < 0 ) ? 0 : $start;
-$data_id	= request(POST_GALLERY_URL, 0);
-$mode		= request('mode', 1);
-$path_dir	= $root_path . $settings['path_gallery'] . '/';
+$data_id	= request(POST_GALLERY_URL, INT);
+$mode		= request('mode', TXT);
+$dir_path	= $root_path . $settings['path_gallery'];
 
 if ( $data_id )
 {
@@ -27,7 +27,7 @@ if ( $data_id )
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$gallery = $db->sql_fetchrow($result);
-#	$gallery = _cached($sql, 'gallery_' . $data_id, 0);
+#	$gallery = _cached($sql, 'gallery_' . $data_id, INT);
 
 #	debug($gallery);
 
@@ -79,8 +79,8 @@ if ( $data_id )
 					break;
 				}
 				
-				$prev	= $path_dir . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_preview'];
-				$image	= $path_dir . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_filename'];
+				$prev	= $dir_path . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_preview'];
+				$image	= $dir_path . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_filename'];
 				
 				list($width, $height, $type, $attr) = getimagesize($root_path . $settings['path_gallery'] . '/' . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_filename']);
 				
@@ -129,7 +129,7 @@ else
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$galleries = $db->sql_fetchrowset($result);
-#	$galleries = _cached($sql, 'list_galleries', 0);
+#	$galleries = _cached($sql, 'list_galleries', INT);
 
 #	debug($galleries);
 	
@@ -155,10 +155,10 @@ else
 	}
 }	
 
-include($root_path . 'includes/page_header.php');
+main_header();
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

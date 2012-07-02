@@ -91,7 +91,7 @@ class GameQ_Buffer
      */
     public function getLength()
     {
-        return max($this->length - $this->index, 0);
+        return max($this->length - $this->index, INT);
     }
 
     /**
@@ -213,7 +213,7 @@ class GameQ_Buffer
     {
         // Get the proper offset
         $len = $this->readInt8();
-        $offset = max($len - $offset, 0);
+        $offset = max($len - $offset, INT);
 
         // Read the data
         if ($read_offset) {

@@ -16,6 +16,8 @@ require($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
+debug($_POST);
+
 if ( isset($_POST['name']) || isset($_POST['mode']) )
 {
 	$key = ( isset($_POST['name']) ) ? $_POST['name'] : $_POST['mode'];

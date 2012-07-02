@@ -23,18 +23,18 @@
 		<!-- BEGIN table_row -->
 		<table cellpadding="1" style="width:100%; text-align:center;  font-size:10px; margin:0px;">
 		<tr>
-			<td colspan="{table_row.COL}">{table_row.VALUE}</td>
+			<td colspan="{tablerow.COL}">{tablerow.VALUE}</td>
 		</tr>
 		
 		<tr>
 			<!-- BEGIN balken_row -->
-			<td style="vertical-align:bottom; width:{table_row.balken_row.WERT1}px;"><div style="margin:auto; background-color:red; height:{table_row.balken_row.WERT2}px; width:{table_row.balken_row.WERT3}" title="{table_row.balken_row.WERT4}"></div></td>
+			<td style="vertical-align:bottom; width:{tablerow.balkenrow.WERT1}px;"><div style="margin:auto; background-color:red; height:{tablerow.balkenrow.WERT2}px; width:{tablerow.balkenrow.WERT3}" title="{tablerow.balkenrow.WERT4}"></div></td>
 			<!-- END balken_row -->
 		</tr>
 		
 		<tr>
 			<!-- BEGIN stellen_row -->
-			<td style=" border:solid 1px #fff;">{table_row.stellen_row.STELLE}</td>
+			<td style=" border:solid 1px #fff;">{tablerow.stellenrow.STELLE}</td>
 			<!-- END stellen_row -->
 		</tr>
 		</table>

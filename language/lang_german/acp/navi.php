@@ -8,6 +8,7 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Navigation',
+	'titles'	=> 'Subnavieinstellungen',
 	'field'		=> 'Navi-Link',
 	'explain'	=> 'Hier kannst du die Navigation Verwalten. Einträge die wie das <em><strong>Beispiel</strong></em> aussehen sind Intern, also nur für eingeloggte Personen.',
 	
@@ -27,9 +28,8 @@ $lang = array_merge($lang, array(
 	'target_new'	=> 'Neue Seite',
 	'target_self'	=> 'Selbe Seite',
 	
-	'title_s'	=> 'Subnavieinstellungen',
-	'update_s'	=> 'Subnavigation erfolgreich geändert.',
-	'return_s'	=> '<br /><br /><strong>%s&laquo; Subnavigations Administration%s</strong>',
+	'update_sub'	=> 'Subnavigation erfolgreich geändert.',
+	'return_sub'	=> '<br /><br /><strong>%s&laquo; Subnavigations Administration%s</strong>',
 	
 	
 	'news_limit'			=> 'Anzahl an Nachrichtentiteln',
@@ -91,20 +91,20 @@ $lang['navi_user']			= 'Benutzer Navi';
 
 
 
-$lang['subnavi_news_limit'] = 'Anzahl an Nachrichtentiteln';
-$lang['subnavi_news_limit_explain'] = 'Die Zahl angeben, wieviele News untereinander angezeigt werden sollen.';
-$lang['subnavi_news_length'] = 'Anzahl der Zeichen vom Nachrichtentitel';
-$lang['subnavi_news_length_explain'] = 'Maximale Anzahl an Zeichen die angezeigt werden, der Text wird bei Überschreitung gekürzt und mit ... ergänzt.';
-$lang['subnavi_match_length'] = 'Anzahl der Zeichen vom Name der Gegner';
-$lang['subnavi_match_length_explain'] = 'Maximale Anzahl an Zeichen die angezeigt werden, der Text wird bei Überschreitung gekürzt und mit ... ergänzt.';
-$lang['subnavi_match_limit'] = 'Anzahl der Begegnungen';
-$lang['subnavi_match_limit_explain'] = 'Die Zahl angeben, wieviele Begegnungen untereinander angezeigt werden sollen.';
+$lang['limit_news'] = 'Anzahl an Nachrichtentiteln';
+$lang['limit_news_explain'] = 'Die Zahl angeben, wieviele News untereinander angezeigt werden sollen.';
+$lang['length_news'] = 'Anzahl der Zeichen vom Nachrichtentitel';
+$lang['length_news_explain'] = 'Maximale Anzahl an Zeichen die angezeigt werden, der Text wird bei Überschreitung gekürzt und mit ... ergänzt.';
+$lang['length_match'] = 'Anzahl der Zeichen vom Name der Gegner';
+$lang['length_match_explain'] = 'Maximale Anzahl an Zeichen die angezeigt werden, der Text wird bei Überschreitung gekürzt und mit ... ergänzt.';
+$lang['limit_match'] = 'Anzahl der Begegnungen';
+$lang['limit_match_explain'] = 'Die Zahl angeben, wieviele Begegnungen untereinander angezeigt werden sollen.';
 
 $lang['subnavi_user_cache'] = 'Cachedauer in Sekunden';
 $lang['subnavi_user_length'] = 'Anzahl der Zeichen vom Benutzername';
 $lang['subnavi_user_limit'] = 'Anzahl an Benutzern';
 $lang['subnavi_user_show'] = 'Letzten Neuen Benutzer anzeigen';
 $lang['subnavi_teams_show'] = 'Teams anzeigen';
-$lang['subnavi_teams_length'] = 'Teamnamenlänge';
+$lang['length_teams'] = 'Teamnamenlänge';
 */
 ?>

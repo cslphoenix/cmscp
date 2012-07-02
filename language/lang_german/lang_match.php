@@ -36,4 +36,7 @@ $lang = array_merge($lang, array(
 	
 ));
 
+$lang['hlsw']		= 'HLSW';
+$lang['hltv']		= 'HLTV';
+
 ?>

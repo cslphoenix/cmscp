@@ -12,7 +12,7 @@
 <!-- END training_row_new -->
 <!-- BEGIN no_entry_new -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_ENTRY_NO}</td>
+	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry_new -->
 </table>
@@ -33,7 +33,7 @@
 <!-- END training_row_old -->
 <!-- BEGIN no_entry_old -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_ENTRY_NO}</td>
+	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry_old -->
 </table>
@@ -54,15 +54,15 @@
 	</tr>
 	<!-- BEGIN teams_row -->
 	<tr>
-		<td class="{teams_row.CLASS}" align="center" width="1%">{teams_row.TEAM_GAME}</td>
-		<td class="{teams_row.CLASS}" align="left" style="vertical-align:middle">{teams_row.TEAM_NAME}</td>
+		<td class="{teamsrow.CLASS}" align="center" width="1%">{teamsrow.TEAM_GAME}</td>
+		<td class="{teamsrow.CLASS}" align="left" style="vertical-align:middle">{teamsrow.TEAM_NAME}</td>
 		
-		<td class="{teams_row.CLASS}" align="right" width="1%" nowrap="nowrap"><a href="{teams_row.TO_TEAM}">{L_TO_TEAM}</a></td>
+		<td class="{teamsrow.CLASS}" align="right" width="1%" nowrap="nowrap"><a href="{teamsrow.TO_TEAM}">{L_TO_TEAM}</a></td>
 	</tr>
 	<!-- END teams_row -->
 	<!-- BEGIN no_entry_team -->
 	<tr>
-		<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
+		<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
 	</tr>
 	<!-- END no_entry_team -->
 	</table>

@@ -1,16 +1,15 @@
-<table class="out" width="100%" cellspacing="0">
+<table class="type4" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" colspan="2" style="text-align:center;">{L_SN_MATCH}</td>
+	<th><span class="right">{CACHE}</span>{L_SN_MATCH}</th>
 </tr>
-<!-- BEGIN _sn_match_row -->
+<!-- BEGIN sn_match_row -->
 <tr>
-	<td class="{_sn_match_row.CLASS}" align="left" width="100%">{_sn_match_row.GAME} <a href="{_sn_match_row.DETAILS}">{_sn_match_row.NAME}</a></td>
-	<td class="{_sn_match_row.CLASS}" align="center" nowrap="nowrap"><span class="{_sn_match_row.CSS}">{_sn_match_row.RESULT}</span></td>
+	<td class="{sn_match_row.CLASS}"><span class="right {sn_match_row.CSS}">{sn_match_row.RESULT}</span>{sn_match_row.GAME} <a href="{sn_match_row.DETAILS}">{sn_match_row.NAME}</a></td>
 </tr>
-<!-- END _sn_match_row -->
-<!-- BEGIN _sn_match_empty -->
+<!-- END sn_match_row -->
+<!-- BEGIN sn_match_empty -->
 <tr>
-	<td colspan="2" align="center">{L_EMPTY}</td>
+	<td class="empty">{L_EMPTY}</td>
 </tr>
-<!-- END _sn_match_empty -->
+<!-- END sn_match_empty -->
 </table>

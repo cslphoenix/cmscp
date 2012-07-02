@@ -33,10 +33,10 @@ $template->assign_vars(array(
 	
 ));
 
-include($root_path . 'includes/page_header.php');
+main_header();
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

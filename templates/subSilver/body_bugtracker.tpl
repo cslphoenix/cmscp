@@ -10,21 +10,21 @@
 </tr>
 <!-- BEGIN bt_row -->
 <tr>
-	<td class="{list.bt_row.CLASS} {list.bt_row.CLASS_STATUS}" align="center" nowrap="nowrap" width="5%">{list.bt_row.BT_ID}</td>
-	<td class="{list.bt_row.CLASS}" align="left" width="100%">
-		&nbsp;<a href="{list.bt_row.U_DETAILS}">{list.bt_row.BT_TITLE}</a>
+	<td class="{list.btrow.CLASS} {list.btrow.CLASS_STATUS}" align="center" nowrap="nowrap" width="5%">{list.btrow.BT_ID}</td>
+	<td class="{list.btrow.CLASS}" align="left" width="100%">
+		&nbsp;<a href="{list.btrow.U_DETAILS}">{list.btrow.BT_TITLE}</a>
 		<br>
-		&nbsp;{list.bt_row.BT_CREATE}
+		&nbsp;{list.btrow.BT_CREATE}
 		<br>
-		&nbsp;{list.bt_row.BT_DESC}
+		&nbsp;{list.btrow.BT_DESC}
 	</td>
-	<td class="{list.bt_row.CLASS}" align="center" nowrap="nowrap">&nbsp;{list.bt_row.BT_WORKER}&nbsp;</td>
-	<td class="{list.bt_row.CLASS}" align="center" nowrap="nowrap">{list.bt_row.BT_STATUS}<br>{list.bt_row.BT_TYPE}</td>
+	<td class="{list.btrow.CLASS}" align="center" nowrap="nowrap">&nbsp;{list.btrow.BT_WORKER}&nbsp;</td>
+	<td class="{list.btrow.CLASS}" align="center" nowrap="nowrap">{list.btrow.BT_STATUS}<br>{list.btrow.BT_TYPE}</td>
 </tr>
 <!-- END list.bt_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_ENTRY_NO}</td>
+	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -165,7 +165,7 @@ tinyMCE.init({
 		<form action="{S_MATCH_ACTION}" method="post">
 		<table class="info" width="75%" cellspacing="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head" colspan="2">{L_COMMENT_ADD}</td>
@@ -191,7 +191,7 @@ tinyMCE.init({
 		<form action="{S_MATCH_ACTION}" method="post" name="post">
 		<table class="info" width="75%" cellspacing="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head">{L_COMMENTS}</td>
@@ -216,7 +216,7 @@ tinyMCE.init({
 		<!-- END row -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
+			<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

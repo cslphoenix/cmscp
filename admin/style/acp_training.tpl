@@ -1,20 +1,11 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-<tr>
-	<td align="right">{L_SORT}: {S_SORT}</td>
-</tr>
-</table>
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
 </form>
 
 <br />
@@ -24,17 +15,17 @@
 	<th>{L_UPCOMING}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _new_row -->
+<!-- BEGIN new_row -->
 <tr>
-	<td><span style="float:right;">{_display._new_row.DATE}</span>{_display._new_row.GAME} {_display._new_row.NAME}</td>
-	<td>{_display._new_row.UPDATE} {_display._new_row.DELETE}</td>		
+	<td><span class="right">{display.new_row.DATE}</span>{display.new_row.GAME} {display.new_row.NAME}</td>
+	<td>{display.new_row.UPDATE}{display.new_row.DELETE}</td>		
 </tr>
-<!-- END _new_row -->
-<!-- BEGIN _entry_empty_new -->
+<!-- END new_row -->
+<!-- BEGIN new_empty -->
 <tr>
-	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty_new -->
+<!-- END new_empty -->
 </table>
 
 <br />
@@ -44,68 +35,71 @@
 	<th>{L_EXPIRED}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _old_row -->
+<!-- BEGIN old_row -->
 <tr>
-	<td><span style="float:right;">{_display._old_row.DATE}</span>{_display._old_row.GAME} {_display._old_row.NAME}</td>
-	<td>{_display._old_row.UPDATE} {_display._old_row.DELETE}</td>		
+	<td><span class="right">{display.old_row.DATE}</span>{display.old_row.GAME} {display.old_row.NAME}</td>
+	<td>{display.old_row.UPDATE}{display.old_row.DELETE}</td>		
 </tr>
-<!-- END _old_row -->
-<!-- BEGIN _entry_empty_old -->
+<!-- END old_row -->
+<!-- BEGIN old_empty -->
 <tr>
-	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty_old -->
+<!-- END old_empty -->
 </table>
 
 <form action="{S_ACTION}" method="post">
 <table class="footer">
 <tr>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-	<td><input type="text" class="post" name="training_vs"> {S_TEAMS}</td>
+	<td><input type="text" name="training_vs" /></td>
+	<td>{S_TEAMS}</td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-	
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 {AJAX}
 {TINYMCE}
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navlist">
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div>{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
+<table class="update">
+<!-- BEGIN tab -->
+<tr>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
+</tr>
+<!-- BEGIN option -->
+<tr>
+	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
+</tr>
+<!-- END option -->
+<!-- END tab -->
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<!-- END row -->
+
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <table class="update">
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
-</tr>
-<tbody class="trhover">
-<tr>
-	<td class="row1"><label for="training_vs">{L_VS}: *</label></td>
+	<td class="row1r"><label for="training_vs">{L_VS}:</label></td>
 	<td class="row2"><input class="post" type="text" name="training_vs" id="training_vs" value="{VS}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="team_id">{L_TEAM}: *</label></td>
+	<td class="row1r"><label for="team_id">{L_TEAM}:</label></td>
 	<td class="row2">{S_TEAMS}</td>
 </tr>
 <tr>
@@ -114,40 +108,43 @@
 </tr>
 <tr>
 	<td class="row1"><label>{L_DATE}:</label></td>
-	<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
+	<td class="row2">{S_DAY}.{S_MONTH}.{S_YEAR} - {S_HOUR}:{S_MIN}</td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_DURATION}:</label></td>
 	<td class="row2">{S_DURATION}</td>
 </tr>
 <tr>
-	<td class="row1"><label>{L_MAPS}: *</label></td>
+	<td class="row1r"><label>{L_MAPS}:</label></td>
 	<td class="row2">
 		<div id="close">
-			<table border="0" cellspacing="0" cellpadding="0">
-			<!-- BEGIN _maps_row -->
-			<tr>
-				<td>{_input._maps_row.MAPS}<input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
-			</tr>
-			<!-- END _maps_row -->
-			</table>
+			<div>
+			<!-- BEGIN maps_row -->
+				<ul>{_input._mapsrow.MAPS}<input type="button" class="more" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></ul>
+			<!-- END maps_row -->
+			</div>
 			{S_MAPS}
 		</div>
-		<div id="content"></div>
+		<div id="ajax_content"></div>
 	</td>
 </tr>
 <tr>
 	<td class="row1"><label for="training_text">{L_TEXT}:</label></td>
 	<td class="row2"><textarea class="post" rows="5" cols="50" name="training_text" id="training_text">{TEXT}</textarea></td>
 </tr>
-</tbody>
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

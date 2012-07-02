@@ -8,23 +8,61 @@ header('content-type: text/html; charset=ISO-8859-1');
 
 define('IN_CMS', true);
 define('IN_ADMIN', true);
+define('HEADER_INC', true);
 
 $root_path = './../../';
 
-require($root_path . 'common.php');
+include($root_path . 'common.php');
 
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
 if ( isset($_POST['new_mode']) )
 {
+	global $db_prefix;
+	
 	$s_select	= '';
 	$new_mode	= $_POST['new_mode'];
 	$new_opt	= $_POST['new_opt'];
 	$cur_mode	= $_POST['cur_mode'];
 	$cur_opt	= $_POST['cur_opt'];
 	
+	$db_field = trim(str_replace($db_prefix, '', $new_mode), 's');
+	$suborcat = ( in_array($db_field, array('field')) ) ? 'sub' : 'type';
 	
+	$sql = "SELECT * FROM $new_mode WHERE {$db_field}_{$suborcat} = $new_opt ORDER BY {$db_field}_order ASC";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$entries = $db->sql_fetchrowset($result);
+	
+	$s_select = '';
+	
+	if ( !$entries )
+	{
+		$s_select = $lang['common_entry_empty'];
+	}
+	else
+	{
+		$s_select .= "<select class=\"select\" name=\"{$new_mode}_order_new\" id=\"{$new_mode}_order\">";
+		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+	
+		for ( $j = 0; $j < count($entries); $j++ )
+		{
+			$name	= $entries[$j]["{$db_field}_name"];
+			$order	= $entries[$j]["{$db_field}_order"];
+			
+				$disabled = ( $order == $cur_opt && $new_opt == $cur_mode ) ? 'disabled="disabled"' : '';
+				
+				$s_select .= ( $order == 10 ) ? "<option value=\"5\" $disabled>" . sprintf($lang['sprintf_select_before'], $name) . "</option>" : '';
+				$s_select .= "<option value=\"" . ( $order + 5 ) . "\" $disabled>" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
+		}
+		
+		$s_select .= "</select>";
+	}
+	
+	/*
 	switch ( $new_mode )
 	{
 		case 'navi':
@@ -93,6 +131,23 @@ if ( isset($_POST['new_mode']) )
 			}
 			
 			break;
+			
+		case 'field':
+
+			$sql = "SELECT field_id AS cat_type, field_name AS cat_name FROM " . FIELDS . " WHERE field_id = $new_opt ORDER BY field_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$cats = $db->sql_fetchrowset($result);
+			
+			$sql = "SELECT field_name, field_order, field_sub AS field_type FROM " . FIELDS . " WHERE field_sub = $new_opt ORDER BY field_sub, field_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			break;
 	}	
 	$entries = $db->sql_fetchrowset($result);
 	
@@ -134,6 +189,7 @@ if ( isset($_POST['new_mode']) )
 		
 		$s_select .= "</select>";
 	}
+	*/
 	
 	echo $s_select;
 }

@@ -26,7 +26,7 @@ if ( isset($_POST['mode']) )
 	$path_files = scandir($root_path . $settings['path_maps'] . '/' . $cat['cat_tag']);
 	
 	$s_select = '';
-	$s_select .= '<tr><td class="row1"><label for="map_file">' . sprintf($lang['sprintf_image'], $lang['maps']) . ': *</label></td><td class="row2">';		
+	$s_select .= '<tr><td class="row1r"><label for="map_file">' . sprintf($lang['sprintf_image'], $lang['maps']) . ':</label></td><td class="row2">';		
 		
 	$endung = array('png', 'jpg', 'jpeg', 'gif');
 	

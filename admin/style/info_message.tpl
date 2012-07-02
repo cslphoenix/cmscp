@@ -1,7 +1,5 @@
 <div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{MESSAGE_TITLE}</a></li>
-	</ul>
+	<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{MESSAGE_TITLE}</a></li></ul>
 </div>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
@@ -21,7 +19,7 @@
 	</td>
 </tr>
 </table>
-
+{S_FIELDS}
 <br clear="all" />
 
 {META}

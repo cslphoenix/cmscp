@@ -23,6 +23,8 @@ $lang = array_merge($lang, array(
 	'rank_image'	=> 'Rangbild',
 	'rank_type'		=> 'Rangtype',
 	'rank_standard'	=> 'Standardrang',
+	
+	'radio:ranks'	=> array(RANK_FORUM => 'Forumrang', RANK_PAGE => 'Seitenrang', RANK_TEAM => 'Teamrang'),
 
 ));
 

@@ -136,7 +136,7 @@
 	<td colspan="2" align="center">
 		<table class="info" width="55%" cellspacing="2">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head" colspan="2">{L_MATCH_INFO}Teilnahmeinfos</td>
@@ -158,7 +158,7 @@
 				<!-- END match_users_status -->
 				<!-- BEGIN no_entry_status -->
 				<tr>
- 					<td align="center" colspan="3">{L_ENTRY_NO}</td>
+ 					<td align="center" colspan="3">{L_EMPTY}</td>
 				</tr>
 				<!-- END no_entry -->
 				</table>
@@ -189,7 +189,7 @@
 		<!-- END users_status -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
+			<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>
@@ -202,7 +202,7 @@
 		<form action="{S_MATCH_ACTION}" method="post" name="form">
 		<table class="info" width="55%" cellspacing="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head" colspan="2">Kommentar einfügen</td>
@@ -260,7 +260,7 @@
 		<form action="{S_MATCH_ACTION}" method="post" name="post">
 		<table class="info" width="55%" cellspacing="0">
 		<tr>
-			<td colspan="2">&nbsp;</td>
+			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td class="info_head">Kommentare</td>
@@ -285,7 +285,7 @@
 		<!-- END comments -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{L_ENTRY_NO}</td>
+			<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

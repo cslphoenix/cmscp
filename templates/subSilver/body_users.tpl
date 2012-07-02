@@ -1,36 +1,33 @@
 <!-- BEGIN list -->
 <form action="{S_ACTION}" method="post" name="post">
-<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr> 
-	<th class="thTop" nowrap="nowrap">{L_USERNAME}</th>
-	<!-- BEGIN _groups -->
-	<th class="thTop" nowrap="nowrap">Benutzergruppen</th>
-	<!-- END _groups -->
-	<!-- BEGIN _teams -->
-	<th class="thTop" nowrap="nowrap">Teams</th>
-	<!-- END _teams -->
+	<th>{L_USERNAME}</th>
+	<!-- BEGIN groups -->
+	<th>{L_GROUPS}1</th>
+	<!-- END groups -->
+	<!-- BEGIN teams -->
+	<th>{L_TEAMS}2</th>
+	<!-- END teams -->
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr> 
-	<td class="{list._row.ROW_CLASS}" align="center">{list._row.USERNAME}</td>
-	<!-- BEGIN _groups -->
-	<td class="{list._row.ROW_CLASS}" align="left" valign="middle">{list._row.GROUPS}</td>
-	<!-- END _groups -->
-	<!-- BEGIN _teams -->
-	<td class="{list._row.ROW_CLASS}" align="left" valign="middle">{list._row.TEAMS}</td>
-	<!-- END _teams -->
+	<td class="{_list.row.CLASS}">{_list.row.USERNAME}</td>
+	<!-- BEGIN groups -->
+	<td class="{_list.row.CLASS}">{_list.row.GROUPS}</td>
+	<!-- END groups -->
+	<!-- BEGIN teams -->
+	<td class="{_list.row.CLASS}">{_list.row.TEAMS}</td>
+	<!-- END teams -->
 </tr>
-<!-- END _row -->
-<!-- BEGIN _entry_empty -->
+<!-- END row -->
+<!-- BEGIN entry_empty -->
 <tr> 
-	<td class="row1" align="center" colspan="9"><span class="gen">&nbsp;{NO_USER_ID_SPECIFIED}&nbsp;</span></td>
+	<td colspan="3"><span class="gen">&nbsp;{NO_USER_ID_SPECIFIED}&nbsp;</span></td>
 </tr>
-<!-- END _entry_empty -->
-<tr>
-	<td colspan="3" align="right">{S_LETTER_SELECT} {S_MODE} {S_ORDER} <input type="submit" name="submit" value="{L_SUBMIT}" class="button2" /></td>
-</tr>
+<!-- END entry_empty -->
 <tr> 
-	<td class="catBottom" colspan="8" height="28">&nbsp;</td>
+	<td colspan="3">&nbsp;</td>
 </tr>
 </table>
 
@@ -44,180 +41,284 @@
 </form>
 <!-- END list -->
 
-<!-- BEGIN _block -->
-<table>
+<!-- BEGIN block -->
+<script type="text/JavaScript">
+// <![CDATA[
+
+<!-- BEGIN add_member -->
+function suggest(inputString){
+        if(inputString.length == 0) {
+            $('#suggestions').fadeOut();
+        } else {
+        $('#country').addClass('load');
+            $.post("autosuggest.php", {queryString: ""+inputString+""}, function(data){
+                if(data.length >0) {
+                    $('#suggestions').fadeIn();
+                    $('#suggestionsList').html(data);
+                    $('#country').removeClass('load');
+                }
+            });
+        }
+    }
+ 
+    function fill(thisValue) {
+        $('#country').val(thisValue);
+        setTimeout("$('#suggestions').fadeOut();", 600);
+    }
+
+function lookup(user_name,type,type_id)
+{
+	if ( user_name.length == 0 )
+	{
+		$('#suggestions').hide();
+	}
+	else
+	{
+		$.post("./includes/ajax/users.php", {user_name: ""+user_name+"", type: ""+type+"", type_id: ""+type_id+""}, function(data)
+		{
+			if ( data.length > 0 )
+			{
+				$('#suggestions').show();
+				$('#autoSuggestionsList').html(data);
+			}
+		});
+	}
+}
+
+function fill(thisValue)
+{
+	$('#user_name').val(thisValue);
+	setTimeout("$('#suggestions').hide();", 200);
+}
+<!-- END add_member -->
+var request = false;
+
+function setRequest(value)
+{
+	if (window.XMLHttpRequest)
+	{	request = new XMLHttpRequest(); }
+	else
+	{	request = new ActiveXObject("Microsoft.XMLHTTP"); }
+	
+	if (!request)
+	{	alert("Kann keine XMLHTTP-Instanz erzeugen"); return false; }
+	else
+	{
+		var url = "./admin/ajax/ajax_team_ranks.php";
+		request.open('post', url, true);
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		request.send('mode='+value);
+		request.onreadystatechange = interpretRequest;
+	}
+}
+
+function interpretRequest()
+{
+	switch (request.readyState)
+	{
+		case 4:
+		
+			if (request.status != 200)
+			{	alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status); }
+			else
+			{	var content = request.responseText; document.getElementById('ajax_content').innerHTML = content; }
+			break;
+		
+		default: document.getElementById('close').style.display = "none"; break;
+	}
+}
+
+// ]]>
+</script>
+<form action="{S_ACTION}" method="post" name="list">
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr> 
-	<td>test</td>
+	<th><span class="right">{OVERVIEW}</span>{TYPE}</th>
 </tr>
-</table>
-
-<table border="0">
-<tr>
-	<td class="header" colspan="6">{L_GROUP_MODERATOR}</td>
-</tr>
-<tr>
-	<td class="info_head" style="text-align:center;">{L_USERNAME}</td>
-	<td class="info_head" style="text-align:center;">{L_GROUPS}</td>
-	<td class="info_head" style="text-align:center;">{L_SELECT}</td>
-</tr>
-<!-- BEGIN _mod -->
-<tr>
-	<td class="{_block._mod.ROW_CLASS}" align="center">{_block._mod.USERNAME}</td>
-	<!-- BEGIN _switch_admin -->
-	<td class="{_block._mod.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_block._mod.USER_ID}"></td>
-	<!-- END _switch_admin -->
-</tr>
-<!-- END _mod -->
-<!-- BEGIN switch_no_moderators -->
-<tr>
-	<td class="row3" colspan="6" align="center"><span class="gen">{L_NO_MODERATORS}</span></td>
-</tr>
-<!-- END switch_no_moderators -->
-<tr>
-	<th colspan="6">{L_GROUP_MEMBERS}</th>
-</tr>
-<tr>
-	<td class="info_head" style="text-align:center;">{L_USERNAME}</td>
-	<td class="info_head" style="text-align:center;">{L_PM}</td>
-	<td class="info_head" style="text-align:center;">{L_EMAIL}</td>
-	<td class="info_head" style="text-align:center;">{L_JOINED}</td>
-	<!-- BEGIN _switch_moderator -->
-	<td class="info_head" style="text-align:center;">{L_SELECT}</td>
-	<!-- END _switch_moderator -->
-</tr>
-
-<!-- BEGIN _member_row -->
-<tr>
-	<td class="{_block._member_row.ROW_CLASS}" align="center"><a href="{_block._member_row.U_VIEWPROFILE}">{_block._member_row.USERNAME}</a></td>
-	<td class="{_block._member_row.ROW_CLASS}" align="center">{_block._member_row.PM_IMG} </td>
-	<td class="{_block._member_row.ROW_CLASS}" align="center">{_block._member_row.EMAIL_IMG}</td>
-	<td class="{_block._member_row.ROW_CLASS}" align="center">{_block._member_row.JOINED}</td>
-	<!-- BEGIN _switch_moderator -->
-	<td class="{_block._member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_block._member_row.USER_ID}"></td>
-	<!-- END _switch_moderator -->
-</tr>
-<!-- END _member_row -->
-<!-- BEGIN switch_no_members -->
-<tr>
-	<td class="row3" colspan="6" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
-</tr>
-<!-- END switch_no_members -->
-<!-- BEGIN switch_hidden_group -->
-<tr>
-	<td class="row1" colspan="6" align="center"><span class="gen">{L_HIDDEN_MEMBERS}</span></td>
-</tr>
-<!-- END switch_hidden_group -->
-</table>
-<!-- END _block -->
-
-<!-- BEGIN _list -->
-<table class="info" width="100%" cellspacing="0">
-<!-- BEGIN _game_row -->
-<tr>
-	<td colspan="5" class="info_head">
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>{_list._game_row.L_GAME}</td>
-		</tr>
-		</table>
+<tr> 
+	<td>
+		{DETAILS}&nbsp;
+		<!-- BEGIN switch_subscribe_group_input -->
+		<input class="button2" type="submit" name="joingroup" value="{L_JOIN_GROUP}" />
+		<!-- END switch_subscribe_group_input -->
+		<!-- BEGIN switch_unsubscribe_group_input -->
+		<input class="button2" type="submit" name="unsub" value="{L_UNSUBSCRIBE_GROUP}" />
+		<!-- END switch_unsubscribe_group_input -->
 	</td>
-</td>
 </tr>
-<!-- BEGIN _team_row -->
+<!-- BEGIN hidden_group -->
 <tr>
-	<td>{_list._game_row._team_row.GAME} {_list._game_row._team_row.NAME}</td>
-	<td>{_list._game_row._team_row.FIGHTUS}</td>
-	<td>{_list._game_row._team_row.JOINUS}</td>
-	<td>{_list._game_row._team_row.MATCH}</td>
+	<td colspan="6" align="center">{L_HIDDEN_MEMBERS}</td>
 </tr>
-<!-- END _team_row -->
-<tr>
-	<td colspan="5">&nbsp;</td>
-</tr>
-<!-- END _game_row -->
-<!-- BEGIN no_entry_team -->
-<tr>
-	<td class="row1" align="center" colspan="5">{L_ENTRY_NO}</td>
-</tr>
-<!-- END no_entry_team -->
+<!-- END hidden_group -->
 </table>
-<!-- END _list -->
 
-<!-- BEGIN _listg -->
-<table class="out" width="100%" cellspacing="0">
-<!-- BEGIN _in_groups -->
-<!-- BEGIN _is_member -->
+<!-- BEGIN mod -->
+<table class="type1 rows" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" colspan="2">{L_CUR}</td>
+	<th>{L_MOD}</th>
+	<th>{L_POSTS}</th>
+	<th>{L_COMMENTS}</th>
+	<th>{L_JOINED}</th>
+	<!-- BEGIN switch_admin -->
+	<th>&nbsp;</th>
+	<!-- END switch_admin -->
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><img class="icon" src="images/get_info.png" alt=""> {_listg._in_groups._is_member._row.NAME}{_listg._in_groups._is_member._row.DESC}</td>
-	<td>{_listg._in_groups._is_member._row.TYPE}</td>
+	<td class="{_block._mod.row.CLASS}">{_block._mod.row.NAME}</td>
+	<td class="{_block._mod.row.CLASS}">{_block._mod.row.POSTS}</td>
+	<td class="{_block._mod.row.CLASS}">{_block._mod.row.COMMENTS}</td>
+	<td class="{_block._mod.row.CLASS}">{_block._mod.row.JOIN}</td>
+	<!-- BEGIN switch_admin -->
+	<td class="{_block._mod.row.CLASS}"><input type="checkbox" name="members[]" value="{_block._mod.row.USER}"></td>
+	<!-- END switch_admin -->
 </tr>
-<!-- END _row -->
+<!-- END row -->
+<!-- BEGIN no_mod -->
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td class="empty" colspan="3" align="center">{L_NO_MODERATORS}</td>
 </tr>
-<!-- END _is_member -->
-<!-- BEGIN _is_pending -->
+<!-- END no_mod -->
+</table>
+<br />
+<!-- END mod -->
+
+<!-- BEGIN mem -->
+<table class="type1 rows" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" colspan="2">{L_PEN}</td>
+	<th>{L_MEM}</th>
+	<th>{L_POSTS}</th>
+	<th>{L_COMMENTS}</th>
+	<th>{L_JOINED}</th>
+	<!-- BEGIN switch_moderator -->
+	<th>&nbsp;</th>
+	<!-- END switch_moderator -->
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><img class="icon" src="images/get_info.png" alt=""> {_listg._in_groups._is_pending._row.NAME}{_listg._in_groups._is_pending._row.DESC}</td>
-	<td>{_listg._in_groups._is_pending._row.TYPE}</td>
+	<td class="{_block._mem.row.CLASS}">{_block._mem.row.NAME}</td>
+	<td class="{_block._mem.row.CLASS}">{_block._mem.row.POSTS}</td>
+	<td class="{_block._mem.row.CLASS}">{_block._mem.row.COMMENTS}</td>
+	<td class="{_block._mem.row.CLASS}">{_block._mem.row.JOIN}</td>
+	<!-- BEGIN switch_moderator -->
+	<td class="{_block._mem.row.CLASS}"><input type="checkbox" name="members[]" value="{_block._mem.row.USER}"></td>
+	<!-- END switch_moderator -->
 </tr>
-<!-- END _row -->
+<!-- END row -->
+<!-- BEGIN no_mem -->
+<tr>
+	<td class="empty" colspan="3" align="center">{L_NO_MEMBERS}</td>
+</tr>
+<!-- END no_mem -->
+</table>
+<!-- END mem -->
+
+<!-- BEGIN add_member -->
+<table class="type1" style="border:none; width:100%; border-spacing:0px; padding:0px;">
+<tr>
+	<td align="left" class="top" width="1%"><input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, '{TYPE_MODE}', '{TYPE_ID}');" onblur="fill();" autocomplete="off"></td>
+	<td align="left" class="top"><input type="submit" name="add" value="{L_ADD_MEMBER}" class="button2"></td>
+	<td align="right" class="top">{S_OPTION}<div id="ajax_content"></div></td>
+	<td align="right" class="top" width="1%"><input type="submit" value="{L_SUBMIT}" class="button2"></td>
+</tr>
+<tr>
+	<td colspan="2">
+		<div class="suggestionsBox" id="suggestions" style="display:none;">
+			<div class="suggestionList" id="autoSuggestionsList"></div>
+		</div>
+	</td>
+	<td align="right" colspan="2"><a href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
+</tr>
+</table>
+<!-- END add_member -->
+
+<!-- BEGIN pen -->
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
+<!-- BEGIN row -->
+<tr>
+	<td class="{_block._pen.row.CLASS}">{_block._pen.NAME}</td>
+	<td class="{_block._pen.row.CLASS}">{_block._pen.JOIN}</td>
+	<td class="{_block._pen.row.CLASS}"><input type="checkbox" name="members[]" value="{_block._pen.USER}"></td>
+</tr>
+<!-- END row -->
+</table>
+<!-- END pen -->
+
+
+{S_FIELDS}
+</form>
+<!-- END block -->
+
+<!-- BEGIN listg -->
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
+<!-- BEGIN in_groups -->
+<!-- BEGIN is_member -->
+<tr>
+	<th colspan="2">{L_CUR}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td class="{_listg._in_groups._is_member.row.CLASS}">{_listg._in_groups._is_member.row.NAME}{_listg._in_groups._is_member.row.DESC}</td>
+	<td class="{_listg._in_groups._is_member.row.CLASS}">{_listg._in_groups._is_member.row.TYPE}</td>
+</tr>
+<!-- END row -->
+<tr>
+	<td colspan="2"></td>
+</tr>
+<!-- END is_member -->
+<!-- BEGIN is_pending -->
+<tr>
+	<th colspan="2">{L_PEN}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td class="{_listg._in_groups._is_pending.row.CLASS}">{_listg._in_groups._is_pending.row.NAME}{_listg._in_groups._is_pending.row.DESC}</td>
+	<td class="{_listg._in_groups._is_pending.row.CLASS}">{_listg._in_groups._is_pending.row.TYPE}</td>
+</tr>
+<!-- END row -->
 <!-- END pending -->
 <tr>
 	<td colspan="3">&nbsp;</td>
 </tr>
-<!-- END _in_groups -->
-<!-- BEGIN _no_group -->
+<!-- END in_groups -->
+<!-- BEGIN no_group -->
 <tr>
-	<td class="info_head" colspan="2">{L_NON}</td>
+	<th colspan="2">{L_NON}</th>
 </tr>
-<!-- BEGIN _row -->
+<!-- BEGIN row -->
 <tr>
-	<td><img class="icon" src="images/get_info.png" alt=""> {_listg._no_group._row.NAME}{_listg._no_group._row.DESC}</td>
-	<td>{_listg._no_group._row.TYPE}</td>
+	<td class="{_listg._no_group.row.CLASS}">{_listg._no_group.row.NAME}{_listg._no_group.row.DESC}</td>
+	<td class="{_listg._no_group.row.CLASS}">{_listg._no_group.row.TYPE}</td>
 </tr>
-<!-- END _row -->
-<!-- END _no_group -->
+<!-- END row -->
+<!-- END no_group -->
 </table>
-<!-- END _listg -->
+<!-- END listg -->
 
-<!-- BEGIN _listt -->
-<table class="info" width="100%" cellspacing="0">
-<!-- BEGIN _game_row -->
+<!-- BEGIN listt -->
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
+<!-- BEGIN game_row -->
 <tr>
-	<td colspan="5" class="info_head">
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>{_listt._game_row.L_GAME}</td>
-		</tr>
-		</table>
-	</td>
+	<th colspan="4">{_listt._gamerow.L_GAME}</th>
 </td>
 </tr>
-<!-- BEGIN _team_row -->
+<!-- BEGIN team_row -->
 <tr>
-	<td>{_listt._game_row._team_row.GAME} {_listt._game_row._team_row.NAME}</td>
-	<td>{_listt._game_row._team_row.FIGHTUS}</td>
-	<td>{_listt._game_row._team_row.JOINUS}</td>
-	<td>{_listt._game_row._team_row.MATCH}</td>
+	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.GAME} {_listt._gamerow._teamrow.NAME}</td>
+	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.FIGHTUS}</td>
+	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.JOINUS}</td>
+	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.MATCH}</td>
 </tr>
-<!-- END _team_row -->
+<!-- END team_row -->
 <tr>
 	<td colspan="5">&nbsp;</td>
 </tr>
-<!-- END _game_row -->
+<!-- END game_row -->
 <!-- BEGIN no_entry_team -->
 <tr>
-	<td class="row1" align="center" colspan="5">{L_ENTRY_NO}</td>
+	<td class="row1" align="center" colspan="5">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry_team -->
 </table>
-<!-- END _listt -->
+<!-- END listt -->

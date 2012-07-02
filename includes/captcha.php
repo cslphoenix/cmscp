@@ -27,7 +27,7 @@ $possible = "123456789";
 
 //	Bilder erstellen
 $img = imagecreate($width, $height); 	// Bitte nicht aendern!
-imagecolorallocatealpha($img, 255, 255, 255, 0); // 255 255 255 127
+imagecolorallocatealpha($img, 255, 255, 255, INT); // 255 255 255 127
 
 //	Reloadbild
 $reload = imagecreatefrompng('../images/reload.png');
@@ -40,10 +40,10 @@ imagecopy($img, $reload, $x, $y, 0, 0, $s2[0], $s2[1]);
 
 
 $color 		= array();
-$color[] 	= imagecolorallocate($img, 128, 0, 0); 		// rot
-$color[]	= imagecolorallocate($img, 0, 128, 0); 		// gruen
+$color[] 	= imagecolorallocate($img, 128, 0, INT); 		// rot
+$color[]	= imagecolorallocate($img, 0, 128, INT); 		// gruen
 $color[]	= imagecolorallocate($img, 0, 0, 128); 		// blau
-$color[]	= imagecolorallocate($img, 0, 0, 0);		// schwarz
+$color[]	= imagecolorallocate($img, 0, 0, INT);		// schwarz
 
 $ttf 		= array();
 $ttf[]		= 'x-files.ttf';

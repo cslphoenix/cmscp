@@ -4,107 +4,107 @@
  * Idee von phpBB3
  */
 
-function request($request_var, $request_type = '', $filter = '')
+function request($request_var, $request_type, $filter = '')
 {
 	global $_POST, $_GET;
 	
-	if ( isset($_POST[$request_var]) || isset($_GET[$request_var]) )
+	if ( is_array($request_var) )
+	{
+		if ( count($request_var) == 3 )
+		{
+			list($typ, $opt, $field) = $request_var;
+			$tmp = ( isset($_POST[$typ][$opt][$field]) || isset($_GET[$typ][$opt][$field]) ) ? ( isset($_POST[$typ][$opt][$field]) ) ? $_POST[$typ][$opt][$field] : $_GET[$typ][$opt][$field] : '';
+		}
+		else
+		{
+			list($typ, $opt) = $request_var;
+			$tmp = ( isset($_POST[$typ][$opt]) || isset($_GET[$typ][$opt]) ) ? ( isset($_POST[$typ][$opt]) ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt] : '';
+		}
+	}
+	else
+	{
+		$tmp = ( isset($_POST[$request_var]) || isset($_GET[$request_var]) ) ? ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var] : '';
+	}
+	
+	$var = '';
+	
+	if ( $tmp != '' )
 	{
 		switch ( $request_type )
 		{
 			/*
-			 *	Zahlen
-			 */
-			case 0:
-				$var = ( isset($_POST[$request_var]) ) ? intval($_POST[$request_var]) : intval($_GET[$request_var]);
-				$var = ( isset($var) ) ? $var : 0;
-				break;
-				
-			/*
-			 *	Mode/Confirm/Sort
-			 */
-			case 1:
-				$var = ( isset($_POST[$request_var]) ) ? str_replace("'", "\'", $_POST[$request_var]) : str_replace("'", "\'", $_GET[$request_var]);
-				break;
-				
-			/*
-			 *	Texte
-			 */
-			case 2:
-				$var = ( isset($_POST[$request_var]) ) ? trim(htmlentities(str_replace("'", "\'", $_POST[$request_var]), ENT_COMPAT)) : trim(htmlentities(str_replace("'", "\'", $_GET[$request_var]), ENT_COMPAT));
-				break;
-				
-			/*
-			 *	Texte ohne HTML Tags
-			 */
-			case 3:
-				$var = ( isset($_POST[$request_var]) ) ? trim(htmlentities(str_replace("'", "\'", strip_tags($_POST[$request_var])), ENT_COMPAT)) : trim(htmlentities(str_replace("'", "\'", strip_tags($_GET[$request_var])), ENT_COMPAT));
-				break;
-
-			/*
-			 *	Arrays
-			 */
-			case 4:
-				
-				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
-				
-				foreach ( $var as $_k => $_v )
-				{
-					if ( $_v != '' )
-					{
-						if ( $filter == 'url' )
-						{
-							if ( !preg_match('#^http[s]?:\/\/#i', $_v) )
+				0 = Zahlen
+				1 = Mode/Confirm/Sort
+				2 = Texte
+				3 = Texte ohne HTML Tags
+				4 = Arrays ( URL / Apostroph ' )
+				5 = URL
+				6 = Image	not work
+			*/
+			case '0': $var = intval($tmp);	$var = isset($var) ? $var : 0;								break;
+			case '1': $var = trim(str_replace("'", "\'", $tmp));										break;
+			case '2': $var = trim(htmlentities(str_replace("'", "\'", $tmp), ENT_COMPAT));				break;
+			case '3': $var = trim(htmlentities(str_replace("'", "\'", strip_tags($tmp)), ENT_COMPAT));	break;
+			case '5': $var = !preg_match('#^http[s]?:\/\/#i', $tmp) ? 'http://' . $var : ''; break;
+			
+			case 'int':		$var = intval($tmp); $var = isset($var) ? $var : '0'; break;
+			case 'url':		
+							if ( $tmp != "" )
 							{
-								$_var = 'http://' . $_v;
+								if ( !preg_match('#^http[s]?:\/\/#i', $tmp) )
+								{
+									$var = 'http://' . $tmp;
+								}
+								
+								if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp) )
+								{
+									$var = '';
+								}
 							}
-							else if ( $_v == '' )
+				break;
+			case 'text':	$var = trim(str_replace("'", "\'", $tmp)); break;
+			case 'clean':	$var = trim(htmlentities(str_replace("'", "\'", $tmp), ENT_COMPAT)); break;
+			case 'html':	$var = trim(htmlentities(str_replace("'", "\'", strip_tags($tmp)), ENT_COMPAT)); break;
+			case 'array':	
+							foreach ( $tmp as $tmp_key => $tmp_value )
 							{
-								$_var = '';
+								$tmp_var = '';
+								
+								if ( $tmp_value != '' )
+								{
+									switch ( $filter )
+									{
+										case 'int':	$tmp_var = intval($tmp_value); break;
+										case 'text':$tmp_var = trim(str_replace("'", "\'", $tmp_value)); break;
+										case 'url': if ( !preg_match('#^http[s]?:\/\/#i', $tmp_value) )
+													{
+														$tmp_var = 'http://' . $tmp_value;
+													}
+													
+													if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp_value) )
+													{
+														$tmp_var = '';
+													}
+													break;
+										default: $tmp_var = str_replace("'", "\'", $tmp_value); break;
+									}
+								}
+								
+								$tmptmp[$tmp_key] = $tmp_var;
 							}
-						}
-						else
-						{
-							$_var = trim(htmlentities(str_replace("'", "\'", $_v), ENT_COMPAT));
-						}
-						
-						$var[$_k] = $_v;
-					}
-					else
-					{
-						$var[$_k] = '';
-					}
-				}
-				
-				break;
-				
-			case 5:
-				
-				/*	URL	*/
-				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
-			
-				break;
-			
-			/*	Image-URL	*/	
-			case 6:
-				
-				/*	URL	*/
-				$var = ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var];
-			
-				break;
-			
-			default:
-				
-				$var = isset($_POST[$request_var]) ? $_POST[$request_var] : $_GET[$request_var];
-				
-				break;
+							
+							$var = $tmptmp;	
+							
+							
+					break;
+			default:	$var = str_replace("'", "\'", $tmp); break;
 		}
 	}
 	else
 	{
 		$var = '';
 	}
-	
+
 	return $var;
 }
 
@@ -151,12 +151,121 @@ function request_files($request_var)
 	}
 }
 
+function add_lang($file)
+{
+	global $root_path, $userdata, $lang;
+	
+	/*
+		@param: string	$file		example: games
+	*/
+	if ( defined('IN_ADMIN') )
+	{
+		if ( is_array($file) )
+		{
+			foreach ( $file as $val )
+			{
+				if ( file_exists("{$root_path}language/lang_{$userdata['user_lang']}/acp/{$val}.php") )
+				{
+					include("{$root_path}language/lang_{$userdata['user_lang']}/acp/{$val}.php");
+				}
+			}
+		}
+		else
+		{
+			if ( file_exists("{$root_path}language/lang_{$userdata['user_lang']}/acp/{$file}.php") )
+			{
+				include("{$root_path}language/lang_{$userdata['user_lang']}/acp/{$file}.php");
+			}
+		}
+	}
+	else
+	{
+		if ( file_exists("{$root_path}language/lang_{$userdata['user_lang']}/{$file}.php") )
+		{
+			include("{$root_path}language/lang_{$userdata['user_lang']}/{$file}.php");
+		}
+	}
+}
+
+function href($type, $file, $array, $text, $lng = '', $comment = false)
+{
+	global $lang, $images;
+	
+	$return = $ary = '';
+
+	foreach ( $array as $k => $v )
+	{
+		$ary[] = "$k=$v";
+	}
+	
+	$_ary	= '?' . implode('&amp;', $ary);
+	$_txt	= strstr($type, 'img') ? isset($images[$text]) ? $images[$text] : $text : $text;
+	$_lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
+	
+	( $type == 'a_txt' ) ? list($_txt, $_lng) = array($_lng, $_txt) : '';
+	
+	$return = sprintf($lang[$type], check_sid($file . $_ary), $_txt, $_lng, $comment);
+	
+	return $return;
+}
+
+function img($type, $icon, $lng = '')
+{
+	global $lang, $images;
+	
+	$_lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
+	
+	$return = '';
+	
+	$return = sprintf($lang[$type], $images[$icon], $_lng);
+	
+	return $return;
+}
+
+function cal_string($entry, $css, $lng, $array, $viewer)
+{
+	$msg = '';
+	
+	$tbl_start = '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>';
+	$tbl_mid = '</td></tr><tr><td>';
+	$tbl_end = '</td></tr></table>';
+	
+	$div_start	= '<div class="cal_list"><ul>';
+	$div_middle	= '</ul><ul>';
+	$div_end	= '</u></div>';
+	
+	#$event .= ( !$event ) ? "$tbl_start <em class=\"wars\">$language</em>$tbl_mid $list" : "$tbl_mid <em class=\"wars\">$language</em><br /> $list";
+
+	
+	if ( $viewer )
+	{
+		$msg .= ( $entry == '' ) ? $div_start : $div_middle;
+		$msg .= ( !$css ) ? "<b>$lng</b>$div_middle" : "<span class=\"$css\">$lng</span>$div_middle";
+		$msg .= implode('<br />', $array);
+	}
+	else
+	{
+		$msg .= ( $entry != '' ) ? '<br />': '';
+		$msg .= ( !$css ) ? "<b>$lng</b><br />" : "<span class=\"$css\">$lng</span><br />";
+		$msg .= implode('<br />', $array);
+	}
+		
+	return $msg;
+}
+
+function cal_cut($string, $length)
+{
+	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3));
+	
+	return $string;
+}
+
 function cut_string($string, $length)
 {
 	/***
 
-	@param string $string	enthält den Titel
-	@param int $length		enthält die maximale Länge
+	@param string $string	enthï¿½lt den Titel
+	@param int $length		enthï¿½lt die maximale Lï¿½nge
 	
 	@return string
 	
@@ -169,12 +278,6 @@ function cut_string($string, $length)
 
 function get_authlist()
 {
-	/***
-
-	@return string
-	
-	***/
-	
 	global $db;
 	
 	$sql = 'SELECT authlist_name FROM ' . AUTHLIST . ' ORDER BY authlist_name';
@@ -189,7 +292,7 @@ function get_authlist()
 	}
 	else
 	{
-		$authlist_data = _cached($sql, 'data_authlist', 0);
+		$authlist_data = _cached($sql, 'data_authlist', INT);
 	}
 
 	for ( $i = 0; $i < count($authlist_data); $i++ )
@@ -296,7 +399,7 @@ function group_set_auth($user_id, $group_id)
 		}
 	}
 	
-	##	Löschung des Cacheintrages
+	##	Lï¿½schung des Cacheintrages
 	$oCache -> deleteCache('display_subnavi_newusers'); # neuste Benutzer
 }
 
@@ -304,14 +407,15 @@ function group_reset_auth($user_id, $group_id)
 {
 	global $db;
 	
-	$sql = 'SELECT g.group_access, g.group_color
-				FROM ' . GROUPS . ' g, ' . GROUPS_USERS . ' gu
-				WHERE gu.user_id <> ' . ANONYMOUS . '
-					AND g.group_id = gu.group_id
-					AND gu.user_id = ' . $user_id . '
+	$sql = "SELECT g.group_access, g.group_color
+				FROM " . GROUPS . " g, " . LISTS . " ul
+				WHERE ul.user_id <> " . ANONYMOUS . "
+					AND g.group_id = ul.type_id
 					AND g.group_single_user = 0
-					AND NOT g.group_id = ' . $group_id . '
-				GROUP BY g.group_id ASC';
+					AND ul.user_id = $user_id
+					AND ul.type = " . TYPE_GROUP . "
+					AND NOT g.group_id = $group_id
+				GROUP BY g.group_id ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -335,21 +439,14 @@ function group_reset_auth($user_id, $group_id)
 	}
 }
 
-function gen_userinfo(&$row, &$name)
+function gen_userinfo(&$row, &$name, &$join, &$posts, &$comments)
 {
-	global $lang, $images, $config, $settings, $userdata, $userauth;
-
-	$name = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '" style="color:' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
+	global $userdata;
 	
-#	$poster_name = $comments[$i]['poster_nick'] ? $comments[$i]['poster_nick'] : '<font color="' . $comments[$i]['user_color'] . '">' . $comments[$i]['user_name'] . '</font>';
-				
-				
-				
-				
-#	'POSTER'	=> "<a href=\"$poster_link\">$poster_name</a>",
-	
-
-#	$user_name'<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
+	$name		= href('a_style', 'profile.php', array('mode' => 'view', POST_USER => $row['user_id']), $row['user_color'], $row['user_name']);
+	$join		= create_shortdate($userdata['user_dateformat'], isset($row['team_join']) ? $row['team_join'] : $row['user_regdate'], $userdata['user_timezone']);
+	$posts		= $row['user_posts'];
+	$comments	= $row['user_comments'];
 }
 
 function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$joined, &$poster_avatar, &$profile_img, &$profile, &$search_img, &$search, &$pm_img, &$pm, &$email_img, &$email, &$www_img, &$www, &$icq_status_img, &$icq_img, &$icq, &$aim_img, &$aim, &$msn_img, &$msn, &$yim_img, &$yim)
@@ -357,7 +454,7 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 	global $lang, $images, $config;
 
 	$from = ( !empty($row['user_from']) ) ? $row['user_from'] : '&nbsp;';
-	$joined = create_date($date_format, $row['user_regdate'], $config['page_timezone']);
+	$joined = create_date($date_format, $row['user_regdate'], $config['default_timezone']);
 
 	$posts = ( $row['user_posts'] ) ? $row['user_posts'] : 0;
 
@@ -424,35 +521,30 @@ function get_profiledata($user_id)
 	return ( $row = $db->sql_fetchrow($result) ) ? $row : false;
 }
 
-function _cache_clear()
-{
-	global $oCache;
-	
-	$oCache -> truncateCache();
-}
+
 
 function _cut($text)
 {
-	// Wörter mit mehr als 60 Zeichen werden ab dem 60. Zeichen um ein Leerzeichen ergänzt 
-	// damit der Browser den Text umbrechen kann (, sonst wird das Layout zerstört) 
+	// Wï¿½rter mit mehr als 60 Zeichen werden ab dem 60. Zeichen um ein Leerzeichen ergï¿½nzt 
+	// damit der Browser den Text umbrechen kann (, sonst wird das Layout zerstï¿½rt) 
 	$max_word_lenght = 60; 
-	// Die Länge von Links ist größer, da sie nur im Quelltext als 'lang' erscheinen 
-	// Links werden später noch gesondert behandelt 
+	// Die Lï¿½nge von Links ist grï¿½ï¿½er, da sie nur im Quelltext als 'lang' erscheinen 
+	// Links werden spï¿½ter noch gesondert behandelt 
 	$max_link_lenght = 200; 
 	// Trennzeichen 
 	$splitter = ' ';
-	// Text in Zeilen aufteilen, sonst würden Zeilenumbrüche (\n) nicht als Worttrennung erkannt 
+	// Text in Zeilen aufteilen, sonst wï¿½rden Zeilenumbrï¿½che (\n) nicht als Worttrennung erkannt 
 	$lines = explode("\n", $text);
 	
 	foreach ($lines as $key_line => $line)
 	{
-		// jede Zeile in Wörter aufteilen 
+		// jede Zeile in Wï¿½rter aufteilen 
 		$words = explode(' ', $line);
-		// jedes Wort prüfen
+		// jedes Wort prï¿½fen
 		
 		foreach ($words as $key_word => $word)
 		{
-			// für Links wird die maximale Länge erhöht
+			// fï¿½r Links wird die maximale Lï¿½nge erhï¿½ht
 			if (substr(strtolower($word), 0, 7)== 'http://' OR substr(strtolower($word), 0, 8)== 'https://' OR substr(strtolower($word), 0, 4)=='www.')
 			{
 				$max_lenght = $max_link_lenght; 
@@ -463,7 +555,7 @@ function _cut($text)
 			}
 			$word = trim($word);
 			
-			// BB-Code Tags entfernen, da sie nicht zur Buchstabenlänge eines Wortes zählen
+			// BB-Code Tags entfernen, da sie nicht zur Buchstabenlï¿½nge eines Wortes zï¿½hlen
 			$word = preg_replace('/\[(.*)\]/Usi', '', $word); 
 			
 			if (strlen($word)>$max_lenght)
@@ -471,518 +563,19 @@ function _cut($text)
 				// Trennen des Wortes nach max_length Buchstaben
 				$words[$key_word] = chunk_split($words[$key_word], $max_lenght, $splitter);
 				
-				// abziehen der Länge des Trennzeichens, dieses wird am Ende automatisch
-				// noch einmal eingefügt
+				// abziehen der Lï¿½nge des Trennzeichens, dieses wird am Ende automatisch
+				// noch einmal eingefï¿½gt
 				$length = strlen($words[$key_word])-strlen($splitter);
 				$words[$key_word] = substr($words[$key_word],0,$length);
 			}
 		}
-		// fügt die veränderten Wörter wieder zur Zeile als String zusammen
+		// fï¿½gt die verï¿½nderten Wï¿½rter wieder zur Zeile als String zusammen
 		$lines[$key_line] = implode(" ", $words);
 	}
-	// fügt Zeilen wieder zum gesamten Text als String zusammen 
+	// fï¿½gt Zeilen wieder zum gesamten Text als String zusammen 
 	$text = implode("\n", $lines);
 	
 	return $text;
-}
-
-function _cached($sql, $name, $row = '', $time = '')
-{
-	/***
-
-	@param string $sql		enthält die SQL Abfrage
-	@param string $name		enthält den Namen der Cachdatei
-	@param int $row			sql_fetchrow/sql_fetchrowset
-	@param int $time		Lebensdauer der Cachdatei
-	
-	@return string
-	
-	***/
-	
-	global $db, $oCache;
-	
-	if ( defined('CACHE') )
-	{
-		$sCacheName = $name;
-		if ( ($fetch = $oCache -> readCache($sCacheName)) === false)
-		{
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-			$db->sql_freeresult($result);
-			
-			$oCache->writeCache($sCacheName, $fetch, $time);
-		}
-	}
-	else
-	{
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		$fetch = ( $row == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
-	}
-	
-	return $fetch;
-}
-
-function error_handler($errno, $errstr, $errfile, $errline)
-{
-	global $root_path, $template, $test_msg;
-	
-	$errfile = str_replace(array(cms_realpath($root_path), '\\'), array('', '/'), $errfile);
-	
-	$errno = $errno & error_reporting();
-	
-	if ( $errno == 0 )
-	{
-		return;
-	}
-	
-	if ( !defined('E_STRICT') )
-	{
-		define('E_STRICT', 2048);
-	}
-    
-	if ( !defined('E_RECOVERABLE_ERROR') )
-	{
-		define('E_RECOVERABLE_ERROR', 4096);
-	}
-	
-	$msg = '<div align="left"><b>[';
-	
-	switch ( $errno )
-	{
-		case E_ERROR:				$msg .= 'Error';					break;
-		case E_WARNING:				$msg .= 'Warning';					break;
-		case E_PARSE:				$msg .= 'Parse Error';				break;
-		case E_NOTICE:				$msg .= 'Information';				break;
-		case E_CORE_ERROR:			$msg .= 'Core Error';				break;
-		case E_CORE_WARNING:		$msg .= 'Core Warning';				break;
-		case E_COMPILE_ERROR:		$msg .= 'Compile Error';			break;
-		case E_COMPILE_WARNING:		$msg .= 'Compile Warning';			break;
-		case E_USER_ERROR:			$msg .= 'User Error';				break;
-		case E_USER_WARNING:		$msg .= 'User Warning';				break;
-		case E_USER_NOTICE:			$msg .= 'User Notice';				break;
-		case E_STRICT:				$msg .= 'Strict Notice';			break;
-		case E_RECOVERABLE_ERROR:	$msg .= 'Recoverable Error';		break;
-		default:					$msg .= 'Unknown error ($errno)';	break;
-	}
-	
-	$msg .= "]:</b> $errstr in <b>$errfile</b> Zeile: <b>$errline</b>";
-	$msg .= "</div>";
-	
-	if (isset($GLOBALS['error_fatal']))
-	{
-		if ($GLOBALS['error_fatal'] & $errno)
-		{
-			die('fatal');
-		}
-	}
-	
-	echo $msg;
-}
-
-function error_fatal($mask = NULL){
-    if(!is_null($mask)){
-        $GLOBALS['error_fatal'] = $mask;
-    }elseif(!isset($GLOBALS['die_on'])){
-        $GLOBALS['error_fatal'] = 0;
-    }
-    return $GLOBALS['error_fatal'];
-}
-
-function debug($data, $name = '')
-{
-	print '<div align="left">';
-	print '<-- start -->';
-	print '<br>';
-	print ( $name ) ? '<br>' . $name : '';
-	print '<br>';
-	print '<pre>';
-	print_r($data);
-	print '</pre>';
-	print '<br>';
-	print '<-- end -->';
-	print '<br>';
-	print '</div>';
-}
-
-function debuge($data)
-{
-	global $root_path, $db, $config, $template;
-	
-	print '<br>';
-	print '<pre>';
-	print_r($data);
-	print '</pre>';
-	print '<br>';
-	
-	$inc = ( defined('IN_ADMIN') ) ? 'admin/page_footer_admin.php' : 'includes/page_footer.php';
-	
-	include($root_path . $inc);
-	
-	exit;
-}
-
-function check_image_type(&$type)
-{
-	global $lang;
-
-	switch( $type )
-	{
-		case 'jpeg':
-		case 'pjpeg':
-		case 'jpg':
-			return '.jpg';
-			break;
-		case 'gif':
-			return '.gif';
-			break;
-		case 'png':
-			return '.png';
-			break;
-		default:
-			$error_msg = $lang['wrong_filetype'];
-
-			message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
-			break;
-	}
-
-	return false;
-}
-
-function team_logo_upload($mode, $format, &$current_logo, &$current_type, $logo_filename, $logo_realname, $logo_filesize, $logo_filetype)
-{
-	global $db, $settings, $lang;
-
-	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
-
-	$width = $height = 0;
-	$type = '';
-
-	if ( ( file_exists(@cms_realpath($logo_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $logo_realname) )
-	{
-		$sfilesize	= ($format == 'n') ? $settings['team_logo_filesize'] : $settings['team_logos_filesize'];
-		$lfilesize	= ($format == 'n') ? $lang['logo_filesize'] : $lang['logos_filesize'];
-		
-		if ( $logo_filesize <= $sfilesize && $logo_filesize > 0 )
-		{
-			preg_match('#image\/[x\-]*([a-z]+)#', $logo_filetype, $logo_filetype);
-			$logo_filetype = $logo_filetype[1];
-		}
-		else
-		{
-			$error_msg = sprintf($lfilesize, round($sfilesize / 1024));
-			
-			message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
-		}
-
-		list($width, $height, $type) = @getimagesize($logo_filename);
-	}
-
-	if ( !($imgtype = check_image_type($logo_filetype)) )
-	{
-		return;
-	}
-
-	switch ($type)
-	{
-		// GIF
-		case 1:
-			if ($imgtype != '.gif')
-			{
-				@unlink($tmp_filename);
-				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-			}
-		break;
-
-		// JPG, JPC, JP2, JPX, JB2
-		case 2:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-			if ($imgtype != '.jpg' && $imgtype != '.jpeg')
-			{
-				@unlink($tmp_filename);
-				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-			}
-		break;
-
-		// PNG
-		case 3:
-			if ($imgtype != '.png')
-			{
-				@unlink($tmp_filename);
-				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-			}
-		break;
-
-		default:
-			@unlink($tmp_filename);
-			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-	}
-	
-	$slogo_max_width	= ($format == 'n') ? $settings['team_logo_max_width'] : $settings['team_logos_max_width'];
-	$slogo_max_height	= ($format == 'n') ? $settings['team_logo_max_height'] : $settings['team_logos_max_height'];
-
-	if ( $width > 0 && $height > 0 && $width <= $slogo_max_width && $height <= $slogo_max_height )
-	{
-		$new_filename = uniqid(rand()) . $imgtype;
-
-		if ( $mode == 'editteam' && $current_type == LOGO_UPLOAD && $current_logo != '' )
-		{
-			team_logo_delete($format, $current_type, $current_logo);
-		}
-
-		if ( @$ini_val('open_basedir') != '' )
-		{
-			if ( @phpversion() < '4.0.3' )
-			{
-				message(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file', '', __LINE__, __FILE__);
-			}
-
-			$move_file = 'move_uploaded_file';
-		}
-		else
-		{
-			$move_file = 'copy';
-		}
-
-		if (!is_uploaded_file($logo_filename))
-		{
-			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-		}
-		
-		$spath = ($format == 'n') ? $settings['team_logo_path'] : $settings['team_logos_path'];
-		
-		$move_file($logo_filename, './../' . $spath . "/$new_filename");
-
-		@chmod('./../' . $spath . "/$new_filename", 0777);
-		
-		if ($format == 'n')
-		{
-			$logo_sql = ( $mode == 'editteam' ) ? "team_logo = '$new_filename', team_logo_type = " . LOGO_UPLOAD . ", " : "'$new_filename', " . LOGO_UPLOAD;
-		}
-		else
-		{
-			$logos_sql = ( $mode == 'editteam' ) ? "team_logos = '$new_filename', team_logos_type = " . LOGO_UPLOAD . ", " : "'$new_filename', " . LOGO_UPLOAD;
-		}
-	}
-	else
-	{
-		$limagesize			= ($format == 'n') ? $lang['logo_imagesize'] : $lang['logos_imagesize'];
-		$slogo_max_width	= ($format == 'n') ? $settings['team_logo_max_width'] : $settings['team_logos_max_width'];
-		$slogo_max_height	= ($format == 'n') ? $settings['team_logo_max_height'] : $settings['team_logos_max_height'];
-		
-		$error_msg = sprintf($limagesize, $slogo_max_width, $slogo_max_height);
-			
-		message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
-	}
-	
-	if ($format == 'n')
-	{
-		return $logo_sql;
-	}
-	else
-	{
-		return $logos_sql;
-	}
-}
-
-function team_logo_delete($format, $logo_type, $logo_file)
-{
-	global $settings;
-	
-	$spath = ($format == 'n') ? $settings['team_logo_path'] : $settings['team_logos_path'];
-
-	$logo_file = basename($logo_file);
-	if ( $logo_type == LOGO_UPLOAD && $logo_file != '' )
-	{
-		if ( @file_exists(@cms_realpath('./../' . $spath . '/' . $logo_file)) )
-		{
-			@unlink('./../' . $spath . '/' . $logo_file);
-		}
-	}
-	
-	if ($format == 'n')
-	{
-		return "team_logo = '', team_logo_type = " . LOGO_NONE . ", ";
-	}
-	else
-	{
-		return "team_logos = '', team_logos_type = " . LOGO_NONE . ", ";
-	}
-}
-
-function picture_upload($num, &$current_logo, &$current_logo_preview, $logo_filename, $logo_realname, $logo_filetype)
-{
-	global $settings, $db, $lang;
-
-	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
-
-	$type = '';
-	
-	if ( ( file_exists(@cms_realpath($logo_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $logo_realname) )
-	{
-		preg_match('#image\/[x\-]*([a-z]+)#', $logo_filetype, $logo_filetype);
-		$logo_filetype = $logo_filetype[1];
-			
-		list($width, $height, $type) = @getimagesize($logo_filename);
-	}
-	
-	if ( !($imgtype = check_image_type($logo_filetype)) )
-	{
-		return;
-	}
-	
-	switch ($type)
-	{
-		// GIF
-		case 1:
-			if ($imgtype != '.gif')
-			{
-				@unlink($tmp_filename);
-				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-			}
-		break;
-
-		// JPG, JPC, JP2, JPX, JB2
-		case 2:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-			if ($imgtype != '.jpg' && $imgtype != '.jpeg')
-			{
-				@unlink($tmp_filename);
-				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-			}
-		break;
-
-		// PNG
-		case 3:
-			if ($imgtype != '.png')
-			{
-				@unlink($tmp_filename);
-				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-			}
-		break;
-
-		default:
-			@unlink($tmp_filename);
-			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-	}
-	
-	
-	
-//	$new_filename = uniqid(rand()) . $imgtype;
-	$new_filename = uniqid(rand());
-	$new_filename_preview = $new_filename . '_preview' . $imgtype;
-	$new_filename = $new_filename . $imgtype;
-/*	
-	echo $new_filename;
-	echo '<br/>';
-	echo $new_filename_preview;
-	exit;
-*/
-	//	neue größe
-	$new_width = '100';
-	$new_height = '75';
-	
-	//	ändern
-	$image_p = imagecreatetruecolor($new_width, $new_height);
-	
-	switch ($imgtype)
-	{
-		case '.jpeg':
-		case '.pjpeg':
-		case '.jpg':
-			$image = imagecreatefromjpeg($logo_filename);
-		break;
-		case '.gif':
-			$image = imagecreatefromgif($logo_filename);
-		break;
-		case '.png':
-			$image = imagecreatefrompng($logo_filename);
-		break;
-	}
-	
-	imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-	
-	switch ($imgtype)
-	{
-		case '.jpeg':
-		case '.pjpeg':
-		case '.jpg':
-			imagejpeg($image_p, './../' . $settings['path_match_picture'] . "/$new_filename_preview", 100);
-		break;
-		case '.gif':
-			imagegif($image_p, './../' . $settings['path_match_picture'] . "/$new_filename_preview");
-		break;
-		case '.png':
-			imagepng($image_p, './../' . $settings['path_match_picture'] . "/$new_filename_preview");
-		break;
-	}
-	
-	if ( $current_logo != '' )
-	{
-		picture_delete($num, $current_logo, $current_logo_preview);
-	}
-
-	if ( @$ini_val('open_basedir') != '' )
-	{
-		if ( @phpversion() < '4.0.3' )
-		{
-			message(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file', '', __LINE__, __FILE__);
-		}
-
-		$move_file = 'move_uploaded_file';
-	}
-	else
-	{
-		$move_file = 'copy';
-	}
-
-	if (!is_uploaded_file($logo_filename))
-	{
-		message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
-	}
-
-	$move_file($logo_filename, './../' . $settings['path_match_picture'] . "/$new_filename");
-
-	@chmod('./../' . $settings['path_match_picture'] . "/$new_filename", 0777);
-	
-	$pic = "details_map_pic_" . $num . " = '$new_filename', pic_" . $num . "_preview = '$new_filename_preview',";
-	
-	return $pic;
-}
-
-function picture_delete($num, $logo_file, $logo_preview_file)
-{
-	global $settings;
-	
-	$logo_file = basename($logo_file);
-	$logo_preview_file = basename($logo_preview_file);
-	if ($logo_file != '' )
-	{
-		if ( @file_exists(@cms_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_file)) )
-		{
-			@unlink('./../' . $settings['path_match_picture'] . '/' . $logo_file);
-		}
-		
-		if ( @file_exists(@cms_realpath('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file)) )
-		{
-			@unlink('./../' . $settings['path_match_picture'] . '/' . $logo_preview_file);
-		}
-	}
-	
-	return "details_map_pic_$num = '', pic_" . $num . "_preview = '', ";
 }
 
 function log_add($type, $log, $message, $data = '')
@@ -1002,7 +595,7 @@ function log_add($type, $log, $message, $data = '')
 				log_data = '$data'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'Log SQL Error ', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error ', '', __LINE__, __FILE__, $sql);
 	}
 }
 
@@ -1220,7 +813,7 @@ function init_userprefs($userdata)
 
 		if ( isset($userdata['user_timezone']) )
 		{
-			$config['page_timezone'] = $userdata['user_timezone'];
+			$config['default_timezone'] = $userdata['user_timezone'];
 		}
 	}
 	else
@@ -1404,7 +997,17 @@ function setup_style($style)
 	$template_name = $row['template_name'] ;
 
 	$template = new Template($root_path . $template_path . $template_name);
-
+	
+	if ( defined('IN_ADMIN') )
+	{
+		$template->set_rootdir($root_path . 'admin/style');
+	}
+	
+#	if ( defined('IN_ADMIN') )
+#	{
+#		$template->set_rootdir($root_path . 'admin/style');
+#	}
+	
 	if ( $template )
 	{
 		$current_template_path = $template_path . $template_name;
@@ -1510,6 +1113,37 @@ function create_date($format, $gmepoch, $tz)
 function create_shortdate($user_format, $date, $user_zone)
 {
 	global $userdata, $lang;
+	
+	//
+	// MOD - TODAY AT - BEGIN
+	// PARSE DATEFORMAT TO GET TIME FORMAT 
+	//
+	$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
+	//eregi($time_reg, $config['default_dateformat'], $regs);
+	preg_match($time_reg, $userdata['user_dateformat'], $regs);
+	$userdata['default_timeformat'] = $regs[1];
+	unset($time_reg);
+	unset($regs);
+	
+	//
+	// GET THE TIME TODAY AND YESTERDAY
+	//
+	$today_ary = explode('|', create_date('m|d|Y', time(), $userdata['user_timezone']));
+	$zeit = localtime(time() , 1);
+	
+	if ( $zeit['tm_isdst'] )
+	{
+		$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'] - date("I"),0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+	}
+	else
+	{
+		$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+	}
+	
+	#$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'] - $userdata['dstime'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
+	$userdata['time_yesterday'] = $userdata['time_today'] - 86400;
+	$userdata['time_tomorrow'] = $userdata['time_today'] + 86400;
+	unset($today_ary);
 	
 	$return = create_date($user_format, $date, $user_zone);
 	
@@ -1703,10 +1337,12 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 	global $starttime;
 	
 	static $msg_history;
-	if( !isset($msg_history) )
+	
+	if ( !isset($msg_history) )
 	{
 		$msg_history = array();
 	}
+	
 	$msg_history[] = array(
 		'msg_code'	=> $msg_code,
 		'msg_text'	=> $msg_text,
@@ -1716,22 +1352,23 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 		'sql'		=> $sql
 	);
 	
-	if(defined('HAS_DIED'))
+	if ( defined('HAS_DIED') )
 	{
-	//	die("message() was called multiple times. This isn't supposed to happen. Was message() used in page_tail.php?");
+	//	
 		//
 		// This message is printed at the end of the report.
 		// Of course, you can change it to suit your own needs. ;-)
 		//
 		$custom_error_message = 'Please, contact the %swebmaster%s. Thank you.';
-		if ( !empty($board_config) && !empty($board_config['board_email']) )
+		if ( !empty($config) && !empty($config['board_email']) )
 		{
-			$custom_error_message = sprintf($custom_error_message, '<a href="mailto:' . $board_config['board_email'] . '">', '</a>');
+			$custom_error_message = sprintf($custom_error_message, '<a href="mailto:' . $config['board_email'] . '">', '</a>');
 		}
 		else
 		{
 			$custom_error_message = sprintf($custom_error_message, '', '');
 		}
+#		echo "<b>Critical Error!</b><br>\nmessage() was called multiple times.<br>&nbsp;<hr />";
 		echo "<html>\n<body>\n<b>Critical Error!</b><br>\nmessage() was called multiple times.<br>&nbsp;<hr />";
 		for( $i = 0; $i < count($msg_history); $i++ )
 		{
@@ -1752,10 +1389,16 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 			echo "&nbsp;<hr />\n";
 		}
 		echo $custom_error_message . '<hr /><br clear="all">';
+		
+		if ( defined('IN_ADMIN') )
+		{
+	#		die("</td></tr></table></div><div id=\"page-footer\"></div></div><div class=\"border-bottom\"><span><span></span></span></div></div></div></div></div></div></div></div></body></html>");
+		}
+		
 		die("</body>\n</html>");
 	}
 	
-	define('HAS_DIED', 1);
+	define('HAS_DIED', true);
 	
 
 	$sql_store = $sql;
@@ -1819,11 +1462,12 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 		//
 		if ( !defined('IN_ADMIN') )
 		{
-			include($root_path . 'includes/page_header.php');
+			main_header();
 		}
 		else
 		{
-			include($root_path . 'admin/page_header_admin.php');
+			include_once($root_path . 'admin/page_header_admin.php');
+			include_once($root_path . 'includes/acp/acp_functions.php');
 		}
 	}
 
@@ -1928,15 +1572,11 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 
 		if ( !defined('IN_ADMIN') )
 		{
-			$template->set_filenames(array(
-				'message_body' => 'message_body.tpl')
-			);
+			$template->set_filenames(array('message_body' => 'message_body.tpl'));
 		}
 		else
 		{
-			$template->set_filenames(array(
-				'message_body' => './../admin/style/info_message.tpl')
-			);
+			$template->set_filenames(array('message_body' => 'info_message.tpl'));
 		}
 
 		$template->assign_vars(array(
@@ -1949,7 +1589,7 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 
 		if ( !defined('IN_ADMIN') )
 		{
-			include($root_path . 'includes/page_tail.php');
+			main_footer();
 		}
 		else
 		{
@@ -2041,98 +1681,6 @@ function board_disable()
 	}
 }
 
-function ucp_read($type, $ary, $user)
-{
-	global $db, $userdata;
-	
-	/*	
-		Überprüfung ob der Benutzer die News gesehen hat
-		vor dem 10.05 wurde jede News durchlaufen, nun werden
-		alle news auf einmal abgefragt und dann jede news 
-		einzeln durchlaufen, man könnte auch erst die news_ids
-		auslesen und dann noch die gelesen tabelle, theoretisch!
-	 */	
-	$sql = "SELECT type_id FROM " . COMMENT_READ . " WHERE user_id = " . $userdata['user_id'] . " AND type = $type AND type_id IN (" . implode(', ', $ary) . ")";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$tmp_read = $db->sql_fetchrowset($result);
-	
-	if ( $tmp_read )
-	{
-		foreach ( $tmp_read as $key => $row )
-		{
-			$ary_sort[] = $row['type_id'];
-		}
-		
-		$ary_diff = array_diff($ary, $ary_sort);
-		
-		if ( $ary_diff )
-		{
-			foreach ( $ary_diff as $key => $row )
-			{
-				$count[$row] = 'unread';
-			}
-		}
-		
-		for ( $i = 0; $i < count($ary_sort); $i++ )
-		{
-			$sql = "SELECT COUNT(comment_id) AS total
-						FROM " . COMMENT . " c
-							LEFT JOIN " . COMMENT_READ . " cr ON c.type_id = cr.type_id
-						WHERE c.type_id = " . $ary_sort[$i] . "
-							AND cr.user_id = $user
-							AND cr.type = $type
-							AND cr.read_time < c.time_create";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$tmp_count = $db->sql_fetchrow($result);
-			
-			$count[$ary_sort[$i]] = $tmp_count['total'];
-		}
-	}
-	else
-	{
-		foreach ( $ary as $key => $row )
-		{
-			$count[$row] = 'unread';
-		}
-	}
-	
-	return $count;
-}
-
-function ucp_diff($type, $ary, $user)
-{
-	global $db, $userdata;
-	
-	$sql = "SELECT type_id FROM " . COMMENT_READ . " WHERE user_id = $user AND type = $type AND type_id IN (" . implode(', ', $ary) . ")";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$tmp_read = $db->sql_fetchrowset($result);
-	
-	$ary_sort = $ary_diff = $diff = '';
-	
-	if ( $tmp_read )
-	{
-		foreach ( $tmp_read as $key => $row )
-		{
-			$ary_sort[] = $row['type_id'];
-		}
-		
-		$ary_diff = array_diff($ary, $ary_sort);
-	}
-	
-	$diff = array('read' => $ary_sort, 'unread' => $ary_diff);
-		
-	
-	return $diff;
-}
 
 
 function sql($table, $type, $submit, $id_field = '', $id = '')
@@ -2177,11 +1725,22 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 			$data = $submit;
 			$data_db = data($table, $id, false, 1, 1);
 			
+		#	debug($data, 'data');
+		#	debug($data_db, 'data_db');
+			
+		#	debug($id_field, "$id_field");
+			
+		#	var_dump(data($table, $id, false, 1, 1));
+			
+		#	debug(data($table, $id, false, 1, 1));
+			
 			if ( $data_db )
 			{
-				unset($data_db[$id_field]);
+			#	unset($data_db[$id_field]);
 			
 				$new = array_diff_assoc($data_db, $data);
+				
+			#	debug($new, 'new diff');
 			
 				if ( $new )
 				{
@@ -2193,25 +1752,23 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 						{
 							if ( $key_new == $key_submit )
 							{
-								$change[] = array(
-											'field'	=> $key_new,
-											'data'	=> $value_new,
-											'post'	=> $value_submit,
-										);
+								$change[] = array('field' => $key_new, 'data' => $value_new, 'post' => $value_submit, 'meta' => $id);
 							}
 						}
 					}
+					
+				#	debug($change, "change");
 					
 					$change = $change;
 				}
 				else
 				{
-					$change = '';
+					$change = '!new';
 				}
 			}
 			else
 			{
-				$change = '';
+				$change = '!data_db';
 			}
 		}
 		
@@ -2351,6 +1908,44 @@ function select_language($default, $select_name = "language", $dirname = "langua
 	return $lang_select;
 }
 
+function select_lang($default, $select_name = "language", $dirname = "language")
+{
+	global $root_path, $lang;
+
+	$dir = opendir($root_path . $dirname);
+
+	$language = array();
+	
+	while ( $file = readdir($dir) )
+	{
+		if (preg_match('#^lang_#i', $file) && !is_file(@cms_realpath($root_path . $dirname . '/' . $file)) && !is_link(@cms_realpath($root_path . $dirname . '/' . $file)))
+		{
+			$filename = trim(str_replace("lang_", "", $file));
+			$displayname = preg_replace("/^(.*?)_(.*)$/", "\\1 [ \\2 ]", $filename);
+			$displayname = preg_replace("/\[(.*?)_(.*)\]/", "[ \\1 - \\2 ]", $displayname);
+			$language[$displayname] = $filename;
+		}
+	}
+
+	closedir($dir);
+
+	@asort($language);
+	@reset($language);
+
+	$lang_select = '<select class="select" name="' . $select_name . '">';
+	
+	while ( list($displayname, $filename) = @each($language) )
+	{
+		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
+		
+		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $name) . '</option>';
+	}
+	$lang_select .= '</select>';
+
+	return $lang_select;
+}
+
 //
 // Pick a template/theme combo, 
 //
@@ -2378,18 +1973,20 @@ function select_style($default, $select_name = "style", $dirname = "templates")
 	return $select;
 }
 
-/* phpBB2 */
-function main_header()
+function main_header($page_title = '')
 {
-	global $config, $settings, $theme, $root_path, $userdata, $template, $db, $lang, $page_title;
+	global $config, $settings, $theme, $root_path, $userdata, $template, $db, $lang;
 	
-	define('HEADER_INC', TRUE);
+	if ( defined('HEADER_INC') )
+	{
+		return;
+	}
+
+	define('HEADER_INC', true);
 	
-	//
-	// gzip_compression
-	//
-	$gzip = FALSE;
-	if ( $config['gzip_compress'] )
+	/* gzip_compression */
+
+	if ( $config['page_gzip'] )
 	{
 		$phpver = phpversion();
 	
@@ -2417,37 +2014,7 @@ function main_header()
 			}
 		}
 	}
-	
-	//
-	// MOD - TODAY AT - BEGIN
-	// PARSE DATEFORMAT TO GET TIME FORMAT 
-	//
-	$time_reg = '/([gh][[:punct:][:space:]]{1,2}[i][[:punct:][:space:]]{0,2}[a]?[[:punct:][:space:]]{0,2}[S]?)/i';
-	//eregi($time_reg, $config['default_dateformat'], $regs);
-	preg_match($time_reg, $userdata['user_dateformat'], $regs);
-	$userdata['default_timeformat'] = $regs[1];
-	unset($time_reg);
-	unset($regs);
-	
-	//
-	// GET THE TIME TODAY AND YESTERDAY
-	//
-	$today_ary = explode('|', create_date('m|d|Y', time(), $userdata['user_timezone']));
-	$zeit = localtime(time() , 1);
-	
-	if ( $zeit['tm_isdst'] )
-	{
-		$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'] - date("I"),0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-	}
-	else
-	{
-		$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-	}
-	
-	#$userdata['time_today'] = gmmktime(0 - $userdata['user_timezone'] - $userdata['dstime'],0,0,$today_ary[0],$today_ary[1],$today_ary[2]);
-	$userdata['time_yesterday'] = $userdata['time_today'] - 86400;
-	$userdata['time_tomorrow'] = $userdata['time_today'] + 86400;
-	unset($today_ary);
+	$gzip = FALSE;
 	
 	//
 	// Parse and show the overall header.
@@ -2493,21 +2060,21 @@ function main_header()
 		$l_login_logout = $lang['Login'];
 	}
 	
-	$s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($config['default_dateformat'], $userdata['user_lastvisit'], $config['page_timezone']) : '';
+	$s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($config['default_dateformat'], $userdata['user_lastvisit'], $config['default_timezone']) : '';
 	
 	//
 	//	Counter
 	//	von http://www.mywebsolution.de/
 	//
-	if ( $settings['site_counter'] == '1' )
+	if ( $config['page_counter'] == '1' )
 	{
-		include($root_path . 'includes/functions_counter.php');
-		
+		include("{$root_path}includes/functions_counter.php");
+
 		counter_update();
 		counter_result();
 	}
 	
-	$sql = "SELECT group_id, group_name, group_color, group_legend FROM " . GROUPS . " WHERE group_single_user <> 1 ORDER BY group_order";
+	$sql = "SELECT group_id, group_name, group_color, group_legend FROM " . GROUPS . " WHERE group_legend = 1 ORDER BY group_order";
 #	if ( !($result = $db->sql_query($sql)) )
 #	{
 #		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -2525,10 +2092,7 @@ function main_header()
 			$groups_name	= $groups[$i]['group_name'];
 			$groups_style	= $groups[$i]['group_color'];
 			
-			if ( $groups[$i]['group_legend'] == 1 )
-			{
-				$list[] = "<a href=\"" . check_sid("groups.php?" . POST_GROUPS . "=$groups_id") . "\" style=\"color:#$groups_style\"><b>$groups_name</b></a>";
-			}
+			$list[] = "<a href=\"" . check_sid("users.php?mode=g&id=$groups_id") . "\" style=\"color:#$groups_style\"><b>$groups_name</b></a>";
 		}
 		
 		$groups_list = implode(', ', $list);
@@ -2620,7 +2184,7 @@ function main_header()
 	
 	$total_online_users = $logged_visible_online + $logged_hidden_online + $guests_online;
 	
-	if ( $total_online_users > $config['record_online_users'])
+	if ( $total_online_users > $config['record_online_users'] )
 	{
 		$config['record_online_users'] = $total_online_users;
 		$config['record_online_date'] = time();
@@ -2653,11 +2217,13 @@ function main_header()
 	$l_online_users .= sprintf($l_h_user_s, $logged_hidden_online);
 	$l_online_users .= sprintf($l_g_user_s, $guests_online);
 	
-	$l_online_users_head = sprintf($l_t_user_s_h, $total_online_users);
-	$l_online_users_head .= sprintf($l_r_user_s_h, $logged_visible_online);
-	$l_online_users_head .= sprintf($l_h_user_s_h, $logged_hidden_online);
-	$l_online_users_head .= sprintf($l_g_user_s_h, $guests_online);
-	
+	if ( $settings['module_stats']['show_header_online'] )
+	{
+		$l_online_users_head = sprintf($l_t_user_s_h, $total_online_users);
+		$l_online_users_head .= sprintf($l_r_user_s_h, $logged_visible_online);
+		$l_online_users_head .= sprintf($l_h_user_s_h, $logged_hidden_online);
+		$l_online_users_head .= sprintf($l_g_user_s_h, $guests_online);
+	}		
 	/*
 	//
 	// Obtain number of new private messages
@@ -2742,48 +2308,6 @@ function main_header()
 		}
 	}
 	
-	display_navi();
-	display_navi_news();
-	display_navi_match();
-	
-	if ( $settings['subnavi_newusers'] )	{ display_navi_newusers(); }
-	if ( $settings['subnavi_teams'] )		{ display_navi_teams(); }
-	if ( $settings['subnavi_minical'] )		{ display_navi_minical(); }
-	
-	if ( $settings['subnavi_links'] )		{ display_navi_network('links'); }
-	if ( $settings['subnavi_partner'] )		{ display_navi_network('partner'); }
-	if ( $settings['subnavi_sponsor'] )		{ display_navi_network('sponsor'); }
-	
-	if ( $userdata['user_level'] >= TRIAL )
-	{
-		if ( $settings['subnavi_training'] )	{ display_next_training(); }
-	}
-	
-	
-	if ( $settings['subnavi_match_next'] )			{ display_next_match(); }
-	
-	if ( $settings['subnavi_statsonline'] )
-	{
-		$template->assign_block_vars('statsonline', array());
-		
-		$l_t_user_s_n = ( $total_online_users != 0 )	? ( $total_online_users == 1 )		? $l_t_user_s = $lang['n_online_user_total'] : $l_t_user_s = $lang['n_online_users_total'] : $lang['n_online_users_zero_total'];
-		$l_r_user_s_n = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['n_reg_user_total'] : $l_r_user_s = $lang['n_reg_users_total'] : $l_r_user_s = $lang['n_reg_users_zero_total'];
-		$l_h_user_s_n = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['n_hidden_user_total'] : $l_h_user_s = $lang['n_hidden_users_total'] : $l_h_user_s = $lang['n_hidden_users_zero_total'];	
-		$l_g_user_s_n = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['n_guest_user_total'] : $l_g_user_s = $lang['n_guest_users_total'] : $l_g_user_s = $lang['n_guest_users_zero_total'];
-		
-		$l_online_users_total	= sprintf($l_t_user_s_n, $total_online_users);
-		$l_online_users_visible	= sprintf($l_r_user_s_n, $logged_visible_online);
-		$l_online_users_hidden	= sprintf($l_h_user_s_n, $logged_hidden_online);
-		$l_online_users_guests	= sprintf($l_g_user_s_n, $guests_online);
-		
-		$template->assign_vars(array(
-			'STATS_ONLINE_TOTAL' 	=> $l_online_users_total,
-			'STATS_ONLINE_VISIBLE' 	=> $l_online_users_visible,
-			'STATS_ONLINE_HIDDEN' 	=> $l_online_users_hidden,
-			'STATS_ONLINE_GUESTS' 	=> $l_online_users_guests,
-		));
-	}
-	
 	$userauth = auth_acp_check($userdata['user_id']);
 
 	$auth = array();
@@ -2818,8 +2342,8 @@ function main_header()
 	}
 	
 	// Format Timezone. We are unable to use array_pop here, because of PHP3 compatibility
-	$l_timezone = explode('.', $config['page_timezone']);
-	$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['page_timezone'])] : $lang[number_format($config['page_timezone'])];
+	$l_timezone = explode('.', $config['default_timezone']);
+	$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['default_timezone'])] : $lang[number_format($config['default_timezone'])];
 	
 	//
 	// The following assigns all _common_ variables that may be used at any point
@@ -2828,38 +2352,65 @@ function main_header()
 	$template->assign_vars(array(
 		'L_ENTRY_NO' => $lang['no_entry'],
 		'NO_ENTRY' => $lang['no_entry'],
-		'L_SUBNAVI_NEWS'	=> $lang['subnavi_news'],
-		'L_SUBNAVI_MATCH'	=> $lang['subnavi_match'],
-		'L_SUBNAVI_TEAMS'	=> $lang['subnavi_teams'],
 		
-		'L_NETWORK_LINKS'		=> $lang['network_link'],
-		'L_NETWORK_PARTNER'		=> $lang['network_partner'],
-		'L_NETWORK_SPONSOR'		=> $lang['network_sponsor'],
-	
+		
 		'VERSION'		=> $config['page_version'],
 	#	'CMS_VERSION'	=> $changelog['changelog_number'],
-								 
+	
+		/* navi */
+		'L_NAVI_MAIN'		=> $lang['navi_main'],
+		'L_NAVI_CLAN'		=> $lang['navi_clan'],
+		'L_NAVI_COM'		=> $lang['navi_com'],
+		'L_NAVI_MISC'		=> $lang['navi_misc'],
+		'L_NAVI_USER'		=> $lang['navi_user'],
+	
+		/* subnavi */
+		'L_SN_NEWS'				=> $lang['sn_news'],
+		'L_SN_MATCH'			=> $lang['sn_match'],
+		'L_SN_TOPICS'			=> $lang['sn_topics'],
+		'L_SN_DOWNLOADS'		=> $lang['sn_downloads'],
+		'L_SN_TEAMS'			=> $lang['sn_teams'],
+		'L_SN_NEWUSERS'			=> sprintf($lang['sn_newest_users'], $settings['module_newusers']['limit']),
+		'L_SN_TEAMS'			=> $lang['sn_teams'],
+		'L_SN_LINKS'			=> $lang['sn_link'],
+		'L_SN_PARTNER'			=> $lang['sn_partner'],
+		'L_SN_SPONSOR'			=> $lang['sn_sponsor'],
+		'L_SN_STATSONLINE'		=> $lang['sn_statsonline'],
+		'L_SN_MINICAL'			=> $lang['sn_minical'],
+		'L_SN_NEXT_MATCH'		=> $lang['sn_nextmatch'],
+		'L_SN_NEXT_TRAINING'	=> $lang['sn_nexttraining'],
 		
+		'L_MARK_ALL'	=> $lang['mark_all'],
+	'L_MARK_DEALL'	=> $lang['mark_deall'],
+
 		'SITENAME' => $config['page_name'],
 		
 		'ADMIN_LINK'	=> $admin_link,
 		
 		'PAGE_TITLE' => $page_title,
 		
+		
+	'L_NO'			=> $lang['common_no'],
+	'L_YES'			=> $lang['common_yes'],
+	
+	'L_SUBMIT'		=> $lang['common_submit'],
+	'L_RESET'		=> $lang['common_reset'],
+		
 		'L_FORUM'	=> $lang['forum_index'],
 		'U_FORUM'	=> check_sid('forum.php'),
 		
 		'LAST_VISIT_DATE' => sprintf($lang['You_last_visit'], $s_last_visit),
-		'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['page_timezone'])),
-		'TOTAL_USERS_ONLINE' => $l_online_users,
+		'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($config['default_dateformat'], time(), $config['default_timezone'])),
+		
+	#	'TOTAL_USERS_ONLINE' => $l_online_users,
 		
 		
-		'TOTAL_USERS_ONLINE_HEAD'	=> $l_online_users_head,
+		'SO_HEADER'	=> $l_online_users_head,
 		
 		'GROUPS_LEGENED'	=> 'Gruppen: ' . $groups_list,
 		
 		'LOGGED_IN_USER_LIST' => $online_userlist,
-		'RECORD_USERS' => sprintf($lang['Record_online_users'], $config['record_online_users'], create_date($config['default_dateformat'], $config['record_online_date'], $config['page_timezone'])),
+		'RECORD_USERS' => sprintf($lang['Record_online_users'], $config['record_online_users'], create_date($config['default_dateformat'], $config['record_online_date'], $config['default_timezone'])),
 	
 		'L_USERNAME' => $lang['Username'],
 		'L_PASSWORD' => $lang['Password'],
@@ -2917,6 +2468,53 @@ function main_header()
 		
 	);
 	
+	display_navi();
+	
+#	if ( $settings['subnavi_newusers'] )	{ display_newusers(); }
+#	if ( $settings['subnavi_teams'] )		{ display_teams(); }
+#	if ( $settings['subnavi_minical'] )		{ display_minical(); }
+#	if ( $settings['subnavi_links'] )		{ display_network('links'); }
+#	if ( $settings['subnavi_partner'] )		{ display_network('partner'); }
+#	if ( $settings['subnavi_sponsor'] )		{ display_network('sponsor'); }
+#	if ( $settings['subnavi_next_match'] )	{ display_next_match(); }
+
+	$settings['module_news']['show']			? display_news()				: false;
+	$settings['module_match']['show']			? display_match()				: false;
+	$settings['module_topics']['show']			? display_topics()				: false;
+	$settings['module_downloads']['show']		? display_downloads()			: false;
+	$settings['module_newusers']['show']		? display_newusers()			: false;
+	$settings['module_teams']['show']			? display_teams()				: false;
+	$settings['module_calendar']['show']		? display_minical()				: false;
+	$settings['module_server']['show']			? display_server()				: false;
+	$settings['module_network']['show_links']	? display_network('links')		: false;
+	$settings['module_network']['show_partner']	? display_network('partner')	: false;
+	$settings['module_network']['show_sponsor']	? display_network('sponsor')	: false;
+	$settings['module_next_match']['show']		? display_next_match()			: false;
+	$settings['module_next_training']['show']	? display_next_training()		: false;
+	
+	if ( $settings['module_stats']['show_navi_online'] )
+	{
+		$l_t_user_s_n = ( $total_online_users != 0 )	? ( $total_online_users == 1 )		? $l_t_user_s = $lang['n_online_user_total'] : $l_t_user_s = $lang['n_online_users_total'] : $lang['n_online_users_zero_total'];
+		$l_r_user_s_n = ( $logged_visible_online != 0 )	? ( $logged_visible_online == 1 )	? $l_r_user_s = $lang['n_reg_user_total'] : $l_r_user_s = $lang['n_reg_users_total'] : $l_r_user_s = $lang['n_reg_users_zero_total'];
+		$l_h_user_s_n = ( $logged_hidden_online != 0 )	? ( $logged_hidden_online == 1 )	? $l_h_user_s = $lang['n_hidden_user_total'] : $l_h_user_s = $lang['n_hidden_users_total'] : $l_h_user_s = $lang['n_hidden_users_zero_total'];	
+		$l_g_user_s_n = ( $guests_online != 0 )			? ( $guests_online == 1 )			? $l_g_user_s = $lang['n_guest_user_total'] : $l_g_user_s = $lang['n_guest_users_total'] : $l_g_user_s = $lang['n_guest_users_zero_total'];
+		
+		$l_online_users_total	= sprintf($l_t_user_s_n, $total_online_users);
+		$l_online_users_visible	= sprintf($l_r_user_s_n, $logged_visible_online);
+		$l_online_users_hidden	= sprintf($l_h_user_s_n, $logged_hidden_online);
+		$l_online_users_guests	= sprintf($l_g_user_s_n, $guests_online);
+		
+		$template->assign_vars(array(
+			'SO_TOTAL' 		=> $l_online_users_total,
+			'SO_VISIBLE' 	=> $l_online_users_visible,
+			'SO_HIDDEN' 	=> $l_online_users_hidden,
+			'SO_GUESTS' 	=> $l_online_users_guests,
+		));
+		
+		$template->set_filenames(array('statsonline' => 'navi_statsonline.tpl'));
+		$template->assign_var_from_handle('STATSONLINE', 'statsonline');
+	}
+	
 	//
 	// Login box?
 	//
@@ -2942,7 +2540,7 @@ function main_header()
 		}
 	}
 	
-	if (defined('PAGE_DISABLE'))
+	if ( defined('PAGE_DISABLE') )
 	{
 		$disable_message = (!empty($config['page_disable_msg'])) ? htmlspecialchars($config['page_disable_msg']) : $lang['Board_disable'];
 		$template->assign_block_vars('page_disable', array('MSG' => str_replace("\n", '<br>', $disable_message)));
@@ -2960,15 +2558,15 @@ function main_header()
 	header('Pragma:no-cache');
 	
 	$template->pparse('overall_header');
+	
+	return;
 }
 
 function main_footer()
 {
 	global $gzip, $userdata, $template, $db, $lang;
 	
-	$template->set_filenames(array(
-		'overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl'
-	));
+	$template->set_filenames(array('overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl'));
 	
 	$debug = (defined('DEBUG')) ? '[ Debug: on ]' : '[ Debug: off ]';
 	$cache = (defined('CACHE')) ? '[ Cache: on ]' : '[ Cache: off ]';

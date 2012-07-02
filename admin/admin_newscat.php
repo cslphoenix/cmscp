@@ -15,36 +15,35 @@ else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
 	$current	= 'sm_newscat';
 	
 	include('./pagestart.php');
 	
-	load_lang('newscat');
+	add_lang('newscat');
 
 	$error	= '';
 	$index	= '';
 	$fields	= '';
 	
-	$log	= SECTION_NEWSCAT;
+	$log	= SECTION_NEWS_CAT;
 	$url	= POST_CAT;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
-	$path_dir	= $root_path . $settings['path_newscat'] . '/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['newscat']);
+	$dir_path	= $root_path . $settings['path_newscat'];
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_newscat'] )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
@@ -56,118 +55,98 @@ else
 		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
+	
+	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete')) ) ? $mode : '';
 		
 	if ( $mode )
 	{
 		switch ( $mode )
 		{
-			case '_create':
-			case '_update':
+			case 'create':
+			case 'update':
 			
-				$template->assign_block_vars('_input', array());
+				$template->assign_block_vars('input', array());
 				
-				$template->assign_vars(array('PATH' => $path_dir));
+				$template->assign_vars(array('PATH' => $dir_path));
 				$template->assign_var_from_handle('UIMG', 'uimg');
 				
-				if ( $mode == '_create' && !(request('submit', 1)) )
+				$vars = array(
+					'newscat' => array(
+						'title1' => 'input_data',
+						'cat_name'	=> array('validate' => 'text',	'type' => 'text:25:25',	'explain' => true,	'required' => 'input_name'),
+						'cat_image'	=> array('validate' => 'text',	'type' => 'drop:image', 'explain' => true,	'params' => $dir_path),
+						'cat_order'	=> array('validate' => 'int',	'type' => 'drop:order',	'explain' => true),
+					),
+				);
+				
+				if ( $mode == 'create' && !(request('submit', TXT)) )
 				{
 					$data = array(
-								'cat_name'	=> ( request('cat_name', 2) ) ? request('cat_name', 2) : '',
-								'cat_image'	=> '',
-								'cat_order'	=> '',
-							);
+						'cat_name'	=> ( request('cat_name', 2) ) ? request('cat_name', 2) : '',
+						'cat_image'	=> '',
+						'cat_order'	=> '',
+					);
 				}
-				else if ( $mode == '_update' && !(request('submit', 1)) )
+				else if ( $mode == 'update' && !(request('submit', TXT)) )
 				{
-					$data = data(NEWSCAT, $data_id, false, 1, 1);
+					$data = data(NEWS_CAT, $data_id, false, 1, true);
 				}
 				else
 				{
-					$data = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_image'	=> request('cat_image', 1),
-								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
-							);
-				}
-				
-				$sql = "SELECT * FROM " . NEWSCAT . " ORDER BY cat_order ASC";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$cats = $db->sql_fetchrowset($result);
-				
-				$cat_image = "<select class=\"select\" name=\"cat_image\" id=\"cat_image\" onchange=\"update_image(this.options[selectedIndex].value);\">";
-				$cat_image .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_cat_image']) . "</option>";
-				
-				for ( $i = 0; $i < count($cats); $i++ )
-				{
-					$marked = ( $data['cat_image'] == $cats[$i]['cat_image'] ) ? ' selected="selected"' : '';
-					$cat_image .= "<option value=\"" . $cats[$i]['cat_image'] . "\"$marked>" . sprintf($lang['sprintf_select_format'], $cats[$i]['cat_name']) . "</option>";
-				}
-				
-				$cat_image .= "</select>";
-				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				
-				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['newscat']),
-					'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['newscat'], $data['cat_name']),
-					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['newscat']),
-					'L_IMAGE'		=> sprintf($lang['sprintf_image'], $lang['newscat']),
+					$temp = data(NEWS_CAT, $data_id, false, 1, true);
+					$temp = array_keys($temp);
+					unset($temp[0]);
 					
-					'NAME'			=> $data['cat_name'],
-					'IMAGE'			=> $data['cat_image'] ? $path_dir . $data['cat_image'] : $images['icon_acp_spacer'],
-					
-					'S_ORDER'		=> simple_order(NEWSCAT, false, 'select', $data['cat_order']),
-					'S_IMAGE'		=> select_box_files('post', 'cat_image', $path_dir, $data['cat_image']),
-										
-					'S_ACTION'		=> check_sid($file),
-					'S_FIELDS'		=> $fields,
-				));
-				
-				if ( request('submit', 1) )
-				{
-					$error .= check(NEWSCAT, array('cat_name'	=> $data['cat_name'], 'cat_id'	=> $data_id), $error);
+					$data = build_request($temp, $vars, 'newscat', $error);
 					
 					if ( !$error )
 					{
-						$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(NEWSCAT, 'cat_order', false) : $data['cat_order'];
-						
-						if ( $mode == '_create' )
+						if ( $mode == 'create' )
 						{
-							$sql = sql(NEWSCAT, $mode, $data);
+							$sql = sql(NEWS_CAT, $mode, $data);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(NEWSCAT, $mode, $data, 'cat_id', $data_id);
+							$sql = sql(NEWS_CAT, $mode, $data, 'cat_id', $data_id);
 							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
-						orders(NEWSCAT);
+						orders(NEWS_CAT);
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);						
 						message(GENERAL_MESSAGE, $msg);
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
 						$template->assign_vars(array('ERROR_MESSAGE' => $error));
 						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						
+						log_add(LOG_ADMIN, $log, 'error', $error);
 					}
 				}
-			
+				
+				build_output($data, $vars, 'input', false, NEWS_CAT);
+				
+				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['cat_name']),
+					
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+				
 				$template->pparse('body');
 				
 				break;
 			
-			case '_order':
+			case 'order':
 			
-				update(NEWSCAT, 'newscat', $move, $data_id);
-				orders(NEWSCAT);
+				update(NEWS_CAT, 'cat', $move, $data_id);
+				orders(NEWS_CAT);
 				
 				log_add(LOG_ADMIN, $log, $mode);
 				
@@ -175,16 +154,18 @@ else
 				
 				break;
 			
-			case '_delete':
+			case 'delete':
 			
-				$data = data(NEWSCAT, $data_id, false, 1, 1);
+				$data = data(NEWS_CAT, $data_id, false, 1, true);
 			
 				if ( $data_id && $confirm )
 				{	
 					sql(NEWS, 'update', array('news_cat' => ''), 'news_cat', $data_id);
 				
-					$sql = sql(NEWSCAT, $mode, $data, 'cat_id', $data_id);
+					$sql = sql(NEWS_CAT, $mode, $data, 'cat_id', $data_id);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+					
+					orders(NEWS_CAT);
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
@@ -204,14 +185,12 @@ else
 				}
 				else
 				{
-					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['newscat']));
+					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 				}
 				
 				$template->pparse('confirm');
 				
 				break;
-			
-			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 		
 		if ( $index != true )
@@ -221,48 +200,50 @@ else
 		}
 	}
 			
-	$template->assign_block_vars('_display', array());
+	$template->assign_block_vars('display', array());
 	
-	$fields .= '<input type="hidden" name="mode" value="_create" />';
-			
-	$template->assign_vars(array(	 
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['newscat']),
-		'L_CREATE'	=> sprintf($lang['sprintf_new_create'], $lang['newscat']),
-		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['newscat']),
-		
-		'L_EXPLAIN'	=> $lang['explain'],
+	$fields	= '<input type="hidden" name="mode" value="create" />';
 	
-		'S_CREATE'	=> check_sid("$file?mode=_create"),
-		'S_ACTION'	=> check_sid($file),
-		'S_FIELDS'	=> $fields,
-	));
-	
-	$max = maxi(NEWSCAT, 'cat_order', '');
-	$cats = data(NEWSCAT, false, 'cat_order ASC', 1, false);
+	$max	= maxi(NEWS_CAT, 'cat_order', '');
+	$cats	= data(NEWS_CAT, false, 'cat_order ASC', 1, false);
 	
 	if ( !$cats )
 	{
-		$template->assign_block_vars('_display._entry_empty', array());
+		$template->assign_block_vars('display.empty', array());
 	}
 	else
 	{
-		for ( $i = 0; $i < count($cats); $i++ )
+		$count = count($cats);
+		
+		for ( $i = 0; $i < $count; $i++ )
 		{
-			$cat_id		= $cats[$i]['cat_id'];
-			$cat_name	= $cats[$i]['cat_name'];
-			$cat_order	= $cats[$i]['cat_order'];
+			$id		= $cats[$i]['cat_id'];
+			$name	= $cats[$i]['cat_name'];
+			$order	= $cats[$i]['cat_order'];
 
-			$template->assign_block_vars('_display._cat_row', array(
-				'NAME'		=> $cat_name,
+			$template->assign_block_vars('display.row', array(
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, ''),
 				
-				'MOVE_UP'	=> ( $cat_order != '10' ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=-15&amp;$url=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" />',
-				'MOVE_DOWN'	=> ( $cat_order != $max ) ? '<a href="' . check_sid("$file?mode=_order&amp;move=+15&amp;$url=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" />',
+				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => 'order', 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => 'order', 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
-				'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$cat_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-				'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$cat_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
 			));
 		}
 	}
+	
+	$template->assign_vars(array(	 
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
+		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
+		
+		'L_EXPLAIN'	=> $lang['explain'],
+	
+		'S_CREATE'	=> check_sid("$file?mode=create"),
+		'S_ACTION'	=> check_sid($file),
+		'S_FIELDS'	=> $fields,
+	));
 		
 	$template->pparse('body');
 			

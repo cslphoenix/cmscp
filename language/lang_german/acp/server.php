@@ -30,6 +30,9 @@ $lang = array_merge($lang, array(
 	
 	'gameserver'	=> 'Gameserver',
 	'voiceserver'	=> 'Voiceserver',
+	
+	'online'	=> 'Online',
+	'offline'	=> 'Offline',
 
 ));
 

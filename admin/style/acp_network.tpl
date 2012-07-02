@@ -1,16 +1,7 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -19,25 +10,23 @@
 	<th>{L_LINK}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _link_row -->
+<!-- BEGIN link_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._link_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._link_row.SHOW}{_display._link_row.MOVE_UP}{_display._link_row.MOVE_DOWN}{_display._link_row.UPDATE} {_display._link_row.DELETE}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.link_row.LINK}</span>{display.link_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.link_row.SHOW}{display.link_row.MOVE_UP}{display.link_row.MOVE_DOWN}{display.link_row.UPDATE}{display.link_row.DELETE}</td>
 </tr>
-<!-- END _link_row -->
-<!-- BEGIN _no_entry_link -->
+<!-- END link_row -->
+<!-- BEGIN no_entry_link -->
 <tr>
-	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _no_entry_link -->
+<!-- END no_entry_link -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td><input type="text" class="post" name="network_name[1]"></td>
+	<td><input type="text" name="network_name[1]"></td>
 	<td><input type="submit" class="button2" name="network_type[1]" value="{L_CREATE_LINK}"></td>
-    <td></td>
-    <td></td>
 </tr>
 </table>
 
@@ -48,25 +37,23 @@
 	<th>{L_PARTNER}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _partner_row -->
+<!-- BEGIN partner_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._partner_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._partner_row.SHOW}{_display._partner_row.MOVE_UP}{_display._partner_row.MOVE_DOWN}{_display._partner_row.UPDATE} {_display._partner_row.DELETE}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.partner_row.LINK}</span>{display.partner_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.partner_row.SHOW}{display.partner_row.MOVE_UP}{display.partner_row.MOVE_DOWN}{display.partner_row.UPDATE}{display.partner_row.DELETE}</td>
 </tr>
-<!-- END _partner_row -->
-<!-- BEGIN _no_entry_partner -->
+<!-- END partner_row -->
+<!-- BEGIN no_entry_partner -->
 <tr>
-	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _no_entry_partner -->
+<!-- END no_entry_partner -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td><input type="text" class="post" name="network_name[2]"></td>
+	<td><input type="text" name="network_name[2]"></td>
 	<td><input type="submit" class="button2" name="network_type[2]" value="{L_CREATE_PARTNER}"></td>
-    <td></td>
-    <td></td>
 </tr>
 </table>
 
@@ -77,101 +64,65 @@
 	<th>{L_SPONSOR}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _sponsor_row -->
+<!-- BEGIN sponsor_row -->
 <tr>
-	<td class="row_class1" align="left" width="100%">{_display._sponsor_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{_display._sponsor_row.SHOW}{_display._sponsor_row.MOVE_UP}{_display._sponsor_row.MOVE_DOWN}{_display._sponsor_row.UPDATE} {_display._sponsor_row.DELETE}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.sponsor_row.LINK}</span>{display.sponsor_row.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.sponsor_row.SHOW}{display.sponsor_row.MOVE_UP}{display.sponsor_row.MOVE_DOWN}{display.sponsor_row.UPDATE}{display.sponsor_row.DELETE}</td>
 </tr>
-<!-- END _sponsor_row -->
-<!-- BEGIN _no_entry_sponsor -->
+<!-- END sponsor_row -->
+<!-- BEGIN no_entry_sponsor -->
 <tr>
-	<td class="entry_empty" align="center" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _no_entry_sponsor -->
+<!-- END no_entry_sponsor -->
 </table>
 
-<table class="footer">
+<table class="lfooter">
 <tr>
-	<td><input type="text" class="post" name="network_name[3]"></td>
+	<td><input type="text" name="network_name[3]"></td>
 	<td><input type="submit" class="button2" name="network_type[3]" value="{L_CREATE_SPONSOR}"></td>
-    <td></td>
-    <td></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 {AJAX}
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
 </ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
 <table class="update">
+<!-- BEGIN tab -->
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
-<tbody class="trhover">
+<!-- BEGIN option -->
 <tr>
-	<td class="row1" width="155"><label for="network_name">{L_NAME}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="network_name" id="network_name" value="{NAME}"></td>
+	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
-<tr>
-	<td class="row1"><label for="network_url">{L_URL}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="network_url" id="network_url" value="{URL}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="network_image">{L_IMAGE}:</label></td>
-	<td class="row3">
-		<!-- BEGIN _image -->
-		<img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="network_image_delete">&nbsp;{L_IMAGE_DELETE}<br />
-		<!-- END _image -->
-		<input type="file" class="post" name="network_image">
-	</td>
-</tr>
-<tr>
-	<td class="row1"><label>{L_TYPE}: *</label></td>
-	<td class="row2">
-		<label><input type="radio" name="network_type" value="1" onclick="setRequest('network', 1, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_LINK} />&nbsp;{L_TYPE_LINK}</label><br />
-		<label><input type="radio" name="network_type" value="2" onclick="setRequest('network', 2, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_PARTNER} />&nbsp;{L_TYPE_PARTNER}</label><br />
-		<label><input type="radio" name="network_type" value="3" onclick="setRequest('network', 3, {CUR_TYPE}, {CUR_ORDER})" {S_TYPE_SPONSOR} />&nbsp;{L_TYPE_SPONSOR}</label>
-	</td> 
-</tr>
-<tr>
-	<td class="row1"><label for="network_view">{L_VIEW}:</label></td>
-	<td class="row2"><label><input type="radio" name="network_view" id="network_view" value="1" {S_VIEW_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="network_view" value="0" {S_VIEW_NO} />&nbsp;{L_NO}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label for="network_order">{L_ORDER}:</label></td>
-	<td class="row2"><div id="close">{S_ORDER}</div><div id="content"></div></td>
-</tr>
-</tbody>
+<!-- END option -->
+<!-- END tab -->
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
+</table>
+<!-- END row -->
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

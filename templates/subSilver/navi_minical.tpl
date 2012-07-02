@@ -1,5 +1,5 @@
 <tr>
-	<td class="info_head"><span class="right">{CACHE}</span><span class="right">{MINI_MONTH}&nbsp;</span>{L_SN_MINICAL}</td>
+	<th><span class="right">{MINI_CACHE}</span><span class="right">{MINI_MONTH}&nbsp;</span>{L_SN_MINICAL}</th>
 </tr>
 <tr>
 	<td>

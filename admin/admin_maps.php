@@ -20,7 +20,7 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('maps');
+	add_lang('maps');
 
 	$error	= '';
 	$index	= '';
@@ -28,25 +28,25 @@ else
 	
 	$log	= SECTION_MAPS;
 	$url	= POST_MAPS;
-	$url_c	= POST_MAPS_CAT;
+	$cat	= POST_MAPS_CAT;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$data_cat	= request($url_c, 0);
-	$data_type	= request('type', 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$data_cat	= request($cat, INT);
+	$data_type	= request('type', INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
-	$path_dir	= $root_path . $settings['path_maps'] . '/';
+	$dir_path	= $root_path . $settings['path_maps'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_maps'] )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
@@ -61,9 +61,9 @@ else
 	
 	if ( request('add_map', 1) || request('add_cat', 1) )
 	{
-		$mode = ( request('add_map', 1) ) ? '_create' : '_create_cat';
+		$mode = ( request('add_map', 1) ) ? 'create' : '_create_cat';
 	
-		if ( $mode == '_create' )
+		if ( $mode == 'create' )
 		{
 			list($cat_id)	= each($_POST['add_map']);
 			$cat_id			= intval($cat_id);
@@ -72,41 +72,74 @@ else
 		}
 	}
 	
+	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete', 'create_cat', 'update_cat', 'order_cat', 'delete_cat')) ) ? $mode : '';
+	
 	if ( $mode )
 	{
 		switch ( $mode )
 		{
-			case '_create':
-			case '_update':
+			case 'create':
+			case 'update':
 
-				$template->assign_block_vars('_input', array());
+				$template->assign_block_vars('input', array());
 				
 				$template->assign_vars(array('FILE' => 'ajax_maps'));
 				$template->assign_var_from_handle('AJAX', 'ajax');
 				
-				if ( $mode == '_create' && !(request('submit', 1)) )
+				if ( $mode == 'create' && !(request('submit', TXT)) )
 				{
 					$data = array(
-								'map_name'	=> isset($map_name) ? $map_name : '',
-								'cat_id'	=> request('cat_id', 2) ? request('cat_id', 2) : $cat_id,
-								'map_type'	=> '',
-								'map_file'	=> '',
-								'map_order'	=> '',
-							);
+						'map_name'	=> isset($map_name) ? $map_name : '',
+						'cat_id'	=> request('cat_id', 2) ? request('cat_id', 2) : $cat_id,
+						'map_type'	=> '',
+						'map_file'	=> '',
+						'map_order'	=> '',
+					);
 				}
-				else if ( $mode == '_update' && !(request('submit', 1)) )
+				else if ( $mode == 'update' && !(request('submit', TXT)) )
 				{
 					$data = data(MAPS, $data_id, false, 1, 1);
 				}
 				else
 				{
 					$data = array(
-								'map_name'	=> request('map_name', 2),
-								'cat_id'	=> request('cat_id', 2),
-								'map_type'	=> request('map_type', 2),
-								'map_file'	=> request('map_file', 2),
-								'map_order'	=> request('map_order', 0) ? request('map_order', 0) : request('map_order_new', 0),
-							);
+						'map_name'	=> request('map_name', 2),
+						'cat_id'	=> request('cat_id', 2),
+						'map_type'	=> request('map_type', 2),
+						'map_file'	=> request('map_file', 2),
+						'map_order'	=> request('map_order', 0) ? request('map_order', 0) : request('map_order_new', 0),
+					);
+					
+					$error .= check(MAPS, array('map_name' => $data['map_name'], 'map_file' => $data['map_file'], 'map_id' => $data_id), $error);
+					$error .= ( !$data['map_type'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_type'] : '';
+					
+					if ( !$error )
+					{
+						$data['map_order'] = $data['map_order'] ? $data['map_order'] : maxa(MAPS, 'map_order', 'cat_id = ' . $data['cat_id']);
+						
+						if ( $mode == 'create' )
+						{
+							$sql = sql(MAPS, $mode, $data);
+							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						}
+						else
+						{
+							$sql = sql(MAPS, $mode, $data, 'map_id', $data_id);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						}
+						
+						orders(MAPS, $data['cat_id']);
+
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
+					}
+					else
+					{
+						$template->assign_vars(array('ERROR_MESSAGE' => $error));
+						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						
+						log_add(LOG_ADMIN, $log, 'error', $error);
+					}
 				}
 				
 				$cats = data(MAPS_CAT, $data['cat_id'], false, 1, true);
@@ -116,20 +149,20 @@ else
 				
 				for ( $j = 0; $j < count($cats_list); $j++ )
 				{
-					$template->assign_block_vars('_input._cat', array(
+					$template->assign_block_vars('input._cat', array(
 						'CAT_ID'	=> $cats_list[$j]['cat_id'],
 						'CAT_NAME'	=> $cats_list[$j]['cat_name'],
 						
 						'S_MARK'	=> ( $data['cat_id'] == $cats_list[$j]['cat_id'] ) ? ' checked="checked"' : '',
 					));
 					
-					$template->assign_block_vars('_input._update_image', array(
+					$template->assign_block_vars('input._update_image', array(
 						'NAME'	=> $cats_list[$j]['cat_tag'],
-						'PATH'	=> $path_dir . $cats_list[$j]['cat_tag'],
+						'PATH'	=> $dir_path . $cats_list[$j]['cat_tag'],
 					));
 				}
 				
-				$path_files = scandir($path_dir . $tag['cat_tag']);
+				$path_files = scandir($dir_path . $tag['cat_tag']);
 				
 				if ( $path_files )
 				{
@@ -176,7 +209,7 @@ else
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['titles']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . $mode ], $lang['title'], $data['map_name']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['map_name']),
 					'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
 					'L_FILE'	=> sprintf($lang['sprintf_image'], $lang['title']),
 					'L_TYPE'	=> sprintf($lang['sprintf_type'], $lang['title']),
@@ -185,12 +218,12 @@ else
 					'NAME'		=> $data['map_name'],
 					'TYPE'		=> $data['map_type'],
 					
-					'PATH'		=> $path_dir . $tag['cat_tag'] . '/',
-					'IMAGE'		=> ( $data['map_file'] ) ? $path_dir . $tag['cat_tag'] . '/' . $data['map_file'] : './../admin/style/images/spacer.gif',
+					'PATH'		=> $dir_path . $tag['cat_tag'] . '/',
+					'IMAGE'		=> ( $data['map_file'] ) ? $dir_path . $tag['cat_tag'] . '/' . $data['map_file'] : './../admin/style/images/spacer.gif',
 					
 					'S_FILE'	=> $maps,
 					
-				#	'S_FILE'	=> select_box_files('post', 'map_file', $path_dir . $data['cat_tag'], $data['map_file']),
+				#	'S_FILE'	=> select_box_files('post', 'map_file', $dir_path . $data['cat_tag'], $data['map_file']),
 					'S_ORDER'	=> simple_order(MAPS, $data['cat_id'], 'select', $data['map_order']),
 				#	'S_ORDER'	=> select_order('select', MAPS, $data['cat_id'], $data['map_order']),
 					
@@ -198,48 +231,11 @@ else
 					'S_FIELDS'	=> $fields,
 				));
 				
-				debug($_POST);
-				debug($data);
-
-				if ( request('submit', 1) )
-				{
-					$error .= check(MAPS, array('map_name' => $data['map_name'], 'map_file' => $data['map_file'], 'map_id' => $data_id), $error);
-					$error .= ( !$data['map_type'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_tag'] : '';
-					
-					if ( !$error )
-					{
-						$data['map_order'] = ( !$data['map_order'] ) ? maxa(MAPS, 'map_order', 'cat_id = ' . $data['cat_id']) : $data['map_order'];
-						
-						if ( $mode == '_create' )
-						{
-							$sql = sql(MAPS, $mode, $data);
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
-						}
-						else
-						{
-							$sql = sql(MAPS, $mode, $data, 'map_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
-						}
-						
-						orders(MAPS, $data['cat_id']);
-
-						log_add(LOG_ADMIN, $log, $mode, $sql);
-						message(GENERAL_MESSAGE, $msg);
-					}
-					else
-					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-					}
-				}
-				
 				$template->pparse('body');
 
 				break;
 			
-			case '_order':
+			case 'order':
 			
 				update(MAPS, 'map', $move, $data_id);
 				orders(MAPS, $data_type);
@@ -250,7 +246,7 @@ else
 
 				break;
 				
-			case '_delete':
+			case 'delete':
 
 				$data = data(MAPS, $data_id, false, 1, true);
 
@@ -277,37 +273,42 @@ else
 				}
 				else
 				{
-					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['map']));
+					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 				}
 				
 				$template->pparse('confirm');
 				
 				break;
 				
-			case '_create_cat':
-			case '_update_cat':
+			case 'create_cat':
+			case 'update_cat':
 
-				$template->assign_block_vars('_input_cat', array());
+				$template->assign_block_vars('input_cat', array());
+				
+				$template->assign_vars(array('FILE' => 'ajax_maps_cat'));
+				$template->assign_var_from_handle('AJAX', 'ajax');
 
-				if ( $mode == '_create_cat' && !(request('submit', 1)) )
+				if ( $mode == '_create_cat' && !(request('submit', TXT)) )
 				{
 					$data = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_tag'	=> '',
-								'cat_order'	=> '',
-							);
+						'cat_name'		=> request('cat_name', 2),
+						'cat_tag'		=> '',
+						'cat_display'	=> '0',
+						'cat_order'		=> '',
+					);
 				}
-				else if ( $mode == '_update_cat' && !(request('submit', 1)) )
+				else if ( $mode == '_update_cat' && !(request('submit', TXT)) )
 				{
 					$data = data(MAPS_CAT, $data_cat, false, 1, true);
 				}
 				else
 				{
 					$data = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_tag'	=> strtolower(request('cat_tag', 2)),
-								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
-							);
+						'cat_name'		=> request('cat_name', 2),
+						'cat_tag'		=> strtolower(request('cat_tag', 2)),
+						'cat_display'	=> request('cat_display', 0),
+						'cat_order'		=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
+					);
 					
 					$cur_tag = request('current_tag', 1);
 					
@@ -319,7 +320,7 @@ else
 						
 						if ( $mode == '_create_cat' )
 						{
-							create_folder($path_dir, $data['cat_tag'], false);
+							create_folder($dir_path, $data['cat_tag'], false);
 							
 							$sql = sql(MAPS_CAT, $mode, $data);
 							$msg = $lang['create_cat'] . sprintf($lang['return'], check_sid($file), $acp_title);
@@ -328,11 +329,11 @@ else
 						{
 							if ( $data['cat_tag'] != $cur_tag )
 							{
-								rename($path_dir . $cur_tag, $path_dir . $data['cat_tag']);
+								rename($dir_path . $cur_tag, $dir_path . $data['cat_tag']);
 							}
 							
 							$sql = sql(MAPS_CAT, $mode, $data, 'cat_id', $data_cat);
-							$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url_c=$data_cat"));
+							$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$cat=$data_cat"));
 						}
 						
 						orders(MAPS_CAT);
@@ -350,7 +351,7 @@ else
 				}
 
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
+				$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
 				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data['cat_tag'] . "\" />";
 				
 				$template->assign_vars(array(
@@ -358,10 +359,14 @@ else
 					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode) ], $lang['cat'], $data['cat_name']),
 					'L_NAME'	=> $lang['cat_name'],
 					'L_TAG'		=> $lang['cat_tag'],
+					'L_DISPLAY'	=> $lang['cat_display'],
 					'L_ORDER'	=> $lang['common_order'],
 
 					'NAME'		=> $data['cat_name'],
 					'TAG'		=> $data['cat_tag'],
+				
+					'S_DISPLAY_NO'	=> (!$data['cat_display'] ) ? 'checked="checked"' : '',
+					'S_DISPLAY_YES'	=> ( $data['cat_display'] ) ? 'checked="checked"' : '',
 					
 					'S_ORDER'	=> simple_order(MAPS_CAT, '', 'select', $data['cat_order']),
 
@@ -373,7 +378,7 @@ else
 
 				break;
 				
-			case '_order_cat':
+			case 'order_cat':
 
 				update(MAPS_CAT, 'cat', $move, $data_cat);
 				orders(MAPS_CAT);
@@ -384,13 +389,13 @@ else
 
 				break;
 
-			case '_delete_cat':
+			case 'delete_cat':
 			
 				$data = data(MAPS_CAT, $data_cat, false, 1, true);
 				
 				if ( $data_cat && $confirm )
 				{
-					delete_folder($path_dir . $data['cat_tag'] . '/');
+					delete_folder($dir_path . $data['cat_tag'] . '/');
 					
 					$sql = sql(MAPS_CAT, $mode, $data, 'cat_id', $data_cat);
 					$msg = $lang['delete_cat'] . sprintf($lang['return'], check_sid($file), $acp_title);
@@ -403,7 +408,7 @@ else
 				else if ( $data_cat && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url_c\" value=\"$data_cat\" />";
+					$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
 
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
@@ -415,14 +420,12 @@ else
 				}
 				else
 				{
-					message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['cat']));
+					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['cat']));
 				}
 				
 				$template->pparse('confirm');
 				
 				break;
-				
-			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -432,14 +435,14 @@ else
 		}
 	}
 	
-	$template->assign_block_vars('_display', array());
+	$template->assign_block_vars('display', array());
 	
-	$fields .= '<input type="hidden" name="mode" value="_create" />';
+	$fields .= '<input type="hidden" name="mode" value="create" />';
 	
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['titles']),
-		'L_CREATE_MAP'	=> sprintf($lang['sprintf_new_create'], $lang['title']),
-		'L_CREATE_CAT'	=> sprintf($lang['sprintf_new_create'], $lang['cat']),
+		'L_CREATE_MAP'	=> sprintf($lang['sprintf_create'], $lang['title']),
+		'L_CREATE_CAT'	=> sprintf($lang['sprintf_create'], $lang['cat']),
 		'L_NAME'		=> $lang['map_name'],
 		'L_EXPLAIN'		=> $lang['explain'],
 		
@@ -449,31 +452,125 @@ else
 		'S_FIELDS'		=> $fields,
 	));
 	
-	$max	= maxi(MAPS_CAT, 'cat_order', '');
-	$cats	= data(MAPS_CAT, false, 'cat_order ASC', 1, false);
+	$tmp = data(MAPS, false, 'maps_sub ASC, maps_order ASC', 1, false);
 	
-	if ( !$cats )
+	if ( $tmp )
 	{
-		$template->assign_block_vars('_display._entry_empty', array());
+		foreach ( $tmp as $row )
+		{
+			if ( !$row['maps_sub'] )
+			{
+				$db_cat[$row['maps_name']]	= sprintf('%s:%s', $row['maps_id'], $row['maps_order']);
+			}
+			else
+			{
+				$db_sub[$row['maps_sub']][$row['maps_name']] = $row;
+			}
+		}
+		
+		if ( isset($db_sub) )
+		{
+			foreach ( $db_sub as $cat => $row )
+			{
+				foreach ( $row as $name => $details )
+				{
+					$max_sub[$cat] = $details['maps_order'];
+				}
+			}
+		}
 	}
 	else
 	{
-		for ( $i = 0; $i < count($cats); $i++ )
+		$db_cat = $max_cat = $db_sub = $max_sub = array();
+	}
+	
+	if ( $db_cat )
+	{
+		list($cat, $max) = explode(':', end($db_cat));
+		
+		foreach ( $db_cat as $name => $key )
 		{
-			$cat_id = $cats[$i]['cat_id'];
+			$cname = isset($lang[$name]) ? $lang[$name] : $name;
+			
+			list($cid, $corder) = explode(':', $key);
+			
+			$template->assign_block_vars('display.cat', array( 
+				'NAME'		=> href('a_txt', $file, array('mode' => '_update_cat', $url => $cid), $cname, $cname),
+				
+				'MOVE_UP'	=> ( $corder != '10' ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '-15', $url => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $corder != $max ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '+15', $url => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', $url => $cid), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $cid), 'icon_cancel', 'common_delete'),
+				
+				'S_NAME'	=> "sub_field[$cid]",
+				'S_SUBMIT'	=> "add_field[$cid]",
+			));
+			
+			if ( isset($db_sub[$cid]) )
+			{
+				
+				foreach ( $db_sub[$cid] as $subname => $subrow )
+				{
+					$fid	= $subrow['maps_id'];
+					$fname	= isset($lang[$subname]) ? $lang[$subname] : $subname;
+					$ftype	= $subrow['maps_type'];
+					$forder	= $subrow['maps_order'];
+					
+					$template->assign_block_vars('display.cat.maps', array(
+						'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $fid), $fname, $fname),
+						'TYPE'		=> ( $ftype != 0 ) ? ( $ftype == 1 ) ? 'textarea' : 'option' : 'textzeile',
+
+						'MOVE_UP'	=> ( $forder != '10' )				? href('a_img', $file, array('mode' => '_order', 'sub' => $cid, 'move' => '-15', $url => $fid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+						'MOVE_DOWN'	=> ( $forder != $max_sub[$cid] )	? href('a_img', $file, array('mode' => '_order', 'sub' => $cid, 'move' => '+15', $url => $fid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				
+						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $fid), 'icon_update', 'common_update'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $fid), 'icon_cancel', 'common_delete'),
+					));
+				}
+			}
+			else
+			{
+				$template->assign_block_vars('display.cat.empty', array());
+			}
+		}
+	}
+	
+	
+	/*
+	$max = maxi(MAPS_CAT, 'cat_order', '');
+	$tmp = data(MAPS_CAT, false, 'cat_order ASC', 1, false);
+	
+	if ( $tmp )
+	{
+		$cnt_cats = count($tmp);
+		
+		for ( $i = 0; $i < $cnt_cats; $i++ )
+		{
+			$cat_id = $tmp[$i]['cat_id'];
+			$name	= $tmp[$i]['cat_name'];
+			$order	= $tmp[$i]['cat_order'];
 			
 			$maps = data(MAPS, "cat_id = $cat_id", 'map_order ASC', 1, false);
 			
-			$template->assign_block_vars('_display._cat_row', array( 
-				'CAT_ID'	=> $cat_id,
-				'CAT_NAME'	=> $cats[$i]['cat_name'],
-				'CAT_TAG'	=> $cats[$i]['cat_tag'],
+			$cnt_maps = $maps ? count($maps) : 0;
+			
+			$template->assign_block_vars('display.cat_row', array( 
+				'NAME'		=> href('a_txt', $file, array('mode' => '_update_cat', $cat => $cat_id), $name, ''),
 				
-				'MOVE_UP'	=> ( $cats[$i]['cat_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_order_cat&amp;move=-15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" border="0" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" border="0" />',
-				'MOVE_DOWN'	=> ( $cats[$i]['cat_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_order_cat&amp;move=+15&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" border="0" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" border="0" />',
+				'ID'		=> $cat_id,
+				'TAG'		=> $tmp[$i]['cat_tag'],
 				
-				'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update_cat&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-				'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete_cat&amp;$url_c=$cat_id") . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+				'MAPS'		=> ( $cnt_maps == '1' ) ? sprintf($lang['sprintf_count_maps'], $cnt_maps, $lang['title']) : sprintf($lang['sprintf_count_maps'], $cnt_maps, $lang['titles']),
+				
+				'DISPLAY'	=> $tmp[$i]['cat_display'] ? '' : 'none',
+				'IMAGE'		=> $tmp[$i]['cat_display'] ? 'collapse' : 'expand',
+				
+				'MOVE_UP'	=> ( $order != '10' )	? href('a_img', $file, array('mode' => '_order_cat', 'move' => '-15', $cat => $cat_id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => '_order_cat', 'move' => '+15', $cat => $cat_id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+								
+				'UPDATE'	=> href('a_img', $file, array('mode' => '_update_cat', $cat => $cat_id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => '_delete_cat', $cat => $cat_id), 'icon_cancel', 'common_delete'),
 				
 				'S_NAME'	=> "map_name[$cat_id]",
 				'S_SUBMIT'	=> "add_map[$cat_id]",
@@ -481,10 +578,12 @@ else
 			
 			if ( !$maps )
 			{
-				$template->assign_block_vars('_display._cat_row._entry_empty', array());
+				$template->assign_block_vars('display.catrow._empty', array());
 			}
 			else
 			{
+				
+				
 				$sql = "SELECT MAX(map_order) AS max$cat_id FROM " . MAPS . " WHERE cat_id = $cat_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -492,30 +591,32 @@ else
 				}
 				$max_map = $db->sql_fetchrow($result);
 			
-				for ( $j = 0; $j < count($maps); $j++ )
+				for ( $j = 0; $j < $cnt_maps; $j++ )
 				{
-					$map_id = $maps[$j]['map_id'];
-					$cat_id = $maps[$j]['cat_id'];
+					$id		= $maps[$j]['map_id'];
+					$cat_id	= $maps[$j]['cat_id'];
+					$name	= $maps[$j]['map_name'];
+					$order	= $maps[$j]['map_order'];
 					
-					if ( $cats[$i]['cat_id'] == $maps[$j]['cat_id'] )
+					if ( $tmp[$i]['cat_id'] == $maps[$j]['cat_id'] )
 					{
-						$template->assign_block_vars('_display._cat_row._map_row', array(
-							'NAME'		=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$map_id") . '">' . $maps[$j]['map_name'] . '</a>',
+						$template->assign_block_vars('display.catrow._map_row', array(
+							'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, ''),
 							'FILE'		=> $maps[$j]['map_file'],
 							'TYPE'		=> $maps[$j]['map_type'],
 							
-							'MOVE_UP'	=> ( $maps[$j]['map_order'] != '10' )						? '<a href="' . check_sid("$file?mode=_order&amp;type=$cat_id&amp;$url=$map_id") . '&amp;move=-15"><img src="' . $images['icon_acp_arrow_u'] . '" alt="" border="0" /></a>' : '<img src="' . $images['icon_acp_arrow_u2'] . '" alt="" border="0" />',
-							'MOVE_DOWN'	=> ( $maps[$j]['map_order'] != $max_map['max' . $cat_id] )	? '<a href="' . check_sid("$file?mode=_order&amp;type=$cat_id&amp;$url=$map_id") . '&amp;move=+15"><img src="' . $images['icon_acp_arrow_d'] . '" alt="" border="0" /></a>' : '<img src="' . $images['icon_acp_arrow_d2'] . '" alt="" border="0" />',
-							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$map_id") . '"><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$map_id") . '"><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+							'MOVE_UP'	=> ( $order != '10' )						? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'type' => $cat_id, $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+							'MOVE_DOWN'	=> ( $order != $max_map['max' . $cat_id] )	? href('a_img', $file, array('mode' => '_order', 'move' => '+15', 'type' => $cat_id, $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
 						));
 					}
 				}
 			}
 		}
 	}
-	
+	*/
 	$template->pparse('body');
 	
 	include('./page_footer_admin.php');

@@ -62,7 +62,41 @@ if ( !$is_auth['auth_read'] || !$is_auth['auth_view'] )
 }
 
 $sql = "SELECT u.user_id, u.user_name, u.user_color 
-	FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g, " . USERS . " u
+			FROM " . FORUM_ACCESS . " fa, " . LISTS . " l, " . GROUPS . " g, " . USERS . " u
+				WHERE fa.forum_id = $forum_id
+					AND fa.auth_mod = 1
+					AND l.type_id = fa.group_id 
+					AND g.group_id = fa.group_id 
+					AND u.user_id = l.user_id 
+			GROUP BY u.user_id, u.user_name  
+			ORDER BY u.user_id";
+if ( !($result = $db->sql_query($sql)) )
+{
+	message(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
+}
+
+$moderators = array();
+while( $row = $db->sql_fetchrow($result) )
+{
+	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
+}
+//	AND g.group_type <> ". GROUP_HIDDEN ."
+$sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
+	FROM " . FORUM_ACCESS . " fa, " . LISTS . " l, " . GROUPS . " g 
+	WHERE fa.forum_id = $forum_id
+		AND fa.auth_mod = 1
+		AND l.type_id = fa.group_id 
+		AND g.group_id = fa.group_id 
+	GROUP BY g.group_id, g.group_name  
+	ORDER BY g.group_order";
+if ( !($result = $db->sql_query($sql)) )
+{
+	message(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
+}
+
+/*
+$sql = "SELECT u.user_id, u.user_name, u.user_color 
+	FROM " . FORUM_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g, " . USERS . " u
 	WHERE aa.forum_id = $forum_id 
 		AND aa.auth_mod = " . TRUE . " 
 		AND g.group_single_user = 1
@@ -83,7 +117,7 @@ while( $row = $db->sql_fetchrow($result) )
 }
 //	AND g.group_type <> ". GROUP_HIDDEN ."
 $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
-	FROM " . AUTH_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g 
+	FROM " . FORUM_ACCESS . " aa, " . GROUPS_USERS . " gu, " . GROUPS . " g 
 	WHERE aa.forum_id = $forum_id
 		AND aa.auth_mod = " . TRUE . " 
 		AND g.group_single_user = 0
@@ -96,6 +130,7 @@ if ( !($result = $db->sql_query($sql)) )
 {
 	message(GENERAL_ERROR, 'Could not query forum moderator information', '', __LINE__, __FILE__, $sql);
 }
+*/
 
 while( $row = $db->sql_fetchrow($result) )
 {
@@ -107,7 +142,7 @@ $forum_moderators = ( count($moderators) ) ? implode(', ', $moderators) : $lang[
 unset($moderators);
 
 $page_title = $lang['View_forum'] . ' - ' . $forum_row['forum_name'];
-include($root_path . 'includes/page_header.php');
+main_header();
 
 $template->set_filenames(array('body' => 'viewforum_body.tpl'));
 
@@ -166,7 +201,7 @@ $sql = "SELECT t.*, u.user_name, u.user_id, u2.user_name as user2, u2.user_id as
 		AND u2.user_id = p2.poster_id 
 		AND t.topic_type <> " . POST_ANNOUNCE . " 
 	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC 
-	LIMIT $start, " . $settings['site_entry_per_page'];
+	LIMIT $start, " . $settings['per_page_entry_site'];
 if ( !($result = $db->sql_query($sql)) )
 {
    message(GENERAL_ERROR, 'Could not obtain topic information', '', __LINE__, __FILE__, $sql);
@@ -417,9 +452,9 @@ if( $total_topics )
 
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
 
-		$first_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['topic_time'], $board_config['page_timezone']);
+		$first_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['topic_time'], $board_config['default_timezone']);
 
-		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['page_timezone']);
+		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['default_timezone']);
 
 		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_user_name2'] != '' ) ? $topic_rowset[$i]['post_user_name2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
 
@@ -479,6 +514,6 @@ else
 
 $template->pparse('body');
 	
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

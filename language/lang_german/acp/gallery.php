@@ -16,6 +16,12 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Die Galerie wurde gelöscht!',
 	'confirm'	=> 'dass diese Galerie:',
 	
+	'gallery_name'		=> 'Galeriename',
+	'gallery_desc'		=> 'Beschreibung',
+	'gallery_auth'		=> 'Berechtigung',
+	'gallery_rating'	=> 'Bewertung',
+	'gallery_comments'	=> 'Kommentare',
+	
 	'sprintf_size-pic'	=> '%s / %s Bilder',
 	
 	'update_d'	=> 'Standarteinstellungen erfolgreich geändert.',

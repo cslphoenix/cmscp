@@ -1,5 +1,5 @@
-.button, .button:link, .button:visited, .button:active,
-.button2, .button2:link, .button2:visited, .button2:active {
+
+.button, .button2, .button3 {
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 1px 4px 1px;
 	color:	#000;
@@ -10,7 +10,7 @@
 	vertical-align:top;
 }
 
-.button3, .button3:link, .button3:visited, .button3:active {
+.button3, .button3:hover {
 	background-image:url(../images/button_go.png);
 	vertical-align:top;
 	height: 18px;
@@ -23,6 +23,7 @@
 	color: #F00;
 	border: #F00 1px solid;
 	background:	#FAFAFA;
+	padding: 1px 4px 1px;
 }
 
 .button2, .button2:link, .button2:visited, .button2:active {
@@ -33,14 +34,13 @@
 	font-weight:bold;
 }
 
-.post, .post:link, .post:visited, .post:active {
+input, .post, select {
 	font-family: Verdana, Geneva, sans-serif;
 	color: #000;
 	background:	#F0EFEF;
 	border:	#666 1px solid;
 	padding: 1px;
-	font-size:12px;
-	
+	font-size:10px;
 }
 
 .postselect, .postselect:link, .postselect:visited, .postselect:active {
@@ -53,6 +53,7 @@
 	
 }
 
+input:hover,
 .post:hover,
 .postselect:hover {
 	font-family: Verdana, Geneva, sans-serif;

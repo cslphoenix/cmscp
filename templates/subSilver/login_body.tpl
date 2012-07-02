@@ -2,7 +2,7 @@
 
 <table class="out" width="100%" cellspacing="0">
 <tr>
-	<td class="info_head">{L_ENTER_PASSWORD}</td>
+	<th>{L_ENTER_PASSWORD}</th>
 </tr>
 <tr>
 	<td align="center">

@@ -1,20 +1,10 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist">
-		<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-		<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-<tr>
-	<td align="right">{L_SORT}: {S_LEVEL}</td>
-</tr>
-</table>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<ul id="navopts">
+	<li>{L_SORT}: {S_LEVEL}</li></ul>
 </form>
 
 <br />
@@ -24,17 +14,25 @@
 	<th>{L_UPCOMING}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _new_row -->
+
+<!-- BEGIN new -->
 <tr>
-	<td><span style="float:right;">{_display._new_row.DATE}</span>{_display._new_row.TITLE}</td>
-	<td>{_display._new_row.UPDATE} {_display._new_row.DELETE}</td>		
+	<td><span class="right">{display.new.DATE}</span>{display.new.TITLE}</td>
+	<td>{display.new.UPDATE}{display.new.DELETE}</td>		
 </tr>
-<!-- END _new_row -->
-<!-- BEGIN _entry_empty_new -->
+<!-- END new -->
+<!-- BEGIN new_empty -->
 <tr>
-	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty_new -->
+<!-- END new_empty -->
+</table>
+
+<form action="{S_ACTION}" method="post">
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="event_title" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}" /></td>
 </table>
 
 <br />
@@ -44,93 +42,63 @@
 	<th>{L_EXPIRED}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _old_row -->
+<!-- BEGIN old -->
 <tr>
-	<td><span style="float:right;">{_display._old_row.DATE}</span>{_display._old_row.TITLE}</td>
-	<td>{_display._old_row.UPDATE} {_display._old_row.DELETE}</td>		
+	<td><span class="right">{display.old.DATE}</span>{display.old.TITLE}</td>
+	<td>{display.old.UPDATE}{display.old.DELETE}</td>		
 </tr>
-<!-- END _old_row -->
-<!-- BEGIN _entry_empty_old -->
+<!-- END old -->
+<!-- BEGIN old_empty -->
 <tr>
-	<td class="entry_empty" colspan="2">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty_old -->
+<!-- END old_empty -->
 </table>
 
-<form action="{S_ACTION}" method="post">
-<table class="footer">
-<tr>
-	<td><input type="text" class="post" name="event_title" /></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}" /></td>
-    <td></td>
+<table class="rfooter">
     <td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
 {TINYMCE}
-<div id="navcontainer">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_REQUIRED}</td>
-</tr>
-</table>
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
+<ul id="navinfo">
+	<li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
+{input.row.HIDDEN}
 <table class="update">
+<!-- BEGIN tab -->
 <tr>
-	<td colspan="2">
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
-		</div>
-	</td>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
-<tbody class="trhover">
+<!-- BEGIN option -->
 <tr>
-	<td class="row1"><label for="event_title">{L_TITLE}: *</label></td>
-	<td class="row2"><input type="text" class="post" name="event_title" id="event_title" value="{TITLE}" /></td>
+	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
+<!-- END option -->
+<!-- END tab -->
+</table>
+<!-- END row -->
+
+<br />
+
+<table class="submit">
 <tr>
-	<td class="row1"><label for="event_level">{L_LEVEL}:</label></td>
-	<td class="row2">{S_LEVEL}</td>
-</tr>
-<tr>
-	<td class="row1"><label for="event_desc">{L_DESC}: *</label></td>
-	<td class="row2"><textarea class="textarea" name="event_desc" id="event_desc" rows="20" style="width:100%">{DESC}</textarea></td>
-</tr>
-<tr>
-	<td class="row1"><label>{L_DATE}:</label></td>
-	<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
-</tr>
-<tr>
-	<td class="row1"><label for="duration">{L_DURATION}:</label></td>
-	<td class="row2">{S_DURATION}</td>
-</tr>
-<tr>
-	<td class="row1"><label for="event_comments">{L_COMMENTS}:</label></td>
-	<td class="row2"><label><input type="radio" name="event_comments" id="event_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="event_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
-</tr>
-</tbody>
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}" /><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}" /></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

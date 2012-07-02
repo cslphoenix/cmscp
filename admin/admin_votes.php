@@ -21,7 +21,7 @@ else
 	
 	include('./pagestart.php');
 	
-	load_lang('votes');
+	add_lang('votes');
 
 	$error	= '';
 	$index	= '';
@@ -31,19 +31,19 @@ else
 	$url	= POST_VOTES;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 		
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_votes'] )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . $current);
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 
@@ -59,16 +59,16 @@ else
 	
 	switch ( $mode )
 	{
-		case '_create':
-		case '_update':
+		case 'create':
+		case 'update':
 		
-			$template->assign_block_vars('_input', array());
+			$template->assign_block_vars('input', array());
 			
 		#	$template->assign_vars(array('FILE' => 'ajax_listmaps'));
 		#	$template->assign_var_from_handle('AJAX', 'ajax');
 		#	$template->assign_var_from_handle('TINYMCE', 'tiny');
 			
-			if ( $mode == '_create' && !request('submit', 1) )
+			if ( $mode == 'create' && !request('submit', TXT) )
 			{
 				$data = array(
 							'vote_title'	=> request('vote_title', 2) ? request('training_vs', 2) : '',
@@ -78,7 +78,7 @@ else
 							'vote_end'		=> time(),
 						);
 			}
-			else if ( $mode == '_update' && !request('submit', 1) )
+			else if ( $mode == 'update' && !request('submit', TXT) )
 			{
 				$data = data(VOTES, $data_id, false, 1, true);
 			}
@@ -101,7 +101,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
-				'L_INPUT'		=> sprintf($lang['sprintf' . $mode], $lang['training'], $data['training_vs']),
+				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['training'], $data['training_vs']),
 				'L_VS'			=> $lang['vs'],
 				'L_TEAM'		=> $lang['team'],
 				'L_MATCH'		=> $lang['match'],
@@ -129,7 +129,7 @@ else
 				'S_FIELDS'		=> $fields,
 			));
 			
-			if ( request('submit', 1) )
+			if ( request('submit', TXT) )
 			{
 				$error .= ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
 				$error .= ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
@@ -141,7 +141,7 @@ else
 				{
 					$data['training_maps'] = is_array($data['training_maps']) ? serialize($data['training_maps']) : array();
 					
-					if ( $mode == '_create' )
+					if ( $mode == 'create' )
 					{
 						$sql = sql(VOTES, $mode, $data);
 						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
@@ -169,7 +169,7 @@ else
 			
 			break;
 			
-		case '_delete':
+		case 'delete':
 		
 			$data = data(VOTES, $data_id, false, 1, true);
 		
@@ -202,7 +202,7 @@ else
 			}
 			else
 			{
-				message(GENERAL_MESSAGE, sprintf($lang['msg_select_must'], $lang['training']));
+				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 			}
 			
 			$template->pparse('confirm');
@@ -211,7 +211,7 @@ else
 						
 		default:
 		
-			$template->assign_block_vars('_display', array());
+			$template->assign_block_vars('display', array());
 			/*
 			$teams = data(TEAMS, false, 'team_order', 0, false);
 			
@@ -244,7 +244,7 @@ else
 			
 			$select_id = ( $team_id >= '1' ) ? "AND tr.team_id = $team_id" : '';
 			
-			$sql = "SELECT tr.*, g.game_image, g.game_size
+			$sql = "SELECT tr.*, g.game_image
 						FROM " . VOTES . " tr, " . TEAMS . " t, " . GAMES . " g
 						WHERE tr.team_id = t.team_id AND t.team_game = g.game_id $select_id
 					ORDER BY training_date";
@@ -256,8 +256,8 @@ else
 			
 			if ( !$training )
 			{
-				$template->assign_block_vars('_display._entry_empty_new', array());
-				$template->assign_block_vars('_display._entry_empty_old', array());
+				$template->assign_block_vars('display.entry_empty_new', array());
+				$template->assign_block_vars('display.entry_empty_old', array());
 			}
 			else
 			{
@@ -277,52 +277,52 @@ else
 				
 				if ( !$training_new )
 				{
-					$template->assign_block_vars('_display._entry_empty_new', array());
+					$template->assign_block_vars('display.entry_empty_new', array());
 				}
 				else
 				{
-					for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_new)); $i++ )
+					for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($training_new)); $i++ )
 					{
 						$training_id = $training_new[$i]['training_id'];
 						
-						$template->assign_block_vars('_display._training_new_row', array(
+						$template->assign_block_vars('display.training_new_row', array(
 							'NAME'	=> $training_new[$i]['training_vs'],
 							'GAME'	=> display_gameicon($training_new[$i]['game_size'], $training_new[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_new[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
 						));
 					}
 				}
 				
 				if ( !$training_old )
 				{
-					$template->assign_block_vars('_display._entry_empty_old', array());
+					$template->assign_block_vars('display.entry_empty_old', array());
 				}
 				else
 				{
-					for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($training_old)); $i++ )
+					for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($training_old)); $i++ )
 					{
 						$training_id = $training_old[$i]['training_id'];
 						
-						$template->assign_block_vars('_display._training_old_row', array(
+						$template->assign_block_vars('display.training_old_row', array(
 							'NAME'	=> $training_old[$i]['training_vs'],
 							'GAME'	=> display_gameicon($training_old[$i]['game_size'], $training_old[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_old[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_option_delete'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
 						));
 					}
 				}
 			}
 					
-			$current_page = ( !count($training) ) ? 1 : ceil( count($training) / $settings['site_entry_per_page'] );
+			$current_page = ( !count($training) ) ? 1 : ceil( count($training) / $settings['per_page_entry']['acp'] );
 		
 			$template->assign_vars(array(
-				'PAGE_NUMBER' => ( count($training) ) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ) : '',
-				'PAGE_PAGING' => ( count($training) ) ? generate_pagination('admin_match.php?', count($training), $settings['site_entry_per_page'], $start) : '',
+				'PAGE_NUMBER' => ( count($training) ) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry']['acp'] ) + 1 ), $current_page ) : '',
+				'PAGE_PAGING' => ( count($training) ) ? generate_pagination('admin_match.php?', count($training), $settings['per_page_entry']['acp'], $start) : '',
 			));
 			*/
 			break;

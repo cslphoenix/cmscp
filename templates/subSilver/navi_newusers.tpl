@@ -1,11 +1,11 @@
 <tr>
-	<td class="info_head"><span class="right">{CACHE}</span>{L_SN_NEWUSERS}</td>
+	<th><span class="right">{CACHE}</span>{L_SN_NEWUSERS}</th>
 </tr>
-<!-- BEGIN _sn_newuers -->
+<!-- BEGIN sn_newuers -->
 <tr>
-	<td>{_sn_newuers.URL}</td>
+	<td>{sn_newuers.URL}</td>
 </tr>
-<!-- END _sn_newuers -->
+<!-- END sn_newuers -->
 <tr>
 	<td>&nbsp;</td>
 </tr>

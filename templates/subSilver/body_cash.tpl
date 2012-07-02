@@ -1,4 +1,4 @@
-<!-- BEGIN _display -->
+<!-- BEGIN display -->
 <form action="{S_CASH_ACTION}" method="post">
 <table class="out" width="100%" cellspacing="0">
 <tr>
@@ -9,15 +9,15 @@
 	<td class="row2">{BD_NAME}</td>
 </tr>
 <tr>
-	<td class="row1">{L_BLZ} / {L_BANK}</td>
+	<td>{L_BLZ} / {L_BANK}</td>
 	<td class="row2">{BD_BLZ} / {BD_BANK}</td>
 </tr>
 <tr>
-	<td class="row1">{L_NUMBER}</td>
+	<td>{L_NUMBER}</td>
 	<td class="row2">{BD_NUMBER}</td>
 </tr>
 <tr>
-	<td class="row1">{L_REASON}</td>
+	<td>{L_REASON}</td>
 	<td class="row2">{BD_REASON}</td>
 </tr>
 </table>
@@ -32,14 +32,14 @@
 </tr>
 <!-- BEGIN cash_row -->
 <tr>
-	<td class="{_display.cash_row.CLASS}" align="left" width="99%">{_display.cash_row.CASH_NAME}</td>
-	<td class="{_display.cash_row.CLASS}" align="right" width="99%">{_display.cash_row.CASH_AMOUNT}&nbsp;</td>
-	<td class="{_display.cash_row.CLASS}" align="center" nowrap="nowrap">{_display.cash_row.CASH_DATE}</td>
+	<td class="{_display.cashrow.CLASS}" align="left" width="99%">{_display.cashrow.CASH_NAME}</td>
+	<td class="{_display.cashrow.CLASS}" align="right" width="99%">{_display.cashrow.CASH_AMOUNT}&nbsp;</td>
+	<td class="{_display.cashrow.CLASS}" align="center" nowrap="nowrap">{_display.cashrow.CASH_DATE}</td>
 </tr>
 <!-- END cash_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row3" align="center" colspan="3">{L_ENTRY_NO}</td>
+	<td class="row3" align="center" colspan="3">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry -->
 <tr>
@@ -59,9 +59,9 @@
 </tr>
 <!-- BEGIN cash_user_row -->
 <tr>
-	<td class="{_display.cash_user_row.CLASS}" align="left" width="99%">{_display.cash_user_row.CASHUSER_USERNAME} <span class="small">({_display.cash_user_row.CASHUSER_MONTH})</span></td>
-	<td class="{_display.cash_user_row.CLASS}" align="right" width="99%">{_display.cash_user_row.CASHUSER_AMOUNT}&nbsp;</td>
-	<td class="{_display.cash_user_row.CLASS}" align="center" nowrap="nowrap">{_display.cash_user_row.CASHUSER_INTERVAL}</td>
+	<td class="{_display.cash_userrow.CLASS}" align="left" width="99%">{_display.cash_userrow.CASHUSER_USERNAME} <span class="small">({_display.cash_userrow.CASHUSER_MONTH})</span></td>
+	<td class="{_display.cash_userrow.CLASS}" align="right" width="99%">{_display.cash_userrow.CASHUSER_AMOUNT}&nbsp;</td>
+	<td class="{_display.cash_userrow.CLASS}" align="center" nowrap="nowrap">{_display.cash_userrow.CASHUSER_INTERVAL}</td>
 </tr>
 <!-- END cash_user_row -->
 <!-- BEGIN cash_user -->
@@ -73,7 +73,7 @@
 <!-- END cash_user -->
 <!-- BEGIN no_entry_users -->
 <tr>
-	<td class="row3" align="center" colspan="3">{L_ENTRY_NO}</td>
+	<td class="row3" align="center" colspan="3">{L_EMPTY}</td>
 </tr>
 <!-- END no_entry_users -->
 <tr>
@@ -91,4 +91,4 @@
 </tr>
 </table>
 </form>
-<!-- END _display -->
+<!-- END display -->

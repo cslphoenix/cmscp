@@ -66,7 +66,7 @@ function get_data($mode, $id, $type)
 		break;
 		
 		case 'newscat':
-			$table		= NEWSCAT;
+			$table		= NEWS_CAT;
 			$idfield	= 'cat_id';
 		break;
 		
@@ -109,7 +109,7 @@ function get_data($mode, $id, $type)
 			$table		= NEWS;
 			$idfield	= 'news_id';
 			$connection	= 'news_cat';
-			$table2		= NEWSCAT;
+			$table2		= NEWS_CAT;
 			$idfield2	= 'cat_id';
 		break;
 		
@@ -205,7 +205,7 @@ function orders($mode, $type = '')
 		break;
 		
 		case 'newscat':
-			$table		= NEWSCAT;
+			$table		= NEWS_CAT;
 			$idfield	= 'cat_id';
 			$orderfield	= 'cat_order';
 		break;

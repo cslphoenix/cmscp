@@ -8,6 +8,7 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Berechtigungsfelder',
+	'field'		=> 'Feld',
 	'explain'	=> 'Hier können Sie die Berechtigungsfelder der Seite verwalten, erleichtert das hinzufügen von Modifikationen die Extra Rechte haben sollen. Bitte nur was verstellen wenn man ein Backup der Datenbank gemacht hat!<br><b>Wichtig:</b> neue Felder werden direkt in der DB eingetragen und das \'auth_\' wird automatisch davor eingetragen!',
 	
 	'create'	=> 'Neues Berechtigungsfeld hinzugefügt.',
@@ -15,8 +16,10 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Das Berechtigungsfeld wurde gelöscht!',
 	'confirm'	=> 'dass dieses Berechtigunsfeld:',
 	
+	'data'	=> 'Felddaten',
+	
 	'authlist_name'		=> 'Feldname',
-	'authlist_field'	=> 'Feld',
+	
 
 ));
 

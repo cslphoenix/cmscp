@@ -1,37 +1,26 @@
-<!-- BEGIN _list -->
-<table class="info" width="100%" cellspacing="0">
-<!-- BEGIN _game_row -->
+<!-- BEGIN list -->
+<table class="teams">
+<!-- BEGIN game_row -->
 <tr>
-	<td colspan="5" class="info_head">
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>{_list._game_row.L_GAME}</td>
-		</tr>
-		</table>
-	</td>
+	<td colspan="5" class="header">{_list._gamerow.L_GAME}</td>
 </td>
 </tr>
-<!-- BEGIN _team_row -->
+<!-- BEGIN team_row -->
 <tr>
-	<td>{_list._game_row._team_row.GAME} {_list._game_row._team_row.NAME}</td>
-	<td>{_list._game_row._team_row.FIGHTUS}</td>
-	<td>{_list._game_row._team_row.JOINUS}</td>
-	<td>{_list._game_row._team_row.MATCH}</td>
+	<td>{_list._gamerow._teamrow.GAME} {_list._gamerow._teamrow.NAME}</td>
+	<td>{_list._gamerow._teamrow.FIGHTUS}</td>
+	<td>{_list._gamerow._teamrow.JOINUS}</td>
+	<td>{_list._gamerow._teamrow.MATCH}</td>
 </tr>
-<!-- END _team_row -->
+<!-- END team_row -->
 <tr>
 	<td colspan="5">&nbsp;</td>
 </tr>
-<!-- END _game_row -->
-<!-- BEGIN no_entry_team -->
-<tr>
-	<td class="row1" align="center" colspan="5">{L_ENTRY_NO}</td>
-</tr>
-<!-- END no_entry_team -->
+<!-- END game_row -->
 </table>
-<!-- END _list -->
+<!-- END list -->
 
-<!-- BEGIN details -->
+<!-- BEGIN view -->
 <form action="{S_GROUPS_ACTION}" method="post" name="post">
 <table class="info" width="100%" cellspacing="0">
 <tr>
@@ -51,13 +40,13 @@
 </tr>
 <!-- BEGIN mod_row -->
 <tr>
-	<td class="{details.mod_row.ROW_CLASS}" align="center"><a href="{details.mod_row.U_VIEWPROFILE}">{details.mod_row.USERNAME}</a></td>
-	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.PM_IMG} </td>
-	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.POSTS}</td>
-	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.EMAIL_IMG}</td>
-	<td class="{details.mod_row.ROW_CLASS}" align="center">{details.mod_row.JOINED}</td>
+	<td class="{_view.modrow.ROW_CLASS}" align="center"><a href="{_view.modrow.U_VIEWPROFILE}">{_view.modrow.USERNAME}</a></td>
+	<td class="{_view.modrow.ROW_CLASS}" align="center">{_view.modrow.PM_IMG} </td>
+	<td class="{_view.modrow.ROW_CLASS}" align="center">{_view.modrow.POSTS}</td>
+	<td class="{_view.modrow.ROW_CLASS}" align="center">{_view.modrow.EMAIL_IMG}</td>
+	<td class="{_view.modrow.ROW_CLASS}" align="center">{_view.modrow.JOINED}</td>
 	<!-- BEGIN switch_mod_option -->
-	<td class="{details.mod_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.mod_row.USER_ID}"></td>
+	<td class="{_view.modrow.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_view.modrow.USER_ID}"></td>
 	<!-- END switch_mod_option -->
 </tr>
 <!-- END mod_row -->
@@ -74,13 +63,13 @@
 </tr>
 <!-- BEGIN member_row -->
 <tr>
-	<td class="{details.member_row.ROW_CLASS}" align="center"><a href="{member_row.U_VIEWPROFILE}">{details.member_row.USERNAME}</a></td>
-	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.PM_IMG} </td>
-	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.POSTS}</td>
-	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.EMAIL_IMG}</td>
-	<td class="{details.member_row.ROW_CLASS}" align="center">{details.member_row.JOINED}</td>
+	<td class="{_view.memberrow.ROW_CLASS}" align="center"><a href="{memberrow.U_VIEWPROFILE}">{_view.memberrow.USERNAME}</a></td>
+	<td class="{_view.memberrow.ROW_CLASS}" align="center">{_view.memberrow.PM_IMG} </td>
+	<td class="{_view.memberrow.ROW_CLASS}" align="center">{_view.memberrow.POSTS}</td>
+	<td class="{_view.memberrow.ROW_CLASS}" align="center">{_view.memberrow.EMAIL_IMG}</td>
+	<td class="{_view.memberrow.ROW_CLASS}" align="center">{_view.memberrow.JOINED}</td>
 	<!-- BEGIN switch_mod_option -->
-	<td class="{details.member_row.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{details.member_row.USER_ID}"></td>
+	<td class="{_view.memberrow.ROW_CLASS}" align="center" width="1%"><input type="checkbox" name="members[]" value="{_view.memberrow.USER_ID}"></td>
 	<!-- END switch_mod_option -->
 </tr>
 <!-- END member_row -->
@@ -108,4 +97,4 @@
 </table>
 {S_FIELDS}
 </form>
-<!-- END details -->
+<!-- END view -->

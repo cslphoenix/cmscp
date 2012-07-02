@@ -6,7 +6,7 @@
 	
 	$Schriftarten = array("x-files.ttf");
     $Bilddatei = imagecreatefrompng("../images/steam.png");
-    $TextFarbe1 = imagecolorallocate( $Bilddatei, 0, 125, 0 );
+    $TextFarbe1 = imagecolorallocate( $Bilddatei, 0, 125, INT);
     $TextFarbe2 = imagecolorallocate( $Bilddatei, 130, 70, 90 );
     $TextFarbe3 = imagecolorallocate( $Bilddatei, 180, 90, 190 );
 

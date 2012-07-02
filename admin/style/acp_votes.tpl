@@ -1,16 +1,7 @@
-<!-- BEGIN _display -->
-<div id="navcontainer">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-</div>
-
-<table class="header">
-<tr>
-	<td>{L_EXPLAIN}</td>
-</tr>
-</table>
+<!-- BEGIN display -->
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
 
 <br />
 
@@ -19,18 +10,18 @@
 	<td class="rowHead" width="99%" colspan="2">{L_UPCOMING}</td>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _training_new_row -->
+<!-- BEGIN training_new_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._training_new_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_new_row.DATE}</span>{_display._training_new_row.NAME}</td>
-	<td class="row_class2" align="center">{_display._training_new_row.UPDATE} {_display._training_new_row.DELETE}</td>		
+	<td class="row_class1" align="center">{display.training_new_row.GAME}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.training_new_row.DATE}</span>{display.training_new_row.NAME}</td>
+	<td class="row_class2" align="center">{display.training_new_row.UPDATE} {display.training_new_row.DELETE}</td>		
 </tr>
-<!-- END _training_new_row -->
-<!-- BEGIN _entry_empty_new -->
+<!-- END training_new_row -->
+<!-- BEGIN entry_empty_new -->
 <tr>
-	<td class="entry_empty" colspan="3">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="3">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty_new -->
+<!-- END entry_empty_new -->
 </table>
 
 <br />
@@ -40,18 +31,18 @@
 	<td class="rowHead" width="99%" colspan="2">{L_EXPIRED}</td>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN _training_old_row -->
+<!-- BEGIN training_old_row -->
 <tr>
-	<td class="row_class1" align="center">{_display._training_old_row.GAME}</td>
-	<td class="row_class1" align="left" width="100%"><span style="float:right;">{_display._training_old_row.DATE}</span>{_display._training_old_row.NAME}</td>
-	<td class="row_class2" align="center">{_display._training_old_row.UPDATE} {_display._training_old_row.DELETE}</td>		
+	<td class="row_class1" align="center">{display.trainingold_row.GAME}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.trainingold_row.DATE}</span>{display.trainingold_row.NAME}</td>
+	<td class="row_class2" align="center">{display.trainingold_row.UPDATE} {display.trainingold_row.DELETE}</td>		
 </tr>
-<!-- END _training_old_row -->
-<!-- BEGIN _entry_empty_old -->
+<!-- END training_old_row -->
+<!-- BEGIN entry_empty_old -->
 <tr>
-	<td class="entry_empty" colspan="3" align="center">{L_ENTRY_NO}</td>
+	<td class="empty" colspan="3" align="center">{L_EMPTY}</td>
 </tr>
-<!-- END _entry_empty_old -->
+<!-- END entry_empty_old -->
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2">
@@ -60,7 +51,7 @@
 	<td align="left">{S_SORT}</td>
 	</form>
 	<form action="{S_ACTION}" method="post">
-	<td align="right"><input type="text" class="post" name="training_vs"></td>
+	<td align="right"><input type="text" name="training_vs"></td>
 	<td class="top" align="right" width="1%">{S_TEAMS}</td>
 	<td class="top" align="right" width="1%"><input type="submit" class="button2" value="{L_CREATE}"></td>
 	{S_FIELDS}
@@ -70,24 +61,23 @@
 
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
-	<td class="row5 small"><span class="show_right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
+	<td class="row5 small"><span class="right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
 </tr>
 </table>
-<!-- END _display -->
+<!-- END display -->
 
-<!-- BEGIN _input -->
+<!-- BEGIN input -->
 {AJAX}
 {TINYMCE}
 <form action="{S_ACTION}" method="post">
 <div id="navcontainer">
 	<ul id="navlist">
 		<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-		<li id="active"><a href="#" id="current">{L_INPUT}</a></li>
-	</ul>
+		<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 </div>
 <table class="header">
 <tr>
-	<td>{L_REQUIRED}</td>
+	<td class="info">{L_REQUIRED}</td>
 </tr>
 </table>
 
@@ -97,45 +87,43 @@
 <tr>
 	<td colspan="2">
 		<div id="navcontainer">
-			<ul id="navlist">
-				<li id="active"><a href="#" id="current">{L_INPUT_DATA}</a></li>
-			</ul>
+			<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 		</div>
 	</td>
 </tr>
 <tbody class="trhover">
 <tr>
-	<td class="row1"><label for="training_vs">{L_VS}: *</label></td>
+	<td class="row1"><label for="training_vs">{L_VS}:</label></td>
 	<td class="row2"><input class="post" type="text" name="training_vs" id="training_vs" value="{VS}"></td>
 </tr>
 <tr>
-	<td class="row1"><label for="team_id">{L_TEAM}: *</label></td>
-	<td class="row2">{S_TEAMS}</td>
+	<td class="row1"><label for="team_id">{L_TEAM}:</label></td>
+	<td>{S_TEAMS}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="match_id">{L_MATCH}:</label></td>
-	<td class="row2">{S_MATCH}</td>
+	<td>{S_MATCH}</td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_DATE}:</label></td>
-	<td class="row2">{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
+	<td>{S_DAY} . {S_MONTH} . {S_YEAR} - {S_HOUR} : {S_MIN}</td>
 </tr>
 <tr>
 	<td class="row1"><label>{L_DURATION}:</label></td>
-	<td class="row2">{S_DURATION}</td>
+	<td>{S_DURATION}</td>
 </tr>
 <tr>
-	<td class="row1"><label>{L_MAPS}: *</label></td>
-	<td class="row2">
+	<td class="row1"><label>{L_MAPS}:</label></td>
+	<td>
 		<div id="close">
 		<table border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN _maps_row -->
+		<!-- BEGIN maps_row -->
 		<tr>
-			<td>{_input._maps_row.MAPS}<input  class="button2" type="button" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
+			<td>{_input._mapsrow.MAPS}<input type="button" class="more" value="{L_REMOVE}" onClick="this.parentNode.parentNode.removeChild(this.parentNode)"></td>
 		</tr>
-		<!-- END _maps_row -->
+		<!-- END maps_row -->
 		</table>
-		{S_MAPS}</div><div id="content"></div>
+		{S_MAPS}</div><div id="ajax_content"></div>
 	</td>
 </tr>
 <tr>
@@ -144,12 +132,18 @@
 </tr>
 </tbody>
 <tr>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="2"></td>
 </tr>
+</table>
+
+<br/>
+
+<table class="submit">
 <tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" class="button" value="{L_RESET}"></td>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END _input -->
+<!-- END input -->

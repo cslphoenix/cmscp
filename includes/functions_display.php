@@ -1,47 +1,32 @@
 <?php
 
-/* Cache Gültigkeit */
-function display_cache($name, $type = '')
-{
-	global $oCache, $userdata, $lang;
-	
-	if ( defined('CACHE') )
-	{
-		$time	= $oCache -> readCacheTime($name);
-		$type	= ( $type == '1' ) ? $lang['cache_valid'] : $lang['cache_duration'] ;
-		$msg	= sprintf($type, create_date($userdata['user_dateformat'], $time, $userdata['user_timezone']));
-		$str	= "<img src=\"images/icon-rss.png\" title=\"$msg\" alt=\"$msg\">";
-		
-		return $str;
-	}
-}
+/* function list
 
+	display_navi			// Navigation
+	display_news			// Nachrichten
+	display_match			// Begegnungen
+	display_forms			// Top Forenthemen
+	display_downloads		// Top Downloads
+	display_newusers		// Neueste Benutzer
+	display_teams			// Teams
+	display_network			// Netzwerk ( Links, Partner, Sponsoren )
+	display_minical			// Minikalender
+	display_server			// Gameserver Viewer
+	display_next_match		// naeste Begegnungen
+	display_next_training	// naechste Trainings
+	display_cache			// Cachespeicherdauer
+	display_gameicon		// Spieliconanzeige
 
-#	Teambilder
-function display_gameicon($game_size, $game_image)
-{
-	global $root_path, $settings;
-	
-	$image	= '<img src="' . $root_path . $settings['path_games'] . '/' . $game_image . '" alt="' . $game_image . '" title="' . $game_image . '" width="' . $game_size . '" height="' . $game_size . '" class="icon" >';
+*/
 
-	return $image;
-}
-
-
-/* navigation */
 function display_navi()
 {
 	global $db, $root_path, $settings, $template, $userdata, $lang;
 	
 	$sql = "SELECT * FROM " . NAVI . " WHERE navi_show = 1 ORDER BY navi_order ASC";
-#	if ( !($result = $db->sql_query($sql)) )
-#	{
-#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#	}
-#	$navi = $db->sql_fetchrowset($result);
-	$navi = _cached($sql, 'dsp_navi');
+	$tmp = _cached($sql, 'dsp_navi', INT);
 
-	foreach ( $navi as $key => $row )
+	foreach ( $tmp as $key => $row )
 	{
 		if ( $userdata['user_level'] >= TRIAL && ( $row['navi_intern'] == 0 || $row['navi_intern'] == 1 ) )
 		{
@@ -53,11 +38,11 @@ function display_navi()
 		}
 	}
 	
-	$template->assign_block_vars('_navi_main', array());
-	$template->assign_block_vars('_navi_clan', array());
-	$template->assign_block_vars('_navi_comm', array());
-	$template->assign_block_vars('_navi_misc', array());
-	$template->assign_block_vars('_navi_user', array());
+	$template->assign_block_vars('navi_main', array());
+	$template->assign_block_vars('navi_clan', array());
+	$template->assign_block_vars('navi_comm', array());
+	$template->assign_block_vars('navi_misc', array());
+	$template->assign_block_vars('navi_user', array());
 	
 	$cnt = count($ary);
 	
@@ -65,48 +50,44 @@ function display_navi()
 	{
 		switch ( $ary[$i]['navi_type'] )
 		{
-			case NAVI_MAIN:	$row_type = '_navi_main._navi_main_row';	break;
-			case NAVI_CLAN:	$row_type = '_navi_clan._navi_clan_row';	break;
-			case NAVI_COM:	$row_type = '_navi_comm._navi_comm_row';	break;
-			case NAVI_MISC:	$row_type = '_navi_misc._navi_misc_row';	break;
-			case NAVI_USER:	$row_type = '_navi_user._navi_user_row';	break;
+			case NAVI_MAIN:	$row_type = 'navi_main.navi_main_row';	break;
+			case NAVI_CLAN:	$row_type = 'navi_clan.navi_clan_row';	break;
+			case NAVI_COM:	$row_type = 'navi_comm.navi_comm_row';	break;
+			case NAVI_MISC:	$row_type = 'navi_misc.navi_misc_row';	break;
+			case NAVI_USER:	$row_type = 'navi_user.navi_user_row';	break;
 		}
 		
-		$template->assign_block_vars($row_type, array(
-			'NAVI_URL'		=> $ary[$i]['navi_url'],
-			'NAVI_NAME'		=> ( $ary[$i]['navi_lang'] ) ? $lang[$ary[$i]['navi_name']] : $ary[$i]['navi_name'],
-			'NAVI_TARGET'	=> ( $ary[$i]['navi_target'] == '0' ) ? '_self' : '_blank',			
-		));
+		$url = $ary[$i]['navi_url'];
+		$tar = $ary[$i]['navi_target'] ? '_blank' : '_self';
+		$name = $ary[$i]['navi_lang'] ? isset($lang[$ary[$i]['navi_name']]) ? $lang[$ary[$i]['navi_name']] : $ary[$i]['navi_name'] : $ary[$i]['navi_name'];
+		
+		$template->assign_block_vars($row_type, array('URL' => "<a href=\"$url\" target=\"$tar\" title=\"$name\">$name</a>"));
 	}
+	
+	$template->set_filenames(array('navi' => 'navi_navigation.tpl'));
+	$template->assign_var_from_handle('NAVIGATION', 'navi');
 }
 
-
-/* news */
-function display_navi_news()
+function display_news()
 {
-	global $config, $db, $lang, $root_path, $settings, $template, $userdata;
+	global $db, $lang, $settings, $template, $userdata;
 	
-	$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.match_id, t.team_name, g.game_image, g.game_size
+	$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, t.team_name, g.game_image
 				FROM " . NEWS . " n
-					LEFT JOIN " . MATCH . " m ON n.match_id = m.match_id
+					LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
 				WHERE n.news_time_public < " . time() . " AND news_public = 1
-			ORDER BY n.news_time_public DESC, n.news_id DESC LIMIT 0," . $settings['subnavi_news_limit'];
-#	if ( !($result = $db->sql_query($sql)) )
-#	{
-#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#	}
-#	$news = $db->sql_fetchrowset($result);
-	$news = _cached($sql, 'dsp_news');
+			ORDER BY n.news_time_public DESC, n.news_id DESC LIMIT 0," . $settings['module_news']['limit'];
+	$tmp = _cached($sql, 'dsp_news', 0, $settings['module_news']['time']);
 	
-	if ( !$news )
+	if ( !$tmp )
 	{
-		$template->assign_block_vars('_news_sn_empty', array());
+		$template->assign_block_vars('sn_news_empty', array());
 	}
 	else
 	{
-		foreach ( $news as $news => $row )
+		foreach ( $tmp as $news => $row )
 		{
 			if ( $userdata['user_level'] >= TRIAL )
 			{
@@ -119,46 +100,46 @@ function display_navi_news()
 		}
 		
 		$cnt = count($ary);
-	
+		
 		for ( $i = 0; $i < $cnt; $i++ )
 		{
-			$template->assign_block_vars('_sn_news_row', array(
-				'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
-				'TITLE'		=> cut_string($ary[$i]['news_title'], $settings['subnavi_news_length']),
-				'GAME'		=> ( $ary[$i]['match_id'] ) ? display_gameicon($ary[$i]['game_size'], $ary[$i]['game_image']) : '',
-				'DETAILS'	=> check_sid('news.php?' . POST_NEWS . '=' . $ary[$i]['news_id']),
+			$game	= $ary[$i]['news_match'] ? display_gameicon($ary[$i]['game_image']) . '&nbsp;' : '';
+			$url	= check_sid('news.php?' . POST_NEWS . '=' . $ary[$i]['news_id']);
+			$name	= cut_string($ary[$i]['news_title'], $settings['module_news']['length']);
+			$title	= $ary[$i]['news_title'];
+
+			$template->assign_block_vars('sn_news_row', array(
+				'CLASS' 	=> ( $i % 2 ) ? 'row1' : 'row2',
+				'GAME'		=> $game,
+				'URL'		=> href('a_txt', 'news.php', array(POST_NEWS => $ary[$i]['news_id']), $title, $name),
 			));
 		}
 	}
 	
-	return;
+	$template->set_filenames(array('news' => 'navi_news.tpl'));
+	$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_news']['cache'] ) ? display_cache('dsp_news', 1) : ''));
+	$template->assign_var_from_handle('NEWS', 'news');
 }
 
-/* match */
-function display_navi_match()
+function display_match()
 {
-	global $config, $db, $lang, $root_path, $settings, $template, $userdata;
+	global $db, $lang, $settings, $template, $userdata;
 	
-	$sql = "SELECT m.match_id, m.match_date, m.match_rival_name, m.match_public, t.team_name, g.game_image, g.game_size
+	$sql = "SELECT m.match_id, m.match_date, m.match_rival_name, m.match_public, t.team_name, g.game_image
 				FROM " . MATCH . " m
 					LEFT JOIN " . TEAMS . " t ON t.team_id = m.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
 				WHERE m.match_date < " . time() . "
-			ORDER BY m.match_date ASC LIMIT 0," . $settings['subnavi_match_limit'];
-#	if ( !($result = $db->sql_query($sql)) )
-#	{
-#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#	}
-#	$match = $db->sql_fetchrowset($result);
-	$match = _cached($sql, 'dsp_match');
+			ORDER BY m.match_date ASC LIMIT 0," . $settings['module_match']['limit'];
+	$tmp = _cached($sql, 'dsp_match', 0, $settings['module_match']['time']);
 	
-	if ( !$match )
+	if ( !$tmp )
 	{
-		$template->assign_block_vars('_sn_match_empty', array());
+		$template->assign_block_vars('sn_match_empty', array());
 	}
 	else
 	{
-		foreach ( $match as $key => $row )
+		foreach ( $tmp as $key => $row )
 		{
 			if ( $userdata['user_level'] >= TRIAL )
 			{
@@ -181,11 +162,6 @@ function display_navi_match()
 		$match_ids = implode(', ', $_ary_ids);
 		
 		$sql = "SELECT match_id, map_name, map_points_home, map_points_rival FROM " . MATCH_MAPS . " WHERE match_id IN ($match_ids) ORDER BY match_id, map_order ASC";
-	#	if ( !($result = $db->sql_query($sql)) )
-	#	{
-	#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	#	}
-	#	$maps = $db->sql_fetchrowset($result);
 		$maps = _cached($sql, 'dsp_match_maps');
 		
 		if ( $match_last )
@@ -197,7 +173,7 @@ function display_navi_match()
 			{
 				$match_id = $match_last[$i]['match_id'];
 				
-				$class = ($i % 2) ? 'row1r' : 'row2r';
+				$class = ($i % 2) ? 'row1' : 'row2';
 				
 				$result_clan[$i] = 0;
 				$result_rival[$i] = 0;
@@ -212,157 +188,190 @@ function display_navi_match()
 				}
 			
 				$css	= ( $result_clan[$i] != $result_rival[$i] ) ? ( $result_clan[$i] > $result_rival[$i] ) ? WIN : LOSE : DRAW;
-				$name	= $match_last[$i]['match_public'] ? sprintf($lang['sprintf_subnavi_match'], cut_string($match_last[$i]['match_rival_name'], $settings['subnavi_match_length'])) : sprintf($lang['sprintf_subnavi_match_i'], cut_string($match_last[$i]['match_rival_name'], $settings['subnavi_match_length']));
+				$name	= $match_last[$i]['match_public'] ? sprintf($lang['sprintf_subnavi_match'], cut_string($match_last[$i]['match_rival_name'], $settings['module_match']['length'])) : sprintf($lang['sprintf_subnavi_match_i'], cut_string($match_last[$i]['match_rival_name'], $settings['length_match']));
 				
-				$template->assign_block_vars('_sn_match_row', array(
+				$template->assign_block_vars('sn_match_row', array(
 					'CSS'		=> $css,
 					'CLASS' 	=> $class,
-					'GAME'		=> display_gameicon($match_last[$i]['game_size'], $match_last[$i]['game_image']),
+					'GAME'		=> display_gameicon($match_last[$i]['game_image']),
 					'NAME'		=> $name,
 					'RESULT'	=> sprintf($lang['sprintf_subnavi_match_result'], $result_clan[$i], $result_rival[$i]),
 					'DETAILS'	=> check_sid('match.php?' . POST_MATCH . '=' . $match_last[$i]['match_id']),
 				));
 			}
 		}
+		
+		$template->set_filenames(array('match' => 'navi_match.tpl'));
+		$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_match']['cache'] ) ? display_cache('dsp_match', 1) : ''));
+		$template->assign_var_from_handle('MATCH', 'match');
 	}
-	
-	return;
 }
 
-/* downloads */
-/* forum */
-
-/* neuste Mitglieder */
-function display_navi_newusers()
+function display_topics()
 {
-	global $db, $lang, $root_path, $settings, $template, $userdata;
+	global $db, $lang, $settings, $template, $userdata;
 	
-	if ( $settings['subnavi_newusers'] )
+	$sql = "SELECT * FROM " . TOPICS . " LIMIT 0," . $settings['module_topics']['limit'];
+	$data = _cached($sql, 'dsp_topics');
+	
+	if ( !$data )
 	{
-		$template->assign_block_vars('_sn_newusers', array());
+		$template->assign_block_vars('sn_topics_empty', array('L_EMPTY' => $lang['header_empty_topics']));
+	}
+	else
+	{
+		$cnt = count($data);
 		
-		$sql = "SELECT user_id, user_name, user_color
-					FROM " . USERS . "
-					WHERE user_id != -1 AND user_active = 1
-				ORDER BY user_regdate
-					LIMIT 0, " . $settings['subnavi_newusers_limit'];
-#		if ( !($result = $db->sql_query($sql)) )
-#		{
-#			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#		}
-#		$users = $db->sql_fetchrowset($result);
-		$users = _cached($sql, 'dsp_sn_newusers', 0, $settings['subnavi_newusers_cache']);
-		
-		for ( $i = 0; $i < count($users); $i++ )
+		for ( $i = 0; $i < $cnt; $i++ )
 		{
-			$template->assign_block_vars('_sn_newusers._user_row', array(
-				'L_USERNAME'	=> '<b>' . cut_string($users[$i]['user_name'], $settings['subnavi_newusers_length']) . '</b>',
-				'U_USERNAME'	=> check_sid('profile.php?' . POST_USER . '=' . $users[$i]['user_id']),
-				'C_USERNAME'	=> 'style="color:' . $users[$i]['user_color'] . '"',
+		#	$clicks	= '';
+		#	$url	= check_sid('news.php?' . POST_NEWS . '=' . $ary[$i]['news_id']);
+		#	$name	= cut_string($ary[$i]['news_title'], $settings['module_downloads_length']);
+		#	$title	= $ary[$i]['news_title'];
+
+			$template->assign_block_vars('sn_topics_row', array(
+				'CLASS' 	=> ( $i % 2 ) ? 'row1' : 'row2',
+		#		'CLICKS'	=> $clicks,
+		#		'URL'		=> "<a href=\"$url\" title=\"$title\">$name</a>",
+			));
+		}
+	}
+	
+	$template->set_filenames(array('topics' => 'navi_topics.tpl'));
+	$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_topics']['cache'] ) ? display_cache('dsp_topics', 1) : ''));
+	$template->assign_var_from_handle('TOPICS', 'topics');
+}
+
+function display_downloads()
+{
+	global $db, $lang, $settings, $template, $userdata;
+	
+	$sql = "SELECT * FROM " . DOWNLOADS . " LIMIT 0," . $settings['module_downloads']['limit'];
+	$data = _cached($sql, 'dsp_downloads');
+	
+	if ( !$data )
+	{
+		$template->assign_block_vars('sn_downloads_empty', array('L_EMPTY' => $lang['header_empty_downloads']));
+	}
+	else
+	{
+		$cnt = count($data);
+		
+		for ( $i = 0; $i < $cnt; $i++ )
+		{
+		#	$clicks	= '';
+		#	$url	= check_sid('news.php?' . POST_NEWS . '=' . $ary[$i]['news_id']);
+		#	$name	= cut_string($ary[$i]['news_title'], $settings['module_downloads_length']);
+		#	$title	= $ary[$i]['news_title'];
+
+			$template->assign_block_vars('sn_downloads_row', array(
+				'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
+		#		'CLICKS'	=> $clicks,
+		#		'URL'		=> "<a href=\"$url\" title=\"$title\">$name</a>",
+			));
+		}
+	}
+	
+	$template->set_filenames(array('downloads' => 'navi_downloads.tpl'));
+	$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_downloads']['cache'] ) ? display_cache('dsp_downloads', 1) : ''));
+	$template->assign_var_from_handle('DOWNLOADS', 'downloads');
+}
+
+function display_newusers()
+{
+	global $db, $lang, $settings, $template;
+	
+	$sql = "SELECT user_id, user_name, user_color FROM " . USERS . " WHERE user_id != -1 AND user_active = 1 ORDER BY user_regdate LIMIT 0, " . $settings['module_newusers']['limit'];
+	$tmp = _cached($sql, 'dsp_sn_newusers', 0, $settings['module_newusers']['time']);
+	$cnt = count($tmp);
+	
+	for ( $i = 0; $i < $cnt; $i++ )
+	{
+		$id		= $tmp[$i]['user_id'];
+		$url	= check_sid('profile.php?' . POST_USER . '=' . $id);
+		$name	= cut_string($tmp[$i]['user_name'], $settings['module_newusers']['length']);
+		$color	= $tmp[$i]['user_color'] ? $tmp[$i]['user_color'] : '';
+		
+		$template->assign_block_vars('sn_newuers', array('URL' => href('a_style', 'profile.php', array('mode' => 'view', POST_USER => $id), $color, $name)));
+	}
+	
+	$template->set_filenames(array('newuers' => 'navi_newusers.tpl'));
+	$template->assign_vars(array('CACHE_NEWUSERS' => ( defined('CACHE') && $settings['module_newusers']['cache'] ) ? display_cache('dsp_sn_newusers', 1) : ''));
+	$template->assign_var_from_handle('NEWUSERS', 'newuers');
+}
+
+function display_teams()
+{
+	global $db, $lang, $settings, $template;
+	
+	$sql = "SELECT t.team_id, t.team_name, t.team_fight, g.game_image FROM " . TEAMS . " t, " . GAMES . " g WHERE t.team_game = g.game_id AND t.team_navi = 1 ORDER BY t.team_order LIMIT 0, " . $settings['module_teams']['limit'];
+	$data = _cached($sql, 'dsp_sn_teams');
+	
+	if ( $data )
+	{
+		$cnt = count($data);
+		
+		for ( $i = 0; $i < $cnt; $i++ )
+		{
+			$id		= $data[$i]['team_id'];
+			$url	= check_sid("users.php?mode=t&amp;id=$id");
+			$name	= cut_string($data[$i]['team_name'], $settings['module_teams']['length']);
+			
+			$template->assign_block_vars('sn_teams', array(
+				'URL'	=> "<a href=\"$url\">$name</a>",
+				'GAME'	=> display_gameicon($data[$i]['game_image']),
 			));
 		}
 		
-		$template->assign_vars(array(
-			'NEW_USERS_CACHE'	=> ( defined('CACHE') ) ? display_cache('display_sn_newusers', 1) : '',									 
-			'L_NEW_USERS'		=> sprintf($lang['newest_users'], $settings['subnavi_newusers_limit']),
-		));
-		
-		return;
+		$template->set_filenames(array('teams' => 'navi_teams.tpl'));
+		$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_teams']['cache'] ) ? display_cache('dsp_sn_teams', 1) : ''));
+		$template->assign_var_from_handle('TEAMS', 'teams');
 	}
 }
 
-/* teams */
-function display_navi_teams()
+function display_network($type)
 {
-	global $db, $lang, $root_path, $settings, $template, $userdata;
+	global $db, $lang, $settings, $template, $userdata;
 	
-	if ( $settings['subnavi_teams'] )
-	{
-		$template->assign_block_vars('_sn_teams', array());
-		
-		$sql = "SELECT t.team_id, t.team_name, t.team_fight, g.game_size, g.game_image
-					FROM " . TEAMS . " t, " . GAMES . " g
-					WHERE t.team_game = g.game_id AND t.team_navi = 1
-				ORDER BY t.team_order
-					LIMIT 0, " . $settings['subnavi_teams_limit'];
-#		if ( !($result = $db->sql_query($sql)) )
-#		{
-#			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#		}
-#		$teams = $db->sql_fetchrowset($result);
-		$teams = _cached($sql, 'dsp_sn_teams');
-		
-		if ( !$teams )
-		{
-			$template->assign_block_vars('_sn_teams_empty', array());
-		}
-		else		
-		{
-			for ( $i = 0; $i < count($teams); $i++ )
-			{
-				$template->assign_block_vars('_sn_teams._team_row', array(
-					'L_TEAM'	=> cut_string($teams[$i]['team_name'], $settings['subnavi_teams_length']),
-					'I_GAME'	=> display_gameicon($teams[$i]['game_size'], $teams[$i]['game_image']),
-					'U_TEAM'	=> check_sid("teams.php?" . POST_TEAMS . "=" . $teams[$i]['team_id']),
-				));
-			}
-		}
-	}
-	
-	return;
-}
-
-/* network: link/partner/sponsor */
-function display_navi_network($type)
-{
-	global $db, $lang, $root_path, $settings, $template, $userdata;
+	$template->set_filenames(array('network' => 'navi_network.tpl'));
 	
 	$sql = "SELECT * FROM " . NETWORK . " WHERE network_view = 1 ORDER BY network_order";
-#	if ( !($result = $db->sql_query($sql)) )
-#	{
-#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#	}
-#	$network_data = $db->sql_fetchrowset($result);
-	$network_data = _cached($sql, 'dsp_sn_network');
+	$tmp = _cached($sql, 'dsp_sn_network');
 	
-	if ( $settings['subnavi_' . $type] )
+	if ( $settings['module_network']["show_$type"] )
 	{
-		$template->assign_block_vars('_sn_' . $type, array());
+		$template->assign_block_vars("sn_$type", array());
 		
 		$typ = ( $type != 'links' ) ? ( $type == 'partner' ) ? NETWORK_PARTNER : NETWORK_SPONSOR : NETWORK_LINK;
 		
-		foreach ( $network_data as $network )
+		foreach ( $tmp as $info )
 		{
-			if ( $network['network_type'] == $typ )
+			if ( $info['network_type'] == $typ )
 			{
-				$template->assign_block_vars('_sn_' . $type . '._' . $type . '_row', array(
-					'L_URL'	=> $network['network_name'],
-					'U_URL'	=> $network['network_url'],
-				));
+				$name = $info['network_name'];
+				$img = $info['network_image'] ? '<img src="' . $settings['path_network']['path'] . $info['network_image'] . '" alt="" border="0" />' : '';
+				$url = $info['network_url'];
+				$info = $img ? $img : $name;
+				
+				$template->assign_block_vars("sn_{$type}.row", array('LINK' => "<a href=\"$url\" title=\"$name\" target=\"_new\">$info</a>"));
 			}
 		}
 	}
 	
-	return;
+	$template->assign_var_from_handle('NETWORK', 'network');
 }
 
-/* minikalender */
-function display_navi_minical()
+#function display_calendar()
+function display_minical()
 {
 	global $db, $lang, $config, $oCache, $root_path, $settings, $template, $userdata;
 	
-	if ( $settings['subnavi_minical'] )
-	{
-		$template->assign_block_vars('_sn_minical', array());
-	}
-	
-	$tag			= date("d", time());	//	Heutiger Tag: z. B. "1"
-	$tag_der_woche	= date("w");			//	Welcher Tag in der Woch: z. B. "0 / Sonntag"
-	$tage_im_monat	= date("t");			//	Anzahl der Tage im Monat: z. B. "31"
-	$monat			= date("m", time());	//	Heutiger Monat
-	$jahr			= date("Y", time());	//	Heutiges Jahr
-	$erster			= date("w", mktime(0, 0, 0, $monat, 1, $jahr));		//	Der erste Tag im Monat: z. B. "5 / Freitag"
-	$arr_woche_kurz	= array('So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa');	//	Wochentage gekürzt
+	$d = date("d", time());		//	Heutiger Tag: z. B. "1"
+	$t = date("t");				//	Anzahl der Tage im Monat: z. B. "31"
+	$m = date("m", time());		//	Heutiger Monat
+	$y = date("Y", time());		//	Heutiges Jahr
+	$f = date("w", mktime(0, 0, 0, $m, 1, $y));		//	Der erste Tag im Monat: z. B. "5 / Freitag"
+	$w = $lang['cal_weekdays'];	//	Wochentage gekï¿½rzt
 	
 	$monate = array(
 		'01'	=> $lang['datetime']['month_01'],
@@ -379,121 +388,267 @@ function display_navi_minical()
 		'12'	=> $lang['datetime']['month_12'],
 	);
 	
-	$month = $monate[$monat];
+	$months = $monate[$m];
+	
+	$ctime	= $settings['module_calendar']['time'];
+	$sbday	= $settings['module_calendar']['bday'];
+	$snews	= $settings['module_calendar']['news'];
+	$sevent	= $settings['module_calendar']['event'];
+	$smatch	= $settings['module_calendar']['match'];
+	$strain	= $settings['module_calendar']['train'];
 	
 	if ( defined('CACHE') )
 	{
 		$sCacheName = 'dsp_sn_minical';
-
-		if ( ( $monat_data = $oCache -> readCache($sCacheName)) === false )
+		
+		if ( ( $month_data = $oCache->readCache($sCacheName) ) === false )
 		{
-			for ( $i = 1; $i < $tage_im_monat + 1; $i++ )
+			$bday = $news = $event = $match = $train = array();
+			
+			$sql = "SELECT user_id, user_name, user_birthday FROM " . USERS . " WHERE MONTH(user_birthday) = $m";
+			if ( !($result = $db->sql_query($sql)) )
 			{
-				$i = ( $i < 10 ) ? '0' . $i : $i;
-				
-				$sql = "SELECT user_name, user_birthday, user_color FROM " . USERS . " WHERE MONTH(user_birthday) = $monat AND DAYOFMONTH(user_birthday) = $i";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$day_rows_b = $db->sql_fetchrowset($result);
-				
-				$sql = 'SELECT event_date, event_duration, event_title, event_level FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$day_rows_e = $db->sql_fetchrowset($result);
-				
-			#	$sql = 'SELECT match_rival_name, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-				$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
-							FROM " . MATCH . " m
-								LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
-								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-						WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$day_rows_w = $db->sql_fetchrowset($result);
-				
-				$sql = 'SELECT training_vs, training_date FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				$day_rows_t = $db->sql_fetchrowset($result);
-				
-				$monat_data_b[$i] = $day_rows_b;
-				$monat_data_e[$i] = $day_rows_e;
-				$monat_data_w[$i] = $day_rows_w;
-				$monat_data_t[$i] = $day_rows_t;
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			if ( $i == $tage_im_monat + 1 )
+			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$monat_data = array_merge(array('bday' => $monat_data_b), array('event' => $monat_data_e), array('match' => $monat_data_w), array('train' => $monat_data_t));
-				$oCache -> writeCache($sCacheName, $monat_data);
+				$tmp = explode('-', $row['user_birthday']);
+				
+				$bday[$tmp[2]][] = $row;
 			}
+			$db->sql_freeresult($result);
+			
+			$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_time_public, t.team_name, g.game_image
+						FROM " . NEWS . " n
+							LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
+							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+					WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%m.%Y') = '$m.$y'";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$news[date('d', $row['news_time_public'])][] = $row;
+			}
+			$db->sql_freeresult($result);
+			
+			$sql = "SELECT event_id, event_date, event_duration, event_title, event_level FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$m.$y'";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$event[date('d', $row['event_date'])][] = $row;
+			}
+			$db->sql_freeresult($result);
+			
+			$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, t.team_name
+						FROM " . MATCH . " m
+							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+					WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%m.%Y') = '$m.$y'";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$match[date('d', $row['match_date'])][] = $row;
+			}
+			$db->sql_freeresult($result);
+			
+			$sql = "SELECT tr.training_vs, tr.training_date, g.game_image, t.team_name
+						FROM " . TRAINING . " tr
+							LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
+							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id	
+					WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%m.%Y') = '$m.$y'";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$train[date('d', $row['training_date'])][] = $row;
+			}
+			$db->sql_freeresult($result);
+			
+			$month_data = array_merge(array('bday' => $bday), array('news' => $news), array('event' => $event), array('match' => $match), array('train' => $train));
+			( $ctime != '' ) ? $oCache->writeCache($sCacheName, $month_data, (int) $ctime) : $oCache->writeCache($sCacheName, $month_data);
 		}
 	}
 	else
 	{
-		for ( $i = 1; $i < $tage_im_monat + 1; $i++ )
+		$bday = $news = $event = $match = $train = array();
+			
+		$sql = "SELECT user_id, user_name, user_birthday FROM " . USERS . " WHERE MONTH(user_birthday) = $monat";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$tmp = explode('-', $row['user_birthday']);
+			
+			$bday[$tmp[2]][] = $row;
+		}
+		$db->sql_freeresult($result);
+		
+		$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_time_public, t.team_name, g.game_image
+					FROM " . NEWS . " n
+						LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
+						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+				WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%m.%Y') = '$m.$y'";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$news[date('d', $row['news_time_public'])][] = $row;
+		}
+		$db->sql_freeresult($result);
+		
+		$sql = "SELECT event_id, event_date, event_duration, event_title, event_level FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$m.$y'";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$event[date('d', $row['event_date'])][] = $row;
+		}
+		$db->sql_freeresult($result);
+		
+		$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, t.team_name
+					FROM " . MATCH . " m
+						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+				WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%m.%Y') = '$m.$y'";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$match[date('d', $row['match_date'])][] = $row;
+		}
+		$db->sql_freeresult($result);
+		
+		$sql = "SELECT tr.training_vs, tr.training_date, g.game_image, t.team_name
+					FROM " . TRAINING . " tr
+						LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
+						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id	
+				WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%m.%Y') = '$m.$y'";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$train[date('d', $row['training_date'])][] = $row;
+		}
+		$db->sql_freeresult($result);
+			
+		for ( $i = 1; $i < $t + 1; $i++ )
 		{
 			$i = ( $i < 10 ) ? '0' . $i : $i;
 			
-			$sql = 'SELECT user_name, user_birthday FROM ' . USERS . " WHERE MONTH(user_birthday) = " . $monat . " AND DAYOFMONTH(user_birthday) = " . $i;
-			if ( !($result = $db->sql_query($sql)) )
+			if ( $sbday )
 			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				$sql = "SELECT user_name, user_birthday, user_color
+							FROM " . USERS . "
+						WHERE MONTH(user_birthday) = $m AND DAYOFMONTH(user_birthday) = $i";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$month_data_b[$i] = $db->sql_fetchrowset($result);
 			}
-			$day_rows_b = $db->sql_fetchrowset($result);
 			
-			$sql = 'SELECT event_date, event_duration, event_title, event_level FROM ' . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-			if ( !($result = $db->sql_query($sql)) )
+			if ( $snews )
 			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, t.team_name, g.game_image
+							FROM " . NEWS . " n
+								LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
+								LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
+								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+						WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%d.%m.%Y') = '$i.$m.$y'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$month_data_n[$i] = $db->sql_fetchrowset($result);
 			}
-			$day_rows_e = $db->sql_fetchrowset($result);
 			
-		#	$sql = 'SELECT match_rival_name, match_date FROM ' . MATCH . " WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-			$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, g.game_size, t.team_name
+			if ( $sevent )
+			{
+				$sql = "SELECT event_date, event_duration, event_title, event_level
+							FROM " . EVENT . "
+						WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%d.%m.%Y') = '$i.$m.$y'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$month_data_e[$i] = $db->sql_fetchrowset($result);
+			}
+			
+			if ( $smatch )
+			{
+				$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, t.team_name
 							FROM " . MATCH . " m
 								LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-						WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%d.%m.%Y') = '$i.$m.$y'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$month_data_m[$i] = $db->sql_fetchrowset($result);
 			}
-			$day_rows_w = $db->sql_fetchrowset($result);
 			
-			$sql = 'SELECT training_vs, training_date FROM ' . TRAINING . " WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%d.%m.%Y') = '$i.$monat.$jahr'";
-			if ( !($result = $db->sql_query($sql)) )
+			if ( $strain )
 			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				$sql = "SELECT training_vs, training_date
+							FROM " . TRAINING . "
+						WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%d.%m.%Y') = '$i.$m.$y'";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$month_data_t[$i] = $db->sql_fetchrowset($result);
 			}
-			$day_rows_t = $db->sql_fetchrowset($result);
-			
-			$monat_data_b[$i] = $day_rows_b;
-			$monat_data_e[$i] = $day_rows_e;
-			$monat_data_w[$i] = $day_rows_w;
-			$monat_data_t[$i] = $day_rows_t;
 		}
 		
-		if ( $i == $tage_im_monat + 1 )
+		if ( $i == $t + 1 )
 		{
-			$monat_data = array_merge(array('bday' => $monat_data_b), array('event' => $monat_data_e), array('match' => $monat_data_w), array('train' => $monat_data_t));
+			$month_data = array_merge(
+				array('bday' => $month_data_b),
+				array('news' => $month_data_n),
+				array('event' => $month_data_e),
+				array('match' => $month_data_m),
+				array('train' => $month_data_t)
+			);
 		}
 	}
 	
-	// wochenstart
-	// 0=Sonntag; 1=Montag; 2=Dienstag; 3=Mittwoch; 4=Donnerstag; 5=Freitag; 6=Samstag
-	$ws = 1;
-	// "woche beginnt mit" - array verschiebung
-	$edmk = $arr_woche_kurz[$erster];
-	$wbmk = $arr_woche_kurz;
+	$ws = $settings['module_calendar']['start'];
+	
+	$edmk = $w[$f];
+	$wbmk = $w;
 	for ( $i = 0; $i < $ws; $i++ )
 	{
 		$wechsel = array_shift($wbmk);
@@ -504,47 +659,51 @@ function display_navi_minical()
 	$days = '';
 	for ( $i = 0; $i < 7; $i++ )
 	{
-		$days .= '<td align="center" width="14%"><b>' . $wbmk[$i] . '</b></td>';
+		$days .= '<th>' . $wbmk[$i] . '</th>';
 	}
 	
-	// berechnung der monatstabelle
-	// zuerst die unbenutzten tage
 	$day = '';
 	for ( $i = 0; $i < $wbmk_wechsel[$edmk]; $i++ )
 	{
-		$day .= '<td align="center" width="14%">&nbsp;</td>';
+		$day .= '<td>&nbsp;</td>';
 	}
-	// ab hier benutzte tage
 	$wcs = $wbmk_wechsel[$edmk];
 	
-	for ( $i = 1; $i < $tage_im_monat + 1; $i++ )
+	for ( $i = 1; $i < $t + 1; $i++ )
 	{
-		$i = ( $i < 10 ) ? '0' . $i : $i;
-#		if ( $i < 10 ) { $i = '0' . $i; }
+		$i = ( $i < 10 ) ? "0$i" : $i;
 		
-		if ( $i == $tag || is_array($monat_data['bday'][$i]) || is_array($monat_data['event'][$i]) || is_array($monat_data['match'][$i]) || is_array($monat_data['train'][$i]) )
+		$bday	= isset($month_data['bday'][$i]) ? $month_data['bday'][$i] : '';
+		$news	= isset($month_data['news'][$i]) ? $month_data['news'][$i] : '';
+		$event	= isset($month_data['event'][$i]) ? $month_data['event'][$i] : '';
+		$match	= isset($month_data['match'][$i]) ? $month_data['match'][$i] : '';
+		$train	= isset($month_data['train'][$i]) ? $month_data['train'][$i] : '';
+		
+		if ( $i == $d || is_array($bday) || is_array($news) || is_array($event) || is_array($match) || is_array($train) )
 		{
-			$day_class = '';
-			$day_event = '';
-			$day_event_num = '0';
+			$css = '';
+			$act = '';
+			$num = '0';
 			
-			if ( $i == $tag )
+			if ( $i == $d )
 			{
-				$day_class		= 'today';
-				$day_event		= '<span><em class="today">' . $lang['cal_today'] . '</em>';
-				$day_event_num	= $day_event_num + 1;
+				$num = $num + 1;
+				$css = 'today';
+				$act = "<b>{$lang['cal_today']}</b><br/>";
 			}
 			
-			if ( is_array($monat_data['bday'][$i]) )
+			if ( is_array($bday) )
 			{
-				$list = array();
-				
-				for ( $k = 0; $k < count($monat_data['bday'][$i]); $k++ )
+				$ary = array();
+				$cnt = count($bday);
+								
+				for ( $k = 0; $k < $cnt; $k++ )
 				{
 					$alter	= 0;
-					$gebdt	= explode('-', $monat_data['bday'][$i][$k]['user_birthday']);
-					$gebdt	= $gebdt[0].$gebdt[1].$gebdt[2];
-					$now	= date('Ymd', time());
+					$gebdt	= explode("-", $bday[$k]['user_birthday']);
+					$gebdt	= $gebdt[0] . $gebdt[1] . $gebdt[2];
+					$date	= mktime(0, 0, 0, $m, $d, $y);
+					$now	= date("Ymd", $date);
 					
 					while ( $gebdt < $now - 9999 )
 					{
@@ -552,103 +711,111 @@ function display_navi_minical()
 						$gebdt = $gebdt + 10000;
 					}
 	
-					$list[] = sprintf($lang['cal_birth'], $monat_data['bday'][$i][$k]['user_name'], $alter);
+					$ary[] = sprintf($lang['cal_birth'], $bday[$k]['user_name'], $alter);
 				}
 				
-				$language		= (count($list) == 1) ? $lang['cal_birthday'] : $lang['cal_birthdays'];
-				$list			= implode('<br>', $list);	
-				$day_event		.= (empty($day_event)) ? "<span><em class=\"birthday\">$language:</em><br />$list" : "<br /><em class=\"birthday\">$language</em><br />$list";
-				$day_class		= 'birthday';
-				$day_event_num	= $day_event_num + 1;
+				$num = $num + 1;
+				$css  = 'birthday';
+				$act .= cal_string($act, false, ( count($ary) == '1' ) ? $lang['cal_birthday'] : $lang['cal_birthdays'], $ary, false);
 			}
 			
-			if ( is_array($monat_data['event'][$i]) )
+			if ( is_array($news) )
 			{
-				$list = array();
+				$ary = array();
+				$cnt = count($news);
 				
-				for ( $k = 0; $k < count($monat_data['event'][$i]); $k++ )
+				for ( $k = 0; $k < $cnt; $k++ )
 				{
-					if ( $userdata['user_level'] >= $monat_data['event'][$i][$k]['event_level'] )
+					$ary[]	= $news[$k]['news_title'];
+				}
+				
+				$num = $num + 1;
+				$css = 'news';
+				$act .= cal_string($act, false, $lang['cal_news'], $ary, false);
+			}
+			
+			if ( is_array($event) )
+			{
+				$ary = array();
+				$cnt = count($event);
+				
+				for ( $k = 0; $k < $cnt; $k++ )
+				{
+					if ( $userdata['user_level'] >= $event[$k]['event_level'] )
 					{
-						$date	= $monat_data['event'][$i][$k]['event_date'];
-						$title	= $monat_data['event'][$i][$k]['event_title'];
-						$dura	= $monat_data['event'][$i][$k]['event_duration'];
+						$date	= $event[$k]['event_date'];
+						$title	= $event[$k]['event_title'];
+						$dura	= $event[$k]['event_duration'];
 						
 						$time_a	= create_date('H:i', $date, $userdata['user_timezone']);
 						$time_b	= create_date('H:i', $dura, $userdata['user_timezone']);
 						
 						$diff	= ( $date == $dura ) ? "am gesamten Tag" : "von $time_a bis $time_b";
 						
-						$list[] = "$title: $diff";
+						$ary[] = "$title: $diff";
 					}
 				}
 				
-				if ( !empty($list) )
+			#	if ( !empty($ary) )
+				if ( count($ary) )
 				{
-					$language		= ( count($list) == '1' ) ? $lang['cal_event'] : $lang['cal_events'];
-					$list			= implode('<br />', $list);	
-					$day_class		= 'events';
-					$day_event_num	= $day_event_num + 1;
+					$num = $num + 1;
+					$css = 'events';
+					$act .= cal_string($act, false, ( count($ary) == '1' ) ? $lang['cal_event'] : $lang['cal_events'], $ary, false);
+				}
+			}
+			
+			if ( is_array($match) )
+			{
+				$ary	= array();
+				$cnt	= count($match);
+				
+				for ( $k = 0; $k < $cnt; $k++ )
+				{
+					$name = $match[$k]['match_rival_name'];
+					$time = create_date('H:i', $match[$k]['match_date'], $config['default_timezone']);
 					
-					$day_event	.= ( empty($day_event) ) ? "<span><em class=\"events\">$language:</em><br />$list" : "<br /><em class=\"events\">$language</em><br />$list";
+					$ary[] = sprintf($lang['sprintf_empty_line'], $name, $time);
 				}
+				
+				$num = $num + 1;
+				$css = 'wars';
+				$act .= cal_string($act, false, ( count($ary) == '1' ) ? $lang['cal_match'] : $lang['cal_matchs'], $ary, false);
 			}
 			
-			if ( is_array($monat_data['match'][$i]) )
+			if ( is_array($train) && $userdata['user_level'] >= TRIAL )
 			{
-				$list = array();
-				for ( $k = 0; $k < count($monat_data['match'][$i]); $k++ )
+				$ary = array();
+				$cnt = count($train);
+				
+				for ( $k = 0; $k < $cnt; $k++ )
 				{
-				#	$match_id	= $monat_data['match'][$i][$k]['match_id'];
-					$match_vs	= $monat_data['match'][$i][$k]['match_rival_name'];
-					$match_time	= create_date('H:i', $monat_data['match'][$i][$k]['match_date'], $config['page_timezone']);
-					$team_name	= $monat_data['match'][$i][$k]['team_name'];
-				#	$game_size	= $monat_data['match'][$i][$k]['game_size'];
-				#	$game_image	= $monat_data['match'][$i][$k]['game_image'];
-				#	$team_image	= "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" align=\"middle\">";
+					$name = $train[$k]['training_vs'];
+					$time = create_date('H:i', $train[$k]['training_date'], $config['default_timezone']);
 					
-				#	$list[] = "$team_image $match_vs - $match_time";
-					$list[] = "$match_vs - $match_time";
-				#	$list[] = $monat_data['match'][$i][$k]['match_rival_name'];
+					$ary[] = sprintf($lang['sprintf_empty_line'], $name, $time);
 				}
 				
-				$language		= ( count($list) == '1' ) ? $lang['cal_match'] : $lang['cal_matchs'];
-				$list			= implode('<br />', $list);
-				$day_event		.= ( empty($day_event) ) ? "<span><em class=\"wars\">$language:</em><br />$list" : "<br /><em class=\"wars\">$language</em><br />$list";
-				$day_class		= 'wars';
-				$day_event_num	= $day_event_num + 1;
+				$css = 'trains';
+				$act .= cal_string($act, false, ( count($ary) == '1' ) ? $lang['cal_training'] : $lang['cal_trainings'], $ary, false);
+				$num = $num + 1;
 			}
 			
-			if ( is_array($monat_data['train'][$i]) && $userdata['user_level'] >= TRIAL )
+			if ( $num )
 			{
-				$list = array();
-				for ( $k = 0; $k < count($monat_data['train'][$i]); $k++ )
-				{
-					$list[] = $monat_data['train'][$i][$k]['training_vs'];
-				}
-				
-				$language		= ( count($list) == '1' ) ? $lang['cal_training'] : $lang['cal_trainings'];
-				$list			= implode('<br />', $list);
-				$day_event		.= ( empty($day_event) ) ? "<span><em class=\"trains\">$language:</em><br />$list" : "<br /><em class=\"trains\">$language</em><br />$list";
-				$day_class		= 'trains';
-				$day_event_num	= $day_event_num + 1;
-			}
-			
-			if ( $day_event_num )
-			{
-				$class = ( $day_event_num > 1 ) ? 'more' : $day_class;
-				
-				$day .= "<td align=\"center\" width=\"14%\" class=\"$class\"><a class=\"$class\" href=\"" . check_sid("calendar.php") . "\">$i</span>$day_event</a></td>";
+				$class = ( $num > 1 ) ? 'more' : $css;
+
+				$day .= "<td><a class=\"$class\" href=\"" . check_sid("calendar.php?mode=view") . "\" title=\"$act\">$i</a></td>";
 				
 			}
 			else
 			{
-				$day .= "<td align=\"center\" width=\"14%\" class=\"day\">$i</td>";
+				$day .= "<td class=\"day\">$i</td>";
 			}
 		}
 		else
 		{
-			$day .= "<td align=\"center\" width=\"14%\" class=\"day\">$i</td>";
+			$day .= "<td class=\"day\">$i</td>";
 		}
 		
 		if ( $wcs < 7 )
@@ -665,47 +832,114 @@ function display_navi_minical()
 	
 	for ( $wcs; $wcs < 7; $wcs++ )
 	{
-		$day .= '<td align="center">&nbsp;</td>';
+		$day .= '<td>&nbsp;</td>';
 	}
 	
+	$template->set_filenames(array('minical' => 'navi_minical.tpl'));
 	$template->assign_vars(array(
-		'MONTH'		=> $month,
-		'DAYS'		=> $days,
-		'DAY'		=> $day,
-		'CAL_CACHE'	=> (defined('CACHE')) ? display_cache($sCacheName, 1) : '',
+		'MINI_MONTH'	=> $months,
+		'MINI_DAYS'		=> $days,
+		'MINI_DAY'		=> $day,
+		'MINI_CACHE'	=> ( $settings['module_calendar']['cache'] && defined('CACHE') ) ? display_cache($sCacheName, 1) : '',
 	));
+	$template->assign_var_from_handle('MINICAL', 'minical');
 }
 
-/* next Match */
+function display_server()
+{
+	global $db, $lang, $template;
+	
+	$template->set_filenames(array('server' => 'navi_server.tpl'));
+	
+	$sql	= "SELECT * FROM " . SERVER . " WHERE server_live = 1 ORDER BY server_order ASC";
+	$data	= _cached($sql, 'dsp_server');
+	
+	if ( $data )
+	{
+		include_once('class_gameq.php');
+		
+		$ary = '';
+		
+		foreach ( $data as $keys => $row )
+		{
+			if ( $row['server_live'] == '1' )
+			{
+				$ary[] = array('id' => $row['server_name'], 'type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port']);
+			}
+		}
+		
+		$gq = new GameQ();
+		$gq->addServers($ary);
+		$gq->setOption('timeout', 1); // Seconds
+		$gq->setFilter('normalise');
+		$gq_serv = $gq->requestData();
+		$gq_data = cached_file($gq_serv, 'data_servers', 120);
+	#	$gq_data = $gq->requestData();
+	}
+	
+	if ( $data && $gq_data )
+	{
+		$cnt = count($data);
+		
+		for ( $i = 0; $i < $cnt; $i++ )
+		{
+			$id		= $data[$i]['server_id'];
+			$name	= $data[$i]['server_name'];
+			$game	= $data[$i]['server_game'];	
+			$type	= $data[$i]['server_type'];
+			
+			$status	= isset($gq_data[$name]['gq_online']) ? $gq_data[$name]['gq_online'] ? $lang['server_online'] : $lang['server_offline'] : '';
+			$player = isset($gq_data[$name]['gq_online']) ? sprintf($lang['cur_max'], $gq_data[$name]['gq_numplayers'], $gq_data[$name]['gq_maxplayers']) : '';
+			
+			$template->assign_block_vars('row', array(
+				'NAME'		=> ( isset($gq_data[$name]['gq_hostname']) ) ? cut_string($gq_data[$name]['gq_hostname'], 20) : cut_string($data[$i]['server_name'], 20),
+				'STATUS'	=> $status,
+				'PLAYER'	=> $player,
+				'IPPORT'	=> sprintf($lang['ip_port'], $gq_data[$name]['gq_address'], $gq_data[$name]['gq_port']),
+				
+				'L_PLAYER'	=> $type ? $lang['server_user'] : $lang['server_player'],
+			));
+			 
+			if ( isset($gq_data[$name]['gq_mapname']) )
+			{
+				$game = in_array($game, array('cs16', 'cscz', 'css')) ? 'cs' : $game;
+				
+				$template->assign_block_vars('row._map', array(
+					'MAP' => isset($lang['map_' . $game][$gq_data[$name]['gq_mapname']]) ? $lang['map_' . $game][$gq_data[$name]['gq_mapname']] : cut_string($gq_data[$name]['gq_mapname'], 15),
+				));
+			}
+		}
+		
+		$template->assign_vars(array(
+			'L_TITLE'	=> $lang['sn_server'],
+			'L_STATUS'	=> $lang['server_status'],
+			'L_MAP'		=> $lang['server_map'],
+			
+			'CACHE_SERVER' => defined('CACHE') ? display_cache('data_servers', 1) : '',
+		));
+	
+		$template->assign_var_from_handle('SERVER', 'server');
+	}
+}
+
 function display_next_match()
 {
-	global $db, $oCache, $root_path, $settings, $template, $userdata, $lang;
+	global $db, $oCache, $settings, $template, $userdata, $lang;
 	
-	if ( $settings['subnavi_match_next'] )
-	{
-		$template->assign_block_vars('_sn_next_match', array());
-	}
-
 	$ary	= '';
 	$time	= time() - 86400;
 	$month	= date("m", time());
-	$cache	= 'dsp_sn_next_match';
 		
-	$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, m.match_public, t.team_name, g.game_image, g.game_size
+	$sql	= "SELECT m.match_id, m.match_rival_name, m.match_date, m.match_public, t.team_name, g.game_image
 					FROM " . MATCH . " m
 						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
 				WHERE match_date > $time AND DATE_FORMAT(FROM_UNIXTIME(match_date), '%m') = '$month' ORDER BY match_date";
-#	if ( !($result = $db->sql_query($sql)) )
-#	{
-#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-#	}
-#	$match = $db->sql_fetchrowset($result);
-	$match = _cached($sql, $cache);
+	$data	= _cached($sql, 'dsp_sn_next_match');
 	
-	if ( $match )
+	if ( $data )
 	{
-		foreach ( $match as $key => $row )
+		foreach ( $data as $key => $row )
 		{
 			if ( $userdata['user_level'] >= TRIAL )
 			{
@@ -724,35 +958,37 @@ function display_next_match()
 		
 		for ( $i = 0; $i < $cnt; $i++ )
 		{
-			$team_name	= $ary[$i]['team_name'];
-			$game_size	= $ary[$i]['game_size'];
-			$game_image	= $ary[$i]['game_image'];
+			$id		= $ary[$i]['match_id'];
+			$name	= $ary[$i]['team_name'];
+			$size	= $ary[$i]['game_size'];
+			$image	= $ary[$i]['game_image'];
 			
 			$name = ( strlen($ary[$i]['match_rival_name']) < 10 ) ? $ary[$i]['match_rival_name'] : substr($ary[$i]['match_rival_name'], 0, 9) . ' ...';
 			
-			$template->assign_block_vars('_sn_next_match._match_row', array(
-				'GAME'	=>  display_gameicon($ary[$i]['game_size'], $ary[$i]['game_image']),
-				'NAME'	=> "<a href=\"" . check_sid("match.php?" . POST_MATCH . "=" . $ary[$i]['match_id']) . "\">$name</a>",
+			$template->assign_block_vars('sn_next_match_row', array(
+				'GAME'	=>  display_gameicon($ary[$i]['game_image']),
+				'NAME'	=> "<a href=\"" . check_sid("match.php?" . POST_MATCH . "=" . $id) . "\">$name</a>",
 				'DATE'	=> create_date('d H:i', $ary[$i]['match_date'], $userdata['user_timezone']),
 			));
 		}
+		
 	}
+	
+	$template->set_filenames(array('next_match' => 'navi_next_match.tpl'));
+	$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_next_match']['cache'] ) ? display_cache('dsp_sn_next_match', 1) : ''));
+	$template->assign_var_from_handle('NEXT_MATCH', 'next_match');
 }
 
-/* next Training */
 function display_next_training()
 {
 	global $db, $oCache, $root_path, $settings, $template, $userdata, $lang;
 	
-	if ( $settings['subnavi_training'] && $userdata['user_level'] >= TRIAL )
+	if ( $settings['module_next_training'] && $userdata['user_level'] >= TRIAL )
 	{
-		$template->assign_block_vars('_sn_next_training', array());
-
 		$time	= time() - 86400;
 		$month	= date("m", time());
-		$cache	= 'dsp_sn_next_training';
 		
-		$sql = "SELECT tr.*, t.team_name, g.game_image, g.game_size
+		$sql = "SELECT tr.*, t.team_name, g.game_image
 					FROM " . TRAINING . "  tr
 						LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
@@ -762,29 +998,72 @@ function display_next_training()
 	#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	#	}
 	#	$train = $db->sql_fetchrowset($result);
-		$train = _cached($sql, $cache);
+		$data = _cached($sql, 'dsp_sn_next_training');
 		
-		if ( $train )
+	#	debug($data);
+		
+		if ( $data )
 		{
-			$cnt = count($train);
+			$cnt = count($data);
 			
 			for ( $i = 0; $i < $cnt; $i++ )
 			{
-				$team_name	= $train[$i]['team_name'];
-				$game_size	= $train[$i]['game_size'];
-				$game_image	= $train[$i]['game_image'];
+				$id		= $data[$i]['training_id'];
+				$name	= $data[$i]['team_name'];
+				$size	= $data[$i]['game_size'];
+				$image	= $data[$i]['game_image'];
 				
-				$game = "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" >";
-				$name = ( strlen($train[$i]['training_vs']) < 10 ) ? $train[$i]['training_vs'] : substr($train[$i]['training_vs'], 0, 9) . '...';
-		
-				$template->assign_block_vars('_sn_next_training._training_row', array(
-					'GAME'	=> $game,
-					'NAME'	=> "<a href=\"" . check_sid('training.php?' . POST_TRAINING . '=' . $train[$i]['training_id']) . "\">$name</a>",
-					'DATE'	=> create_date('d H:i', $train[$i]['training_date'], $userdata['user_timezone']),
+				$name = ( strlen($data[$i]['training_vs']) < 10 ) ? $data[$i]['training_vs'] : substr($data[$i]['training_vs'], 0, 9) . ' ...';
+				
+				$template->assign_block_vars('sn_next_training_row', array(
+					'GAME'	=>  display_gameicon($data[$i]['game_image']),
+					'NAME'	=> "<a href=\"" . check_sid("training.php?" . POST_TRAINING . "=" . $id) . "\">$name</a>",
+					'DATE'	=> create_date('d H:i', $data[$i]['training_date'], $userdata['user_timezone']),
 				));
+				
+		#		$team_name	= $train[$i]['team_name'];
+		#		$game_size	= $train[$i]['game_size'];
+		#		$game_image	= $train[$i]['game_image'];
+		#		
+		#		$game = "<img src=\"$root_path" . $settings['path_games'] . "/$game_image\" alt=\"$team_name\" title=\"$team_name\" width=\"$game_size\" >";
+		#		$name = ( strlen($train[$i]['training_vs']) < 10 ) ? $train[$i]['training_vs'] : substr($train[$i]['training_vs'], 0, 9) . '...';
+		
+		#		$template->assign_block_vars('sn_next_training_row', array(
+		#			'GAME'	=> $game,
+		#			'NAME'	=> "<a href=\"" . check_sid('training.php?' . POST_TRAINING . '=' . $train[$i]['training_id']) . "\">$name</a>",
+		#			'DATE'	=> create_date('d H:i', $train[$i]['training_date'], $userdata['user_timezone']),
+		#		));
 			}
 		}
+		
+		$template->set_filenames(array('next_training' => 'navi_next_training.tpl'));
+		$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_next_training']['cache'] ) ? display_cache('dsp_sn_next_training', 1) : ''));
+		$template->assign_var_from_handle('NEXT_TRAINING', 'next_training');
 	}
+}
+
+function display_cache($name, $type = '')
+{
+	global $oCache, $userdata, $lang;
+	
+	if ( defined('CACHE') )
+	{
+		$time	= $oCache->readCacheTime($name);
+		$type	= ( $type == '1' ) ? $lang['cache_valid'] : $lang['cache_duration'] ;
+		$msg	= sprintf($type, create_date($userdata['user_dateformat'], $time, $userdata['user_timezone']));
+		$str	= "<img class=\"icon\" src=\"images/icon-rss.png\" title=\"$msg\" alt=\"$msg\">";
+		
+		return $str;
+	}
+}
+
+function display_gameicon($image)
+{
+	global $root_path, $settings;
+	
+	$return	= '<img class="icon" src="' . $root_path . $settings['path_games'] . '/' . $image . '" alt="' . $image . '" title="' . $image . '" width="16" height="16">';
+
+	return $return;
 }
 
 ?>

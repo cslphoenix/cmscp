@@ -1,29 +1,14 @@
-<table class="out" width="100%" cellspacing="0">
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td class="info_head" colspan="3">{L_HEAD}</td>
+	<th colspan="3">{L_HEAD}</th>
 </tr>
 <!-- BEGIN lobby -->
 <tr>
-	<td>
+	<td colspan="2">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
 			<td><a href="ucp.php?mode=profile_edit">Profil bearbeiten</a></td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
@@ -34,156 +19,170 @@
 		</table>
 	</td>
 </tr>
+</table>
+
+<table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
+<!-- BEGIN news -->
 <tr>
-	<td>
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<!-- BEGIN _news -->
-		<tr>
-			<td valign="top">{L_NEWS}</td>
-			<td align="left">
-				<table cellspacing="0" cellpadding="0" class="lobby">
-				<!-- BEGIN _news_row -->
-				<tr>
-					<td>{lobby._news._news_row.DATE}</td>
-					<td>{lobby._news._news_row.TITLE}</td>
-					<td>{lobby._news._news_row.COMMENT}</td>
-					<td>&nbsp;</td>
-				</tr>
-				<!-- END _news_row -->
-				</table>		
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">&nbsp;</td>
-		</tr>
-		<!-- END _news -->
-		<!-- BEGIN _event_new -->
-		<tr>
-			<td valign="top">{L_UP_EVENT}:</td>
-			<td align="left">
-				<table cellspacing="0" cellpadding="0" class="lobby">
-				<!-- BEGIN _event_new_row -->
-				<tr>
-					<td>{lobby._event_new._event_new_row.DATE}</td>
-					<td>{lobby._event_new._event_new_row.TITLE}</td>
-					<td>{lobby._event_new._event_new_row.COMMENT}</td>
-					<td>{lobby._event_new._event_new_row.OPTION}</td>
-				</tr>
-				<!-- END _event_new_row -->
-				</table>
-			</td>
-		</tr>
-		<!-- END _event_new -->
-		<!-- BEGIN _event_old -->
-		<tr>
-			<td valign="top">{L_EX_EVENT}:</td>
-			<td align="left">
-				<table cellspacing="0" cellpadding="0" class="lobby">
-				<!-- BEGIN _event_old_row -->
-				<tr>
-					<td>{lobby._event_old._event_old_row.DATE}</td>
-					<td>{lobby._event_old._event_old_row.TITLE}</td>
-					<td>{lobby._event_old._event_old_row.COMMENT}</td>
-					<td>&nbsp;</td>
-				</tr>
-				<!-- END _event_old_row -->
-				</table>
-			</td>
-		</tr>
-		<!-- END _event_old -->
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<!-- BEGIN _match_new -->
-		<tr>
-			<td valign="top">{L_UP_MATCH}:</td>
-			<td align="left">
-				<table cellspacing="0" cellpadding="0" class="lobby">
-				<!-- BEGIN _match_new_row -->
-				<tr>
-					<td>{lobby._match_new._match_new_row.DATE}</td>
-					<td>{lobby._match_new._match_new_row.TITLE}</td>
-					<td>{lobby._match_new._match_new_row.COMMENT}</td>
-					<td>{lobby._match_new._match_new_row.OPTION}</td>
-				</tr>
-				<!-- END _match_new_row -->
-				</table>			
-			</td>
-		</tr>
-		<!-- END _match_new -->
-		<!-- BEGIN _match_old -->
-		<tr>
-			<td valign="top">{L_EX_MATCH}:</td>
-			<td align="left">
-				<table cellspacing="0" cellpadding="0" class="lobby">
-				<!-- BEGIN _match_old_row -->
-				<tr>
-					<td>{lobby._match_old._match_old_row.DATE}</td>
-					<td>{lobby._match_old._match_old_row.TITLE}</td>
-					<td>{lobby._match_old._match_old_row.COMMENT}</td>
-					<td>&nbsp;</td>
-				</tr>
-				<!-- END _match_old_row -->
-				</table>			
-			</td>
-		</tr>
-		<!-- END _match_old -->
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<!-- BEGIN training -->
-		<tr>
-			<td valign="top">Aktuelle Trainings:</td>
-			<td align="left">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN training_new_row -->
-				<tr>
-					<td nowrap="nowrap">{training.training_new_row.TRAINING_NAME}</td>
-					<td align="left">{training.training_new_row.TRAINING_COMMENTS}</td>
-				</tr>
-				<!-- END training_new_row -->
-				</table>			
-			</td>
-		</tr>
-		<!-- BEGIN training_old -->
-		<tr>
-			<td valign="top">Abelaufene Trainings:</td>
-			<td align="left">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<!-- BEGIN training_old_row -->
-				<tr>
-					<td width="20%" nowrap="nowrap">{training.training_old.training_old_row.TRAINING_NAME}</td>
-					<td align="left">{training.training_old.training_old_row.TRAINING_COMMENTS}</td>
-					
-				</tr>
-				<!-- END training_old_row -->
-				</table>			
-			</td>
-		</tr>
-		<!-- END training_old -->
-		<!-- END training -->
-		</table>
-	</td>
+	<th colspan="2"><span class="right">{UNREAD_NEWS}</span>{L_NEWS}</th>
 </tr>
 <tr>
 	<td>&nbsp;</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN news_row -->
+		<tr>
+			<td><span title="{lobby.news.news_row.DATEI}">{lobby.news.news_row.DATE}</span></td>
+			<td>{lobby.news.news_row.TITLE}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<!-- END news_row -->
+		</table>		
+	</td>
 </tr>
-<!-- END lobby -->
-<!-- BEGIN profile_edit -->
-
-
-<!-- BEGIN catrow -->
 <tr>
-	<th colspan="2">{profile_edit.catrow.CATEGORY_NAME}</th>
+	<td colspan="2"></td>
 </tr>
-<!-- BEGIN profilerow -->
-<tr> 
-	<td class="row1" width="160">{profile_edit.catrow.profilerow.NAME}</td>
-	<td class="row2">{profile_edit.catrow.profilerow.FIELD}</td>
-</tr>
-<!-- END profilerow -->
-<!-- END catrow -->
+<!-- END news -->
 
-<!-- END profile_edit -->
+<!-- BEGIN event -->
+<tr>
+	<th colspan="2"><span class="right">{UNREAD_EVENT}</span>{L_EVENT}</th>
+</tr>
+<!-- BEGIN new -->
+<tr>
+	<td class="top right">{L_UPCOMING}</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN new_row -->
+		<tr>
+			<td>{lobby.event.new.new_row.DATE}</td>
+			<td>{lobby.event.new.new_row.TITLE}</td>
+			<td>{lobby.event.new.new_row.OPTION}</td>
+		</tr>
+		<!-- END new_row -->
+		</table>		
+	</td>
+</tr>
+<!-- END new -->
+<!-- BEGIN old -->
+<tr>
+	<td class="top right">{L_EXPIRED}</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN old_row -->
+		<tr>
+			<td>{lobby.event.old.old_row.DATE}</td>
+			<td>{lobby.event.old.old_row.TITLE}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<!-- END old_row -->
+		</table>
+	</td>
+</tr>
+<!-- END old -->
+<tr>
+	<td colspan="2"></td>
+</tr>
+<!-- END event -->
+
+<!-- BEGIN match -->
+<tr>
+	<th colspan="4"><span class="right">{UNREAD_MATCH}</span>{L_MATCH}</th>
+</tr>
+<!-- BEGIN new -->
+<tr>
+	<td class="top right">{L_UPCOMING}</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN new_row -->
+		<tr>
+			<td>{lobby.match.new.new_row.DATE}</td>
+			<td>{lobby.match.new.new_row.TITLE}</td>
+			<td>{lobby.match.new.new_row.OPTION}</td>
+		</tr>
+		<!-- END new_row -->
+		</table>
+	</td>
+</tr>
+<!-- END new -->
+
+<!-- BEGIN old -->
+<tr>
+	<td class="top right">{L_EXPIRED}</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN old_row -->
+		<tr>
+			<td>{lobby.match.old.old_row.DATE}</td>
+			<td>{lobby.match.old.old_row.TITLE}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<!-- END old_row -->
+		</table>			
+	</td>
+</tr>
+<!-- END old -->
+<tr>
+	<td colspan="2"></td>
+</tr>
+<!-- END match -->
+
+<!-- BEGIN train -->
+<tr>
+	<th colspan="4"><span class="right">{UNREAD_TRAIN}</span>{L_TRAIN}</th>
+</tr>
+<!-- BEGIN new -->
+<tr>
+	<td class="top right">{L_UPCOMING}</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN new_row -->
+		<tr>
+			<td>{lobby.train.new.new_row.DATE}</td>
+			<td>{lobby.train.new.new_row.TITLE}</td>
+			<td>{lobby.train.new.new_row.OPTION}</td>
+		</tr>
+		<!-- END new_row -->
+		</table>
+	</td>
+</tr>
+<!-- END new -->
+<!-- BEGIN old -->
+<tr>
+	<td class="top right">{L_EXPIRED}</td>
+	<td>
+		<table class="type6" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<!-- BEGIN old_row -->
+		<tr>
+			<td>{lobby.train.old.old_row.DATE}</td>
+			<td>{lobby.train.old.old_row.TITLE}</td>
+			<td>{lobby.train.old.old_row.OPTION}</td>
+		</tr>
+		<!-- END old_row -->
+		</table>
+	</td>
+</tr>
+<!-- END old -->
+<!-- END train -->
+<!-- END lobby -->
+
+<!-- BEGIN update -->
+<tr>
+	<td colspan="2"></td>
+</tr>
+<!-- BEGIN cat -->
+<tr>
+	<th colspan="2">{update.cat.CATEGORY_NAME}</th>
+</tr>
+<!-- BEGIN field -->
+<tr> 
+	<td class="row1" width="160">{update.cat.field.NAME}</td>
+	<td class="row2">{update.cat.field.INPUT}</td>
+</tr>
+<!-- END field -->
+<!-- END cat -->
+
+<!-- END update -->
 </table>
 

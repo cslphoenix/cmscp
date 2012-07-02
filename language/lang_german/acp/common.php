@@ -6,111 +6,111 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
-
-	'navi_navigation'	=> 'Navigation',
-	
 	'content_encoding'	=> 'iso-8859-1',
 	'content_direction'	=> 'ltr',
-	
+	'content_footer'	=> '<div class="copyright">powered by <a href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a> &copy; 2009-2012 by Phoenix &bull; Version: %s</div>',
+
 	/* Hauptmenü */
-	'hm_contact'	=> 'Kontakt',	
-	'hm_database'	=> 'Datenbank',	
+	'hm_contact'	=> 'Kontakt',
+	'hm_database'	=> 'Datenbank',
 	'hm_dev'		=> 'Entwicklung',
 	'hm_forum'		=> 'Forum',
 	'hm_games'		=> 'Spiele',
 	'hm_groups'		=> 'Gruppen',
-	'hm_main'		=> 'Allgemein',	
+	'hm_main'		=> 'Allgemein',
 	'hm_news'		=> 'News',
 	'hm_teams'		=> 'Teams',
-	'hm_template'	=> 'Themes/Template',	
+	'hm_server'		=> 'Game/Voice Server',
+	'hm_template'	=> 'Themes/Template',
 	'hm_users'		=> 'Benutzer',
 
-	/* Hauptmenü */
-	
 	/* Submenü */
-	/* Styles */
-	'sm_themes'			=> 'Themes',
-	'sm_addnew'			=> 'Hinzufügen',
-	'sm_create'			=> 'Erstellen',
-	'sm_manage'			=> 'Eingestellungen',
-	'sm_export'			=> 'Exportieren',
-	
+	'sm_themes'				=> 'Themes',
+	'sm_addnew'				=> 'Hinzufügen',
+	'sm_create'				=> 'Erstellen',
+	'sm_manage'				=> 'Eingestellungen',
+	'sm_export'				=> 'Exportieren',
+	'sm_votes'				=> 'Umfragen',
+	'sm_settings'			=> 'Einstellungen',
+	'sm_settings_teams'		=> 'Teameinstellungen',
+	'sm_settings_user'		=> 'Benutzereinstellungen',
 	'sm_settings_groups'	=> 'Gruppeneinstellung',
-	
-	'sm_votes'	=> 'Umfragen',
-	
-	'sm_teams_match'	=> 'Begegnungen',
-	'sm_teams_training'	=> 'Training',
-	'sm_teams_settings'	=> 'Einstellung',
-	'sm_news'		=> 'News',
-	'sm_news_cat'	=> 'Kategorie',
-	'sm_index'		=> 'Übersicht',
-	'sm_training'	=> 'Training',
-	'sm_authlist'			=> 'Berechtigungsfelder',
-	'sm_bugtracker'		=> 'Bugtracker',
+	'sm_teams_match'		=> 'Begegnungen',
+	'sm_teams_training'		=> 'Training',
+	'sm_teams_settings'		=> 'Einstellung',
+	'sm_news'				=> 'News',
+	'sm_news_cat'			=> 'Kategorie',
+	'sm_index'				=> 'Übersicht',
+	'sm_training'			=> 'Training',
+	'sm_authlist'			=> 'Berechtigungsf.',
+	'sm_bugtracker'			=> 'Bugtracker',
 	'sm_cash'				=> 'Clankasse',
-	'sm_changelog'		=> 'Changelog',
-	'sm_downloads'		=> 'Downloads',
+	'sm_changelog'			=> 'Changelog',
+	'sm_downloads'			=> 'Downloads',
 	'sm_overview'			=> 'Übersicht',
 	'sm_fightus'			=> 'Fight us',
-	'sm_joinus'			=> 'Join us',
+	'sm_joinus'				=> 'Join us',
 	'sm_contact'			=> 'Kontakt',
 	'sm_database'			=> 'Datenbank',
-	'sm_backup'			=> 'Backup',
+	'sm_backup'				=> 'Backup',
 	'sm_restore'			=> 'Wiederherstellen',
 	'sm_optimize'			=> 'Optimieren',
-	'sm_event'			=> 'Ereignisse',
+	'sm_event'				=> 'Ereignisse',
 	'sm_perm'				=> 'Berechtigung',
-	'sm_perm_list'		=> 'Berechtigungsliste',
+	'sm_perm_list'			=> 'Berechtigungsliste',
 	'sm_logs'				=> 'Protokoll',
-	'sm_logs_error'		=> 'Fehlerprotokoll',		
+	'sm_logs_error'			=> 'Fehlerprotokoll',
 	'sm_maps'				=> 'Karten',
-	'sm_match'			=> 'Begegnungen',
+	'sm_match'				=> 'Begegnungen',
 	'sm_navi'				=> 'Navigation',
 	'sm_news'				=> 'News',
 	'sm_newscat'			=> 'Kategorie',
 	'sm_network'			=> 'Netzwerk',
-	'sm_newsletter'		=> '!Newsletter',		
+	'sm_newsletter'			=> '!Newsletter',
 	'sm_profile'			=> 'Profilefelder',
-	'sm_ranks'			=> 'Ränge',
-	'sm_server'		=> 'Server',
-	
-	
-	'sm_settings'		=> 'Einstellungen',
-	'sm_settings_teams'	=> 'Teameinstellungen',
-	'sm_settings_user'	=> 'Benutzereinstellungen',
-	
-	'sm_games'			=> 'Spiele',
+	'sm_ranks'				=> 'Ränge',
+	'sm_server'				=> 'Server',
+	'sm_server_type'		=> 'Server Typen',
+	'sm_gameserver'			=> 'Gameserver',
+	'sm_teamspeak'			=> 'Teamspeak',
+	'sm_games'				=> 'Spiele',
 	'sm_gallery'			=> 'Galerie',
-	'sm_group'			=> 'Gruppe',
-	'sm_forum'			=> 'Forum',
-	'sm_index'			=> 'Übersicht',
-	'sm_users'			=> 'Benutzer',
-	'sm_group'			=> 'Gruppe',
-	'sm_teams'			=> 'Teams',
-	/* Submenü */
-	
-	/* Sektion */
-	'section'	=> array(
-		SECTION_TEAMSPEAK	=> 'Teamspeak',
-		SECTION_DOWNLOADS	=> 'Downloads',
-		SECTION_MATCH		=> 'Begegnungen',
-	),
-	
+	'sm_group'				=> 'Gruppe',
+	'sm_forum'				=> 'Forum',
+	'sm_index'				=> 'Übersicht',
+	'sm_users'				=> 'Benutzer',
+	'sm_group'				=> 'Gruppe',
+	'sm_teams'				=> 'Teams',
+
 	/* sprintf: Allgemein */
-	'sprintf_head'				=> '%s Administration',
-	'sprintf_create'			=> '%s hinzufügen',
-	'sprintf_update'			=> '%s bearbeiten: %s',
-	
-	'sprintf_new_create'		=> 'Neue %s erstellen',
-	'sprintf_new_createn'		=> 'Neuen %s erstellen',		
-	'sprintf_new_creates'		=> 'Neues %s erstellen',
-	
-	'sprintf_name'				=> '%sname',
-	'sprintf_title'				=> '%stitel',
-	'sprintf_desc'				=> '%sbeschreibung',
+	'sprintf_head'			=> '%s Administration',
+	'sprintf_create'		=> '%s hinzufügen',
+	'sprintf_create_cat'	=> '%s hinzufügen',
+	'sprintf_create_user'	=> '%s hinzufügen',
+	'sprintf_update'		=> '%s bearbeiten: %s',
+	'sprintf_update_cat'	=> '%s bearbeiten: %s',
+	'sprintf_update_user'	=> '%s bearbeiten: %s',
+
+	'sprintf_new_create'	=> 'Neue %s erstellen',
+	'sprintf_new_createn'	=> 'Neuen %s erstellen',
+	'sprintf_new_creates'	=> 'Neues %s erstellen',
+
+	'sprintf_new_add'		=> 'Neue %s hinzufügen',
+	'sprintf_new_addn'		=> 'Neuen %s hinzufügen',
+#	'sprintf_new_adds'		=> 'Neues %s erstellen',
+
+	'sprintf_name'			=> '%sname',
+	'sprintf_title'			=> '%stitel',
+	'sprintf_desc'			=> '%sbeschreibung',
 	/* sprintf: Allgemein */
-	
+
+	'a_txt'				=> '<a href="%s" title="%s">%s</a>',
+	'a_img'				=> '<a href="%s"><img class="icon" src="%s" title="%s" alt="" /></a>',
+
+	'i_icon'			=> '<img class="icon" src="%s" title="%s" alt="" />',
+	'i_iconn'			=> '<img src="%s" title="%s" alt="" />',
+
+
 	/* sprintf: Spiele */
 	'sprintf_tag'				=> '%s Tag',				# game
 	'sprintf_image'				=> '%s Bild',				# game, maps, network, newscat
@@ -120,23 +120,24 @@ $lang = array_merge($lang, array(
 	'sprintf_cat'				=> '%skategorie',			# maps, news
 	'sprintf_text'				=> '%stext',				# news
 	'sprintf_rating'			=> '%sbewertung',			# news
-	
+
 	'sprintf_auth'				=> '%sberechtigung',
 	'sprintf_comments'			=> '%skommentare erlauben?',
-	'sprintf_create_user'		=> '%s hinzufügen',		
+	'sprintf_create_user'		=> '%s hinzufügen',
 	'sprintf_intern'			=> '<em><b> %s </b></em>',
 	'sprintf_list'				=> '%sliste',
-	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',		
+	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',
 	'sprintf_match_name'		=> 'vs. %s',
 	'sprintf_message'			=> '%s Nachricht',
 	'sprintf_news_title'		=> '<em><b>%s</b></em>',
 	'sprintf_normal'			=> '%s',
 	'sprintf_overview'			=> '%s Übersicht',
 	'sprintf_processing'		=> '%s Bearbeitung',
-	'sprintf_right_overview'	=> '%s Rechteübersicht',		
-	'sprintf_update_user'		=> '%s bearbeiten: %s',		
+	'sprintf_right_overview'	=> '%s Rechteübersicht',
+	'sprintf_update_user'		=> '%s bearbeiten: %s',
 	'sprintf_upload'			=> '%s Upload',
-	'sprintf_upload_info'		=> 'Abmessung: %s x %s / Größe: %s KB\'s',
+	'sprintf_upload_info'		=> 'Abmessung: %s / Größe: %s KB\'s',
+	'sprintf_select_menu'		=> '&raquo;&nbsp;%s',
 	'sprintf_select_format'		=> '&raquo;&nbsp;%s&nbsp;',
 	'sprintf_select_format2'	=> '&raquo;&nbsp;%s&nbsp;::&nbsp;%s',
 	'sprintf_select_order'		=> '&raquo;&nbsp;nach:&nbsp;%s&nbsp;',
@@ -144,16 +145,22 @@ $lang = array_merge($lang, array(
 	'sprintf_imagesize'			=> 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.',
 	'sprintf_ajax_fail'			=> 'Kein Suchergebnis!',
 	'sprintf_ajax_users'		=> '%s<br />&nbsp;&not;&nbsp;Benutzerlevel: %s<br />&nbsp;&not;&nbsp;Reg: %s<br />&nbsp;&not;&nbsp;Log: %s',
-	
+	'sprintf_ajax_more'			=> 'weitere %s Einträge vorhanden ...&nbsp;',
+
 	'sprintf_db_create'			=> '|%s| geändert in: %s',
 	'sprintf_db_delete'			=> '|%s| gelöscht: %s',
 	'sprintf_db_change'			=> '|%s| von: %s auf: %s geändert.',
-	
+
 	'sprintf_log_create'		=> ' %s geändert in: <b>%s</b>',
 	'sprintf_log_change'		=> ' %s geändert von: <b>%s</b> auf: <b>%s</b>.<br />',
 	'sprintf_log_delete'		=> ' %s gelöscht: %s',
-	
-	
+
+
+	'sprintf_count_maps'		=> '%s %s',			# news
+	'sprintf_empty_space'		=> '%s %s',			# index
+	'sprintf_empty_line'		=> '%s - %s',	# Menü
+
+
 	/* allgemein: Standard */
 	'common_confirm'		=> 'Bestätigen',
 	'common_order'			=> 'Reihenfolge',
@@ -168,6 +175,7 @@ $lang = array_merge($lang, array(
 	'common_language'		=> 'Sprachdatei',
 	'common_intern'			=> 'Intern',
 	'common_visible'		=> 'Sichtbar',
+	'common_go'				=> 'Los',
 	'common_no'				=> 'Nein',
 	'common_yes'			=> 'Ja',
 	'common_cat'			=> 'Kategorie',
@@ -179,6 +187,11 @@ $lang = array_merge($lang, array(
 	'common_info_intern'	=> 'wird nur von eingeloggten Benutzern gesehen',
 	'common_info_intern2'	=> 'wird von allen gesehen',
 
+	'common_empty'			=> 'Keine Einträge vorhanden.',
+	'common_resync'			=> 'Synchronisieren',
+	'common_order_u'		=> 'nach Oben verschieben',
+	'common_order_d'		=> 'nach Unten verschieben',
+	
 	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
 	'common_entry_new'		=> 'Neuer Eintrag',
 	'common_add'			=> 'Hinzufügen',
@@ -191,6 +204,9 @@ $lang = array_merge($lang, array(
 	'common_input_standard'	=> 'Standard',
 	'common_default'		=> 'Standarteinstellungen',
 	'common_delete'			=> 'Löschen',
+	'common_delete_all'		=> 'Alles löschen',
+	'common_login'			=> 'Login',
+	'common_login_acp'		=> 'Adminlogin',
 	'common_desc'			=> 'Beschreibung',
 	'common_details'		=> 'Details',
 	'common_image'			=> 'Bild',
@@ -209,11 +225,17 @@ $lang = array_merge($lang, array(
 	'common_submit'			=> 'Absenden',
 	'common_upload'			=> 'Upload',
 	'common_update'			=> 'Bearbeiten',
+	'common_create'			=> 'Hinzufügen',
+	'common_order'			=> 'Ordnen',
 	'common_sort'			=> 'Sortieren',
 	'common_public'			=> 'Öffentlich',
 	'common_page_of'		=> 'Seite <b>%d</b> von <b>%d</b>',
+	'common_on'				=> 'Aktiv',
+	'common_off'			=> 'Inaktiv',
+	'common_active'			=> 'Aktiviert',
+	'common_deactive'		=> 'Deaktiviert',
 	/* allgemein: Standard */
-	
+	'navi_navigation'	=> 'Navigation',
 	'return'			=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a></strong>',
 	'return_update'		=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;zurück</a></strong>',
 	
@@ -235,8 +257,9 @@ $lang = array_merge($lang, array(
 	'msg_empty_text'		=> 'Bitte einen Text eintragen!',
 	
 	'msg_select_type'		=> 'Bitte ein Type auswählen!',
-	'msg_select_date'		=> 'Bitte ein Gültiges Datum auswählen!',
-	'msg_select_past'		=> 'Bitte ein Datum/Zeit in der Zukunft auswählen!',
+	
+	
+	'msg_sizedir_empty'		=> 'Leer',
 	/* msg: alle */
 	
 	/* msg: ajax */
@@ -283,19 +306,20 @@ $lang = array_merge($lang, array(
 	/* groups */
 	'msg_empty_add'				=> 'Keine <i>Neuen</i> oder <i>eingetragene</i> Benutzer ausgwählt/eingetragen!',
 	'msg_select_level'			=> 'Bitte ein Gruppenlevel auswählen!',
+	'msg_select_userlevel'		=> 'Bitte ein Benutzerlevel auswählen!',
+	
+	
 	
 	'msg_select_item'			=> 'Bitte etwas auswählen!',
 	
 	'msg_empty_map'				=> 'Bitte eine Map eintragen!',
-	'msg_empty_rival_name'		=> 'Bitte einen Gegnernamen eintragen!',		
-	'msg_empty_rival_tag'		=> 'Bitte einen Gegnerclantag eintragen!',		
-	'msg_empty_server'			=> 'Bitte einen Gameserver eintragen!',	
+	
 	
 	
 	
 	'msg_must_select_authlist'	=> 'Es muss ein Wähle ein Authfeld aus',		
 	'msg_must_select_game'		=> 'Wähle ein Spiel aus',		
-	'msg_select_amount'			=> 'Bitte einen Betrag eintragen!',	
+	
 	'msg_select_cat'			=> 'Bitte ein Match Art auswählen!',	
 	'msg_select_cat'			=> 'Bitte ein Match Art auswählen',	
 	'msg_select_cat'			=> 'Bitte eine Kategorie auswählen',	
@@ -308,7 +332,7 @@ $lang = array_merge($lang, array(
 	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
 	'msg_select_game'			=> 'Bitte ein Spiel auswählen!',	
 	'msg_select_game_image'		=> 'Bitte ein Spielbild auswählen!',		
-	'msg_select_league'			=> 'Bitte eine Liga auswählen!',	
+	
 	'msg_select_map'			=> 'Bitte eine Map auswählen!',	
 	'msg_select_map'			=> 'Bitte eine Karte auswählen!',	
 	'msg_select_maps'			=> 'Bitte eine Map Auswählen!',	
@@ -324,26 +348,26 @@ $lang = array_merge($lang, array(
 	'msg_select_order_end'		=> 'am Ende sortieren',		
 	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder auswählen, zum löschen.',	
 	'msg_select_profilefield'	=> 'Bitte Profilefeld eintragen!',		
-	'msg_select_rank_set'		=> 'Status %s setzen',		
+	'msg_select_rank_set'		=> 'Status %s setzen',	
 	'msg_select_ranks'			=> 'Bitte einen Rang auswählen!',	
 	'msg_select_rival'			=> 'Bitte ein Gegnernamen eintragen',	
 	'msg_select_rival_tag'		=> 'Bitte ein Gegnerclantag eintragen',		
 	'msg_select_server'			=> 'Bitte ein Gameserver eintragen',	
 	'msg_select_sort_team'		=> 'Team fürs sortieren wählen!',		
-	'msg_select_team'			=> 'Bitte ein Team auswählen!',	
-	'msg_select_team'			=> 'Bitte ein Team auswählen!',	
-	'msg_select_team_first'		=> 'Bitte ein Team zuerst auswählen!',		
-	'msg_select_type'			=> 'Bitte ein Type auswählen!',	
+	
+#	'msg_select_type'			=> 'Bitte ein Type auswählen!',	
 	'msg_select_type'			=> 'Bitte ein Type / Art auswählen!',	
 	'msg_select_url'			=> 'Bitte ein Link eintragen!',	
-	'msg_select_user'			=> 'Bitte einen Benutzer auswählen!',	
+		
 	'msg_select_user_level'		=> 'Bitte ein Benutzerlevel auswählen!',		
-	'msg_select_war'			=> 'Bitte ein Wartype auswählen!',	
+	
 	'msg_selected_member'		=> 'Bitte Spieler auswählen die noch nicht eingetragen sind.',		
 	'msg_sprintf_noentry'		=> 'Es sind keine %s eingetragen',		
 	'select_msg_cat_image'		=> 'Bitte ein Kategoriebild auswählen!',		
 	'select_msg_forum_icon'		=> 'Bitte ein Forumicon auswählen!',		
 	'select_msg_game_image'		=> 'Bitte ein Spielbild auswählen!',		
+	
+	'msg_page_disable'			=> 'Seite ist im Wartungsmodus!',
 	
 	'select_rank'				=> 'Rang setzen &raquo;',
 	'select_ranks_rights'		=> 'Gruppenrechte geben/nehmen',		
@@ -371,9 +395,8 @@ $lang = array_merge($lang, array(
 
 	'delete_confirm_map'		=> 'dass diese Karte:',
 	'delete_confirm_map_cat'	=> 'dass diese Kartenkategorie:',
-	'delete_log'				=> 'Der oder die Logeinträge wurde gelöscht',
-	'delete_log_all'			=> 'Alle Logeinträge wurde gelöscht!',
-	'delete_log_error'			=> 'Der oder die Fehlermeldungen wurde gelöscht!',
+	
+	
 	'delete_newsletter'			=> 'Die eMailadresse wurde gelöscht!',
 	'delete_teamspeak'			=> 'Der Teamspeak wurde gelöscht!',
 	'delete_user'				=> 'Der Benutzer wurde gelöscht!',
@@ -390,7 +413,8 @@ $lang = array_merge($lang, array(
 	'header_acp'	=> 'Adminhauptseite',
 
 	'mark_all'			=> 'alle markieren',
-	'mark_deall'		=> 'keine Auswahl',
+	'mark_deall'		=> 'alles abwählen',
+	'mark_invert'		=> 'Markierung umkehren',
 	'mark_yes'			=> 'Ja aktivieren',
 	'mark_no'			=> 'Nein aktivieren',
 	
@@ -403,83 +427,48 @@ $lang = array_merge($lang, array(
 	'ON'	=> 'Aktiv',// This is for GZip compression
 	'OFF'	=> 'Inaktiv',
 
-/*	Berechtigung	*/
+	/*	Berechtigung	*/
 	'auth_guest'	=> 'Gast',
 	'auth_user'		=> 'Benutzer',
 	'auth_trial'	=> 'Trial',
 	'auth_member'	=> 'Member',
 	'auth_mod'		=> 'Moderator',
 	'auth_admin'	=> 'Administrator',
+	'auth_none'		=> 'deaktiviert',
 
-	'switch_level' => array(
-						GUEST	=> 'Gast',
-						USER	=> 'Benutzer',
-						TRIAL	=> 'Trial',
-						MEMBER	=> 'Member',
-						MOD		=> 'Moderator',
-						ADMIN	=> 'Administrator',
-					),
+	'auth_cash'				=> 'Clankasse',
+	'auth_contact'			=> 'Kontakt',
+	'auth_event'			=> 'Event',
+	'auth_fightus'			=> 'Fightus',
+	'auth_forum'			=> 'Forum',
+	'auth_forum_perm'		=> 'Forumberechtigung',
+	'auth_gallery'			=> 'Galerie',
+	'auth_games'			=> 'Spiele',
+	'auth_groups'			=> 'Gruppen',
+	'auth_groups_perm'		=> 'Gruppen Befugnisse',		
+	'auth_joinus'			=> 'Joinus',
+	'auth_match'			=> 'Begegnungen',
+	'auth_navi'				=> 'Navigation',
+	'auth_network'			=> 'Network',
+	'auth_news'				=> 'News',
+	'auth_news_public'		=> 'News veröffentlichen',		
+	'auth_newscat'			=> 'Newskategorien',
+	'auth_newsletter'		=> 'Newsletter',		
+	'auth_ranks'			=> 'Ränge',
+	'auth_server'			=> 'Server',
+	'auth_teams'			=> 'Teams',
+	'auth_teamspeak'		=> 'Teamspeak',
+	'auth_training'			=> 'Training',
+	'auth_user'				=> 'Benutzer',
+	'auth_user_perm'		=> 'Benutzer Befugnisse',
+	'auth_downloads'		=> 'Download',
+	'auth_downloads_cat'	=> 'Downloadkategorien',
+	'auth_maps'				=> 'Karten',
+	'auth_themes'			=> 'Templates/Stlye',
+	'auth_votes'			=> 'Umfragen',
+	'auth_server_type'		=> 'Server Typen',
 
-	'auth_cash'			=> 'Clankasse',
-	'auth_contact'		=> 'Kontakt',
-	'auth_event'		=> 'Event',
-	'auth_fightus'		=> 'Fightus',
-	'auth_forum'		=> 'Forum',
-	'auth_forum_perm'	=> 'Forumberechtigung',
-	'auth_gallery'		=> 'Galerie',
-	'auth_games'		=> 'Spiele',
-	'auth_groups'		=> 'Gruppen',
-	'auth_groups_perm'	=> 'Gruppen Befugnisse',		
-	'auth_joinus'		=> 'Joinus',
-	'auth_match'		=> 'Begegnungen',
-	'auth_navi'			=> 'Navigation',
-	'auth_network'		=> 'Network',
-	'auth_news'			=> 'News',
-	'auth_news_public'	=> 'News veröffentlichen',		
-	'auth_newscat'		=> 'Newskategorien',
-	'auth_newsletter'	=> 'Newsletter',		
-	'auth_ranks'		=> 'Ränge',
-	'auth_server'		=> 'Server',
-	'auth_teams'		=> 'Teams',
-	'auth_teamspeak'	=> 'Teamspeak',
-	'auth_training'		=> 'Training',
-	'auth_user'			=> 'Benutzer',
-	'auth_user_perm'	=> 'Benutzer Befugnisse',
-	'auth_download'		=> 'Download',
-	'auth_download_cat'	=> 'Downloadkategorien',
-	'auth_maps'			=> 'Karten',
-
-	'auths' => array(
-				'auth_cash'				=> 'Clankasse',
-				'auth_contact'			=> 'Kontakt',
-				'auth_event'			=> 'Event',
-				'auth_fightus'			=> 'Fightus',
-				'auth_forum'			=> 'Forum',
-				'auth_forum_perm'		=> 'Forumberechtigung',
-				'auth_gallery'			=> 'Galerie',
-				'auth_games'			=> 'Spiele',
-				'auth_groups'			=> 'Gruppen',
-				'auth_groups_perm'		=> 'Gruppen Befugnisse',
-				'auth_joinus'			=> 'Joinus',	
-				'auth_match'			=> 'Begegnungen',	
-				'auth_navi'				=> 'Navigation',
-				'auth_network'			=> 'Network',	
-				'auth_news'				=> 'News',
-				'auth_news_public'		=> 'News veröffentlichen',
-				'auth_newscat'			=> 'Newskategorien',	
-				'auth_newsletter'		=> 'Newsletter',
-				'auth_ranks'			=> 'Ränge',	
-				'auth_server'			=> 'Server',	
-				'auth_teams'			=> 'Teams',	
-				'auth_teamspeak'		=> 'Teamspeak',
-				'auth_training'			=> 'Training',	
-				'auth_user'				=> 'Benutzer',
-				'auth_user_perm'		=> 'Benutzer Befugnisse',
-				'auth_download'			=> 'Download',
-				'auth_download_cat'		=> 'Downloadkategorien',
-				'auth_maps'				=> 'Karten',
-				'auth_styles'			=> 'Templates/Stlye',
-			),
+	
 
 	'image_filesize'	=> 'Die Dateigröße muss kleiner als %d KB sein.',
 	'image_imagesize'	=> 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.',
@@ -487,10 +476,95 @@ $lang = array_merge($lang, array(
 	'empty_site' => "<html><head><title></title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"></head><body bgcolor=\"#FFFFFF\" text=\"#000000\"></body></html>",
 	
 	'size_by' => ' Bytes',
-	'size_kb' => ' KB',
+	'size_kb' => ' kB',
 	'size_mb' => ' MB',
 	'size_gb' => ' GB',
 	
+	'common_image_upload'	=> 'Hochladen',
+	'common_image_current'	=> 'Aktuelles Gruppenbild',
+	
+	/* folder */
+	'folder'		=> 'Ordner vorhanden',
+	'folder_add'	=> 'Ordner hinzufügen',
+	'folder_bug'	=> 'Ordnerbug, nicht vorhanden',
+	'folder_edit'	=> 'Ordner hat richtige CHMOD Rechte',
+	'folder_error'	=> 'Ordner hat keine CHMOD Rechte',
+	
+	/* image */
+	'image'			=> 'Bild vorhanden',
+	'image_add'		=> 'Bild hinzufügen',
+	'image_delete'	=> 'Bild löschen/gelöscht',
+	'image_edit'	=> 'Bild bearbeiten',
+	'image_link'	=> 'Bild verlinkt',
+	
+	'sync'				=> 'Sync',
+	
+	/* error msg */
+	'msg_select_date'		=> 'Bitte ein Gültiges Datum auswählen!',				# match
+	'msg_select_past'		=> 'Bitte ein Datum/Zeit in der Zukunft auswählen!',	# match
+	
+	'msg_select_users'		=> 'Bitte einen Benutzer auswählen!',					# cash
+	
+	'create'	=> 'hinzugefügt',
+	'update'	=> 'bearbeitet',
+	
+	
+	'radio:match'	=> array(0 => 'als Auswählpunkte', 1 => 'als Dropdownmenü'),
+	'radio:caldays'	=> array(0 => 'Sonntag', 1 => 'Montag', 2 => 'Dienstag', 3 => 'Mittwoch', 4 => 'Donnerstag', 5 => 'Freitag', 6 => 'Samstag'),
+	'radio:calview'	=> array(0 => 'als Listenansicht', 1 => 'als Blockansicht'),
+	'radio:news'	=> array(0 => 'als Listenansicht', 1 => 'als Blockansicht'),
+	'radio:yesno'	=> array(1 => $lang['common_yes'], 0 => $lang['common_no']),
+	'radio:gallery'	=> array(0 => 'als Listenansicht', 1 => 'nach Vorgabe der Einstellungen'),
+	
+
+	
+));
+
+$lang = array_merge($lang, array(
+
+	'auths' => array(
+		'auth_cash'				=> $lang['auth_cash'],
+		'auth_contact'			=> $lang['auth_contact'],
+		'auth_event'			=> $lang['auth_event'],
+		'auth_fightus'			=> $lang['auth_fightus'],
+		'auth_forum'			=> $lang['auth_forum'],
+		'auth_forum_perm'		=> $lang['auth_forum_perm'],
+		'auth_gallery'			=> $lang['auth_gallery'],
+		'auth_games'			=> $lang['auth_games'],
+		'auth_groups'			=> $lang['auth_groups'],
+		'auth_groups_perm'		=> $lang['auth_groups_perm'],
+		'auth_joinus'			=> $lang['auth_joinus'],
+		'auth_match'			=> $lang['auth_match'],
+		'auth_navi'				=> $lang['auth_navi'],
+		'auth_network'			=> $lang['auth_network'],
+		'auth_news'				=> $lang['auth_news'],
+		'auth_news_public'		=> $lang['auth_news_public'],
+		'auth_newscat'			=> $lang['auth_newscat'],
+		'auth_newsletter'		=> $lang['auth_newsletter'],
+		'auth_ranks'			=> $lang['auth_ranks'],
+		'auth_server'			=> $lang['auth_server'],
+		'auth_teams'			=> $lang['auth_teams'],
+		'auth_teamspeak'		=> $lang['auth_teamspeak'],
+		'auth_training'			=> $lang['auth_training'],
+		'auth_user'				=> $lang['auth_user'],
+		'auth_user_perm'		=> $lang['auth_user_perm'],
+		'auth_downloads'		=> $lang['auth_downloads'],
+		'auth_downloads_cat'	=> $lang['auth_downloads_cat'],
+		'auth_maps'				=> $lang['auth_maps'],
+		'auth_themes'			=> $lang['auth_themes'],
+		'auth_votes'			=> $lang['auth_votes'],
+		'auth_server_type'		=> $lang['auth_server_type']
+	),
+	
+	'switch_level' => array(
+		NONE	=> $lang['auth_none'],
+		GUEST	=> $lang['auth_guest'],
+		USER	=> $lang['auth_user'],
+		TRIAL	=> $lang['auth_trial'],
+		MEMBER	=> $lang['auth_member'],
+		MOD		=> $lang['auth_mod'],
+		ADMIN	=> $lang['auth_admin'],
+	),
 	
 ));
 

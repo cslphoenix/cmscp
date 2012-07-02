@@ -11,7 +11,7 @@ $userauth = auth_acp_check($userdata['user_id']);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_TEAM;
@@ -21,8 +21,8 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, 0);	
-$mode	= request('mode', 1);
+$data	= request($url, INT);	
+$mode	= request('mode', TXT);
 
 $error	= '';
 $fields	= '';
@@ -39,19 +39,19 @@ $start		= ( $start < 0 ) ? 0 : $start;
 $confirm	= ( isset($HTTP_POST_VARS['confirm']) ) ? TRUE : 0;
 $cancel		= ( isset($HTTP_POST_VARS['cancel']) ) ? TRUE : 0;
 */
-$confirm	= ( isset($HTTP_POST_VARS['confirm']) ) ? TRUE : 0;
-$cancel		= ( isset($HTTP_POST_VARS['cancel']) ) ? TRUE : 0;
-$sid		= ( isset($HTTP_POST_VARS['sid']) ) ? $HTTP_POST_VARS['sid'] : '';
-$start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start		= ( $start < 0 ) ? 0 : $start;
+#$confirm	= ( isset($HTTP_POST_VARS['confirm']) ) ? TRUE : 0;
+#$cancel		= ( isset($HTTP_POST_VARS['cancel']) ) ? TRUE : 0;
+#$sid		= ( isset($HTTP_POST_VARS['sid']) ) ? $HTTP_POST_VARS['sid'] : '';
+#$start		= ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
+#$start		= ( $start < 0 ) ? 0 : $start;
 
-$is_moderator = FALSE;
+#$is_moderator = FALSE;
 
 //if ( $mode == 'view' && intval($HTTP_GET_VARS[POST_TEAMS]) )
 
 if ( !$mode )
 {
-	$template->assign_block_vars('_list', array());
+	$template->assign_block_vars('list', array());
 	
 	$page_title = $lang['teams'];
 	
@@ -63,7 +63,7 @@ if ( !$mode )
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$games = $db->sql_fetchrowset($result);
-//	$games = _cached($sql, 'data_games');
+#	$games = _cached($sql, 'data_games');
 
 	$sql = "SELECT * FROM " . TEAMS . " ORDER BY team_order";
 	if ( !($result = $db->sql_query($sql)) )
@@ -71,24 +71,27 @@ if ( !$mode )
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$teams = $db->sql_fetchrowset($result);
-//	$teams = _cached($sql, 'data_teams');
+#	$teams = _cached($sql, 'data_teams');
 
-	for ( $i = 0; $i < count($games); $i++ )
+	$cnt_games = count($games);
+	$cnt_teams = count($teams);
+
+	for ( $i = 0; $i < $cnt_games; $i++ )
 	{
 		$game_id = $games[$i]['game_id'];
 		
-		$template->assign_block_vars('_list._game_row', array('L_GAME' => $games[$i]['game_name']));
+		$template->assign_block_vars('list._game_row', array('L_GAME' => $games[$i]['game_name']));
 															 
-		for ( $j = 0; $j < count($teams); $j++ )
+		for ( $j = 0; $j < $cnt_teams; $j++ )
 		{
 			$team_id	= $teams[$j]['team_id'];
 			$team_game	= $teams[$j]['team_game'];
 			
 			if ( $team_game == $game_id )
 			{
-				$template->assign_block_vars('_list._game_row._team_row', array(
+				$template->assign_block_vars('list._gamerow._team_row', array(
 					'NAME'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$team_id") . '">' . $teams[$j]['team_name'] . '</a>',
-					'GAME'		=> display_gameicon($games[$i]['game_size'], $games[$i]['game_image']),
+					'GAME'		=> display_gameicon($games[$i]['game_image']),
 					
 					'JOINUS'	=> $teams[$j]['team_join']	? '<a href="' . check_sid("contact.php?mode=joinus&amp;$url=$team_id") . '">' . $lang['match_joinus'] . '</a>'  : '',
 					'FIGHTUS'	=> $teams[$j]['team_fight']	? '<a href="' . check_sid("contact.php?mode=fightus&amp;$url=$team_id") . '">' . $lang['match_fightus'] . '</a>'  : '',
@@ -99,9 +102,11 @@ if ( !$mode )
 }
 else if ( $mode == 'view' && $data )
 {
-//	$page_title = $lang['team'];
-	$template->set_filenames(array('body' => 'body_teams.tpl'));
-	$template->assign_block_vars('details', array());
+	$template->assign_block_vars('view', array());
+	
+	$page_title = $lang['team'];
+	
+	main_header();
 	
 	if ( isset($HTTP_GET_VARS['validate']) )
 	{
@@ -111,26 +116,36 @@ else if ( $mode == 'view' && $data )
 		}
 	}
 	
-	$sql = 'SELECT user_id
-				FROM ' . TEAMS_USERS . '
-				WHERE team_mod = 1
-					AND team_id = ' . $data;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
-	}
-	$team_mods = $db->sql_fetchrowset($result);
-	
-	$sql = 'SELECT t.*, g.game_size, g.game_image
-				FROM ' . TEAMS . ' t
-					LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
-				WHERE t.team_id = ' . $data;
-//	$team = _cached($sql, 'team_details_' . $team_id . '_member', 1);
+	$sql = "SELECT u.user_name, u.user_id, u.user_viewemail, u.user_posts, u.user_regdate, u.user_email, u.user_color, tu.team_mod
+				FROM " . USERS . " u, " . TEAMS_USERS . " tu
+				WHERE tu.team_id = $data AND u.user_id = tu.user_id
+			ORDER BY u.user_name";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
-	$team = $db->sql_fetchrow($result);
+	$members = $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
+	
+	$cnt_members = count($members);
+	
+	/* Teamdaten Abfragen */
+	$sql = "SELECT t.*, g.game_image FROM " . TEAMS . " t LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$teams = $db->sql_fetchrowset($result);
+	$db->sql_freeresult($result);
+#	$teams = _cached($sql, "data_teamsandgames");
+	
+	foreach ( $teams as $rows )
+	{
+		if ( $rows['team_id'] == $data )
+		{
+			$team = $rows;
+		}
+	}
 	
 	// add krams
 	if ( !empty($HTTP_POST_VARS['add']) || $mode == 'remove' || isset($HTTP_POST_VARS['approve']) || isset($HTTP_POST_VARS['deny']) || $mode == 'change_level' )
@@ -374,66 +389,56 @@ else if ( $mode == 'view' && $data )
 	}
 
 	
-//	debug($team);
-	
-	$sql = 'SELECT u.user_name, u.user_id, u.user_viewemail, u.user_posts, u.user_regdate, u.user_email, tu.team_mod
-				FROM ' . USERS . ' u, ' . TEAMS_USERS . ' tu
-				WHERE tu.team_id = ' . $data . '
-					AND u.user_id = tu.user_id
-				ORDER BY u.user_name';
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'Error getting user list for group', '', __LINE__, __FILE__, $sql);
-	}
-	$team_members = $db->sql_fetchrowset($result);
-	$db->sql_freeresult($result);
-	
+//	
 	$is_team_member = 0;
-	if ( count($team_members) )
+	
+	if ( $cnt_members )
 	{
-		for($i = 0; $i < count($team_members); $i++)
+		for ( $i = 0; $i < $cnt_members; $i++ )
 		{
-			if ( $team_members[$i]['user_id'] == $userdata['user_id'] && $userdata['session_logged_in'] )
+			if ( $members[$i]['user_id'] == $userdata['user_id'] && $userdata['session_logged_in'] )
 			{
-				$is_group_member = TRUE; 
+				$is_group_member = true; 
 			}
 			
-			if ( $team_members[$i]['user_id'] == $userdata['user_id'] && $team_members[$i]['team_mod'] && $userdata['session_logged_in'] )
+			if ( $members[$i]['user_id'] == $userdata['user_id'] && $members[$i]['team_mod'] && $userdata['session_logged_in'] )
 			{
-				$is_moderator = TRUE;
+				$is_moderator = true;
 			}
 		}
 	}
 	
-	$teams_mods = $teams_nomods = array();
-	
-	if ( $team_members )
+	$team_mods = $team_memb = array();
+		
+	if ( $members )
 	{
-		foreach ( $team_members as $member => $row )
+		foreach ( $members as $member => $row )
 		{
 			if ( $row['team_mod'] )
 			{
-				$teams_mods[] = $row;
+				$team_mods[] = $row;
 			}
 			else
 			{
-				$teams_nomods[] = $row;
+				$team_memb[] = $row;
 			}
 		}
 	}
 	
-	if ( $teams_mods )
+	if ( $team_mods )
 	{
-		for ( $j = 0; $j < count($teams_mods); $j++ )
+		$cnt_mods = count($team_mods);
+		
+		for ( $j = 0; $j < $cnt_mods; $j++ )
 		{
-			$user_name	= $teams_mods[$j]['user_name'];
-			$user_id	= $teams_mods[$j]['user_id'];
-	
-			generate_user_info($teams_mods[$j], $config['default_dateformat'], $is_moderator, $from, $posts, $joined, $poster_avatar, $profile_img, $profile, $search_img, $search, $pm_img, $pm, $email_img, $email, $www_img, $www, $icq_status_img, $icq_img, $icq, $aim_img, $aim, $msn_img, $msn, $yim_img, $yim);
+			$user_id	= $team_mods[$j]['user_id'];
+			$user_name	= $team_mods[$j]['user_name'];
+			
+			generate_user_info($team_mods[$j], $config['default_dateformat'], $is_moderator, $from, $posts, $joined, $poster_avatar, $profile_img, $profile, $search_img, $search, $pm_img, $pm, $email_img, $email, $www_img, $www, $icq_status_img, $icq_img, $icq, $aim_img, $aim, $msn_img, $msn, $yim_img, $yim);
 	
 			$row_class = ( !($j % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 
-			$template->assign_block_vars('details.mod_row', array(
+			$template->assign_block_vars('view.mod_row', array(
 				'ROW_CLASS' => $row_class,
 				'USERNAME' => $user_name,
 				'JOINED' => $joined,
@@ -451,28 +456,28 @@ else if ( $mode == 'view' && $data )
 			
 			if ( $is_moderator )
 			{
-				$template->assign_block_vars('details.mod_row.switch_mod_option', array());
+				$template->assign_block_vars('view.modrow.switch_mod_option', array());
 			}
 		}
 	}
 	else
 	{
-		$template->assign_block_vars('details.switch_no_moderators', array());
+		$template->assign_block_vars('view.switch_no_moderators', array());
 		$template->assign_vars(array('L_NO_MODERATORS' => $lang['group_no_moderators']));
 	}
 
-	if ( $teams_nomods )
+	if ( $team_memb )
 	{
-		for ( $i = $start; $i < min($settings['site_entry_per_page'] + $start, count($teams_nomods)); $i++ )
+		for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, count($team_memb)); $i++ )
 		{
-			$user_name	= $teams_nomods[$i]['user_name'];
-			$user_id	= $teams_nomods[$i]['user_id'];
+			$user_name	= $team_memb[$i]['user_name'];
+			$user_id	= $team_memb[$i]['user_id'];
 	
-			generate_user_info($teams_nomods[$i], $config['default_dateformat'], $is_moderator, $from, $posts, $joined, $poster_avatar, $profile_img, $profile, $search_img, $search, $pm_img, $pm, $email_img, $email, $www_img, $www, $icq_status_img, $icq_img, $icq, $aim_img, $aim, $msn_img, $msn, $yim_img, $yim);
+			generate_user_info($team_memb[$i], $config['default_dateformat'], $is_moderator, $from, $posts, $joined, $poster_avatar, $profile_img, $profile, $search_img, $search, $pm_img, $pm, $email_img, $email, $www_img, $www, $icq_status_img, $icq_img, $icq, $aim_img, $aim, $msn_img, $msn, $yim_img, $yim);
 	
 			$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 
-			$template->assign_block_vars('details.member_row', array(
+			$template->assign_block_vars('view.member_row', array(
 				'ROW_CLASS' => $row_class,
 				'USERNAME' => $user_name,
 				'FROM' => $from,
@@ -505,29 +510,29 @@ else if ( $mode == 'view' && $data )
 			
 			if ( $is_moderator )
 			{
-				$template->assign_block_vars('details.member_row.switch_mod_option', array());
+				$template->assign_block_vars('view.memberrow.switch_mod_option', array());
 			}
 		}
 	}
 	else
 	{
-		$template->assign_block_vars('details.switch_no_members', array());
+		$template->assign_block_vars('view.switch_no_members', array());
 		$template->assign_vars(array('L_NO_MEMBERS' => $lang['group_no_members']));
 	}
 	
 	if ( $is_moderator || $userdata['user_level'] == ADMIN )
 	{
-		$template->assign_block_vars('details.switch_mod_option', array());
+		$template->assign_block_vars('view.switch_mod_option', array());
 	}
 	
-	$current_page = ( !count($team_members) ) ? 1 : ceil( count($team_members) / $settings['site_entry_per_page'] );
+	$current_page = ( !$cnt_members ) ? 1 : ceil($cnt_members/$settings['per_page_entry_site']);
 	
 	
 	$sql_id = '';
 	
-	if ( $team_members )
+	if ( $members )
 	{
-		foreach ($team_members as $member )
+		foreach ($members as $member )
 		{
 			$ids[] = $member['user_id'];
 		}
@@ -559,17 +564,17 @@ else if ( $mode == 'view' && $data )
 	$select_options .= '<option value="change_level">&raquo; Gruppenrechte geben/nehmen</option>';
 	$select_options .= '</select>';
 	
-	$s_hidden_fields = '<input type="hidden" name="' . POST_TEAMS . '" value="' . $team_id . '" />';
+	$s_hidden_fields = '<input type="hidden" name="' . POST_TEAMS . '" value="' . $data . '" />';
 	$s_hidden_fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
 	
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination('teams.php?' . POST_GROUPS . "=$team_id", count($team_members), $settings['site_entry_per_page'], $start),
-		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['site_entry_per_page'] ) + 1 ), $current_page ), 
+		'PAGINATION' => generate_pagination('teams.php?' . POST_GROUPS . "=$data", count($members), $settings['per_page_entry_site'], $start),
+		'PAGE_NUMBER' => sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ), 
 		'L_GOTO_PAGE' => $lang['Goto_page'],
 		
 		'L_TEAM_VIEW'		=> $lang['team_view'],
-		'L_TEAM_MODERATOR'	=> $lang['team_moderator'],
-		'L_TEAM_MEMBERS'	=> $lang['team_member'],
+	#	'L_TEAM_MODERATOR'	=> $lang['team_moderator'],
+	#	'L_TEAM_MEMBERS'	=> $lang['team_member'],
 								 
 								 
 		'L_GROUP_INFORMATION' => $lang['Group_Information'],
@@ -610,7 +615,7 @@ else if ( $mode == 'view' && $data )
 		'L_JOINED'	=> $lang['Joined'],
 
 		'GROUP_NAME' => $team['team_name'],
-		'GROUP_DESC' => $team['team_description'],
+	#	'GROUP_DESC' => $team['team_description'],
 
 
 		'S_HIDDEN_FIELDS' => $s_hidden_fields, 
@@ -618,7 +623,7 @@ else if ( $mode == 'view' && $data )
 //		'S_ORDER_SELECT' => $select_sort_order,
 		'S_SELECT_USERS'	=> $select_users,
 		'S_SELECT_OPTION'	=> $select_options,
-		'S_ACTION' => check_sid('teams.php?' . POST_TEAMS . '=' . $team_id)
+		'S_ACTION' => check_sid('teams.php?' . POST_TEAMS . '=' . $data)
 	));
 	
 }
@@ -629,6 +634,6 @@ else
 
 $template->pparse('body');
 
-include($root_path . 'includes/page_tail.php');
+main_footer();
 
 ?>

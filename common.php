@@ -51,7 +51,7 @@ if (isset($HTTP_SESSION_VARS) && !is_array($HTTP_SESSION_VARS))
 if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')
 {
 	// PHP4+ path
-	$not_unset = array('HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_COOKIE_VARS', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS', 'HTTP_ENV_VARS', 'HTTP_POST_FILES', 'phpEx', 'root_path');
+	$not_unset = array('HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_COOKIE_VARS', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS', 'HTTP_ENV_VARS', 'HTTP_POST_FILES', 'root_path');
 
 	// Not only will array_merge give a warning if a parameter
 	// is not an array, it will actually fail. So we check if
@@ -115,7 +115,7 @@ if( !get_magic_quotes_gpc() )
 			{
 				while( list($k2, $v2) = each($HTTP_POST_VARS[$k]) )
 				{
-					$HTTP_POST_VARS[$k][$k2] = addslashes($v2);
+					$HTTP_POST_VARS[$k][$k2] = @addslashes($v2);
 				}
 				@reset($HTTP_POST_VARS[$k]);
 			}
@@ -161,13 +161,13 @@ $images		= array();
 $lang		= array();
 $nav_links	= array();
 $dss_seeded	= false;
-$gen_simple_header = FALSE;
+$gen_simple_header = false;
 
 include($root_path . 'includes/config.php');
 
-if (!defined("CMS_INSTALLED"))
+if ( !defined('CMS_INSTALLED') )
 {
-	header('Location: ' . $root_path . 'install/install.php');
+	header('Location: ./install.php');
 	exit;
 }
 
@@ -175,15 +175,26 @@ include($root_path . 'includes/constants.php');
 include($root_path . 'includes/template.php');
 include($root_path . 'includes/sessions.php');
 include($root_path . 'includes/auth.php');
+include($root_path . 'includes/class_cache.php');
 include($root_path . 'includes/functions.php');
 include($root_path . 'includes/functions_display.php');
+include($root_path . 'includes/functions_cache.php');
+include($root_path . 'includes/functions_post.php');
 include($root_path . 'includes/db.php');
-include($root_path . 'includes/class_cache.php');
-
-error_reporting((defined('DEBUG')) ? E_ALL : E_ALL ^ E_NOTICE);
-defined('DEBUG') ? set_error_handler('error_handler') : '';
 
 unset($db_pwd);
+
+if ( defined('DEBUG') )
+{
+	include($root_path . 'includes/functions_debug.php');
+	
+	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+	set_error_handler('error_handler');
+}
+else
+{
+	error_reporting(0);
+}
 
 $client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
 $user_ip = encode_ip($client_ip);
@@ -209,18 +220,23 @@ if ( defined('IN_ADMIN') )
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$settings[$row['settings_name']] = $row['settings_value'];
-	}
-	
-	$sql = 'SELECT * FROM ' . GALLERY_SETTINGS;
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	
-	while ( $row = $db->sql_fetchrow($result) )
-	{
-		$gallery_settings[$row['config_name']] = $row['config_value'];
+		$unserialize = unserialize($row['settings_value']);
+		
+		foreach ( $unserialize as $keys => $rows )
+		{
+			if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks') ) )
+			{
+				$settings[$row['settings_name']] = $rows;
+			}
+			else if ( in_array($row['settings_name'], array('match_type', 'match_type2', 'match_war', 'match_war2', 'match_league', 'match_league2') ) )
+			{
+				$settings[$row['settings_name']][$keys] = $rows;
+			}
+			else
+			{
+				$settings[$row['settings_name']][$keys] = $rows;
+			}
+		}
 	}
 }
 else
@@ -229,7 +245,7 @@ else
 	{
 		$oCache->sCachePath = './cache/';
 		
-		if ( ( $config = $oCache -> readCache('cfg_config') ) === false )
+		if ( ( $config = $oCache->readCache('cfg_config') ) === false )
 		{
 			$sql = "SELECT * FROM " . CONFIG;
 			if ( !($result = $db->sql_query($sql)) )
@@ -242,10 +258,10 @@ else
 				$config[$row['config_name']] = $row['config_value'];
 			}
 			
-			$oCache -> writeCache('cfg_config', $config);
+			$oCache->writeCache('cfg_config', $config);
 		}
 
-		if ( ( $settings = $oCache -> readCache('cfg_setting') ) === false )
+		if ( ( $settings = $oCache->readCache('cfg_setting') ) === false )
 		{
 			$sql = "SELECT * FROM " . SETTINGS;
 			if ( !($result = $db->sql_query($sql)) )
@@ -255,26 +271,24 @@ else
 			
 			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$settings[$row['settings_name']] = $row['settings_value'];
+				
+				$unserialize = unserialize($row['settings_value']);
+				
+				foreach ( $unserialize as $keys => $rows )
+				{
+					
+					if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks') ) )
+					{
+						$settings[$row['settings_name']] = $rows;
+					}
+					else
+					{
+						$settings[$row['settings_name']][$keys] = $rows;
+					}
+				}
 			}
 			
-			$oCache -> writeCache('cfg_setting', $settings);
-		}
-
-		if ( ( $gallery = $oCache -> readCache('cfg_gallery') ) === false )
-		{
-			$sql = "SELECT * FROM " . GALLERY_SETTINGS;
-			if (!($result = $db->sql_query($sql)))
-			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$gallery[$row['config_name']] = $row['config_value'];
-			}
-			
-			$oCache -> writeCache('cfg_gallery', $gallery);
+			$oCache->writeCache('cfg_setting', $settings);
 		}
 	}
 	else
@@ -298,23 +312,27 @@ else
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$settings[$row['settings_name']] = $row['settings_value'];
-		}
-		
-		$sql = "SELECT * FROM " . GALLERY_SETTINGS;
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$gallery[$row['config_name']] = $row['config_value'];
+			$unserialize = unserialize($row['settings_value']);
+			
+			foreach ( $unserialize as $keys => $rows )
+			{
+				if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks') ) )
+				{
+					$settings[$row['settings_name']] = $rows['value'];
+				}
+				else
+				{
+					$settings[$row['settings_name']][$keys] = $rows['value'];
+				}
+			}
 		}
 	}
 }
 
-if ( file_exists('install') || file_exists('contrib') )
+$settings['per_page_entry_site'] = $settings['per_page_entry']['site'];
+$settings['ppec'] = $settings['per_page_entry']['comments'];
+
+if ( file_exists('install') )
 {
 	message(GENERAL_MESSAGE, 'Please_remove_install_contrib');
 }

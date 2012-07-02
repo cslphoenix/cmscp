@@ -9,13 +9,16 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(	
 	'title'		=> 'Menü',
 	'explain'	=> 'menü krams bla blubb admin',
+	
 	'create'	=> 'Neuen Menüpunkt hinzugefügt.',
 	'update'	=> 'Menüpunktdaten erfolgreich geändert.',
 	'delete'	=> 'Der Menüpunkt wurde gelöscht!',
 	'confirm'	=> 'das dieser Menüpunkt:',
+	
 	'data'		=> 'Menüpunktdaten',
 	
-	'file_name'	=> 'Name',
+	'menu_name'	=> 'Name',
+	'menu_lang'	=> 'Sprache',
 ));
 
 /* cat */

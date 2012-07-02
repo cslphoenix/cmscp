@@ -53,7 +53,7 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 {
 	global $db, $lang;
 
-	switch( $type )
+	switch ( $type )
 	{
 		case AUTH_ALL:
 			$a_sql = 'a.auth_view, a.auth_read, a.auth_post, a.auth_reply, a.auth_edit, a.auth_delete, a.auth_sticky, a.auth_announce, a.auth_poll, a.auth_pollcreate';
@@ -145,10 +145,11 @@ function auth($type, $forum_id, $userdata, $f_access = '')
 		$forum_match_sql = ( $forum_id != AUTH_LIST_ALL ) ? "AND a.forum_id = $forum_id" : '';
 
 		$sql = "SELECT a.forum_id, $a_sql, a.auth_mod 
-			FROM " . AUTH_ACCESS . " a, " . GROUPS_USERS . " gu 
-			WHERE gu.user_id = " . $userdata['user_id'] . " 
-				AND gu.user_pending = 0 
-				AND a.group_id = gu.group_id
+			FROM " . FORUM_ACCESS . " a, " . LISTS . " l 
+			WHERE l.user_id = " . $userdata['user_id'] . "
+				AND l.type = " . TYPE_GROUP . "
+				AND l.user_pending = 0 
+				AND a.group_id = l.type_id
 				$forum_match_sql";
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -346,91 +347,57 @@ function auth_check_user($type, $key, $u_access, $is_admin)
 
 function auth_acp_check($user_id)
 {
-	global $db;
+	global $db, $userdata;
 	
-	$group_auth_fields = get_authlist();
+#	debug(unserialize($userdata['user_gauth']));
+
+	$auth_user = unserialize($userdata['user_gauth']);
 	
-	$sql = 'SELECT g.group_id, ' . implode(', ', $group_auth_fields) . '
-				FROM ' . GROUPS . ' g, ' . GROUPS_USERS . ' gu
-				WHERE g.group_id = gu.group_id
-					AND gu.user_pending = 0
-					AND gu.user_id = ' . $user_id . ' ORDER BY group_id';
+	$sql = "SELECT g.group_id, g.auth_data
+				FROM " . GROUPS . " g, " . LISTS . " ul
+				WHERE g.group_id = ul.type_id
+					AND ul.type = " . TYPE_GROUP . "
+					AND ul.user_pending = 0
+					AND ul.user_id = $user_id
+			ORDER BY g.group_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
-	$usergroups_data = array();
-	while ($row = $db->sql_fetchrow($result))
+	$auth_group = array();
+	
+	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$group_in[] = $row['group_id'];
-		$usergroups_data[$row['group_id']] = $row;
-		
-		unset($usergroups_data[$row['group_id']]['group_id']);
+		$auth_group[$row['group_id']] = unserialize($row['auth_data']);
 	}
 	$db->sql_freeresult($result);
 	
-	$sql = 'SELECT group_id, ' . implode(', ', $group_auth_fields) . '
-				FROM ' . GROUPS . '
-				WHERE group_single_user = 0
-					AND group_id IN (' . implode(', ', $group_in) . ')
-			ORDER BY group_id';
-	if ( !($result = $db->sql_query($sql)) )
+	foreach ( $auth_group as $row )
 	{
-		message(GENERAL_ERROR, 'Could not obtain user and group information', '', __LINE__, __FILE__, $sql2);
-	}
-	
-	$group_data = array();
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$group_data[$row['group_id']] = $row;
-		
-		unset($group_data[$row['group_id']]['group_id']);
-	}
-	$db->sql_freeresult($result);
-	
-	$userauth	= array();
-	$group_ids	= array_keys($group_data);
-	
-	foreach ( $usergroups_data as $key => $value )
-	{
-		if ( $group_ids )
+		foreach ( $row as $gkey => $grow )
 		{
-			foreach ($group_ids as $group_key => $group_id)
+			if ( $grow )
 			{
-				foreach( $value as $v_key => $v_value )
-				{
-					if ( $v_value == '0' )
-					{
-						if ( !array_key_exists($v_key, $userauth) )
-						{
-							$userauth[$v_key] = $group_data[$group_id][$v_key];
-						}
-						else if ( !$userauth[$v_key] )
-						{
-							$userauth[$v_key] = $group_data[$group_id][$v_key];
-						}
-					}
-					else if ( $v_value == '2' )
-					{
-						$userauth[$v_key] = $v_value;
-					}
-					else
-					{
-						$userauth[$v_key] = $v_value;
-					}
-				}
+				$tmp_auth[$gkey] = $grow;
 			}
+		}
+	}
+	
+	$userauth = array();
+	
+	foreach ( $auth_user as $ukey => $uvalue )
+	{
+		if ( isset($tmp_auth[$ukey]) && $uvalue != 2 )
+		{
+			$userauth[$ukey] = 1;
 		}
 		else
 		{
-			foreach ( $value as $v_key => $v_value )
-			{
-				$userauth[$v_key] = $v_value;
-			}
+			$userauth[$ukey] = $uvalue;
 		}
 	}
-	
+		
 	return $userauth;
 }
 

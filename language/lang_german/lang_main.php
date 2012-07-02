@@ -6,7 +6,17 @@ include('lang_teamspeak.php');
 
 $lang = array_merge($lang, array(
 
+	'header_empty_news'			=> 'keine News vorhanden',
+	'header_empty_match'		=> 'keine Begnungen vorhanden',
+	'header_empty_topics'		=> 'keine Themen vorhanden',
+	'header_empty_downloads'	=> 'keine Downloads vorhanden',
+	
+	'mark_all'			=> 'alle markieren',
+	'mark_deall'		=> 'alles abwählen',
+	
+
 	'cur_max'	=> '%s / %s',
+	'ip_port'	=> '%s:%s',
 
 	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
 
@@ -54,7 +64,99 @@ $lang = array_merge($lang, array(
     'sort_all'			=> 'alle',
     'sort_others'		=> 'andere',
 	'sort_by_letter'	=> 'Nur Benutzernamen beginnend mit',
+	
+	'sprintf_empty_space'		=> '%s %s',
+	'sprintf_empty_line'		=> '%s - %s',
+	'sprintf_empty_points'		=> ' :: %s',
+	
+	'a_txt'				=> '<a href="%s" title="%s">%s</a>',
+	'a_css'				=> '<a href="%s" class="%s">%s</a>',
+	'a_style'			=> '<a href="%s" style="color:%s">%s</a>',
+	'a_user'			=> '<a href="%s" style="color:%s">%s</a>',
+	'a_txt_ly'			=> '<a href="%s" title="%s">%s</a> :: %s',
+	'a_img'				=> '<a href="%s"><img class="icon" src="%s" title="%s" alt="" /></a>',
 
+	'i_icon'			=> '<img class="icon" src="%s" title="%s" alt="" />',
+	'i_iconn'			=> '<img src="%s" title="%s" alt="" />',
+	
+	'upcoming'	=> 'Aktuelle',
+	'expired'	=> 'Abgelaufen',
+	
+	
+	'unread_txt'	=> 'als gelesen markieren',
+	'unread_all'	=> 'Alles als gelesen markiert!',
+	'unread_news'	=> 'Alle News als gelesen markiert!',
+	'unread_event'	=> 'Alle Ereignisse als gelesen markiert!',
+	'unread_match'	=> 'Alle Begegnungen als gelesen markiert!',
+	'unread_train'	=> 'Alle Trainings als gelesen markiert!',
+	
+	'main_ucp'		=> 'Benutzer-Center',
+	
+	
+	
+	'cal_birthday'	=> 'Geburtstag',
+	'cal_birthdays'	=> 'Geburtstage',
+	'cal_event'		=> 'Ereignis',
+	'cal_events'	=> 'Ereignisse',
+	'cal_match'		=> 'War',
+	'cal_matchs'	=> 'Wars',
+	'cal_training'	=> 'Training',
+	'cal_trainings'	=> 'Trainings',
+	'cal_news'		=> 'News',
+	'cal_birth'		=> '%s wird %s Jahre alt',
+	'cal_today'		=> 'Heute',
+	
+	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
+	'common_entry_new'		=> 'Neuer Eintrag',
+	'common_add'			=> 'Hinzufügen',
+	'common_auth'			=> 'Berechtigung',
+	'common_comment'		=> 'Kommentar',
+	'common_comments_pub'	=> 'Kommentare erlauben',
+	'common_input_data'		=> 'Daten eingeben',
+	'common_input_option'	=> 'Option',
+	'common_input_upload'	=> 'Upload',
+	'common_input_standard'	=> 'Standard',
+	'common_default'		=> 'Standarteinstellungen',
+	'common_delete'			=> 'Löschen',
+	'common_delete_all'		=> 'Alles löschen',
+	'common_login'			=> 'Login',
+	'common_login_acp'		=> 'Adminlogin',
+	'common_desc'			=> 'Beschreibung',
+	'common_details'		=> 'Details',
+	'common_image'			=> 'Bild',
+	'common_member'			=> 'Mitglied',
+	'common_members'		=> 'Mitglieder',
+	'common_message'		=> 'Nachricht',
+	'common_moderator'		=> 'Moderator',		
+	'common_moderators'		=> 'Moderatoren',		
+	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
+	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
+	'common_option_select'	=> 'Option wählen',			
+	'common_overview'		=> 'Übersicht',		
+	'common_reset'			=> 'Zurücksetzen',
+	'common_setting'		=> 'Einstellung',
+	'common_settings'		=> 'Einstellungen',		
+	'common_submit'			=> 'Absenden',
+	'common_upload'			=> 'Upload',
+	'common_update'			=> 'Bearbeiten',
+	'common_create'			=> 'Hinzufügen',
+	'common_order'			=> 'Ordnen',
+	'common_sort'			=> 'Sortieren',
+	'common_public'			=> 'Öffentlich',
+	'common_page_of'		=> 'Seite <b>%d</b> von <b>%d</b>',
+	'common_on'				=> 'Aktiv',
+	'common_off'			=> 'Inaktiv',
+	'common_no'				=> 'Nein',
+	'common_yes'			=> 'Ja',
+
+	
+	'add_comment'			=> 'Kommentar hinzugefügt.',
+	'click_return_match'	=> '%sHier klicken%s, um zum Match zurückzukehren.',
+	'click_return_training'	=> '%sHier klicken%s, um zum Training zurückzukehren.',
+	'click_return_news'		=> '%sHier klicken%s, um zu den News zurückzukehren.',
+	
+	'return'			=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a></strong>',
+	
 ));
 
 $lang = array_merge($lang, array(
@@ -76,6 +178,11 @@ $lang = array_merge($lang, array(
 	'desc_500'	=> 'An Internal Server Error occurred.<br>If reloading the page doens\'t help, please contact the system administrator.',
 ));
 
+/* calendar */
+$lang = array_merge($lang, array(
+	'cal_weekdays' => array('So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'),
+));
+
 $lang['msg_match_fail'] = 'Match nicht vorhanden oder Match nicht freigegeben!';
 $lang['at_today'] = "Heute %s"; // %s is the time
 $lang['at_yesterday'] = "Gestern %s"; // %s is the time
@@ -87,9 +194,9 @@ $lang['lobby_news'] = 'News';
 $lang['comment']	= '%s neuer Kommentar';
 $lang['comments']	= '%s neue Kommentare';
 
-$lang['sprintf_comment']	= 'Kommentar: 1 Kommentar';
-$lang['sprintf_comments']	= 'Kommentare: %s Kommentare';
-$lang['sprintf_comment_no']	= 'Kommentar: keine Kommentare';
+$lang['sprintf_comment']	= '1 Kommentar';
+$lang['sprintf_comments']	= '%s Kommentare';
+$lang['sprintf_comment_no']	= 'keine Kommentare';
 
 /* event */
 $lang = array_merge($lang, array(
@@ -115,7 +222,96 @@ $lang = array_merge($lang, array(
 	'header_match'			=> 'Begegnung',
 	'header_calendar'		=> 'Kalender',
 	'header_group'			=> 'Benutzergruppe',
+	
 ));
+
+/* subtitle */
+$lang = array_merge($lang, array(
+
+	'navi_main'			=> 'Main',
+	'navi_clan'			=> 'Clan',
+	'navi_com'			=> 'Community',
+	'navi_misc'			=> 'Misc',
+	'navi_user'			=> 'Benutzer',
+
+	'sn_news'			=> 'Letzte Nachrichten',
+	'sn_match'			=> 'Letzte Begegnungen',
+	'sn_topics'			=> 'Letzte Forumthemen',
+	'sn_downloads'		=> 'Letzte Downloads',
+	'sn_newest_users'	=> '%s neuesten Mitglieder',
+	'sn_teams'			=> 'Teams',
+	'sn_link'			=> 'Links',
+	'sn_partner'		=> 'Partner',
+	'sn_sponsor'		=> 'Sponsor',
+	'sn_statsonline'	=> 'Stats Online',
+	'sn_statscounter'	=> 'Stats Counter',
+	'sn_minical'		=> 'Kalender',
+	'sn_server'			=> 'Server',
+	'sn_nextmatch'		=> 'next War',
+	'sn_nexttraining'	=> 'next Train',
+	
+	/* subtitle server */
+	'server_status'		=> 'Status:',
+	'server_map'		=> 'Karte:',
+	'server_online'		=> '<font color="#green">Online</font>',
+	'server_offline'	=> '<font color="#red">Offline</font>',
+	'server_player'		=> 'Spieler:',
+	'server_user'		=> 'Benutzer:',
+));
+
+$lang = array_merge($lang, array(
+	'map_bf3' => array(
+		'MP_001'	=> 'Grand Bazaar',
+		'MP_003'	=> 'Tehran Highway',
+		'MP_007'	=> 'Caspian Border',
+		'MP_011'	=> 'Seine Crossing',
+		'MP_012'	=> 'Operation Firestorm',
+		'MP_013'	=> 'Damavand Peak',
+		'MP_017'	=> 'Noshahar Canals',
+		'MP_018'	=> 'Kharg Island',
+		'MP_Subway'	=> 'Operation Metro',
+		'XP1_001'	=> 'Strike at Karkand',
+		'XP1_002'	=> 'Gulf of Oman',
+		'XP1_003'	=> 'Sharqi Peninsula',
+		'XP1_004'	=> 'Wake Island',
+	),
+	
+	'map_cs' => array(
+		'as_highrise'		=> 'High Rise',
+		'as_oilrig'			=> 'Oilrig',
+		'as_tundra'			=> 'Tundra',
+		'cs_747'			=> '474 Hijack',
+		'cs_assault'		=> 'Assault',
+		'cs_arabstreets'	=> 'Arab Streets',
+		'cs_backalley'		=> 'Alleyway',
+		'cs_estate'			=> 'Zaphod\'s Estate',
+		'cs_havana'			=> 'Havana',
+		'cs_italy'			=> 'Italy',
+		'cs_militia'		=> 'Militia',
+		'cs_office'			=> 'Office Complex',
+		'cs_siege'			=> 'Canyon Siege',
+		'cs_thunder'		=> 'Thunder',
+		'de_aztec'			=> 'Aztec',
+		'de_chateau'		=> 'Chateau',
+		'de_cbble'			=> 'Cobble',
+		'de_dust'			=> 'Dust',
+		'de_dust2'			=> 'Dust II',
+		'de_foption'		=> 'Final Option',
+		'de_inferno'		=> 'Inferno',
+		'de_nuke'			=> 'Nuke',
+		'de_piranesi'		=> 'Piranesi',
+		'de_prodigy'		=> 'Prodigy',
+		'de_rotterdam'		=> 'Rotterdam Docks',
+		'de_storm'			=> 'Storm',
+		'de_train'			=> 'Trainyard',
+		'de_vegas'			=> 'Vegas',
+		'de_vertigo'		=> 'Vertigo',
+		'fy_pool_day'		=> 'Pool Day',
+	),
+	
+));
+
+
 
 $lang['current_time'] = 'Aktuelles Datum und Uhrzeit: %s';
 
@@ -126,7 +322,7 @@ $lang['sprintf_select_order']	= '&raquo;&nbsp;nach:&nbsp;%s&nbsp;';
 $lang['sprintf_select_before']	= '&raquo;&nbsp;vor:&nbsp;%s&nbsp;';
 
 $lang['common_more']	= 'Erweitern';
-$lang['cal_legend']		= '<b>Legende:</b> <span class="today">Heute</span>, <span class="birthday">Geburtstage</span>, <span class="events">Ereignisse</span>, <span class="wars">Wars</span>, <span class="trains">Trainings</span>, <span class="more">mehrere Ereignisse an einem Tag</span>';
+$lang['cal_legend']		= '<b>Legende:</b> <span class="today">Heute</span>, <span class="news">News</span>, <span class="birthday">Geburtstage</span>, <span class="events">Ereignisse</span>, <span class="wars">Wars</span>, <span class="trains">Trainings</span>, <span class="more">mehrere Ereignisse an einem Tag</span>';
 
 $lang['user']			= 'Benutzer';
 
@@ -216,23 +412,14 @@ $lang['Board_disable_msg_explain'] = 'This message will be shown when the board 
 
 $lang['page_disable_mode_opt'] = array(
 										GUEST => 'Gäste',
-										USER => 'Registierte Benutzer',
+										USER => 'Benutzer',
 										TRIAL => 'Trial Member',
-										MEMBER => 'Member'
+										MEMBER => 'Member',
+										MOD => 'CoLeader',
 									);
 
 
-$lang['cal_birthday']		= 'Geburtstag';
-$lang['cal_birthdays']		= 'Geburtstage';
-$lang['cal_event']			= 'Ereignis';
-$lang['cal_events']			= 'Ereignisse';
-$lang['cal_match']			= 'War';
-$lang['cal_matchs']			= 'Wars';
-$lang['cal_training']		= 'Training';
-$lang['cal_trainings']		= 'Trainings';
 
-$lang['cal_birth']		= '%s wird %s Jahre alt';
-$lang['cal_today']		= 'Heute';
 
 $lang['cache_duration']			= 'Cache-Datei verfällt am: %s';
 $lang['cache_valid']			= 'Gültig bis: %s';
@@ -251,7 +438,7 @@ $lang['counter_total']			= ' Gesamt: %s';
 //
 //	Header
 //
-$lang['newest_users']		= '%s neuesten Mitglieder';
+
 
 //
 //	Forum
@@ -380,14 +567,10 @@ $lang['navi_match']			= 'Wars';
 $lang['navi_index']			= 'Startseite';
 
 
-$lang['add_comment']			= 'Kommentar hinzugefügt.';
-$lang['click_return_match']		= '%sHier klicken%s, um zum Match zurückzukehren.';
-$lang['click_return_training']	= '%sHier klicken%s, um zum Training zurückzukehren.';
-$lang['click_return_news']		= '%sHier klicken%s, um zu den News zurückzukehren.';
+
 
 $lang['click_return_newsletter']	= '%sHier klicken%s, um zu der Newsletter Seite zurückzukehren.';
 
-$lang['hlsw']		= 'HLSW';
 $lang['connect']	= 'spielen';
 
 
@@ -1465,7 +1648,7 @@ $lang['A_critical_error'] = 'Ein kritischer Fehler ist aufgetreten.';
 //$lang['Admin_reauthenticate'] = 'Für den Zugriff auf den Administrations-Bereich musst du deinen Benutzernamen und dein Passwort erneut eingeben.';
 $lang['Admin_reauthenticate'] = 'Benutzernamen und dein Passwort erneut eingeben!';
 $lang['Login_attempts_exceeded'] = 'Die maximale Anzahl von %s zulässigen Login-Versuchen wurde überschritten. Du kannst dich in den nächsten %s Minuten nicht einloggen.';
-$lang['Please_remove_install_contrib'] = 'Bitte stelle sicher, dass du die Verzeichnisse install/ und contrib/ gelöscht hast.';
+$lang['Please_remove_install_contrib'] = 'Bitte stelle sicher, dass du die Verzeichnisse install/ gelöscht hast.';
 
 $lang['Session_invalid'] = 'Ungültige Sitzung. Bitte sende das Formular erneut ab.';
 
@@ -1528,9 +1711,7 @@ $lang['ary_month'] = array(
 	'12'	=> 'Dezember'
 );
 
-$lang['network_link']		= 'Links';
-$lang['network_partner']	= 'Partner';
-$lang['network_sponsor']	= 'Sponsor';
+
 
 $lang['main_changelog'] = array(
 	'cl_added'		=> 'Hinzugefügt',

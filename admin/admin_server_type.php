@@ -30,19 +30,19 @@ else
 	$url	= POST_SERVER_TYPE;
 	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', 0) ) ? request('start', 0) : 0;
+	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 	
-	$data_id	= request($url, 0);
-	$confirm	= request('confirm', 1);
-	$mode		= request('mode', 1);
-	$move		= request('move', 1);
+	$data_id	= request($url, INT);
+	$confirm	= request('confirm', TXT);
+	$mode		= request('mode', TXT);
+	$move		= request('move', TXT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_server_type'] )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail' . str_replace('sm', '', $current));
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
@@ -54,54 +54,59 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	$mode = ( in_array($mode, array('_create', '_update', '_delete')) ) ? $mode : '';
+	$mode = ( in_array($mode, array('create', 'update', 'delete')) ) ? $mode : '';
 	
 	if ( $mode )
 	{
 		switch ( $mode )
 		{
-			case '_create':
-			case '_update':
+			case 'create':
+			case 'update':
 			
-				$template->assign_block_vars('_input', array());
+				$template->assign_block_vars('input', array());
 				
-				if ( $mode == '_create' && !request('submit', 1) )
+				$vars = array(
+					'type' => array(
+						'title1' => 'input_data',
+						'type_name'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
+						'type_game'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_game'),
+						'type_dport'	=> array('validate' => INT,	'type' => 'text:10:10',		'explain' => true, 'required' => 'input_dport'),
+						'type_sort'		=> array('validate' => INT,	'type' => 'radio:types', 	'explain' => true),
+					),
+				);
+				
+				if ( $mode == 'create' && !request('submit', TXT) )
 				{
 					$data = array(
-								'type_name'		=> request('type_name', 1),
+								'type_name'		=> request('type_name', TXT),
 								'type_game'		=> '',
 								'type_dport'	=> '',
 								'type_sort'		=> '',
 							);
 				}
-				else if ( $mode == '_update' && !request('submit', 1) )
+				else if ( $mode == 'update' && !request('submit', TXT) )
 				{
 					$data = data(SERVER_TYPE, $data_id, false, 1, true);
 				}
 				else
 				{
-					$data = array(
-								'type_name'		=> request('type_name', 2),
-								'type_game'		=> request('type_game', 2),
-								'type_dport'	=> request('type_dport', 0),
-								'type_sort'		=> request('type_sort', 0),
-							);
-							
-					$error .= check(SERVER_TYPE, array('type_name' => $data['type_name'], 'type_id' => $data_id), $error);
-					$error .= !$data['game_tag'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_tag'] : '';
-					$error .= !$data['game_tag'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_tag'] : '';
+					$temp = data(SERVER_TYPE, $data_id, false, 1, true);
+					$temp = array_keys($temp);
+					unset($temp[0]);
+					
+					$data = build_request($temp, $vars, 'type', $error);
 					
 					if ( !$error )
 					{
-						if ( $mode == '_create' )
+						if ( $mode == 'create' )
 						{
 							$sql = sql(SERVER_TYPE, $mode, $data);
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							$sql = sql(SERVER_TYPE, $mode, $data, 'type_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -116,30 +121,15 @@ else
 					}
 				}
 				
+				build_output($data, $vars, 'input', false, SERVER_TYPE);
+				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . $mode], $lang['title'], $data['type_name']),
-					'L_DATA'	=> $lang['data'],
-					
-					'L_NAME'	=> $lang['type_name'],
-					'L_GAME'	=> $lang['type_game'],
-					'L_DPORT'	=> $lang['type_dport'],
-					'L_SORT'	=> $lang['type_sort'],
-					
-					'L_GAMESERVER'	=> $lang['serv_game'],
-					'L_VOICESERVER'	=> $lang['serv_voice'],
-					
-					'NAME'		=> $data['type_name'],
-					'GAME'		=> $data['type_game'],
-					'DPORT'		=> $data['type_dport'],
-					
-					'S_GAME'	=> (!$data['type_sort'] ) ? 'checked="checked"' : '',
-					'S_VOICE'	=> ( $data['type_sort'] ) ? 'checked="checked"' : '',
-					
-					
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['type_name']),
+				
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
@@ -148,7 +138,7 @@ else
 				
 				break;
 			
-			case '_delete':
+			case 'delete':
 			
 				$data = data(SERVER_TYPE, $data_id, false, 1, true);
 			
@@ -192,15 +182,16 @@ else
 		}
 	}
 			
-	$template->assign_block_vars('_display', array());
+	$template->assign_block_vars('display', array());
 	
-	$fields		= '<input type="hidden" name="mode" value="_create" />';
+	$fields		= '<input type="hidden" name="mode" value="create" />';
+	
 	$type_game	= data(SERVER_TYPE, 'type_sort = 0', 'type_id ASC', 1, false);
 	$type_voice	= data(SERVER_TYPE, 'type_sort = 1', 'type_id ASC', 1, false);
 			
 	if ( !$type_game )
 	{
-		$template->assign_block_vars('_display._game_empty', array());
+		$template->assign_block_vars('display.game_empty', array());
 	}
 	else
 	{
@@ -213,21 +204,21 @@ else
 			$game	= $type_game[$i]['type_game'];
 			$dport	= $type_game[$i]['type_dport'];
 			
-			$template->assign_block_vars('_display._game_row', array(
-				'NAME'		=> href('a_txt', $file, array('?mode' => '_update', $url => $id), $name, ''),
+			$template->assign_block_vars('display.game_row', array(
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, ''),
 			
 				'GAME'		=> $game,
 				'DPORT'		=> $dport,
 				
-				'UPDATE'	=> href('a_img', $file, array('?mode' => '_update', $url => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('?mode' => '_delete', $url => $id), 'icon_cancel', 'common_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
 			));
 		}
 	}
 	
 	if ( !$type_voice )
 	{
-		$template->assign_block_vars('_display._voice_empty', array());
+		$template->assign_block_vars('display.voice_empty', array());
 	}
 	else
 	{
@@ -240,14 +231,14 @@ else
 			$game	= $type_voice[$i]['type_game'];
 			$dport	= $type_voice[$i]['type_dport'];
 			
-			$template->assign_block_vars('_display._voice_row', array(
-				'NAME'		=> href('a_txt', $file, array('?mode' => '_update', $url => $id), $name, ''),
+			$template->assign_block_vars('display.voice_row', array(
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, ''),
 			
 				'GAME'		=> $game,
 				'DPORT'		=> $dport,
 				
-				'UPDATE'	=> href('a_img', $file, array('?mode' => '_update', $url => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('?mode' => '_delete', $url => $id), 'icon_cancel', 'common_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
 			));
 		}
 	}
@@ -259,7 +250,7 @@ else
 		'L_GAME'	=> $lang['serv_game'],
 		'L_VOICE'	=> $lang['serv_voice'],
 		
-		'S_CREATE'	=> check_sid("$file?mode=_create"),
+		'S_CREATE'	=> check_sid("$file?mode=create"),
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));

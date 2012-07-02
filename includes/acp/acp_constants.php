@@ -35,20 +35,6 @@ $simple_auth_types = array(
 	$lang['forms_special'],
 );
 
-$forum_auth_fields = array(
-	'auth_view',
-	'auth_read',
-	'auth_post',
-	'auth_reply',
-	'auth_edit',
-	'auth_delete',
-	'auth_sticky',
-	'auth_announce',
-	'auth_globalannounce',
-	'auth_poll',
-	'auth_pollcreate'
-);
-
 $field_names = array(
 	'auth_view'				=> $lang['forms_view'],
 	'auth_read'				=> $lang['forms_read'],
@@ -77,7 +63,33 @@ $field_images = array(
 	'auth_pollcreate'		=> $images['forms_pollcreate'],
 );
 
+
+
+$forum_auth_fields = array(
+	'auth_view',
+	'auth_read',
+	'auth_post',
+	'auth_reply',
+	'auth_edit',
+	'auth_delete',
+	'auth_sticky',
+	'auth_announce',
+	'auth_globalannounce',
+	'auth_poll',
+	'auth_pollcreate'
+);
+
 $forum_auth_levels	= array('all', 'register', 'trial', 'member', 'moderator', 'private', 'admin');
 $forum_auth_const	= array(AUTH_ALL, AUTH_REG, AUTH_TRI, AUTH_MEM, AUTH_MOD, AUTH_ACL, AUTH_ADM);
+
+$gallery_auth_fields	= array('auth_view', 'auth_edit', 'auth_delete', 'auth_rate', 'auth_upload');
+$gallery_auth_levels	= array('guest', 'user', 'trial', 'member', 'coleader', 'leader', 'uploader');
+$gallery_auth_constants	= array(AUTH_GUEST, AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOADER);
+/* values for rights form upload */
+$gallery_auth_upload_levels		= array('user', 'trial', 'member', 'coleader', 'leader');
+$gallery_auth_upload_constants	= array(AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER);
+/* values for rights form no guests */
+$gallery_auth_none_levels		= array('user', 'trial', 'member', 'coleader', 'leader', 'uploader');
+$gallery_auth_none_constants	= array(AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOADER);
 
 ?>
