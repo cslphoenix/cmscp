@@ -120,10 +120,7 @@ if ( $mode == 'newtopic' )
 		}
 		else
 		{
-		#	log_add(LOG_ADMIN, $log, 'error', $error);
-			
-			$template->assign_vars(array('ERROR_MESSAGE' => $error));
-			$template->assign_var_from_handle('ERROR_BOX', 'error');
+		#	error('ERROR_BOX', $error);
 		}
 	}
 	

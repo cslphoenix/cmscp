@@ -135,6 +135,11 @@ table.index td:first-child	{ text-align:left; width:100%; white-space:nowrap; }
 table.index td:last-child	{ text-align:center; white-space:nowrap; }
 table.index td.empty		{ text-align:center; background:none; font-weight:normal; }
 
+table.row						{ width:100%; border:1px #CCC solid; vertical-align:middle; border-spacing:1px; }
+table.row tr:hover				{ color:#000; background-color:#efefef; }
+table.row th					{ white-space:nowrap; background-color:#DFE7EB; padding:3px; text-align:left; }
+table.row td					{ padding:1px 3px; background-color:#E6EDF0; vertical-align:middle; white-space:nowrap; }
+
 table.rows						{ width:100%; border:1px #CCC solid; vertical-align:middle; border-spacing:1px; }
 table.rows tr:hover				{ color:#000; background-color:#efefef; }
 table.rows th					{ white-space:nowrap; background-color:#DFE7EB; padding:3px; text-align:left; }
@@ -162,6 +167,7 @@ table.update					{ width:100%; border:none; border-spacing:0px; font-size: 11px;
 table.update td					{ padding:5px; cursor:default; }
 table.update td .icon			{ padding:0px 1px; }
 table.update td.row1			{ font-weight:bold; border-right:1px #FFF solid; width:35%; white-space:nowrap; text-align:right; font-size: 11px; vertical-align:top; padding-top:6px; }
+table.update td.row1			{ font-weight:bold; border-right:1px #FFF solid; width:35%; white-space:nowrap; text-align:right; font-size: 11px; vertical-align:top; padding-top:6px; }
 table.update td.row1r			{ font-weight:bold; border-right:1px #FFF solid; width:35%; white-space:nowrap; text-align:right; font-size: 11px; vertical-align:top; padding-top:6px; color:#900; }
 table.update td.row2			{ white-space:nowrap; }
 table.update td.row3			{ white-space:nowrap; padding:0px; }
@@ -169,6 +175,7 @@ table.update td.normal			{ white-space:nowrap; padding:5px; padding-top:6px; fon
 table.update tr:hover td		{ color:#000; }
 table.update tr:hover td.row1	{ border-right:1px #39F solid; }
 table.update tr:hover td.row1r	{ border-right:1px #39F solid; color:#F00; }
+table.update td span			{ font-weight:normal; font-size: 10px; }
 
 table.update2					{ width:100%; border:none; border-spacing:0px; font-size: 11px; }
 table.update2 td				{ padding:3px; cursor:default; }

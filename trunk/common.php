@@ -224,7 +224,7 @@ if ( defined('IN_ADMIN') )
 		
 		foreach ( $unserialize as $keys => $rows )
 		{
-			if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks') ) )
+			if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks', 'path_icons') ) )
 			{
 				$settings[$row['settings_name']] = $rows;
 			}
@@ -277,7 +277,7 @@ else
 				foreach ( $unserialize as $keys => $rows )
 				{
 					
-					if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks') ) )
+					if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks', 'path_icons') ) )
 					{
 						$settings[$row['settings_name']] = $rows;
 					}
@@ -316,7 +316,7 @@ else
 			
 			foreach ( $unserialize as $keys => $rows )
 			{
-				if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks') ) )
+				if ( in_array($row['settings_name'], array('path_games', 'path_maps', 'path_newscat', 'path_downloads', 'path_gallery', 'path_ranks', 'path_icons') ) )
 				{
 					$settings[$row['settings_name']] = $rows['value'];
 				}

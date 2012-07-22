@@ -25,36 +25,12 @@ function interpretRequestn()
 {
 	switch (requestn.readyState)
 	{
-		case 4:
-		
-			if (requestn.status != 200)
-			{ alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+requestn.status); }
-			else
-			{
-				var content = requestn.responseText;
-				document.getElementById('ajax_navi').innerHTML = content;
-			}
-			break;
+		case 4: if (requestn.status != 200) { alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+requestn.status); } break;
 	}
 }
 
 </script>
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_NAVIGATION}</a></li></ul>
-<!-- BEGIN cat_row -->
-<table class="navi">
-<tr>
-	<th onclick="toggle('{catrow.NAME}'); setRequestn('{catrow.NAME}');">{catrow.L_NAME}</th>
-</tr>
-<tbody id="{catrow.NAME}" style="display:{catrow.SHOW};">
-<!-- BEGIN mod_row -->
-<tr>
-	<td><a href="{catrow.modrow.U_MODULE}" {catrow.modrow.CLASS}>{catrow.modrow.L_MODULE}</a></td>
-</tr>
-<!-- END mod_row -->
-</tbody>
-</table>
-<!-- END cat_row -->
-
 <!-- BEGIN row -->
 <table class="navi">
 <tr>
@@ -69,8 +45,6 @@ function interpretRequestn()
 </tbody>
 </table>
 <!-- END row -->
-
-
 
 </td>
 <td width="830" valign="top">

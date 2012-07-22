@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['hm_main']['sm_authlist'] = $root_file;
+		$module['hm_system']['sm_authlist'] = $root_file;
 	}
 	
 	return;
@@ -46,7 +46,6 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_authlist.tpl',
-		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
@@ -59,9 +58,16 @@ else
 		
 			$template->assign_block_vars('input', array());
 			
+			$vars = array(
+				'authlist' => array(
+					'title' => 'data_input',
+					'authlist_name'	=> array('validate' => TXT,	'type' => 'text:25:25', 'explain' => true, 'required' => 'input_name', 'check' => true, 'prefix' => 'auth_'),
+				),
+			);
+			
 			if ( $mode == 'create' && !request('submit', TXT) )
 			{
-				$data = array('authlist_name' => str_replace('auth_', '', request('authlist_name', 2)));
+				$data = array('authlist_name' => str_replace(' ', '_', strtolower(request('authlist_name', TXT))));
 			}
 			else if ( $mode == 'update' && !request('submit', TXT) )
 			{
@@ -69,13 +75,11 @@ else
 			}
 			else
 			{
-				$data = array('authlist_name' => strtolower('auth_' . str_replace('auth_', '', request('authlist_name', 2))));
+				$data = build_request(AUTHLIST, $vars, 'authlist', $error);
 				
-				$error .= check(AUTHLIST, array('authlist_name' => $data['authlist_name'], 'authlist_id' => $data_id), $error);
-					
 				if ( !$error )
 				{
-					$sql = "SELECT group_id, auth_data FROM " . GROUPS . " ORDER BY group_order";
+					$sql = "SELECT group_id, group_auth FROM " . GROUPS . " ORDER BY group_order";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -94,16 +98,15 @@ else
 					if ( $mode == 'create' )
 					{
 						$sql = sql(AUTHLIST, $mode, $data);
-					#	$add = sql(GROUPS, 'alter', array('part' => "ADD `" . $data['authlist_name'] . "`", 'type' => "TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'"));
 						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						
 						foreach ( $grp as $k => $v )
 						{
-							$auth[$v['group_id']] = unserialize($v['auth_data']);
+							$auth[$v['group_id']] = unserialize($v['group_auth']);
 							$mauth = array_merge($auth[$v['group_id']], array($data['authlist_name'] => 0));
 							$sauth = serialize($mauth);
 						
-							$sql = "UPDATE " . GROUPS . " SET auth_data = '$sauth' WHERE group_id = " . $v['group_id'];
+							$sql = "UPDATE " . GROUPS . " SET group_auth = '$sauth' WHERE group_id = " . $v['group_id'];
 							if ( !($result = $db->sql_query($sql)) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -126,16 +129,15 @@ else
 					else
 					{
 						$sql = sql(AUTHLIST, $mode, $data, 'authlist_id', $data_id);
-					#	$add = sql(GROUPS, 'alter', array('part' => "CHANGE `" . request('old_name', 1) . "` `" . $data['authlist_name'] . "`", 'type' => "TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'"));
 						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						
 						foreach ( $grp as $k => $v )
 						{
-							$auth[$v['group_id']] = unserialize($v['auth_data']);
+							$auth[$v['group_id']] = unserialize($v['group_auth']);
 							
 							foreach ( $auth[$v['group_id']] as $key => $value )
 							{
-								if ( $key == request('old_name', 2) )
+								if ( $key == request('old_name', TXT) )
 								{
 									$nauth[$data['authlist_name']] = $value;
 								}
@@ -147,7 +149,7 @@ else
 							
 							$sauth = serialize($nauth);
 						
-							$sql = "UPDATE " . GROUPS . " SET auth_data = '$sauth' WHERE group_id = " . $v['group_id'];
+							$sql = "UPDATE " . GROUPS . " SET group_auth = '$sauth' WHERE group_id = " . $v['group_id'];
 							if ( !($result = $db->sql_query($sql)) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -160,7 +162,7 @@ else
 							
 							foreach ( $auth[$v['user_id']] as $key => $value )
 							{
-								if ( $key == request('old_name', 2) )
+								if ( $key == request('old_name', TXT) )
 								{
 									$nauth[$data['authlist_name']] = $value;
 								}
@@ -187,12 +189,11 @@ else
 				}
 				else
 				{
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
-					
-					log_add(LOG_ADMIN, $log, 'error', $error);
+					error('ERROR_BOX', $error);
 				}
 			}
+			
+			build_output($data, $vars, 'input', false, MAPS);
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
@@ -201,11 +202,6 @@ else
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
 				'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['field'], $data['authlist_name']),
-				'L_DATA'	=> $lang['data'],
-				
-				'L_NAME'	=> $lang['authlist_name'],
-				
-				'NAME'		=> str_replace('auth_', '', $data['authlist_name']),
 				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
@@ -223,7 +219,7 @@ else
 			#	$add = sql(GROUPS, 'alter', array('part' => "DROP ", 'type'	=> $data['authlist_name']));
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
-				$sql = "SELECT group_id, auth_data FROM " . GROUPS . " ORDER BY group_order";
+				$sql = "SELECT group_id, group_auth FROM " . GROUPS . " ORDER BY group_order";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -241,7 +237,7 @@ else
 				
 				foreach ( $grp as $k => $v )
 				{
-					$auth[$v['group_id']] = unserialize($v['auth_data']);
+					$auth[$v['group_id']] = unserialize($v['group_auth']);
 					
 					foreach ( $auth[$v['group_id']] as $key => $value )
 					{
@@ -253,7 +249,7 @@ else
 					
 					$sauth = serialize($nauth);
 				
-					$sql = "UPDATE " . GROUPS . " SET auth_data = '$sauth' WHERE group_id = " . $v['group_id'];
+					$sql = "UPDATE " . GROUPS . " SET group_auth = '$sauth' WHERE group_id = " . $v['group_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -313,7 +309,7 @@ else
 		
 			$template->assign_block_vars('display', array());
 			
-			$fields	= '<input type="hidden" name="mode" value="_create" />';
+			$fields	= '<input type="hidden" name="mode" value="create" />';
 			
 			$tmp = data(AUTHLIST, false, 'authlist_id ASC', 0, false);
 			$cnt = count($tmp);
@@ -336,7 +332,7 @@ else
 				'L_NAME'	=> $lang['authlist_name'],
 				'L_EXPLAIN'	=> $lang['explain'],
 				
-				'S_CREATE'	=> check_sid("$file?mode=_create"),
+				'S_CREATE'	=> check_sid("$file?mode=create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));

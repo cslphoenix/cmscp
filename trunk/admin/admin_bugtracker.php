@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == 6 )
 	{
-		$module['hm_dev']['sm_bugtracker'] = $root_file;
+		$module['hm_system']['sm_bugtracker'] = $root_file;
 	}
 	
 	return;

@@ -13,9 +13,10 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-if ( isset($_POST['user_name']) )
+if ( isset($_POST['user_name']) || isset($_POST['user_id']) )
 {
-	$user_name	= str_replace("'", "\'", $_POST['user_name']);
+	$fill_type	= isset($_POST['user_name']) ? 'fill' : 'set_user_id';
+	$user_name	= isset($_POST['user_name']) ? str_replace("'", "\'", $_POST['user_name']) : str_replace("'", "\'", $_POST['user_id']);
 	$user_name	= str_replace('*', '%', strtolower($user_name));
 	$user_new	= isset($_POST['user_new']) ? str_replace("'", "\'", $_POST['user_new']) : '';
 	$user_level	= isset($_POST['user_level']) ? "AND user_level >= " . str_replace("'", "\'", $_POST['user_level']) : false;
@@ -50,7 +51,7 @@ if ( isset($_POST['user_name']) )
 				default: $lvl = $tmp[$i]['user_level'];	break;
 			}				
 			
-			echo '<li onclick="fill(\'' . $name . '\');">' . sprintf($lang['sprintf_ajax_users'], $name, $lvl, $reg, $log) . '</li>';
+			echo "<li onclick=\"$fill_type('$name');\">" . sprintf($lang['sprintf_ajax_users'], $name, $lvl, $reg, $log) . "</li>";
 			
 			if ( $i == 4 )
 			{
@@ -63,7 +64,7 @@ if ( isset($_POST['user_name']) )
 	{
 		if ( $user_new )
 		{
-			echo '<li onclick="fill(\'' . $user_name . '\');">' . $lang['new_entry'] . '</li>';
+			echo '<li onclick="$fill_type(\'' . $user_name . '\');">' . $lang['new_entry'] . '</li>';
 		}
 		else
 		{

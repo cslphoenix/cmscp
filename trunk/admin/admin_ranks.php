@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_ranks'] )
 	{
-		$module['hm_main']['sm_ranks'] = $root_file;
+		$module['hm_system']['sm_ranks'] = $root_file;
 	}
 	
 	return;
@@ -40,7 +40,6 @@ else
 	$move		= request('move', TXT);
 	
 	$dir_path	= $root_path . $settings['path_ranks'];
-	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_ranks'] )
@@ -53,9 +52,9 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_ranks.tpl',
-		'ajax'		=> 'style/ajax_order.tpl',
-		'uimg'		=> 'style/inc_java_img.tpl',
-		'error'		=> 'style/info_error.tpl',
+	#	'ajax'		=> 'style/ajax_order.tpl',
+	#	'uimg'		=> 'style/inc_java_img.tpl',
+	#	'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
@@ -69,21 +68,20 @@ else
 			case 'update':
 			
 				$template->assign_block_vars('input', array());
-				
-				$template->assign_vars(array('PATH' => $dir_path));
+				$template->assign_vars(array('IPATH' => $dir_path));
 								
-				$template->assign_var_from_handle('AJAX', 'ajax');
-				$template->assign_var_from_handle('UIMG', 'uimg');
+			#	$template->assign_var_from_handle('AJAX', 'ajax');
+			#	$template->assign_var_from_handle('UIMG', 'uimg');
 				
 				$vars = array(
-					'ranks' => array(
+					'rank' => array(
 						'title1' => 'input',
-						'rank_name'			=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
-						'rank_image'		=> array('validate' => 'image',	'type' => 'drop:image',		'explain' => true),
-						'rank_type'			=> array('validate' => 'int',	'type' => 'radio:ranks',	'explain' => true),
-						'rank_min'			=> array('validate' => 'int',	'type' => 'text:5:5',		'explain' => true),
-						'rank_special'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
-						'rank_order'		=> array('validate' => 'int',	'type' => 'drop:order',		'explain' => true),
+						'rank_name'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
+						'rank_image'		=> array('validate' => TXT,	'type' => 'drop:image',		'explain' => true, 'params' => $dir_path),
+						'rank_type'			=> array('validate' => INT,	'type' => 'radio:ranks',	'explain' => true, 'params' => true, 'ajax' => 'ajax_order:ajax_order'),
+						'rank_special'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
+						'rank_min'			=> array('validate' => INT,	'type' => 'text:5:5',		'explain' => true, 'trid' => true),
+						'rank_order'		=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
 					),
 				);
 				
@@ -95,12 +93,12 @@ else
 					$data = array(
 						'rank_name'		=> $name,
 						'rank_type'		=> $type,
-						'rank_min'		=> '0',
-						'rank_special'	=> '0',
+						'rank_min'		=> 0,
+						'rank_special'	=> 0,
 						'rank_image'	=> '',
-						'rank_standard'	=> '0',
+						'rank_standard'	=> 0,
 					#	'rank_order'	=> maxa(RANKS, 'rank_order', "rank_type = $type"),
-						'rank_order'	=> '',
+						'rank_order'	=> 0,
 					);
 				}
 				else if ( $mode == 'update' && !request('submit', TXT) )
@@ -119,7 +117,7 @@ else
 						'rank_order'	=> request('rank_order', 0) ? request('rank_order', 0) : request('rank_order_new', 0),
 					);
 					
-					$error .= check(RANKS, array('rank_name' => $data['rank_name'], 'rank_id' => $data_id), $error);
+					$error[] = check(RANKS, array('rank_name' => $data['rank_name'], 'rank_id' => $data_id), $error);
 					
 					if ( !$error )
 					{
@@ -144,10 +142,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 				}
 				
@@ -296,8 +291,8 @@ else
 				'SPECIAL'	=> ( $tmp_f[$i]['rank_special'] == '1' ) ? $lang['common_yes'] : $lang['common_no'],
 				'IMAGE'		=> $image ? img('i_icon', 'icon_image', '') : img('i_icon', 'icon_image2', ''),
 				
-				'MOVE_UP'	=> ( $tmp_f[$i]['rank_special'] && $order != '10' )		? href('a_img', $file, array('mode' => '_order', 'type' => RANK_FORUM, 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $tmp_f[$i]['rank_special'] && $order != $max_f )	? href('a_img', $file, array('mode' => '_order', 'type' => RANK_FORUM, 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $tmp_f[$i]['rank_special'] && $order != '10' )		? href('a_img', $file, array('mode' => 'order', 'type' => RANK_FORUM, 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $tmp_f[$i]['rank_special'] && $order != $max_f )	? href('a_img', $file, array('mode' => 'order', 'type' => RANK_FORUM, 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
@@ -325,8 +320,8 @@ else
 				'STANDARD'	=> $tmp_p[$i]['rank_standard'] ? $lang['rank_standard'] : '',
 				'IMAGE'		=> $image ? img('i_icon', 'icon_image', '') : img('i_icon', 'icon_image2', ''),
 				
-				'MOVE_UP'	=> ( $order != '10' )	? href('a_img', $file, array('mode' => '_order', 'type' => RANK_PAGE, 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max_p )	? href('a_img', $file, array('mode' => '_order', 'type' => RANK_PAGE, 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '10' )	? href('a_img', $file, array('mode' => 'order', 'type' => RANK_PAGE, 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max_p )	? href('a_img', $file, array('mode' => 'order', 'type' => RANK_PAGE, 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
@@ -354,8 +349,8 @@ else
 				'STANDARD'	=> $tmp_t[$i]['rank_standard'] ? $lang['rank_standard'] : '',
 				'IMAGE'		=> $image ? img('i_icon', 'icon_image', '') : img('i_icon', 'icon_image2', ''),
 				
-				'MOVE_UP'	=> ( $order != '10' )	? href('a_img', $file, array('mode' => '_order', 'type' => RANK_TEAM, 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max_t )	? href('a_img', $file, array('mode' => '_order', 'type' => RANK_TEAM, 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '10' )	? href('a_img', $file, array('mode' => 'order', 'type' => RANK_TEAM, 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max_t )	? href('a_img', $file, array('mode' => 'order', 'type' => RANK_TEAM, 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),

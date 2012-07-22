@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_maps'] )
 	{
-		$module['hm_games']['sm_maps2'] = $root_file;
+		$module['hm_clan']['sm_maps2'] = $root_file;
 	}
 	
 	return;
@@ -110,8 +110,8 @@ else
 						'map_order'	=> request('map_order', 0) ? request('map_order', 0) : request('map_order_new', 0),
 					);
 					
-					$error .= check(MAPS, array('map_name' => $data['map_name'], 'map_file' => $data['map_file'], 'map_id' => $data_id), $error);
-					$error .= ( !$data['map_type'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_type'] : '';
+					$error[] = check(MAPS, array('map_name' => $data['map_name'], 'map_file' => $data['map_file'], 'map_id' => $data_id), $error);
+					$error[] = ( !$data['map_type'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_type'] : '';
 					
 					if ( !$error )
 					{
@@ -135,10 +135,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				
@@ -312,7 +309,7 @@ else
 					
 					$cur_tag = request('current_tag', 1);
 					
-					$error .= check(MAPS_CAT, array('cat_name' => $data['cat_name'], 'cat_tag' => $data['cat_tag'], 'cat_id' => $data_cat), $error);
+					$error[] = check(MAPS_CAT, array('cat_name' => $data['cat_name'], 'cat_tag' => $data['cat_tag'], 'cat_id' => $data_cat), $error);
 					
 					if ( !$error )
 					{
@@ -343,10 +340,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}							
 				}
 
@@ -437,7 +431,7 @@ else
 	
 	$template->assign_block_vars('display', array());
 	
-	$fields .= '<input type="hidden" name="mode" value="_create" />';
+	$fields .= '<input type="hidden" name="mode" value="create" />';
 	
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['titles']),

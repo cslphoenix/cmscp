@@ -41,7 +41,7 @@
 
 <table>
 
-<!-- BEGIN group_auth_data -->
+<!-- BEGIN group_group_auth -->
 <tr>
 	<td>{group_auth_data.CELL_TITLE}</td>
 	<td>{group_auth_data.S_AUTH_LEVELS_SELECT}</td>

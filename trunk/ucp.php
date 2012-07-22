@@ -11,7 +11,7 @@ $time = time();
 $file = basename(__FILE__);
 
 $mode	= request('mode', TXT);
-$smode	= request('smode', 1);
+$smode	= request('smode', TXT);
 
 #$url_news	= POST_NEWS;
 #$url_event	= POST_EVENT;

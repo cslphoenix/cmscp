@@ -1,12 +1,12 @@
 <?php
 
-if ( isset($setmodules) )
+if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] )
 	{
-		$module['hm_main']['sm_event'] = $root_file;
+		$module['hm_clan']['sm_event'] = $root_file;
 	}
 	
 	return;
@@ -70,13 +70,13 @@ else
 
 			$vars = array(
 				'event' => array(
-					'title1' => 'data_input',
-					'event_title'		=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_title'),
-					'event_desc'		=> array('validate' => 'text',	'type' => 'textarea:50',		'explain' => true, 'required' => 'input_desc', 'params' => TINY_NORMAL),
-					'event_level'		=> array('validate' => 'text',	'type' => 'drop:userlevel',	'explain' => true, 'required' => 'select_level', 'params' => 'user_level'),
-					'event_date'		=> array('validate' => 'int',	'type' => 'drop:datetime',	'explain' => true, 'params' => ( $mode == 'update' ) ? 'none' : $time),
-					'event_duration'	=> array('validate' => 'int',	'type' => 'drop:duration',	'explain' => true, 'params' => 'event_date'),
-					'event_comments'	=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
+					'title' => 'data_input',
+					'event_title'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_title'),
+					'event_desc'		=> array('validate' => TXT,	'type' => 'textarea:50',	'explain' => true, 'required' => 'input_desc', 'params' => TINY_NORMAL),
+					'event_level'		=> array('validate' => TXT,	'type' => 'drop:userlevel',	'explain' => true, 'required' => 'select_level', 'params' => 'user_level'),
+					'event_date'		=> array('validate' => INT,	'type' => 'drop:datetime',	'explain' => true, 'params' => ( $mode == 'create' ) ? $time : '-1'),
+					'event_duration'	=> array('validate' => INT,	'type' => 'drop:duration',	'explain' => true, 'params' => 'event_date'),
+					'event_comments'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
 					'event_create'		=> array('type' => 'hidden'),
 					'event_update'		=> array('type' => 'hidden'),
 					'count_comment'		=> array('type' => 'hidden'),
@@ -93,7 +93,7 @@ else
 					'event_duration'	=> 0,
 					'event_comments'	=> 1,
 					'event_create'		=> $time,
-					'event_update'		=> $time,
+					'event_update'		=> 0,
 					'count_comment'		=> 0,
 				);
 			}
@@ -103,16 +103,12 @@ else
 			}
 			else
 			{
-				$temp = data(EVENT, $data_id, false, 1, true);
-				$temp = array_keys($temp);
-				unset($temp[0]);
-				
-				$data = build_request($temp, $vars, 'event', $error);
+				$data = build_request(EVENT, $vars, 'event', $error);
 				
 				debug($data);
 				
-			#	$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
-			#	$error .= ( time() >= $data['event_date'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
+			#	$error[] = ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
+			#	$error[] = ( time() >= $data['event_date'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
 				
 				if ( !$error )
 				{
@@ -139,16 +135,13 @@ else
 				}
 				else
 				{
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
-					
-					log_add(LOG_ADMIN, $log, 'error', $error);
+					error('ERROR_BOX', $error);
 				}
 			}
 			
 			build_output($data, $vars, 'input', false, EVENT);
 			
-			$event_create = ( $mode == 'update' ) ? $time : $data['event_create'];
+		#	$event_create = ( $mode == 'update' ) ? $time : $data['event_create'];
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
@@ -300,7 +293,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
+				'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
 				'L_EXPLAIN'	=> $lang['explain'],
 				
 				'L_DATE'		=> $lang['event_date'],

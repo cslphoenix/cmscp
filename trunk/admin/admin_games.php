@@ -1,12 +1,12 @@
 <?php
 
-if ( isset($setmodules) )
+if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_games'] )
 	{
-		$module['hm_games']['sm_games'] = $root_file;
+		$module['hm_clan']['sm_games'] = $root_file;
 	}
 	
 	return;
@@ -51,8 +51,6 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_games.tpl',
-		'uimg'		=> 'style/inc_java_img.tpl',
-		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
@@ -66,17 +64,15 @@ else
 			case 'update':
 			
 				$template->assign_block_vars('input', array());
-				
-				$template->assign_vars(array('PATH' => $dir_path));
-				$template->assign_var_from_handle('UIMG', 'uimg');
+				$template->assign_vars(array('IPATH' => $dir_path));
 				
 				$vars = array(
 					'game' => array(
-						'title' => 'input',
-						'game_name'		=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name',	'check' => true),
-						'game_tag'		=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_tag',	'check' => true),
-						'game_image'	=> array('validate' => 'text',	'type' => 'drop:image',		'explain' => true, 'params' => $dir_path),
-						'game_order'	=> array('validate' => 'int',	'type' => 'drop:order',		'explain' => true),
+						'title' => 'input_data',
+						'game_name'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name',	'check' => true),
+						'game_tag'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_tag',	'check' => true),
+						'game_image'	=> array('validate' => TXT,	'type' => 'drop:image',		'explain' => true, 'params' => $dir_path),
+						'game_order'	=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
 					),
 				);
 				
@@ -95,11 +91,7 @@ else
 				}
 				else
 				{
-					$temp = data(GAMES, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
-					$data = build_request($temp, $vars, 'game', $error);
+					$data = build_request(GAMES, $vars, 'game', $error);
 					
 					if ( !$error )
 					{
@@ -121,10 +113,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				

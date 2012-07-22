@@ -6,9 +6,9 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['hm_database']['sm_backup']		= "$root_file?mode=backup";
-		$module['hm_database']['sm_restore']	= "$root_file?mode=restore";
-		$module['hm_database']['sm_optimize']	= "$root_file?mode=optimize";
+		$module['hm_maintenance']['sm_backup']		= "$root_file?mode=backup";
+		$module['hm_maintenance']['sm_restore']	= "$root_file?mode=restore";
+		$module['hm_maintenance']['sm_optimize']	= "$root_file?mode=optimize";
 	}
 	
 	return;

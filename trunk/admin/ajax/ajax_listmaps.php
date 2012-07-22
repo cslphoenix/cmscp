@@ -16,7 +16,7 @@ require($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-debug($_POST);
+#debug($_POST);
 
 if ( isset($_POST['name']) || isset($_POST['mode']) )
 {
@@ -24,19 +24,59 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 	
 	if ( $key )
 	{
-		$sql = "SELECT mc.*
-					FROM " . MAPS_CAT . " mc
+		$sql = "SELECT m.*
+					FROM " . MAPS . " m
 						LEFT JOIN " . TEAMS . " t ON t.team_id = $key
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE mc.cat_tag = g.game_tag";
+				WHERE m.map_tag = g.game_tag";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
-		$cats = $db->sql_fetchrow($result);
+		$cat = $db->sql_fetchrow($result);
 		
-		$s_select = '';
+	#	debug($sql);
+	#	debug($cat);
 		
+		if ( $cat )
+		{
+			$sql = "SELECT * FROM " . MAPS . " WHERE map_sub = {$cat['map_id']} ORDER BY map_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$maps = $db->sql_fetchrowset($result);
+			
+		#	debug($maps);
+		
+			$s_select = '';
+			
+			if ( $maps )
+			{
+				$s_select .= '<div><div><select name="training[training_maps][]" id="training_training_maps">';
+				$s_select .= '<option selected="selected" value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . '</option>';
+				
+				for ( $j = 0; $j < count($maps); $j++ )
+				{
+					$map_id		= $maps[$j]['map_id'];
+					$map_name	= $maps[$j]['map_name'];
+		
+					$s_select .= '<option value="' . $map_id . '">' . sprintf($lang['sprintf_select_format'], $map_name) . '</option>';
+				}
+				
+				$s_select .= '</select>&nbsp;<input type="button" class="more" value="' . $lang['common_more'] . '" onclick="clone(this)"></div></div>';
+			}
+			else
+			{
+				$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+			}
+		}
+		else
+		{
+			$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+		}
+		
+		/*
 		if ( $cats )
 		{
 			$cat_id		= $cats['cat_id'];
@@ -77,6 +117,7 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 		{
 			$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
 		}
+		*/
 	}
 	else
 	{

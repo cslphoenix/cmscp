@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_teamspeak'] )
 	{
-		$module['hm_server']['sm_teamspeak'] = $root_file;
+		$module['hm_clan']['sm_teamspeak'] = $root_file;
 	}
 	
 	return;
@@ -99,11 +99,11 @@ else
 						'teamspeak_show'		=> request('teamspeak_show', 0),
 					);
 							
-					$error .= !$data['teamspeak_name']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					$error .= !$data['teamspeak_ip']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_ip'] : '';
-					$error .= !$data['teamspeak_port']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_port'] : '';
-					$error .= !$data['teamspeak_qport']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_qport'] : '';
-					$error .= !isset($data['teamspeak_type'])	? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
+					$error[] = !$data['teamspeak_name']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error[] = !$data['teamspeak_ip']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_ip'] : '';
+					$error[] = !$data['teamspeak_port']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_port'] : '';
+					$error[] = !$data['teamspeak_qport']			? ( $error ? '<br />' : '' ) . $lang['msg_empty_qport'] : '';
+					$error[] = !isset($data['teamspeak_type'])	? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
 					
 					if ( !$error )
 					{
@@ -135,10 +135,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				
 				}
@@ -219,11 +216,11 @@ else
 				/*
 				if ( request('submit', TXT) )
 				{
-					$error .= !$data['teamspeak_name']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					$error .= !$data['teamspeak_ip']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_ip'] : '';
-					$error .= !$data['teamspeak_port']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_port'] : '';
-					$error .= !$data['teamspeak_qport'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_qport'] : '';
-					$error .= !isset($data['teamspeak_type']) ? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
+					$error[] = !$data['teamspeak_name']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error[] = !$data['teamspeak_ip']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_ip'] : '';
+					$error[] = !$data['teamspeak_port']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_port'] : '';
+					$error[] = !$data['teamspeak_qport'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_qport'] : '';
+					$error[] = !isset($data['teamspeak_type']) ? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
 					
 					if ( !$error )
 					{
@@ -255,10 +252,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 				}
 				*/			
@@ -311,7 +305,7 @@ else
 	
 	$template->assign_block_vars('display', array());
 	
-	$fields	= '<input type="hidden" name="mode" value="_create" />';
+	$fields	= '<input type="hidden" name="mode" value="create" />';
 	$tmp	= data(TEAMSPEAK, false, false, 1, false);
 					
 	if ( !$tmp )

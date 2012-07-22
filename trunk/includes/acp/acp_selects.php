@@ -9,7 +9,7 @@
 	function select_box();				//
 	function select_box_files();		//	acp_games, acp_newscat
 !	function select_box_game();			//
-	function _select_rank();			//
+	function select_rank();				//
 !	function select_newscategory();		//
 	function select_lang_box();			//
 	function _select_match();			//
@@ -173,20 +173,20 @@ function select_team($default, $meta, $name, $select, $css = false)
 	
 		$css = $css ? "class=\"$css\"" : '';
 		
-		$name = $meta ? "{$meta}[$name]" : $name;
-		$id = $meta ? "{$meta}_$name" : $name;
+		$field_name = $meta ? "{$meta}[$name]" : $name;
+		$field_id = $meta ? "{$meta}_$name" : $name;
 		
 		if ( $select == 'submit' ) 
 		{
-			$return .= "<select $css name=\"$name\" id=\"$id\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
+			$return .= "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
 		}
 		else if ( $select == 'request' )
 		{
-			$return .= "<select $css name=\"$name\" id=\"$id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
+			$return .= "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
 		}
 		else
 		{
-			$return .= "<select $css name=\"$name\" id=\"$id\">";
+			$return .= "<select $css name=\"$field_name\" id=\"$field_id\">";
 		}
 		$return .= "<option value=\"0\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_team']) . "</option>";
 		
@@ -501,11 +501,11 @@ function select_box_game($class, $default)
 }
 */
 
-function _select_rank($class, $default, $type)
+function select_rank($default, $type)
 {
 	global $db, $lang;
 	
-	$order = ( $type == '2' ) ? 'rank_order' : 'rank_id';
+	$order = ( $type == RANK_FORUM ) ? 'rank_order' : 'rank_id';
 	
 	$sql = 'SELECT rank_id, rank_name, rank_order FROM ' . RANKS . " WHERE rank_type = $type ORDER BY $order";
 	if ( !($result = $db->sql_query($sql)) )
@@ -583,7 +583,7 @@ function select_match($default, $main, $name)
 {
 	global $db, $lang, $userdata;
 	
-	$sql = 'SELECT match_id, match_rival_name, match_rival_tag, match_date FROM ' . MATCH . '  WHERE match_date > ' . time() . ' ORDER BY match_date ASC';
+	$sql = 'SELECT match_id, match_rival_name, match_rival_tag, match_date FROM ' . MATCH . '  WHERE match_date >= ' . time() . ' ORDER BY match_date ASC';
 	if (!($result = $db->sql_query($sql)))
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -594,6 +594,7 @@ function select_match($default, $main, $name)
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
+	#	debug($row);
 		$selected = ( $row['match_id'] == $default ) ? ' selected="selected"' : '';
 		$select .= "<option value='" . $row['match_id'] . "'$selected>" . sprintf($lang['sprintf_select_format'], sprintf('%s :: %s :: %s', create_date($userdata['user_dateformat'], $row['match_date'], $userdata['user_timezone']), $row['match_rival_name'], $row['match_rival_tag'])) . "</option>";
 	}
@@ -1193,11 +1194,11 @@ function simple_order($table, $where, $current_order, $main_array, $field)
 {
 	global $db, $db_prefix, $lang;
 	
-	$filter = array(NEWS_CAT, MENU_CAT, DOWNLOADS_CAT, MAPS_CAT, PROFILE_CAT);
+	$filter = array(NEWS_CAT, MENU_CAT, DOWNLOADS_CAT, PROFILE_CAT);
 
 	$cats = '';
 	
-	$db_field = trim(str_replace($db_prefix, '', $table), 's');
+	$db_field = rtrim(str_replace($db_prefix, '', $table), 's');
 	
 	if ( in_array($table, $filter) )
 	{
@@ -1249,7 +1250,7 @@ function simple_order($table, $where, $current_order, $main_array, $field)
 	}
 	else
 	{
-		$s_select = $lang['no_entry'];
+		$s_select = '<div id="close">' . $lang['no_entry'] . '</div><div id="ajax_content"></div>';
 	}
 
 /*
@@ -1554,43 +1555,124 @@ function match_types($default, $meta, $name)
 }
 
 #	select_auth($typ, $tmp_vars)
-function select_auth($auth_field, $default, $tpl)
+#	$opt .= select_auth($tmp_data, $tmp_meta, $tmp_name, $type); break;
+function select_auth($default, $meta, $name, $type)
 {
-	global $root_path, $lang, $template;
+	global $root_path, $lang, $template, $settings;
+#	global $gallery_auth_levels, $gallery_auth_constants;
+#	global $gallery_auth_none_levels, $gallery_auth_none_constants;
+#	global $gallery_auth_upload_levels, $gallery_auth_upload_constants;
+#	debug($default, 'default');
+
+	global $simple_auth, $fields_auth;
 	
-	include("{$root_path}includes/acp/acp_constants.php");
+	for ( $j = 0; $j < count($lang['simple_auth_types']); $j++ )
+	{
+		foreach ( $simple_auth[$j] as $key_s => $value_s )
+		{
+			foreach ( $fields_auth as $key_f => $value_f )
+			{
+				if ( $key_s == $key_f )
+				{
+					$new[$j][$value_f] = $value_s;
+				}
+			}
+		}
+	
+		foreach ( $new[$j] as $key_n => $value_n )
+		{
+			$set_right[$j][] = "set_right('$key_n', '$value_n')";
+			
+		}
+		
+		$set_right[$j] = implode('; ', $set_right[$j]);
+		
+		$auth[] = '<a style="cursor:pointer" onclick="' . $set_right[$j] . '; set_right(\'simpleauth\', \'' . $j . '\')">' . $lang['simple_auth_types'][$j] . '</a>';
+	}
+	
+	$auth = implode('<br />', $auth);
+	
+#	debug($auth);
+	
+#	debug($simple_auth, "simple_auth");
+	
+	$default = @unserialize($default);
+	
+	$tmp = is_array($default) ? $default : unserialize($default);
+	
+	if ( empty($tmp) )
+	{
+		$default = array(																		#		0		1		2		3		  4		  5			6		  7
+			'auth_view' =>		( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 1,	#	'guest', 'user', 'trial', 'member', 'mod', 'admin', 'uploader'
+			'auth_edit' =>		( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 6,	#										'mod', 'admin', 'uploader'
+			'auth_delete' =>	( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 6,	#										'mod', 'admin', 'uploader'
+			'auth_rate' =>		( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 1,	#	'guest', 'user', 'trial', 'member', 'mod', 'admin', 'uploader'
+			'auth_comment' =>	( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 1,	#	'guest', 'user', 'trial', 'member', 'mod', 'admin', 'uploader'
+			'auth_upload' =>	( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 3,	#			 'user', 'trial', 'member', 'mod', 'admin'
+			'auth_approve' =>	( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 4,	#										'mod', 'admin',			  'disabled'
+			'auth_report' =>	( $type == GROUPS ) ? $settings['gallery']['auth_view'] : 1,	#	'guest', 'user', 'trial', 'member', 'mod', 'admin', 'uploader'
+		);
+	}
+	
+	$auth_all		= array('auth_view', 'auth_rate', 'auth_comment', 'auth_report');
+	$auth_edit		= array('auth_edit', 'auth_delete');
+	$auth_up		= array('auth_upload');
+	$auth_app		= array('auth_approve');
+	
+	$auth_all_lvl	= array('guest', 'user', 'trial', 'member', 'mod', 'admin', 'uploader');
+	$auth_edit_lvl	= array('mod', 'admin', 'uploader');
+	$auth_up_lvl	= array('user', 'trial', 'member', 'mod', 'admin');
+	$auth_app_lvl	= array('mod', 'admin', 'disabled');
+	
+	$auth_all_con	= array(AUTH_GUEST, AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_MOD, AUTH_ADMIN, AUTH_UPLOADER);
+	$auth_edit_con	= array(AUTH_MOD, AUTH_ADMIN, AUTH_UPLOADER, AUTH_DISABLED);
+	$auth_up_con	= array(AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_MOD, AUTH_ADMIN);
+	$auth_app_con	= array(AUTH_MOD, AUTH_ADMIN, AUTH_DISABLED);
 	
 	$opt = '';
 	
-	$opt .= "<select name=\"{$tpl}[$auth_field]\" id=\"{$tpl}_{$auth_field}\">";
-	$opt .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_item']) . "</option>";
+	foreach ( $default as $dkey => $drow )
+	{
+		$opt .= '<label><select name="' . sprintf('%s[%s][%s]', $meta, $name, $dkey) . '" id="' . $dkey . '">';
+		$opt .= '<option value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_item']) . '</option>';
+		
+		if ( in_array($dkey, $auth_all) )
+		{
+			foreach ( $auth_all_lvl as $levelskey => $levels )
+			{
+				$selected = ( $default[$dkey] == $auth_all_con[$levelskey] ) ? ' selected="selected"' : '';
+				$opt .= '<option value="' . $auth_all_con[$levelskey] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $lang["common_auth_$levels"]) . '</option>';
+			}
+		}
+		else if ( in_array($dkey, $auth_edit) )
+		{
+			foreach ( $auth_edit_lvl as $levelskey => $levels )
+			{
+				$selected = ( $default[$dkey] == $auth_edit_con[$levelskey] ) ? ' selected="selected"' : '';
+				$opt .= '<option value="' . $auth_edit_con[$levelskey] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $lang["common_auth_$levels"]) . '</option>';
+			}
+		}
+		else if ( in_array($dkey, $auth_up) )
+		{
+			foreach ( $auth_up_lvl as $levelskey => $levels )
+			{
+				$selected = ( $default[$dkey] == $auth_up_con[$levelskey] ) ? ' selected="selected"' : '';
+				$opt .= '<option value="' . $auth_up_con[$levelskey] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $lang["common_auth_$levels"]) . '</option>';
+			}
+		}
+		else if ( in_array($dkey, $auth_app) )
+		{
+			foreach ( $auth_app_lvl as $levelskey => $levels )
+			{
+				$selected = ( $default[$dkey] == $auth_app_con[$levelskey] ) ? ' selected="selected"' : '';
+				$opt .= '<option value="' . $auth_app_con[$levelskey] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $lang["common_auth_$levels"]) . '</option>';
+			}
+		}
+		
+		$opt .= '</select>&nbsp;' . $lang['common_'.$dkey] . '</label><br />';
+	}
 	
-	if ( $auth_field == 'auth_view' || $auth_field == 'auth_rate' )
-	{
-		foreach ( $gallery_auth_levels as $levelskey => $levels )
-		{
-			$selected = ( $default == $gallery_auth_constants[$levelskey] ) ? ' selected="selected"' : '';
-			$opt .= "<option value=\"$gallery_auth_constants[$levelskey]\"$selected>" . sprintf($lang['sprintf_select_format'], $lang["auth_gallery_$levels"]) . "</option>";
-		}
-	}
-	else if ( $auth_field == 'auth_edit' || $auth_field == 'auth_delete' )
-	{
-		foreach ( $gallery_auth_none_levels as $levelskey => $levels )
-		{
-			$selected = ( $default == $gallery_auth_none_constants[$levelskey] ) ? ' selected="selected"' : '';
-			$opt .= "<option value=\"$gallery_auth_none_constants[$levelskey]\"$selected>" . sprintf($lang['sprintf_select_format'], $lang["auth_gallery_$levels"]) . "</option>";
-		}
-	}
-	else if ( $auth_field == 'auth_upload' )
-	{
-		foreach ( $gallery_auth_upload_levels as $levelskey => $levels )
-		{
-			$selected = ( $default == $gallery_auth_upload_constants[$levelskey] ) ? ' selected="selected"' : '';
-			$opt .= "<option value=\"$gallery_auth_upload_constants[$levelskey]\"$selected>" . sprintf($lang['sprintf_select_format'], $lang["auth_gallery_$levels"]) . "</option>";
-		}
-	}
-	
-	return $opt;
+	return array($opt, $auth);
 }
 
 ?>

@@ -28,7 +28,7 @@ if ( isset($_POST['new_mode']) )
 	$cur_opt	= $_POST['cur_opt'];
 	
 	$db_field = trim(str_replace($db_prefix, '', $new_mode), 's');
-	$suborcat = ( in_array($db_field, array('field')) ) ? 'sub' : 'type';
+	$suborcat = ( in_array($db_field, array('field', 'forum')) ) ? 'sub' : 'type';
 	
 	$sql = "SELECT * FROM $new_mode WHERE {$db_field}_{$suborcat} = $new_opt ORDER BY {$db_field}_order ASC";
 	if ( !($result = $db->sql_query($sql)) )

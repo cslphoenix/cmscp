@@ -3,7 +3,7 @@
 </tr>
 <!-- BEGIN sn_next_match_row -->
 <tr>
-	<td><span class="right">{sn_next_matchrow.DATE}</span>{sn_next_matchrow.GAME} {sn_next_matchrow.NAME}</td>
+	<td><span class="right">{sn_next_match_row.DATE}</span>{sn_next_match_row.GAME} {sn_next_match_row.NAME}</td>
 </tr>
 <!-- END sn_next_match_row -->
 <tr>

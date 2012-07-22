@@ -1,3 +1,163 @@
+<!-- BEGIN input -->
+<script type="text/JavaScript">
+<!-- BEGIN ajax -->
+function look_{input.ajax.NAME}({input.ajax.NAME}, user_new, user_level)
+{
+	if ( {input.ajax.NAME}.length == 0 )
+	{
+		$('#{input.ajax.NAME}').hide();
+	}
+	else
+	{
+		$.post("./ajax/{input.ajax.FILE}", {{input.ajax.NAME}: ""+{input.ajax.NAME}+"", user_new: ""+user_new+"", user_level: ""+user_level+""}, function(data) {
+				if ( data.length > 0 )
+				{
+					$('#{input.ajax.NAME}').show();
+					$('#auto_{input.ajax.NAME}').html(data);
+				}
+			}
+		);
+	}
+}
+function set_{input.ajax.NAME}(thisValue)
+{
+	$('#user_{input.ajax.NAME}').val(thisValue);
+	setTimeout("$('#{input.ajax.NAME}').hide();", 200);
+}
+<!-- END ajax -->
+function set_infos(id,text)
+{
+	var obj = document.getElementById(id).value = text;
+}
+</script>
+<form action="{S_ACTION}" method="post">	
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
+
+<br /><div align="center">{ERROR_BOX}</div>
+
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<table class="update">
+<!-- BEGIN tab -->
+<tr>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
+</tr>
+<!-- BEGIN option -->
+<tr {input.row.tab.option.ID}>
+	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
+</tr>
+<!-- END option -->
+<!-- END tab -->
+</table>
+<!-- END row -->
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END input -->
+
+<!-- BEGIN input_cat -->
+<form action="{S_ACTION}" method="post">
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
+
+<br /><div align="center">{ERROR_BOX}</div>
+
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input_cat.row.hidden.HIDDEN}
+<!-- END hidden -->
+<table class="update">
+<!-- BEGIN tab -->
+<tr>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input_cat.row.tab.L_LANG}</a></li></ul></th>
+</tr>
+<!-- BEGIN option -->
+<tr>
+	<td class="{input_cat.row.tab.option.CSS}"><label for="{input_cat.row.tab.option.LABEL}" {input_cat.row.tab.option.EXPLAIN}>{input_cat.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input_cat.row.tab.option.OPTION}</td>
+</tr>
+<!-- END option -->
+<!-- END tab -->
+</table>
+<!-- END row -->
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END input_cat -->
+
+<!-- BEGIN bankdata -->
+<form action="{S_ACTION}" method="post">
+<ul id="navlist">
+	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
+	<li><a href="#" id="right" onclick="return false;">{L_BANKDATA}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
+
+<br /><div align="center">{ERROR_BOX}</div>
+
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input_cat.row.hidden.HIDDEN}
+<!-- END hidden -->
+<table class="update">
+<!-- BEGIN tab -->
+<tr>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{bankdata.row.tab.L_LANG}</a></li></ul></th>
+</tr>
+<!-- BEGIN option -->
+<tr>
+	<td class="{bankdata.row.tab.option.CSS}"><label for="{bankdata.row.tab.option.LABEL}" {bankdata.row.tab.option.EXPLAIN}>{bankdata.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{bankdata.row.tab.option.OPTION}</td>
+</tr>
+<!-- END option -->
+<!-- END tab -->
+</table>
+<!-- END row -->
+
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
+<!-- BEGIN row -->
+<table class="update">
+<!-- BEGIN option -->
+<tr>
+<td class="row1r"><label for="{_bankdata.row.KEY}_{_bankdata.row._option.KEYS}">{_bankdata.row._option.LNGS}:</label></td>
+	<td>
+		<!-- BEGIN input -->
+		<input type="text" name="{_bankdata.row._option.KEYS}" id="{_bankdata.row.KEY}_{_bankdata.row._option.KEYS}" value="{_bankdata.row._option._input.VALUE}" />
+		<!-- END input -->
+	</td>
+</tr>
+<!-- END option -->
+</table>
+<!-- END row -->
+
+<br/>
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END bankdata -->
+
 <!-- BEGIN display -->
 <script type="text/JavaScript">
 
@@ -152,216 +312,3 @@ function fill(thisValue)
 <input type="hidden" name="mode" value="create" />
 </form>
 <!-- END display -->
-
-<!-- BEGIN input_cat -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
-<br />
-
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
-<table class="update">
-<tr>
-	<td class="row1r"><label for="cash_name">{L_NAME}:</label></td>
-	<td class="row2"><input type="text" name="cash_name" id="cash_name" value="{NAME}" /></td>
-</tr>
-<tr>
-	<td class="row1r"><label for="cash_amount">{L_AMOUNT}:</label></td>
-	<td class="row2"><input type="text" name="cash_amount" id="cash_amount" value="{AMOUNT}" /></td>
-</tr>
-<tr>
-	<td class="row1"><label for="cash_type">{L_TYPE}:</label></td>
-	<td class="row2"><label><input type="radio" name="cash_type" id="cash_type" value="0" {S_TYPE_GAME} />&nbsp;{L_TYPE_GAME}</label><br />
-		<label><input type="radio" name="cash_type" value="1" {S_TYPE_VOICE} />&nbsp;{L_TYPE_VOICE}</label><br />
-		<label><input type="radio" name="cash_type" value="2" {S_TYPE_OTHER} />&nbsp;{L_TYPE_OTHER}</label>
-	</td>
-</tr>
-<tr>
-	<td class="row1"><label for="cash_interval">{L_INTERVAL}:</label></td>
-	<td class="row2"><label><input type="radio" name="cash_interval" id="cash_interval" value="0" {S_INT_MONTH} />&nbsp;{L_INTAVAL_MONTH}</label><br />
-		<label><input type="radio" name="cash_interval" value="1" {S_INT_WEEKS} />&nbsp;{L_INTAVAL_WEEKS}</label><br />
-		<label><input type="radio" name="cash_interval" value="2" {S_INT_WEEKLY} />&nbsp;{L_INTAVAL_WEEKLY}</label>
-	</td>
-</tr>
-</table>
-
-<br/>
-
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END input_cat -->
-
-<!-- BEGIN input -->
-
-<script language="javascript" type="text/javascript">
-function disable_checkbox(name)
-{
-//	checkbox_name = name;
-//	document.getElementById(checkbox_name).disabled = 'disabled';
-	document.getElementById(name).disabled = '';
-}
-
-function activate_checkbox(name)
-{
-//	checkbox_name = name;
-//	document.getElementById(checkbox_name).disabled = '';
-	document.getElementById(name).disabled = 'disabled';
-}
-</script>
-
-<script language="javascript" type="text/javascript">
-<!-- // JavaScript-Bereich für ältere Browser auskommentieren
-// Folgende Funktion aktiviert oder dektiviert eine Gruppe von Radio-Buttons,
-// die als Detaileingabe zu einem Checkbox-Element gehören.
-function toggle_activation (element)
-{
-	// Ist das angegebene Element eines vom Typ checkbox?
-	if (element.type == 'checkbox')
-	{
-		// Name der Radio-Button-Gruppe, die aktiviert bzw.
-		// deaktiviert werden soll ist in der Value-Eigenschaft
-		// der angegebenen Checkbox gespeichert.
-		var groupname = element.value;
-
-		// Existieren HTML-Elementobjekte, die den in der Checkbox
-		// gespeicherten Namen in der Name-Eigenschaft tragen.
-		if (document.getElementsByName(groupname))
-		{
-			// Array mit den Elementobjekten zwischenspeichern
-			var group = document.getElementsByName(groupname);
-	
-			// Jedes der ermittelten Element einzeln durchgehen
-			for (var i = 0; i < group.length; i++)
-			// Handelt es sich bei dem Element um einen
-			// Radio-button?
-			if (group[i].type == 'radio')
-			// Radio-Button aktivieren, wenn das
-			// Checkbox-Element angekreuzt ist bzw,
-			// deaktivieren, wenn dem nicht so ist.
-			group[i].disabled = !element.checked;
-		}
-	}
-}
-// -->
-</script>
-
-
-<form action="{S_ACTION}" method="post">	
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
-<br /><div align="center">{ERROR_BOX}</div>
-
-<!-- BEGIN row -->
-<table class="update">
-<!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
-<!-- BEGIN option -->
-<tr>
-	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
-<!-- END option -->
-<!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<!-- END row -->
-
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
-<table class="update">
-<tr>
-	<td class="row1r">{L_USER}:</td>
-	<td class="row2">{S_USER}</td>
-</tr>
-<tr>
-	<td class="row1r">{L_USER_AMOUNT}:</td>
-	<td class="row2"><input type="text" name="user_amount" value="{AMOUNT}" /></td>
-</tr>
-<tr>
-	<td class="row1">{L_USER_MONTH}:</td>
-	<td class="row2">
-		
-		<table class="none">
-		<!-- BEGIN month -->
-		<tr class="hover">
-			<td class="row3"><label><input type="checkbox" id="checkbox_group_" name="user_month[{input._month.NUM}]" value="{input._month.NUM}" onchange="toggle_activation(this)" {input._month.CHECK} /> {input._month.MONTH}</label></td>
-			<td>{input._month.SWITCH}</td>
-		</tr>
-		<!-- END month -->
-		</table>
-		
-		{S_MONTH}
-	</td>
-</tr>
-<tr>
-	<td class="row1"><label for="user_interval">{L_USER_INTERVAL}:</label></td>
-	<td class="row2"><label><input type="radio" name="user_interval" value="1" id="user_interval" {S_INTAVAL_ONLY} />&nbsp;{L_INTAVAL_ONLY}</label><span style="padding:4px;"></span><label><input type="radio" name="user_interval" value="0" {S_INTAVAL_MONTH} />&nbsp;{L_INTAVAL_MONTH}</label></td>
-</tr>
-</table>
-
-<br/>
-
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END input -->
-
-<!-- BEGIN bankdata -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="#" id="right" onclick="return false;">{L_BANKDATA}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
-<br /><div align="center">{ERROR_BOX}</div>
-
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
-<!-- BEGIN row -->
-<table class="update">
-<!-- BEGIN option -->
-<tr>
-<td class="row1r"><label for="{_bankdata.row.KEY}_{_bankdata.row._option.KEYS}">{_bankdata.row._option.LNGS}:</label></td>
-	<td>
-		<!-- BEGIN input -->
-		<input type="text" name="{_bankdata.row._option.KEYS}" id="{_bankdata.row.KEY}_{_bankdata.row._option.KEYS}" value="{_bankdata.row._option._input.VALUE}" />
-		<!-- END input -->
-	</td>
-</tr>
-<!-- END option -->
-</table>
-<!-- END row -->
-
-<br/>
-
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END bankdata -->

@@ -1,59 +1,147 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<div id="navcontainer">
-	<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_AUTH_TITLE}</a></li></ul>
-</div>
-<table class="head" cellspacing="0">
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+{S_FORMS}
+
+<table class="lfooter">
 <tr>
-	<td>{L_AUTH_EXPLAIN}</td>
-</tr>
+	<td><input type="submit" name="sel_f" value="{L_SUBMIT}" /></td>
+	<td></td>
 </table>
 
-<br>
-
-<table class="row" cellspacing="1">
-<tr>
-	<th>{L_AUTH_SELECT}</td>
-</tr>
-<tr>
-	<td>{S_FIELDS}{S_SELECT}&nbsp;&nbsp;<input type="submit" value="{L_LOOK_UP}" class="button2"></td>
-</tr>
-</table>
+{S_FIELDS}
 </form>
 <!-- END display -->
 
+<!-- BEGIN select -->
+
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+<form action="{S_ACTION}" method="post">
+{S_GROUPS_IN}
+{S_FIELDS}
+<input type="submit" name="grp_delete" value="{L_SUBMIT} delete" />
+<input type="submit" name="grp_update" value="{L_SUBMIT}" />
+</form>
+<br />
+<form action="{S_ACTION}" method="post">
+{S_GROUPS_OUT}
+{S_FIELDS}
+<input type="submit" name="grp_create" value="{L_SUBMIT}" />
+
+
+</form>
+<!-- END select -->
+
 <!-- BEGIN auth_forum -->
-<form action="{S_FORUMAUTH_ACTION}" method="post">
-<table class="head" cellspacing="0">
+<script type="text/javascript">
+
+$(function() { $('.tabs').liteTabs({ borders: true, height: 'auto', selectedTab: 1, width: '750' }); });
+
+function set_right(id,text)
+{
+	var obj = document.getElementById(id).value = text;
+}
+
+function set_permission(type, forum, group)
+{
+	
+//	alert(forms);
+//	.checked = true;
+	switch ( type )
+	{
+		<!-- BEGIN set_perm -->
+		case '{auth_forum.set_perm.ID}':
+			<!-- BEGIN row -->
+			document.getElementById('{auth_forum.set_perm.row.FIELD}' + '[' + forum + '][' + group + ']' + '{auth_forum.set_perm.row.VALUE}').checked = true;
+			<!-- END row -->
+		break;		
+		<!-- END set_perm -->
+	}
+}
+
+function reset_simpleauth(id)
+{
+	if (!document.getElementById(id))
+	{
+		return;
+	}
+
+	document.getElementById(id).options[0].selected = true;
+}
+</script>
+
+<form action="{S_ACTION}" method="post">
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+<!-- BEGIN row -->
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{auth_forum.row.NAME}</a></li></ul>
+<table class="update" border="1">
+<!-- BEGIN group -->
 <tr>
-	<th>
-		<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="{S_ACTION}">{L_AUTH_TITLE}</a></li>
-				<li id="active"><a href="#" id="current" onclick="return false;">{L_FORUM}: {FORUM_NAME}</a></li></ul>
+	<th align="right" style="padding:5px;">{auth_forum.row.group.NAME}</th>
+	<th></th>
+</tr>
+<tr>
+	<td class="row1">{L_AUTH}auth:</td>
+	<td class="row2">{auth_forum.row.group.SIMPLE}<a href="#" class="right closed" onClick="toggle('{auth_forum.row.group.TOGGLE}'); return false;">Details</a></td>
+</tr>
+<tr>
+	<td colspan="2" class="row3">
+		<div id="{auth_forum.row.group.TOGGLE}" style="display:none;" align="center">
+			<div class="tabs">
+			<ul>
+				<li><a href="#1">{L_AUTH_FORUM}</a></li>
+				<li><a href="#2">{L_AUTH_OPTION}</a></li>
+				<li><a href="#3">{L_AUTH_POLL}</a></li>
+			</ul>
+			<div name="#1">
+				<table class="index">
+				<!-- BEGIN fauth -->
+				<tr>
+					<td>{auth_forum.row.group.fauth.LANG}</td>
+					<td>{auth_forum.row.group.fauth.AUTH}</td>
+				</tr>
+				<!-- END fauth -->
+				</table>
+			</div>
+			<div name="#2">
+				<table class="index">
+				<!-- BEGIN mauth -->
+				<tr>
+					<td>{auth_forum.row.group.mauth.LANG}</td>
+					<td>{auth_forum.row.group.mauth.AUTH}</td>
+				</tr>
+				<!-- END mauth -->
+				</table>
+			</div>
+			<div name="#3">
+				<table class="index">
+				<!-- BEGIN pauth -->
+				<tr>
+					<td>{auth_forum.row.group.pauth.LANG}</td>
+					<td>{auth_forum.row.group.pauth.AUTH}</td>
+				</tr>
+				<!-- END pauth -->
+				</table>
+			</div>
+			</div>
 		</div>
 	</td>
 </tr>
-<tr>
-	<td>{L_AUTH_EXPLAIN}</td>
-</tr>
+<!-- END group -->
 </table>
-
-<br>
+<!-- END row -->
 
 <table class="out" cellspacing="0">
-<!-- BEGIN forum_auth_data -->
 <tr>
-	<th>{auth_forum.forum_auth_data.CELL_TITLE}</th>
-	<td>{auth_forum.forum_auth_data.S_AUTH_LEVELS_SELECT}</td>
-</tr>
-<!-- END forum_auth_data -->
-<tr>
-	<td colspan="2" align="center" class="row3"><span class="gensmall">{U_SWITCH_MODE}</span></td>
-</tr>
-<tr>
-	<td colspan="2" align="center">{S_FIELDS} <input type="submit" name="submit" value="{L_SUBMIT}" class="button2" /> <input type="reset" value="{L_RESET}" name="reset" class="button"></td>
+	<td align="center"><input type="submit" name="submit" value="{L_SUBMIT}" /> <input type="reset" value="{L_RESET}" name="reset"></td>
 </tr>
 </table>
+{S_FIELDS}
 </form>
 <!-- END auth_forum -->

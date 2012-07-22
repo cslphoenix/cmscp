@@ -1,49 +1,15 @@
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_NAME}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td><span class="right">{display.row.INFO}&nbsp;</span><b>{display.row.NAME}</b><br />{display.row.DESC}</td>
-	<td>{display.row.MOVE_UP}{display.row.MOVE_DOWN}{display.row.RESYNC}{display.row.OVERVIEW}{display.row.UPLOAD}{display.row.UPDATE}{display.row.DELETE}</td>
-</tr>
-<!-- END row -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
-</table>
-
-<table class="footer">
-<tr>
-	<td><input type="text" name="gallery_name"></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-	<td></td>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END display -->
-
 <!-- BEGIN input -->
+<script type="text/javascript">
+// <![CDATA[
+function set_right(id,text)
+{
+	var obj = document.getElementById(id).value = text;
+}
+// ]]>
+</script>
 <form action="{S_ACTION}" method="post">
 {TINYMCE}
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
 	<!-- BEGIN upload -->
 	<li><a href="{S_UPLOAD}">{L_UPLOAD}</a></li>
 	<!-- END upload -->
@@ -56,88 +22,23 @@
 <br /><div align="center">{ERROR_BOX}</div>
 
 <!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
 <table class="update">
 <!-- BEGIN tab -->
 <tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{_input.row._tab.L_LANG}</a></li></ul></th>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
 <!-- BEGIN option -->
 <tr>
-	<td class="row1{_input.row.tab.option.CSS}"><label for="{_input.row.tab.option.LABEL}" {_input.row.tab.option.EXPLAIN}>{_input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{_input.row.tab.option.OPTION}</td>
+	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label><span>{input.row.tab.option.AUTH}</span></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
 <!-- END option -->
 <!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
 </table>
 <!-- END row -->
-
-
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
-<table class="update">
-<tr>
-	<td class="row1r"><label for="gallery_name">{L_NAME}:</label></td>
-	<td class="row2"><input type="text" name="gallery_name" id="gallery_name" value="{NAME}"></td>
-</tr>
-<tr>
-	<td class="row1"><label>{L_AUTH}:</label></td>
-	<td class="row2">
-		<div>
-			<!-- BEGIN auth -->
-			<ul>{_input._auth.SELECT} <label for="{_input._auth.INFO}">{_input._auth.TITLE}</label></ul>
-			<!-- END auth -->
-		</div>
-	</td>
-</tr>
-<tr>
-	<td class="row1"><label for="max_width">{L_MAX_WIDTH}:</label></td>
-	<td class="row2"><input type="text" name="max_width" id="max_width" value="{MAX_WIDTH}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="max_height">{L_MAX_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" name="max_height" id="max_height" value="{MAX_HEIGHT}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="max_filesize">{L_MAX_FILESIZE}:</label></td>
-	<td class="row2"><input type="text" name="max_filesize" id="max_filesize" value="{MAX_FILESIZE}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="per_rows">{L_PER_ROWS}:</label></td>
-	<td class="row2"><input type="text" name="per_rows" id="per_rows" value="{PER_ROWS}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="per_cols">{L_PER_COLS}:</label></td>
-	<td class="row2"><input type="text" name="per_cols" id="per_cols" value="{PER_COLS}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="preview_list">{L_PREVIEW_LIST}:</label></td>
-	<td class="row2"><label><input type="radio" name="preview_list" id="preview_list" value="1" {S_LIST_YES} />&nbsp;{L_LIST}</label><span style="padding:4px;"></span><label><input type="radio" name="preview_list" value="0" {S_LIST_NO} />&nbsp;{L_PREVIEW}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label for="preview_widht">{L_PREVIEW_WIDHT}:</label></td>
-	<td class="row2"><input type="text" name="preview_widht" id="preview_widht" value="{PREVIEW_WIDHT}"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="preview_height">{L_PREVIEW_HEIGHT}:</label></td>
-	<td class="row2"><input type="text" name="preview_height" id="preview_height" value="{PREVIEW_HEIGHT}"></td>
-</tr>
-<tr>
-	<td class="row1r"><label>{L_DESC}:</label></td>
-	<td class="row2"><textarea class="textarea" name="gallery_desc" rows="5" style="width:50%">{DESC}</textarea></td>
-</tr>
-<tr>
-	<td class="row1"><label for="gallery_comments">{L_COMMENT}:</label></td>
-	<td class="row2"><label><input type="radio" name="gallery_comments" id="gallery_comments" value="1" {S_COMMENT_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="gallery_comments" value="0" {S_COMMENT_NO} />&nbsp;{L_NO}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label for="gallery_rate">{L_RATE}:</label></td>
-	<td class="row2"><label><input type="radio" name="gallery_rate" id="gallery_rate" value="1" {S_RATE_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="gallery_rate" value="0" {S_RATE_NO} />&nbsp;{L_NO}</label></td>
-</tr>
-</table>
-
-<br/>
 
 <table class="submit">
 <tr>
@@ -151,10 +52,7 @@
 
 <!-- BEGIN upload -->
 <form action="{S_ACTION}" method="post" name="form" id="form" enctype="multipart/form-data">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_UPLOAD}</a></li>
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li><a href="{S_UPDATE}">{L_INPUT}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_UPLOAD}</a></li>
 	<!-- BEGIN overview -->
 	<li><a href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
 	<!-- END overview -->
@@ -326,10 +224,7 @@
 <!-- END overview -->
 
 <!-- BEGIN gallery_resync -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li></ul>
-
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li><li><a id="setting" href="{S_DEFAULT}">{L_DEFAULT}</a></li></ul>
 <table class="header">
 <tr>
 	<td class="info">{L_EXPLAIN}</td>
@@ -339,3 +234,40 @@
 <br />
 
 <!-- END gallery_resync -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span class="right">{display.row.INFO}&nbsp;</span><b>{display.row.NAME}</b><br />{display.row.DESC}</td>
+	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.RESYNC}{display.row.OVERVIEW}{display.row.UPLOAD}{display.row.UPDATE}{display.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
+</table>
+
+<table class="footer">
+<tr>
+	<td><input type="text" name="gallery_name"></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td></td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

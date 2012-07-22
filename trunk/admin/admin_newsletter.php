@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_newsletter'] )
 	{
-		$module['hm_news']['sm_newsletter'] = $root_file;
+		$module['hm_system']['sm_newsletter'] = $root_file;
 	}
 	
 	return;

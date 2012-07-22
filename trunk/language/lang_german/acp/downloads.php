@@ -10,7 +10,7 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Download',
 	'file'		=> 'Datei',
 	'cat'		=> 'Kategorie',
-	'explain'	=> 'Downloads',
+	'explain'	=> 'Downloads halt',
 
 	'create'	=> 'Neuen Download hinzugefügt.',
 	'update'	=> 'Downloaddaten erfolgreich geändert.',
@@ -43,6 +43,7 @@ $lang = array_merge($lang, array(
 	'comment_set_cat'	=> 'Kommentare einstellen',
 	
 	/* http://www.php.net/manual/de/function.mime-content-type.php#87856 */
+	/* image http://www.iconfinder.com/search/?q=file+extension# */
 	'meta_application'	=> 'Anwendung',
 	'meta_image'		=> 'Bilder',
 	'meta_text'			=> 'Text',
@@ -54,9 +55,9 @@ $lang = array_merge($lang, array(
 		'doc'			=> 'application/msword',
 		'exe, msi'		=> 'application/x-msdownload',	
 		'js'			=> 'application/javascript',
-		'json'			=> 'application/json',
-		'ods'			=> 'application/vnd.oasis.opendocument.spreadsheet',
-		'odt'			=> 'application/vnd.oasis.opendocument.text',
+	#	'json'			=> 'application/json',
+	#	'ods'			=> 'application/vnd.oasis.opendocument.spreadsheet',
+	#	'odt'			=> 'application/vnd.oasis.opendocument.text',
 		'pdf'			=> 'application/pdf',
 		'ppt'			=> 'application/vnd.ms-powerpoint',
 		'rar'			=> 'application/x-rar-compressed',
@@ -65,7 +66,7 @@ $lang = array_merge($lang, array(
 		'xls'			=> 'application/vnd.ms-excel',
 		'xml'			=> 'application/xml',
 		'zip'			=> 'application/zip',
-		'torren'		=> 'application/x-bittorrent',
+		'torrent'		=> 'application/x-bittorrent',
 	),
 	
 	'type_image' => array(
@@ -73,10 +74,10 @@ $lang = array_merge($lang, array(
 		'gif'				=> 'image/gif',
 		'png'				=> 'image/png',
 		'psd'				=> 'image/vnd.adobe.photoshop',
-		'ico'				=> 'image/vnd.microsoft.icon',
-		'jpe, jpeg, jpg'	=> 'image/jpeg',			
+	#	'ico'				=> 'image/vnd.microsoft.icon',
+		'jpeg, jpg'			=> 'image/jpeg', # jpe, 
 		'tiff, tif'			=> 'image/tiff',	
-		'svg, svgz'			=> 'image/svg+xml',	
+	#	'svg, svgz'			=> 'image/svg+xml',	
 	),
 	
 	'type_text' => array(
@@ -98,7 +99,12 @@ $lang = array_merge($lang, array(
 	'msg_select_file'	=> 'Bitte eine Datei auswählen!',
 	
 
-	
+	'forms_public'		=> 'Öffentlich',
+	'forms_register'	=> 'Registriert',
+	'forms_trial'		=> 'Trial',
+	'forms_member'		=> 'Mitglieder',
+	'forms_mod'		=> 'Moderatoren',
+	'forms_admin'		=> 'Administrator',
 	
 ));
 

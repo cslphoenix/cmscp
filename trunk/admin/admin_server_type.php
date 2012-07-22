@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_server_type'] )
 	{
-		$module['hm_server']['sm_server_type'] = $root_file;
+		$module['hm_clan']['sm_server_type'] = $root_file;
 	}
 
 	return;
@@ -90,11 +90,7 @@ else
 				}
 				else
 				{
-					$temp = data(SERVER_TYPE, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
-					$data = build_request($temp, $vars, 'type', $error);
+					$data = build_request(SERVER_TYPE, $vars, 'type', $error);
 					
 					if ( !$error )
 					{
@@ -114,10 +110,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				

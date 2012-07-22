@@ -169,6 +169,8 @@ function display_match()
 			$cnt = count($match_last);
 			$cnt_maps = count($maps);
 			
+			$result = '';
+			
 			for ( $i = 0; $i < $cnt; $i++ )
 			{
 				$match_id = $match_last[$i]['match_id'];
@@ -190,6 +192,8 @@ function display_match()
 				$css	= ( $result_clan[$i] != $result_rival[$i] ) ? ( $result_clan[$i] > $result_rival[$i] ) ? WIN : LOSE : DRAW;
 				$name	= $match_last[$i]['match_public'] ? sprintf($lang['sprintf_subnavi_match'], cut_string($match_last[$i]['match_rival_name'], $settings['module_match']['length'])) : sprintf($lang['sprintf_subnavi_match_i'], cut_string($match_last[$i]['match_rival_name'], $settings['length_match']));
 				
+				$result[]	.= ( $result_clan[$i] != $result_rival[$i] ) ? ( $result_clan[$i] > $result_rival[$i] ) ? 1 : -1 : 0;
+				
 				$template->assign_block_vars('sn_match_row', array(
 					'CSS'		=> $css,
 					'CLASS' 	=> $class,
@@ -202,7 +206,10 @@ function display_match()
 		}
 		
 		$template->set_filenames(array('match' => 'navi_match.tpl'));
-		$template->assign_vars(array('CACHE' => ( defined('CACHE') && $settings['module_match']['cache'] ) ? display_cache('dsp_match', 1) : ''));
+		$template->assign_vars(array(
+			'CACHE' => ( defined('CACHE') && $settings['module_match']['cache'] ) ? display_cache('dsp_match', 1) : '',
+			'RESULT' => implode(', ', $result),
+		));
 		$template->assign_var_from_handle('MATCH', 'match');
 	}
 }
@@ -960,7 +967,6 @@ function display_next_match()
 		{
 			$id		= $ary[$i]['match_id'];
 			$name	= $ary[$i]['team_name'];
-			$size	= $ary[$i]['game_size'];
 			$image	= $ary[$i]['game_image'];
 			
 			$name = ( strlen($ary[$i]['match_rival_name']) < 10 ) ? $ary[$i]['match_rival_name'] : substr($ary[$i]['match_rival_name'], 0, 9) . ' ...';
@@ -1010,7 +1016,6 @@ function display_next_training()
 			{
 				$id		= $data[$i]['training_id'];
 				$name	= $data[$i]['team_name'];
-				$size	= $data[$i]['game_size'];
 				$image	= $data[$i]['game_image'];
 				
 				$name = ( strlen($data[$i]['training_vs']) < 10 ) ? $data[$i]['training_vs'] : substr($data[$i]['training_vs'], 0, 9) . ' ...';

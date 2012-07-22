@@ -7,18 +7,8 @@
 <tr>
 	<td width="50%" class="top">
 		<table class="info">
-		<th>
-			<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="#" id="right" onclick="return false;">{L_INFO}</a></li></ul>
-			</div>
-		</th>
-		<th>
-			<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="#" id="current" onclick="return false;">{L_VALUE}</a></li></ul>
-			</div>
-		</th>
+		<th><ul id="navlist"><li><a href="#" id="right" onclick="return false;">{L_INFO}</a></li></ul></th>
+		<th><ul id="navlist"><li><a href="#" id="current" onclick="return false;">{L_VALUE}</a></li></ul></th>
 		<tr>
 			<td>{L_PAGE_STARTED}:</td>
 			<td>{PAGE_STARTED}</td>
@@ -47,18 +37,8 @@
 	</td>
 	<td width="50%" class="top">
 		<table class="info">
-		<th>
-			<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="#" id="right" onclick="return false;">{L_DIR}</a></li></ul>
-			</div>
-		</th>
-		<th>
-			<div id="navcontainer">
-			<ul id="navlist">
-				<li><a href="#" id="current" onclick="return false;">{L_SIZE}</a></li></ul>
-			</div>
-		</th>
+		<th><ul id="navlist"><li><a href="#" id="right" onclick="return false;">{L_DIR}</a></li></ul></th>
+		<th><ul id="navlist"><li><a href="#" id="current" onclick="return false;">{L_SIZE}</a></li></ul></th>
 		<tr>
 			<td>{L_SIZE_CACHE}:</td>
 			<td>{SIZE_CACHE}</td>
@@ -94,8 +74,7 @@
 <table>
 <tr>
 	<td class="top" width="50%">
-		<ul id="navlist">
-			<li><a href="{U_NEWS}" id="current"><img src="{I_NEWS}" width="12" height="12" alt="" />&nbsp;{L_NEWS}</a></li></ul>
+		<ul id="navlist"><li><a href="{U_NEWS}" id="current"><img src="{I_NEWS}" width="12" height="12" alt="" />&nbsp;{L_NEWS}</a></li></ul>
 		<table class="index">
 		<!-- BEGIN news_row -->
 		<tr>
@@ -111,8 +90,7 @@
 		</table>
 	</td>
 	<td class="top" width="50%">
-		<ul id="navlist">
-			<li><a href="{U_EVENT}" id="right"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li></ul>
+		<ul id="navlist"><li><a href="{U_EVENT}" id="right"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li></ul>
 		<table class="index">
 		<!-- BEGIN event_row -->
 		<tr>
@@ -135,8 +113,7 @@
 <table>
 <tr>
 	<td class="top" width="50%">
-		<ul id="navlist">
-			<li><a href="{U_MATCH}" id="current"><img src="{I_MATCH}" width="12" height="12" alt="" />&nbsp;{L_MATCH}</a></li></ul>
+		<ul id="navlist"><li><a href="{U_MATCH}" id="current"><img src="{I_MATCH}" width="12" height="12" alt="" />&nbsp;{L_MATCH}</a></li></ul>
 		<table class="index">
 		<!-- BEGIN match_row -->
 		<tr>
@@ -152,8 +129,7 @@
 		</table>
 	</td>
 	<td class="top" width="50%">
-		<ul id="navlist">
-			<li><a href="{U_TRAIN}" id="right"><img src="{I_TRAIN}" width="12" height="12" alt="" />&nbsp;{L_TRAIN}</a></li></ul>
+		<ul id="navlist"><li><a href="{U_TRAIN}" id="right"><img src="{I_TRAIN}" width="12" height="12" alt="" />&nbsp;{L_TRAIN}</a></li></ul>
 		<table class="index">
 		<!-- BEGIN training_row -->
 		<tr>
@@ -173,8 +149,7 @@
 
 <br />
 
-<ul id="navlist">
-	<li><a href="{U_USERS}" id="current"><img src="{I_USERS}" width="12" height="12" alt="" />&nbsp;{L_USERS}</a></li></ul>
+<ul id="navlist"><li><a href="{U_USERS}" id="current"><img src="{I_USERS}" width="12" height="12" alt="" />&nbsp;{L_USERS}</a></li></ul>
 <table class="index">
 <!-- BEGIN user_row -->
 <tr>

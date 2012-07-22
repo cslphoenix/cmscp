@@ -10,6 +10,7 @@ define('URL', 'url');
 define('TXT', 'text');
 define('ARY', 'array');
 define('CLN', 'clean');
+
 define('ANONYMOUS',	1);
 
 /* Read Types */
@@ -23,7 +24,7 @@ define('WIN',	'win');
 define('LOSE',	'lose');
 define('DRAW',	'draw');
 
-define('TYPE_GAME',	0);
+define('TYPE_GAME',		0);
 define('TYPE_VOICE',	1);
 define('TYPE_OTHER',	2);
 
@@ -108,7 +109,8 @@ define('SECTION_SETTINGS',		555);
 define('SECTION_MENU',			800);
 define('SECTION_DATABASE',		888);
 define('SECTION_FIELDS',		777);
-
+define('SECTION_ICONS',			666);
+define('SECTION_AUTH',			1234567899);
 define('SECTION_CHANGELOG',		998);
 define('SECTION_BUGTRACKER',	999);
 
@@ -180,13 +182,13 @@ define('GROUP_SYSTEM',	4);
 
 //	Auth settings
 define('AUTH_LIST_ALL',	0);
-define('AUTH_ALL',	0);
+define('AUTH_ALL',		0);
 define('AUTH_REG',		1);//	Benutzer
 define('AUTH_TRI',		2);//	Trial
 define('AUTH_MEM',		3);//	Member
 define('AUTH_MOD',		4);//	Moderatoren
-define('AUTH_ACL',		5);//	Privat
-define('AUTH_ADM',		6);//	Administratoren
+define('AUTH_ADM',		5);//	Administratoren
+define('AUTH_UPL',		6);	#	Uploader
 
 define('AUTH_VIEW',				1);//	sehen
 define('AUTH_READ',				2);//	lesen
@@ -205,13 +207,15 @@ define('AUTH_ALLOWED',		1);//	erlaubt
 define('AUTH_SPECIAL',		2);//	Special für Benutzer
 define('AUTH_DEFAULT',		3);//	Vorgabe Einstellung
 
-define('AUTH_GUEST',	0);//	Gast
+define('AUTH_GUEST',		0);//	Gast
 define('AUTH_USER',			1);//	Benutzer
 define('AUTH_TRIAL',		2);//	Trialmember
 define('AUTH_MEMBER',		3);//	Member
 define('AUTH_COLEADER',		4);//	Squadleader
 define('AUTH_LEADER',		5);//	Leader
+define('AUTH_ADMIN',		5);//	Leader
 define('AUTH_UPLOADER',		6);//	Uploader
+define('AUTH_DISABLED',		7);//	Disabled
 
 //	Newsletter Status
 define('NL_ADD',	0);
@@ -260,12 +264,12 @@ define('PROFILE_EMAIL',		3);
 
 /* URL PARAMETERS */
 /* global */
-define('POST_CAT',			'cat');
-define('POST_PIC',			'pic');
+define('POST_CAT',			'c');
+define('POST_PIC',			'p');
 /* special */
-define('POST_GAMES',		'games');
-define('POST_GALLERY',		'gallery');
-define('POST_GROUPS',		'group');
+define('POST_GAMES',		'g');
+define('POST_GALLERY',		'g');
+define('POST_GROUPS',		'g');
 define('POST_NEWS',			'n');
 define('POST_EVENT',		'e');
 
@@ -276,6 +280,12 @@ define('POST_FORUM',		'f');
 define('POST_FORUM_CAT',	'fc');
 define('POST_FORUM_SUB',	'fs');
 define('POST_CALENDAR',		'cal');
+
+
+define('POST_AUTH_USERGROUPS', 'ug');
+
+
+define('POST_SUB',			's');
 
 define('POST_SERVER',		's');
 define('POST_SERVER_TYPE',	'st');
@@ -299,12 +309,13 @@ define('POST_USERS',		'user');
 define('POST_BUGTRACKER',	'bt');
 define('POST_CHANGELOGS',	'cl');
 define('POST_FIELDS',		'f');
+define('POST_ICONS',		'i');
 
 
 define('POST_VOTES',		'vote');
 
 define('POST_DOWNLOADS',		'd');
-define('POST_DOWNLOADS_CAT',	'cat');
+define('POST_DOWNLOADS_CAT',	'c'); # c wie cat
 define('POST_MAPS',			'm');
 define('POST_MAPS_CAT',		'mc');
 
@@ -337,11 +348,16 @@ define('GALLERY',			$db_prefix . 'gallery');
 define('GALLERY_PIC',		$db_prefix . 'gallery_pic');
 
 
+define('FORMS',				$db_prefix . 'forum');
+define('FORMS_AUTH',		$db_prefix . 'forum_auth');
+
+
 define('BANLIST',			$db_prefix . 'banlist');
 define('CAPTCHA',			$db_prefix . 'captcha');
 define('DISALLOW',			$db_prefix . 'disallow');
 define('FORUM_ACCESS',		$db_prefix . 'forum_access');
 define('FORUM_CAT',			$db_prefix . 'forum_cat');
+
 define('FORUM',				$db_prefix . 'forum_forums');
 define('POSTS',				$db_prefix . 'forum_posts');
 define('TOPICS',			$db_prefix . 'forum_topics');
@@ -404,6 +420,8 @@ define('MATCH_TYPE',		$db_prefix . 'match_type');
 
 /* only main site */
 define('BUGTRACKER',		$db_prefix . 'bugtracker');
-define('CHANGELOG',			$db_prefix . 'changelog');						
+define('CHANGELOG',			$db_prefix . 'changelog');
+
+define('ICONS',				$db_prefix . 'icons');
 
 ?>

@@ -13,6 +13,8 @@
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.maxlength.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.custom.css" media="screen" />
 	
+	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.litetabs.css" media="screen" />
+	
 	<!--	
 		Name:		JSColor
 		Version:	1.3.3
@@ -31,6 +33,9 @@
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.lightbox.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.custom.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.maxlength.js"></script>
+	
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.sparkline.min.js"></script>
+	<script type="text/javascript" src="./../includes/js/jquery/jquery.litetabs.js"></script>
 	
 	<script language="javascript" type="text/javascript">
 	// <![CDATA[
@@ -246,6 +251,7 @@
 		$('#config_page_desc').maxlength({max: 255});
 		$('#config_page_disable_msg').maxlength({max: 255});
 		
+	//	$('.tabs').liteTabs({ borders: true, height: 'auto', selectedTab: 1 });
 	});
 	
 	// ]]>

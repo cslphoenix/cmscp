@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['hm_main']['sm_settings'] = $root_file;
+		$module['hm_system']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -234,16 +234,17 @@ else
 					$display_vars = array(
 						'gallery' => array(
 							'tab1'	=> 'gallery',
-							'auth_view'		=> array('type' => 'drop:auth_view',	'validate' => 'int'),
-							'auth_edit'		=> array('type' => 'drop:auth_edit',	'validate' => 'int'),
-							'auth_delete'	=> array('type' => 'drop:auth_delete',	'validate' => 'int'),
-							'auth_rate'		=> array('type' => 'drop:auth_rate',	'validate' => 'int'),
-							'auth_upload'	=> array('type' => 'drop:auth_upload',	'validate' => 'int'),
-							'filesize'		=> array('type' => 'text:4:5',			'validate' => 'int'),
-							'dimension'		=> array('type' => 'double:4:5',		'validate' => 'int'),
-							'format'		=> array('type' => 'double:4:5',		'validate' => 'int'),
-							'preview'		=> array('type' => 'double:4:5',		'validate' => 'int'),
-							'preview_list'	=> array('type' => 'radio:gallery',		'validate' => 'int'),
+						#	'auth_view'		=> array('validate' => ARY,	'type' => 'drop:auth_view',	),
+						#	'auth_edit'		=> array('validate' => ARY,	'type' => 'drop:auth_edit'),
+						#	'auth_delete'	=> array('validate' => ARY,	'type' => 'drop:auth_delete'),
+						#	'auth_rate'		=> array('validate' => ARY,	'type' => 'drop:auth_rate'),
+						#	'auth_upload'	=> array('validate' => ARY,	'type' => 'drop:auth_upload'),
+							'auth'			=> array('validate' => ARY, 'type' => 'drop:auth'),
+							'filesize'		=> array('validate' => INT, 'type' => 'text:4:5'),
+							'dimension'		=> array('validate' => INT, 'type' => 'double:4:5'),
+							'format'		=> array('validate' => INT, 'type' => 'double:4:5'),
+							'preview'		=> array('validate' => INT, 'type' => 'double:4:5'),
+							'preview_list'	=> array('validate' => INT, 'type' => 'radio:gallery'),
 						)
 					);
 					
@@ -570,7 +571,7 @@ else
 						if ( isset($_POST[$settings_name]) && !in_array($settings_name, array('match_war', 'match_type', 'match_league')) )
 						{
 							$request = build_request($settings_name, $display_vars, true, $error);
-						#	debug($request);
+					#		debug($new[$settings_name]);
 							$new[$settings_name] = serialize($request);
 						}
 						

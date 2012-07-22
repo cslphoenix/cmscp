@@ -6,8 +6,8 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['hm_dev']['sm_logs']		= $root_file . "?mode=_log";
-		$module['hm_dev']['sm_logs_error']	= $root_file . "?mode=_error";
+		$module['hm_maintenance']['sm_logs']		= $root_file . "?mode=_log";
+		$module['hm_maintenance']['sm_logs_error']	= $root_file . "?mode=_error";
 	}
 
 	return;

@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_network'] )
 	{
-		$module['hm_main']['sm_network'] = $root_file;
+		$module['hm_system']['sm_network'] = $root_file;
 	}
 	
 	return;
@@ -72,9 +72,9 @@ else
 				
 				$vars = array(
 					'network' => array(
-						'title1' => 'data_input',
-						'network_name'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name', 'check' => true),
-						'network_url'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_url', 'check' => true),
+						'title' => 'data_input',
+						'network_name'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
+						'network_url'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_url'),
 						'network_image'			=> array('validate' => TXT,	'type' => 'upload:network',	'explain' => true, 'params' => $dir_path),
 						'network_type'			=> array('validate' => INT,	'type' => 'radio:network',	'explain' => true, 'params' => true),
 						'network_view'			=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
@@ -102,13 +102,9 @@ else
 				}
 				else
 				{
-					$temp = data(NETWORK, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
 					debug($_POST);
 					
-					$data = build_request($temp, $vars, 'network', $error);
+					$data = build_request(NETWORK, $vars, 'network', $error);
 					
 					debug($data);
 					
@@ -125,9 +121,9 @@ else
 					$pic	= request_file('network_img');
 					
 					
-					$error .= !$data['network_name']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					$error .= !$data['network_url']		? ( $error ? '<br />' : '' ) . $lang['msg_empty_url'] : '';
-					$error .= !$data['network_type']	? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
+					$error[] = !$data['network_name']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error[] = !$data['network_url']		? ( $error ? '<br />' : '' ) . $lang['msg_empty_url'] : '';
+					$error[] = !$data['network_type']	? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
 					
 					$data['network_image'] = ( !request('network_image_delete', 1) ) ? ( ( !$pic ) ? $data['network_image'] : image_upload($mode, 'image_network', 'network_image', '', $data['network_image'], '', $dir_path, $pic['temp'], $pic['name'], $pic['size'], $pic['type'], $error) ) : image_delete($data['network_image'], '', $dir_path, 'network_image');
 					*/
@@ -155,10 +151,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				

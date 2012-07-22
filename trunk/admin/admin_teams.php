@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_teams'] )
 	{
-		$module['hm_teams']['sm_settings'] = $root_file;
+		$module['hm_usergroups']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -127,11 +127,7 @@ else
 				}
 				else
 				{
-					$temp = data(TEAMS, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
-					$data = build_request($temp, $vars, 'team', $error);
+					$data = build_request(TEAMS, $vars, 'team', $error);
 					
 					if ( !$error )
 					{
@@ -156,10 +152,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				
@@ -440,7 +433,7 @@ else
 							{
 								$db->sql_freeresult($result);
 								
-								$error .= $lang['msg_select_nomembers'];
+								$error[] = $lang['msg_select_nomembers'];
 							}
 							
 							do
@@ -474,7 +467,7 @@ else
 						
 						if ( !$add_id_ary )
 						{
-							$error .= $lang['msg_select_nomembers'];
+							$error[] = $lang['msg_select_nomembers'];
 						}
 						
 						if (sizeof($add_id_ary))

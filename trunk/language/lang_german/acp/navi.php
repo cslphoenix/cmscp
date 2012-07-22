@@ -62,6 +62,15 @@ $lang = array_merge($lang, array(
 	'teams_length_explain'		=> '',
 
 ));
+
+$lang = array_merge($lang, array(
+	
+	'radio:target'	=> array(1 => $lang['target_new'], 0 => $lang['target_self']),
+	'radio:type'	=> array(1 => $lang['main'], 2 => $lang['clan'], 3 => $lang['com'], 4 => $lang['misc'], 5 => $lang['user']),
+
+));
+
+
 /*
 $lang['click_return_navigation']		= '<br><br><strong>%s&laquo; Navigations Administration%s</strong>';		
 $lang['click_return_navigation_set']	= '<br><br><strong>%s&laquo; Subnavigations Administration%s</strong>';			

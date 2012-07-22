@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['hm_main']['sm_profile'] = $root_file;
+		$module['hm_system']['sm_profile2'] = $root_file;
 	}
 	
 	return;
@@ -185,8 +185,8 @@ else
 				
 				if ( request('submit', TXT) )
 				{
-					$error .= ( !$data['profile_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
-					$error .= ( !$data['profile_field'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_profilefield'] : '';
+					$error[] = ( !$data['profile_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
+					$error[] = ( !$data['profile_field'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_profilefield'] : '';
 					
 					if ( !$error )
 					{
@@ -228,10 +228,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 				}
 				
@@ -341,7 +338,7 @@ else
 					
 					$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(PROFILE_CAT, 'cat_order', false) : $data['cat_order'];
 					
-					$error .= ( !$data['cat_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error[] = ( !$data['cat_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					
 					if ( !$error )
 					{
@@ -376,10 +373,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 				}
 				

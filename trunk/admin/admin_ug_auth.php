@@ -6,12 +6,12 @@ if( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user_perm'] )
 	{
-		$module['hm_users']['sm_perm'] = $root_file . "?mode=user";
+		$module['hm_usergroups']['sm_uperm'] = $root_file . "?mode=user";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_groups_perm'] )
 	{
-		$module['hm_groups']['sm_perm'] = $root_file . "?mode=group";
+		$module['hm_usergroups']['sm_gperm'] = $root_file . "?mode=group";
 	}
 
 	return;
@@ -26,7 +26,7 @@ else
 	$root_path = './../';
 	require('./pagestart.php');
 	
-	$params = array('mode' => 'mode', 'user_id' => POST_USER_URL, 'group_id' => POST_GROUPS_URL, 'adv' => 'adv');
+	$params = array('mode' => 'mode', 'user_id' => POST_USER, 'group_id' => POST_GROUPS, 'adv' => 'adv');
 	
 	while( list($var, $param) = @each($params) )
 	{
@@ -135,8 +135,7 @@ else
 			FROM " . GROUPS_USERS . " ug, " . USERS . " u, " . GROUPS . " g
 			WHERE u.user_id = $user_id 
 				AND ug.user_id = u.user_id 
-				AND g.group_id = ug.group_id 
-				AND g.group_single_user = " . TRUE;
+				AND g.group_id = ug.group_id";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'Could not select info from user/user_group table', '', __LINE__, __FILE__, $sql);
@@ -498,7 +497,7 @@ else
 				}
 				$db->sql_freeresult($result);
 	
-				$sql = ( $mode == 'user' ) ? "SELECT aa.* FROM " . FORUM_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = " . TRUE : "SELECT * FROM " . FORUM_ACCESS . " WHERE group_id = $group_id";
+				$sql = ( $mode == 'user' ) ? "SELECT aa.* FROM " . FORUM_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id" : "SELECT * FROM " . FORUM_ACCESS . " WHERE group_id = $group_id";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
@@ -804,8 +803,8 @@ else
 			}
 		}
 	
-		$sql = "SELECT u.user_id, u.user_name, u.user_level, g.group_id, g.group_name, g.group_single_user, ug.user_pending FROM " . USERS . " u, " . GROUPS . " g, " . GROUPS_USERS . " ug WHERE ";
-		$sql .= ( $mode == 'user' ) ? "u.user_id = $user_id AND ug.user_id = u.user_id AND g.group_id = ug.group_id AND g.group_single_user = 0" : "g.group_id = $group_id AND ug.group_id = g.group_id AND u.user_id = ug.user_id";
+		$sql = "SELECT u.user_id, u.user_name, u.user_level, g.group_id, g.group_name, ug.user_pending FROM " . USERS . " u, " . GROUPS . " g, " . LISTS . " ug WHERE ";
+		$sql .= ( $mode == 'user' ) ? "u.user_id = $user_id AND ug.user_id = u.user_id AND g.group_id = ug.list_id" : "g.group_id = $group_id AND ug.list_id = g.group_id AND u.user_id = ug.user_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, "Couldn't obtain user/group information", "", __LINE__, __FILE__, $sql);
@@ -817,7 +816,7 @@ else
 		}
 		$db->sql_freeresult($result);
 	
-		$sql = ( $mode == 'user' ) ? "SELECT aa.*, g.group_single_user FROM " . FORUM_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id AND g.group_single_user = 1" : "SELECT * FROM " . FORUM_ACCESS . " WHERE group_id = $group_id";
+		$sql = ( $mode == 'user' ) ? "SELECT aa.* FROM " . FORUM_ACCESS . " aa, " . GROUPS_USERS . " ug, " . GROUPS. " g WHERE ug.user_id = $user_id AND g.group_id = ug.group_id AND aa.group_id = ug.group_id" : "SELECT * FROM " . FORUM_ACCESS . " WHERE group_id = $group_id";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, "Couldn't obtain user/group permissions", "", __LINE__, __FILE__, $sql);
@@ -1047,7 +1046,7 @@ else
 		{
 			for($i = 0; $i < count($ug_info); $i++)
 			{
-				$ug = ( $mode == 'user' ) ? 'group&amp;' . POST_GROUPS_URL : 'user&amp;' . POST_USER;
+				$ug = ( $mode == 'user' ) ? 'group&amp;' . POST_GROUPS : 'user&amp;' . POST_USER;
 	
 				if (!$ug_info[$i]['user_pending'])
 				{
@@ -1089,7 +1088,7 @@ else
 		//
 	
 		$template->set_filenames(array(
-			'body' => './../admin/style/auth_ug_body.tpl')
+			'body' => 'style/auth_ug_body.tpl')
 		);
 	
 		$adv_switch = ( empty($adv) ) ? 1 : 0;
@@ -1181,8 +1180,7 @@ else
 		else
 		{
 			$sql = 'SELECT group_id, group_name
-						FROM ' . GROUPS . '
-						WHERE group_single_user <> ' . TRUE;
+						FROM ' . GROUPS;
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, "Couldn't get group list", "", __LINE__, __FILE__, $sql);

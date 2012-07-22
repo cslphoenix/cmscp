@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] || $userauth['auth_news_public'] )
 	{
-		$module['hm_news']['sm_news'] = $root_file;
+		$module['hm_system']['sm_news'] = $root_file;
 	}
 	
 	return;
@@ -141,11 +141,7 @@ else
 				}
 				else
 				{
-					$temp = data(NEWS, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
-					$data = build_request($temp, $vars, 'news', $error);
+					$data = build_request(NEWS, $vars, 'news', $error);
 					
 					debug($data);
 					/*
@@ -201,10 +197,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 				}
 				
@@ -293,9 +286,9 @@ else
 				/*
 				if ( request('submit', TXT) )
 				{
-					$error .= ( !$data['news_title'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_title'] : '';
-					$error .= ( !$data['news_cat'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_cat'] : '';
-					$error .= ( !$data['news_text'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_text'] : '';
+					$error[] = ( !$data['news_title'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_title'] : '';
+					$error[] = ( !$data['news_cat'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_cat'] : '';
+					$error[] = ( !$data['news_text'] )	? ( $error ? '<br />' : '' ) . $lang['msg_empty_text'] : '';
 					
 					if ( !$error )
 					{
@@ -358,10 +351,7 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}					
 				}
 				*/

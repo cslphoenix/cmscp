@@ -189,7 +189,7 @@ if ( $cats )
 								$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
 								$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 	
-								$template->assign_block_vars('catrow.forum_row',	array(
+								$template->assign_block_vars('cat_row.forum_row',	array(
 									'ROW_COLOR' => '#' . $row_color,
 									'ROW_CLASS' => $row_class,
 									'FORUM_FOLDER_IMG' => $folder_image, 
@@ -211,7 +211,7 @@ if ( $cats )
 										
 										if ( $forum_id == $subforms[$k]['forum_sub'] )
 										{
-											$template->assign_block_vars('catrow.forumrow._subforum_row', array(
+											$template->assign_block_vars('cat_row.forum_row.subforum_row', array(
 												'NAME' => $subforms[$k]['forum_name'],
 											));
 										}
