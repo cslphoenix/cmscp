@@ -31,7 +31,7 @@ function SelectAll(id)
 </tr>
 <!-- BEGIN option -->
 <tr>
-	<td class="row1{default.row.tab.option.CSS}"><label for="{default.row.tab.option.LABEL}" {default.row.tab.option.EXPLAIN}>{default.row.tab.option.L_NAME}:</label></td>
+	<td class="{default.row.tab.option.CSS}"><label for="{default.row.tab.option.LABEL}" {default.row.tab.option.EXPLAIN}>{default.row.tab.option.L_NAME}:</label></td>
 	<td class="row2">{default.row.tab.option.OPTION}</td>
 </tr>
 <!-- END option -->

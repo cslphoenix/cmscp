@@ -110,7 +110,7 @@ switch ( $mode )
 					case MOD:	$level = img('i_icon', 'icon_level_mod', 'auth_mod');		break;
 					case ADMIN:	$level = img('i_icon', 'icon_level_admin', 'auth_admin');	break;
 				}
-					
+				
 				$template->assign_block_vars('event_row', array(
 					'TITLE'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_event'] ) ? href('a_txt', 'admin_event.php', array('mode' => 'update', $url_event => $id), $title, $title) : $title,
 					
@@ -323,6 +323,131 @@ switch ( $mode )
 		
 	#	$cache_dir_tmp = array_diff(scandir($root_path . $settings['path_cache']), array('.', '..', '.htaccess'));
 	#	$cache_dir_tmp = implode(', ', $cache_dir_tmp);
+	
+		/* added 11.07.2012
+		$year = '2009';
+		
+		for ( $i = 1; $i < 13; $i++ ) 
+		{
+			$i = ( $i < 10 ) ? "0$i" : $i;
+			
+			$dates = date("t", mktime(0, 0, 0, $i, 1, $year));
+			
+			for ( $j = 1; $j < $dates+1; $j++ )
+			{
+				$j = ( $j < 10 ) ? "0$j" : $j;
+				
+				$sql = "SELECT counter_date, counter_entry FROM " . COUNTER_COUNTER . " WHERE MONTH(counter_date) = $i AND DAYOFMONTH(counter_date) = $j AND YEAR(counter_date) = $year";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$row = $db->sql_fetchrow($result);
+				
+				$c09["{$year}-{$i}-{$j}"] = isset($row['counter_entry']) ? $row['counter_entry'] : '0';
+			}
+		}
+		
+		$year = '2010';
+		
+		for ( $i = 1; $i < 13; $i++ ) 
+		{
+			$i = ( $i < 10 ) ? "0$i" : $i;
+			
+			$dates = date("t", mktime(0, 0, 0, $i, 1, $year));
+			
+			for ( $j = 1; $j < $dates+1; $j++ )
+			{
+				$j = ( $j < 10 ) ? "0$j" : $j;
+				
+				$sql = "SELECT counter_date, counter_entry FROM " . COUNTER_COUNTER . " WHERE MONTH(counter_date) = $i AND DAYOFMONTH(counter_date) = $j AND YEAR(counter_date) = $year";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$row = $db->sql_fetchrow($result);
+				
+				$c10["{$year}-{$i}-{$j}"] = isset($row['counter_entry']) ? $row['counter_entry'] : '0';
+			}
+		}
+		
+		$year = '2011';
+		
+		for ( $i = 1; $i < 13; $i++ ) 
+		{
+			$i = ( $i < 10 ) ? "0$i" : $i;
+			
+			$dates = date("t", mktime(0, 0, 0, $i, 1, $year));
+			
+			for ( $j = 1; $j < $dates+1; $j++ )
+			{
+				$j = ( $j < 10 ) ? "0$j" : $j;
+				
+				$sql = "SELECT counter_date, counter_entry FROM " . COUNTER_COUNTER . " WHERE MONTH(counter_date) = $i AND DAYOFMONTH(counter_date) = $j AND YEAR(counter_date) = $year";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$row = $db->sql_fetchrow($result);
+				
+				$c11["{$year}-{$i}-{$j}"] = isset($row['counter_entry']) ? $row['counter_entry'] : '0';
+			}
+		}
+		
+		$year = '2012';
+		
+		for ( $i = 1; $i < 13; $i++ ) 
+		{
+			$i = ( $i < 10 ) ? "0$i" : $i;
+			
+			$dates = date("t", mktime(0, 0, 0, $i, 1, $year));
+			
+			for ( $j = 1; $j < $dates+1; $j++ )
+			{
+				$j = ( $j < 10 ) ? "0$j" : $j;
+				
+				$sql = "SELECT counter_date, counter_entry FROM " . COUNTER_COUNTER . " WHERE MONTH(counter_date) = $i AND DAYOFMONTH(counter_date) = $j AND YEAR(counter_date) = $year";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$row = $db->sql_fetchrow($result);
+				
+				$c12["{$year}-{$i}-{$j}"] = isset($row['counter_entry']) ? $row['counter_entry'] : '0';
+			}
+		}
+		
+		debug(count($c09));
+		debug(count($c10));
+		debug(count($c11));
+		debug(count($c12));
+		*/
+		
+		$sql = 'SELECT * FROM cms_counter_counter WHERE YEAR(counter_date) = \'2010\'';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$rows_10 = $db->sql_fetchrowset($result);
+		
+		$sql = 'SELECT * FROM cms_counter_counter WHERE YEAR(counter_date) = \'2011\'';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$rows_11 = $db->sql_fetchrowset($result);
+		
+		$sql = 'SELECT * FROM cms_counter_counter WHERE YEAR(counter_date) = \'2012\'';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$rows_12 = $db->sql_fetchrowset($result);
+	
+	#	debug(count($rows_09));
+	#	debug(count($rows_10));
+	#	debug(count($rows_11));
+	#	debug(count($rows_12));
 	
 		$template->assign_vars(array(
 			'L_WELCOME'	=> $lang['index'],

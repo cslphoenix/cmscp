@@ -114,6 +114,8 @@
 	<script type="text/javascript" src="./includes/js/jquery/jquery.lightbox.js"></script>
 	<script type="text/javascript" src="./includes/js/jquery/jquery.atooltip.js"></script>
 	
+	<script type="text/javascript" src="./includes/js/jquery/jquery.sparkline.min.js"></script>
+	
 	<script type="text/javascript" language="javascript">
 	
 	$(document).ready(function()

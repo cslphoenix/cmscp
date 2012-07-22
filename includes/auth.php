@@ -353,7 +353,7 @@ function auth_acp_check($user_id)
 
 	$auth_user = unserialize($userdata['user_gauth']);
 	
-	$sql = "SELECT g.group_id, g.auth_data
+	$sql = "SELECT g.group_id, g.group_auth
 				FROM " . GROUPS . " g, " . LISTS . " ul
 				WHERE g.group_id = ul.type_id
 					AND ul.type = " . TYPE_GROUP . "
@@ -369,7 +369,7 @@ function auth_acp_check($user_id)
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$auth_group[$row['group_id']] = unserialize($row['auth_data']);
+		$auth_group[$row['group_id']] = unserialize($row['group_auth']);
 	}
 	$db->sql_freeresult($result);
 	

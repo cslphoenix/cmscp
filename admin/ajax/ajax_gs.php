@@ -16,10 +16,10 @@ require($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-if ( isset($_POST['server']) || isset($_POST['hltv']) )
+if ( isset($_POST['match_server_ip']) || isset($_POST['match_hltv_ip']) )
 {
-	$fill = ( isset($_POST['server']) ) ? 'set_server' : 'set_hltv';
-	$post = ( isset($_POST['server']) ) ? $_POST['server'] : $_POST['hltv'];
+	$fill = ( isset($_POST['match_server_ip']) ) ? 'set_match_server_ip' : 'set_match_hltv_ip';
+	$post = ( isset($_POST['match_server_ip']) ) ? $_POST['match_server_ip'] : $_POST['match_hltv_ip'];
 	
 	$post = str_replace("'", "\'", $post);
 	$post = str_replace('*', '%', strtolower($post));
@@ -32,8 +32,6 @@ if ( isset($_POST['server']) || isset($_POST['hltv']) )
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		$tmp_s = $db->sql_fetchrowset($result);
-		
-		debug($tmp_s);
 		
 		$sql = "SELECT DISTINCT match_server_ip FROM " . MATCH . " WHERE match_server_ip LIKE '%$post%'";
 		if ( !($result = $db->sql_query($sql)) )

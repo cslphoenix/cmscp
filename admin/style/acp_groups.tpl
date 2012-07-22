@@ -1,74 +1,47 @@
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td><span class="right">{display.row.COUNT}</span>{display.row.NAME}</td>
-	<td>{display.row.MEMBER}{display.row.MOVE_UP}{display.row.MOVE_DOWN}{display.row.UPDATE}{display.row.DELETE}</td>
-</tr>
-<!-- END row -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="group_name" /></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END display -->
-
 <!-- BEGIN input -->
 <script type="text/JavaScript">
-// <![CDATA[
-
-function lookup(user_name)
+<!-- BEGIN ajax -->
+function look_{input.ajax.NAME}({input.ajax.NAME}, user_new, user_level)
 {
-	if ( user_name.length == 0 )
+	if ( {input.ajax.NAME}.length == 0 )
 	{
-		$('#suggestions').hide();
+		$('#{input.ajax.NAME}').hide();
 	}
 	else
 	{
-		$.post("./ajax/ajax_user.php", {user_name: ""+user_name+""}, function(data) {
+		$.post("./ajax/{input.ajax.FILE}", {{input.ajax.NAME}: ""+{input.ajax.NAME}+"", user_new: ""+user_new+"", user_level: ""+user_level+""}, function(data) {
 				if ( data.length > 0 )
 				{
-					$('#suggestions').show();
-					$('#autoSuggestionsList').html(data);
+					$('#{input.ajax.NAME}').show();
+					$('#auto_{input.ajax.NAME}').html(data);
 				}
 			}
 		);
 	}
 }
-
-function fill(thisValue)
+function set_{input.ajax.NAME}(thisValue)
 {
-	$('#user_name').val(thisValue);
-	setTimeout("$('#suggestions').hide();", 200);
+	$('#group_{input.ajax.NAME}').val(thisValue);
+	setTimeout("$('#{input.ajax.NAME}').hide();", 200);
 }
+<!-- END ajax -->
+function set_infos(id,text)
+{
+	var obj = document.getElementById(id).value = text;
+}
+</script>
+<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 
-function activated()
+<script type="text/JavaScript">
+// <![CDATA[
+function check_yes()
 {
 	<!-- BEGIN auth -->
-	document.getElementById("{_auth.FIELDS}").checked = true;
+	document.getElementById("{input.auth.FIELDS}").checked = true;
 	<!-- END auth -->
 }
 
-function deactivated()
+function check_no()
 {
 	var radios = document.forms["post"].elements["deactivated"];
 	
@@ -80,7 +53,6 @@ function deactivated()
 
 // ]]>
 </script>
-<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
@@ -92,6 +64,26 @@ function deactivated()
 
 <br /><div align="center">{ERROR_BOX}</div>
 
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<table class="update">
+<!-- BEGIN tab -->
+<tr>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
+</tr>
+<!-- BEGIN option -->
+<tr>
+	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{input.row.tab.option.OPTION}</td>
+</tr>
+<!-- END option -->
+<!-- END tab -->
+</table>
+<!-- END row -->
+
+<!--
 <ul id="navlist">
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_DATA}</a></li>
 	<li><a href="#" id="right" onclick="return false;">{L_AUTH}</a></li>
@@ -104,7 +96,7 @@ function deactivated()
 			<td class="row1r"><label for="group_name">{L_NAME}:</label></td>
 			<td class="row2"><input type="text" name="group_name" id="group_name" value="{NAME}"></td>
 		</tr>
-		<!-- BEGIN create -->
+		<!-- BEGIN create ->
 		<tr>
 			<td class="row1r"><label for="user_name">{L_MOD}:</label></td>
 			<td class="row2"><input type="text" name="user_id" id="user_name" value="{MOD}" onkeyup="lookup(this.value);" onblur="fill();" autocomplete="off">
@@ -113,7 +105,7 @@ function deactivated()
 				</div>
 			</td>
 		</tr>
-		<!-- END create -->
+		<!-- END create ->
 		<tr>
 			<td class="row1"><label for="group_access">{L_ACCESS}:</label></td>
 			<td class="row2">{S_ACCESS}</td>
@@ -138,12 +130,12 @@ function deactivated()
 			<td class="row1"><label for="rank_id">{L_RANK}:</label></td>
 			<td class="row2">{S_RANK}</td>
 		</tr>
-		<!-- BEGIN image -->
+		<!-- BEGIN image ->
 		<tr>
 			<td class="row1">{L_IMAGE_CURRENT}:</td>
 			<td class="row2"><img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="group_image_delete">&nbsp;{L_IMAGE_DELETE}</td>
 		</tr>
-		<!-- END image -->
+		<!-- END image ->
 		<tr>
 			<td class="row1"><label for="ufile">{L_IMAGE_UPLOAD}:</label></td>
 			<td class="row2"><input type="file" class="post" name="group_img" /></td>
@@ -156,12 +148,12 @@ function deactivated()
 	</td>
 	<td valign="top" nowrap="nowrap">
 		<table class="update3">
-		<!-- BEGIN auth -->
+		<!-- BEGIN auth ->
 		<tr>
 			<td class="row1"><label for="{_input._auth.FIELDS}">{_input._auth.TITLE}:</label></td>
 			<td class="row2">{_input._auth.SELECT}</td>
 		</tr>
-		<!-- END auth -->
+		<!-- END auth ->
 		<tr>
 			<td class="row2 right"><a href="#" onclick="activated(); return false;">{L_MARK_YES}</a></td>
 			<td class="row2"><a href="#" onclick="deactivated(); return false;">{L_MARK_NO}</a></td>
@@ -175,7 +167,7 @@ function deactivated()
 </table>
 
 <br/>
-
+-->
 <table class="submit">
 <tr>
 	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
@@ -328,3 +320,33 @@ function deactivated()
 {S_FIELDS}
 </form>
 <!-- END overview -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li><li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li></ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span class="right">{display.row.COUNT}</span>{display.row.NAME}</td>
+	<td>{display.row.MEMBER}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+</tr>
+<!-- END row -->
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="group_name" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

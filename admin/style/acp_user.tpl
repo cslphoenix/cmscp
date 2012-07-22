@@ -1,66 +1,3 @@
-<!-- BEGIN display -->
-<script type="text/JavaScript">
-
-function lookup(user_name, user_new, user_level)
-{
-	if ( user_name.length == 0 ) { $('#suggestions').hide(); }
-	else
-	{
-		$.post("./ajax/ajax_user.php", {user_name: ""+user_name+"", user_new: ""+user_new+"", user_level: ""+user_level+""}, function(data)
-		{
-			if ( data.length > 0 )
-			{
-				$('#suggestions').show();
-				$('#autoSuggestionsList').html(data);
-			}
-		});
-	}
-}
-
-function fill(thisValue)
-{
-	$('#user_name').val(thisValue);
-	setTimeout("$('#suggestions').hide();", 200);
-}
-
-</script>
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
-
-<table class="rows">
-<tr>
-	<th>{L_NAME}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td><span class="right">{display.row.LEVEL}&nbsp;&bull;&nbsp;{display.row.REGISTER}</span>{display.row.USERNAME}</td>
-	<td>{display.row.AUTH}{display.row.FIELD}{display.row.GROUP}{display.row.UPDATE}{display.row.DELETE}</td>		
-</tr>
-<!-- END row -->
-</table>
-
-<table class="footer">
-<tr>
-	<td>
-		<input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 1, INT);" onblur="fill();" autocomplete="off"> <input type="submit" class="button2" value="{L_UPDATE} / {L_CREATE}">
-		<div class="suggestionsBox" id="suggestions" style="display:none;">
-			<div class="suggestionList" id="autoSuggestionsList"></div>
-		</div>
-	</td>
-	<td></td>
-	<td></td>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END display -->
-
 <!-- BEGIN head -->
 <form action="{S_ACTION}" method="post">
 <ul id="navlist">
@@ -167,12 +104,12 @@ function fill(thisValue)
 <table class="update">
 <!-- BEGIN tab -->
 <tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{_input.row._tab.L_LANG}</a></li></ul></th>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
 <!-- BEGIN option -->
 <tr>
-	<td class="row1{_settings.row.tab.option.CSS}"><label for="{_settings.row.tab.option.LABEL}" {_settings.row.tab.option.EXPLAIN}>{_settings.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{_settings.row.tab.option.OPTION}</td>
+	<td class="row1{settings.row.tab.option.CSS}"><label for="{settings.row.tab.option.LABEL}" {settings.row.tab.option.EXPLAIN}>{settings.row.tab.option.L_NAME}:</label></td>
+	<td class="row2">{settings.row.tab.option.OPTION}</td>
 </tr>
 <!-- END option -->
 <!-- END tab -->
@@ -199,24 +136,24 @@ function fill(thisValue)
 </tr>
 <!-- BEGIN cat_row -->
 <tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{_fields.catrow.CAT_NAME}</a></li></ul></th>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{fields.catrow.CAT_NAME}</a></li></ul></th>
 </tr>
 <!-- BEGIN field_row -->
 <tr> 
-	<td class="row1">{_fields.catrow.fieldrow.NAME}</td>
-	<td class="row2">{_fields.catrow.fieldrow.INPUT}</td>
+	<td class="row1">{fields.catrow.fieldrow.NAME}</td>
+	<td class="row2">{fields.catrow.fieldrow.INPUT}</td>
 </tr>
 <!-- END field_row -->
 <!-- END cat_row -->
 
 <!-- BEGIN cat -->
 <tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{_fields._cat.CAT_NAME}</a></li></ul></th>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{fields.cat.CAT_NAME}</a></li></ul></th>
 </tr>
 <!-- BEGIN field -->
 <tr> 
-	<td class="row1{_fields._cat._field.REQ}">{_fields._cat._field.NAME}:</td>
-	<td class="row2">{_fields._cat._field.INPUT}</td>
+	<td class="row1{fields.cat.field.REQ}">{fields.cat.field.NAME}:</td>
+	<td class="row2">{fields.cat.field.INPUT}</td>
 </tr>
 <!-- END field -->
 <!-- END cat -->
@@ -254,8 +191,8 @@ function activate_checkbox(name)
 <table class="update2">
 <!-- BEGIN group_row -->
 <tr>
-	<td class="row1"><label for="{_groups._grouprow.GROUP_FIELD}" title="{_groups._grouprow.GROUP_INFO}">{_groups._grouprow.GROUP_NAME}:</label></td>
-	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_group_{_groups._grouprow.S_MARK_ID}');" name="{_groups._grouprow.S_MARK_NAME}" id="{_groups._grouprow.GROUP_FIELD}" value="{_groups._grouprow.S_MARK_ID}" {_groups._grouprow.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{_groups._grouprow.S_MARK_ID}');" name="{_groups._grouprow.S_MARK_NAME}" value="{_groups._grouprow.S_NEG_MARK_ID}" {_groups._grouprow.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{_groups._grouprow.S_MARK_ID}" name="mod_group_{_groups._grouprow.S_MARK_ID}" {_groups._grouprow.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{_groups._grouprow.RIGHT} {_groups._grouprow.U_USER_PENDING}
+	<td class="row1"><label for="{groups.group_row.GROUP_FIELD}" title="{groups.group_row.GROUP_INFO}">{groups.group_row.GROUP_NAME}:</label></td>
+	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_group_{groups.group_row.S_MARK_ID}');" name="{groups.group_row.S_MARK_NAME}" id="{groups.group_row.GROUP_FIELD}" value="{groups.group_row.S_MARK_ID}" {groups.group_row.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.group_row.S_MARK_ID}');" name="{groups.group_row.S_MARK_NAME}" value="{groups.group_row.S_NEG_MARK_ID}" {groups.group_row.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.group_row.S_MARK_ID}" name="mod_group_{groups.group_row.S_MARK_ID}" {groups.group_row.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.group_row.RIGHT} {groups.group_row.U_USER_PENDING}
 	</td>
 </tr>
 <!-- END group_row -->
@@ -274,8 +211,8 @@ function activate_checkbox(name)
 </tr>
 <!-- BEGIN team_row -->
 <tr>
-	<td class="row1">{_groups._teamrow.U_TEAM_NAME}</td>
-	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_team_{_groups._teamrow.S_MARK_ID}');" name="{_groups._teamrow.S_MARK_NAME}" value="{_groups._teamrow.S_MARK_ID}" {_groups._teamrow.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{_groups._teamrow.S_MARK_ID}');" name="{_groups._teamrow.S_MARK_NAME}" value="{_groups._teamrow.S_NEG_MARK_ID}" {_groups._teamrow.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{_groups._teamrow.S_MARK_ID}" name="mod_team_{_groups._teamrow.S_MARK_ID}" {_groups._teamrow.S_MOD_TEAM} />&nbsp;{L_MOD}</label></td>
+	<td class="row1">{groups.team_row.U_TEAM_NAME}</td>
+	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_team_{groups.team_row.S_MARK_ID}');" name="{groups.team_row.S_MARK_NAME}" value="{groups.team_row.S_MARK_ID}" {groups.team_row.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.team_row.S_MARK_ID}');" name="{groups.team_row.S_MARK_NAME}" value="{groups.team_row.S_NEG_MARK_ID}" {groups.team_row.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.team_row.S_MARK_ID}" name="mod_team_{groups.team_row.S_MARK_ID}" {groups.team_row.S_MOD_TEAM} />&nbsp;{L_MOD}</label></td>
 </tr>
 <!-- END team_row -->
 <tr>
@@ -306,16 +243,16 @@ function activate_checkbox(name)
 function activated()
 {
 	<!-- BEGIN list -->
-	document.getElementById("{_auth._list.NAME}").checked = true;
-	document.getElementById("color_{_auth._list.NAME}").style.color = '#2e8b57';
+	document.getElementById("{auth.list.NAME}").checked = true;
+	document.getElementById("color_{auth.list.NAME}").style.color = '#2e8b57';
 	<!-- END list -->
 }
 
 function deactivated()
 {
 	<!-- BEGIN list -->
-	document.getElementById("de_{_auth._list.NAME}").checked = true;
-	document.getElementById("color_{_auth._list.NAME}").style.color = '#ff6347';
+	document.getElementById("de_{auth.list.NAME}").checked = true;
+	document.getElementById("color_{auth.list.NAME}").style.color = '#ff6347';
 	<!-- END list -->
 }
 
@@ -334,8 +271,8 @@ function set_color(name,farbe)
 <table class="update2">
 <!-- BEGIN data -->
 <tr>
-	<td class="row1"><label for="{_auth._data.NAME}">{_auth._data.TITLE}</label></td>
-	<td class="row2" {_auth._data.STATUS} id="color_{_auth._data.NAME}" nowrap="nowrap">{_auth._data.S_SELECT} {_auth._data.S_DEFAULT}</td>
+	<td class="row1"><label for="{auth.data.NAME}">{auth.data.TITLE}</label></td>
+	<td class="row2" {auth.data.STATUS} id="color_{auth.data.NAME}" nowrap="nowrap">{auth.data.S_SELECT} {auth.data.S_DEFAULT}</td>
 </tr>
 <!-- END data -->
 <tr>
@@ -355,3 +292,66 @@ function set_color(name,farbe)
 {S_FIELDS}
 </form>
 <!-- END auth -->
+
+<!-- BEGIN display -->
+<script type="text/JavaScript">
+
+function lookup(user_name, user_new, user_level)
+{
+	if ( user_name.length == 0 ) { $('#suggestions').hide(); }
+	else
+	{
+		$.post("./ajax/ajax_user.php", {user_name: ""+user_name+"", user_new: ""+user_new+"", user_level: ""+user_level+""}, function(data)
+		{
+			if ( data.length > 0 )
+			{
+				$('#suggestions').show();
+				$('#autoSuggestionsList').html(data);
+			}
+		});
+	}
+}
+
+function fill(thisValue)
+{
+	$('#user_name').val(thisValue);
+	setTimeout("$('#suggestions').hide();", 200);
+}
+
+</script>
+<form action="{S_ACTION}" method="post">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+<table class="rows">
+<tr>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span class="right">{display.row.LEVEL}&nbsp;&bull;&nbsp;{display.row.REGISTER}</span>{display.row.USERNAME}</td>
+	<td>{display.row.AUTH}{display.row.FIELD}{display.row.GROUP}{display.row.UPDATE}{display.row.DELETE}</td>		
+</tr>
+<!-- END row -->
+</table>
+
+<table class="footer">
+<tr>
+	<td>
+		<input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 1, 0);" onblur="fill();" autocomplete="off"> <input type="submit" class="button2" value="{L_UPDATE} / {L_CREATE}">
+		<div class="suggestionsBox" id="suggestions" style="display:none;">
+			<div class="suggestionList" id="autoSuggestionsList"></div>
+		</div>
+	</td>
+	<td></td>
+	<td></td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

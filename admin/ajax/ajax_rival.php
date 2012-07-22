@@ -12,10 +12,9 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-
-if ( isset($_POST['rival_name']) )
+if ( isset($_POST['match_rival_name']) )
 {
-	$rival = str_replace("'", "\'", $_POST['rival_name']);
+	$rival = str_replace("'", "\'", $_POST['match_rival_name']);
 	$rival = str_replace('*', '%', strtolower($rival));
 		
 	if ( strlen($rival) > 0 )
@@ -47,7 +46,7 @@ if ( isset($_POST['rival_name']) )
 				else	{ $logohp = ''; }
 				
 			#	echo '<li onClick="set_rival(\'' . $tmp[$i]['match_rival_name'] . '\'); set_infos(\'match_rival_tag\', \'' . $tmp[$i]['match_rival_tag'] . '\'); set_infos(\'match_rival_url\', \'' . $tmp[$i]['match_rival_url'] . '\'); set_infos(\'match_rival_logo\', \'' . $tmp[$i]['match_rival_logo'] . '\');">' . $tmp[$i]['match_rival_name'] . '</li>';
-				echo "<li onClick=\"set_rival_name('$name'); set_infos('match_match_rival_tag', '$tag'); set_infos('match_match_rival_url', '$url'); set_infos('match_match_rival_logo', '$logo');\">$name <span style=\"font-size:10px;\">$logohp</span></li>";
+				echo "<li onClick=\"set_match_rival_name('$name'); set_infos('match_match_rival_tag', '$tag'); set_infos('match_match_rival_url', '$url'); set_infos('match_match_rival_logo', '$logo');\">$name <span style=\"font-size:10px;\">$logohp</span></li>";
 				
 				if ( $i == 4 )
 				{
@@ -55,10 +54,11 @@ if ( isset($_POST['rival_name']) )
 					break;
 				}
 			}
+			echo "<li onClick=\"set_match_rival_name('$rival');\">" . $lang['new_entry'] . "</li>";
 		}
 		else
 		{
-			echo "<li  onClick=\"set_rival('$rival');\">" . $lang['new_entry'] . "</li>";
+			echo "<li onClick=\"set_match_rival_name('$rival');\">" . $lang['new_entry'] . "</li>";
 		}
 		
 	}

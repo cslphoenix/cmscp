@@ -14,7 +14,7 @@ $lang = array_merge($lang, array(
 	'hm_contact'	=> 'Kontakt',
 	'hm_database'	=> 'Datenbank',
 	'hm_dev'		=> 'Entwicklung',
-	'hm_forum'		=> 'Forum',
+	'hm_forum'		=> 'Foren',
 	'hm_games'		=> 'Spiele',
 	'hm_groups'		=> 'Gruppen',
 	'hm_main'		=> 'Allgemein',
@@ -81,6 +81,10 @@ $lang = array_merge($lang, array(
 	'sm_users'				=> 'Benutzer',
 	'sm_group'				=> 'Gruppe',
 	'sm_teams'				=> 'Teams',
+	
+	/* added 18.07 */
+	'sm_manage'			=> 'Verwalten',
+	'sm_rights'			=> 'Rechte',
 
 	/* sprintf: Allgemein */
 	'sprintf_head'			=> '%s Administration',
@@ -169,6 +173,7 @@ $lang = array_merge($lang, array(
 	'common_duration'		=> 'Dauer',
 	'common_comments'		=> 'Kommentare',
 	'common_view'			=> 'Anzeigen',
+	'common_noview'			=> 'nicht Anzeigen',
 	'common_image_delete'	=> 'Bild löschen',
 	'common_more'			=> 'Erweitern',
 	'common_remove'			=> 'Entfernen',
@@ -349,7 +354,7 @@ $lang = array_merge($lang, array(
 	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder auswählen, zum löschen.',	
 	'msg_select_profilefield'	=> 'Bitte Profilefeld eintragen!',		
 	'msg_select_rank_set'		=> 'Status %s setzen',	
-	'msg_select_ranks'			=> 'Bitte einen Rang auswählen!',	
+	'msg_select_rank'			=> 'Bitte einen Rang auswählen!', /* change 13.07 acp_ranks */
 	'msg_select_rival'			=> 'Bitte ein Gegnernamen eintragen',	
 	'msg_select_rival_tag'		=> 'Bitte ein Gegnerclantag eintragen',		
 	'msg_select_server'			=> 'Bitte ein Gameserver eintragen',	
@@ -435,7 +440,26 @@ $lang = array_merge($lang, array(
 	'auth_mod'		=> 'Moderator',
 	'auth_admin'	=> 'Administrator',
 	'auth_none'		=> 'deaktiviert',
-
+	
+	/* added 15.7.2012 */
+	'common_auth_guest'		=> 'Gast',
+	'common_auth_user'		=> 'Benutzer',
+	'common_auth_trial'		=> 'Trial',
+	'common_auth_member'	=> 'Member',
+	'common_auth_mod'		=> 'Moderator',
+	'common_auth_admin'		=> 'Administrator',
+	'common_auth_uploader'	=> 'Uploader',
+	'common_auth_disabled'	=> 'Deaktiviert',
+	
+	'common_auth_view'		=> 'Betrachten',
+	'common_auth_edit'		=> 'Bearbeiten',
+	'common_auth_delete'	=> 'Löschen',
+	'common_auth_rate'		=> 'Bewertung',
+	'common_auth_comment'	=> 'Kommentieren',
+	'common_auth_upload'	=> 'Upload',
+	'common_auth_approve'	=> 'Bestätigen',
+	'common_auth_report'	=> 'Melden',
+	
 	'auth_cash'				=> 'Clankasse',
 	'auth_contact'			=> 'Kontakt',
 	'auth_event'			=> 'Event',
@@ -516,8 +540,17 @@ $lang = array_merge($lang, array(
 	'radio:yesno'	=> array(1 => $lang['common_yes'], 0 => $lang['common_no']),
 	'radio:gallery'	=> array(0 => 'als Listenansicht', 1 => 'nach Vorgabe der Einstellungen'),
 	
-
+	/* added 8.7.2012 */
+	'sql_duplicate'	=> '%s: "%s" schon vorhanden!',
+	/* added 11.7.2012 */
+	'msg_select_team_first'		=> 'Bitte ein Team zuerst auswählen!',
 	
+	'common_auth_public'	=> 'Öffentlich',
+	'common_auth_register'	=> 'Registriert',
+	'common_auth_trial'		=> 'Trial',
+	'common_auth_member'	=> 'Mitglieder',
+	'common_auth_mod'		=> 'Moderatoren',
+	'common_auth_admin'		=> 'Administrator',	
 ));
 
 $lang = array_merge($lang, array(
@@ -564,6 +597,15 @@ $lang = array_merge($lang, array(
 		MEMBER	=> $lang['auth_member'],
 		MOD		=> $lang['auth_mod'],
 		ADMIN	=> $lang['auth_admin'],
+	),
+	
+	'simple_auth_types'	=> array(
+		$lang['common_auth_public'],
+		$lang['common_auth_register'],
+		$lang['common_auth_trial'],
+		$lang['common_auth_member'],
+		$lang['common_auth_mod'],
+		$lang['common_auth_admin'],
 	),
 	
 ));

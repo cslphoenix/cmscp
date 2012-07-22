@@ -6,10 +6,10 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_themes'] )
 	{
-		$module['hm_template']['sm_addnew']	= "$root_file?mode=addnew";
-		$module['hm_template']['sm_create']	= "$root_file?mode=create";
-		$module['hm_template']['sm_export']	= "$root_file?mode=export";
-		$module['hm_template']['sm_manage']	= $root_file;
+		$module['hm_system']['sm_addnew']	= "$root_file?mode=addnew";
+		$module['hm_system']['sm_create']	= "$root_file?mode=create";
+		$module['hm_system']['sm_export']	= "$root_file?mode=export";
+		$module['hm_system']['sm_manage']	= $root_file;
 	}
 	
 	return;
@@ -893,7 +893,7 @@ else
 			$themes = data(THEMES, false, false, 1, false);
 			
 			
-			$fields .= '<input type="hidden" name="mode" value="_create" />';
+			$fields .= '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
@@ -902,7 +902,7 @@ else
 				
 				'L_EXPLAIN'	=> $lang['explain'],
 				
-				'S_CREATE'	=> check_sid("$file?mode=_create"),
+				'S_CREATE'	=> check_sid("$file?mode=create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));

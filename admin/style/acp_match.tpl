@@ -1,87 +1,16 @@
-<!-- BEGIN display -->
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<form action="{S_ACTION}" method="post">
-<ul id="navinfo"><li>{L_EXPLAIN}<br /><a href="{U_SYNC}">{L_SYNC}</a></li></ul>
-<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
-</form>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_UPCOMING}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN new_row -->
-<tr>
-	<td><span class="right">{display.new_row.DATE}</span>{display.new_row.GAME} {display.new_row.NAME}</td>
-	<td>{display.new_row.TRAIN}{display.new_row.DETAIL}{display.new_row.UPDATE}{display.new_row.DELETE}</td>
-</tr>
-<!-- END new_row -->
-<!-- BEGIN new_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END new_empty -->
-</table>
-
-<form action="{S_ACTION}" method="post">
-<table class="lfooter">
-<tr>
-	<td>{S_TEAM}</td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_EXPIRED}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN old_row -->
-<tr>
-	<td><span style="float: right;">{display.old_row.DATE}</span>{display.old_row.GAME} {display.old_row.NAME}</td>
-	<td>{display.old_row.DETAIL} {display.old_row.UPDATE} {display.old_row.DELETE}</td>
-</tr>
-<!-- END old_row -->
-<!-- BEGIN old_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END old_empty -->
-</table>
-
-
-<table class="footer">
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-</tr>
-</table>
-<!-- END display -->
-
 <!-- BEGIN input -->
 {AJAX}
 <script type="text/JavaScript">
 <!-- BEGIN ajax -->
-function look_{input.ajax.NAME}(input_{input.ajax.NAME})
+function look_{input.ajax.NAME}({input.ajax.NAME})
 {
-	if ( input_{input.ajax.NAME}.length == 0 )
+	if ( {input.ajax.NAME}.length == 0 )
 	{
 		$('#{input.ajax.NAME}').hide();
 	}
 	else
 	{
-		$.post("./ajax/{input.ajax.FILE}", {{input.ajax.NAME}: ""+input_{input.ajax.NAME}+""}, function(data) {
+		$.post("./ajax/{input.ajax.FILE}", {{input.ajax.NAME}: ""+{input.ajax.NAME}+""}, function(data) {
 				if ( data.length > 0 )
 				{
 					$('#{input.ajax.NAME}').show();
@@ -93,7 +22,7 @@ function look_{input.ajax.NAME}(input_{input.ajax.NAME})
 }
 function set_{input.ajax.NAME}(thisValue)
 {
-	$('#input_{input.ajax.NAME}').val(thisValue);
+	$('#match_{input.ajax.NAME}').val(thisValue);
 	setTimeout("$('#{input.ajax.NAME}').hide();", 200);
 }
 <!-- END ajax -->
@@ -101,7 +30,6 @@ function set_infos(id,text)
 {
 	var obj = document.getElementById(id).value = text;
 }
-
 
 </script>
 <form action="{S_ACTION}" method="post" name="form">
@@ -116,8 +44,10 @@ function set_infos(id,text)
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-
 <!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
 <table class="update">
 <!-- BEGIN tab -->
 <tr>
@@ -125,17 +55,13 @@ function set_infos(id,text)
 </tr>
 <!-- BEGIN option -->
 <tr>
-	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
 	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
 <!-- END option -->
 <!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
 </table>
 <!-- END row -->
-
 
 <!--
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_STANDARD}</a></li></ul>
@@ -149,7 +75,7 @@ function set_infos(id,text)
 	<td class="row1r"><label for="match_type">{L_TYPE}:</label></td>
 	<td class="row2">{S_TYPE}
 		<!-- BEGIN type ->
-		<label><input type="radio" name="match_type" value="{_input._type.TYPE}" {_input._type.MARK}/>&nbsp;{_input._type.NAME}</label><br />
+		<label><input type="radio" name="match_type" value="{_input.type.TYPE}" {_input.type.MARK}/>&nbsp;{_input.type.NAME}</label><br />
 		<!-- END type ->
 	</td>
 </tr>
@@ -157,7 +83,7 @@ function set_infos(id,text)
 	<td class="row1r"><label for="match_war">{L_WAR}:</label></td>
 	<td class="row2">{S_WAR}
 		<!-- BEGIN war ->
-		<label><input type="radio" name="match_war" value="{_input._war.TYPE}" {_input._war.MARK} />&nbsp;{_input._war.NAME}</label><br />
+		<label><input type="radio" name="match_war" value="{_input.war.TYPE}" {_input.war.MARK} />&nbsp;{_input.war.NAME}</label><br />
 		<!-- END war ->
 	</td>
 </tr>
@@ -165,7 +91,7 @@ function set_infos(id,text)
 	<td class="row1r"><label for="match_league">{L_LEAGUE}:</label></td>
 	<td class="row2">{S_LEAGUE}
 		<!-- BEGIN league ->
-		<label><input type="radio" name="match_league" value="{_input._league.TYPE}" {_input._league.MARK} onclick="{_input._league.CLICK}" />&nbsp;{_input._league.NAME}</label><br />
+		<label><input type="radio" name="match_league" value="{_input.league.TYPE}" {_input.league.MARK} onclick="{_input.league.CLICK}" />&nbsp;{_input.league.NAME}</label><br />
 		<!-- END league ->
 	</td>
 </tr>
@@ -332,7 +258,7 @@ function set_infos(id,text)
 		</tr>
 		<!-- END entry_empty -->
 		</table>
-		<input type="hidden" name="smode" value="_user_add" />
+		<input type="hidden" name="smode" value="user_add" />
 		{S_FIELDS}
 		</form>
 	</td>
@@ -343,13 +269,13 @@ function set_infos(id,text)
 			<li><a href="#" id="right" onclick="return false;">{L_LINEUP_STATUS}</a></li>
 			<li><a href="#" id="current" onclick="return false;">{L_USERNAME}</a></li></ul>
 		</div>
-		<table class="update">
+		<table class="update index">
 		<!-- BEGIN list_users -->
 		<!-- BEGIN member_row -->
-		<tr onclick="checked({_detail._list_users._memberrow.USER_ID})">
-			<td class="row4" width="90%" align="left" style="padding-left:15px;">{_detail._list_users._memberrow.USERNAME}</td>
-			<td class="row4" width="5%" align="right" style="padding-right:15px;">{_detail._list_users._memberrow.STATUS}</td>
-			<td class="row4" width="5%" align="center"><input type="checkbox" name="members[]" value="{_detail._list_users._memberrow.USER_ID}" id="check_{_detail._list_users._memberrow.USER_ID}"></td>
+		<tr onclick="checked({detail.list_users.member_row.USER_ID})">
+			<td class="row4" width="90%" align="left" style="padding-left:15px;">{detail.list_users.member_row.USERNAME}</td>
+			<td class="row4" width="5%" align="right" style="padding-right:15px;">{detail.list_users.member_row.STATUS}</td>
+			<td class="row4" width="5%" align="center"><input type="checkbox" name="members[]" value="{detail.list_users.member_row.USER_ID}" id="check_{detail.list_users.member_row.USER_ID}"></td>
 		</tr>
 		<!-- END member_row -->
 		</table>
@@ -390,26 +316,26 @@ function set_infos(id,text)
 <!-- BEGIN map_row -->
 <tr>
 	<td>
-		<input type="hidden" name="map_id[]" value="{_detail._maps._maprow.MAP_ID}">
+		<input type="hidden" name="map_id[]" value="{detail.maps.maprow.MAP_ID}">
 		<table class="update list">
 		<tr>
 			<td class="row1">{L_DETAIL_MAP}:</td>
-			<td>{_detail._maps._maprow.S_MAP}</td>
-			<td rowspan="3" width="1%" nowrap="nowrap">{_detail._maps._maprow.PIC_URL}
+			<td>{detail.maps.maprow.S_MAP}</td>
+			<td rowspan="3" width="1%" nowrap="nowrap">{detail.maps.maprow.PIC_URL}
 				<!-- BEGIN delete -->
-				<br /><input type="checkbox" name="map_pic[{_detail._maps._maprow.MAP_ID}]" id="del_{_detail._maps._maprow.MAP_ID}" value="on">&nbsp;<label for="del_{_detail._maps._maprow.MAP_ID}">{L_DELETE}</label>
+				<br /><input type="checkbox" name="map_pic[{detail.maps.maprow.MAP_ID}]" id="del_{detail.maps.maprow.MAP_ID}" value="on">&nbsp;<label for="del_{detail.maps.maprow.MAP_ID}">{L_DELETE}</label>
 				<!-- END delete -->
 			</td>
-			<td rowspan="3" width="1%" nowrap="nowrap">{_detail._maps._maprow.MOVE_UP}{_detail._maps._maprow.MOVE_DOWN}</td>
-			<td rowspan="3" width="1%" nowrap="nowrap"><input type="checkbox" name="map_delete[{_detail._maps._maprow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+			<td rowspan="3" width="1%" nowrap="nowrap">{detail.maps.maprow.MOVE_UP}{detail.maps.maprow.MOVE_DOWN}</td>
+			<td rowspan="3" width="1%" nowrap="nowrap"><input type="checkbox" name="map_delete[{detail.maps.maprow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 		</tr>
 		<tr>
 			<td class="row1">{L_DETAIL_POINTS}:</td>
-			<td class="row2"><input type="text" name="map_points_home[{_detail._maps._maprow.MAP_ID}]" value="{_detail._maps._maprow.MAP_HOME}" size="2">&nbsp;:&nbsp;<input type="text" name="map_points_rival[{_detail._maps._maprow.MAP_ID}]" value="{_detail._maps._maprow.MAP_RIVAL}" size="2">&nbsp;{_detail._maps._maprow.S_ROUND}</td>
+			<td class="row2"><input type="text" name="map_points_home[{detail.maps.maprow.MAP_ID}]" value="{detail.maps.maprow.MAP_HOME}" size="2">&nbsp;:&nbsp;<input type="text" name="map_points_rival[{detail.maps.maprow.MAP_ID}]" value="{detail.maps.maprow.MAP_RIVAL}" size="2">&nbsp;{detail.maps.maprow.S_ROUND}</td>
 		</tr>
 		<tr>
 			<td class="row1">{L_DETAIL_MAPPIC}:</td>
-			<td class="row2 top"><input type="file" name="ufile[{_detail._maps._maprow.MAP_ID}]" id="ufile[]" size="12" /></td>
+			<td class="row2 top"><input type="file" name="ufile[{detail.maps.maprow.MAP_ID}]" id="ufile[]" size="12" /></td>
 		</tr>
 		</table>
 		<hr />
@@ -456,26 +382,26 @@ function set_infos(id,text)
 </tr>
 <!-- BEGIN maps -->
 <tr>
-	<td>{_sync.row._maps.NAME}</td>
-	<td align="center">{_sync.row._maps.HOME}</td>
-	<td align="center">{_sync.row._maps.RIVAL}</td>
-	<td align="center">{_sync.row._maps.PICTURE}</td>
-	<td align="center">{_sync.row._maps.PREVIEW}</td>
-	<td><input type="checkbox" name="map_delete[{_sync.row._maps.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+	<td>{_sync.row.maps.NAME}</td>
+	<td align="center">{_sync.row.maps.HOME}</td>
+	<td align="center">{_sync.row.maps.RIVAL}</td>
+	<td align="center">{_sync.row.maps.PICTURE}</td>
+	<td align="center">{_sync.row.maps.PREVIEW}</td>
+	<td><input type="checkbox" name="map_delete[{_sync.row.maps.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 </tr>
 <!-- BEGIN result -->
 <tr>
-	<td>{_sync.row._maps._result.COUNT}</td>
-	<td>{_sync.row._maps._result.HOME}</td>
-	<td>{_sync.row._maps._result.RIVAL}</td>
+	<td>{_sync.row.maps.result.COUNT}</td>
+	<td>{_sync.row.maps.result.HOME}</td>
+	<td>{_sync.row.maps.result.RIVAL}</td>
 	<td colspan="2"></td>
 	<td></td>
 </tr>
 <!-- END result -->
 <!-- BEGIN result_row -->
 <tr>
-	<td colspan="5">{_sync.row._maps._resultrow.NAME}</td>
-	<td><input type="checkbox" name="map_delete[{_sync.row._maps._resultrow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+	<td colspan="5">{_sync.row.maps.resultrow.NAME}</td>
+	<td><input type="checkbox" name="map_delete[{_sync.row.maps.resultrow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 </tr>
 <!-- END result_row -->
 <!-- END maps -->
@@ -483,3 +409,68 @@ function set_infos(id,text)
 </table>
 
 <!-- END sync -->
+
+<!-- BEGIN display -->
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
+<form action="{S_ACTION}" method="post">
+<ul id="navinfo"><li>{L_EXPLAIN}<br /><a href="{U_SYNC}">{L_SYNC}</a></li></ul>
+<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
+</form>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN new_row -->
+<tr>
+	<td><span class="right">{display.new_row.DATE}</span>{display.new_row.GAME} {display.new_row.NAME}</td>
+	<td>{display.new_row.TRAIN}{display.new_row.DETAIL}{display.new_row.UPDATE}{display.new_row.DELETE}</td>
+</tr>
+<!-- END new_row -->
+<!-- BEGIN new_empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END new_empty -->
+</table>
+
+<form action="{S_ACTION}" method="post">
+<table class="lfooter">
+<tr>
+	<td>{S_TEAM}</td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_EXPIRED}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN old_row -->
+<tr>
+	<td><span style="float: right;">{display.old_row.DATE}</span>{display.old_row.GAME} {display.old_row.NAME}</td>
+	<td>{display.old_row.DETAIL} {display.old_row.UPDATE} {display.old_row.DELETE}</td>
+</tr>
+<!-- END old_row -->
+<!-- BEGIN old_empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END old_empty -->
+</table>
+
+<table class="rfooter">
+<tr>
+	<td></td>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+</tr>
+</table>
+<!-- END display -->

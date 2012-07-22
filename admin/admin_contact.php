@@ -6,22 +6,22 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'])
 	{
-		$module['hm_contact']['sm_overview'] = $root_file . "?mode=overview";
+		$module['hm_system']['sm_overview'] = $root_file . "?mode=overview";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] )
 	{
-		$module['hm_contact']['sm_contact'] = $root_file . "?mode=contact";
+		$module['hm_system']['sm_contact'] = $root_file . "?mode=contact";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_joinus'] )
 	{
-		$module['hm_contact']['sm_joinus'] = $root_file . "?mode=joinus";
+		$module['hm_system']['sm_joinus'] = $root_file . "?mode=joinus";
 	}
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_fightus'] )
 	{
-		$module['hm_contact']['sm_fightus'] = $root_file . "?mode=fightus";
+		$module['hm_system']['sm_fightus'] = $root_file . "?mode=fightus";
 	}
 
 	return;

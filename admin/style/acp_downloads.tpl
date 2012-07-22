@@ -1,58 +1,6 @@
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
-
-<br />
-
-<!-- BEGIN cat_row -->
-<table class="rows">
-<tr>
-	<th><span class="righti">{display.catrow.PATH}</span><span title="{display.catrow.TYPE}">{display.catrow.NAME}</span></th>
-	<th>{display.catrow.MOVE_UP}{display.catrow.MOVE_DOWN}{display.catrow.RESYNC}{display.catrow.UPDATE}{display.catrow.DELETE}</th>
-</tr>
-<!-- BEGIN file_row -->
-<tr> 
-	<td>{display.catrow._filerow.NAME}</td>
-	<td>{display.catrow._filerow.RESYNC}{display.catrow._filerow.MOVE_UP}{display.catrow._filerow.MOVE_DOWN}{display.catrow._filerow.UPDATE}{display.catrow._filerow.DELETE}</td>
-</tr>
-<!-- END file_row -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="{display.catrow.S_NAME}" /></td>
-	<td><input type="submit" class="button2" name="{display.catrow.S_SUBMIT}" value="{L_CREATE}"></td>
-</tr>
-</table>
-
-<br />
-<!-- END cat_row -->
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="cat_name" /></td>
-	<td><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
-</tr>
-</table>
-
-</form>
-<!-- END display -->
-
 <!-- BEGIN input -->
 <form action="{S_ACTION}" method="post" enctype="multipart/form-data">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-</ul>
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
@@ -76,56 +24,38 @@
 <!-- END input -->
 
 <!-- BEGIN cat -->
+<script type="text/javascript">
+// <![CDATA[
+function set_right(id,text)
+{
+	var obj = document.getElementById(id).value = text;
+}
+// ]]>
+</script>
 <form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-</ul>
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 <br /><div align="center">{ERROR_BOX}</div>
 
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_DATA}</a></li></ul>
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{cat.row.hidden.HIDDEN}
+<!-- END hidden -->
 <table class="update">
+<!-- BEGIN tab -->
 <tr>
-	<td class="row1r"><label for="cat_name">{L_NAME}:</label></td>
-	<td class="row2"><input type="text" name="cat_name" id="cat_name" value="{NAME}"></td>
+	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{cat.row.tab.L_LANG}</a></li></ul></th>
 </tr>
+<!-- BEGIN option -->
 <tr>
-	<td class="row1r"><label for="cat_icon">{L_ICON}:</label></td>
-	<td class="row2">{S_ICONS}</td>
+	<td class="{cat.row.tab.option.CSS}"><label for="{cat.row.tab.option.LABEL}" {cat.row.tab.option.EXPLAIN}>{cat.row.tab.option.L_NAME}:</label><span>{cat.row.tab.option.AUTH}</span></td>
+	<td class="row2">{cat.row.tab.option.OPTION}</td>
 </tr>
-<tr>
-	<td class="row1"><label for="cat_path">{L_PATH}:</label></td>
-	<td class="row2">{PATH}</td>
-</tr>
-<tr>
-	<td class="row1r"><label for="cat_types">{L_TYPES}:</label></td>
-	<td class="row2">{S_TYPES}</td>
-</tr>
-<tr>
-	<td class="row1r"><label for="cat_desc">{L_DESC}:</label></td>
-	<td class="row2"><textarea class="textarea" name="cat_desc" id="cat_desc" cols="40">{DESC}</textarea></td>
-</tr>
-<tr>
-	<td class="row1r"><label for="cat_auth">{L_AUTH}:</label></td>
-	<td class="row2">{S_AUTH}</td>
-</tr>
-<tr>
-	<td class="row1r"><label for="cat_rate">{L_RATE}:</label></td>
-	<td class="row2">{S_RATE}</td>
-</tr>
-<tr>
-	<td class="row1r"><label for="cat_comment">{L_COMMENT}:</label></td>
-	<td class="row2">{S_COMMENT}</td>
-</tr>
-<tr>
-	<td class="row1"><label for="cat_order">{L_ORDER}:</label></td>
-	<td class="row2">{S_ORDER}</td>
-</tr>
+<!-- END option -->
+<!-- END tab -->
 </table>
-
-<br/>
+<!-- END row -->
 
 <table class="submit">
 <tr>
@@ -136,3 +66,52 @@
 {S_FIELDS}
 </form>
 <!-- END cat -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+
+<br />
+
+<!-- BEGIN cat -->
+<table class="rows">
+<tr>
+	<th><span class="righti">{display.cat.PATH}</span><span title="{display.cat.TYPE}">{display.cat.NAME}</span></th>
+	<th>{display.cat.MOVE_UP}{display.cat.MOVE_DOWN}{display.cat.RESYNC}{display.cat.UPDATE}{display.cat.DELETE}</th>
+</tr>
+<!-- BEGIN file -->
+<tr> 
+	<td>{display.cat.file.NAME}</td>
+	<td>{display.cat.file.RESYNC}{display.cat.file.MOVE_UP}{display.cat.file.MOVE_DOWN}{display.cat.file.UPDATE}{display.cat.file.DELETE}</td>
+</tr>
+<!-- END file -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="{display.cat.S_NAME}" /></td>
+	<td><input type="submit" class="button2" name="{display.cat.S_SUBMIT}" value="{L_CREATE}"></td>
+</tr>
+</table>
+
+<br />
+<!-- END cat -->
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="cat_name" /></td>
+	<td><input type="submit" class="button2" name="add_cat" value="{L_CREATE_CAT}"></td>
+</tr>
+</table>
+
+</form>
+<!-- END display -->

@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_newscat'] )
 	{
-		$module['hm_news']['sm_newscat'] = $root_file;
+		$module['hm_system']['sm_newscat'] = $root_file;
 	}
 	
 	return;
@@ -93,23 +93,22 @@ else
 				}
 				else
 				{
-					$temp = data(NEWS_CAT, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
-					$data = build_request($temp, $vars, 'newscat', $error);
+					$data = build_request(NEWS_CAT, $vars, 'newscat', $error);
 					
 					if ( !$error )
 					{
+						$data['cat_order'] = $data['cat_order'] ? $data['cat_order'] : maxa(NEWS_CAT, 'cat_order', false);
+					#	$data['cat_order'] = $data['cat_order'] ? $data['cat_order'] : maxa(NETWORK, 'cat_order', false);
+						
 						if ( $mode == 'create' )
 						{
 							$sql = sql(NEWS_CAT, $mode, $data);
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							$sql = sql(NEWS_CAT, $mode, $data, 'cat_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
 						orders(NEWS_CAT);
@@ -119,10 +118,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				

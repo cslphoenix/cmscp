@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['hm_dev']['sm_changelog'] = $root_file;
+		$module['hm_system']['sm_changelog'] = $root_file;
 	}
 	
 	return;
@@ -205,7 +205,7 @@ else
 		
 			$template->assign_block_vars('display', array());
 			
-			$fields .= '<input type="hidden" name="mode" value="_create" />';
+			$fields .= '<input type="hidden" name="mode" value="create" />';
 					
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['changelog']),
@@ -213,7 +213,7 @@ else
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['changelog']),
 				'L_EXPLAIN'		=> $lang['changelog_explain'],
 				
-				'S_CREATE'		=> check_sid("$file?mode=_create"),
+				'S_CREATE'		=> check_sid("$file?mode=create"),
 				'S_ACTION'		=> check_sid($file),
 				'S_FIELDS'		=> $fields,
 			));

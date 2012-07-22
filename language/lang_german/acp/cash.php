@@ -62,10 +62,20 @@ $lang = array_merge($lang, array(
 	/* error msg */
 	'msg_select_amount'		=> 'Bitte einen Betrag eintragen!',
 	
+	/* added 14.07 */
+	'cash_name'		=> 'Kostenname',
+	'cash_amount'	=> 'Betrag',
+	'cash_type'		=> 'Kosten Type',
+	'cash_interval'	=> 'Zahlungsintervall',
+	
+	
+	
 ));
 
 $lang = array_merge($lang, array(	
-	'radio:interval'	=> array(0 => $lang['interval_only'], 1 => $lang['interval_month']),
+	'radio:interval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_only']),
+	'radio:cinterval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_weeks'], 2 => $lang['interval_weekly']),
+	'radio:type'		=> array(0 => $lang['type_game'], 1 => $lang['type_voice'], 2 => $lang['type_other']),
 ));
 
 /*

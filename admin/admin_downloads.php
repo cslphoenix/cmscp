@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_downloads'] )
 	{
-		$module['hm_main']['sm_downloads'] = $root_file;
+		$module['hm_system']['sm_downloads'] = $root_file;
 	}
 
 	return;
@@ -34,8 +34,7 @@ else
 	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
 	$start	= ( $start < 0 ) ? 0 : $start;
 
-	$data_url	= request($url, INT);
-	$data_cat	= request($cat, INT);
+	$data_id	= request($url, INT) ? request($url, INT) : request($cat, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
 	$move		= request('move', TXT);
@@ -53,58 +52,79 @@ else
 
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_downloads.tpl',
-		'error'		=> 'style/info_error.tpl',
+	#	'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
-		'tiny_mce'	=> 'style/tinymce_normal.tpl',
+	#	'tiny_mce'	=> 'style/tinymce_normal.tpl',
 	));
-
-	if ( request('add_file', 1) || request('add_cat', 1) )
+	
+	if ( isset($_POST['add_file']) || isset($_POST['add_cat']) )
 	{
-		$mode = ( request('add_file', 1) ) ? 'create' : '_create_cat';
-
-		if ( $mode == 'create' )
+		if ( isset($_POST['add_file']) )
 		{
-			list($cat_id) = each($_POST['add_file']);
-			$data_cat = intval($cat_id);
-
-			$name = trim(htmlentities(str_replace("\'", "'", $_POST['file_name'][$cat_id]), ENT_COMPAT));
+			$mode = 'create';
+			$cat_id = key($_POST['add_file']);
+			$name = request(array('file_name', $cat_id), TXT);
+		}
+		else
+		{
+			$mode = 'create_cat';
+			$name = request('file_name', TXT);
 		}
 	}
 	
-
 	/* $settings['download_types'] ??? */
-	$mine_types = array('meta_application', 'meta_image', 'meta_text', 'meta_video');
-
+	$mime_types = array('meta_application', 'meta_image', 'meta_text', 'meta_video');
+	 
 #	debug($mode);
 #	debug($_GET);
 #	debug($_POST);
 #	debug($_FILES);
 
-	$mode = ( in_array($mode, array('create', 'update', '_order', 'delete', '_create_cat', '_update_cat', '_order_cat', '_delete_cat')) ) ? $mode : '';
+	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete', 'create_cat', 'update_cat', 'order_cat', 'delete_cat')) ) ? $mode : '';
 
 	if ( $mode )
 	{
 		switch ( $mode )
 		{
 			case 'create':
-		case 'update':
+			case 'update':
 
 				$template->assign_block_vars('input', array());
-
+				
+				debug($_POST);
+				
+				$vars = array(
+					'file' => array(
+						'title'	=> 'data_input',
+						'file_name'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true,	'required' => 'input_name'),
+					#	'cat_id'		=> array('validate' => INT,	'type' => 'radio:cat'),
+						'cat_id'		=> array('validate' => INT,	'type' => 'radio:cat',		'explain' => true, 'params' => true, 'ajax' => 'ajax_order:ajax_order'),
+						'file_filename'	=> array('validate' => TXT,	'type' => 'upload:file',	'explain' => true,'required' => 'select_file'),
+						'file_order'	=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
+						'file_type'		=> array('type' => 'hidden'),
+						'file_size'		=> array('type' => 'hidden'),
+					)
+				);
+				
 				if ( $mode == 'create' && !request('submit', TXT) )
 				{
 					$data = array(
 						'file_name'		=> $name,
-						'cat_id'		=> '',
-						'file_order'	=> '',
+						'cat_id'		=> $cat,
+						'file_filename'	=> '',
+						'file_type'		=> '',
+						'file_size'		=> '',
+						'file_order'	=> 0,						
 					);
 				}
 				else if ( $mode == 'update' && !request('submit', TXT) )
 				{
-					$data = data(DOWNLOADS, $data_url, false, 1, true);
+					$data = data(DOWNLOADS, $data_id, false, 1, true);
 				}
 				else
 				{
+					$data = build_request(DOWNLOADS, $vars, 'file', $error);
+					/*
 					$data = array(
 						'file_name'		=> request('file_name', 2),
 						'cat_id'		=> request($cat, 0),
@@ -113,9 +133,9 @@ else
 					
 					$ufile = request_file('ufile');
 					
-					$cats = data(DOWNLOADS_CAT, $data_cat, false, 1, true);
+					$cats = data(DOWNLOADS_CAT, $data_id, false, 1, true);
 					
-					$error .= !$data['file_name'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
+					$error[] = !$data['file_name'] ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					
 					if ( $ufile['temp'] )
 					{
@@ -127,12 +147,12 @@ else
 					}
 					else
 					{
-						$error .= ( $error ? '<br />' : '' ) . $lang['msg_select_file'];
+						$error[] = ( $error ? '<br />' : '' ) . $lang['msg_select_file'];
 					}
-					
+					*/
 					if ( !$error )
 					{
-						$data['file_order'] = $data['file_order'] ? $data['file_order'] : maxa(DOWNLOADS, 'file_order', "cat_id = " . $data['cat_id']);
+						$data['file_order'] = $data['file_order'] ? $data['file_order'] : maxa(DOWNLOADS, 'file_order', "cat_id = {$data['cat_id']}");
 												
 						if ( $mode == 'create' )
 						{
@@ -141,7 +161,7 @@ else
 						}
 						else
 						{
-							$sql = sql(DOWNLOADS, $mode, $data, 'file_id', $data_url);
+							$sql = sql(DOWNLOADS, $mode, $data, 'file_id', $data_id);
 							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 						
@@ -152,16 +172,14 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-						
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				
+				build_output($data, $vars, 'input', false, DOWNLOADS);
+				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_url\" />";
-				$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
+				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 				
 				$template->assign_vars(array(
 				#	'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['download_cat']),
@@ -183,7 +201,7 @@ else
 
 			case 'order':
 
-				update(DOWNLOADS_CAT, 'download_cat', $move, $data_cat);
+				update(DOWNLOADS_CAT, 'download_cat', $move, $data_id);
 				orders(DOWNLOADS_CAT);
 
 				log_add(LOG_ADMIN, SECTION_DOWNLOADS_CAT, 'acp_download_cat_order');
@@ -194,11 +212,11 @@ else
 
 			case 'delete':
 
-				$data = get_data(DOWNLOADS_CAT, $data_cat, 1);
+				$data = get_data(DOWNLOADS_CAT, $data_id, 1);
 
-				if ( $data_cat && $confirm )
+				if ( $data_id && $confirm )
 				{
-					$sql = "DELETE FROM " . DOWNLOADS_CAT . " WHERE cat_id = $data_cat";
+					$sql = "DELETE FROM " . DOWNLOADS_CAT . " WHERE cat_id = $data_id";
 					if ( !$db->sql_query($sql) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -208,11 +226,11 @@ else
 					log_add(LOG_ADMIN, SECTION_DOWNLOADS_CAT, 'delete_download_cat');
 					message(GENERAL_MESSAGE, $message);
 				}
-				else if ( $data_cat && !$confirm )
+				else if ( $data_id && !$confirm )
 				{
 					$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 
-					$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . $cat . '" value="' . $data_cat . '" />';
+					$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . $cat . '" value="' . $data_id . '" />';
 
 					$template->assign_vars(array(
 						'MESSAGE_TITLE'	=> $lang['common_confirm'],
@@ -236,15 +254,33 @@ else
 
 				$template->assign_block_vars('cat', array());
 				
-				if ( $mode == '_create_cat' && !(request('submit', TXT)) )
+				$vars = array(
+					'cat' => array(
+						'title' => 'data_input',
+						'cat_name'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => false, 'required' => 'input_name'),
+						'cat_desc'		=> array('validate' => TXT,	'type' => 'textarea:40',	'explain' => false, 'required' => 'input_desc'),
+						'cat_icon'		=> array('validate' => INT,	'type' => 'radio:icons',	'explain' => false),
+						'cat_type'		=> array('validate' => ARY,	'type' => 'drop:dtype',		'explain' => false, 'required' => 'select_type'),
+						'cat_auth'		=> array('validate' => ARY,	'type' => 'drop:auth',		'explain' => false, 'simple_auth' => true),
+						'cat_rate'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => false),
+						'cat_comment'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => false),
+						'cat_order'		=> array('validate' => INT,	'type' => 'drop:order',		'explain' => false),
+						'cat_path'		=> array('type' => 'hidden'),
+						'time_create'	=> array('type' => 'hidden'),
+						'time_update'	=> array('type' => 'hidden'),
+						'time_upload'	=> array('type' => 'hidden'),
+					),
+				);
+				
+				if ( $mode == 'create_cat' && !(request('submit', TXT)) )
 				{
 					$data = array(
 						'cat_name'		=> request('cat_name', 2),
 						'cat_desc'		=> '',
-						'cat_icon'		=> 0,
+						'cat_icon'		=> '',
 						'cat_path'		=> '',
-						'cat_types'		=> 0,
-						'cat_auth'		=> 0,
+						'cat_type'		=> 'a:0:{}',
+						'cat_auth'		=> 'a:0:{}',
 						'cat_rate'		=> 0,
 						'cat_comment'	=> 0,
 						'time_create'	=> time(),
@@ -253,33 +289,19 @@ else
 						'cat_order'		=> '',
 					);
 				}
-				else if ( $mode == '_update_cat' && !(request('submit', TXT)) )
+				else if ( $mode == 'update_cat' && !(request('submit', TXT)) )
 				{
-					$data = data(DOWNLOADS_CAT, $data_cat, false, 1, true);
+					$data = data(DOWNLOADS_CAT, $data_id, false, 1, true);
 				}
 				else
 				{
-					$data = array(
-						'cat_name'		=> request('cat_name', 2),
-						'cat_desc'		=> request('cat_desc', 2),
-						'cat_icon'		=> request('cat_icon', 2),
-						'cat_path'		=> request('cat_path', 2),
-						'cat_types'		=> request('cat_types', 4),
-						'cat_auth'		=> request('cat_auth', 0),
-						'cat_rate'		=> request('cat_rate', 0),
-						'cat_comment'	=> request('cat_comment', 0),
-						'time_create'	=> request('time_create', 0),
-						'time_update'	=> request('time_update', 0),
-						'time_upload'	=> request('time_upload', 0),
-						'cat_order'		=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
-					);
+					$data = build_request(DOWNLOADS_CAT, $vars, 'cat', $error);
 					
-					$data['cat_types'] = is_array($data['cat_types']) ? implode(', ', $data['cat_types']) : '';
-					$data['cat_order'] = $data['cat_order'] ? $data['cat_order'] : maxa(DOWNLOADS_CAT, 'cat_order', '');
-
 					if ( !$error )
 					{
-						if ( $mode == '_create_cat' )
+						$data['cat_order'] = $data['cat_order'] ? $data['cat_order'] : maxa(DOWNLOADS_CAT, 'cat_order', '');
+						
+						if ( $mode == 'create_cat' )
 						{
 							$data['cat_path'] = create_folder($dir_path, 'download_', true);
 
@@ -288,8 +310,8 @@ else
 						}
 						else
 						{
-							$sql = sql(DOWNLOADS_CAT, $mode, $data, 'cat_id', $data_cat);
-							$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$cat=$data_cat"));
+							$sql = sql(DOWNLOADS_CAT, $mode, $data, 'cat_id', $data_id);
+							$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$cat=$data_id"));
 						}
 
 						orders(DOWNLOADS_CAT);
@@ -299,59 +321,19 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				
-				$s_types = '<select class="postsmall" id="cat_types" name="cat_types[]" size="15" multiple="multiple">';
-
-				foreach ( $mine_types as $meta_type )
-				{
-					$_type = str_replace('meta', 'type', $meta_type);
-
-					$s_types .= "<optgroup label=\"" . sprintf($lang['sprintf_select_format'], $lang[$meta_type]) . "\">";
-
-					foreach ( $lang[$_type] as $type => $mine )
-					{
-						$marked = ( in_array($mine, explode(', ', $data['cat_types'])) ) ? ' selected="selected"' : '';
-						$s_types .= "<option value=\"{$mine}\"$marked>&nbsp;&nbsp;&nbsp;" . sprintf($lang['sprintf_select_format'], $type) . "</option>";
-					}
-				}
-
-				$s_types .= '</select>';
+				build_output($data, $vars, 'cat', false, DOWNLOADS_CAT);
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
+				$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_id\" />";
 				$fields .= "<input type=\"hidden\" name=\"cat_path\" value=\"" . $data['cat_path'] . "\" />";
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode)], $lang['name_cat'], $data['cat_name']),
-					'L_DATA'	=> $lang['data_cat'],
-
-					'L_NAME'	=> $lang['name_cat'],
-					'L_DESC'	=> $lang['desc_cat'],
-					'L_ICON'	=> $lang['icon_cat'],
-					'L_PATH'	=> $lang['path_cat'],
-					'L_TYPES'	=> $lang['types_cat'],
-					'L_AUTH'	=> $lang['auth_cat'],
-					'L_RATE'	=> $lang['rate_cat'],
-					'L_COMMENT'	=> $lang['comment_cat'],
-					
-					'NAME'	=> $data['cat_name'],
-					'DESC'	=> $data['cat_desc'],
-					'PATH'	=> $data['cat_path'],
-					
-					'S_ICON'	=> '',
-					'S_TYPES'	=> $s_types,
-					'S_AUTH'	=> select_level('', 'user_level', 'cat_auth', $data['cat_auth'], 'user_level'),
-					'S_RATE'	=> select_level('', 'user_level', 'cat_rate', $data['cat_rate']),
-					'S_COMMENT'	=> select_level('', 'user_level', 'cat_comment', $data['cat_comment']),
-					
-					'S_ORDER'	=> simple_order(DOWNLOADS_CAT, false, 'select', $data['cat_order']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['cat'], $data['cat_name']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -363,7 +345,7 @@ else
 				
 			case 'order_cat':
 				
-				update(DOWNLOADS_CAT, 'cat', $move, $data_cat);
+				update(DOWNLOADS_CAT, 'cat', $move, $data_id);
 				orders(DOWNLOADS_CAT);
 				
 				log_add(LOG_ADMIN, $log, $mode);
@@ -374,14 +356,14 @@ else
 				
 			case 'delete_cat':
 			
-				$data = data(DOWNLOADS_CAT, $data_cat, false, 1, true);
+				$data = data(DOWNLOADS_CAT, $data_id, false, 1, true);
 			
-				if ( $data_cat && $confirm )
+				if ( $data_id && $confirm )
 				{
-					$sql = sql(DOWNLOADS_CAT, $mode, $data, 'cat_id', $data_cat);
+					$sql = sql(DOWNLOADS_CAT, $mode, $data, 'cat_id', $data_id);
 					$msg = $lang['delete_cat'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
-					sql(DOWNLOADS, $mode, false, 'cat_id', $data_cat);
+					sql(DOWNLOADS, $mode, false, 'cat_id', $data_id);
 					
 					delete_folder($dir_path . $data['cat_path'] . '/');
 
@@ -390,10 +372,10 @@ else
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
 				}
-				else if ( $data_cat && !$confirm )
+				else if ( $data_id && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
+					$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_id\" />";
 
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
@@ -422,7 +404,7 @@ else
 
 	$template->assign_block_vars('display', array());
 
-	$fields .= '<input type="hidden" name="mode" value="_create" />';
+	$fields .= '<input type="hidden" name="mode" value="create" />';
 
 	$template->assign_vars(array(
 		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
@@ -432,7 +414,7 @@ else
 		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['cat']),
 		'L_EXPLAIN'		=> $lang['explain'],
 
-		'S_CREATE'	=> check_sid("$file?mode=_create"),
+		'S_CREATE'	=> check_sid("$file?mode=create"),
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
@@ -450,18 +432,18 @@ else
 			$cname	= $tmp[$i]['cat_name'];
 			$csize	= $tmp[$i]['cat_size'];
 			$cfiles	= $tmp[$i]['cat_files'];
-			$ctypes	= $tmp[$i]['cat_types'];
+			$ctype	= unserialize($tmp[$i]['cat_type']);
 			$corder	= $tmp[$i]['cat_order'];
 			
 			$typ = '';
 			
-			foreach ( $mine_types as $meta_type )
+			foreach ( $mime_types as $meta_type )
 			{
 				$_type = str_replace('meta', 'type', $meta_type);
 
-				foreach ( $lang[$_type] as $type => $mine )
+				foreach ( $lang[$_type] as $type => $mime )
 				{
-					if ( in_array($mine, explode(', ', $tmp[$i]['cat_types'])) )
+					if ( in_array($type, $ctype) )
 					{
 						$typ[] = $type;
 					}
@@ -470,19 +452,19 @@ else
 			
 			$typ = is_array($typ) ? implode(', ', $typ) : $typ;
 			
-			$template->assign_block_vars('display.cat_row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => '_update_cat', $cat => $cid), $cname, ''),
+			$template->assign_block_vars('display.cat', array(
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update_cat', $cat => $cid), $cname, ''),
 				
 				'PATH'		=> $dir_path . $tmp[$i]['cat_path'],
 				
 				'TYPE'		=> $typ,
 
-				'MOVE_UP'	=> ( $corder != '10' ) ? href('a_img', $file, array('mode' => '_order_cat', 'move' => '-15', $cat => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $corder != $max ) ? href('a_img', $file, array('mode' => '_order_cat', 'move' => '+15', $cat => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $corder != '10' ) ? href('a_img', $file, array('mode' => 'order_cat', 'move' => '-15', $cat => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $corder != $max ) ? href('a_img', $file, array('mode' => 'order_cat', 'move' => '+15', $cat => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 
-				'RESYNC'	=> $files ? href('a_img', $file, array('mode' => '_rescny_cat', $cat => $cid), 'icon_resync', 'common_resync') : img('i_icon', 'icon_resync2', 'common_resync'),
-				'UPDATE'	=> href('a_img', $file, array('mode' => '_update_cat', $cat => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => '_delete_cat', $cat => $cid), 'icon_cancel', 'common_delete'),
+				'RESYNC'	=> $files ? href('a_img', $file, array('mode' => 'rescny_cat', $cat => $cid), 'icon_resync', 'common_resync') : img('i_icon', 'icon_resync2', 'common_resync'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', $cat => $cid), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', $cat => $cid), 'icon_cancel', 'common_delete'),
 				
 				'S_NAME'	=> "file_name[$cid]",
 				'S_SUBMIT'	=> "add_file[$cid]",
@@ -499,7 +481,7 @@ else
 			
 			if ( !$files )
 			{
-				$template->assign_block_vars('display.catrow._empty', array());
+				$template->assign_block_vars('display.cat.empty', array());
 			}
 			else
 			{
@@ -509,7 +491,7 @@ else
 					
 					if ( $files[$j]['cat_id'] == $cid )
 					{
-						$template->assign_block_vars('display.catrow._file_row', array(
+						$template->assign_block_vars('display.cat.file', array(
 							'NAME'		=> $files[$j]['file_name'],
 							
 							'MOVE_UP'	=> ( $files[$j]['file_order'] != '10' )							? '<a href="' . check_sid("$file?mode=_order&amp;cat_type=$cid&amp;move=-15&amp;$url=$file_id") . '"><img src="' . $images['icon_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_u2'] . '" alt="" />',

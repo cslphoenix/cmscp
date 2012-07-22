@@ -26,6 +26,8 @@ $lang = array_merge($lang, array(
 	'train_team'	=> 'Trainingsteam',
 	'train_dura'	=> 'Trainingsdauer',
 	
+	
+	
 ));
 
 ?>

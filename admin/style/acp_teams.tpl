@@ -59,7 +59,7 @@
 </tr>
 <!-- BEGIN option -->
 <tr>
-	<td class="row1{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
+	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
 	<td class="row2">{input.row.tab.option.OPTION}</td>
 </tr>
 <!-- END option -->

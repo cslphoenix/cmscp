@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user'])
 	{
-		$module['hm_users']['sm_settings'] = $root_file;
+		$module['hm_usergroups']['sm_settings'] = $root_file;
 	}
 	
 	return;
@@ -93,7 +93,7 @@ else
 	if ( $mode != 'create' )
 	{
 		$s_mode = '<select class="postselect" name="mode" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
-		foreach ( $lang['_option'] as $key => $value )
+		foreach ( $lang['option'] as $key => $value )
 		{
 			$selected = ( $mode == $key ) ? ' selected="selected"' : '';
 			$s_mode .= '<option value="' . $key . '"' . $selected . '>&raquo;&nbsp;' . $value . '&nbsp;</option>';
@@ -179,12 +179,12 @@ else
 				$mail_con = request('user_email_confirm', 2);
 				$pass_switch = request('pass_switch', INT);
 				
-				$error .= check(USERS, array('user_name' => $data['user_name'], 'user_email' => $data['user_email'], 'user_id' => $data_id), $error);
-			#	$error .= valid(user_name, user_email);
+				$error[] = check(USERS, array('user_name' => $data['user_name'], 'user_email' => $data['user_email'], 'user_id' => $data_id), $error);
+			#	$error[] = valid(user_name, user_email);
 			
 				if ( $mode == 'create' || $mode == 'update' && $mail_con )
 				{
-					$error .= ( $data['user_email'] != $mail_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_email_mismatch'] : '';
+					$error[] = ( $data['user_email'] != $mail_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_email_mismatch'] : '';
 				}
 				
 				if ( $pass_switch )
@@ -195,7 +195,7 @@ else
 					}
 					else
 					{
-						$error .= ( $error ? '<br />' : '' ) . $lang['msg_select_pass'];
+						$error[] = ( $error ? '<br />' : '' ) . $lang['msg_select_pass'];
 					}
 					
 					$password		= $pass_rnd;
@@ -205,9 +205,9 @@ else
 				{
 					if ( $mode == 'create' )
 					{
-						$error .= !$pass_new ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass'] : '';
-						$error .= !$pass_con ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_confirm'] : '';
-						$error .= ( $pass_new != $pass_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
+						$error[] = !$pass_new ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass'] : '';
+						$error[] = !$pass_con ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_confirm'] : '';
+						$error[] = ( $pass_new != $pass_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
 						
 						$password		= $pass_new;
 						$password_md5	= md5($pass_new);
@@ -218,7 +218,7 @@ else
 					}
 					else
 					{
-						$error .= ( $pass_new != $pass_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
+						$error[] = ( $pass_new != $pass_con ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_pass_mismatch'] : '';
 						
 						$password		= $pass_new;
 						$password_md5	= md5($pass_new);
@@ -280,14 +280,11 @@ else
 				}
 				else
 				{
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
-					
-					log_add(LOG_ADMIN, $log, 'error', $error);
+					error('ERROR_BOX', $error);
 				}
 			}
 			
-			( $mode == 'update' ) ? $template->assign_block_vars($temp . '._update', array()) : '';
+			( $mode == 'update' ) ? $template->assign_block_vars($temp . '.update', array()) : '';
 	
 			
 			if ( $userdata['user_founder'] )
@@ -399,7 +396,7 @@ else
 				),
 			);
 			
-			build_output($data, $display_vars, '_settings');
+			build_output($data, $display_vars, 'settings');
 			
 			$rank_page	= $data['user_rank_page'];
 			$rank_forum	= $data['user_rank_forum'];
@@ -445,7 +442,7 @@ else
 				{
 					if ( isset($db_sub[$key]) )
 					{
-						$template->assign_block_vars("$temp._cat", array('CAT_NAME' => $value));
+						$template->assign_block_vars("$temp.cat", array('CAT_NAME' => $value));
 						
 						foreach ( $db_sub[$key] as $field => $row )
 						{
@@ -459,7 +456,7 @@ else
 						
 							if ( $row['field_required'] )
 							{
-								$error .= !$value ? ( $error ? '<br />' : '' ) . sprintf($lang['msg_select_profile_field'], $name) : '';
+								$error[] = !$value ? ( $error ? '<br />' : '' ) . sprintf($lang['msg_select_profile_field'], $name) : '';
 							}
 							
 							if ( $row['field_type'] == 0 )
@@ -477,7 +474,7 @@ else
 								$input = "<label><input type=\"radio\" name=\"$field\" value=\"1\" $checked_yes/>&nbsp;{$lang['common_yes']}</label><span style=\"padding:4px;\"></span><label><input type=\"radio\" name=\"$field\" value=\"0\" $checked_no/>&nbsp;{$lang['common_no']}</label>";
 							}
 							
-							$template->assign_block_vars("$temp._cat._field", array(
+							$template->assign_block_vars("$temp.cat.field", array(
 								'REQ'	=> $req,
 								'NAME'	=> "<label for=\"$field\">$name</label>",
 								'INPUT' => $input,
@@ -499,10 +496,7 @@ else
 				}
 				else
 				{
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
-					
-					log_add(LOG_ADMIN, $log, 'error', $error);
+					error('ERROR_BOX', $error);
 				}
 			}
 			
@@ -585,7 +579,7 @@ else
 			{
 				$_auth = '';
 				
-				$auth = unserialize($group['auth_data']);
+				$auth = unserialize($group['group_auth']);
 				
 				foreach ( $auth as $key => $value )
 				{
@@ -641,7 +635,7 @@ else
 				
 				$s_mod_group .= ( !$member ) ? ' disabled' : '';
 				
-				$template->assign_block_vars('groups._group_row', array(
+				$template->assign_block_vars('groups.group_row', array(
 					'GROUP_NAME'	=> $group_name,
 					'GROUP_INFO'	=> $group_info,
 					'GROUP_FIELD'	=> "group_" . $group_id,
@@ -683,7 +677,7 @@ else
 				$s_mod_team	= ( $row['user_status'] ) ? 'checked="checked"' : '';
 				$s_mod_team .= ( !$member ) ? ' disabled' : '';
 				
-				$template->assign_block_vars('groups._team_row', array(
+				$template->assign_block_vars('groups.team_row', array(
 					'S_MARK_NAME'		=> "marks_team[$team_id]",
 					'S_MARK_ID'			=> $team_id,
 					'S_NEG_MARK_ID'		=> $neg_team_id,
@@ -967,7 +961,7 @@ else
 			$user_auth = unserialize($data['user_gauth']);
 			
 			/* Gruppenrechte */
-			$sql = "SELECT g.group_id, g.group_name, g.auth_data
+			$sql = "SELECT g.group_id, g.group_name, g.group_auth
 						FROM " . GROUPS . " g, " . LISTS . " ul
 						WHERE g.group_id = ul.type_id
 							AND ul.type = " . TYPE_GROUP . "
@@ -984,7 +978,7 @@ else
 			while ( $row = $db->sql_fetchrow($result) )
 			{
 				$name_group[$row['group_id']] = $row['group_name'];
-				$auth_group[$row['group_id']] = unserialize($row['auth_data']);
+				$auth_group[$row['group_id']] = unserialize($row['group_auth']);
 			}
 			$db->sql_freeresult($result);
 			
@@ -1053,7 +1047,7 @@ else
 		
 				$status = ( !$selected_default ) ? 'style="color: #2e8b57;"' : 'style="color: #ff6347;"';
 				
-				$template->assign_block_vars('auth._data', array(
+				$template->assign_block_vars('auth.data', array(
 					'TITLE'		=> $cell,
 					'NAME'		=> $auth_fields[$j],
 					
@@ -1063,7 +1057,7 @@ else
 					'S_DEFAULT'	=> $custom_authd[$j],
 				));
 				
-				$template->assign_block_vars('auth._list', array(
+				$template->assign_block_vars('auth.list', array(
 					'NAME'	=> $auth_fields[$j],
 				));
 			}
@@ -1115,7 +1109,7 @@ else
 		
 		default:
 		
-			$fields .= '<input type="hidden" name="mode" value="_create" />';
+			$fields .= '<input type="hidden" name="mode" value="create" />';
 	
 			$data = data(USERS, 'user_id != 1', 'user_id DESC', 1, false);
 			
@@ -1140,9 +1134,9 @@ else
 					'REGISTER'	=> create_date($userdata['user_dateformat'], $data[$i]['user_regdate'], $userdata['user_timezone']),
 					'LEVEL'		=> $user_level,
 					
-					'AUTH'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => '_auth', $url => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
-					'FIELD'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => '_fields', $url => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
-					'GROUP'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => '_groups', $url => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
+					'AUTH'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'auth', $url => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
+					'FIELD'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'fields', $url => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
+					'GROUP'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'groups', $url => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
 					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
 					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
 				));
@@ -1160,7 +1154,7 @@ else
 				'PAGE_NUMBER'	=> ( count($data) ) ? sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry']['acp'] ) + 1 ), $current_page ) : '',
 				'PAGE_PAGING'	=> ( count($data) ) ? generate_pagination($file . '?', count($data), $settings['per_page_entry']['acp'], $start ) : '',
 				
-				'S_CREATE'	=> check_sid("$file?mode=_create"),
+				'S_CREATE'	=> check_sid("$file?mode=create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));

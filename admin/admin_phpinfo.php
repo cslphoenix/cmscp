@@ -3,8 +3,11 @@
 if ( !empty($setmodules) )
 {
 	$root_file = basename(__FILE__);
-
-	$module['hm_dev']['sm_phpinfo'] = $root_file;
+	
+	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
+	{
+		$module['hm_system']['sm_phpinfo'] = $root_file;
+	}
 
 	return;
 }
@@ -22,6 +25,12 @@ else
 	$file	= basename(__FILE__);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
+	
+	if ( $userdata['user_level'] != ADMIN xor !$userdata['user_founder'] )
+	{
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+	}
 	
 	$template->set_filenames(array('body' => 'style/acp_phpinfo.tpl'));
 	

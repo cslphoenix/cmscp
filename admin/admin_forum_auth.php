@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_perm'] )
 	{
-		$module['hm_forum']['sm_perm2'] = $root_file;
+		$module['hm_forums']['sm_perm2'] = $root_file;
 	}
 	
 	return;

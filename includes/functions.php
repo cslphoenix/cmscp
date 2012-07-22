@@ -7,6 +7,9 @@
 function request($request_var, $request_type, $filter = '')
 {
 	global $_POST, $_GET;
+#	global $_SERVER;
+	
+#	$request = $_SERVER['REQUEST_METHOD'];
 	
 	if ( is_array($request_var) )
 	{
@@ -14,11 +17,13 @@ function request($request_var, $request_type, $filter = '')
 		{
 			list($typ, $opt, $field) = $request_var;
 			$tmp = ( isset($_POST[$typ][$opt][$field]) || isset($_GET[$typ][$opt][$field]) ) ? ( isset($_POST[$typ][$opt][$field]) ) ? $_POST[$typ][$opt][$field] : $_GET[$typ][$opt][$field] : '';
+		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt][$field] : $_GET[$typ][$opt][$field];
 		}
 		else
 		{
 			list($typ, $opt) = $request_var;
 			$tmp = ( isset($_POST[$typ][$opt]) || isset($_GET[$typ][$opt]) ) ? ( isset($_POST[$typ][$opt]) ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt] : '';
+		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt];
 		}
 	}
 	else
@@ -26,7 +31,7 @@ function request($request_var, $request_type, $filter = '')
 		$tmp = ( isset($_POST[$request_var]) || isset($_GET[$request_var]) ) ? ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var] : '';
 	}
 	
-	$var = '';
+	$var = $opt = '';
 	
 	if ( $tmp != '' )
 	{
@@ -45,11 +50,11 @@ function request($request_var, $request_type, $filter = '')
 			case '1': $var = trim(str_replace("'", "\'", $tmp));										break;
 			case '2': $var = trim(htmlentities(str_replace("'", "\'", $tmp), ENT_COMPAT));				break;
 			case '3': $var = trim(htmlentities(str_replace("'", "\'", strip_tags($tmp)), ENT_COMPAT));	break;
-			case '5': $var = !preg_match('#^http[s]?:\/\/#i', $tmp) ? 'http://' . $var : ''; break;
+#array		case '4': break;
+			case '5': $var = !preg_match('#^http[s]?:\/\/#i', $tmp) ? 'http://' . $var : '';			break;
 			
 			case 'int':		$var = intval($tmp); $var = isset($var) ? $var : '0'; break;
-			case 'url':		
-							if ( $tmp != "" )
+			case 'url':		if ( $tmp != "" )
 							{
 								if ( !preg_match('#^http[s]?:\/\/#i', $tmp) )
 								{
@@ -61,42 +66,50 @@ function request($request_var, $request_type, $filter = '')
 									$var = '';
 								}
 							}
-				break;
+					break;
 			case 'text':	$var = trim(str_replace("'", "\'", $tmp)); break;
 			case 'clean':	$var = trim(htmlentities(str_replace("'", "\'", $tmp), ENT_COMPAT)); break;
 			case 'html':	$var = trim(htmlentities(str_replace("'", "\'", strip_tags($tmp)), ENT_COMPAT)); break;
 			case 'array':	
-							foreach ( $tmp as $tmp_key => $tmp_value )
+							$tmp_tmp = '';
+							$tmp_var = '';
+							
+							if ( count($tmp) > 1 || $opt == 'user_month' )
 							{
-								$tmp_var = '';
-								
-								if ( $tmp_value != '' )
+								foreach ( $tmp as $tmp_key => $tmp_value )
 								{
-									switch ( $filter )
+									if ( $tmp_value != '' )
 									{
-										case 'int':	$tmp_var = intval($tmp_value); break;
-										case 'text':$tmp_var = trim(str_replace("'", "\'", $tmp_value)); break;
-										case 'url': if ( !preg_match('#^http[s]?:\/\/#i', $tmp_value) )
-													{
-														$tmp_var = 'http://' . $tmp_value;
-													}
-													
-													if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp_value) )
-													{
-														$tmp_var = '';
-													}
-													break;
-										default: $tmp_var = str_replace("'", "\'", $tmp_value); break;
+										switch ( $filter )
+										{
+											case 'int':	$tmp_var = intval($tmp_value); break;
+											case 'text':$tmp_var = trim(str_replace("'", "\'", $tmp_value)); break;
+											case 'url': if ( !preg_match('#^http[s]?:\/\/#i', $tmp_value) )
+														{
+															$tmp_var = 'http://' . $tmp_value;
+														}
+														
+														if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp_value) )
+														{
+															$tmp_var = '';
+														}
+														break;
+											default: $tmp_var = str_replace("'", "\'", $tmp_value); break;
+										}
 									}
+									$tmp_tmp[$tmp_key] = $tmp_var;
 								}
-								
-								$tmptmp[$tmp_key] = $tmp_var;
 							}
-							
-							$var = $tmptmp;	
-							
+							else
+							{
+								$tmp_tmp = $tmp[0];
+							}
+								
+							$var = $tmp_tmp;
+						#	debug($var, 'ary request!');
 							
 					break;
+					
 			default:	$var = str_replace("'", "\'", $tmp); break;
 		}
 	}
@@ -187,24 +200,24 @@ function add_lang($file)
 	}
 }
 
-function href($type, $file, $array, $text, $lng = '', $comment = false)
+function href($type, $file, $params, $text, $lng = '', $comment = false)
 {
 	global $lang, $images;
 	
-	$return = $ary = '';
+	$return = $url = '';
 
-	foreach ( $array as $k => $v )
+	foreach ( $params as $k => $v )
 	{
-		$ary[] = "$k=$v";
+		$url[] = "$k=$v";
 	}
 	
-	$_ary	= '?' . implode('&amp;', $ary);
-	$_txt	= strstr($type, 'img') ? isset($images[$text]) ? $images[$text] : $text : $text;
-	$_lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
+	$url	= '?' . implode('&amp;', $url);
+	$txt	= strstr($type, 'img') ? ( isset($images[$text]) ? $images[$text] : $text ) : $text;
+	$lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
 	
-	( $type == 'a_txt' ) ? list($_txt, $_lng) = array($_lng, $_txt) : '';
+	( $type == 'a_txt' ) ? list($txt, $lng) = array($lng, $txt) : '';
 	
-	$return = sprintf($lang[$type], check_sid($file . $_ary), $_txt, $_lng, $comment);
+	$return = sprintf($lang[$type], check_sid($file . $url), $txt, $lng, $comment);
 	
 	return $return;
 }
@@ -1723,7 +1736,7 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 		if ( defined('IN_ADMIN') )
 		{
 			$data = $submit;
-			$data_db = data($table, $id, false, 1, 1);
+			$data_db = data($table, $id, false, 1, true);
 			
 		#	debug($data, 'data');
 		#	debug($data_db, 'data_db');

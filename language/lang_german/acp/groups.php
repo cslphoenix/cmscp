@@ -6,6 +6,10 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
+
+
+	
+	
 	
 	'title'		=> 'Gruppe',
 	'titles'	=> 'Gruppen',
@@ -25,13 +29,14 @@ $lang = array_merge($lang, array(
 	
 	'group_name'	=> 'Name',
 	'group_mod'		=> 'Moderator',
-	'group_access'	=> 'Level',
-	'group_type'	=> 'Type',
+	'group_access'	=> 'Zugriffslevel',
+	'group_type'	=> 'Anfragentyp',
 	'group_desc'	=> 'Beschreibung',
 	'group_color'	=> 'Farbe',
 	'group_legend'	=> 'Legende',
 	'group_rank'	=> 'Rang',
 	'group_image'	=> 'Bild',
+	'group_order'	=> 'Reihenfolge',
 	
 	'count'		=> 'Mitgliederanzahl',
 	'view_member'	=> 'Mitglieder Übersicht',
@@ -77,6 +82,12 @@ $lang = array_merge($lang, array(
 		GROUP_HIDDEN	=> $lang['group_hidden'],
 		GROUP_SYSTEM	=> $lang['group_system'],
 	),
+));
+
+$lang = array_merge($lang, array(
+	
+	'radio:legend'	=> array(1 => $lang['common_view'], 0 => $lang['common_noview']),
+	
 ));
 
 /*

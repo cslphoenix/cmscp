@@ -17,6 +17,7 @@ if ( isset($_POST['mode']) )
 	$mode = (string) $_POST['mode'];
 	
 	$sql = "SELECT cat_tag FROM " . MAPS_CAT . " WHERE cat_id = $mode";
+	debug($sql);
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

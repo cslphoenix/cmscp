@@ -10,9 +10,10 @@ define('IN_ADMIN', true);
 $root_path = './../';
 
 include($root_path . 'common.php');
-include($root_path . 'includes/acp/acp_upload.php');
-include($root_path . 'includes/acp/acp_selects.php');
+include($root_path . 'includes/acp/acp_constants.php');
 include($root_path . 'includes/acp/acp_functions.php');
+include($root_path . 'includes/acp/acp_selects.php');
+include($root_path . 'includes/acp/acp_upload.php');
 
 $userdata = session_pagestart($user_ip, PAGE_ADMIN);
 init_userprefs($userdata);

@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 
 	if ( $userdata['user_level'] == ADMIN || $userauth['auth_votes'] )
 	{
-		$module['hm_main']['sm_votes'] = $root_file;
+		$module['hm_system']['sm_votes'] = $root_file;
 	}
 
 	return;
@@ -131,11 +131,11 @@ else
 			
 			if ( request('submit', TXT) )
 			{
-				$error .= ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
-				$error .= ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
-				$error .= ( !$data['training_maps'] )			? ( $error ? '<br />' : '' ) . $lang['msg_select_map'] : '';
-				$error .= ( time() >= $data['training_date'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
-				$error .= ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
+				$error[] = ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
+				$error[] = ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
+				$error[] = ( !$data['training_maps'] )			? ( $error ? '<br />' : '' ) . $lang['msg_select_map'] : '';
+				$error[] = ( time() >= $data['training_date'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
+				$error[] = ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
 				
 				if ( !$error )
 				{
@@ -160,10 +160,7 @@ else
 				}
 				else
 				{
-					log_add(LOG_ADMIN, $log, 'error', $error);
-					
-					$template->assign_vars(array('ERROR_MESSAGE' => $error));
-					$template->assign_var_from_handle('ERROR_BOX', 'error');
+					error('ERROR_BOX', $error);
 				}
 			}
 			
@@ -225,7 +222,7 @@ else
 			}
 			$s_sort .= "</select>";
 			
-			$fields .= '<input type="hidden" name="mode" value="_create" />';
+			$fields .= '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
@@ -237,7 +234,7 @@ else
 				'S_SORT'	=> $s_sort,
 				'S_TEAMS'	=> select_box('team', 'selectsmall', 0),
 				
-				'S_CREATE'	=> check_sid("$file?mode=_create"),
+				'S_CREATE'	=> check_sid("$file?mode=create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));

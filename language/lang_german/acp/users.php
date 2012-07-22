@@ -20,14 +20,14 @@ $lang = array_merge($lang, array(
 	'update_groups'	=> 'Benutzergruppen & Teams erfolgreich geändert.',
 	'update_fields'	=> 'Profilefelder erfolgreich geändert.',
 	
-	'_option' => array(
+	'option' => array(
 		'update'	=> 'Erforderliche Daten',
-		'_settings'	=> '!Einstellungen',
-		'_pics'		=> '!Foto & Avatar',
-		'_auth'		=> 'Benutzerberechtigungen',
-		'_groups'	=> 'Benutzergruppen & Teams',		
-		'_fields'	=> 'Profilfelder',
-		'_overview'	=> '!Übersicht',
+		'settings'	=> '!Einstellungen',
+		'pics'		=> '!Foto & Avatar',
+		'auth'		=> 'Benutzerberechtigungen',
+		'groups'	=> 'Benutzergruppen & Teams',		
+		'fields'	=> 'Profilfelder',
+		'overview'	=> '!Übersicht',
 	),
 	
 	'teams'			=> 'Teams',

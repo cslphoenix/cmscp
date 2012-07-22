@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
 	{
-		$module['hm_main']['sm_menu'] = $root_file;
+		$module['hm_system']['sm_menu'] = $root_file;
 	}
 	
 	return;
@@ -111,10 +111,7 @@ else
 					}
 					else
 					{
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
-
-						log_add(LOG_ADMIN, $log, 'error', $error);
+						error('ERROR_BOX', $error);
 					}
 				}
 				

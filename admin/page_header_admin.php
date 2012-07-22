@@ -152,6 +152,10 @@ if ( $tmp )
 		}
 	}
 }
+else
+{
+	$sql_cat = $sql_sub = $cat_ino = array();
+}
 
 foreach ( $module as $key => $row )
 {
@@ -164,21 +168,28 @@ foreach ( $module as $key => $row )
 	}
 }
 
-if ( $new_ary = array_diff($mod_cat, $sql_cat) )
+if ( $userdata['user_level'] == ADMIN )
 {
-	foreach ( $new_ary as $rows )
+	if ( $new_ary = array_diff($mod_cat, $sql_cat) )
 	{
-		$ary_new[$rows] = $module[$rows];
+		foreach ( $new_ary as $rows )
+		{
+			$ary_new[$rows] = $module[$rows];
+		}
+		
+		if ( $ary_new )
+		{
+			$tmp_cat = array_merge($cat_ino, $ary_new);
+		}
 	}
-	
-	if ( $ary_new )
+	else
 	{
-		$tmp_cat = array_merge($cat_ino, $ary_new);
+		$tmp_cat = $mod_cat;
 	}
 }
 else
 {
-	$tmp_cat = $sql_cat;
+	$tmp_cat = $mod_cat;
 }
 
 foreach ( $tmp_cat as $catkey => $catrow )

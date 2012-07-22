@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 	
 	if ( $userdata['user_level'] == ADMIN )
 	{
-		$module['hm_main']['sm_fields'] = $root_file;
+		$module['hm_usergroups']['sm_fields'] = $root_file;
 	}
 	
 	return;
@@ -52,29 +52,26 @@ else
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_fields.tpl',
-		'ajax'		=> 'style/ajax_order.tpl',
-		'error'		=> 'style/info_error.tpl',
+	#	'ajax'		=> 'style/ajax_order.tpl',
+	#	'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
-	
-	debug($_POST);
 
-	if ( request('add_field', TXT) || request('add_cat', TXT) )
+	if ( isset($_POST['add_field']) || isset($_POST['add_cat']) )
 	{
-		$mode = ( request('add_field', TXT) ) ? 'create' : 'create_cat';
-	
-		if ( request('add_field', ARY) )
+		if ( isset($_POST['add_field']) )
 		{
-			list($cat_id) = each(request('add_field', ARY));
-			
-			$field_name = request(array('sub_field', $cat_id), 'text');
+			$mode = 'create';
+			$cat_id = key($_POST['add_field']);
+			$name = request(array('sub_field', $cat_id), TXT);
 		}
 		else
 		{
-			$field_name = request('field_name', TXT);
+			$mode = 'create_cat';
+			$name = request('field_name', TXT);
 		}
 	}
-	
+#	debug($_POST);
 	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete', 'create_cat', 'update_cat', 'order_cat', 'delete_cat')) ) ? $mode : '';
 	
 	if ( $mode )
@@ -86,38 +83,38 @@ else
 			
 				$template->assign_block_vars('input', array());
 			
-				$template->assign_vars(array('FILE' => 'ajax_order'));
-				$template->assign_var_from_handle('AJAX', 'ajax');
+			#	$template->assign_vars(array('FILE' => 'ajax_order'));
+			#	$template->assign_var_from_handle('AJAX', 'ajax');
 				
 				$vars = array(
 					'field' => array(
 						'title1' => 'input_data',
-						'field_name'			=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name', 'check' => true),
-						'field_field'			=> array('validate' => 'text',	'type' => 'text:25:25',		'params' => 'prefix:field_', 'explain' => true, 'required' => 'input_field', 'check' => true),
-						'field_type'			=> array('validate' => 'int',	'type' => 'radio:type',		'explain' => true),
-						'field_sub'				=> array('validate' => 'int',	'type' => 'radio:sub', 		'explain' => true, 'params' => true),
-						'field_lang'			=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
-						'field_show_user'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
-						'field_show_member'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
-						'field_show_register'	=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
-						'field_required'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),
-						'field_order'			=> array('validate' => 'int',	'type' => 'drop:order',		'explain' => true),
+						'field_name'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name', 'check' => true),
+						'field_field'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_field', 'check' => true, 'prefix' => 'field_'),
+						'field_type'			=> array('validate' => INT,	'type' => 'radio:type',		'explain' => true),
+						'field_sub'				=> array('validate' => INT,	'type' => 'radio:sub', 		'explain' => true, 'params' => true, 'ajax' => 'ajax_order:ajax_order'),
+						'field_lang'			=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
+						'field_show_user'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
+						'field_show_member'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
+						'field_show_register'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
+						'field_required'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
+						'field_order'			=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
 					),
 				);
 				
 				if ( $mode == 'create' && !(request('submit', TXT)) )
 				{
 					$data = array(
-						'field_name'			=> $field_name,
-						'field_field'			=> str_replace(' ', '_', strtolower($field_name)),
-						'field_type'			=> '0',
+						'field_name'			=> $name,
+						'field_field'			=> str_replace(' ', '_', strtolower($name)),
+						'field_type'			=> 0,
 						'field_sub'				=> $cat_id,
-						'field_lang'			=> '0',
-						'field_show_user'		=> '0',
-						'field_show_member'		=> '0',
-						'field_show_register'	=> '0',
-						'field_required'		=> '0',
-						'field_order'			=> '',
+						'field_lang'			=> 0,
+						'field_show_user'		=> 0,
+						'field_show_member'		=> 0,
+						'field_show_register'	=> 0,
+						'field_required'		=> 0,
+						'field_order'			=> 0,
 					);
 				}
 				else if ( $mode == 'update' && !(request('submit', TXT)) )
@@ -126,11 +123,7 @@ else
 				}
 				else
 				{
-					$temp = data(FIELDS, $data_id, false, 1, true);
-					$temp = array_keys($temp);
-					unset($temp[0]);
-					
-					$data = build_request($temp, $vars, 'field', $error);
+					$data = build_request(FIELDS, $vars, 'field', $error);
 					
 					if ( !$error )
 					{
@@ -139,40 +132,33 @@ else
 						if ( $mode == 'create' )
 						{
 							$sql = sql(FIELDS, $mode, $data);
-							
-					#		$type = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL';
-							$type = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) NOT NULL';
-							
-							$add = sql(FIELDS_DATA, 'alter', array('part' => "ADD `{$data['field_field']}`", 'type' => $type));
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+					#		$typ = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL';
+							$typ = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) NOT NULL';
+							$add = sql(FIELDS_DATA, 'alter', array('part' => "ADD `{$data['field_field']}`", 'type' => $typ));
+							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							$sql = sql(FIELDS, $mode, $data, 'field_id', $data_id);
-							
-							$type = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) NOT NULL';
-							
-							$add = sql(FIELDS_DATA, 'alter', array('part' => "CHANGE `" . request('current_field', 1) . "` `{$data['field_field']}`", 'type' => $type));
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$typ = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) NOT NULL';
+							$add = sql(FIELDS_DATA, 'alter', array('part' => "CHANGE `" . request('current_field', TXT) . "` `{$data['field_field']}`", 'type' => $typ));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
 						}
 					
 						orders(FIELDS, $data['field_sub']);
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
 						message(GENERAL_MESSAGE, $msg);
-				
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 					
 				}
 				
 				build_output($data, $vars, 'input', false, FIELDS);
+			
 			
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
@@ -193,45 +179,41 @@ else
 			case 'create_cat':
 			case 'update_cat':
 			
-				$template->assign_block_vars('input', array());
-				$template->assign_vars(array('FILE' => 'ajax_order'));
-				$template->assign_var_from_handle('AJAX', 'ajax');
+				$template->assign_block_vars('input_cat', array());
+			#	$template->assign_vars(array('FILE' => 'ajax_order'));
+			#	$template->assign_var_from_handle('AJAX', 'ajax');
 				
-				$temp = array('field_name', 'field_sub', 'field_lang', 'field_order');
+				
 				$vars = array(
 					'field' => array(
-						'tab1' => 'cat',
-						'field_name'	=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => false,	'required' => true, 'check' => true),
-						'field_lang'	=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => false),
-						'field_order'	=> array('validate' => 'int',	'type' => 'drop:order',		'explain' => false),
-						
-						'tab2' => 'hidden',
-						'field_sub'		=> array('validate' => 'int',	'type' => 'hidden'),
+						'title' => 'data_input',
+						'field_name'	=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => false,	'required' => 'input_name', 'check' => true),
+						'field_order'	=> array('validate' => INT,	'type' => 'drop:order',		'explain' => false),
+						'field_sub'		=> array('type' => 'hidden'),
 					),
 				);
 				
-				if ( $mode == '_create_cat' && !(request('submit', TXT)) )
+				if ( $mode == 'create_cat' && !(request('submit', TXT)) )
 				{
 					$data = array(
-						'field_name'	=> $field_name,
-						'field_sub'		=> '0',
-						'field_lang'	=> '0',
+						'field_name'	=> $name,
 						'field_order'	=> '0',
+						'field_sub'		=> '0',
 					);
 				}
-				else if ( $mode == '_update_cat' && !(request('submit', TXT)) )
+				else if ( $mode == 'update_cat' && !(request('submit', TXT)) )
 				{
 					$data = data(FIELDS, $data_id, false, 1, true);
 				}
 				else
 				{
-					$data = build_request($temp, $vars, 'field', $error);
-					
+					$data = build_request(FIELDS, $vars, 'field', $error);
+
 					if ( !$error )
 					{
-						$data['field_order'] = $data['field_order'] ? $data['field_order'] : maxa(FIELDS, 'field_order', '');
+						$data['field_order'] = $data['field_order'] ? $data['field_order'] : maxa(FIELDS, 'field_order', "field_sub = {$data['field_sub']}");
 												
-						if ( $mode == '_create_cat' )
+						if ( $mode == 'create_cat' )
 						{
 							$sql = sql(FIELDS, $mode, $data);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
@@ -249,21 +231,18 @@ else
 					}
 					else
 					{
-						log_add(LOG_ADMIN, $log, 'error', $error);
-						
-						$template->assign_vars(array('ERROR_MESSAGE' => $error));
-						$template->assign_var_from_handle('ERROR_BOX', 'error');
+						error('ERROR_BOX', $error);
 					}
 				}
 				
-				build_output($data, $vars, 'input', false, FIELDS);
+				build_output($data, $vars, 'input_cat', false, FIELDS);
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['field'], $data['field_name']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['cat'], $data['field_name']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -404,7 +383,7 @@ else
 			list($cid, $corder) = explode(':', $key);
 			
 			$template->assign_block_vars('display.cat', array( 
-				'NAME'		=> href('a_txt', $file, array('mode' => '_update_cat', $url => $cid), $cname, $cname),
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update_cat', $url => $cid), $cname, $cname),
 				
 				'MOVE_UP'	=> ( $corder != '10' ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '-15', $url => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 				'MOVE_DOWN'	=> ( $corder != $max ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '+15', $url => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
