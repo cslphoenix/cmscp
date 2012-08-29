@@ -2,21 +2,20 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
-	{
-		$module['hm_system']['sm_phpinfo'] = $root_file;
-	}
-
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_phpinfo',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_phpinfo', 'auth' => false),
+		),
+	);
 }
 else
 {
 	define('IN_CMS', true);
 
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_phpinfo';
+	$current	= 'acp_phpinfo';
 
 	include('./pagestart.php');
 

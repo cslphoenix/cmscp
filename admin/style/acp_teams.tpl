@@ -1,78 +1,50 @@
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td><span class="right">{display.row.COUNT}</span>{display.row.GAME}{display.row.NAME}</td>
-	<td>{display.row.MEMBER}{display.row.MOVE_UP}{display.row.MOVE_DOWN}{display.row.UPDATE}{display.row.DELETE}</td>
-</tr>
-<!-- END row -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="team_name"></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END display -->
-
 <!-- BEGIN input -->
+<script type="text/javascript">
+// <![CDATA[
+
+function update_image(newimage)
+{
+	document.getElementById('image').src = (newimage) ? "{IPATH}" + encodeURI(newimage) : "./../images/spacer.gif";
+}
+
+// ]]>
+</script>
 {TINYMCE}
-{UIMG}
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-	<!-- BEGIN member -->
-	<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
-	<!-- END member -->
+<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
+<!-- BEGIN member -->
+<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
+<!-- END member -->
 </ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
-<table class="update">
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<div class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
 <!-- BEGIN option -->
-<tr>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+<div{input.row.tab.option.ID}>
+<dl>			
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+</div>
 <!-- END option -->
 <!-- END tab -->
-</table>
+</div>
 <!-- END row -->
 
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END input -->
@@ -87,7 +59,7 @@
 </ul>
 <ul id="navinfo"><li>{L_MEMBERS_EXPLAIN}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <table class="normal">
 <tr>
@@ -96,15 +68,15 @@
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_JOIN}</a></li></ul></th>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_RANK}</a></li></ul></th>
 </tr>
-<!-- BEGIN mod_row -->
-<tr onclick="checked({_member._modrow.ID})" class="hover">
-	<td>{_member._modrow.NAME}</td>
-	<td>{_member._modrow.REG}</td>
-	<td>{_member._modrow.JOIN}</td>
-	<td>{_member._modrow.RANK}</td>
-	<td><input type="checkbox" name="member[]" value="{_member._modrow.ID}" id="check_{_member._modrow.ID}"></td>
+<!-- BEGIN mod -->
+<tr onclick="checked({member.mod.ID})" class="hover">
+	<td>{member.mod.NAME}</td>
+	<td>{member.mod.REG}</td>
+	<td>{member.mod.JOIN}</td>
+	<td>{member.mod.RANK}</td>
+	<td><input type="checkbox" name="member[]" value="{member.mod.ID}" id="check_{member.mod.ID}"></td>
 </tr>
-<!-- END mod_row -->
+<!-- END mod -->
 <!-- BEGIN no_moderators -->
 <tr>
 	<td class="empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
@@ -121,15 +93,16 @@
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_JOIN}</a></li></ul></th>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_RANK}</a></li></ul></th>
 </tr>
-<!-- BEGIN member_row -->
-<tr onclick="checked({_member._memberrow.ID})">
-	<td>{_member._memberrow.NAME}</td>
-	<td>{_member._memberrow.REG}</td>
-	<td>{_member._memberrow.JOIN}</td>
-	<td>{_member._memberrow.RANK}</td>
-	<td><input type="checkbox" name="member[]" value="{_member._memberrow.ID}" id="check_{_member._memberrow.ID}"></td>
+<!-- BEGIN mem -->
+<!--<tr class="hover">-->
+<tr>
+	<td><label for="check_{member.mem.ID}">{member.mem.NAME}</label></td>
+	<td><label for="check_{member.mem.ID}">{member.mem.REG}</label></td>
+	<td><label for="check_{member.mem.ID}">{member.mem.JOIN}</label></td>
+	<td><label for="check_{member.mem.ID}">{member.mem.RANK}</label></td>
+	<td><input type="checkbox" name="member[]" value="{member.mem.ID}" id="check_{member.mem.ID}"></td>
 </tr>
-<!-- END member_row -->
+<!-- END mem -->
 <!-- BEGIN no_members -->
 <tr>
 	<td class="empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
@@ -150,7 +123,7 @@
 {S_FIELDS}
 </form>
 
-<!-- BEGIN user_add -->
+<!-- BEGIN add -->
 <form action="{S_ACTION}" method="post" name="post" id="list">
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBERS_ADD}</a></li></ul>
 
@@ -183,7 +156,45 @@
 </tr>
 </table>
 {S_FIELDS}
-<input type="hidden" name="smode" value="_user_create" />
+<input type="hidden" name="smode" value="user_create" />
 </form>
-<!-- END user_add -->
+<!-- END add -->
 <!-- END member -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
+<ul id="navlist">
+	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
+	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
+</ul>
+<p>{L_EXPLAIN}</p>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span class="right">{display.row.COUNT}</span>{display.row.GAME}{display.row.NAME}</td>
+	<td>{display.row.MEMBER}{display.row.MOVE_UP}{display.row.MOVE_DOWN}{display.row.UPDATE}{display.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="team_name"></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

@@ -347,9 +347,318 @@ function auth_check_user($type, $key, $u_access, $is_admin)
 
 function auth_acp_check($user_id)
 {
-	global $db, $userdata;
+	global $db;
+	
+	$gauth_access = array();
+	$uauth_access = array();
+	$options = array();
+	$tmp_auth = array();
+	$userauth = array();
+	$auth_group = array();
+	
+	$sql = 'SELECT type_id AS group_id FROM ' . LISTS . ' WHERE type = ' . TYPE_GROUP . ' AND user_pending = 0 AND user_id = "' . $user_id . '"';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$auth_group[] = $row['group_id'];
+	}
+	$db->sql_freeresult($result);
+	
+	if ( $auth_group )
+	{
+		$sql = 'SELECT * FROM cms_acl_groups WHERE group_id IN (' . implode(', ', $auth_group) . ')';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$gauth_access[] = $row;
+		}
+		$db->sql_freeresult($result);
+	}
+	
+	$sql = 'SELECT * FROM cms_acl_users WHERE user_id = ' . $user_id;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+		
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$uauth_access[] = $row;
+	}
+	$db->sql_freeresult($result);
+	
+	$sql = 'SELECT * FROM cms_acl_fields';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$acl_fields[$row['field_id']] = $row['field_name'];
+	}
+	
+	$sql = 'SELECT * FROM cms_acl_options';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$options[$row['option_id']][$row['field_id']] = $row['auth_value'];
+	}
+	
+	
+	
+	if ( $gauth_access )
+	{
+		foreach ( $gauth_access as $keys => $rows )
+		{
+			if ( $rows['label_id'] != 0 )
+			{
+				if ( isset($options[$rows['label_id']]) )
+				{
+					foreach ( $options[$rows['label_id']] as $key => $row )
+					{
+						$gaccess[$keys][$acl_fields[$key]] = $row;
+					}
+				}
+				
+				$tlabel = $rows['label_id'];
+			}
+			
+			if ( $rows['field_id'] != 0 )
+			{
+				$gaccess[$keys][$acl_fields[$rows['field_id']]] = $rows['auth_value'];
+			}
+		}
+		
+		foreach ( $gaccess as $rows )
+		{
+			foreach ( $rows as $key => $row )
+			{
+				if ( $row == '1' )
+				{
+					if ( isset($tmp_auth[$key]) )
+					{
+						if ( $tmp_auth[$key] == '-1' )
+						{
+							$tmp_auth[$key] = '';
+						}
+						else if ( $tmp_auth[$key] == '0' )
+						{
+							$tmp_auth[$key] = '1';
+						}
+					}
+					else
+					{
+						$tmp_auth[$key] = '1';
+					}
+				}
+				else if ( $row == '0' )
+				{
+					if ( isset($tmp_auth[$key]) )
+					{
+						if ( $tmp_auth[$key] == '-1' )
+						{
+							$tmp_auth[$key] = '';
+						}
+						else if ( $tmp_auth[$key] == '1' )
+						{
+							$tmp_auth[$key] = '1';
+						}
+						
+					}
+					else
+					{
+						$tmp_auth[$key] = '';
+					}
+				}
+				else
+				{
+					$tmp_auth[$key] = '';
+				}
+			}
+		}
+	}
+	
+	if ( $uauth_access )
+	{
+		foreach ( $uauth_access as $keys => $rows )
+		{
+			if ( $rows['label_id'] != 0 )
+			{
+				if ( isset($options[$rows['label_id']]) )
+				{
+					foreach ( $options[$rows['label_id']] as $key => $row )
+					{
+						$uaccess[$keys][$acl_fields[$key]] = $row;
+					}
+				}
+				
+				$tlabel = $rows['label_id'];
+			}
+			
+			if ( $rows['field_id'] != 0 )
+			{
+				$uaccess[$keys][$acl_fields[$rows['field_id']]] = $rows['auth_value'];
+			}
+		}
+		
+		foreach ( $uaccess as $rows )
+		{
+			foreach ( $rows as $key => $row )
+			{
+				if ( $row == '1' )
+				{
+					if ( isset($tmp_auth[$key]) )
+					{
+						if ( $tmp_auth[$key] == '-1' )
+						{
+							$tmp_auth[$key] = '';
+						}
+						else if ( $tmp_auth[$key] == '0' )
+						{
+							$tmp_auth[$key] = '1';
+						}
+					}
+					else
+					{
+						$tmp_auth[$key] = '1';
+					}
+				}
+				else if ( $row == '0' )
+				{
+					if ( isset($tmp_auth[$key]) )
+					{
+						if ( $tmp_auth[$key] == '-1' )
+						{
+							$tmp_auth[$key] = '';
+						}
+						else if ( $tmp_auth[$key] == '1' )
+						{
+							$tmp_auth[$key] = '1';
+						}
+						
+					}
+					else
+					{
+						$tmp_auth[$key] = '';
+					}
+				}
+				else
+				{
+					$tmp_auth[$key] = '';
+				}
+			}
+		}
+	}
+	
+	if ( $tmp_auth )
+	{
+		foreach ( $tmp_auth as $key => $row )
+		{
+			if ( $row )
+			{
+				$userauth[$key] = $row;
+			}
+		}
+	}
+	
+	/*
+	$sql = 'SELECT type_id AS group_id FROM ' . LISTS . ' WHERE type = ' . TYPE_GROUP . ' AND user_pending = 0 AND user_id = "' . $user_id . '"';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$auth_group[] = $row['group_id'];
+	}
+	$db->sql_freeresult($result);
+	
+	$sql = 'SELECT * FROM ' . ACCESS . ' WHERE access_usergroup = "' . $user_id * -1 . '"';
+	$sql .= (isset($auth_group)) ? ' OR access_usergroup IN (' . implode(', ', $auth_group) . ')' : '';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$auth_access = array();
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		unset($row['access_usergroup']);
+		$auth_access[] = $row;
+	}
+	$db->sql_freeresult($result);
+	
+	$userauth = array();
+	
+	foreach ( $auth_access as $rows )
+	{
+		foreach ( $rows as $name => $value )
+		{
+			if ( $value == '1' )
+			{
+				if ( isset($userauth[$name]) )
+				{
+					if ( $userauth[$name] == '-1' )
+					{
+						$userauth[$name] = '-1';
+					}
+					else if ( $userauth[$name] == '0' )
+					{
+						$userauth[$name] = '1';
+					}
+				}
+				else
+				{
+					$userauth[$name] = '1';
+				}
+			}
+			else if ( $value == '0' )
+			{
+				if ( isset($userauth[$name]) )
+				{
+					if ( $userauth[$name] == '-1' )
+					{
+						$userauth[$name] = '-1';
+					}
+					else if ( $userauth[$name] == '1' )
+					{
+						$userauth[$name] = '1';
+					}
+					
+				}
+				else
+				{
+					$userauth[$name] = '0';
+				}
+			}
+			else
+			{
+				$userauth[$name] = '-1';
+			}
+		}
+	}
+	*/
 	
 #	debug(unserialize($userdata['user_gauth']));
+
+	/*
 
 	$auth_user = unserialize($userdata['user_gauth']);
 	
@@ -397,7 +706,8 @@ function auth_acp_check($user_id)
 			$userauth[$ukey] = $uvalue;
 		}
 	}
-		
+	*/
+	
 	return $userauth;
 }
 

@@ -2,65 +2,77 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_training'] )
-	{
-		$module['hm_clan']['sm_training'] = $root_file;
-	}
-
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_training',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_training'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_training';
+	$cancel = ( isset($_POST['cancel']) ) ? true : false;
+	$update = ( isset($_POST['submit']) ) ? true : false;
+	
+	$current = 'acp_training';
 	
 	include('./pagestart.php');
 	
 	add_lang('training');
-
+	
 	$error	= '';
 	$index	= '';
-	$fields	= '';
+	$fields = '';
 	
-	$log	= SECTION_TRAINING;
-	$url	= POST_TRAINING;
-	$team	= POST_TEAMS;
-	$match	= POST_MATCH;
-	$file	= basename(__FILE__);
 	$time	= time();
+	$log	= SECTION_TRAINING;
 	
-	$start		= ( request('start', INT) ) ? request('start', INT) : 0;
-	$start		= ( $start < 0 ) ? 0 : $start;
+	$data	= request('id', INT);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
+	$sub	= request('sub', TYP);
+	$subs	= request('subs', TYP);
+	$mode	= request('mode', TYP);
+	$sort	= request('sort', TYP) ;
+	$type	= request('type', TYP);
+	$accept	= request('accept', TYP);
+	$action	= request('action', TYP);
 	
-	$data_id	= request($url, INT);
-	$team_id	= request($team, INT);
-	$match_id	= request($match, INT);
-	$confirm	= request('confirm', TXT);
-	$mode		= request('mode', TXT);
-	$sort		= request('sort', TXT) ? request('sort', TXT) : '';
+	$team_id	= request(POST_TEAMS, INT);
+	$match_id	= request(POST_MATCH, INT);
 	$acp_main	= request('acp_main', INT);
 	
+	$dir_path	= $root_path . 'admin/';
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-		
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_training'] )
+	
+	if ( $userdata['user_level'] != ADMIN && !$userauth['a_menu'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
-
-	( $header && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
-	( $header && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
+	
+	( $cancel && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_training.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
+	if ( $userdata['user_level'] != ADMIN && !$userauth['a_training'] )
+	{
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+	}
+	
 	$mode = ( in_array($mode, array('create', 'update', 'delete')) ) ? $mode : '';
+	
+	$switch = $settings['switch']['training'];
+	
+	debug($_POST, 'POST');
 	
 	switch ( $mode )
 	{
@@ -71,45 +83,43 @@ else
 
 			$vars = array(
 				'training' => array(
-					'title1' => 'input_data',
-					'training_vs'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
-					'team_id'			=> array('validate' => INT,	'type' => 'drop:team',		'explain' => true, 'required' => 'select_team', 'params' => 'request', 'ajax' => 'ajax_listmaps'),
-					'match_id'			=> array('validate' => INT,	'type' => 'drop:match',		'explain' => true),
-					'training_maps'		=> array('validate' => ARY,	'type' => 'drop:maps', 		'explain' => true, 'required' => 'select_maps'),
-					'training_date'		=> array('validate' => INT,	'type' => 'drop:datetime',	'explain' => true, 'params' => ( $mode == 'create' ) ? $time : '-1'),
-					'training_duration'	=> array('validate' => INT,	'type' => 'drop:duration',	'explain' => true, 'params' => 'training_date'),
-					'training_text'		=> array('validate' => TXT,	'type' => 'textarea:40',	'explain' => true, 'params' => TINY_NORMAL),
-					'training_create'	=> array('type' => 'hidden'),
-					'training_update'	=> array('type' => 'hidden'),
-					'count_comment'		=> array('type' => 'hidden'),
-					'training_comments'	=> array('type' => 'hidden'),
+					'title' => 'input_data',
+					'training_vs'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',		'required' => 'input_name'),
+					'team_id'			=> array('validate' => INT,	'explain' => false, 'type' => 'drop:team',		'required' => 'select_team', 'params' => array('request', 'training_maps')),
+					'match_id'			=> array('validate' => INT,	'explain' => false, 'type' => 'drop:match'),
+					'training_maps'		=> array('validate' => ARY,	'explain' => false, 'type' => 'drop:maps',		'required' => 'select_maps'),
+				#	'training_date'		=> array('validate' => INT,	'explain' => false, 'type' => 'drop:datetime',	'params' => ( $mode == 'create' ) ? $time : '-1'),
+					'training_date'		=> array('validate' => ($switch ? INT : TXT), 'type' => ($switch ? 'drop:datetime' : 'text:25;25'), 'params' => ($switch ? (($mode == 'create') ? $time : '-1') : 'format')),
+					'training_duration'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:duration',	'params' => 'training_date'),
+					'training_text'		=> array('validate' => TXT,	'explain' => false, 'type' => 'textarea:40',	'params' => TINY_NORMAL),
+					'training_comments'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+					'time_create'		=> 'hidden',
+					'time_update'		=> 'hidden',
 				),
 			);
 			
-			if ( $mode == 'create' && !request('submit', TXT) )
+			if ( $mode == 'create' && !$update )
 			{
-				$data = array(
+				$data_sql = array(
 					'training_vs'		=> ( request('training_vs', TXT) ) ? request('training_vs', TXT) : request('vs', TXT),
-					'team_id'			=> ( request('team_id', INT) ) ? request('team_id', INT) : $team_id,
-					'match_id'			=> request($match, INT),
-					'training_maps'		=> '',
+					'team_id'			=> $team_id,
+					'match_id'			=> $match_id,
+					'training_maps'		=> 'a:0:{}',
 					'training_date'		=> $time,
 					'training_duration'	=> '',
 					'training_text'		=> '',
-					'training_create'	=> $time,
-					'training_update'	=> $time,
-					'count_comment'		=> 0,
 					'training_comments'	=> 0,
-					
+					'time_create'		=> $time,
+					'time_update'		=> 0,
 				);
 			}
-			else if ( $mode == 'update' && !request('submit', TXT) )
+			else if ( $mode == 'update' && !$update )
 			{
-				$data = data(TRAINING, $data_id, false, 1, true);
+				$data_sql = data(TRAINING, $data, false, 1, true);
 			}
 			else
 			{
-				$data = build_request(TRAINING, $vars, 'training', $error);
+				$data_sql = build_request(TRAINING, $vars, $error, $mode);
 				
 				if ( !$error )
 				{
@@ -117,13 +127,13 @@ else
 					
 					if ( $mode == 'create' )
 					{
-						$sql = sql(TRAINING, $mode, $data);
+						$sql = sql(TRAINING, $mode, $data_sql);
 						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
-						$sql = sql(TRAINING, $mode, $data, 'training_id', $data_id);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(TRAINING, $mode, $data_sql, 'training_id', $data);
+						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					}
 					
 				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');
@@ -138,16 +148,13 @@ else
 				}
 			}
 			
-			build_output($data, $vars, 'input', false, TRAINING);
+			build_output(TRAINING, $vars, $data_sql);
 			
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-						
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['training_vs']),
+				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['training_vs']),
 				
-				'S_ACTION'		=> check_sid($file),
+				'S_ACTION'		=> check_sid("$file&mode=$mode&amp;id=$data"),
 				'S_FIELDS'		=> $fields,
 			));
 			
@@ -155,19 +162,19 @@ else
 			
 		case 'delete':
 		
-			$data = data(TRAINING, $data_id, false, 1, true);
+			$data_sql = data(TRAINING, $data, false, 1, true);
 		
-			if ( $data_id && $confirm )
+			if ( $data && $confirm )
 			{
 				$file = ( $acp_main ) ? check_sid('index.php') : check_sid($file);
 				$name = ( $acp_main ) ? $lang['header_acp'] : $acp_title;
 				
-				$sql = sql(TRAINING, $mode, $data, 'training_id', $data_id);
+				$sql = sql(TRAINING, $mode, $data_sql, 'training_id', $data);
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $name);
 				
-			#	sql(COMMENTS, $mode, $data, 'training_id', $data_id);
-			#	sql(COMMENTS_READ, $mode, $data, 'training_id', $data_id);
-				sql(TRAINING_USERS, $mode, false, 'training_id', $data_id);
+			#	sql(COMMENTS, $mode, $data_sql, 'training_id', $data);
+			#	sql(COMMENTS_READ, $mode, $data_sql, 'training_id', $data);
+				sql(TRAINING_USERS, $mode, false, 'training_id', $data);
 					
 			#	$oCache -> deleteCache('subnavi_training_*');
 				
@@ -177,12 +184,12 @@ else
 			else if ( $data_id && !$confirm )
 			{
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['training_vs']),
+					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data_sql['training_vs']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -205,16 +212,16 @@ else
 			
 			$teams = data(TEAMS, false, 'team_order', 0, false);
 			
-			$s_sort .= "<select class=\"selectsmall\" name=\"$team\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
-			$s_sort .= "<option value=\"0\">" .  sprintf($lang['sprintf_select_format'], $lang['msg_select_team']) . "</option>";
+			$s_sort .= '<select name="' . POST_TEAMS . '" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
+			$s_sort .= '<option value="0">' .  sprintf($lang['sprintf_select_format'], $lang['msg_select_team']) . '</option>';
 			
 			foreach ( $teams as $info => $value )
 			{
 				$selected = ( $value['team_id'] == $team_id ) ? ' selected="selected"' : '';
-				$s_sort .= "<option value=\"" . $value['team_id'] . "\" $selected>" . sprintf($lang['sprintf_select_format'], $value['team_name']) . "</option>";
+				$s_sort .= '<option value="' . $value['team_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $value['team_name']) . '</option>';
 			}
 			
-			$s_sort .= "</select>";
+			$s_sort .= '</select>';
 			
 			$select_id = ( $team_id >= '1' ) ? "AND tr.team_id = $team_id" : '';
 			
@@ -246,6 +253,8 @@ else
 						$old[] = $row;
 					}
 				}
+				
+			#	debug($old, 'old');
 
 				if ( !$new )
 				{
@@ -261,12 +270,12 @@ else
 						$vs = $new[$i]['training_vs'];
 						
 						$template->assign_block_vars('display.new_row', array(
-							'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $vs, $vs),
+							'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $vs, $vs),
 							'GAME'		=> display_gameicon($new[$i]['game_image']),
 							'DATE'		=> create_date($userdata['user_dateformat'], $new[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 						));
 					}
 				}
@@ -278,27 +287,29 @@ else
 				else
 				{
 					$cnt_old = count($old);
+				#	debug($start, 'start', true);
 					
-					for ( $i = $start; $i < $cnt_old; $i++ )
+				#	for ( $j = $start; $j < $cnt_old; $j++ )
+					for ( $j = $start; $j < min(5 + $start, $cnt_old); $j++ )
 					{
-						$id = $old[$i]['training_id'];
-						$vs = $old[$i]['training_vs'];
+						$id = $old[$j]['training_id'];
+						$vs = $old[$j]['training_vs'];
 						
 						$template->assign_block_vars('display.old_row', array(
-							'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $vs, $vs),
-							'GAME'		=> display_gameicon($old[$i]['game_image']),
-							'DATE'		=> create_date($userdata['user_dateformat'], $old[$i]['training_date'], $userdata['user_timezone']),
+							'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $vs, $vs),
+							'GAME'		=> display_gameicon($old[$j]['game_image']),
+							'DATE'		=> create_date($userdata['user_dateformat'], $old[$j]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 						));
 					}
 				}
 			}
 					
-			$current_page = ( !$cnt_old ) ? 1 : ceil($cnt_old/$settings['per_page_entry']['acp']);
+			$current_page = ( !$cnt_old ) ? 1 : ceil($cnt_old/5);
 			
-			$fields .= '<input type="hidden" name="mode" value="create" />';
+			$fields = '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
@@ -307,13 +318,13 @@ else
 				'L_UPCOMING'	=> $lang['upcoming'],
 				'L_EXPIRED'		=> $lang['expired'],
 				
-				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry']['acp'] ) + 1 ), $current_page),
-				'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_old, $settings['per_page_entry']['acp'], $start ),
+				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / 5 ) + 1 ), $current_page),
+				'PAGE_PAGING'	=> generate_pagination($file, $cnt_old, 5, $start ),
 				
 				'S_SORT'	=> $s_sort,
-				'S_TEAMS'	=> select_team($team, false, 'team_id', false),
+				'S_TEAMS'	=> select_team($team_id, false, POST_TEAMS, false),
 
-				'S_CREATE'	=> check_sid("$file?mode=create"),
+				'S_CREATE'	=> check_sid("$file&mode=create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));

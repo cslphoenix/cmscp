@@ -1,5 +1,5 @@
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 
 <br />
 
@@ -54,7 +54,7 @@
 <table class="update">
 <tr>
 	<td class="row1">{L_SHOW_NOT_OPTIMIZED}:</td>
-	<td class="row2"><label><input type="radio" name="db_show_optimized" value="1" {S_OPTIMIZED_YES}/>&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="db_show_optimized" value="0" {S_OPTIMIZED_NO} />&nbsp;{L_NO}</label></td>
+	<td class="row2"><label><input type="radio" name="db_showoptimized" value="1" {S_OPTIMIZED_YES}/>&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="db_showoptimized" value="0" {S_OPTIMIZED_NO} />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1">{L_SHOW_BEGIN_FOR}:</td>
@@ -85,12 +85,12 @@
 	<th><input type="checkbox" name="selected_tbl[]" onclick="checkbox(this.name,this.checked)" /></th>
 </tr>	
 <!-- BEGIN optimize_row -->
-<tr onclick="checked({_optimize._optimizerow.NUM})">
-	<td>{_optimize._optimizerow.NAME}</td>
-	<td>{_optimize._optimizerow.ROWS}</td>
-	<td>{_optimize._optimizerow.SIZE}</td>
-	<td>{_optimize._optimizerow.FREE}</td>
-	<td>{_optimize._optimizerow.S_SELECT}</td>
+<tr>
+	<td><label for="check_{optimize.optimize_row.NUM}" title="{optimize.optimize_row.TITLE}">{optimize.optimize_row.NAME}</label></td>
+	<td><label for="check_{optimize.optimize_row.NUM}">{optimize.optimize_row.ROWS}</label></td>
+	<td><label for="check_{optimize.optimize_row.NUM}">{optimize.optimize_row.SIZE}</label></td>
+	<td><label for="check_{optimize.optimize_row.NUM}">{optimize.optimize_row.FREE}</label></td>
+	<td>{optimize.optimize_row.S_SELECT}</td>
 </tr>
 <!-- END optimize_row -->
 <tr>

@@ -308,7 +308,7 @@ if ( $data && $tmp )
 				$fielde .= "<input type=\"hidden\" name=\"smode\" value=\"change\" />";
 				$fielde .= "<input type=\"hidden\" name=\"status\" value=\"$status\" />";
 				$fielde .= "<input type=\"hidden\" name=\"mode\" value=\"detail\" />";
-				$fielde .= "<input type=\"hidden\" name=\"$url\" value=\"$data\" />";
+				$fielde .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'S_NO'		=> ( $row['user_status'] == STATUS_NO ) ? 'checked="checked"' : '',
@@ -581,7 +581,7 @@ if ( $data && $tmp )
 	}
 	
 #	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"detail\" />";
-#	$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data\" />";
+#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	$fields .= "<input type=\"hidden\" name=\"smode\" value=\"msg\" />";
 	
 	$template->assign_vars(array(

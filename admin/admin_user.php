@@ -2,14 +2,13 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user'])
-	{
-		$module['hm_usergroups']['sm_settings'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_user',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_user', 'auth' => 'auth_user'),
+		)
+	);
 }
 else
 {
@@ -17,7 +16,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_settings_user';
+	$current	= 'acp_settings_user';
 	
 	include('./pagestart.php');
 	
@@ -28,7 +27,6 @@ else
 	
 	$log	= SECTION_USER;
 	$url	= POST_USER;
-	$file	= basename(__FILE__);
 	$time	= time();
 	
 	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
@@ -55,7 +53,6 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	$auth_fields	= get_authlist();
 	$auth_levels	= array('disallowed', 'allowed', 'special', 'default');
 	$auth_const		= array(AUTH_DISALLOWED, AUTH_ALLOWED, AUTH_SPECIAL, AUTH_DEFAULT);
 	
@@ -99,7 +96,7 @@ else
 			$s_mode .= '<option value="' . $key . '"' . $selected . '>&raquo;&nbsp;' . $value . '&nbsp;</option>';
 		}
 		$s_mode .= '</select>';
-		$s_mode .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+		$s_mode .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	}
 	else
 	{
@@ -137,9 +134,9 @@ else
 		case 'create':
 		case 'update':
 			
-			if ( $mode == 'create' && !request('submit', TXT) )
+			if ( $mode == 'create' && !$update )
 			{
-				$data = array(
+				$data_sql = array(
 							'user_name'			=> request('user_name', 1),
 							'user_regdate'		=> time(),
 							'user_lastvisit'	=> time(),
@@ -150,9 +147,9 @@ else
 							'user_birthday'		=> '',
 						);
 			}
-			else if ( $mode == 'update' && !request('submit', TXT) )
+			else if ( $mode == 'update' && !$update )
 			{
-				$data = data(USERS, $data_id, false, 1, 1);
+				$data_sql = data(USERS, $data_id, false, 1, 1);
 				
 				if ( $userdata['user_level'] < $data['user_level'] )
 				{
@@ -161,7 +158,7 @@ else
 			}
 			else
 			{
-				$data = array(
+				$data_sql = array(
 							'user_name'			=> request('user_name', 2),
 							'user_regdate'		=> request('user_regdate', 0),
 							'user_lastvisit'	=> request('user_lastvisit', 0),
@@ -232,7 +229,7 @@ else
 						
 					if ( $mode == 'create' )
 					{
-						$sql = sql(USERS, $mode, $data);
+						$sql = sql(USERS, $mode, $data_sql);
 						$uid = $db->sql_nextid();
 						
 						$grp = sql(GROUPS, $mode, array('group_name' => $data['user_name'], 'group_type' => '2', 'group_desc' => 'Personal User', 'group_single_user' => '1'));
@@ -271,8 +268,8 @@ else
 					}
 					else
 					{
-						$sql = sql(USERS, $mode, $data, 'user_id', $data_id);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(USERS, $mode, $data_sql, 'user_id', $data);
+						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -299,7 +296,7 @@ else
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			$fields .= "<input type=\"hidden\" name=\"user_regdate\" value=\"" . $data['user_regdate'] . "\" />";
 			$fields .= "<input type=\"hidden\" name=\"user_password\" value=\"" . $data['user_password'] . "\" />";
 			$fields .= "<input type=\"hidden\" name=\"user_lastvisit\" value=\"" . $data['user_lastvisit'] . "\" />";
@@ -359,7 +356,7 @@ else
 				'S_FIELDS'	=> $fields,
 			));
 			
-			if ( request('submit', TXT) )
+			if ( $update )
 			{
 				
 			}
@@ -368,30 +365,30 @@ else
 			
 		case 'settings':
 		
-			$data = data(USERS, $data_id, false, 1, true);
+			$data_sql = data(USERS, $data, false, 1, true);
 			
 			$display_vars = array(
 				'setting'	=> array(
 					'title1' => 'sub',
 					
-					'user_allow_viewonline'	=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Darf sich verstecken oder nicht					
-					'user_viewemail'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Zeige meine E-Mail-Adresse immer an
-					'user_attachsig'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Signatur immer anhängen
+					'user_allow_viewonline'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Darf sich verstecken oder nicht					
+					'user_viewemail'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Zeige meine E-Mail-Adresse immer an
+					'user_attachsig'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Signatur immer anhängen
 					
-					'user_notify'			=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Bei Antworten immer benachrichtigen
-					'user_notify_pm'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Bei neuen Privaten Nachrichten benachrichtigen
-					'user_popup_pm'			=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// PopUp-Fenster bei neuen Privaten Nachrichten
-					'user_send_type'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	//					
+					'user_notify'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Bei Antworten immer benachrichtigen
+					'user_notify_pm'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Bei neuen Privaten Nachrichten benachrichtigen
+					'user_popup_pm'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// PopUp-Fenster bei neuen Privaten Nachrichten
+					'user_send_type'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	//					
 					
-					'user_lang'				=> array('validate' => 'text',	'type' => 'drop:lang',		'explain' => true),
-					'user_style'			=> array('validate' => 'text',	'type' => 'drop:style',		'explain' => true),
-					'user_timezone'			=> array('validate' => 'int',	'type' => 'drop:tz',		'explain' => true),
-					'user_dateformat'		=> array('validate' => 'text',	'type' => 'text:25:25',		'explain' => true),
+					'user_lang'				=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:lang'),
+					'user_style'			=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:style'),
+					'user_timezone'			=> array('validate' => INT,	'explain' => false, 'type' => 'drop:tz'),
+					'user_dateformat'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25'),
 					
 					'tab2' => 'admin',
-					'user_allow_sig'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Signatur erlauben oder sperren
-					'user_allow_avatar'		=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Avatar erlauben oder sperren
-					'user_allow_pm'			=> array('validate' => 'int',	'type' => 'radio:yesno',	'explain' => true),	// Private Nachrichten erlauben oder sperren
+					'user_allow_sig'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Signatur erlauben oder sperren
+					'user_allow_avatar'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Avatar erlauben oder sperren
+					'user_allow_pm'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),	// Private Nachrichten erlauben oder sperren
 					
 				),
 			);
@@ -402,7 +399,7 @@ else
 			$rank_forum	= $data['user_rank_forum'];
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -417,8 +414,8 @@ else
 		
 		case 'fields':
 		
-			$data	= data(USERS, $data_id, false, 1, true);
-			$info	= data(FIELDS_DATA, $data_id, false, 1, true);
+			$data	= data(USERS, $data, false, 1, true);
+			$info	= data(FIELDS_DATA, $data, false, 1, true);
 			$field	= data(FIELDS, false, 'field_sub ASC, field_order ASC', 1, false);
 			
 			if ( $field )
@@ -484,12 +481,12 @@ else
 				}
 			}
 			
-			if ( request('submit', TXT) )
+			if ( $update )
 			{
 				if ( !$error )
 				{
-					$sql = ( !$info ) ? sql(FIELDS_DATA, 'create', $request) : sql(FIELDS_DATA, 'update', $request, 'user_id', $data_id);
-					$msg = $lang['update_fields'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+					$sql = ( !$info ) ? sql(FIELDS_DATA, 'create', $request) : sql(FIELDS_DATA, 'update', $request, 'user_id', $data);
+					$msg = $lang['update_fields'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
@@ -501,7 +498,7 @@ else
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -518,7 +515,7 @@ else
 		
 			$confirm = isset($HTTP_POST_VARS['confirm']);
 			
-			if ( $data_id && $confirm )
+			if ( $data && $confirm )
 			{
 				$user = get_data('user', $data_id, INT);
 			
@@ -540,7 +537,7 @@ else
 			{
 				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
+				$fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="id" value="' . $data_id . '" />';
 	
 				$template->assign_vars(array(
 					'MESSAGE_TITLE'		=> $lang['common_confirm'],
@@ -562,7 +559,7 @@ else
 		
 		case 'groups':
 			
-			$data = data(USERS, $data_id, false, 1, true);
+			$data_sql = data(USERS, $data, false, 1, true);
 			
 			if ( $userdata['user_level'] < $data['user_level'] )
 			{
@@ -691,7 +688,7 @@ else
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -709,7 +706,7 @@ else
 				'S_FIELDS'	=> $fields,
 			));
 			
-			if ( request('submit', TXT) )
+			if ( $update )
 			{
 				debug($_POST);
 				
@@ -950,7 +947,9 @@ else
 		
 		case 'auth':
 		
-			$data = data(USERS, $data_id, false, 1, true);
+		debug($_POST);
+		
+			$data_sql = data(USERS, $data, false, 1, true);
 			
 			if ( $userdata['user_level'] < $data['user_level'] )
 			{
@@ -1063,7 +1062,7 @@ else
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
@@ -1079,9 +1078,9 @@ else
 				'S_FIELDS'	=> $fields,
 			));
 			
-			if ( request('submit', TXT) )
+			if ( $update )
 			{
-				$fields = get_authlist();
+				$tmp = '';
 				
 				for ( $i = 0; $i < count($fields); $i++ )
 				{
@@ -1111,7 +1110,7 @@ else
 		
 			$fields .= '<input type="hidden" name="mode" value="create" />';
 	
-			$data = data(USERS, 'user_id != 1', 'user_id DESC', 1, false);
+			$data_sql = data(USERS, 'user_id != 1', 'user_id DESC', 1, false);
 			
 			for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($data)); $i++ )
 			{
@@ -1130,15 +1129,15 @@ else
 				}
 				
 				$template->assign_block_vars('display.row', array(
-					'USERNAME'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_txt', $file, array('mode' => 'update', $url => $id), $name, $name) : img('a_txt', $name, $name),
+					'USERNAME'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name) : img('a_txt', $name, $name),
 					'REGISTER'	=> create_date($userdata['user_dateformat'], $data[$i]['user_regdate'], $userdata['user_timezone']),
 					'LEVEL'		=> $user_level,
 					
-					'AUTH'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'auth', $url => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
-					'FIELD'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'fields', $url => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
-					'GROUP'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'groups', $url => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
-					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+					'AUTH'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'auth', 'id' => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
+					'FIELD'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'fields', 'id' => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
+					'GROUP'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'groups', 'id' => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
+					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
 				));
 			}
 			

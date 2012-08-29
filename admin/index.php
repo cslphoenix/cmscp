@@ -25,7 +25,7 @@ switch ( $mode )
 {
 	case 'switch':
 	
-		$data = data(NEWS, $num, false, 1, true);
+		$data_sql = data(NEWS, $num, false, 1, true);
 		
 		$switch = ( $data['news_public'] ) ? 0 : 1;
 		
@@ -53,7 +53,7 @@ switch ( $mode )
 		$url_train	= POST_TRAINING;
 		$url_user	= POST_USER;
 		
-		$news	= data(NEWS, false, 'news_time_public DESC, news_id DESC', 1, false);
+		$news	= data(NEWS, false, 'news_date DESC, news_id DESC', 1, false);
 		$event	= data(EVENT, "WHERE event_date > " . time(), 'event_date ASC', 1, false);
 		$match	= data(MATCH, false, 'match_date DESC', 4, false);
 		$train	= data(TRAINING, "WHERE training_date > " . time(), 'training_date DESC', 0, false);
@@ -78,7 +78,7 @@ switch ( $mode )
 				$template->assign_block_vars('news_row', array(
 					'TITLE'		=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', 'admin_news.php', array('mode' => 'update', $url_news => $id), $title, $title) : $title : $title,
 					
-					'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_time_public'], $userdata['user_timezone']),
+					'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_date'], $userdata['user_timezone']),
 					
 					'PUBLIC'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )	? href('a_txt', 'index.php', array('mode' => 'switch', 'num' => $id), $public, '') : img('i_icon', 'icon_news_denied', ''),
 					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php', array('mode' => 'update', $url_news => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),

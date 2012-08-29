@@ -32,7 +32,7 @@ spl_autoload_register(array('GameQ', 'auto_load'));
  * any games servers.  All necessary sub-classes are loaded as needed.
  *
  * Requirements: See wiki or README for more information on the requirements
- *  - PHP 5.3+
+ *  - PHP 5.2+ (Recommended 5.3+)
  *  	* Bzip2 - http://www.php.net/manual/en/book.bzip2.php
  *  	* Zlib - http://www.php.net/manual/en/book.zlib.php
  *
@@ -43,7 +43,7 @@ class GameQ
 	/*
 	 * Constants
 	 */
-	const VERSION = '2.0.0';
+	const VERSION = '2.0.1';
 
 	/*
 	 * Server array keys
@@ -122,7 +122,6 @@ class GameQ
 		return $found;
 	}
 
-
 	/* Dynamic Section */
 
 	/**
@@ -132,7 +131,6 @@ class GameQ
 	 */
 	protected $options = array(
 		'debug' => FALSE,
-		'raw' => FALSE,
 		'timeout' => 3, // Seconds
 		'filters' => array(),
 	);
@@ -164,14 +162,14 @@ class GameQ
 		// Check for Bzip2
 		if(!function_exists('bzdecompress'))
 		{
-			throw new GameQException('Bzip2 is not installed.  See http://www.php.net/manual/en/book.bzip2.php for more info.', INT);
+			throw new GameQException('Bzip2 is not installed.  See http://www.php.net/manual/en/book.bzip2.php for more info.', 0);
 			return FALSE;
 		}
 
 		// Check for Zlib
 		if(!function_exists('gzuncompress'))
 		{
-			throw new GameQException('Zlib is not installed.  See http://www.php.net/manual/en/book.zlib.php for more info.', INT);
+			throw new GameQException('Zlib is not installed.  See http://www.php.net/manual/en/book.zlib.php for more info.', 0);
 			return FALSE;
 		}
 	}
@@ -268,8 +266,6 @@ class GameQ
 	 */
 	public function addServer(Array $server_info=NULL)
 	{
-		global $root_path;
-		
 		// Check for server type
 		if(!key_exists(self::SERVER_TYPE, $server_info) || empty($server_info[self::SERVER_TYPE]))
 		{
@@ -337,15 +333,15 @@ class GameQ
 
 		// Create the class so we can reference it properly later
 		$protocol_class = 'GameQ_Protocols_'.ucfirst($server_info[self::SERVER_TYPE]);
-			
+
 		// Create the new instance and add it to the servers list
 		$this->servers[$server_id] = new $protocol_class(
 			$server_ip,
 			$server_port,
 			array_merge($this->options, $server_info[self::SERVER_OPTIONS])
 		);
-		
-		return $this; // Make calls chaninable
+
+		return $this; // Make calls chainable
 	}
 
 	/**
@@ -362,7 +358,7 @@ class GameQ
 			$this->addServer($server_info);
 		}
 
-		return $this; // Make calls chaninable
+		return $this; // Make calls chainable
 	}
 
 	/**
@@ -387,7 +383,7 @@ class GameQ
 	public function requestData()
 	{
 		// Data returned array
-		$data = array();
+		$data_sql = array();
 
 		// Init the query array
 		$queries = array(
@@ -762,6 +758,8 @@ class GameQ
 
 		// Init some variables
 		$read = $sockets;
+		$write = NULL;
+		$except = NULL;
 
 		// This is when it should stop
 		$time_stop = microtime(TRUE) + $this->timeout;
@@ -770,8 +768,7 @@ class GameQ
 		while ($loop_active && microtime(TRUE) < $time_stop)
 		{
 			// Now lets listen for some streams, but do not cross the streams!
-		#	$streams = stream_select($read, $write = NULL, $except = NULL, 0, 800000);
-			$streams = stream_select($read, $write = NULL, $except = NULL, 1);
+			$streams = stream_select($read, $write, $except, 0, 800000);
 
 			// We had error or no streams left
 			if($streams === FALSE || ($streams <= 0))

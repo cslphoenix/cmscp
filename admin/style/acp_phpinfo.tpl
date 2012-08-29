@@ -1,5 +1,5 @@
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<h1>{L_HEAD}</h1>
 
 <table class="header">
 <tr>

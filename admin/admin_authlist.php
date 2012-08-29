@@ -2,22 +2,21 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
-	{
-		$module['hm_system']['sm_authlist'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_authlist',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_authlist'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_authlist';
-	
+	$current	= 'acp_authlist';
+
 	include('./pagestart.php');
 	
 	add_lang('authlist');
@@ -61,21 +60,21 @@ else
 			$vars = array(
 				'authlist' => array(
 					'title' => 'data_input',
-					'authlist_name'	=> array('validate' => TXT,	'type' => 'text:25:25', 'explain' => true, 'required' => 'input_name', 'check' => true, 'prefix' => 'auth_'),
+					'authlist_name'	=> array('validate' => TXT,	'type' => 'text:25;25', 'explain' => false, 'required' => 'input_name', 'check' => true, 'prefix' => 'auth_'),
 				),
 			);
 			
-			if ( $mode == 'create' && !request('submit', TXT) )
+			if ( $mode == 'create' && !$update )
 			{
-				$data = array('authlist_name' => str_replace(' ', '_', strtolower(request('authlist_name', TXT))));
+				$data_sql = array('authlist_name' => str_replace(' ', '_', strtolower(request('authlist_name', TXT))));
 			}
-			else if ( $mode == 'update' && !request('submit', TXT) )
+			else if ( $mode == 'update' && !$update )
 			{
-				$data = data(AUTHLIST, $data_id, false, 1, true);
+				$data_sql = data(AUTHLIST, $data, false, 1, true);
 			}
 			else
 			{
-				$data = build_request(AUTHLIST, $vars, 'authlist', $error);
+				$data_sql = build_request(AUTHLIST, $vars, 'authlist', $error);
 				
 				if ( !$error )
 				{
@@ -97,7 +96,7 @@ else
 					
 					if ( $mode == 'create' )
 					{
-						$sql = sql(AUTHLIST, $mode, $data);
+						$sql = sql(AUTHLIST, $mode, $data_sql);
 						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						
 						foreach ( $grp as $k => $v )
@@ -128,8 +127,8 @@ else
 					}
 					else
 					{
-						$sql = sql(AUTHLIST, $mode, $data, 'authlist_id', $data_id);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(AUTHLIST, $mode, $data_sql, 'authlist_id', $data);
+						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						
 						foreach ( $grp as $k => $v )
 						{
@@ -196,7 +195,7 @@ else
 			build_output($data, $vars, 'input', false, MAPS);
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			$fields .= "<input type=\"hidden\" name=\"old_name\" value=\"" . $data['authlist_name'] . "\" />";
 			
 			$template->assign_vars(array(
@@ -211,11 +210,11 @@ else
 		
 		case 'delete':
 		
-			$data = data(AUTHLIST, $data_id, false, 1, true);
+			$data_sql = data(AUTHLIST, $data, false, 1, true);
 		
-			if ( $data_id && $confirm )
+			if ( $data && $confirm )
 			{
-				$sql = sql(AUTHLIST, $mode, $data, 'authlist_id', $data_id);
+				$sql = sql(AUTHLIST, $mode, $data_sql, 'authlist_id', $data);
 			#	$add = sql(GROUPS, 'alter', array('part' => "DROP ", 'type'	=> $data['authlist_name']));
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
@@ -286,7 +285,7 @@ else
 			else if ( $data_id && !$confirm )
 			{
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
@@ -320,9 +319,9 @@ else
 				$name	= $tmp[$i]['authlist_name'];
 
 				$template->assign_block_vars('display.row', array(
-					'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, $name),
-					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+					'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
+					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 				));
 			}
 			

@@ -91,6 +91,27 @@ echo $text[$i];
 	return $return;
 }
 
+/*
+SELECT n.*, nc.cat_name, nc.cat_image, u.user_name, u.user_color, m.*, t.team_name, t.team_logo, g.game_image,
+( SELECT COUNT(rate_value)
+	FROM cms_rate
+	WHERE n.news_id = rate_type_id) AS cnt_rating,
+	( SELECT SUM(rate_value)
+	FROM cms_rate
+	WHERE n.news_id = rate_type_id) AS sum_rating
+FROM cms_news n
+LEFT JOIN cms_users u ON n.user_id = u.user_id
+LEFT JOIN cms_match m ON n.news_match = m.match_id
+LEFT JOIN cms_teams t ON m.team_id = t.team_id
+LEFT JOIN cms_game g ON t.team_game = g.game_id
+LEFT JOIN cms_newscat nc ON n.news_cat = nc.cat_id
+#LEFT JOIN cms_rate r ON r.rate_type_id = n.news_id
+WHERE n.news_date < 1343734435 AND n.news_public = 1 ORDER BY n.news_date DESC, n.news_id DESC
+*/
+
+#,( SELECT COUNT(rate_value) FROM " . RATE . " WHERE n.news_id = rate_type_id AND rate_type = 1 ) as cnt_rating
+#,( SELECT SUM(rate_value) FROM " . RATE . " WHERE n.news_id = rate_type_id AND rate_type = 1 ) as sum_rating
+
 $sql = "SELECT n.*, nc.cat_name, nc.cat_image, u.user_name, u.user_color, m.*, t.team_name, t.team_logo, g.game_image
 			FROM " . NEWS . " n
 				LEFT JOIN " . USERS . " u ON n.user_id = u.user_id
@@ -98,8 +119,8 @@ $sql = "SELECT n.*, nc.cat_name, nc.cat_image, u.user_name, u.user_color, m.*, t
 				LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 				LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
 				LEFT JOIN " . NEWS_CAT . " nc ON n.news_cat = nc.cat_id
-			WHERE n.news_time_public < " . time() . " AND news_public = 1
-		ORDER BY n.news_time_public DESC, n.news_id DESC";
+			WHERE n.news_date < " . time() . " AND news_public = 1
+		ORDER BY n.news_date DESC, n.news_id DESC";
 #$tmp = _cached($sql, 'data_news');
 $tmp = _cached($sql, 'sql_news');
 
@@ -362,7 +383,7 @@ else if ( $mode == 'archiv' )
 				'AUTHOR'	=> href('a_user', 'profile.php', array('mode' => 'view', POST_USER => $ary[$i]['user_id']), $ary[$i]['user_color'], $ary[$i]['user_name']),
 				'CAT'		=> $ary[$i]['cat_name'],
 				'COMMENTS'	=> ( $comment != 0 ) ? (( $comment == 1 ) ? $lang['sprintf_comment'] : sprintf($lang['sprintf_comments'], $comment)) : $lang['sprintf_comment_no'],
-				'DATE'		=> create_shortdate($userdata['user_dateformat'], $ary[$i]['news_time_public'], $userdata['user_timezone']),
+				'DATE'		=> create_shortdate($userdata['user_dateformat'], $ary[$i]['news_date'], $userdata['user_timezone']),
 				
 			#	'TITLE'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$news_id") . '">' . $ary[$i]['news_title'] . '</a>',	
 			#	'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
@@ -407,6 +428,23 @@ else
 	}
 	else
 	{
+	#	debug($settings['rating_news']['guests']);
+		
+		$sql = "SELECT rate_type_id, rate_value, rate_userid, rate_userip FROM " . RATE . " WHERE rate_type = 1 AND rate_type_id IN (" . implode(', ', $ids)  . ")";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+		#	$user = ( $row['rate_userid'] == ANONYMOUS ) ? $row['rate_userip'] : $row['rate_userid'];
+			
+			$tmp_rate[$row['rate_type_id']][] = array('userid' => $row['rate_userid'], 'userip' => $row['rate_userip'], 'value' => $row['rate_value']);
+		}
+		
+	#	debug($tmp_rate);
+		
 		$sql = "SELECT news_id, count_comment AS count FROM " . NEWS . " WHERE news_id IN (" . implode(', ', $ids) . ")";
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -422,25 +460,107 @@ else
 		
 		for ( $i = $start; $i < min($settings['news']['limit'] + $start, $cnt_ary); $i++ )
 		{
+			$rate_cnt = $rate_sum = $average = 0;
+			
+			if ( $ary[$i]['news_rate'] )
+			{
+				$rate_check = 'false';
+				$rate_ids	= array();
+				$rate_ips	= array();
+				$rate_cnt	= 0;
+				$rate_ave	= 0;
+				
+				if ( isset($tmp_rate[$ary[$i]['news_id']]) )
+				{
+					$tmp_rate_ids = $tmp_rate[$ary[$i]['news_id']];
+					
+					$count_value = 0;
+					$userip = $userid = '';
+					
+					foreach ( $tmp_rate_ids as $rows )
+					{
+						$rate_ids[] = $rows['userid'];
+						$rate_ips[] = $rows['userip'];
+						$count_value += $rows['value'];
+					}
+
+					$rate_cnt	= count($tmp_rate_ids);
+					$rate_sum	= $count_value;
+					$rate_ave	= round(($rate_sum/$rate_cnt), 1);
+				}
+
+				#debug($rate_ids);
+				#debug(in_array($userdata['user_id'], $rate_ids), 'inary');
+				
+				/*
+				if ( in_array($userdata['user_id'], $rate_ids) )
+				{
+					if ( $userdata['user_id'] == ANONYMOUS )
+					{
+						if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
+						{
+							$rate_check = 'true';
+						}
+						else
+						{
+							$rate_check = 'false';
+						}
+					}
+					else
+					{
+						$rate_check = 'true';
+					}
+				}
+				else if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
+				{
+					$rate_check = 'true';
+				}
+				*/
+				
+				if ( in_array($userdata['user_id'], $rate_ids) )
+				{
+					$rate_check = ( $userdata['user_id'] == ANONYMOUS ) ? ( in_array(iptoint($userdata['session_ip']), $rate_ips) ) ? 'true' : 'false' : 'true';
+				}
+				else if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
+				{
+					$rate_check = 'true';
+				}
+
+				$template->assign_block_vars('list.info', array(
+					'ID'	=> $ary[$i]['news_id'],
+					'RATE'	=> $rate_check,
+				));
+				
+			}
+			
 			$news_id	= $ary[$i]['news_id'];
 			$comments	= $cnt_comment[$news_id];
 			
 			$txt_tmp = html_entity_decode($ary[$i]['news_text'], ENT_QUOTES);
 			
 			$template->assign_block_vars('list.row', array(
+				'ID'	=> $ary[$i]['news_id'],
 				'TITLE'		=> $ary[$i]['news_title'],
+			#	'RATING'	=> rating_bar($ary[$i]['news_id'], 5),
 				'TEXT'		=> truncate2($txt_tmp, 100, '...'),
-				'DATE'		=> create_shortdate($userdata['user_dateformat'], $ary[$i]['news_time_public'], $userdata['user_timezone']),
+				'DATE'		=> create_shortdate($userdata['user_dateformat'], $ary[$i]['news_date'], $userdata['user_timezone']),
 				'COMMENTS'	=> ( $comments != 0 ) ? ( $comments == 1 ) ? $lang['sprintf_comment'] : sprintf($lang['sprintf_comments'], $comments) : $lang['sprintf_comment_no'],
 				'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
 				
 				'NC_TITLE'	=> ( $ary[$i]['cat_name'] ) ? $ary[$i]['cat_name'] : '',
 				'NC_IMAGE'	=> ( $ary[$i]['cat_image'] ) ? $root_path . $settings['path_newscat'] . '/' . $ary[$i]['cat_image'] : '',
 				
-				'U_NEWS'	=> check_sid("$file?$url=$news_id"),
+				'R_SHOW'	=> ( $ary[$i]['news_rate'] ) ? '' : 'none',
+				'R_CNT'		=> ( $rate_cnt ) ? $rate_cnt : 0,
+				'R_SUM'		=> ( $rate_ave ) ? $rate_ave : 0,
 				
+				'RATING'	=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, 5),
+				#{list.row.R_CNT} Votes &oslash; {list.row.R_SUM} / 5
+				
+				'U_NEWS'	=> check_sid("$file?$url=$news_id"),
 			));
 			
+			/*
 			if ( unserialize($ary[$i]['news_url']) )
 			{
 				$_ary	= '';
@@ -459,6 +579,7 @@ else
 					'URLS'	=> $urls,
 				));
 			}
+			*/
 
 			if ( isset($ary[$i]['match_id']) )
 			{

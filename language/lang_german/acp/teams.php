@@ -15,12 +15,26 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Das Team wurde gelöscht!',
 	'confirm'	=> 'dass dieses Team:',
 	
-	'data'		=> 'Teamdaten',
-	'option'	=> 'Teamoptionen',
-	'image'		=> 'Teambild',
 	
 	'count'		=> 'Anzahl',
 	'members'	=> 'Mitglieder',
+	
+	
+	'input_data'	=> 'Teamdaten',
+	
+	'team_name'		=> 'Name',
+	'team_game'		=> 'Game',
+	'team_desc'		=> 'Beschreibung',
+	'team_navi'		=> 'Navigation',
+	'team_awards'	=> 'Awards',
+	'team_wars'		=> 'Begegnungen',
+	'team_join'		=> 'JoinUs',
+	'team_fight'	=> 'FightUs',
+	'team_view'		=> 'in Übersicht',
+	'team_show'		=> 'geöffentes Menü',
+	'team_flag'		=> 'Teambanner',
+	'team_logo'		=> 'Teamlogo',
+	
 	
 	'game'		=> 'Teamspiel',
 	'navi'		=> 'in Navigation',

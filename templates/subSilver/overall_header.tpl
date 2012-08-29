@@ -5,13 +5,16 @@
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	{META}
 	
-<title>{SITENAME} :: {PAGE_TITLE}</title>
+	<title>{SITENAME} :: {PAGE_TITLE}</title>
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php">
 	
 	<link rel="stylesheet" type="text/css" href="templates/subSilver/theme/stylesheet.css">
 	<link rel="stylesheet" type="text/css" href="includes/css/jquery.atooltip.css">
 	<link rel="stylesheet" type="text/css" href="includes/css/jquery.lightbox.css" media="screen" />
+	
+	<link rel="stylesheet" type="text/css" href="includes/css/jRating.jquery.css" />
+	
 	<script type="text/javascript">
 	// <![CDATA[
 	
@@ -113,8 +116,7 @@
 	<script type="text/javascript" src="./includes/js/jquery/jquery.js"></script>
 	<script type="text/javascript" src="./includes/js/jquery/jquery.lightbox.js"></script>
 	<script type="text/javascript" src="./includes/js/jquery/jquery.atooltip.js"></script>
-	
-	<script type="text/javascript" src="./includes/js/jquery/jquery.sparkline.min.js"></script>
+	<script type="text/javascript" src="./includes/js/jquery/jquery.sparkline.js"></script>
 	
 	<script type="text/javascript" language="javascript">
 	
@@ -150,9 +152,9 @@
 			containerResizeSpeed:	400,
 			txtImage: 'Bild',
 			txtOf: 'von',
-			keyToClose:				'c',
-			keyToPrev:				'p',
-			keyToNext:				'n',
+			keyToClose:	'c',
+			keyToPrev:	'p',
+			keyToNext:	'n',
 		   });
 	});
 	

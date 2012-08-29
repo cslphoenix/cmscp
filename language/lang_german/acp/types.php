@@ -15,7 +15,7 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Das Spiel wurde gelöscht!',
 	'confirm'	=> 'dass dieses Spiel:',
 	
-	'data'		=> 'Typedaten',
+	'input_data'	=> 'Typedaten',
 	
 	'type_name'		=> 'Name',
 	'type_game'		=> 'Spiel',
@@ -28,7 +28,7 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 
-	'radio:types' => array(0 => $lang['serv_game'], 1 => $lang['serv_voice']),
+	'radio:type' => array(0 => $lang['serv_game'], 1 => $lang['serv_voice']),
 
 ));
 

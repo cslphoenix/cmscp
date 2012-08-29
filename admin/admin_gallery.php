@@ -2,14 +2,13 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_gallery'] )
-	{
-		$module['hm_system']['sm_gallery'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_gallery',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_gallery', 'auth' => 'auth_gallery'),
+		)
+	);
 }
 else
 {
@@ -17,7 +16,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_gallery';
+	$current	= 'acp_gallery';
 	
 	include('./pagestart.php');
 	
@@ -40,14 +39,14 @@ else
 	$data_pic	= request($url_p, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	$order		= request('order', INT);
 	
 	$dir_path	= $root_path . $settings['path_gallery'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
-	$auth_fields	= array('auth_view', 'auth_edit', 'auth_delete', 'auth_rate', 'auth_upload');
-	$auth_levels	= array('guest', 'user', 'trial', 'member', 'coleader', 'leader', 'uploader');
+#	$auth_fields	= array('auth_view', 'auth_edit', 'auth_delete', 'auth_rate', 'auth_upload');
+#	$auth_levels	= array('guest', 'user', 'trial', 'member', 'coleader', 'leader', 'uploader');
 	$auth_constants	= array(AUTH_GUEST, AUTH_USER, AUTH_TRIAL, AUTH_MEMBER, AUTH_COLEADER, AUTH_LEADER, AUTH_UPLOADER);
 	/* values for rights form upload */
 #	$auth_lvl_ul	= array('user', 'trial', 'member', 'coleader', 'leader');
@@ -72,6 +71,8 @@ else
 	
 	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete')) ) ? $mode : '';
 	
+	debug($_POST);
+	
 	if ( $mode )
 	{
 		switch ( $mode )
@@ -81,94 +82,50 @@ else
 			
 				$template->assign_block_vars('input', array());
 				
-				debug($_POST);
-				
 				$vars = array(
 					'gallery' => array(
 						'title'	=> 'data_input',
-						'gallery_name'			=> array('validate' => TXT,	'type' => 'text:25:25',		'required' => 'input_name', 'check' => true),
-						'gallery_desc'			=> array('validate' => TXT,	'type' => 'textarea:35:900','required' => 'input_desc'),
-						'gallery_auth'			=> array('validate' => ARY,	'type' => 'drop:auth', 'simple_auth' => true),
-					#	'gallery_auth_view'		=> array('validate' => INT,	'type' => 'drop:auth_view'),
-					#	'gallery_auth_edit'		=> array('validate' => INT,	'type' => 'drop:auth_edit'),
-					#	'gallery_auth_delete'	=> array('validate' => INT,	'type' => 'drop:auth_delete'),
-					#	'gallery_auth_rate'		=> array('validate' => INT,	'type' => 'drop:auth_rate'),
-					#	'gallery_auth_upload'	=> array('validate' => INT,	'type' => 'drop:auth_upload'),
-						'gallery_filesize'		=> array('validate' => INT,	'type' => 'text:10:10'),
-						'gallery_dimension'		=> array('validate' => INT,	'type' => 'double:4:5'),
-						'gallery_format'		=> array('validate' => INT,	'type' => 'double:4:5'),
-						'gallery_preview'		=> array('validate' => INT,	'type' => 'double:4:5'),
-						'gallery_preview_list'	=> array('validate' => INT,	'type' => 'radio:gallery'),
-						'gallery_comments'		=> array('validate' => INT,	'type' => 'radio:yesno'),
-						'gallery_rate'			=> array('validate' => INT,	'type' => 'radio:yesno'),
-						'gallery_order'			=> array('validate' => INT,	'type' => 'drop:order'),
+						'gallery_name'			=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',		'required' => 'input_name', 'check' => true),
+						'gallery_auth'			=> array('validate' => INT,	'explain' => false, 'type' => 'text:10;10'),
+						'gallery_desc'			=> array('validate' => TXT,	'explain' => false, 'type' => 'textarea:35:900','required' => 'input_desc'),
+						'gallery_filesize'		=> array('validate' => INT,	'explain' => false, 'type' => 'text:10;10'),
+						'gallery_dimension'		=> array('validate' => INT,	'explain' => false, 'type' => 'double:4;5'),
+						'gallery_format'		=> array('validate' => INT,	'explain' => false, 'type' => 'double:4;5'),
+						'gallery_preview'		=> array('validate' => INT,	'explain' => false, 'type' => 'double:4;5'),
+						'gallery_preview_list'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:gallery'),
+						'gallery_comments'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'gallery_rate'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
 						
-						'gallery_pics'		=> array('type' => 'hidden'),
-						'gallery_path'		=> array('type' => 'hidden'),
-						'gallery_create'	=> array('type' => 'hidden'),
-						'gallery_update'	=> array('type' => 'hidden'),
+						'gallery_order'		=> 'hidden',
+						'gallery_pics'		=> 'hidden',
+						'gallery_path'		=> 'hidden',
+						'gallery_create'	=> 'hidden',
+						'gallery_update'	=> 'hidden',
 					)
 				);
 				
-				/*
-				debug($settings['gallery']);
-				
-				list($max_width, $max_height) = explode(':', $settings['gallery']['dimension']);
-				list($per_rows, $per_cols) = explode(':', $settings['gallery']['dsp_format']);
-				list($preview_width, $preview_height) = explode(':', $settings['gallery']['preview']);
-				
-				if ( $mode == 'create' && !request('submit', TXT) )
+				if ( $mode == 'create' && !$update )
 				{
-					$data = array(
-						'gallery_name'		=> request('gallery_name', 2),
-						'gallery_desc'		=> '',
-						'gallery_comments'	=> '1',
-						'gallery_rate'		=> '1',
-						'auth_view'			=> $settings['gallery']['auth_view'],
-						'auth_edit'			=> $settings['gallery']['auth_edit'],
-						'auth_delete'		=> $settings['gallery']['auth_delete'],
-						'auth_rate'			=> $settings['gallery']['auth_rate'],
-						'auth_upload'		=> $settings['gallery']['auth_upload'],
-						'per_rows'			=> $per_rows,
-						'per_cols'			=> $per_cols,
-						'max_width'			=> $max_width,
-						'max_height'		=> $preview_height,
-						'max_filesize'		=> $settings['gallery']['max_filesize'],
-						'preview_list'		=> $settings['gallery']['preview_list'],
-						'preview_widht'		=> $preview_width,
-						'preview_height'	=> $preview_height,
-						'gallery_order'		=> '',
-					);
-				}
-				*/
-				
-				if ( $mode == 'create' && !request('submit', TXT) )
-				{
-					$data = array(
+					$data_sql = array(
 						'gallery_name'			=> request('gallery_name', TXT),
 						'gallery_desc'			=> '',
 						'gallery_comments'		=> '1',
 						'gallery_rate'			=> '1',
 						'gallery_auth'			=> $settings['gallery']['auth'],
-					#	'gallery_auth_view'		=> $settings['gallery']['auth_viw'],
-					#	'gallery_auth_edit'		=> $settings['gallery']['auth_edit'],
-					#	'gallery_auth_delete'	=> $settings['gallery']['auth_delete'],
-					#	'gallery_auth_rate'		=> $settings['gallery']['auth_rate'],
-					#	'gallery_auth_upload'	=> $settings['gallery']['auth_upload'],
 						'gallery_dimension'		=> $settings['gallery']['dimension'],
 						'gallery_format'		=> $settings['gallery']['format'],
 						'gallery_filesize'		=> $settings['gallery']['filesize'],
 						'gallery_preview'		=> $settings['gallery']['preview'],
-						'gallery_list'			=> $settings['gallery']['preview_list'],
+						'gallery_preview_list'	=> $settings['gallery']['preview_list'],
 						'gallery_pics'			=> 0,
 						'gallery_create'		=> $time,
 						'gallery_update'		=> 0,
-						'gallery_order'			=> '',
+						'gallery_order'			=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !request('submit', TXT) )
+				else if ( $mode == 'update' && !$update )
 				{
-					$data = data(GALLERY, $data_id, false, 1, true);
+					$data_sql = data(GALLERY, $data, false, 1, true);
 					
 					( $data['gallery_pics'] ) ? $template->assign_block_vars('input.overview', array()) : false;
 					
@@ -176,35 +133,7 @@ else
 				}
 				else
 				{
-				#	$temp = data(GALLERY, $data_id, false, 1, true);
-				#	$temp = array_keys($temp);
-				#	unset($temp[0]);
-					/*
-					$data = array(
-						'gallery_name'		=> request('gallery_name', 2),
-						'gallery_desc'		=> request('gallery_desc', 3),
-						'gallery_comments'	=> request('gallery_comments', 0),
-						'gallery_rate'		=> request('gallery_rate', 0),
-						'auth_view'			=> request('auth_view', 0),
-						'auth_edit'			=> request('auth_edit', 0),
-						'auth_delete'		=> request('auth_delete', 0),
-						'auth_rate'			=> request('auth_rate', 0),
-						'auth_upload'		=> request('auth_upload', 0),
-						'per_rows'			=> request('per_rows', 0) ? request('per_rows', 0) : $settings['gallery']['per_rows'],
-						'per_cols'			=> request('per_cols', 0) ? request('per_cols', 0) : $settings['gallery']['per_cols'],
-						'max_width'			=> request('max_width', 0) ? request('max_width', 0) : $settings['gallery']['max_width'],
-						'max_height'		=> request('max_height', 0) ? request('max_height', 0) : $settings['gallery']['max_height'],
-						'max_filesize'		=> request('max_filesize', 0) ? request('max_filesize', 0) : $settings['gallery']['max_filesize'],
-						'preview_list'		=> ( request('preview_list', 0) < 2 ) ? request('preview_list', 0) : $settings['gallery']['preview_list'],
-						'preview_widht'		=> request('preview_widht', 0) ? request('preview_widht', 0) : $settings['gallery']['preview_widht'],
-						'preview_height'	=> request('preview_height', 0) ? request('preview_height', 0) : $settings['gallery']['preview_height'],
-						'gallery_order'		=> request('gallery_order', 0) ? request('gallery_order', 0) : request('gallery_order_new', 0),
-					);
-					
-					$error[] = ( !$data['gallery_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					$error[] = ( !$data['gallery_desc'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_desc'] : '';
-					*/
-					$data = build_request(GALLERY, $vars, 'gallery', $error);
+					$data_sql = build_request($vars, $error);
 					
 					if ( !$error )
 					{
@@ -214,13 +143,13 @@ else
 						{
 							$data['gallery_path'] = create_folder($dir_path, 'gallery_', true);
 							
-							$sql = sql(GALLERY, $mode, $data);
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+							$sql = sql(GALLERY, $mode, $data_sql);
+							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(GALLERY, $mode, $data, 'gallery_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$sql = sql(GALLERY, $mode, $data_sql, 'gallery_id', $data);
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -232,7 +161,7 @@ else
 					}
 				}
 				
-				build_output($data, $vars, 'input', false, GALLERY);
+				build_output($vars, $data_sql);
 				/*
 				for ( $j = 0; $j < count($auth_fields); $j++ )
 				{
@@ -275,7 +204,7 @@ else
 				}
 				*/
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['gallery']),
@@ -341,7 +270,7 @@ else
 					log_add(LOG_ADMIN, $log, '_order_pic');
 				}
 				
-				$data_gallery	= data(GALLERY, $data_id, false, 1, true);
+				$data_gallery	= data(GALLERY, $data, false, 1, true);
 				$data_pics		= data(GALLERY_PIC, $data_id, 'pic_order ASC', 1, false);
 				
 				$max = maxi(GALLERY_PIC, 'pic_order', '');
@@ -372,8 +301,8 @@ else
 								
 								'ORDER'		=> $data_pics[$i]['pic_order'],
 								
-							#	'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-							#	'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+							#	'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+							#	'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 								
 								'MOVE_UP'	=> ( $data_pics[$i]['pic_order'] != '10' ) ? '<a href="' . check_sid("$file?mode=_overview&amp;$url=$data_id&amp;order=1&amp;move=-15&amp;$url_p=$pic_id") . '"><img src="' . $images['icon_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_u2'] . '" alt="" />',
 								'MOVE_DOWN'	=> ( $data_pics[$i]['pic_order'] != $max ) ? '<a href="' . check_sid("$file?mode=_overview&amp;$url=$data_id&amp;order=1&amp;move=+15&amp;$url_p=$pic_id") . '"><img src="' . $images['icon_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_d2'] . '" alt="" />',
@@ -438,7 +367,7 @@ else
 				}
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
@@ -461,7 +390,7 @@ else
 					'S_FIELDS'		=> $fields,
 				));
 				
-				if ( request('submit', TXT) )
+				if ( $update )
 				{
 					$data = get_data(GALLERY, $data_id, 1);
 					
@@ -530,14 +459,14 @@ else
 			
 				$template->assign_block_vars('upload', array());
 				
-				$data = data(GALLERY, $data_id, false, 1, true);
+				$data_sql = data(GALLERY, $data, false, 1, true);
 				$pics = data(GALLERY_PIC, $data_id, 'pic_order ASC', 1, false);
 				$next = maxa(GALLERY_PIC, 'pic_order', "gallery_id = $data_id");
 				
 				( $pics ) ? $template->assign_block_vars('upload._overview', array()) : false;
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['gallery']),
@@ -553,7 +482,7 @@ else
 					'S_FIELDS'		=> $fields,
 				));
 				
-				if ( request('submit', TXT) )
+				if ( $update )
 				{
 					$pic_file = request_files('ufile');
 					
@@ -608,7 +537,7 @@ else
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$msg = $lang['update_u'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$msg = $lang['update_u'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						
 						log_add(LOG_ADMIN, $log, $mode);
 						message(GENERAL_MESSAGE, $msg);
@@ -636,7 +565,7 @@ else
 				
 			case 'resync':
 			
-				$data = data(GALLERY, $data_id, false, 1, true);
+				$data_sql = data(GALLERY, $data, false, 1, true);
 				
 				if ( is_dir($dir_path . $data['gallery_path'] . '/') )
 				{
@@ -674,7 +603,7 @@ else
 					$data['gallery_path'] = create_folder($dir_path, 'gallery_', true);
 					$data['gallery_pics'] = 0;
 					
-					$sql = sql(GALLERY, 'update', $data, 'gallery_id', $data_id);
+					$sql = sql(GALLERY, 'update', $data, 'gallery_id', $data);
 				}
 				
 			#	$index = true;
@@ -683,9 +612,9 @@ else
 				
 			case 'delete':
 			
-				$data = data(GALLERY, $data_id, false, 1, 1);
+				$data_sql = data(GALLERY, $data_id, false, 1, 1);
 
-				if ( $data_id && $confirm )
+				if ( $data && $confirm )
 				{	
 					$sql = "DELETE FROM " . GALLERY . " WHERE gallery_id = $data_id";
 					if ( !$db->sql_query($sql) )
@@ -709,7 +638,7 @@ else
 				else if ( $data_id && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
@@ -780,19 +709,19 @@ else
 			}
 			
 			$template->assign_block_vars('display.row', array(
-				'NAME'	=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, $name),
+				'NAME'	=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
 				'INFO'	=> sprintf($lang['sprintf_size-pic'], $size_pics, $tmp[$i]['gallery_pics']),
 				'DESC'	=> $desc,
 
-				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 
-				'OVERVIEW'	=> $count ? href('a_img', $file, array('mode' => '_overview', $url => $id), 'icon_overview', 'common_overview') : img('i_icon', 'icon_overview2', 'common_overview'),
-				'RESYNC'	=> $count ? href('a_img', $file, array('mode' => '_resync', $url => $id), 'icon_resync', 'common_resync') : img('i_icon', 'icon_resync2', 'common_resync'),
+				'OVERVIEW'	=> $count ? href('a_img', $file, array('mode' => '_overview', 'id' => $id), 'icon_overview', 'common_overview') : img('i_icon', 'icon_overview2', 'common_overview'),
+				'RESYNC'	=> $count ? href('a_img', $file, array('mode' => '_resync', 'id' => $id), 'icon_resync', 'common_resync') : img('i_icon', 'icon_resync2', 'common_resync'),
 				
-				'UPLOAD'	=> href('a_img', $file, array('mode' => '_upload', $url => $id), 'icon_upload', 'common_upload'),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+				'UPLOAD'	=> href('a_img', $file, array('mode' => '_upload', 'id' => $id), 'icon_upload', 'common_upload'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 			));
 		}
 		

@@ -2,13 +2,6 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
-	{
-		$module['hm_system']['sm_changelog'] = $root_file;
-	}
-	
 	return;
 }
 else
@@ -17,7 +10,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_games';
+	$current	= 'acp_games';
 	
 	include('./pagestart.php');
 	
@@ -35,7 +28,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
 	$fields	= '';
@@ -182,7 +175,7 @@ else
 			else if ( $authlist_id && !$confirm )
 			{
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],

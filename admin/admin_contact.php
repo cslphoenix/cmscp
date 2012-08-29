@@ -2,29 +2,16 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] || $userauth['auth_joinus'] || $userauth['auth_fightus'])
-	{
-		$module['hm_system']['sm_overview'] = $root_file . "?mode=overview";
-	}
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_contact'] )
-	{
-		$module['hm_system']['sm_contact'] = $root_file . "?mode=contact";
-	}
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_joinus'] )
-	{
-		$module['hm_system']['sm_joinus'] = $root_file . "?mode=joinus";
-	}
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_fightus'] )
-	{
-		$module['hm_system']['sm_fightus'] = $root_file . "?mode=fightus";
-	}
-
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_contact',
+		'modes'		=> array(
+			'main'		=> array('title' => 'acp_overview'),
+			'contact'	=> array('title' => 'acp_contact'),
+			'joinus'	=> array('title' => 'acp_joinus'),
+			'fightus'	=> array('title' => 'acp_fightus'),
+		)
+	);
 }
 else
 {
@@ -32,7 +19,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_overview';
+	$current	= 'acp_overview';
 	
 	include('./pagestart.php');
 	
@@ -52,7 +39,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['contact']);

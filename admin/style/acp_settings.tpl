@@ -11,8 +11,8 @@ function SelectAll(id)
 </script>
 
 <form action="{S_ACTION}" method="post" name="mode" id="mode">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 <ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
 </form>
 
@@ -24,44 +24,44 @@ function SelectAll(id)
 
 <!-- BEGIN default -->
 <!-- BEGIN row -->
-<table class="update2">
+<!-- BEGIN hidden -->
+{default.row.hidden.HIDDEN}
+<!-- END hidden -->
+<div class="update2">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{default.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{default.row.tab.L_LANG}</a></li></ul>
 <!-- BEGIN option -->
-<tr>
-	<td class="{default.row.tab.option.CSS}"><label for="{default.row.tab.option.LABEL}" {default.row.tab.option.EXPLAIN}>{default.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{default.row.tab.option.OPTION}</td>
-</tr>
+<div{default.row.tab.option.ID}>
+<dl>			
+	<dt{default.row.tab.option.CSS}><label for="{default.row.tab.option.LABEL}"{default.row.tab.option.EXPLAIN}>{default.row.tab.option.L_NAME}:</label></dt>
+	<dd>{default.row.tab.option.OPTION}</dd>
+</dl>
+</div>
 <!-- END option -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
 <!-- END tab -->
-</table>
+</div>
 <!-- END row -->
 <!-- END default -->
 
 <!-- BEGIN calendar -->
 <!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{calendar.row.hidden.HIDDEN}
+<!-- END hidden -->
 <div style="float:left; width:49%;">
-	<table class="update2">
-	<!-- BEGIN tab -->
-	<tr>
-		<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{calendar.row.tab.L_LANG}</a></li></ul></th>
-	</tr>
-	<!-- BEGIN option -->
-	<tr>
-		<td class="row1"><label for="{calendar.row.KEY}_{calendar.row.tab.option.KEYS}">{calendar.row.tab.option.L_NAME}:</label></td>
-		<td class="row2">{calendar.row.tab.option.OPTION}</td>
-	</tr>
-	<!-- END option -->
-	<!-- END tab -->
-	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-	</table>
+<div class="update2">
+<!-- BEGIN tab -->
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{calendar.row.tab.L_LANG}</a></li></ul>
+<!-- BEGIN option -->
+<div{calendar.row.tab.option.ID}>
+<dl>			
+	<dt{calendar.row.tab.option.CSS}><label for="{calendar.row.tab.option.LABEL}"{calendar.row.tab.option.EXPLAIN}>{calendar.row.tab.option.L_NAME}:</label></dt>
+	<dd>{calendar.row.tab.option.OPTION}</dd>
+</dl>
+</div>
+<!-- END option -->
+<!-- END tab -->
+</div>
 </div>
 <!-- END row -->
 <!-- END calendar -->
@@ -86,6 +86,27 @@ function SelectAll(id)
 </table>
 <!-- END row -->
 <!-- END gallery -->
+
+<!-- BEGIN rating -->
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{rating.row.hidden.HIDDEN}
+<!-- END hidden -->
+<div class="update">
+<!-- BEGIN tab -->
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{rating.row.tab.L_LANG}</a></li></ul>
+<!-- BEGIN option -->
+<div {rating.row.tab.option.ID}>
+<dl>			
+	<dt{rating.row.tab.option.CSS}><label for="{rating.row.tab.option.LABEL}"{rating.row.tab.option.EXPLAIN}>{rating.row.tab.option.L_NAME}:</label></dt>
+	<dd>{rating.row.tab.option.OPTION}</dd>
+</dl>
+</div>
+<!-- END option -->
+<!-- END tab -->
+</div>
+<!-- END row -->
+<!-- END rating -->
 
 <!-- BEGIN module -->
 <!-- BEGIN row -->
@@ -135,23 +156,21 @@ function SelectAll(id)
 
 <!-- BEGIN upload -->
 <!-- BEGIN row -->
-<div style="float:left; width:49%;">
-	<table class="update2">
-	<!-- BEGIN tab -->
-	<tr>
-		<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{upload.row.tab.L_LANG}</a></li></ul></th>
-	</tr>
-	<!-- BEGIN option -->
-	<tr>
-		<td class="row1"><label for="{upload.row.KEY}_{upload.row.tab.option.KEYS}">{upload.row.tab.option.L_NAME}:</label></td>
-		<td class="row2">{upload.row.tab.option.OPTION}</td>
-	</tr>
-	<!-- END option -->
-	<!-- END tab -->
-	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-	</table>
+<!-- BEGIN hidden -->
+{upload.row.hidden.HIDDEN}
+<!-- END hidden -->
+<div class="update">
+<!-- BEGIN tab -->
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{upload.row.tab.L_LANG}</a></li></ul>
+<!-- BEGIN option -->
+<div {upload.row.tab.option.ID}>
+<dl>			
+	<dt{upload.row.tab.option.CSS}><label for="{upload.row.tab.option.LABEL}"{upload.row.tab.option.EXPLAIN}>{upload.row.tab.option.L_NAME}:</label></dt>
+	<dd>{upload.row.tab.option.OPTION}</dd>
+</dl>
+</div>
+<!-- END option -->
+<!-- END tab -->
 </div>
 <!-- END row -->
 <!-- END upload -->

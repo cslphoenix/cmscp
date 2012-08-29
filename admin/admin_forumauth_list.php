@@ -2,14 +2,12 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_perm'] )
-	{
-		$module['hm_forums']['sm_perm_list'] = $root_file;
-	}
-
-	return;
+	$module['sm_forumauth_list'] = array(
+		'filename'	=> basename(__FILE__),
+		'modes'		=> array(
+			'index'	=> 'sm_forumauth_list',
+		),
+	);
 }
 else
 {
@@ -17,7 +15,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_perm_list';
+	$current	= 'acp_perm_list';
 	
 	include('./pagestart.php');
 	
@@ -41,7 +39,7 @@ else
 	$data_cat	= request($url_c, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['forum']);
 	
@@ -60,7 +58,7 @@ else
 	$forum_id	= ( $data_id )	? $data_id : '';
 	$forum_sql	= ( $data_id )	? "AND forum_id = $data_id" : '';
 	
-	if ( request('submit', TXT) )
+	if ( $update )
 	{
 		$sql = '';
 	
@@ -355,11 +353,11 @@ else
 		}
 	
 		$adv_mode = ( empty($adv) ) ? '1' : '0';
-		$switch_mode = check_sid('admin_forumauth_list.php?' . $url . '=' . $forum_id . "&adv=". $adv_mode);
+		$switch_mode = check_sid('admin_forumauth_list.php?id=' . $forum_id . "&adv=". $adv_mode);
 		$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 		$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 	
-		$fields = '<input type="hidden" name="' . $url . '" value="' . $forum_id . '">';
+		$fields = '<input type="hidden" name="id" value="' . $forum_id . '">';
 	
 		$template->assign_vars(array(
 		
@@ -428,7 +426,7 @@ else
 				
 				$template->assign_block_vars('catrow.forum_row', array(
 					'ROW_CLASS' => ( !($j % 2) ) ? 'row_class1' : 'row_class2',
-					'FORUM_NAME' => '<a href="' . check_sid('admin_forumauth_list.php?' . $url . '=' . $forum_id) . '">' . $forum_name . '</a>'
+					'FORUM_NAME' => '<a href="' . check_sid('admin_forumauth_list.php?id=' . $forum_id) . '">' . $forum_name . '</a>'
 				));
 				
 				for ( $k=0; $k < count($forum_auth_fields); $k++ )

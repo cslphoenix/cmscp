@@ -1,7 +1,7 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 
 <br />
 
@@ -13,7 +13,7 @@
 <!-- BEGIN link_row -->
 <tr>
 	<td class="row_class1" align="left" width="100%"><span class="right">{display.link_row.LINK}</span>{display.link_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.link_row.SHOW}{display.link_row.MOVE_UP}{display.link_row.MOVE_DOWN}{display.link_row.UPDATE}{display.link_row.DELETE}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.link_row.SHOW}{display.link_row.MOVE_DOWN}{display.link_row.MOVE_UP}{display.link_row.UPDATE}{display.link_row.DELETE}</td>
 </tr>
 <!-- END link_row -->
 <!-- BEGIN no_entry_link -->
@@ -40,7 +40,7 @@
 <!-- BEGIN partner_row -->
 <tr>
 	<td class="row_class1" align="left" width="100%"><span class="right">{display.partner_row.LINK}</span>{display.partner_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.partner_row.SHOW}{display.partner_row.MOVE_UP}{display.partner_row.MOVE_DOWN}{display.partner_row.UPDATE}{display.partner_row.DELETE}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.partner_row.SHOW}{display.partner_row.MOVE_DOWN}{display.partner_row.MOVE_UP}{display.partner_row.UPDATE}{display.partner_row.DELETE}</td>
 </tr>
 <!-- END partner_row -->
 <!-- BEGIN no_entry_partner -->
@@ -67,7 +67,7 @@
 <!-- BEGIN sponsor_row -->
 <tr>
 	<td class="row_class1" align="left" width="100%"><span class="right">{display.sponsor_row.LINK}</span>{display.sponsor_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.sponsor_row.SHOW}{display.sponsor_row.MOVE_UP}{display.sponsor_row.MOVE_DOWN}{display.sponsor_row.UPDATE}{display.sponsor_row.DELETE}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.sponsor_row.SHOW}{display.sponsor_row.MOVE_DOWN}{display.sponsor_row.MOVE_UP}{display.sponsor_row.UPDATE}{display.sponsor_row.DELETE}</td>
 </tr>
 <!-- END sponsor_row -->
 <!-- BEGIN no_entry_sponsor -->
@@ -96,33 +96,33 @@
 </ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
-<table class="update">
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<div class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
 <!-- BEGIN option -->
-<tr>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+<div{input.row.tab.option.ID}>
+<dl>			
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+</div>
 <!-- END option -->
 <!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-</table>
+</div>
 <!-- END row -->
 
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END input -->

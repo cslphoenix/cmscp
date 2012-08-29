@@ -9,34 +9,27 @@ $lang = array_merge($lang, array(
 	
 	'title'		=> 'Karte',
 	'titles'	=> 'Karten',
-	'cat'		=> 'Kategorie',
 	
 	'explain'	=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
 
-	'create'	=> 'Neue Karte hinzugefügt.',
-	'update'	=> 'Kartendaten erfolgreich geändert.',
-	'delete'	=> 'Die Karte wurde gelöscht!',
-	'confirm'	=> 'dass diese Karte:',
+	'create'	=> 'Neue Karte/Kategorie hinzugefügt.',
+	'update'	=> 'Infos erfolgreich geändert.',
+	'delete'	=> 'Die Karte/Kategorie wurde gelöscht!',
+	'confirm'	=> 'dass diese Karte/Kategorie:',
 	
-	'create_cat'	=> 'Neue Kategorie hinzugefügt.',
-	'update_cat'	=> 'Kategoriedaten erfolgreich geändert.',
-	'delete_cat'	=> 'Die Kategorie wurde gelöscht!',
-	'confirm_cat'	=> 'dass diese Kategorie:',
+	'map_name'	=> 'Name',
+	'map_type'	=> 'Type',
+	'map_tag'	=> 'Tag',
+	'map_sub'	=> 'Kategorie',
 	
-	'map_name'	=> 'Kartenname',
-	'tag'		=> 'Tag',
+	'map_file'	=> 'Datei',
+	'map_info'	=> 'Karteninfo',
 	
-	'cat_name'		=> 'Kategoriename',
-	'cat_tag'		=> 'Kategorietag',
-	'cat_display'	=> 'Klappmenü',
+	'type_0'	=> 'Kategorie',
+	'type_1'	=> 'Karte',
+	
+	'radio:maps'	=> array(0 => 'Kategorie', 1 => 'Karte'),
 
 ));
-
-#$lang['map']		= 'Karte';
-#$lang['maps']		= 'Karten';
-#$lang['cat']		= 'Kategorie';
-#$lang['tag']		= 'Tag';
-
-#$lang['explain']	= 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.';
 
 ?>

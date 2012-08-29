@@ -6,20 +6,10 @@ var request = false;
 // Request senden
 function setRequest(value)
 {
-	// Request erzeugen
-	if (window.XMLHttpRequest)
-	{
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-		request = new XMLHttpRequest();
-	}
-	else
-	{
-		// code for IE6, IE5
-		request = new ActiveXObject("Microsoft.XMLHTTP");
-	}
+	if ( window.XMLHttpRequest ) { request = new XMLHttpRequest(); } else { request = new ActiveXObject("Microsoft.XMLHTTP"); }
 	
 	// überprüfen, ob Request erzeugt wurde
-	if (!request)
+	if ( !request )
 	{
 		alert("Kann keine XMLHTTP-Instanz erzeugen");
 		return false;

@@ -15,12 +15,11 @@ $lang = array_merge($lang, array(
 	'delete'	=> 'Das Spiel wurde gelöscht!',
 	'confirm'	=> 'dass dieses Spiel:',
 	
-	'data'	=> 'Spieldaten',
+	'input_data'	=> 'Spieldaten',
 	
 	'game_name'		=> 'Spielname',
 	'game_tag'		=> 'Spiel Tag',
 	'game_image'	=> 'Spiel Bild',
-	'image_size'	=> 'Bildgröße',
 
 ));
 

@@ -12,7 +12,7 @@
 	<li {TAB_AKTIV3} href="{S_FIGHTUS}">{L_FIGHTUS}</a></li>
 	<!-- END fightus -->
 </ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 

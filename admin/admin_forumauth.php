@@ -2,14 +2,12 @@
 
 if( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_perm'] )
-	{
-		$module['hm_forums']['sm_rights'] = $root_file;
-	}
-
-	return;
+	$module['sm_forumauth'] = array(
+		'filename'	=> basename(__FILE__),
+		'modes'		=> array(
+			'index'	=> 'sm_forumauth',
+		),
+	);
 }
 else
 {

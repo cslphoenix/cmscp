@@ -2,14 +2,12 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_forum_perm'] )
-	{
-		$module['hm_forums']['sm_perm2'] = $root_file;
-	}
-	
-	return;
+	$module['sm_forum_auth'] = array(
+		'filename'	=> basename(__FILE__),
+		'modes'		=> array(
+			'main'	=> 'sm_forum_auth',
+		)
+	);
 }
 else
 {
@@ -17,14 +15,14 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-#	$current	= 'sm_perm_list';
+#	$current	= 'acp_perm_list';
 	
 	include('./pagestart.php');
 	
 #	add_lang(array('forums', 'forum_auth'));
 	add_lang('forum_auth');
 
-	include($root_path . 'includes/acp/acp_constants.php');
+#	include($root_path . 'includes/acp/acp_constants.php');
 	
 	$error	= '';
 	$index	= '';
@@ -56,7 +54,7 @@ else
 	
 	debug($_POST);
 	
-	if ( request('submit', TXT) )
+	if ( $update )
 	{
 		$sql = '';
 		

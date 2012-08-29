@@ -2,18 +2,6 @@
 
 if( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_user_perm'] )
-	{
-		$module['hm_usergroups']['sm_uperm'] = $root_file . "?mode=user";
-	}
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_groups_perm'] )
-	{
-		$module['hm_usergroups']['sm_gperm'] = $root_file . "?mode=group";
-	}
-
 	return;
 }
 else

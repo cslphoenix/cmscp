@@ -2,22 +2,23 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN )
-	{
-		$module['hm_maintenance']['sm_logs']		= $root_file . "?mode=_log";
-		$module['hm_maintenance']['sm_logs_error']	= $root_file . "?mode=_error";
-	}
-
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_logs',
+		'modes'		=> array(
+			'log_acp'	=> array('title' => 'acp_log_acp'),
+			'log_mcp'	=> array('title' => 'acp_log_mcp'),
+			'log_ucp'	=> array('title' => 'acp_log_ucp'),
+			'error'		=> array('title' => 'acp_errors'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_logs';
+	$current	= 'acp_logs';
 	
 	include('./pagestart.php');
 	

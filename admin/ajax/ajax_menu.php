@@ -12,49 +12,65 @@ require($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-if ( isset($_POST['mode']) )
+if ( isset($_POST['type']) )
 {
-	$_menu = $_POST['mode'];
-	$umenu = $userdata['user_acp_menu'] ? unserialize($userdata['user_acp_menu']) : false;
+	$type = $_POST['type'];
+	$meta = $_POST['meta'];
+	$name = $_POST['name'];
 	
-	if ( $umenu )
+	$sql = "SELECT * FROM " . MENU2 . " ORDER BY main ASC, menu_order ASC";
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		foreach ( $umenu as $keys => $rows )
+		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$tmp_db = $db->sql_fetchrowset($result);
+	
+	if ( isset($tmp_db) )
+	{
+		foreach ( $tmp_db as $rows )
 		{
-			$key[]		= $keys;
-			$row[$keys] = $rows;
-		}
-		
-		/*
-		$value = '';
-		
-		if ( in_array($_menu, $key) )
-		{
-			$value = ( $row[$_menu] == '1' ) ? '0':'1';
-			$tmpsvars = serialize(array_merge($row, array($_menu => $value)));
-		}
-		else
-		{
-			$tmpsvars = serialize(array_merge($row, array($_menu => 1)));
-		}
-		*/
-		
-		$tmpsvars = serialize(array_merge($row, array($_menu => ( in_array($_menu, $key) ) ? ( $row[$_menu] == 1 ) ? 0 : 1 : 0)));
-		
-		$sql = "UPDATE " . USERS . " SET user_acp_menu = '$tmpsvars' WHERE user_id = " . $userdata['user_id'];
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			if ( !$rows['type'] )
+			{
+				$cat[$rows['menu_id']] = $rows;
+			}
+			else if ( $rows['type'] == 1 )
+			{
+				$lab[$rows['main']][$rows['menu_id']] = $rows;
+			}
+			else
+			{
+				$sub[$rows['main']][$rows['menu_id']] = $rows;
+			}
 		}
 	}
-	else
+	
+	ksort($cat);
+	ksort($lab);
+	
+	debug($name);
+	
+	$opt = '<div id="close"><select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
+	
+	foreach ( $cat as $ckey => $crow )
 	{
-		$sql = "UPDATE " . USERS . " SET user_acp_menu = '" . serialize(array($_menu => 1)) . "' WHERE user_id = " . $userdata['user_id'];
-		if ( !$db->sql_query($sql) )
+		$shut = ( $type == 2 ) ? ' disabled="disabled"': '';
+		
+		$opt .= '<option value="' . $crow['menu_id'] . '"' . $shut . '>' . $crow['menu_name'] . ' :: ' . $crow['menu_id'] . '</option>';
+			
+		if ( isset($lab[$ckey]) )
 		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			foreach ( $lab[$ckey] as $lkey => $lrow )
+			{
+				$shut = ( $type == 1 ) ? ' disabled="disabled"': '';
+				
+				$opt .= '<option value="' . $lrow['menu_id'] . '"' . $shut . '>&nbsp; &nbsp;' . $lrow['menu_name'] . ' :: ' . $lrow['menu_id'] . '</option>';
+			}
 		}
 	}
+	
+	$opt .= '</select></div><div id="ajax_content"></div>';
+	
+	echo $opt;
 }
 else
 {

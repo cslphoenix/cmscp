@@ -53,9 +53,10 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 
 		// Team
 		'team' => array(
-			//'score' => array('tickets'),
-		),
+			//'score' => array('tickets),
 	);
+
+return $module;
 
 	/**
 	 * Array of packets we want to look up.
@@ -192,7 +193,10 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 		$buffer = $this->preProcess($this->packets_response[self::PACKET_DETAILS]);
 
 		// Process the buffer response
-		$data = array_shift($this->parse_response($buffer));
+		$data = $this->parse_response($buffer);
+
+		// Shift off the first item
+		$data = array_shift($data);
 
 		// Set the result to a new result instance
 		$result = new GameQ_Result();
@@ -342,24 +346,21 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 		$this->verify_response(trim($buffer->readString("\n")));
 
 		$return = array();
-		
+
 		foreach ($data as $part)
 		{
 			$variables = explode (' ', $part);
-			
+
 			$info = array();
-			
+
 			foreach ($variables as $variable)
 			{
-			#	if ( explode('=', $variable) )
-				if ( strpos($variable, "=") !== false )
-				{
-					list($key, $value) = explode('=', $variable, 2);
-				}
+				// Explode and make sure we always have 2 items in the array
+				list($key, $value) = array_pad(explode('=', $variable, 2), 2, '');
 
 				$info[$key] = str_replace(array_keys($this->string_replace), array_values($this->string_replace), $value);
 			}
-			
+
 			// Add this to the return
 			$return[] = $info;
 		}

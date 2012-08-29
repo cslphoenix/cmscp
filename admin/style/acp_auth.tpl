@@ -1,7 +1,7 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 
 {S_FORMS}
 
@@ -17,8 +17,8 @@
 
 <!-- BEGIN select -->
 
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 
 <form action="{S_ACTION}" method="post">
 {S_GROUPS_IN}
@@ -38,8 +38,6 @@
 
 <!-- BEGIN auth_forum -->
 <script type="text/javascript">
-
-$(function() { $('.tabs').liteTabs({ borders: true, height: 'auto', selectedTab: 1, width: '750' }); });
 
 function set_right(id,text)
 {
@@ -75,8 +73,8 @@ function reset_simpleauth(id)
 </script>
 
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 
 <!-- BEGIN row -->
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{auth_forum.row.NAME}</a></li></ul>

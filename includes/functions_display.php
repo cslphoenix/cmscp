@@ -50,7 +50,7 @@ function display_navi()
 	{
 		switch ( $ary[$i]['navi_type'] )
 		{
-			case NAVI_MAIN:	$row_type = 'navi_main.navi_main_row';	break;
+			case NAVI_MAIN:	$row_type = 'navi_main.row';	break;
 			case NAVI_CLAN:	$row_type = 'navi_clan.navi_clan_row';	break;
 			case NAVI_COM:	$row_type = 'navi_comm.navi_comm_row';	break;
 			case NAVI_MISC:	$row_type = 'navi_misc.navi_misc_row';	break;
@@ -77,8 +77,8 @@ function display_news()
 					LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE n.news_time_public < " . time() . " AND news_public = 1
-			ORDER BY n.news_time_public DESC, n.news_id DESC LIMIT 0," . $settings['module_news']['limit'];
+				WHERE n.news_date < " . time() . " AND news_public = 1
+			ORDER BY n.news_date DESC, n.news_id DESC LIMIT 0," . $settings['module_news']['limit'];
 	$tmp = _cached($sql, 'dsp_news', 0, $settings['module_news']['time']);
 	
 	if ( !$tmp )
@@ -239,7 +239,7 @@ function display_topics()
 			$template->assign_block_vars('sn_topics_row', array(
 				'CLASS' 	=> ( $i % 2 ) ? 'row1' : 'row2',
 		#		'CLICKS'	=> $clicks,
-		#		'URL'		=> "<a href=\"$url\" title=\"$title\">$name</a>",
+		#		'URL'		=> "<a href=\"id\" title=\"$title\">$name</a>",
 			));
 		}
 	}
@@ -274,7 +274,7 @@ function display_downloads()
 			$template->assign_block_vars('sn_downloads_row', array(
 				'CLASS' 	=> ( $i % 2 ) ? 'row1r' : 'row2r',
 		#		'CLICKS'	=> $clicks,
-		#		'URL'		=> "<a href=\"$url\" title=\"$title\">$name</a>",
+		#		'URL'		=> "<a href=\"id\" title=\"$title\">$name</a>",
 			));
 		}
 	}
@@ -325,7 +325,7 @@ function display_teams()
 			$name	= cut_string($data[$i]['team_name'], $settings['module_teams']['length']);
 			
 			$template->assign_block_vars('sn_teams', array(
-				'URL'	=> "<a href=\"$url\">$name</a>",
+				'URL'	=> "<a href=\"id\">$name</a>",
 				'GAME'	=> display_gameicon($data[$i]['game_image']),
 			));
 		}
@@ -360,7 +360,7 @@ function display_network($type)
 				$url = $info['network_url'];
 				$info = $img ? $img : $name;
 				
-				$template->assign_block_vars("sn_{$type}.row", array('LINK' => "<a href=\"$url\" title=\"$name\" target=\"_new\">$info</a>"));
+				$template->assign_block_vars("sn_{$type}.row", array('LINK' => "<a href=\"id\" title=\"$name\" target=\"_new\">$info</a>"));
 			}
 		}
 	}
@@ -426,12 +426,12 @@ function display_minical()
 			}
 			$db->sql_freeresult($result);
 			
-			$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_time_public, t.team_name, g.game_image
+			$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_date, t.team_name, g.game_image
 						FROM " . NEWS . " n
 							LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 							LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 							LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-					WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%m.%Y') = '$m.$y'";
+					WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$m.$y'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -439,7 +439,7 @@ function display_minical()
 			
 			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$news[date('d', $row['news_time_public'])][] = $row;
+				$news[date('d', $row['news_date'])][] = $row;
 			}
 			$db->sql_freeresult($result);
 			
@@ -509,12 +509,12 @@ function display_minical()
 		}
 		$db->sql_freeresult($result);
 		
-		$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_time_public, t.team_name, g.game_image
+		$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_date, t.team_name, g.game_image
 					FROM " . NEWS . " n
 						LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%m.%Y') = '$m.$y'";
+				WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$m.$y'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -522,7 +522,7 @@ function display_minical()
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$news[date('d', $row['news_time_public'])][] = $row;
+			$news[date('d', $row['news_date'])][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
@@ -593,7 +593,7 @@ function display_minical()
 								LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 								LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 								LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-						WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%d.%m.%Y') = '$i.$m.$y'";
+						WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%d.%m.%Y') = '$i.$m.$y'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

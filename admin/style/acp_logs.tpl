@@ -2,7 +2,7 @@
 <form action="{S_ACTION}" method="post" id="list" name="post">
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_ERROR}">{L_ERROR}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 
@@ -15,11 +15,11 @@
 	<th><input type="checkbox" name="log_id[]" onclick="checkbox(this.name,this.checked)" value="" /></th>
 </tr>
 <!-- BEGIN row -->
-<tr onclick="checked({display.row.LOG_ID})">
-	<td class="{display.row.CLASS}">{display.row.USERNAME}</td>
-	<td class="{display.row.CLASS}">{display.row.IP}</td>
-	<td class="{display.row.CLASS}">{display.row.DATE}</td>
-	<td class="{display.row.CLASS}"><strong>{display.row.SEKTION}</strong>&nbsp;&raquo;&nbsp;<strong>{display.row.MESSAGE}</strong>{display.row.DATA}</td>
+<tr>
+	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}">{display.row.USERNAME}</label></td>
+	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}">{display.row.IP}</label></td>
+	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}">{display.row.DATE}</label></td>
+	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}"><strong>{display.row.SEKTION}</strong>&nbsp;&raquo;&nbsp;<strong>{display.row.MESSAGE}</strong>{display.row.DATA}</label></td>
 	<td align="center" width="1%"><input type="checkbox" name="log_id[]" id="check_{display.row.LOG_ID}" value="{display.row.LOG_ID}"> {display.row.LOG_ID}</td>
 </tr>
 <!-- END row -->
@@ -65,7 +65,7 @@
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_ERROR}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 

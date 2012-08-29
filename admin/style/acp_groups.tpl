@@ -1,6 +1,7 @@
 <!-- BEGIN input -->
+<!--
 <script type="text/JavaScript">
-<!-- BEGIN ajax -->
+<!-- BEGIN ajax ->
 function look_{input.ajax.NAME}({input.ajax.NAME}, user_new, user_level)
 {
 	if ( {input.ajax.NAME}.length == 0 )
@@ -24,21 +25,20 @@ function set_{input.ajax.NAME}(thisValue)
 	$('#group_{input.ajax.NAME}').val(thisValue);
 	setTimeout("$('#{input.ajax.NAME}').hide();", 200);
 }
-<!-- END ajax -->
+<!-- END ajax ->
 function set_infos(id,text)
 {
 	var obj = document.getElementById(id).value = text;
 }
 </script>
-<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 
 <script type="text/JavaScript">
 // <![CDATA[
 function check_yes()
 {
-	<!-- BEGIN auth -->
+	<!-- BEGIN auth ->
 	document.getElementById("{input.auth.FIELDS}").checked = true;
-	<!-- END auth -->
+	<!-- END auth ->
 }
 
 function check_no()
@@ -53,6 +53,8 @@ function check_no()
 
 // ]]>
 </script>
+-->
+<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
@@ -62,26 +64,34 @@ function check_no()
 </ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<table class="update">
+<div class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
 <!-- BEGIN option -->
-<tr>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+<div{input.row.tab.option.ID}>
+<dl>			
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+</div>
 <!-- END option -->
 <!-- END tab -->
-</table>
+</div>
 <!-- END row -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
 
 <!--
 <ul id="navlist">
@@ -168,13 +178,6 @@ function check_no()
 
 <br/>
 -->
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_FIELDS}
 </form>
 <!-- END input -->
 
@@ -184,22 +187,22 @@ function check_no()
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_VIEWMEMBER}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
-<table class="normal">
+<table class="normal db">
 <tr>
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MODERATOR}</a></li></ul></th>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="right" onclick="return false;">{L_REGISTER}</a></li></ul></th>
 </tr>
-<!-- BEGIN mod_row -->
+<!-- BEGIN mod -->
 <tr>
-	<td>{_member._modrow.USERNAME}</td>
-	<td>{_member._modrow.REGISTER}</td>
-	<td><input type="checkbox" name="members[]" value="{_member._modrow.USER_ID}"></td>
+	<td><label for="u{member.mod.USER_ID}">{member.mod.USERNAME}</label></td>
+	<td>{member.mod.REGISTER}</td>
+	<td><input type="checkbox" name="members[]" value="{member.mod.USER_ID}" id="u{member.mod.USER_ID}" /></td>
 </tr>
-<!-- END mod_row -->
+<!-- END mod -->
 <!-- BEGIN mod_no -->
 <tr>
 	<td class="empty" colspan="3">{L_MODERATOR_NO}</td>
@@ -209,18 +212,18 @@ function check_no()
 
 <br />
 
-<table class="normal">
+<table class="normal db">
 <tr>
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBER}</a></li></ul></th>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="right" onclick="return false;">{L_REGISTER}</a></li></ul></th>
 </tr>
-<!-- BEGIN mem_row -->
+<!-- BEGIN mem -->
 <tr>
-	<td>{_member._memrow.USERNAME}</td>
-	<td>{_member._memrow.REGISTER}</td>
-	<td><input type="checkbox" name="members[]" value="{_member._memrow.USER_ID}"></td>
+	<td><label for="u{member.mem.USER_ID}">{member.mem.USERNAME}</label></td>
+	<td>{member.mem.REGISTER}</td>
+	<td><input type="checkbox" name="members[]" value="{member.mem.USER_ID}" id="u{member.mem.USER_ID}" /></td>
 </tr>
-<!-- END mem_row -->
+<!-- END mem -->
 <!-- BEGIN mem_no -->
 <tr>
 	<td class="empty" colspan="3">{L_MEMBER_NO}</td>
@@ -239,16 +242,16 @@ function check_no()
 <!-- BEGIN pending -->
 <br />
 
-<table class="normal">
+<table class="normal db">
 <tr>
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_PENDING}</a></li></ul></th>
 	<th colspan="2" align="right"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_REGISTER}</a></li></ul></th>
 </tr>
 <!-- BEGIN pending_row -->
 <tr>
-	<td>{_member._pending._pendingrow.USERNAME}</td>
-	<td>{_member._pending._pendingrow.REGISTER}</td>
-	<td><input type="checkbox" name="pending_members[]" value="{_member._pending._pendingrow.USER_ID}" checked="checked"></td>
+	<td>{member.pending.pen.USERNAME}</td>
+	<td>{member.pending.pen.REGISTER}</td>
+	<td><input type="checkbox" name="pendingmembers[]" value="{member.pending.pen.USER_ID}" checked="checked"></td>
 </tr>
 <!-- END pending_row -->
 </table>
@@ -324,7 +327,7 @@ function check_no()
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li><li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 

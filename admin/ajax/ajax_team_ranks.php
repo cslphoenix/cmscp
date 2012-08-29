@@ -16,7 +16,7 @@ if ( isset($_POST['mode']) )
 {
 	$s_select = '';
 	
-	if ( $_POST['mode'] == '_user_setrank' )
+	if ( $_POST['mode'] == 'user_setrank' )
 	{
 		$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = " . RANK_TEAM . " ORDER BY rank_special DESC, rank_order ASC";
 		if ( !($result = $db->sql_query($sql)) )

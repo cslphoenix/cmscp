@@ -2,21 +2,22 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_games'] )
-	{
-		$module['hm_clan']['sm_games'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_games',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_games'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_games';
+	$cancel = ( isset($_POST['cancel']) ) ? true : false;
+	$update = ( isset($_POST['submit']) ) ? true : false;
+	
+	$current = 'acp_games';
 	
 	include('./pagestart.php');
 	
@@ -24,35 +25,39 @@ else
 	
 	$error	= '';
 	$index	= '';
-	$fields	= '';
+	$fields = '';
 	
+	$time	= time();
 	$log	= SECTION_GAMES;
-	$url	= POST_GAMES;
-	$file	= basename(__FILE__);
 	
-	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
-	$start	= ( $start < 0 ) ? 0 : $start;
-	
-	$data_id	= request($url, INT);
-	$confirm	= request('confirm', TXT);
-	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$data	= request('id', INT);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
+	$sub	= request('sub', TYP);
+	$subs	= request('subs', TYP);
+	$mode	= request('mode', TYP);
+	$sort	= request('sort', TYP) ;
+	$type	= request('type', TYP);
+	$accept	= request('accept', TYP);
+	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_games'] )
+	if ( $userdata['user_level'] != ADMIN && !$userauth['a_games'] )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_games.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
+	
+	debug($_POST, 'POST');
 	
 	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete')) ) ? $mode : '';
 	
@@ -69,41 +74,43 @@ else
 				$vars = array(
 					'game' => array(
 						'title' => 'input_data',
-						'game_name'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name',	'check' => true),
-						'game_tag'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_tag',	'check' => true),
-						'game_image'	=> array('validate' => TXT,	'type' => 'drop:image',		'explain' => true, 'params' => $dir_path),
-						'game_order'	=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
+						'game_name'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
+						'game_tag'		=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:server','required' => 'select_tag',	'check' => true, 'params' => true),
+						'game_image'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:image', 'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
+						'game_order'	=> 'hidden',
 					),
 				);
 				
-				if ( $mode == 'create' && !request('submit', TXT) )
+				if ( $mode == 'create' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 						'game_name'		=> request('game_name', TXT),
 						'game_tag'		=> '',
 						'game_image'	=> '',
-						'game_order'	=> '',
+						'game_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !request('submit', TXT) )
+				else if ( $mode == 'update' && !$update )
 				{
-					$data = data(GAMES, $data_id, false, 1, true);
+					$data_sql = data(GAMES, $data, false, 1, true);
 				}
 				else
 				{
-					$data = build_request(GAMES, $vars, 'game', $error);
+					$data_sql = build_request(GAMES, $vars, $error, $mode);
 					
 					if ( !$error )
 					{
 						if ( $mode == 'create' )
 						{
-							$sql = sql(GAMES, $mode, $data);
+							$data_sql['game_order'] = maxa(GAMES, 'game_order', false);
+							
+							$sql = sql(GAMES, $mode, $data_sql);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(GAMES, $mode, $data, 'game_id', $data_id);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						orders(GAMES);
@@ -117,16 +124,13 @@ else
 					}
 				}
 				
-				build_output($data, $vars, 'input', false, GAMES);
+				build_output(GAMES, $vars, $data_sql);
 
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
-				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['game_name']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['game_name']),
 					
-					'S_ACTION'	=> check_sid($file),
+					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
 				));
 
@@ -147,11 +151,11 @@ else
 
 			case 'delete':
 
-				$data = data(GAMES, $data_id, false, 1, true);
+				$data_sql = data(GAMES, $data, false, 1, true);
 
-				if ( $data_id && $confirm )
+				if ( $data && $confirm )
 				{
-					$sql = sql(GAMES, $mode, $data, 'game_id', $data_id);
+					$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 
 					orders(GAMES);
@@ -162,7 +166,7 @@ else
 				else if ( $data_id && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
@@ -211,15 +215,15 @@ else
 			$order	= $tmp[$i]['game_order'];
 
 			$template->assign_block_vars('display.row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, $name),
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
 				'TAG'		=> $tmp[$i]['game_tag'],
 				'GAME'		=> $tmp[$i]['game_image'] ? display_gameicon($tmp[$i]['game_image']) : img('i_icon', 'icon_spacer', ''),
 				
-				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => 'order', 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => 'order', 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => 'order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => 'order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 			));
 		}
 	}
@@ -231,7 +235,6 @@ else
 
 		'L_NAME'	=> $lang['game_name'],
 
-		'S_CREATE'	=> check_sid("$file?mode=create"),
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));

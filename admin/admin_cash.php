@@ -2,21 +2,20 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_cash'] )
-	{
-		$module['hm_clan']['sm_cash'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_cash',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_cash'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
-	
+
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_cash';
+	$current	= 'acp_cash';
 	
 	include('./pagestart.php');
 	
@@ -58,6 +57,19 @@ else
 	
 	$mode = ( in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata', 'bankdata_delete')) ) ? $mode : '';
 	
+		debug($_POST, 'post');
+	
+	$test = '101010101010';
+	
+#	debug(explode('', $test));
+	
+#	for ($i = 0; $i < strlen($test); $i++)
+#    $tests[] = $test{$i};
+	
+	debug(str_split($test));
+	
+
+	
 	debug($_POST);
 	
 	switch ( $mode )
@@ -70,18 +82,18 @@ else
 			$vars = array(
 				'user' => array(
 					'title1' => 'input_data',
-					'user_id'		=> array('validate' => TXT, 'type' => 'ajax:25',		'explain' => true, 'required' => 'input_user', 'params' => 'user:0:2'),
-					'user_amount'	=> array('validate' => INT,	'type' => 'text:5:5',		'explain' => true, 'required' => 'input_amount'),
-					'user_interval'	=> array('validate' => TXT,	'type' => 'radio:interval',	'explain' => true),
-					'user_month'	=> array('validate' => ARY,	'type' => 'check:months',	'explain' => true),
-					'time_create'	=> array('type' => 'hidden'),
-					'time_update'	=> array('type' => 'hidden'),
+					'user_id'		=> array('validate' => TXT,	'explain' => false, 'type' => 'ajax:25', 'required' => 'input_user', 'params' => array('user', 0, 2)),
+					'user_amount'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:5:5', 'required' => 'input_amount'),
+					'user_interval'	=> array('validate' => TXT,	'explain' => false, 'type' => 'radio:interval'),
+					'user_month'	=> array('validate' => ARY,	'type' => 'check:months'),
+					'time_create'	=> 'hidden',
+					'time_update'	=> 'hidden',
 				),
 			);
 			
-			if ( $mode == 'create' && !request('submit', TXT) )
+			if ( $mode == 'create' && !$update )
 			{
-				$data = array(
+				$data_sql = array(
 					'user_id'		=> request('user_name', TXT),
 					'user_amount'	=> '',
 					'user_month'	=> date("n", $time),
@@ -90,13 +102,13 @@ else
 					'time_update'	=> 0,
 				);
 			}
-			else if ( $mode == 'update' && !request('submit', TXT) )
+			else if ( $mode == 'update' && !$update )
 			{
-				$data = data(CASH_USER, $data_id, false, 2, true);
+				$data_sql = data(CASH_USER, $data_id, false, 2, true);
 			}
 			else
 			{
-				$data = build_request(CASH_USER, $vars, 'user', $error);
+				$data_sql = build_request(CASH_USER, $vars, $error, $mode);
 				
 				if ( !$error )
 				{
@@ -104,13 +116,13 @@ else
 					
 					if ( $mode == 'create' )
 					{
-						$sql = sql(CASH_USER, $mode, $data);
+						$sql = sql(CASH_USER, $mode, $data_sql);
 						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
-						$sql = sql(CASH_USER, $mode, $data, 'cash_user_id', $data_id);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(CASH_USER, $mode, $data_sql, 'cash_user_id', $data);
+						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -127,7 +139,7 @@ else
 			$user_name = '';
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['title']),
@@ -138,10 +150,10 @@ else
 			));
 			
 			break;
-					
+		/*		
 		case 'delete_user':
 		
-			$data = data(CASH_USER, $data_user, false, 2, 1);
+			$data_sql = data(CASH_USER, $data_user, false, 2, 1);
 			
 			if ( $data_user && $confirm )
 			{
@@ -183,41 +195,41 @@ else
 			$vars = array(
 				'cash' => array(
 					'title1' => 'input_data',
-					'cash_name'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
-					'cash_amount'	=> array('validate' => INT,	'type' => 'text:5:5',		'explain' => true, 'required' => 'input_amount'),
-					'cash_type'		=> array('validate' => TXT,	'type' => 'radio:type',		'explain' => true),
-					'cash_interval'	=> array('validate' => INT,	'type' => 'radio:cinterval','explain' => true),
+					'cash_name'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
+					'cash_amount'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:5:5', 'required' => 'input_amount'),
+					'cash_type'		=> array('validate' => TXT,	'explain' => false, 'type' => 'radio:type'),
+					'cash_interval'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:cinterval'),
 				),
 			);
-			
-			if ( $mode == 'create_cat' && !request('submit', TXT) )
+
+			if ( $mode == 'create_cat' && !$update )
 			{
-				$data = array(
+				$data_sql = array(
 					'cash_name'		=> request('cash_name', TXT),
 					'cash_type'		=> 0,
 					'cash_amount'	=> '',
 					'cash_interval'	=> 0,
 				);
 			}
-			else if ( $mode == 'update_cat' && !request('submit', TXT) )
+			else if ( $mode == 'update_cat' && !$update )
 			{
-				$data = data(CASH, $data_cat, false, 1, true);
+				$data_sql = data(CASH, $data_cat, false, 1, true);
 			}
 			else
 			{
-				$data = build_request(CASH, $vars, 'cash', $error);
+				$data_sql = build_request(CASH, $vars, 'cash', $error);
 				
 				if ( !$error )
 				{
 					if ( $mode == 'create_cat' )
 					{
-						$sql = sql(CASH, $mode, $data);
+						$sql = sql(CASH, $mode, $data_sql);
 						$msg = $lang['create_cat'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
-						$sql = sql(CASH, $mode, $data, 'cash_id', $data_cat);
-						$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(CASH, $mode, $data_sql, 'cash_id', $data_cat);
+						$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -246,11 +258,11 @@ else
 		
 		case 'delete_cat':
 		
-			$data = data(CASH, $data_id, false, 1, true);
+			$data_sql = data(CASH, $data, false, 1, true);
 			
-			if ( $data_id && $confirm )
+			if ( $data && $confirm )
 			{
-				$sql = sql(CASH, $mode, $data, 'cash_id', $data_cat);
+				$sql = sql(CASH, $mode, $data_sql, 'cash_id', $data_cat);
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				orders(GAMES, '-1');
@@ -261,7 +273,7 @@ else
 			else if ( $data_id && !$confirm )
 			{
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
@@ -279,12 +291,12 @@ else
 			$template->pparse('confirm');
 			
 			break;
-		
+		*/
 		case 'bankdata':
 			
 			$template->assign_block_vars('bankdata', array());
 			
-			$data = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
+			$data_sql = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
 			
 			foreach ( $data['bank_data'] as $key => $array )
 			{
@@ -313,7 +325,7 @@ else
 						'LNGS' => $lngs,
 					));
 					
-					if ( !request('submit', TXT) )
+					if ( !$update )
 					{
 						$template->assign_block_vars("$mode.row._option._input", array(
 							'TYPE'	=> $rows['type'],
@@ -336,7 +348,7 @@ else
 				}
 			}
 			
-			if ( request('submit', TXT) )
+			if ( $update )
 			{
 				if ( !$error )
 				{
@@ -346,7 +358,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', __LINE__, __FILE__, $sql);
 					}
 					
-					$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+					$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					
 					log_add(LOG_ADMIN, $log, $mode);
 					message(GENERAL_MESSAGE, $msg);
@@ -488,7 +500,7 @@ else
 					$time	= ( $user[$i]['time_update'] ) ? $user[$i]['time_update'] : $user[$i]['time_create'];
 										
 					$template->assign_block_vars('display.user_row', array(
-						'USER'		=> href('a_txt', $file, array('mode' => 'update', $url => $uid), $user[$i]['user_name'], $user[$i]['user_name']),
+						'USER'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $uid), $user[$i]['user_name'], $user[$i]['user_name']),
 						
 						'MONTH'		=> $user[$i]['user_month'],
 						'AMOUNT'	=> $user[$i]['user_amount'],
@@ -496,8 +508,8 @@ else
 						
 						'TIME'		=> sprintf('%s: %s', $lang[$lng], create_date($userdata['user_dateformat'], $time, $userdata['user_timezone'])),
 						
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $uid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $uid), 'icon_cancel', 'common_delete'),
+						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $uid), 'icon_update', 'common_update'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $uid), 'icon_cancel', 'common_delete'),
 					));
 				}
 				

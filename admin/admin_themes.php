@@ -2,17 +2,15 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_themes'] )
-	{
-		$module['hm_system']['sm_addnew']	= "$root_file?mode=addnew";
-		$module['hm_system']['sm_create']	= "$root_file?mode=create";
-		$module['hm_system']['sm_export']	= "$root_file?mode=export";
-		$module['hm_system']['sm_manage']	= $root_file;
-	}
-	
-	return;
+	$module['sm_teamspeak'] = array(
+		'filename'	=> basename(__FILE__),
+		'modes'		=> array(
+			'addnew'	=> 'sm_addnew',
+			'create'	=> 'sm_create',
+			'export'	=> 'sm_export',
+			'manage'	=> 'sm_manage',
+		),
+	);
 }
 else
 {
@@ -20,7 +18,7 @@ else
 	
 	$root_path	= './../';
 	$cancel		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_themes';
+	$current	= 'acp_themes';
 	
 	include('./pagestart.php');
 	
@@ -40,7 +38,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_themes'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);

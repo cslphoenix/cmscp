@@ -1,6 +1,1 @@
-<table class="disagree">
-<tr> 
-	<td align="center"><span class="gen">{ERROR_MESSAGE}</span></td>
-</tr>
-</table>
-<br clear="all" />
+<div class="error_box"><p>{ERROR_MESSAGE}</p></div>

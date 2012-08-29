@@ -9,7 +9,7 @@
 
 <form action="{S_ACTION}" method="post">
 <!-- BEGIN display -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<h1>{L_HEAD}</h1>
 
 <table class="header">
 <tr>
@@ -55,7 +55,7 @@
 <!-- END display -->
 
 <!-- BEGIN cats -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
+<h1>{L_HEAD}</h1>
 
 <table class="head" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -239,7 +239,7 @@ function clip(id)
 <ul id="navinfo">
 	<li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <table class="update">
 <tr>
