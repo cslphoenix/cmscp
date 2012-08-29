@@ -100,12 +100,12 @@ if ( defined('CACHE') )
 		}
 		$db->sql_freeresult($result);
 		
-		$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_time_public, t.team_name, g.game_image
+		$sql = "SELECT n.news_id, n.news_title, n.news_intern, n.news_match, n.news_date, t.team_name, g.game_image
 					FROM " . NEWS . " n
 						LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%m.%Y') = '$monat.$jahr'";
+				WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$monat.$jahr'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -113,7 +113,7 @@ if ( defined('CACHE') )
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$news[date('d', $row['news_time_public'])][] = $row;
+			$news[date('d', $row['news_date'])][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
@@ -185,7 +185,7 @@ else
 					LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE n.news_time_public < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_time_public), '%m.%Y') = '$monat.$sy'";
+				WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$monat.$sy'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -193,7 +193,7 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$news[date('d', $row['news_time_public'])][] = $row;
+		$news[date('d', $row['news_date'])][] = $row;
 	}
 	$db->sql_freeresult($result);
 	

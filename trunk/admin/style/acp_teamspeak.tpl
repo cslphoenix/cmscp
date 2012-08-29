@@ -2,7 +2,7 @@
 <form action="{S_ACTION}" method="post">
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 
@@ -42,7 +42,7 @@
 <ul id="navinfo">
 	<li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 

@@ -118,17 +118,21 @@ function upload_dl($file_info, $path, $types, $maxsize, &$error)
 function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_current, $image_preview, $image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, &$error)
 {
 	global $db, $lang, $settings, $error;
-	
+	debug($mode_category);
 	switch ( $mode_category )
 	{
+		
 		/* system_filesize = sfz */
 		/* system_max_width = smw */
 		/* system_max_height = smh */
-		case 'image_group':
-			$sfz = $settings['path_groups']['filesize'];
-			list($smw, $smh) = explode(':', $settings['path_groups']['dimension']);
+		case 'group_image':
+			
+			$sfz = ($settings['path_group']['filesize']*1048576);
+			list($smw, $smh) = explode(':', $settings['path_group']['dimension']);
+
 			break;
-		case 'network':
+		
+		case 'network_image':
 		
 			$sfz = ($settings['path_network']['filesize']*1048576);
 			
@@ -201,7 +205,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 		}
 		else
 		{
-			$error .= sprintf($lang['image_filesize'], round($sfz / 1024));
+			$error[] = sprintf($lang['image_filesize'], round($sfz / 1024));
 			
 			return;
 		}
@@ -345,7 +349,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	}
 	else
 	{
-		$error .= sprintf($lang['sprintf_imagesize'], $smw, $smh);
+		$error[] = sprintf($lang['sprintf_imagesize'], $smw, $smh);
 		
 		return;
 	}

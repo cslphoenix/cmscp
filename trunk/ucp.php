@@ -71,7 +71,7 @@ if ( $userdata['session_logged_in'] )
 		$ntime = $time - $lobby_limit_news;
 		
 		/* News / Newskommentare */
-		$sql = "SELECT * FROM " . NEWS . " WHERE news_time_public > $ntime ORDER BY news_time_public DESC";
+		$sql = "SELECT * FROM " . NEWS . " WHERE news_date > $ntime ORDER BY news_date DESC";
 		$tmp = _cached($sql, 'ly_news');
 		
 		if ( $tmp )
@@ -121,8 +121,8 @@ if ( $userdata['session_logged_in'] )
 						$show++;
 						
 						$template->assign_block_vars('lobby.news.news_row', array(
-							'DATE'	=> create_date($lobby_dateformat, $new_ary[$i]['news_time_public'], $userdata['user_timezone']),
-							'DATEI'	=> create_date($userdata['user_dateformat'], $new_ary[$i]['news_time_public'], $userdata['user_timezone']),
+							'DATE'	=> create_date($lobby_dateformat, $new_ary[$i]['news_date'], $userdata['user_timezone']),
+							'DATEI'	=> create_date($userdata['user_dateformat'], $new_ary[$i]['news_date'], $userdata['user_timezone']),
 							'TITLE'	=> href('a_txt_ly', 'news.php', array($posturl => $nid), $ntitle, $ntitle, $comment),
 						));
 					}

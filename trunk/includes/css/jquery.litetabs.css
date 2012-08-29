@@ -1,0 +1,24 @@
+@charset 'utf-8';
+/*************************************************
+*
+*	project:  	liteTabs - Lightweight jQuery tabs plugin
+*	author:   	Nicola Hibbert
+*	url:	  	http://nicolahibbert.com/lightweight-jquery-tab-plugin/
+*	demo:	  	http://www.nicolahibbert.com/demo/liteTabs/
+*
+/*************************************************/
+/****************************************** Core */
+.liteTabs			{ margin: 0; padding: 0; overflow: hidden; width: 40px; font-size:small; font-weight:normal; text-align:right; }
+.liteTabs ul		{ margin: 0; padding: 0; overflow: hidden }
+.liteTabs li		{ float: left; list-style-type: none }
+.liteTabs li a		{ display: block; text-decoration: none; outline: 0; padding:2px 10px; margin-right:8px; color: #666; background: #E8EBF0; border:1px solid #ccc; }
+.liteTabs a:hover	{ background:#fdfdfd; border-bottom:1px solid #fdfdfd; color:#39F; }
+.liteTabs a:focus	{ text-decoration: underline; }
+.liteTabs a.selected, .liteTabs a.selected:hover { background:#fff; border-bottom:1px solid #fff; color:#000; }
+.liteTabs div { float: left; width: 100%; padding: 0; background: white }
+.liteTabs div.selected { position: static !important }
+
+/**************************************** Borders */
+.borders ul { position: relative; top: 1px }
+.borders li a { border: 1px solid #ccc; border-bottom: 0 }
+.borders div { border:1px solid #ccc; }

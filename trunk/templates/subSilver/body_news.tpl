@@ -1,4 +1,21 @@
 <!-- BEGIN list -->
+<script type="text/javascript" src="./includes/js/jquery/jRating.jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	<!-- BEGIN info -->
+	$(".rate_{list.info.ID}").jRating({
+		length:5,
+		step:true,
+		rateMax:5,
+		showRateInfo:false,
+		isDisabled:{list.info.RATE},
+	});
+	<!-- END info -->
+});
+
+</script>
+
 <table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
 	<th>{L_MAIN}</th>
@@ -34,8 +51,8 @@
 		<!-- END urls -->
 	</td>
 </tr>
-<tr>
-	<td>&nbsp;</td>
+<tr style="display:{list.row.R_SHOW};">
+	<td><div class="rate_{list.row.ID}" id="{list.row.R_SUM}_{list.row.ID}_1"></div><div id="close_{list.row.ID}">{list.row.RATING}</div><div id="ajax_{list.row.ID}"></div></td>
 </tr>
 <!-- END row -->
 <!-- BEGIN empty -->

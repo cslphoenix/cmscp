@@ -2,13 +2,6 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == 6 )
-	{
-		$module['hm_system']['sm_bugtracker'] = $root_file;
-	}
-	
 	return;
 }
 else
@@ -17,7 +10,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_games';
+	$current	= 'acp_games';
 	
 	include('./pagestart.php');
 	
@@ -37,7 +30,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
@@ -46,7 +39,7 @@ else
 	
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_bugtracker';
+	$current	= 'acp_bugtracker';
 	
 	include('./pagestart.php');
 	include($root_path . 'includes/acp/acp_selects.php');
@@ -60,7 +53,7 @@ else
 	$sort		= ( request('sort', 1) ) ? request('sort', 1) : 'bugtracker_status_all';
 	$data_id	= request(POST_BUGTRACKER_URL, INT);	
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	$confirm	= request('confirm', TXT);
 	
 	$error		= '';
@@ -133,7 +126,7 @@ else
 			}
 			$s_status .= '</select>';
 			
-			$fields = '<input type="hidden" name="mode" value="_detail_save" /><input type="hidden" name="' . $url . '" value="' . $data_id . '" />';
+			$fields = '<input type="hidden" name="mode" value="_detail_save" /><input type="hidden" name="id" value="' . $data_id . '" />';
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['bugtracker']),

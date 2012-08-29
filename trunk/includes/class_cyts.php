@@ -1673,7 +1673,7 @@ class cyts {
 		$pattern = '/<input.*?name="([a-zA-Z0-9]+)".*?value="(.*?)".*?>/im';
 		$pattern2 = '/<input.*?name="serverudpport".*?value="(.*?)">*/im';
 		if (!preg_match_all($pattern, $sRead[1], $matches)) return false;
-		$data = array();
+		$data_sql = array();
 		foreach ($matches[1] as $key => $val) {
 			if (strstr($matches[0][$key], 'type="checkbox"')) {
 				$data[$val] = (strstr($matches[0][$key], "checked")) ? 1 : 0;
@@ -1730,7 +1730,7 @@ class cyts {
 		$pattern = '/<input.*?name="([a-zA-Z0-9_]+)".*?value="(.*?)".*?>/im';
 		$pattern2 = '/<option value="(.*?)" selected>/im';
 		if (!preg_match_all($pattern, $sRead[1], $matches)) return false;
-		$data = array();
+		$data_sql = array();
 		foreach ($matches[1] as $key => $val) {
 			if (strstr($matches[0][$key], 'type="checkbox"')) {
 				$data[$val] = (strstr($matches[0][$key], "checked")) ? 1 : 0;
@@ -1787,7 +1787,7 @@ class cyts {
 		if (!$sRead = $this->_wiget("/server_manager_permission_$class.html")) return false;
 		$pattern = '/<input.*?name="([a-zA-Z_]+)".*?value="1"(checked)*>/im';
 		if (!preg_match_all($pattern, $sRead[1], $matches)) return false;
-		$data = array();
+		$data_sql = array();
 		foreach ($matches[1] as $key => $val) {
 			if ($matches[2][$key] == "checked")
 				$matches[2][$key] = 1;

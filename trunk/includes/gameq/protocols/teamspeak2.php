@@ -54,9 +54,10 @@ class GameQ_Protocols_Teamspeak2 extends GameQ_Protocols
 
 		// Team
 		'team' => array(
-			'id' => array('id'),
-		),
+			'id' => array('id),
 	);
+
+return $module;
 
 	/**
 	 * Array of packets we want to look up.

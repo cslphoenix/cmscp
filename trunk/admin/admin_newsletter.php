@@ -2,14 +2,12 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_newsletter'] )
-	{
-		$module['hm_system']['sm_newsletter'] = $root_file;
-	}
-	
-	return;
+	$module['sm_newsletter'] = array(
+		'filename'	=> basename(__FILE__),
+		'modes'		=> array(
+			'index'	=> 'sm_newsletter',
+		),
+	);
 }
 else
 {

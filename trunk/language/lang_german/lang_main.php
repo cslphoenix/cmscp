@@ -148,6 +148,9 @@ $lang = array_merge($lang, array(
 	'common_off'			=> 'Inaktiv',
 	'common_no'				=> 'Nein',
 	'common_yes'			=> 'Ja',
+	
+	/* 01.08 */
+	'common_rating'		=> 'Abstimmungen',
 
 	
 	'add_comment'			=> 'Kommentar hinzugefügt.',
@@ -338,7 +341,8 @@ $lang['sprintf_subnavi_match']			= 'vs. %s';
 $lang['sprintf_subnavi_match_i']		= '<span style="font-style:italic;">vs. %s</span>';
 $lang['sprintf_subnavi_match_result']	= '%s:%s';
 
-$lang['team_view']					= 'Team Übersicht';
+/*30072012*/
+#$lang['team_view']					= 'Team Übersicht';
 
 
 

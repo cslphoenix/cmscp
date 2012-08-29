@@ -20,6 +20,179 @@
 	function select_add_lang();			//
 */
 
+function select_main($default, $meta, $name, $data)
+{
+	global $db, $lang;
+	
+	switch ( $meta )
+	{
+		case 'menu':	$tbl = MENU2; $field_id = $meta . '_id'; $field_name = $meta . '_name'; $field_order = $meta . '_order'; break;
+		case 'forum':	$tbl = FORMS; $field_id = $meta . '_id'; $field_name = $meta . '_name'; $field_order = $meta . '_order'; break;
+	}
+		
+	$sql = 'SELECT * FROM ' . $tbl . ' ORDER BY main ASC, ' . $field_order . ' ASC';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	if ( $db->sql_numrows($result) )
+	{
+		$tmp = $db->sql_fetchrowset($result);
+		
+		foreach ( $tmp as $rows )
+		{
+			if ( !$rows['type'] )
+			{
+				$cat[$rows[$field_id]] = $rows;
+			}
+			else if ( $rows['type'] == 1 )
+			{
+				$lab[$rows['main']][$rows[$field_id]] = $rows;
+			}
+			else
+			{
+				$sub[$rows['main']][$rows[$field_id]] = $rows;
+			}
+		}
+	}
+	
+	ksort($cat);
+	ksort($lab);
+	
+#	debug($cat);
+#	debug($sub);
+#	debug($lab);
+
+#	debug($default);
+	
+	$return = '<div id="close"><select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
+	
+	foreach ( $cat as $ckey => $crow )
+	{
+		$lng = isset($lang[$crow[$field_name]]) ? $lang[$crow[$field_name]] : $crow[$field_name];
+		
+		$return .= '<option value="' . $crow[$field_id] . '"' . (( $crow[$field_id] == $default ) ? ' selected="selected"' : '') . (( $data['type'] == 2 ) ? ' disabled="disabled"': '') . '>' . $lng . '</option>';
+			
+		if ( isset($lab[$ckey]) )
+		{
+			foreach ( $lab[$ckey] as $lkey => $lrow )
+			{
+				$lng = isset($lang[$lrow[$field_name]]) ? $lang[$lrow[$field_name]] : $lrow[$field_name];
+				
+				$return .= '<option value="' . $lrow[$field_id] . '"' . (( $lrow[$field_id] == $default ) ? ' selected="selected"' : '') . (( $data['type'] == 1 ) ? ' disabled="disabled"': '') . '>&nbsp; &nbsp;' . $lng . '</option>';
+			}
+		}
+	}
+	
+	$return .= '</select></div><div id="ajax_content"></div>';
+	
+	return $return;
+}
+
+function select_forms($default, $meta, $name, $params)
+{
+	global $db, $lang;
+	
+#	$tmp_db = data(FORMS, false, 'main ASC, forum_order ASC', 1, false);
+	
+	$sql = "SELECT * FROM " . FORMS . " ORDER BY main ASC, forum_order ASC";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$tmp_db = $db->sql_fetchrowset($result);
+	
+#	debug($tmp_db);
+							
+	if ( isset($tmp_db) )
+	{
+		foreach ( $tmp_db as $rows )
+		{
+			if ( !$rows['type'] )
+			{
+				$cats[$rows['forum_id']] = $rows;
+			}
+			else if ( $rows['type'] == 1 )
+			{
+				$forms[$rows['main']][$rows['forum_id']] = $rows;
+			}
+			else
+			{
+				$subs[$rows['main']][$rows['forum_id']] = $rows;
+			}
+		}
+	}
+	
+	ksort($forms);
+	ksort($subs);
+	
+#	debug($default, '$default');
+	
+	$type = ( $params == 'forms' ) ? true : false;
+#	$typs = ( $default != 0 ) ? ( $default > 0 ? 1 : 2 ) : 0;
+#	$ftyp = ( $data['forum_type'] != 0 ) ? ( $data['forum_type'] > 1 ? 2 : 1 ) : 0;
+	
+	$opt = ( $type ) ? '<div id="close">' : '';
+	$opt .= '<select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
+	$opt .= ( $type ) ? '' : '<option value="0" selected="selected">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . '</option>';
+	
+	foreach ( $cats as $ckey => $crow )
+	{
+		$mark = ( $default == $crow['forum_id'] ) ? ' selected="selected"' : '';
+		$shut = ( $type ) ? ( $crow['type'] == '2' ) ? ' disabled="disabled"': '' : ' disabled="disabled"';
+		$opt .= '<option value="' . $crow['forum_id'] . '"' . $mark . $shut . '>' . $crow['forum_name'] . ' :: ' . $crow['forum_id'] . '</option>';
+			
+		if ( isset($forms[$ckey]) )
+		{
+			foreach ( $forms[$ckey] as $fkey => $frow )
+			{
+			#	$default = $tdata > 0 ? $tdata : $tdata * -1;
+				$mark = ( $default == $frow['forum_id'] ) ? ' selected="selected"' : '';
+				$shut = ( $type ) ? ( $crow['type'] == '1' ) ? ' disabled="disabled"': '' : (@$data['forum_id'] == $frow['forum_id']) ? ' disabled="disabled"' : '';
+				$opt .= '<option value="' . $frow['forum_id'] . '"' . $mark . $shut . '>&nbsp; &nbsp;' . $frow['forum_name'] . ' :: ' . $frow['forum_id'] . '</option>';
+				
+				if ( isset($subs[$fkey]) )
+				{
+					foreach ( $subs[$fkey] as $skey => $srow )
+					{
+						$shut = ( $type ) ? ' disabled="disabled"' : (@$data['forum_id'] == $srow['forum_id']) ? ' disabled="disabled"' : '';
+						$opt .= '<option value="' . $srow['forum_id'] . '"' . @$shut . '>&nbsp; &nbsp;&nbsp; &nbsp;' . $srow['forum_name'] . '</option>';
+					}
+				}
+			}
+		}
+	}
+	
+	$opt .= '</select>';
+	$opt .= ( $type ) ?  '</div><div id="ajax_content"></div>' : '';
+	
+	return $opt;
+}
+
+/* tdata = default, tmeta = name, tname = name, params = typ */
+function select_server($default, $meta, $name, $typ)
+{
+	global $lang;
+	
+	$type = ( $typ ) ? 0 : 1;
+	
+	$data_sql = data(SERVER_TYPE, "type_sort = $type", false, 1, false);
+	
+	$box = '<select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
+	$box .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_gametype']) . '</option>';
+							
+	foreach ( $data_sql as $row )
+	{
+		$mark = ( $default == $row['type_game'] ) ? ' selected="selected"' : '';
+		$box .= '<option value="' . $row['type_game'] . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $row['type_name']) . '</option>';
+	}
+	
+	$box .= '</select>';
+	
+	return $box;
+}
+
 function select_path()
 {
 	global $root_path, $lang, $settings;
@@ -95,7 +268,7 @@ function select_newscat($default, $main, $name, $path)
 		$select .= "<option value=\"" . $data[$i]['cat_image'] . "\"$marked>" . sprintf($lang['sprintf_select_format'], $data[$i]['cat_name']) . "</option>";
 	}
 	
-	$select .= "</select><br /><img class=\"icon\" src=\"$current_image\" id=\"image\" alt=\"\" />";
+	$select .= "</select><br /><img src=\"$current_image\" id=\"image\" alt=\"\" />";
 	
 	return $select;
 }
@@ -176,13 +349,27 @@ function select_team($default, $meta, $name, $select, $css = false)
 		$field_name = $meta ? "{$meta}[$name]" : $name;
 		$field_id = $meta ? "{$meta}_$name" : $name;
 		
-		if ( $select == 'submit' ) 
+		if ( is_array($select) )
+		{
+			list($type, $params) = array_values($select);
+		}
+		else
+		{
+			$type = $select;
+			$params = '';
+		}
+		
+	#	debug($select, 'select');
+	#	debug($type, 'type');
+	#	debug($params, 'option');
+		
+		if ( $type == 'submit' ) 
 		{
 			$return .= "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
 		}
-		else if ( $select == 'request' )
+		else if ( $type == 'request' )
 		{
-			$return .= "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
+			$return .= ( $params ) ? '<select ' . $css . ' name="' . $field_name . '" id="' . $field_id . '" onchange="setRequest(this.options[selectedIndex].value, \''. $meta . '\', \'' . $name . '\');">' : "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
 		}
 		else
 		{
@@ -378,23 +565,24 @@ function select_games($default, $main, $name, $path)
 	
 	$current_image = '';
 	
-	$select = "<select name=\"{$main}[$name]\" id=\"{$main}_$name\" onkeyup=\"update_image(this.options[selectedIndex].value);\" onchange=\"update_image(this.options[selectedIndex].value);\">";
-	$select .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang["msg_select_$main"]) . '</option>';
+	$select = '<select name="' . sprintf('%s[%s]', $main, $name) . '" id="' . sprintf('%s_%s', $main, $name ) . '"' . ( $path ? 'onkeyup="update_image(this.options[selectedIndex].value);" onchange="update_image(this.options[selectedIndex].value);"' : '' ) . '>';
+	$select .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $main]) . '</option>';
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		if ( $row['game_image'] == $default )
+		if ( $path && $row['game_image'] == $default )
 		{
 			$current_image = $path . $row['game_image'];
 		}
-
-		$marked = ( $row['game_image'] == $default ) ? ' selected="selected"' : '';
 		
-		$select .= "<option value=\"" . $row['game_image'] . "\"$marked>" . sprintf($lang['sprintf_select_format'], $row['game_name']) . "</option>";
+		$game = ( $path ) ? $row['game_image'] : substr($row['game_image'], 0, strrpos($row['game_image'], '.'));
+		$mark = ( $game == $default ) ? ' selected="selected"' : '';
+		
+		$select .= '<option value="' . $game . '"' .$mark . '>' . sprintf($lang['sprintf_select_format'], $row['game_name']) . '</option>';
 	}
 	
-	$select .= "</select>";
-	$select .= " <img class=\"icon\" src=\"$current_image\" id=\"image\" alt=\"\" height=\"15\" />";
+	$select .= '</select>';
+	$select .= ( $path ) ? '&nbsp;<img class="icon" src="' . $current_image . '" id="image" alt="" height="15" />' : '';
 
 	return $select;
 }
@@ -437,7 +625,7 @@ function select_image($default, $main, $name, $path, $line)
 		$select .= "<option value=\"$file\"$marked>" . sprintf($lang['sprintf_select_format'], $filter) . "</option>";
 	}
 	$select .= "</select>";
-	$select .= $line ? " <img class=\"icon\" src=\"$current_image\" id=\"image\" alt=\"\" height=\"15\" />" : "<br /><img class=\"icon\" src=\"$current_image\" id=\"image\" alt=\"\" />";
+	$select .= $line ? " <img src=\"$current_image\" id=\"image\" alt=\"\" height=\"15\" />" : "<br /><img src=\"$current_image\" id=\"image\" alt=\"\" />";
 	
 	return $select;
 }
@@ -1502,7 +1690,7 @@ function select_map($team, $num, $default = '')
 
 function match_types($default, $meta, $name)
 {
-	global $lang, $template, $settings;
+	global $lang, $settings;
 	
 #	debug($default);
 #	debug($meta);
@@ -1521,8 +1709,9 @@ function match_types($default, $meta, $name)
 	array_multisort($sort, SORT_ASC, SORT_NUMERIC, $data);
 	
 #	debug($data);
-	
-	if ( $show['value'] )
+#	debug($show);
+
+	if ( $show )
 	{
 	#	$select .= "<select name=\"$name\" id=\"$name\">";
 		$select = "<select name=\"{$meta}[$name]\" id=\"{$meta}_$name\">";
@@ -1541,16 +1730,17 @@ function match_types($default, $meta, $name)
 	}
 	else
 	{
+		$radio = '';
+		
 		foreach ( $data as $key => $value )
 		{
-			$template->assign_block_vars("input.{$mcut}", array(
-				'NAME'	=> $value['value'],
-				'TYPE'	=> $key,
-				'MARK'	=> ( $default != '' ) ? ( $default == $key ) ? ' checked="checked"' : '' : ( $value['default'] == 1 ) ? ' checked="checked"' : '',
-			));
+			$checked = ( $default != '' ) ? ( $default == $key ) ? ' checked="checked"' : '' : ( $value['default'] == 1 ) ? ' checked="checked"' : '';
+			
+			$radio .= '<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $key . '"' . $checked . ' />&nbsp;' . $value['value'] . '</label>';
+			$radio .= '<br />';
 		}
 		
-		return;
+		return $radio;
 	}
 }
 

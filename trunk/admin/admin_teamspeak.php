@@ -2,26 +2,25 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_teamspeak'] )
-	{
-		$module['hm_clan']['sm_teamspeak'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_teamspeak',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_teamspeak', 'auth' => 'auth_teamspeak'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_teamspeak';
+	$current	= 'acp_teamspeak';
 	
 	include('./pagestart.php');
 	
 	add_lang('teamspeak');
-	
+
 	$error	= '';
 	$index	= '';
 	$fields	= '';
@@ -36,7 +35,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
@@ -65,9 +64,9 @@ else
 				
 				$template->assign_block_vars('input', array());
 				
-				if ( $mode == 'create' && !request('submit', TXT) )
+				if ( $mode == 'create' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 						'teamspeak_name'		=> request('teamspeak_name', 2),
 						'teamspeak_type'		=> TS_3,
 						'teamspeak_viewer'		=> TS_TSSTATUS,
@@ -80,13 +79,13 @@ else
 						'teamspeak_show'		=> '0',
 					);
 				}
-				else if ( $mode == 'update' && !request('submit', TXT) )
+				else if ( $mode == 'update' && !$update )
 				{
-					$data = data(TEAMSPEAK, $data_id, false, 1, true);
+					$data_sql = data(TEAMSPEAK, $data, false, 1, true);
 				}
 				else
 				{
-					$data = array(
+					$data_sql = array(
 						'teamspeak_name'		=> request('teamspeak_name', 2),
 						'teamspeak_type'		=> request('teamspeak_type', 0),
 						'teamspeak_viewer'		=> request('teamspeak_viewer', 0),
@@ -119,13 +118,13 @@ else
 						
 						if ( $mode == 'create' )
 						{
-							$sql = sql(TEAMSPEAK, $mode, $data);
+							$sql = sql(TEAMSPEAK, $mode, $data_sql);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(TEAMSPEAK, $mode, $data, 'teamspeak_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$sql = sql(TEAMSPEAK, $mode, $data_sql, 'teamspeak_id', $data);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						$oCache -> deleteCache('teamspeak');
@@ -141,11 +140,11 @@ else
 				}
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['teamspeak_name']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['teamspeak_name']),
 					
 					'L_NAME'			=> $lang['name'],
 					'L_IP'				=> $lang['ip'],
@@ -214,7 +213,7 @@ else
 				));
 				
 				/*
-				if ( request('submit', TXT) )
+				if ( $update )
 				{
 					$error[] = !$data['teamspeak_name']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
 					$error[] = !$data['teamspeak_ip']	? ( $error ? '<br />' : '' ) . $lang['msg_empty_ip'] : '';
@@ -236,13 +235,13 @@ else
 						
 						if ( $mode == 'create' )
 						{
-							$sql = sql(TEAMSPEAK, $mode, $data);
+							$sql = sql(TEAMSPEAK, $mode, $data_sql);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(TEAMSPEAK, $mode, $data, 'teamspeak_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$sql = sql(TEAMSPEAK, $mode, $data_sql, 'teamspeak_id', $data);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						$oCache -> deleteCache('teamspeak');
@@ -262,11 +261,11 @@ else
 			
 			case 'delete':
 				
-				$data = data(TEAMSPEAK, $data_id, false, 1, true);
+				$data_sql = data(TEAMSPEAK, $data, false, 1, true);
 			
-				if ( $data_id && $confirm )
+				if ( $data && $confirm )
 				{
-					$sql = sql(TEAMSPEAK, $mode, $data, 'teamspeak_id', $data_id);
+					$sql = sql(TEAMSPEAK, $mode, $data_sql, 'teamspeak_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -276,7 +275,7 @@ else
 				else if ( $data_id && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
@@ -323,12 +322,12 @@ else
 			$show	= $tmp[$i]['teamspeak_show'];
 			
 			$template->assign_block_vars('display.row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, ''),
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, ''),
 				
 				'SHOW'		=> $show ? $lang['teamspeak_viewer'] : '',
 				
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 			));
 		}
 	}

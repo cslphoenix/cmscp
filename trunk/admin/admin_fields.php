@@ -1,22 +1,21 @@
 <?php
 
-if ( !empty($setmodules) )
+if ( isset($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN )
-	{
-		$module['hm_usergroups']['sm_fields'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_fields',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_fields'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_profile';
+	$current	= 'acp_profile';
 	
 	include('./pagestart.php');
 
@@ -37,7 +36,7 @@ else
 	$data_sub	= request('sub', INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['profile']);
@@ -89,22 +88,22 @@ else
 				$vars = array(
 					'field' => array(
 						'title1' => 'input_data',
-						'field_name'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name', 'check' => true),
-						'field_field'			=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_field', 'check' => true, 'prefix' => 'field_'),
-						'field_type'			=> array('validate' => INT,	'type' => 'radio:type',		'explain' => true),
-						'field_sub'				=> array('validate' => INT,	'type' => 'radio:sub', 		'explain' => true, 'params' => true, 'ajax' => 'ajax_order:ajax_order'),
-						'field_lang'			=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'field_show_user'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'field_show_member'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'field_show_register'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'field_required'		=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'field_order'			=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
-					),
+						'field_name'			=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name', 'check' => true),
+						'field_field'			=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_field', 'check' => true, 'prefix' => 'field_'),
+						'field_type'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:type'),
+						'field_sub'				=> array('validate' => INT,	'explain' => false, 'type' => 'radio:sub', 'params' => true, 'ajax' => 'ajax_order:ajax_order'),
+						'field_lang'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'field_show_user'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'field_show_member'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'field_show_register'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'field_required'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'field_order'			=> array('validate' => INT,	'explain' => false, 'type' => 'drop:order'),
+					)
 				);
 				
-				if ( $mode == 'create' && !(request('submit', TXT)) )
+				if ( $mode == 'create' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 						'field_name'			=> $name,
 						'field_field'			=> str_replace(' ', '_', strtolower($name)),
 						'field_type'			=> 0,
@@ -117,13 +116,13 @@ else
 						'field_order'			=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !(request('submit', TXT)) )
+				else if ( $mode == 'update' && !$update )
 				{
-					$data = data(FIELDS, $data_id, false, 1, true);
+					$data_sql = data(FIELDS, $data, false, 1, true);
 				}
 				else
 				{
-					$data = build_request(FIELDS, $vars, 'field', $error);
+				#	$data_sql = build_request(FIELDS, $vars, 'field', $error);
 					
 					if ( !$error )
 					{
@@ -131,7 +130,7 @@ else
 					
 						if ( $mode == 'create' )
 						{
-							$sql = sql(FIELDS, $mode, $data);
+							$sql = sql(FIELDS, $mode, $data_sql);
 					#		$typ = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL';
 							$typ = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) NOT NULL';
 							$add = sql(FIELDS_DATA, 'alter', array('part' => "ADD `{$data['field_field']}`", 'type' => $typ));
@@ -139,10 +138,10 @@ else
 						}
 						else
 						{
-							$sql = sql(FIELDS, $mode, $data, 'field_id', $data_id);
+							$sql = sql(FIELDS, $mode, $data_sql, 'field_id', $data);
 							$typ = ( $data['field_type'] != 0 ) ? ( $data['field_type'] == 1 ) ? 'TEXT NOT NULL' : 'TINYINT( 1 ) UNSIGNED NOT NULL': 'VARCHAR( 255 ) NOT NULL';
 							$add = sql(FIELDS_DATA, 'alter', array('part' => "CHANGE `" . request('current_field', TXT) . "` `{$data['field_field']}`", 'type' => $typ));
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 					
 						orders(FIELDS, $data['field_sub']);
@@ -157,11 +156,11 @@ else
 					
 				}
 				
-				build_output($data, $vars, 'input', false, FIELDS);
+			#	build_output($data, $vars, 'input', false, FIELDS);
 			
 			
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				$fields .= "<input type=\"hidden\" name=\"current_field\" value=\"" . $data['field_field'] . "\" />";
 
 				$template->assign_vars(array(
@@ -187,27 +186,27 @@ else
 				$vars = array(
 					'field' => array(
 						'title' => 'data_input',
-						'field_name'	=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => false,	'required' => 'input_name', 'check' => true),
-						'field_order'	=> array('validate' => INT,	'type' => 'drop:order',		'explain' => false),
-						'field_sub'		=> array('type' => 'hidden'),
+						'field_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',	'required' => 'input_name', 'check' => true),
+						'field_order'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:order'),
+						'field_sub'		=> 'hidden',
 					),
 				);
 				
-				if ( $mode == 'create_cat' && !(request('submit', TXT)) )
+				if ( $mode == 'create_cat' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 						'field_name'	=> $name,
 						'field_order'	=> '0',
 						'field_sub'		=> '0',
 					);
 				}
-				else if ( $mode == 'update_cat' && !(request('submit', TXT)) )
+				else if ( $mode == 'update_cat' && !$update )
 				{
-					$data = data(FIELDS, $data_id, false, 1, true);
+					$data_sql = data(FIELDS, $data, false, 1, true);
 				}
 				else
 				{
-					$data = build_request(FIELDS, $vars, 'field', $error);
+			#		$data_sql = build_request(FIELDS, $vars, $error);
 
 					if ( !$error )
 					{
@@ -215,13 +214,13 @@ else
 												
 						if ( $mode == 'create_cat' )
 						{
-							$sql = sql(FIELDS, $mode, $data);
+							$sql = sql(FIELDS, $mode, $data_sql);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(FIELDS, $mode, $data, 'field_id', $data_id);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$sql = sql(FIELDS, $mode, $data_sql, 'field_id', $data);
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						orders(FIELDS, $data['field_sub']);
@@ -235,10 +234,10 @@ else
 					}
 				}
 				
-				build_output($data, $vars, 'input_cat', false, FIELDS);
+			#	build_output(FIELDS, $vars, $data_sql);
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
@@ -265,9 +264,9 @@ else
 			
 			case 'delete':
 
-				$data = data(FIELDS, $data_id, false, 1, true);
+				$data_sql = data(FIELDS, $data, false, 1, true);
 
-				if ( $data_id && $confirm )
+				if ( $data && $confirm )
 				{
 					if ( $data['field_sub'] == 0 )
 					{
@@ -280,15 +279,15 @@ else
 							sql(FIELDS_DATA, 'alter', array('part' => "DROP ", 'type' => $row['field_field']));
 						}
 						
-						sql(FIELDS, $mode, $data, 'field_id', $del_id);
+						sql(FIELDS, $mode, $data_sql, 'field_id', $del_id);
 					}
 					else
 					{
-						sql(FIELDS, $mode, $data, 'field_id', $data_id);
+						sql(FIELDS, $mode, $data_sql, 'field_id', $data);
 						sql(FIELDS_DATA, 'alter', array('part' => "DROP ", 'type' => $data['field_field']));
 					}
 						
-					$sql = sql(FIELDS, $mode, $data, 'field_id', $data_id);
+					$sql = sql(FIELDS, $mode, $data_sql, 'field_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 
 					orders(FIELDS, $data['field_sub']);
@@ -299,7 +298,7 @@ else
 				else if ( $data_id && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 					
 					$lang_confirm = ( $data['field_sub'] != '0' ) ? $lang['confirm'] : $lang['confirm_sub'];
 
@@ -383,13 +382,13 @@ else
 			list($cid, $corder) = explode(':', $key);
 			
 			$template->assign_block_vars('display.cat', array( 
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update_cat', $url => $cid), $cname, $cname),
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update_cat', 'id' => $cid), $cname, $cname),
 				
-				'MOVE_UP'	=> ( $corder != '10' ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '-15', $url => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $corder != $max ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '+15', $url => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $corder != '10' ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '-15', 'id' => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $corder != $max ) ? href('a_img', $file, array('mode' => 'order', 'sub' => 0, 'move' => '+15', 'id' => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', $url => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', $url => $cid), 'icon_cancel', 'common_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', 'id' => $cid), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', 'id' => $cid), 'icon_cancel', 'common_delete'),
 				
 				'S_NAME'	=> "sub_field[$cid]",
 				'S_SUBMIT'	=> "add_field[$cid]",
@@ -406,14 +405,14 @@ else
 					$forder	= $subrow['field_order'];
 					
 					$template->assign_block_vars('display.cat.field', array(
-						'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $fid), $fname, $fname),
+						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $fname, $fname),
 						'TYPE'		=> ( $ftype != 0 ) ? ( $ftype == 1 ) ? 'textarea' : 'option' : 'textzeile',
 
-						'MOVE_UP'	=> ( $forder != '10' )				? href('a_img', $file, array('mode' => 'order', 'sub' => $cid, 'move' => '-15', $url => $fid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-						'MOVE_DOWN'	=> ( $forder != $max_sub[$cid] )	? href('a_img', $file, array('mode' => 'order', 'sub' => $cid, 'move' => '+15', $url => $fid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+						'MOVE_UP'	=> ( $forder != '10' )				? href('a_img', $file, array('mode' => 'order', 'sub' => $cid, 'move' => '-15', 'id' => $fid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+						'MOVE_DOWN'	=> ( $forder != $max_sub[$cid] )	? href('a_img', $file, array('mode' => 'order', 'sub' => $cid, 'move' => '+15', 'id' => $fid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $fid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $fid), 'icon_cancel', 'common_delete'),
+						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'common_delete'),
 					));
 				}
 			}

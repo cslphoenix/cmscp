@@ -55,8 +55,8 @@ $sql = 'SELECT n.*, nc.cat_name, nc.cat_image, u.user_name, u.user_color, m.*, t
 				LEFT JOIN ' . TEAMS . ' t ON m.team_id = t.team_id
 				LEFT JOIN ' . GAMES . ' g ON t.team_game = g.game_id
 				LEFT JOIN ' . NEWS_CAT . ' nc ON n.news_cat = nc.cat_id
-			WHERE n.news_time_public < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
-		ORDER BY n.news_time_public DESC, n.news_id DESC';
+			WHERE n.news_date < ' . time() . ' AND n.news_intern = 0 AND news_public = 1
+		ORDER BY n.news_date DESC, n.news_id DESC';
 if ( !($result = $db->sql_query($sql)) )
 {
 	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -71,7 +71,7 @@ else
 {
 	for ( $i = 0; $i < count($news_data); $i++ )
 	{
-		$news_date = create_date($config['default_dateformat'], $news_data[$i]['news_time_public'], $config['default_timezone']); 
+		$news_date = create_date($config['default_dateformat'], $news_data[$i]['news_date'], $config['default_timezone']); 
 		
 		$template->assign_block_vars('post_item', array(
 			'NEWS_TITLE'		=> $news_data[$i]['news_title'],

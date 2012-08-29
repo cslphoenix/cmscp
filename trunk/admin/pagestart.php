@@ -34,10 +34,10 @@ if ( $_GET['sid'] != $userdata['session_id'] )
 if ( !$userdata['session_admin'] )
 {
 	$url = str_replace("?", "&", basename($_SERVER['REQUEST_URI']));
-	redirect(check_sid("login.php?redirect=admin/$url&admin=1", true));
+	redirect(check_sid("login.php?redirect=admin/$url&i=1&admin=1", true));
 }
 
-if ( empty($header) )
+if ( empty($cancel) )
 {
 	include('./page_header_admin.php');
 }

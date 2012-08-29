@@ -188,7 +188,7 @@ function interpretRequest2()
 <ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
@@ -338,7 +338,7 @@ function interpretRequest2()
 </tr>
 </table>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>

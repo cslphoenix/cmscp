@@ -2,26 +2,25 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_server'] )
-	{
-		$module['hm_clan']['sm_gameserver'] = $root_file;
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_server',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_server', 'auth' => 'auth_server'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_server';
+	$current	= 'acp_server';
 	
 	include('./pagestart.php');
 	
 	add_lang('server');
-	
+
 	$error	= '';
 	$index	= '';
 	$fields	= '';
@@ -36,7 +35,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
@@ -67,23 +66,23 @@ else
 				$vars = array(
 					'server' => array(
 						'title'	=> 'data_input',
-						'server_name'	=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_name'),
-						'server_game'	=> array('validate' => TXT,	'type' => 'drop:server',	'explain' => true, 'required' => 'input_game'),
-						'server_ip'		=> array('validate' => TXT,	'type' => 'text:25:25',		'explain' => true, 'required' => 'input_ip'),
-						'server_port'	=> array('validate' => TXT,	'type' => 'text:10:10',		'explain' => true, 'required' => 'input_port'),
-						'server_pw'		=> array('validate' => TXT,	'type' => 'text:10:10',		'explain' => true),
-						'server_live'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'server_list'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'server_show'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'server_own'	=> array('validate' => INT,	'type' => 'radio:yesno',	'explain' => true),
-						'server_order'	=> array('validate' => INT,	'type' => 'drop:order',		'explain' => true),
-						'server_type'	=> array('type' => 'hidden'),
+						'server_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
+						'server_game'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:server', 'required' => 'input_game', 'params' => true),
+						'server_ip'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_ip'),
+						'server_port'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:10:10', 'required' => 'input_port'),
+						'server_pw'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:10:10'),
+						'server_live'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'server_list'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'server_show'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'server_own'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'server_order'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:order'),
+						'server_type'	=> 'hidden',
 					)
 				);
 				
-				if ( $mode == 'create' && !request('submit', TXT) )
+				if ( $mode == 'create' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 						'server_name'	=> request('server_name', TXT),
 						'server_type'	=> 0,
 						'server_game'	=> '',
@@ -97,13 +96,13 @@ else
 						'server_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !request('submit', TXT) )
+				else if ( $mode == 'update' && !$update )
 				{
-					$data = data(SERVER, $data_id, false, 1, true);
+					$data_sql = data(SERVER, $data, false, 1, true);
 				}
 				else
 				{
-					$data = build_request(SERVER, $vars, 'server', $error);
+					$data_sql = build_request(SERVER, $vars, 'server', $error);
 					
 					if ( !$error )
 					{
@@ -111,13 +110,13 @@ else
 						
 						if ( $mode == 'create' )
 						{
-							$sql = sql(SERVER, $mode, $data);
+							$sql = sql(SERVER, $mode, $data_sql);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(SERVER, $mode, $data, 'server_id', $data_id);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$sql = sql(SERVER, $mode, $data_sql, 'server_id', $data);
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						orders(SERVER);
@@ -134,11 +133,11 @@ else
 				build_output($data, $vars, 'input', false, SERVER);
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data['server_name']),
+					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['server_name']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -161,11 +160,11 @@ else
 				
 			case 'delete':
 			
-				$data = data(SERVER, $data_id, false, 1, true);
+				$data_sql = data(SERVER, $data, false, 1, true);
 			
-				if ( $data_id && $confirm )
+				if ( $data && $confirm )
 				{
-					$sql = sql(SERVER, $mode, $data, 'server_id', $data_id);
+					$sql = sql(SERVER, $mode, $data_sql, 'server_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					
 					orders(SERVER);
@@ -176,7 +175,7 @@ else
 				else if ( $data_id && !$confirm )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 		
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['common_confirm'],
@@ -256,16 +255,16 @@ else
 		#	debug($gq_serv[$server_name]['gq_online']);
 			
 			$template->assign_block_vars('display.row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $id), $name, ''),
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, ''),
 				'TYPE'		=> $type ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_match', ''),
 				'USERS'		=> ( isset($gq_serv[$name]['gq_online']) ) ? sprintf($lang['cur_max'], $cur_u, $max_u) : '',
 				'STATUS'	=> $live ? ( isset($gq_serv[$name]['gq_online']) ) ? $lang['online'] : $lang['offline'] : '',
 				
-				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', $url => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', $url => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $id), 'icon_cancel', 'common_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 			));
 			
 		#	$servers['server_' . $i] = array($serv[$i]['server_game'], $serv[$i]['server_ip'], $serv[$i]['server_port']);

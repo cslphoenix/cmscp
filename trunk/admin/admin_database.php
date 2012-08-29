@@ -2,23 +2,22 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
-	{
-		$module['hm_maintenance']['sm_backup']		= "$root_file?mode=backup";
-		$module['hm_maintenance']['sm_restore']	= "$root_file?mode=restore";
-		$module['hm_maintenance']['sm_optimize']	= "$root_file?mode=optimize";
-	}
-	
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_database',
+		'modes'		=> array(
+			'backup'	=> array('title' => 'acp_backup'),
+			'restore'	=> array('title' => 'acp_restore'),
+			'optimize'	=> array('title' => 'acp_optimize'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
-	$header		= true;
-	$current	= 'sm_database';
+	$cancel		= true;
+	$current	= 'acp_database';
 	
 	include("./pagestart.php");
 	include("{$root_path}includes/sql_parse.php");
@@ -36,7 +35,7 @@ else
 	
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
-	$mode		= request('mode', TXT);
+	$mode		= request('action', TXT);
 
 	$dir_path	= "{$root_path}files/";
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
@@ -414,6 +413,26 @@ else
 				{
 					if ( $tables[$i]['Data_free'] != 0 || !$config['db_show_not_optimized'] )
 					{
+						$sql = 'SHOW FIELDS FROM ' . $tables[$i]['Name'];
+						if ( !($result = $db->sql_query($sql)) )
+						{
+							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						}
+						$db_fields = $db->sql_fetchrowset($result);
+						
+						$tbl_fields = array();
+						
+						foreach ( $db_fields as $rows )
+						{
+							$tbl_fields[] = sprintf('<strong>Feld:</strong> %s / <strong>Type:</strong> %s', $rows['Field'], $rows['Type']);
+						}
+						
+						$tbl_fields = implode(',<br />', $tbl_fields);
+						
+					#	debug($fields);
+					#	debug($tbl_field);
+						
+					#	debug($tables[$i]);
 						$name		= $tables[$i]['Name'];
 						$size_tbl	= $tables[$i]['Index_length'] + $tables[$i]['Data_length'];
 						$size_data	= $tables[$i]['Data_free'];
@@ -421,12 +440,14 @@ else
 								
 						$s_check	= ( $size_data ) ? 'checked="checked"' : "";
 						
-						$template->assign_block_vars('optimize._optimize_row', array(
+						$template->assign_block_vars('optimize.optimize_row', array(
 							'NUM'		=> $i,
 							'NAME'		=> $name,
 							'ROWS'		=> $tables[$i]['Rows'],
 							'SIZE'		=> size_round($size_tbl, 1),
 							'FREE'		=> $size_free,
+							
+							'TITLE'		=> $tbl_fields,
 							
 							'S_SELECT'	=> "<input type=\"checkbox\" name=\"selected_tbl[]\" id=\"check_$i\" value=\"" . $tables[$i]['Name'] . "\" $s_check>",
 						));

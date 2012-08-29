@@ -1,5 +1,5 @@
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_WELCOME}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_WELCOME}</h1>
+<p>{L_EXPLAIN}</p>
 
 <br />
 
@@ -56,12 +56,20 @@
 			<td>{SIZE_GALLERY}</td>
 		</tr>
 		<tr>
-			<td>{L_SIZE_MATCH}:</td>
-			<td>{SIZE_MATCH}</td>
+			<td>{L_SIZE_MATCHS}:</td>
+			<td>{SIZE_MATCHS}</td>
 		</tr>
 		<tr>
-			<td>{L_SIZE_USER}:</td>
-			<td>{SIZE_USER}</td>
+			<td>{L_SIZE_USERS}:</td>
+			<td>{SIZE_USERS}</td>
+		</tr>
+		<tr>
+			<td>{L_SIZE_GROUPS}:</td>
+			<td>{SIZE_GROUPS}</td>
+		</tr>
+		<tr>
+			<td>{L_SIZE_GROUPS}:</td>
+			<td>{SIZE_NETWORK}</td>
 		</tr>
 		</table>
 	</td>

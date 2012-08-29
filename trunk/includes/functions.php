@@ -6,22 +6,30 @@
 
 function request($request_var, $request_type, $filter = '')
 {
-	global $_POST, $_GET;
+#	global $_POST, $_GET;
 #	global $_SERVER;
+
+#	debug($_SERVER);
 	
 #	$request = $_SERVER['REQUEST_METHOD'];
+	
+#	debug($_SERVER);
+
+	$tmp = '';
 	
 	if ( is_array($request_var) )
 	{
 		if ( count($request_var) == 3 )
 		{
 			list($typ, $opt, $field) = $request_var;
+		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt][$field] : $_GET[$typ][$opt][$field];
 			$tmp = ( isset($_POST[$typ][$opt][$field]) || isset($_GET[$typ][$opt][$field]) ) ? ( isset($_POST[$typ][$opt][$field]) ) ? $_POST[$typ][$opt][$field] : $_GET[$typ][$opt][$field] : '';
 		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt][$field] : $_GET[$typ][$opt][$field];
 		}
 		else
 		{
 			list($typ, $opt) = $request_var;
+		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt];
 			$tmp = ( isset($_POST[$typ][$opt]) || isset($_GET[$typ][$opt]) ) ? ( isset($_POST[$typ][$opt]) ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt] : '';
 		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt];
 		}
@@ -29,55 +37,49 @@ function request($request_var, $request_type, $filter = '')
 	else
 	{
 		$tmp = ( isset($_POST[$request_var]) || isset($_GET[$request_var]) ) ? ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var] : '';
+#		$tmp = ( $request == 'POST' ) ? $_POST[$request_var] : $_GET[$request_var];
 	}
+	
+#	debug($tmp, $request_var, true);
 	
 	$var = $opt = '';
 	
-	if ( $tmp != '' )
-	{
+#	if ( $tmp != '' )
+#	{
 		switch ( $request_type )
 		{
-			/*
-				0 = Zahlen
-				1 = Mode/Confirm/Sort
-				2 = Texte
-				3 = Texte ohne HTML Tags
-				4 = Arrays ( URL / Apostroph ' )
-				5 = URL
-				6 = Image	not work
-			*/
-			case '0': $var = intval($tmp);	$var = isset($var) ? $var : 0;								break;
-			case '1': $var = trim(str_replace("'", "\'", $tmp));										break;
-			case '2': $var = trim(htmlentities(str_replace("'", "\'", $tmp), ENT_COMPAT));				break;
-			case '3': $var = trim(htmlentities(str_replace("'", "\'", strip_tags($tmp)), ENT_COMPAT));	break;
-#array		case '4': break;
-			case '5': $var = !preg_match('#^http[s]?:\/\/#i', $tmp) ? 'http://' . $var : '';			break;
+			//	int = Zahlen
+			//	type = Mode/Confirm/Sort
+			//	text = Texte
+			//	clean = Texte ohne HTML Tags
+			//	html = entfernt alle html tags
+			///	array = Arrays ( URL / Apostroph ' )
+			//	ulr = URL
+			//	image = Image	not work
+
+			case 'int':		$var = ( isset($tmp) ) ? (int) $tmp : (int) 0; break;
+			case 'type':	$var = ( isset($tmp) ) ? ( is_numeric($tmp) ) ? (int) $tmp : (string) trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
 			
-			case 'int':		$var = intval($tmp); $var = isset($var) ? $var : '0'; break;
-			case 'url':		if ( $tmp != "" )
-							{
-								if ( !preg_match('#^http[s]?:\/\/#i', $tmp) )
-								{
-									$var = 'http://' . $tmp;
-								}
-								
-								if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp) )
-								{
-									$var = '';
-								}
-							}
-					break;
-			case 'text':	$var = trim(str_replace("'", "\'", $tmp)); break;
-			case 'clean':	$var = trim(htmlentities(str_replace("'", "\'", $tmp), ENT_COMPAT)); break;
-			case 'html':	$var = trim(htmlentities(str_replace("'", "\'", strip_tags($tmp)), ENT_COMPAT)); break;
+			
+			case 'text':	$var = ( isset($tmp) ) ? (string) trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			
+			case 'clean':	$var = ( isset($tmp) ) ? (string) trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case 'html':	$var = ( isset($tmp) ) ? (string) trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT)) : ''; break;
 			case 'array':	
 							$tmp_tmp = '';
-							$tmp_var = '';
 							
-							if ( count($tmp) > 1 || $opt == 'user_month' )
+					#		debug($typ, 'opt');
+					#		debug($tmp, 'ary request!');
+							
+							if ( is_array($tmp) && ( count($tmp) >= 1 || ( $opt == 'user_month' || $typ == 'training' || $typ == 'match' ) ) )
 							{
+							#	debug($tmp, 'tmp', true);
+								
 								foreach ( $tmp as $tmp_key => $tmp_value )
 								{
+									$tmp_tmp[$tmp_key] = '';
+									$tmp_var = '';
+									
 									if ( $tmp_value != '' )
 									{
 										switch ( $filter )
@@ -97,27 +99,41 @@ function request($request_var, $request_type, $filter = '')
 											default: $tmp_var = str_replace("'", "\'", $tmp_value); break;
 										}
 									}
+									
 									$tmp_tmp[$tmp_key] = $tmp_var;
 								}
 							}
 							else
 							{
-								$tmp_tmp = $tmp[0];
+								$tmp_tmp = $tmp;
 							}
 								
 							$var = $tmp_tmp;
 						#	debug($var, 'ary request!');
 							
 					break;
+			case 'url':		if ( $tmp != "" )
+							{
+								if ( !preg_match('#^http[s]?:\/\/#i', $tmp) )
+								{
+									$var = 'http://' . $tmp;
+								}
+								
+								if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp) )
+								{
+									$var = '';
+								}
+							}
+					break;	
 					
 			default:	$var = str_replace("'", "\'", $tmp); break;
 		}
-	}
-	else
-	{
-		$var = '';
-	}
-
+#	}
+#	else
+#	{
+#		$var = ( $request_type == INT ) ? 0 : '';
+#	}
+#	debug($var, $request_var, true);
 	return $var;
 }
 
@@ -205,13 +221,16 @@ function href($type, $file, $params, $text, $lng = '', $comment = false)
 	global $lang, $images;
 	
 	$return = $url = '';
-
-	foreach ( $params as $k => $v )
-	{
-		$url[] = "$k=$v";
-	}
 	
-	$url	= '?' . implode('&amp;', $url);
+	if ( $params )
+	{
+		foreach ( $params as $k => $v )
+		{
+			$url[] = "$k=$v";
+		}
+	}
+#	$url	= '?' . implode('&amp;', $url);
+	$url	= '&amp;' . implode('&amp;', $url);
 	$txt	= strstr($type, 'img') ? ( isset($images[$text]) ? $images[$text] : $text ) : $text;
 	$lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
 	
@@ -287,33 +306,6 @@ function cut_string($string, $length)
 	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3)) . '...';
 	
 	return $string;
-}
-
-function get_authlist()
-{
-	global $db;
-	
-	$sql = 'SELECT authlist_name FROM ' . AUTHLIST . ' ORDER BY authlist_name';
-	
-	if ( defined('IN_ADMIN') )
-	{
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		$authlist_data = $db->sql_fetchrowset($result);
-	}
-	else
-	{
-		$authlist_data = _cached($sql, 'data_authlist', INT);
-	}
-
-	for ( $i = 0; $i < count($authlist_data); $i++ )
-	{
-		$authlist[] = $authlist_data[$i]['authlist_name'];
-	}
-	
-	return $authlist;
 }
 
 function random_password($minlength = 7, $maxlength = 14, $uselower = true, $useupper = false, $usenumbers = true, $usespecial = false)
@@ -1055,6 +1047,16 @@ function decode_ip($int_ip)
 {
 	$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
 	return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
+}
+
+function iptoint($userip)
+{
+	return ip2long(decode_ip("$userip"));
+}
+
+function inttoip($int)
+{
+	return long2ip(encode_ip("$int"));
 }
 
 //
@@ -1969,7 +1971,7 @@ function select_style($default, $select_name = "style", $dirname = "templates")
 	$sql = "SELECT themes_id, style_name FROM " . THEMES . " ORDER BY template_name, themes_id";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message_die(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	$row = $db->sql_fetchrowset($result);
 
@@ -1984,6 +1986,126 @@ function select_style($default, $select_name = "style", $dirname = "templates")
 	$select .= "</select>";
 
 	return $select;
+}
+
+function rating_bar($id, $units = '', $static = '', $rating_unitwidth = 30)
+{
+	global $db;
+	
+	//set some variables
+	$ip = $_SERVER['REMOTE_ADDR'];
+	if (!$units) {$units = 10;}
+	if (!$static) {$static = FALSE;}
+	// get votes, values, ips for the current rating bar
+	$sql = "SELECT * FROM " . RATE . " WHERE rate_type_id = '$id'";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrowset($result);
+	
+#	if ( !$row )
+#	{
+#		$sql = "INSERT INTO " . RATE . " SET rate_type_id = '$id', rate_type = 1";
+#		if ( !($result = $db->sql_query($sql)) )
+#		{
+#			message(GENERAL_ERROR, 'SQL Error ', '', __LINE__, __FILE__, $sql);
+#		}
+#	}
+#	else
+#	{
+#		i
+#	}
+
+	if ( count($row) < 1 )
+	{
+		$count = 0;
+	}
+	else
+	{
+		$count = count($row); //how many votes total
+	}
+		
+#	$query=mysql_query("SELECT total_votes, total_value, used_ips FROM $rating_dbname.$rating_tableName WHERE id='$id' ")or die(" Error: ".mysql_error());
+	
+	// insert the id in the DB if it doesn't exist already
+	// see: http://www.masugadesign.com/the-lab/scripts/unobtrusive-ajax-star-rating-bar/#comment-121
+#	if (mysql_num_rows($query) == 0)
+#	{
+#		$sql = "INSERT INTO $rating_dbname.$rating_tableName (`id`,`total_votes`, `total_value`, `used_ips`) VALUES ('$id', '0', '0', '')";
+#		$result = mysql_query($sql);
+#	}
+#	
+#	$numbers=mysql_fetch_assoc($query);
+#	
+#	if ( count($row) < 1)
+#	{
+#		$count = 0;
+#	}
+#	else
+#	{
+#		$count=$numbers['total_votes']; //how many votes total
+#	}
+	
+	$current_rating = count($row); //total number of rating added together and stored
+	$tense=($count==1) ? "vote" : "votes"; //plural form votes/vote
+	
+	// determine whether the user has voted, so we know how to draw the ul/li
+#	$voted=mysql_num_rows(mysql_query("SELECT used_ips FROM $rating_dbname.$rating_tableName WHERE used_ips LIKE '%".$ip."%' AND id='".$id."' "));
+
+	if ( $row )
+	{
+		
+	}
+	else
+	{
+		$voted = false;
+	}
+	
+	// now draw the rating bar
+	$rating_width = @number_format($current_rating/$count,2)*$rating_unitwidth;
+	$rating1 = @number_format($current_rating/$count,1);
+	$rating2 = @number_format($current_rating/$count,2);
+	
+	if ($static == 'static')
+	{
+		$static_rater = array();
+		$static_rater[] .= "\n".'<div class="ratingblock">';
+		$static_rater[] .= '<div id="unit_long'.$id.'">';
+		$static_rater[] .= '<ul id="unit_ul'.$id.'" class="unit-rating" style="width:'.$rating_unitwidth*$units.'px;">';
+		$static_rater[] .= '<li class="current-rating" style="width:'.$rating_width.'px;">Currently '.$rating2.'/'.$units.'</li>';
+		$static_rater[] .= '</ul>';
+		$static_rater[] .= '<p class="static">'.$id.'. Rating: <strong> '.$rating1.'</strong>/'.$units.' ('.$count.' '.$tense.' cast) <em>This is \'static\'.</em></p>';
+		$static_rater[] .= '</div>';
+		$static_rater[] .= '</div>'."\n\n";
+		
+		return join("\n", $static_rater);
+	}
+	else
+	{
+		$rater ='';
+		$rater.='<div class="ratingblock">';
+
+		$rater.='<div id="unit_long'.$id.'">';
+		$rater.='  <ul id="unit_ul'.$id.'" class="unit-rating" style="width:'.$rating_unitwidth*$units.'px;">';
+		$rater.='     <li class="current-rating" style="width:'.$rating_width.'px;">Currently '.$rating2.'/'.$units.'</li>';
+		
+		for ($ncount = 1; $ncount <= $units; $ncount++) { // loop from 1 to the number of units
+		if(!$voted) { // if the user hasn't yet voted, draw the voting stars
+		  $rater.='<li><a href="db.php?j='.$ncount.'&amp;q='.$id.'&amp;t='.$ip.'&amp;c='.$units.'" title="'.$ncount.' out of '.$units.'" class="r'.$ncount.'-unit rater" rel="nofollow">'.$ncount.'</a></li>';
+		}
+		}
+		$ncount=0; // resets the count
+		
+		$rater.='  </ul>';
+		$rater.='  <p';
+		if($voted){ $rater.=' class="voted"'; }
+		$rater.='>'.$id.' Rating: <strong> '.$rating1.'</strong>/'.$units.' ('.$count.' '.$tense.' cast)';
+		$rater.='  </p>';
+		$rater.='</div>';
+		$rater.='</div>';
+		return $rater;
+	}
 }
 
 function main_header($page_title = '')
@@ -2336,7 +2458,7 @@ function main_header($page_title = '')
 	//
 	// Show the overall footer.
 	//
-	$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+	$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 	
 	//$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
 	//if ( !($result = $db->sql_query($sql)) )

@@ -1,7 +1,7 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post" id="bugtracker_sort" name="bugtracker_sort">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<h1>{L_HEAD}</h1>
+<p>{L_EXPLAIN}</p>
 
 <br />
 

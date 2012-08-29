@@ -1,5 +1,115 @@
 <?php
 
+#moveset(MENU2, $mode, $order, $main, $type, $usub);
+function moveset($tbl, $mode, $order, $main = false, $type = false, $usub = false)
+{
+	global $db;
+	global $action;
+	
+	$sql = 'SHOW FIELDS FROM ' . $tbl;
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$temp[] = $row['Field'];
+	}
+	
+	$field_id = array_shift($temp);
+	$field_order = array_pop($temp);
+	
+	$sql = "SELECT $field_id, $field_order FROM $tbl";
+
+	if ( $type )
+	{
+		$sql .= " WHERE type = $type AND main = $usub";
+	}
+	else if ( $main )
+	{
+		$sql .= " WHERE main = $main";
+	}
+	
+	if ( $action && $action != 'cat' )
+	{
+		$sql .= " AND action = '$action'";
+	}
+	
+	$sql .= " ORDER BY $field_order ASC";
+#	debug($sql);
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$data_temp[$row[$field_id]] = $row[$field_order];
+	}
+	
+	foreach ( $data_temp as $keys => $value )
+	{
+		if ( $value == $order )
+		{
+			$data_temp[$keys] = $value + (($mode == 'move_up') ? - '1.5' : + '1.5');
+		}
+	}
+	
+#	debug($data_temp);
+	
+	asort($data_temp);
+	
+	$i = 1;
+
+	foreach ( $data_temp as $key => $row )
+	{
+		$sql = "UPDATE $tbl SET $field_order = $i WHERE $field_id = $key";
+		if ( !$db->sql_query($sql) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+
+		$i += 1;
+	}
+	
+	/*
+	$sql = "SELECT menu_id, menu_order FROM $tbl WHERE " . (($type) ? "menu_type = $type AND menu_sub = $sub" : "menu_sub = $subs") . " ORDER BY menu_order ASC";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$menu[$row['menu_id']] = $row['menu_order'];
+	}
+	
+	foreach ( $menu as $keys => $value )
+	{
+		if ( $value == $order )
+		{
+			$menu[$keys] = $value + (($mode == 'move_up') ? - '1.5' : + '1.5');
+		}
+	}
+	
+	asort($menu);
+	
+	$i = 1;
+
+	foreach ( $menu as $key => $row )
+	{
+		$sql = 'UPDATE ' . MENU2 . ' SET menu_order = ' . $i . ' WHERE menu_id = ' . $key;
+		if ( !$db->sql_query($sql) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		$i += 1;
+	}
+	*/
+}
+
 function error($tpl_box, $error_ary)
 {
 	global $template, $log;
@@ -39,45 +149,69 @@ function build_request_list($vars, &$error)
 	return $request;
 }
 
-function build_request($name, $vars, $multi, &$error, $sql_add = false)
+#	$data_sql = build_request($tbl, $vars, 'game', $error);
+#	$data_sql = build_request($vars, $error);
+
+#function build_request($name, $vars, $multi, &$error, $sql_add = false)
+function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = false)
 {
-	global $db, $url, $lang, $_POST;
+#	global $db, $url, $lang, $_POST;
+	global $db, $lang, $settings;
 	
-	if ( is_bool($multi) )
+	$request = '';
+	
+	if ( $name )
 	{
-		foreach ( $vars[$name] as $key_vars => $row_vars )
+		if ( isset($vars[$name]) )
 		{
-			if ( strpos($key_vars, 'tab') !== false )
+			foreach ( $vars[$name] as $key_vars => $row_vars )
 			{
-				continue;
-			}
-			
-			if ( !is_array($_POST[$name][$key_vars]) )
-			{
-				$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
-			}
-			else
-			{
-				debug($key_vars, '!is_array');
-				
-				if ( strpos($key_vars, 'dimension') !== false || strpos($key_vars, 'format') !== false || strpos($key_vars, 'preview') !== false )
+				if ( strpos($key_vars, 'tab') !== false )
 				{
-					$request[$key_vars] = sprintf('%s:%s', request(array($name, $key_vars, 0), $vars[$name][$key_vars]['validate']), request(array($name, $key_vars, 1), $vars[$name][$key_vars]['validate']));
+					continue;
 				}
-				else if ( strpos($key_vars, 'auth') !== false )
+				
+				if ( is_array($_POST[$name][$key_vars]) )
 				{
-					$request[$key_vars] = serialize(request(array($name, $key_vars), $vars[$name][$key_vars]['validate']));
+					if ( strpos($key_vars, 'dimension') !== false || strpos($key_vars, 'format') !== false || strpos($key_vars, 'preview') !== false )
+					{
+						$request[$key_vars] = sprintf('%s:%s', request(array($name, $key_vars, 0), $vars[$name][$key_vars]['validate']), request(array($name, $key_vars, 1), $vars[$name][$key_vars]['validate']));
+					}
+					else if ( strpos($key_vars, 'auth') !== false )
+					{
+						$request[$key_vars] = serialize(request(array($name, $key_vars), $vars[$name][$key_vars]['validate']));
+					}
+					else
+					{
+						$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
+					}
 				}
 				else
 				{
-					$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
+					if ( $key_vars != 'show' && ( $name == 'match_type' || $name == 'match_war' || $name == 'match_league' ))
+					{
+						$value		= request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
+						$order		= request(array("{$name}_order", $key_vars), INT);
+						$default	= ( request("{$name}_default", TXT) == $key_vars ) ? 1 : 0;
+						$url		= ( request(array("{$name}_url", $key_vars), TXT) ) ? request(array("{$name}_url", $key_vars), TXT) : false;
+						
+						$request[$key_vars] = array('value' => $value, 'order' => $order, 'default' => $default);
+						$request[$key_vars] = ( empty($url) ) ? $request[$key_vars] : array_merge($request[$key_vars], array('url' => $url));
+					}
+					else
+					{
+						$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
+					}				
 				}
 			}
 		}
+		
 	}
 	else
 	{
-		$sql = 'SHOW FIELDS FROM ' . $name;
+		$multi = key($vars);
+		
+		$sql = 'SHOW FIELDS FROM ' . $tbl;
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -90,62 +224,91 @@ function build_request($name, $vars, $multi, &$error, $sql_add = false)
 		}
 		unset($temp[0]);
 		
-		if ( $sql_add && $_POST['mode'] == 'create' )
+		if ( $sql_add && in_array($mode, array('create', 'news_create', 'cat_create')) )
 		{
 			$sqla = is_array($sql_add) ? $sql_add : array($sql_add);
 			$temp = array_merge($temp, $sqla);
 		}
-		
+			
 		foreach ( $temp as $rows )
 		{
 			/* nur vars die auch angeben sind überprüfen, sonst NOTICE Warnung */
 			if ( isset($vars[$multi][$rows]) )
 			{
+				$type	= isset($vars[$multi][$rows]['type'])	? $vars[$multi][$rows]['type'] : $vars[$multi][$rows];
 				$check	= isset($vars[$multi][$rows]['check'])	? true : false;
 				$prefix = isset($vars[$multi][$rows]['prefix']) ? $vars[$multi][$rows]['prefix'] : false;
 			#	$requir = isset($vars[$multi][$rows]['required']) ? $vars[$multi][$rows]['required'] : false;
+			
+				$val = isset($vars[$multi][$rows]['validate']) ? $vars[$multi][$rows]['validate'] : false;				
+				$req = isset($vars[$multi][$rows]['required']) ? $vars[$multi][$rows]['required'] : false;
 				
-			#	debug($requir);
+				/* teilt den string, für bessere und schneller verarbeitung */
+				@list($tbl_name, $tbl_type) = explode('_', $rows);
 				
+				/* order rausgenommen, könnte aber später wieder eingebunden werden, falls die mehrheit es wünscht */
+				/*
 				if ( strpos($rows, '_order') !== false ) 
 				{
 					$order = str_replace('_order', '_order_new', $rows);
 					
 					$request[$rows] = request(array($multi, $order), $vars[$multi][$rows]['validate']);
 				}
-				else if ( strpos($rows, 'dimension') !== false || strpos($rows, 'format') !== false || strpos($rows, 'preview') !== false )
+				*/
+				
+			#	if ( strpos($rows, 'dimension') !== false || strpos($rows, 'format') !== false || strpos($rows, 'preview') !== false )
+				if ( in_array($tbl_type, array('dimension', 'format', 'preview')) )
 				{
-					$request[$rows] = sprintf('%s:%s', request(array($multi, $rows, 0), $vars[$multi][$rows]['validate']), request(array($multi, $rows, 1), $vars[$multi][$rows]['validate']));
+					$request[$rows] = sprintf('%s:%s', request(array($multi, $rows, 0), $val), request(array($multi, $rows, 1), $val));
 				}
-				else if ( $vars[$multi][$rows]['type'] == 'hidden' ) 
+				else if ( $type == 'hidden' ) 
 				{
 					$request[$rows] = request(array($multi, $rows), TXT);
 				}
 				else if ( $prefix )
 				{
-					$request[$rows] = str_replace(' ', '_', request(array($multi, $rows), $vars[$multi][$rows]['validate']));
+					$request[$rows] = str_replace(' ', '_', request(array($multi, $rows), $val));
+				}
+				else if ( in_array($rows, array('news_cat', 'team_game')) )
+				{
+					$request[$rows] = search_image($vars[$multi][$rows]['params'][1], 'id', request(array($multi, $rows), TXT));
 				}
 				else
 				{
-					$request[$rows] = request(array($multi, $rows), $vars[$multi][$rows]['validate']);
+					$request[$rows] = request(array($multi, $rows), $val);
 				}
 				
-				if ( isset($vars[$multi][$rows]['required']) && $vars[$multi][$rows]['type'] != 'hidden' )
+				if ( is_array($req) )
+				{
+					$required = $req[0];
+					$required_check = ( $_POST[$multi][$req[1]] != $req[2] ) ? false : true;
+				}
+				else
+				{
+					$required = $req;
+					$required_check = true;
+				}
+				
+				if ( $required && $required_check && $type != 'hidden' )
 				{
 					$request[$rows] = $prefix ? str_replace($prefix, '', $request[$rows]) : $request[$rows];
 					
-					if ( ( $request[$rows] == '' || $request[$rows] == '-1' ) )
+					
+				#	debug($request[$rows] == '', $rows . '\'\'');
+				#	debug($request[$rows] == '-1', $rows . '-1');
+					
+					if ( $request[$rows] == '' || $request[$rows] == '-1' )
 					{
-						$error[] = $vars[$multi][$rows]['required'];
+						$error[] = $required;
 						$check = false;
 					}
 					
 					$request[$rows] = $prefix ? $prefix . $request[$rows] : $request[$rows];
 				}
-			
-				if ( $check )
+				
+				if ( $check && $required_check )
 				{
-					$sql = "SELECT * FROM $name";
+					$sql = "SELECT * FROM $tbl";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -154,7 +317,7 @@ function build_request($name, $vars, $multi, &$error, $sql_add = false)
 					while ( $match = $db->sql_fetchrow($result) )
 					{
 						$field_name = array_shift(array_keys($match));
-						$field_id = request($url, INT);
+						$field_id = request('id', INT);
 						
 						if ( strtolower($match[$rows]) == strtolower($request[$rows]) && $match[$field_name] != $field_id )
 						{
@@ -163,94 +326,137 @@ function build_request($name, $vars, $multi, &$error, $sql_add = false)
 					}
 				}
 				
-				/* setzt die jeweilige Zeit */
-				if ( $_POST['mode'] == 'create' && ( $vars[$multi][$rows]['type'] == 'hidden' && strpos($rows, 'create') !== false ) )
+			#	setzt die jeweilige Zeit
+				if ( $tbl_name == 'time' && $mode == $tbl_type && $type == 'hidden' )
 				{
 					$request[$rows] = time();
 				}
 				
-				if ( $_POST['mode'] == 'update' && ( $vars[$multi][$rows]['type'] == 'hidden' && strpos($rows, 'update') !== false ) )
-				{
-					$request[$rows] = time();
-				}
+			#	if ( $tbl_name == 'time' )
+			#	{
+			#		if ( $mode == 'create' && ( $type == 'hidden' && $tbl_type == 'create' ) )
+			#		{
+			#			$request[$rows] = time();
+			#		}
+			#		
+			#		if ( $mode == 'update' && ( $type == 'hidden' && $tbl_type == 'update' ) )
+			#		{
+			#			$request[$rows] = time();
+			#		}
+			#		
+			#		if ( $mode == 'upload' && ( $type == 'hidden' && $tbl_type == 'upload' ) )
+			#		{
+			#			$request[$rows] = time();
+			#		}
+			#	}
 				
-				if ( $_POST['mode'] == 'upload' && ( $vars[$multi][$rows]['type'] == 'hidden' && strpos($rows, 'upload') !== false ) )
+			#	für News
+				if ( strpos($type, 'links') !== false )
 				{
-					$request[$rows] = time();
-				}
-			
-				/* für News
-				if ( isset($vars[$multi][$rows]['params']) )
-				{
-					if ( strpos($vars[$multi][$rows]['params'], ':') !== false )
-					{
-						list($opt, $var) = explode(':', $vars[$multi][$rows]['params']);
+					$link_url = request(array($multi, $rows, 'link'), ARY, TXT);
+					$name_url = request(array($multi, $rows, 'name'), ARY, TXT);
 					
-						switch ( $opt )
+					$tmp = '';
+					
+					$cnt = count($link_url);
+					
+					for ( $i = 0; $i < $cnt; $i++ )
+					{
+						if ( $link_url[$i] != '' && $name_url[$i] != '' )
 						{
-							case 'prefix': $request[$rows] = $var . str_replace($var, '', $request[$rows]); break;
+							$tmp[] = sprintf('%s|%s', $link_url[$i], $name_url[$i]);
 						}
 					}
-					
-					if ( strpos($vars[$multi][$rows]['params'], '~') !== false )
-					{
-						$link_url = request(array($multi, $rows, 'url'), 'array', TXT);
-						$name_url = request(array($multi, $rows, 'name'), 'array', TXT);
 						
-						$request[$rows] = sprintf('%s~%s', serialize($link_url), serialize($name_url));
-					}
+					$request[$rows] = serialize($tmp);
 				}
-				*/
 				
-				if ( $vars[$multi][$rows]['type'] == 'drop:datetime' || $vars[$multi][$rows]['type'] == 'drop:duration' )
+			#	debug($required_check, $rows);
+				
+				if ( in_array($tbl_type, array('date', 'duration')) )
 				{
-				#	$prefix = isset($vars[$multi][$rows]['prefix']) ? $vars[$multi][$rows]['prefix'] : '';
-					
-					$hour	= request("{$prefix}hour", INT);
-					$min	= request("{$prefix}min", INT);
-					$dura	= request("{$prefix}duration", INT);
-					$month	= request("{$prefix}month", INT);
-					$day	= request("{$prefix}day", INT);
-					$year	= request("{$prefix}year", INT);
-					
-					if ( $vars[$multi][$rows]['type'] == 'drop:datetime' )
+					if ( $required_check )
 					{
-						$request[$rows] = mktime($hour, $min, 00, $month, $day, $year);
+						$tparams = $vars[$multi][$rows]['params'];
 						
-						if ( !checkdate($month, $day, $year) )
+						if ( $type == 'drop:datetime' || ( $settings['switch'][$tbl_name] && $type == 'drop:duration' ) )
 						{
-							$error[] = $lang['msg_select_date'];
+							$hour	= request("{$prefix}hour", INT);
+							$min	= request("{$prefix}min", INT);
+							$dura	= request("{$prefix}duration", INT);
+							$month	= request("{$prefix}month", INT);
+							$day	= request("{$prefix}day", INT);
+							$year	= request("{$prefix}year", INT);
+						}
+						else if ( $tparams == 'format' )
+						{
+							list($date, $datetime) = explode(' ', $request[$prefix . $rows]);
+							list($day, $month, $year) = explode('.', $date);
+							list($hour, $min) = explode(':', $datetime);
 						}
 						
-						if ( $_POST['mode'] == 'create' && time() >= $request[$rows] )
+						if ( $type == 'drop:datetime' || $vars[$multi][$rows]['params'] == 'format' )
 						{
-							$error[] = $lang['msg_select_past'];
+							$request[$rows] = mktime($hour, $min, 00, $month, $day, $year);
+							
+							if ( !checkdate($month, $day, $year) )
+							{
+								$error[] = $lang['msg_select_date'];
+							}
+							
+							if ( $mode == 'create' && time() >= $request[$rows] )
+							{
+								$error[] = $lang['msg_select_past'];
+							}
+						}
+						else
+						{
+							$request[$rows] = mktime($hour, $min + request("{$prefix}duration", INT), 00, $month, $day, $year);
 						}
 					}
 					else
 					{
-						$request[$rows] = mktime($hour, $min + $dura, 00, $month, $day, $year);
+						$request[$rows] = '';
 					}
 				}
 				
-				if ( strpos($vars[$multi][$rows]['type'], 'upload:') !== false )
+				if ( strpos($type, 'upload:') !== false )
 				{
-					list($type, $info) = explode(':', $vars[$multi][$rows]['type']);
+					list($type, $info) = explode(':', $type);
 					
-					$upload_pic	= request_file("{$info}_img");
+					$upload = request_file("{$info}_img");
+					$delete = request($rows . '_delete', TYP);
+					$current = request('current_' . $info, TXT);
 					
-					$request[$rows] = $upload_pic ? image_upload('single', 'network', $rows, '', request('current_image', TXT), '', $vars[$multi][$rows]['params'], $upload_pic['temp'], $upload_pic['name'], $upload_pic['size'], $upload_pic['type'], $error) : '';
+					if ( $delete && !$upload )
+					{
+					#	debug($delete, 'delete');
+						image_delete($current, '', $vars[$multi][$rows]['params'], $rows);
+					}
+					else if ( $upload )
+					{
+						$request[$rows] = image_upload('single', $rows, $rows, '', request('current_' . $info, TXT), '', $vars[$multi][$rows]['params'], $upload['temp'], $upload['name'], $upload['size'], $upload['type'], $error);
+					}
+					else
+					{
+						$request[$rows] = $current;
+					}
+						
+				
+				#	$data['network_image'] = ( !request('network_image_delete', 1) ) ? ( ( !$pic ) ? $data['network_image'] : image_upload($mode, 'image_network', 'network_image', '', $data['network_image'], '', $dir_path, $pic['temp'], $pic['name'], $pic['size'], $pic['type'], $error) ) : image_delete($data['network_image'], '', $dir_path, 'network_image');
+					
+				#	 : request('current_' . $info, TXT);
 				}
 				
-				if ( in_array($rows, array('group_auth', 'gallery_auth', 'cat_type', 'cat_auth')) && in_array($name, array(GALLERY, GROUPS, DOWNLOADS_CAT)) )
-				{
-					$request[$rows] = is_array($request[$rows]) ? serialize($request[$rows]) : serialize(array($request[$rows]));
-				}
+			#	if ( in_array($rows, array('cat_type', 'cat_auth')) && in_array($name, array(GALLERY, GROUPS, DOWNLOADS_CAT)) )
+			#	{
+			#		$request[$rows] = is_array($request[$rows]) ? serialize($request[$rows]) : serialize(array($request[$rows]));
+			#	}
 				
-				if ( in_array($rows, array('user_month')) && in_array($name, array(CASH)) )
-				{
-					$request[$rows] = is_array($request[$rows]) ? implode(', ', $request[$rows]) : $request[$rows];
-				}
+			#	if ( in_array($rows, array('user_month')) && in_array($name, array(CASH)) )
+			#	{
+			#		$request[$rows] = is_array($request[$rows]) ? implode(', ', $request[$rows]) : $request[$rows];
+			#	}
 				
 				if ( in_array($rows, array('training_maps')) )
 				{
@@ -273,10 +479,13 @@ function build_request($name, $vars, $multi, &$error, $sql_add = false)
 					
 					$request[$rows] = serialize($tmp_map);
 				}
+				
 			}
 		}
 	}
-	
+	#serialize
+#	debug($request, 'function request return');
+
 	return $request;
 }
 
@@ -375,9 +584,7 @@ function build_output_list($data, $vars, $tpl, $settings_name)
 	return;
 }
 
-
-
-function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
+function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 {
 	global $db, $root_path, $lang, $template, $settings, $userdata, $dir_path;
 	
@@ -391,13 +598,14 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 		}
 	}
 	
-#	debug($vars);
-#	debug($data);
-	
 	foreach ( $vars as $vars_key => $vars_value )
 	{
 		if ( $multi )
 		{
+			$sql_data = '';
+			
+			$keys = array_keys($vars_value);
+			
 			foreach ( $data as $data_key => $data_value )
 			{
 				if ( $vars_key == $data_key )
@@ -406,6 +614,8 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 				}
 			}
 		}
+		
+	#	debug($sql_data);
 		
 		$template->assign_block_vars("$tpl.row", array(
 			'KEY'		=> $vars_key,
@@ -416,41 +626,49 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 		{
 			if ( !is_array($vars_type) )
 			{
-				$template->assign_block_vars("$tpl.row.tab", array('L_LANG' => isset($lang[$vars_type]) ? $lang[$vars_type] : $vars_type));
-				/*
 				if ( $vars_type != 'hidden' )
 				{
-					$template->assign_block_vars("$tpl.row.tab", array('L_LANG' => isset($lang[$vars_type]) ? $lang[$vars_type] : $vars_type));
+					$template->assign_block_vars("$tpl.row.tab", array('L_LANG' => isset($lang[$vars_type]) ? $lang[$vars_type] : $vars_type));	
 				}
-				*/
-			}
-			else if ( $vars_type['type'] == 'hidden' )
-			{
-				$tmp_opts = isset($vars_type['opt']) ? $vars_type['opt'] : '';
-				$tmp_data = $multi ? @$sql_data[$vars_key][$vars_opt] : @$sql_data[$vars_opt];
-				$tmp_meta = $vars_key;
-				$tmp_name = $vars_opt;
-				$hidden = '<input type="hidden" name="' . sprintf('%s[%s]', $tmp_meta, $tmp_name) . '" value="' . $tmp_data . '" />';
-				
-				$template->assign_block_vars("$tpl.row.hidden", array('HIDDEN' => $hidden));
+				else
+				{
+					$tdata = $multi ? @$sql_data[$vars_key][$vars_opt] : @$sql_data[$vars_opt];
+					
+					$tmp_opts = isset($vars_type['opt']) ? $vars_type['opt'] : '';
+					
+					$tmeta = $vars_key;
+					$tname = $vars_opt;
+					$hidden = '<input type="hidden" name="' . sprintf('%s[%s]', $tmeta, $tname) . '" value="' . $tdata . '" />';
+					
+					$template->assign_block_vars("$tpl.row.hidden", array('HIDDEN' => $hidden));
+				}
 			}
 			else
 			{
 				/* Fehlerunterdrückung für Daten beim War um das Training zuerstellen (@). */
-				$tmp_type = $vars_type['type'];
 				$tmp_opts = isset($vars_type['opt']) ? $vars_type['opt'] : '';
-				$tmp_data = $multi ? @$sql_data[$vars_key][$vars_opt] : @$sql_data[$vars_opt];
-				$tmp_meta = $vars_key;
-				$tmp_name = $vars_opt;
-				$tmp_parm = isset($vars_type['params']) ? $vars_type['params'] : '';
+				
+				$ttype = $vars_type['type'];
+				$tdata = ( $multi ) ? $sql_data[$vars_key][$vars_opt] : @$sql_data[$vars_opt];
+				$tmeta = $vars_key;
+				$tname = $vars_opt;
 				
 				$lngs = isset($lang[$vars_opt]) ? $lang[$vars_opt] : $vars_opt;
+				
+				$f_id	= sprintf('%s_%s', $tmeta, $tname);
+				$f_name	= sprintf('%s[%s]', $tmeta, $tname);
+				
 			
 				$opt = '';
 				
-				$pos = strpos($tmp_type, ':');
-				$str = substr($tmp_type, 0, $pos);
+			#	$pos = strpos($ttype, ':');
+			#	$str = substr($ttype, 0, $pos);
+			
+				list($type, $option) = explode(':', $ttype);
 				
+			#	debug($type, 'type');
+			#	debug($option, 'option');
+				/*
 				if ( isset($vars_type['ajax']) )
 				{
 					list($ajaxphp, $ajaxtpl) = explode(':', $vars_type['ajax']);
@@ -459,27 +677,40 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 					$template->assign_vars(array('FILE'		=> $ajaxphp));
 					$template->assign_var_from_handle('AJAX', 'ajax');
 				}
-				
-				if ( $str == 'ajax' )
+				*/
+				if ( $type == 'ajax' )
 				{
-					list($type, $size) = explode(':', $tmp_type);
+					list($size, $max) = explode(';', $option);
 					
-					if ( substr_count($tmp_type, ':') >= 1 )
+					/*
+					$typ = $vars_type['params'];
+					
+					if ( substr_count($ttype, ':') >= 1 )
 					{
-						list($typ, $new, $level) = explode(':', $tmp_parm);
+						list($typ, $new, $level) = explode(':', $vars_type['params']);
 					}
 					else
 					{
-						$typ = $tmp_parm;
+						$typ = $vars_type['params'];
+					}
+					*/
+					
+					if ( is_array($vars_type['params']) )
+					{
+						list($typ, $new, $level) = explode(':', $vars_type['params']);
+					}
+					else
+					{
+						$typ = $vars_type['params'];
 					}
 					
 					$ajax_file = ( $typ != 'server' ) ? ( $typ == 'rival' ) ? 'ajax_rival.php' : 'ajax_user.php' : 'ajax_gs.php';
 					
-					$opt .= '<input type="text" size="' . $size . '" name="' . sprintf('%s[%s]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '" value="' . $tmp_data . '" onkeyup="look_' . $tmp_name . '(this.value' . (( substr_count($tmp_parm, ':') >= 1 ) ? sprintf(', %s, %s', $new, $level) : '')  . ');" onblur="set_' . $tmp_name . '();" autocomplete="off"><div class="suggestionsBox" id="' . $tmp_name . '" style="display:none;"><div class="suggestionList" id="auto_' . $tmp_name . '"></div></div>';
+					$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" onkeyup="look_' . $tname . '(this.value' . (( substr_count($vars_type['params'], ':') >= 1 ) ? sprintf(', %s, %s', $new, $level) : '')  . ');" onblur="set_' . $tname . '();" autocomplete="off"><div class="suggestionsBox" id="' . $tname . '" style="display:none;"><div class="suggestionList" id="auto_' . $tname . '"></div></div>';
 					
-					$template->assign_block_vars("$tpl.ajax", array('NAME' => $tmp_name, 'FILE' => $ajax_file));
+					$template->assign_block_vars("$tpl.ajax", array('NAME' => $tname, 'FILE' => $ajax_file));
 				}
-				else if ( $str == 'check' )
+				else if ( $type == 'check' )
 				{
 					$monate = array(
 						'1'		=> $lang['datetime']['month_01'],
@@ -502,140 +733,443 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 					{
 						$check = '';
 					
-						if ( in_array($i, explode(', ', $tmp_data)) )
+						if ( in_array($i, explode(', ', $tdata)) )
 						{
 							$check = ' checked="checked"';
 						}
 							
-						$switch[] = '<label><input type="checkbox" name="' . sprintf('%s[%s][%s]', $tmp_meta, $tmp_name, $i) . '"' . $check . ' value="' . $i . '">&nbsp;' . $monate[$i] . '</label>';
+						$switch[] = '<label><input type="checkbox" name="' . sprintf('%s[%s][%s]', $tmeta, $tname, $i) . '"' . $check . ' value="' . $i . '">&nbsp;' . $monate[$i] . '</label>';
 					}
 					
 					$opt .= implode('<br />', $switch);
 				}
-				else if ( $str == 'double' )
+				else if ( $type == 'double' )
 				{
-					list($valuea, $valueb) = explode(':', $tmp_data);
-					list($type, $size, $max) = explode(':', $tmp_type);
+					list($valuea, $valueb) = explode(':', $tdata);
+					list($size, $max) = explode(';', $option);
 						
-					$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . sprintf('%s[%s][]', $tmp_meta, $tmp_name) . '" value="' . $valuea . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '" /><span style="padding:4px;">&bull;</span>';
-					$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . sprintf('%s[%s][]', $tmp_meta, $tmp_name) . '" value="' . $valueb . '" />';
+					$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . sprintf('%s[%s][]', $tmeta, $tname) . '" value="' . $valuea . '" id="' . $f_id . '" /><span style="padding:4px;">&bull;</span>';
+					$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . sprintf('%s[%s][]', $tmeta, $tname) . '" value="' . $valueb . '" />';
 				}
-				else if ( $str == 'drop' )
+				else if ( $type == 'drop' )
 				{
-					list($type, $typ) = explode(':', $tmp_type);
+				#	list($type, $typ) = explode(':', $ttype);
 						
-					if ( strpos($tmp_type, 'auth_') !== false )
-					{
-						$type = $typ;
-						$typ = 'auth';
-					}
+				#	if ( strpos($ttype, 'auth_') !== false )
+				#	{
+				#		$type = $typ;
+				#		$typ = 'auth';
+				#	}
 					
 					$pre = isset($vars_type['prefix']) ? $vars_type['prefix'] : '';
 					
-					switch ( $typ )
+					switch ( $option )
 					{
-						case 'authcopy':	
-						case 'forum':
+						/* acp_games, acp_server // tdata = default, tmeta/tname = name und id, params = game/voice server */
+						case 'server':	$opt .= select_server($tdata, $tmeta, $tname, $vars_type['params']); break;
+						case 'main':	$opt .= select_main($tdata, $tmeta, $tname, $data); break;
 							
-							$tmp_db = data(FORMS, false, 'forum_sub ASC, forum_order ASC', 1, false);
-							
-							if ( isset($tmp_db) )
+						case 'copy':	
+						case 'forms':	$opt .= select_forms($tdata, $tmeta, $tname, $option);	break;
+						
+						case 'files':
+						
+						#	debug($vars_key, $vars_key);
+						
+							$change = '';
+							$filter = '';
+							$ending = false;
+						
+							switch ( $vars_key )
 							{
-								foreach ( $tmp_db as $rows )
-								{
-									if ( $rows['forum_sub'] == '0' )
-									{
-										$forum_cat[$rows['forum_id']] = $rows;
-									}
-									else if ( $rows['forum_sub'] < 0 )
-									{
-										$forum_frs[$rows['forum_sub']*(-1)][$rows['forum_id']] = $rows;
-									}
-									else
-									{
-										$forum_sub[$rows['forum_sub']][$rows['forum_id']] = $rows;
-									}
-								}
-							}
-							
-							ksort($forum_frs);
-							ksort($forum_sub);
-							
-							$opt .= '<select name="' . sprintf('%s[%s]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '">';
-							$opt .= ($typ == 'authcopy') ? '<option value="" selected="selected">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . '</option>' : '';
-							
-							foreach ( $forum_cat as $ckey => $crow )
-							{
-								$default = $tmp_data < 0 ? $tmp_data * -1 : '';
-								$mark = ( $default == $crow['forum_id'] ) ? ' selected="selected"' : '';
+								case 'navi':
 								
-								$opt .= '<option value="' . (($typ == 'forum') ? $crow['forum_id'] * -1 : $crow['forum_id']) . '"' . $mark . '>' . $crow['forum_name'] . '</option>';
+									$folder = $vars_type['params'][0];
+									$filter = $vars_type['params'][1];
+									$change = $vars_type['params'][2];
 									
-								if ( isset($forum_frs[$ckey]) )
-								{
-									foreach ( $forum_frs[$ckey] as $fkey => $frow )
+									$files = scandir($folder);
+									$tdata = str_replace('./', '', $tdata);
+									
+									$nfiles = $files;
+								
+								break;
+								
+								case 'menu':
+								
+									$folder = $vars_type['params'][0];
+									$filter = $vars_type['params'][1];
+									$change = $vars_type['params'][2];
+									$format = '%s [%s]';
+									
+									$setmodules = 1;
+									
+									$files = scandir($folder);
+									
+									foreach ( $files as $key => $tmp_file )
 									{
-										$mark = ( $tmp_data == $frow['forum_id'] ) ? ' selected="selected"' : '';
-										$shut = ( $data['forum_id'] == $frow['forum_id'] ) ? ' disabled="disabled"': '';
-										
-										$opt .= '<option value="' . $frow['forum_id'] . '"' . $mark . $shut . '>&nbsp; &nbsp;' . $frow['forum_name'] . '</option>';
-										
-										if ( isset($forum_sub[$fkey]) )
+										if ( preg_match('/^admin_.*?\.php$/', $tmp_file) )
 										{
-											foreach ( $forum_sub[$fkey] as $skey => $srow )
+											debug($tmp_file);
+											$modules[$key] = include('./' . $tmp_file);
+											
+											if ( !is_array($modules[$key]) )
 											{
-												$opt .= '<option value="' . $srow['forum_id'] . '"' . (($typ == 'authcopy') ? (($data['forum_id'] == $srow['forum_id']) ? ' disabled="disabled"' : '') : ' disabled="disabled"') . '>&nbsp; &nbsp;&nbsp; &nbsp;' . $srow['forum_name'] . '</option>';
+												unset($modules[$key]);
 											}
 										}
 									}
+									
+									unset($setmodules);
+									
+									foreach ( $modules as $row )
+									{
+										$nfiles[] = array($row['title'] => $row['filename']);
+									}
+								
+								break;
+							}
+							
+						#	debug($nfiles, 'nfiles');
+							
+							switch ( $change )
+							{
+								case 'mode':	$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="display_modes(this.value);">'; break;
+								case 'self':	$opt .= '<select name="' . $f_name . '" id="' . sprintf('%s', $tname) . '"  onchange="' . $f_id . '.value = this.value;">';
+												$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . '</option>';
+												$ending = true;
+									break;
+									
+								default: $opt .= '<select name="' . $f_name . '" id="' . $f_id . '">'; break;
+							}
+							
+						#	$opt .= '<select name="' . $f_name . '" id="' . $f_id . '"' . $change . '>';
+						#	$opt .= $ending ? "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . "</option>" : '';
+									
+							foreach ( $nfiles as $row )
+							{
+								if ( is_array($row) )
+								{
+									$temp_lng = isset($lang[key($row)]) ? $lang[key($row)] : key($row);
+									$lng = sprintf($format, $temp_lng, current($row));
+									$temp_file = current($row);
+								}
+								else
+								{
+									$lng = isset($lang[$row]) ? $lang[$row] : $row;
+									$temp_file = $row;
+								}
+																
+								if ( strstr($temp_file, $filter) )
+								{
+									$mark = ( $tdata == $temp_file ) ? ' selected="selected"' : '';
+									$opt .= '<option value="' . $temp_file . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $lng) . '</option>';
+								}
+							}
+							$opt .= '</select>';
+							
+							$opt .= $ending ? '&nbsp;<input type="text" size="25" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" />' : '';
+							
+							break;
+						
+					#	case 'newscat':		$opt .= select_newscat($tdata, $tmeta, $tname, $vars_type['params']); break;
+						
+						case 'images':#	$opt .= '';
+						
+							$folder = $vars_type['params'][0];
+							$db_sql = $vars_type['params'][1];
+							$layout = $vars_type['params'][2];
+							
+							$sql = 'SHOW FIELDS FROM ' . $db_sql;
+							if ( !($result = $db->sql_query($sql)) )
+							{
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							
+							while ( $row = $db->sql_fetchrow($result) )
+							{
+								$temp[] = $row['Field'];
+							}
+							
+							$field_id = array_shift($temp);
+							$field_name = array_shift($temp);
+							$field_image = array_shift($temp);
+							$field_order = array_pop($temp);
+							
+						#	debug($field_id);
+						#	debug($field_name);
+						#	debug($field_order);
+						
+							$sql = 'SELECT * FROM ' . $db_sql . ' ORDER BY ' . $field_order . ' ASC';
+							if ( !($result = $db->sql_query($sql)) )
+							{
+								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+							}
+							$data = $db->sql_fetchrowset($result);
+							
+							$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="update_image(this.options[selectedIndex].value);">';
+							$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select' . str_replace($tmeta, '', $tname) . '_image']) . '</option>';
+							
+							$cimage = '';
+							
+							foreach ( $data as $row )
+							{
+								if ( $tdata == $row[$field_id] )
+								{
+									$cimage = $folder . $row[$field_image];
+								}
+								
+								$opt .= '<option value="' . $row[$field_image] . '"' . (( $tdata == $row[$field_id] ) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $row[$field_name]) . '</option>';
+							}
+							
+							$opt .= '</select>';
+							$opt .= ( $layout ) ? '&nbsp;<img src="' . $cimage . '" id="image" alt="" height="16" />' : '<br /><img class="img" src="' . $cimage . '" id="image" alt="" />';
+						#	$opt .= '<br /><img class="img" src="' . $cimage . '" id="image" alt="" />';
+						
+							break;
+					
+					
+					#	case 'image':	$opt .= select_image($tdata, $tmeta, $tname, $vars_type['params'], ( strpos($tname, 'cat') !== false ) ? 0 : 1); break;
+						case 'image':
+						
+							$folder = $vars_type['params'][0];
+							$filter = $vars_type['params'][1];
+							$change = isset($vars_type['params'][2]) ? $vars_type['params'][2] : '';
+							$layout = isset($vars_type['params'][3]) ? $vars_type['params'][3] : '';
+							$cimage = '';
+							
+							$files = scandir($folder);
+							$files = array_diff(scandir($folder), array('.', '..', '.htaccess', '.htm', '.svn', 'spacer.gif'));
+							
+							$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="update_image(this.options[selectedIndex].value);">';
+							$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $tmeta]) . '</option>';
+							
+							foreach ( $files as $tfile )
+							{
+								if ( in_array(substr($tfile, strrpos($tfile, '.')), $filter) )
+								{
+									$lng = substr($tfile, 0, strrpos($tfile, '.'));
+									
+									if ( $tdata == $tfile )
+									{
+										$cimage = $folder . $tfile;
+									}
+									
+									$opt .= '<option value="' . $tfile . '"' . (( $tdata == $tfile ) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $lng) . '</option>';
 								}
 							}
 							
 							$opt .= '</select>';
+							$opt .= $layout ? '&nbsp;<img src="' . $cimage . '" id="image" alt="" height="16" />' : '<br /><img class="img" src="' . $cimage . '" id="image" alt="" />';
 							
 							break;
-							
-						case 'server':
-							
-							$data = data(SERVER_TYPE, "type_sort = '0'", false, 1, false);
-
-							$opt .= '<select name="' . sprintf('%s[%s]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '">';
-							
-							foreach ( $data as $row )
+						
+						case 'file_img':
+						
+							if ( $data['main'] )
 							{
-								$selected = ( $tmp_data == $row['type_game'] ) ? ' selected="selected"' : '';
-								$opt .= "<option value=\"" . $row['type_game'] . "\" $selected>" . sprintf($lang['sprintf_select_format'], $row['type_name']) . "</option>";
+								$tmp_db	= data($tbl, ' WHERE map_id = ' . $data['main'], 'main ASC, map_order ASC', 1, true);
+								$files	= scandir($vars_type['params'] . $tmp_db['map_tag']);
+								$format	= array('png', 'jpg', 'jpeg', 'gif');
+								
+								if ( $files )
+								{
+									foreach ( $files as $row )
+									{
+										if ( $row != '.' && $row != '..' && $row != 'index.htm' && $row != '.svn' && $row != 'spacer.gif' )
+										{
+											if ( in_array(substr($row, -3), $format) )
+											{
+												$tmp_files[] = $row;
+											}
+										}
+									}
+									
+									if ( $tmp_files )
+									{
+									#	$template->assign_vars(array('IPATH' => $root_path . $settings['path_maps'] . $tmp_db['map_tag'] . '/'));
+									
+										$img_path = $root_path . $settings['path_maps'] . $tmp_db['map_tag'] . '/';
+										
+										$current_image = '';
+										
+										$opt .= '<div id="close"><select name="' . $f_name . '" id="' . $f_id . '" onkeyup="update_image_' . $tmp_db['map_tag'] . '(this.options[selectedIndex].value);" onchange="update_image_' . $tmp_db['map_tag'] . '(this.options[selectedIndex].value);">';
+										
+										foreach ( $tmp_files as $row )
+										{
+											if ( $tdata == $row )
+											{
+												$current_image = $img_path . $row;
+											}
+											
+											$mark = ( $tdata == $row ) ? ' selected="selected"' : '';
+											$mask = str_replace(substr($row, strrpos($row, '.')), "", $row);
+								
+											$opt .= '<option value="' . $row . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $mask) . '</option>';
+										}
+										
+										$opt .= '</select><br /><img src="' . $current_image . '" id="image" alt="" /></div><div id="ajax_content"></div>';
+									}
+								}
 							}
-							$opt .= "</select>";
-						
-							break;
+							else
+							{
+								$opt .= '<div id="close">select cat oder keine bilder vorhanden</div><div id="ajax_content"></div>';
+							}
 							
-						case 'files':
+							break;
+					/*	*/	
 						
-							$tmp_data = str_replace('./', '', $tmp_data);
+						/* acp_newscat */
+					#	case 'game':		$opt .= select_games($tdata, $tmeta, $tname, $vars_type['params']); break;
+						/*	
+						case 'tfile':
+						
+							$tdata = str_replace('./', '', $tdata);
 						
 							$folder = $root_path;
 							$files = scandir($folder);
 							
-							$opt .= '<select name="navi_url" id="navi_url" onchange="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '.value = this.value;">';
+							$opt .= '<select name="navi_url" id="navi_url" onchange="' . $f_id . '.value = this.value;">';
 							$opt .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . "</option>";
 							
 							foreach ( $files as $sfile )
 							{
 								if ( strstr($sfile, '.php') )
 								{
-									$selected = ( $sfile == $tmp_data ) ? 'selected="selected"' : '';
+									$selected = ( $sfile == $tdata ) ? 'selected="selected"' : '';
 									$opt .= "<option value=\"$sfile\" $selected>" . sprintf($lang['sprintf_select_format'], $sfile) . "</option>";
 								}
 							}
 							$opt .= '</select>';
-							$opt .= '&nbsp;<input type="text" size="25" name="' . sprintf('%s[%s]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '" value="' . $tmp_data . '" />';
+							$opt .= '&nbsp;<input type="text" size="25" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" />';
 						
 							break;
 							
-						case 'maps':
+						case 'dfile':
 						
-						#	debug($tmp_data);
+							$folder = $vars_type['params'][0];
+							
+							$setmodules = 1;
+							
+							$files = scandir($folder);
+							
+						#	debug($files);
+							
+							foreach ( $files as $key => $tmp_file )
+							{
+							#	if ( preg_match("/^admin_.*?\.php$/", $tmp_file) )
+								if ( preg_match('/^admin_.*?\.php$/', $tmp_file) )
+								{
+								#	debug($tmp_file);
+									$modules[$key] = include('./' . $tmp_file);
+									
+									if ( !is_array($modules[$key]) )
+									{
+										unset($modules[$key]);
+									}
+								}
+								
+							#	debug($modules[$key]);
+							#	if ( preg_match("/^admin_.*?\.php$/", $tmp_file) )
+							#	{
+							#		$modules[$key] = include('./' . $tmp_file);
+							#		
+							#		if ( !is_array($modules[$key]) )
+							#		{
+							#			unset($modules[$key]);
+							#		}
+							#	}
+							}
+							
+						#	debug($modules);
+
+							sort($module);
+							
+							unset($setmodules);
+							
+						#	$opt .= '<select name="navi_url" id="navi_url" onchange="' . $f_id . '.value = this.value;">';
+						#	$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onkeyup="set_info(this.options[selectedIndex].value);" onchange="set_info(this.options[selectedIndex].value);">';
+							$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="display_modes(this.value);">';
+							
+							foreach ( $modules as $module_info )
+							{
+								if ( strstr($module_info['filename'], '.php') )
+								{
+									$mark = ( $module_info['filename'] == $tdata ) ? ' selected="selected"' : '';
+									$opt .= '<option value="' . $module_info['filename'] . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], sprintf('%s [%s]', (isset($lang[$module_info['title']]) ? $lang[$module_info['title']] : $module_info['title']), $module_info['filename'])) . '</option>';
+								}
+							}
+							$opt .= '</select>';
+							
+							unset($modules);
+							
+							break;
+						*/		
+						case 'iopts':
+						
+							$folder = $vars_type['params'];
+						
+							$setmodules = 1;
+							
+							$files = scandir($folder);
+							
+							foreach ( $files as $key => $tmp_file )
+							{
+								if ( preg_match('/^admin_.*?\.php$/', $tmp_file) )
+								{
+								#	debug($tmp_file);
+									$modules[$key] = include('./' . $tmp_file);
+									
+									if ( !is_array($modules[$key]) )
+									{
+										unset($modules[$key]);
+									}
+								}
+							}
+							
+							sort($modules);
+							
+							unset($setmodules);
+							
+							foreach ( $modules as $module_info )
+							{
+								$template->assign_block_vars("$tpl.m_names", array('A_NAME' => $module_info['filename']));
+								
+								foreach ( $module_info['modes'] as $key => $row )
+								{
+									$template->assign_block_vars("$tpl.m_names.modes", array(
+										'A_OPTION' => $row['title'],
+										'A_VALUE' => $key
+									));
+								}
+							}
+							
+							$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="display_auth(this.options[selectedIndex].value);">';
+							
+							$first_file = current($modules[0]);
+							
+							foreach ( $modules as $module_info )
+							{
+								$tmp_file = !empty($data['menu_file']) ? $data['menu_file'] : $first_file;
+								
+								if ( $module_info['filename'] == $tmp_file )
+								{
+									foreach ( $module_info['modes'] as $keys => $rows )
+									{
+										$mark = ( $keys == $tdata ) ? ' selected="selected"' : "";
+										$opt .= '<option value="' . $keys . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $rows['title']) . '</option>';
+									}
+								}
+							}
+							
+							$opt .= '</select>';
+							
+							unset($modules);
+							
+							break;
+						
+						case 'maps':
 						
 							$opt .= '<div id="close">';
 							
@@ -654,7 +1188,7 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 								
 								if ( $cat )
 								{
-									$sql = "SELECT * FROM " . MAPS . " WHERE map_sub = {$cat['map_id']} ORDER BY map_order ASC";
+									$sql = "SELECT * FROM " . MAPS . " WHERE main = {$cat['map_id']} ORDER BY map_order ASC";
 									if ( !($result = $db->sql_query($sql)) )
 									{
 										message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -663,7 +1197,28 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 									
 									if ( $maps )
 									{
-										$opt .= '<div><div><select name="training[training_maps][]" id="training_training_maps">';
+										$un_tdata = unserialize($tdata);
+										
+										if ( is_array($un_tdata) && !empty($un_tdata) )
+										{
+											foreach ( $un_tdata as $data_key )
+											{
+												$opt .= '<div><div><select name="' . sprintf('%s[%s][]', $tmeta, $tname) . '" id="' . $f_id . '">';
+												$opt .= '<option selected="selected" value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . '</option>';
+											
+												foreach ( $maps as $map )
+												{
+													$mark = ( $map['map_id'] == $data_key ) ? ' selected="selected"' : '';
+													
+													$opt .= '<option value="' . $map['map_id'] . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $map['map_name']) . '</option>';
+												}
+												
+												$opt .= '</select>&nbsp;<input type="button" class="more" value="' . $lang['common_remove'] . '" onclick="this.parentNode.parentNode.removeChild(this.parentNode);"></div></div>';
+											}
+											
+										}
+										
+										$opt .= '<div><div><select name="' . sprintf('%s[%s][]', $tmeta, $tname) . '" id="' . $f_id . '">';
 										$opt .= '<option selected="selected" value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . '</option>';
 										
 										for ( $j = 0; $j < count($maps); $j++ )
@@ -693,95 +1248,48 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 							
 							$opt .= '</div><div id="ajax_content"></div>';
 							
-							
 							break;
-					#	case 'auth':		$opt .= select_auth($tmp_data, $tmp_meta, $tmp_name, $type); break;
-						case 'auth':
+					#	case 'auth':		$opt .= select_auth($tdata, $tmeta, $tname, $type); break;
+					#	case 'auth':
+					#	
+					#		$info = select_auth($tdata, $tmeta, $tname, $type);
+					#		$opt .= $info[0];
+					#	
+					#		break;
+						case 'match':		$opt .= select_match($tdata, $tmeta, $tname); break;
 						
-							$info = select_auth($tmp_data, $tmp_meta, $tmp_name, $type);
-							$opt .= $info[0];
-						
-							break;
-						case 'match':		$opt .= select_match($tmp_data, $tmp_meta, $tmp_name); break;
-						case 'newscat':		$opt .= select_newscat($tmp_data, $tmp_meta, $tmp_name, $tmp_parm); break;
-						case 'disable':		$opt .= page_mode_select($tmp_data, "{$tmp_meta}[page_disable_mode]"); break;
-						case 'lang':		$opt .= select_lang($tmp_data, "{$tmp_meta}[default_lang]", "language"); break;
-						case 'style':		$opt .= select_style($tmp_data, "{$tmp_meta}[default_style]", "../templates"); break;
-						case 'tz':			$opt .= select_tz($tmp_data, "{$tmp_meta}[default_timezone]"); break;
+						case 'disable':		$opt .= page_mode_select($tdata, "{$tmeta}[page_disable_mode]"); break;
+						case 'lang':		$opt .= select_lang($tdata, "{$tmeta}[default_lang]", "language"); break;
+						case 'style':		$opt .= select_style($tdata, "{$tmeta}[default_style]", "../templates"); break;
+						case 'tz':			$opt .= select_tz($tdata, "{$tmeta}[default_timezone]"); break;
 					
-						case 'userlevel':	$opt .= select_level($tmp_data, "{$tmp_meta}[$tmp_name]", $tmp_parm); break;
-						
+						case 'userlevel':	$opt .= select_level($tdata, "{$tmeta}[$tname]", $vars_type['params']); break;
+						/* acp_event */
 						case 'datetime':	$opt .= sprintf('%s.%s.%s - %s:%s',
-												select_date('select', 'day',	"{$pre}day",	date('d', is_numeric($tmp_parm) ? $tmp_data : $time), $time),
-												select_date('select', 'month',	"{$pre}month",	date('m', is_numeric($tmp_parm) ? $tmp_data : $time), $time),
-												select_date('select', 'year',	"{$pre}year",	date('Y', is_numeric($tmp_parm) ? $tmp_data : $time), $time),
-												select_date('select', 'hour',	"{$pre}hour",	date('H', is_numeric($tmp_parm) ? $tmp_data : $time), $time),
-												select_date('select', 'min',	"{$pre}min",	date('i', is_numeric($tmp_parm) ? $tmp_data : $time), $time));
-										break;
-						
-						case 'duration':	$opt .= select_date('select', 'duration', "{$pre}duration", ( $tmp_data - $data[$tmp_parm] ) / 60); break;
-						
-						case 'image':		$opt .= select_image($tmp_data, $tmp_meta, $tmp_name, $tmp_parm, ( strpos($tmp_name, 'cat') !== false ) ? 0 : 1); break;
-						case 'game':		$opt .= select_games($tmp_data, $tmp_meta, $tmp_name, $tmp_parm); break;
-						
-						case 'team':		$opt .= select_team($tmp_data, $tmp_meta, $tmp_name, $tmp_parm); break;
-						case 'match_type':	$opt .= match_types($tmp_data, $tmp_meta, $tmp_name); break;
-						case 'match_war':	$opt .= match_types($tmp_data, $tmp_meta, $tmp_name); break;
-						case 'match_league':$opt .= match_types($tmp_data, $tmp_meta, $tmp_name); break;
-							
-					#	case 'order':		$opt .= simple_order($dbsql, 'game_id != -1', '', $tmp_data); break;
-					
-						case 'gaccess':	if ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data['group_access'] )
-										{
-											$opt .= '<select name="' . sprintf('%s[%s][]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '">';
-											$opt .= '<optgroup label="' . sprintf($lang['sprintf_select_format'], $lang['msg_select_user_level']) . '">';
-											
-											foreach ( $lang['group_access_ary'] as $level => $name )
-											{
-												$mark = ( $level == $tmp_data ) ? 'selected="selected"' : "";
-												$prot = ( $level > $userdata['user_level'] ) ? 'disabled="disabled"' : "";
-												$opt .= '<option value="' . $level . '" ' . $mark . $prot . '>' . sprintf($lang['sprintf_select_format'], $name) . '</option>';
-											}
-											
-											$opt .= '</optgroup></select>';
-										}
-										else
-										{
-											$opt .= $lang['group_access_ary'][$data['group_access']];
-											$opt .= '<input type="hidden" name="group[group_type]" value="' . $data['group_access'] . '" />';
-										}
-										
-										
-										break;
-						
-						case 'gtype':	if ( $tmp_data != GROUP_SYSTEM )
-										{
-											$opt .= '<select name="' . sprintf('%s[%s][]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '">';
-											$opt .= '<optgroup label="' . sprintf($lang['sprintf_select_format'], $lang['msg_select_level']) . '">';
-											
-											foreach ( $lang['group_type_ary'] as $level => $name )
-											{
-												$mark = ( $level == $tmp_data ) ? 'selected="selected"' : "";
-												$prot = ( $level == GROUP_SYSTEM ) ? 'disabled="disabled"' : "";
-												$opt .= '<option value="' . $level . '" ' . $mark . $prot . '>' . sprintf($lang['sprintf_select_format'], $name) . '</option>';
-											}
-											
-											$opt .= '</optgroup></select>';
-										}
-										else
-										{
-											$opt .= $lang['group_system'];
-											$opt .= '<input type="hidden" name="group[group_type]" value="' . GROUP_SYSTEM . '" />';
-										}
-										
+												select_date('select', 'day',	"{$pre}day",	date('d', is_numeric($vars_type['params']) ? $tdata : $time), $time),
+												select_date('select', 'month',	"{$pre}month",	date('m', is_numeric($vars_type['params']) ? $tdata : $time), $time),
+												select_date('select', 'year',	"{$pre}year",	date('Y', is_numeric($vars_type['params']) ? $tdata : $time), $time),
+												select_date('select', 'hour',	"{$pre}hour",	date('H', is_numeric($vars_type['params']) ? $tdata : $time), $time),
+												select_date('select', 'min',	"{$pre}min",	date('i', is_numeric($vars_type['params']) ? $tdata : $time), $time));
 							break;
+						/* acp_event */
+						case 'duration':	$opt .= select_date('select', 'duration', "{$pre}duration", ( $tdata - $data[$vars_type['params']] ) / 60); break;
+						/* acp_event */
+						
+						
+						case 'team':		$opt .= select_team($tdata, $tmeta, $tname, $vars_type['params']); break;
+						case 'match_type':	$opt .= match_types($tdata, $tmeta, $tname); break;
+						case 'match_war':	$opt .= match_types($tdata, $tmeta, $tname); break;
+						case 'match_league':$opt .= match_types($tdata, $tmeta, $tname); break;
+							
+					#	case 'order':		$opt .= simple_order($dbsql, 'game_id != -1', '', $tdata); break;
 						
 						case 'dtype':
 						
 							$mime_type = array('meta_application', 'meta_image', 'meta_text', 'meta_video');
-							$tmp_data = unserialize($tmp_data);
+							$tdata = unserialize($tdata);
 							
-							$opt .= '<select name="' . sprintf('%s[%s][]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '" size="15" multiple="multiple">';
+							$opt .= '<select name="' . sprintf('%s[%s][]', $tmeta, $tname) . '" id="' . $f_id . '" size="15" multiple="multiple">';
 							
 							foreach ( $mime_type as $meta_type )
 							{
@@ -791,7 +1299,7 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 								
 								foreach ( $lang[$lang_type] as $key => $row )
 								{
-									$marked = ( in_array($key, $tmp_data) ) ? ' selected="selected"' : '';
+									$marked = ( in_array($key, $tdata) ) ? ' selected="selected"' : '';
 									$opt .= '<option value="' . $key . '"' . $marked . '>' . sprintf($lang['sprintf_select_format'], $key) . '</option>';
 								}
 							}
@@ -802,20 +1310,20 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 										
 						case 'ranks':
 						
-						#	$order = ( $tmp_parm != RANK_FORUM ) ? 'rank_order' : 'rank_min';
+						#	$order = ( $vars_type['params'] != RANK_FORUM ) ? 'rank_order' : 'rank_min';
 
-							$sql = 'SELECT rank_id, rank_name, rank_order FROM ' . RANKS . ' WHERE rank_type = ' . $tmp_parm . ' ORDER BY ' . (( $tmp_parm != RANK_FORUM ) ? 'rank_order' : 'rank_min');
+							$sql = 'SELECT rank_id, rank_name, rank_order FROM ' . RANKS . ' WHERE rank_type = ' . $vars_type['params'] . ' ORDER BY ' . (( $vars_type['params'] != RANK_FORUM ) ? 'rank_order' : 'rank_min');
 							if ( !($result = $db->sql_query($sql)) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 						
-							$opt .= '<select name="' . sprintf('%s[%s]', $tmp_meta, 'rank_id') . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '">';
+							$opt .= '<select name="' . sprintf('%s[%s]', $tmeta, 'rank_id') . '" id="' . $f_id . '">';
 							$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_rank']) . '</option>';
 							
 							while ( $row = $db->sql_fetchrow($result) )
 							{
-								$selected = ( $row['rank_id'] == $tmp_data ) ? ' selected="selected"' : '';
+								$selected = ( $row['rank_id'] == $tdata ) ? ' selected="selected"' : '';
 								$opt .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $row['rank_name']) . '</option>';
 							}
 							$opt .= '</select>';
@@ -826,65 +1334,152 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 						
 							switch ( $dbsql )
 							{
-								case FIELDS:	$opt .= simple_order($dbsql, "field_sub = {$data['field_sub']}", $tmp_data, $vars_key, $tmp_meta); break;
-								case NETWORK:	$opt .= simple_order($dbsql, "network_type = {$data['network_type']}", $tmp_data, $vars_key, $tmp_meta); break;
-								case RANKS:		$opt .= simple_order($dbsql, "rank_type = {$data['rank_type']}", $tmp_data, $vars_key, $tmp_meta); break;
-								case MAPS:		$opt .= simple_order($dbsql, "map_sub = {$data['map_sub']}", $tmp_data, $vars_key, $tmp_meta); break;
-								case NAVI:		$opt .= simple_order($dbsql, "navi_type = {$data['navi_type']}", $tmp_data, $vars_key, $tmp_meta); break;
-								case FORMS:		$opt .= simple_order($dbsql, "forum_sub = {$data['forum_sub']}", $tmp_data, $vars_key, $tmp_meta); break;
+								case FIELDS:	$opt .= simple_order($dbsql, "field_sub = {$data['field_sub']}", $tdata, $vars_key, $tmeta); break;
+								case NETWORK:	$opt .= simple_order($dbsql, "network_type = {$data['network_type']}", $tdata, $vars_key, $tmeta); break;
+								case RANKS:		$opt .= simple_order($dbsql, "rank_type = {$data['rank_type']}", $tdata, $vars_key, $tmeta); break;
+							#	case MAPS:		$opt .= simple_order($dbsql, "map_sub = {$data['map_sub']}", $tdata, $vars_key, $tmeta); break;
+								case NAVI:		$opt .= simple_order($dbsql, "navi_type = {$data['navi_type']}", $tdata, $vars_key, $tmeta); break;
+							#	case FORMS:		$opt .= simple_order($dbsql, "forum_sub = {$data['forum_sub']}", $tdata, $vars_key, $tmeta); break;
 								
 								/*
-								case GALLERY:	$opt .= simple_order($dbsql, '', $tmp_data, $vars_key, $tmp_meta); break;
-								case GAMES:		$opt .= simple_order($dbsql, '', $tmp_data, $vars_key, $tmp_meta); break;
-								case GROUPS:	$opt .= simple_order($dbsql, '', $tmp_data, $vars_key, $tmp_meta); break;
-								case NEWS_CAT:	$opt .= simple_order($dbsql, '', $tmp_data, $vars_key, $tmp_meta); break;
-								case TEAMS:		$opt .= simple_order($dbsql, '', $tmp_data, $vars_key, $tmp_meta); break;
+								case GALLERY:	$opt .= simple_order($dbsql, '', $tdata, $vars_key, $tmeta); break;
+								case GAMES:		$opt .= simple_order($dbsql, '', $tdata, $vars_key, $tmeta); break;
+								case GROUPS:	$opt .= simple_order($dbsql, '', $tdata, $vars_key, $tmeta); break;
+								case NEWS_CAT:	$opt .= simple_order($dbsql, '', $tdata, $vars_key, $tmeta); break;
+								case TEAMS:		$opt .= simple_order($dbsql, '', $tdata, $vars_key, $tmeta); break;
 								*/
 								
 								case SERVER:
 								case GALLERY:
 								case GAMES:
-								case GROUPS:
+							#	case GROUPS:
 								case NEWS_CAT:
 								case DOWNLOADS_CAT:
-								case TEAMS:		$opt .= simple_order($dbsql, '', $tmp_data, $vars_key, $tmp_meta); break;
+								case TEAMS:		$opt .= simple_order($dbsql, '', $tdata, $vars_key, $tmeta); break;
 								
 								
 								default:		$opt .= $dbsql; break;
 							}
 							
 						break;
+						
+						default: $opt .= '&nbsp;';
 					}
 				}
-				else if ( $str == 'links' )
+				else if ( $type == 'links' )
 				{
-					list($valuea, $valueb) = explode('~', $tmp_data);
-					list($type, $size) = explode(':', $tmp_type);
+				#	debug($tdata, $vars_opt);
 					
-					$valuea = unserialize($valuea);
-					$valueb = unserialize($valueb);
+					$un_tdata = unserialize($tdata);
 					
-					if ( isset($valuea) )
+					if ( isset($un_tdata) )
 					{
-						foreach ( $valuea as $akey => $rowa )
+						foreach ( $un_tdata as $row )
 						{
-							$opt .= "<div><ul><input type=\"text\" name=\"{$tmp_meta}[$tmp_name][url][]\" value=\"$rowa\"><span style=\"padding:4px;\">&bull;</span><input type=\"text\" name=\"{$tmp_meta}[$tmp_name][name][]\" value=\"$valueb[$akey]\">&nbsp;<input class=\"more\" type=\"button\" value=\"{$lang['common_remove']}\" onClick=\"this.parentNode.parentNode.removeChild(this.parentNode)\"></ul></div>";
+							list($link, $name) = explode('|', $row);
+							
+							$opt .= '<div><ul>';
+							$opt .= '<input type="text" size="' . $option . '" name="' . sprintf('%s[%s][link][]', $tmeta, $tname) . '" id="' . $f_id . '" value="' . $link . '">';
+							$opt .= '<span style="padding:4px;">&bull;</span>';
+							$opt .= '<input type="text" size="' . $option . '" name="' . sprintf('%s[%s][name][]', $tmeta, $tname) . '" value="' . $name . '">&nbsp;';
+							$opt .= '<input class="more" type="button" value="' . $lang['common_remove'] . '" onClick="this.parentNode.parentNode.removeChild(this.parentNode)">';
+							$opt .= '</ul></div>';
 						}
 					}
 					
-					
-					$opt .= "<div><div><input type=\"text\" size=\"$size\" name=\"{$tmp_meta}[$tmp_name][url][]\" value=\"\" id=\"{$tmp_meta}_{$tmp_name}\" /><span style=\"padding:4px;\">&bull;</span>";
-					$opt .= "<input type=\"text\" size=\"$size\" maxlength=\"$max\" name=\"{$tmp_meta}[$tmp_name][name][]\" value=\"\" />&nbsp;<input class=\"more\" type=\"button\" value=\"{$lang['common_more']}\"onclick=\"clone(this)\"></div></div>";
+					$opt .= '<div><div>';
+					$opt .= '<input type="text" size="' . $option . '" name="' . sprintf('%s[%s][link][]', $tmeta, $tname) . '" id="' . $f_id . '" value="" />';
+					$opt .= '<span style="padding:4px;">&bull;</span>';
+					$opt .= '<input type="text" size="' . $option . '" name="' . sprintf('%s[%s][name][]', $tmeta, $tname) . '" value="" />&nbsp;';
+					$opt .= '<input class="more" type="button" value="' . $lang['common_more'] . '"onclick="clone(this)">';
+					$opt .= '</div></div>';
 				}
-				else if ( $str == 'radio' )
+				else if ( $type == 'radio' )
 				{
-					list($type, $typ) = explode(':', $tmp_type);
+					$tmp_lang = '';
+					
+					if ( isset($lang[$ttype]) )
+					{
+						$tmp_lang = $lang[$ttype];
+					}
+					else
+					{
+						$tmp_db = data($tbl, "WHERE $tname = 0", "{$vars_key}_order ASC", 1, false);
+						
+					#	debug($tmp_db, 'test');
+						
+						if ( $tmp_db )
+						{
+							foreach ( $tmp_db as $tmp_key => $tmp_value )
+							{
+								$tmp_lang[$tmp_value["{$vars_key}_id"]] = $tmp_value["{$vars_key}_name"];
+							}
+						}
+					}
+					
+					$first = true;
+					$break = '';
+					$click = '';
+					
+					foreach ( $tmp_lang as $var => $lng )
+					{
+						if ( isset($vars_type['params']) )
+						{
+							$break = $vars_type['params'][1];
+							
+							switch ( $vars_type['params'][0] )
+							{
+								case 'order':
+									$click		= true;
+									$data_sub	= $data[$vars_opt];
+									$data_order	= isset($data["{$vars_key}_order"]) ? $data["{$vars_key}_order"] : 0;
+									
+									break;
+									
+								case 'type':	$click = ' onclick="display_options(this.value);"';		break;
+								/* acp_maps */
+								case 'ajax':	$click = ' onclick="setRequest(\'' . $var . '\');"';	break;									
+								case 'combi':	$click = ' onclick="display_options(this.value); setRequest(this.value, \''. $tmeta . '\', \''. ( isset($vars_type['params'][2]) ? $vars_type['params'][2] : $tname ) . '\');"';	break;
+								/* acp_forum, acp_menu */
+								
+							#	case 'disabled':
+							#	
+							#		if ( $tdata == $vars_type['params'][2] )
+							#		{
+							#			$click = ' disabled="disabled"';
+							#		}
+							#		
+							#		$hidden_field = true;
+							#		$hidden_types = $vars_type['params'][2];
+							#		
+							#		break;
+							}
+						}
+						
+						if ( $tmeta == 'group' && $var == GROUP_SYSTEM )
+						{
+							$click = ' disabled="disabled"';
+						}
+						
+						$idcheck = ( $first )			? ' id="' . $f_id . '"' : '';
+						$checked = ( $tdata == $var )	? ' checked="checked"' : '';
+						$onclick = $click;
+						
+						$opt .= '<label><input type="radio" name="' . sprintf('%s[%s]', $tmeta, $tname) . '" value="' . $var . '"' . $checked . $idcheck . $onclick . ' />&nbsp;' . $lng . '</label>';
+						$opt .= ( $break ) ? "<br />" : "<span style=\"padding:4px;\"></span>";
+						
+						$first = false;
+					}
+					
+					$opt .= ( $tdata == GROUP_SYSTEM ) ? '<input type="hidden" name="' . $f_name . '" value="' . GROUP_SYSTEM . '" />' : '';
+					/*
+					list($type, $typ) = explode(':', $ttype);
 					
 					$tmp_lang = '';
 					
-					if ( isset($lang[$tmp_type]) )
+					if ( isset($lang[$ttype]) )
 					{
-						$tmp_lang = $lang[$tmp_type];
+						$tmp_lang = $lang[$ttype];
 					}
 					else if ( in_array($typ, array('icons')) )
 					{
@@ -892,7 +1487,7 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 					}
 					else
 					{
-						$tmp_db = data($dbsql, "$tmp_name = 0", "{$vars_key}_order ASC", 1, false);
+						$tmp_db = data($dbsql, "$tname = 0", "{$vars_key}_order ASC", 1, false);
 						
 						if ( $tmp_db )
 						{
@@ -908,150 +1503,114 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 					
 					foreach ( $tmp_lang as $var => $lng )
 					{
-						if ( $tmp_parm )
+						if ( $vars_type['params'] )
 						{
 							$click		= true;
 							$data_sub	= $data[$vars_opt];
 							$data_order	= isset($data["{$vars_key}_order"]) ? $data["{$vars_key}_order"] : 0;
 						}
 						
-						$idcheck = ( $first ) ? "id=\"{$tmp_meta}_{$tmp_name}\"" : '';
-						$checked = ( $tmp_data == $var ) ? 'checked="checked"' : '';
+						$idcheck = ( $first ) ? "id=\"{$tmeta}_{$tname}\"" : '';
+						$checked = ( $tdata == $var ) ? 'checked="checked"' : '';
 					#	$onclick = ( $click ) ?  "onclick=\"setRequest('$dbsql', $var, $data_sub, $data_order); rank_posts(this.value); user_interval(this.value); \"" : '';
 						$onclick = ( $click ) ?  "onclick=\"setRequest('$dbsql', $var, $data_sub, $data_order); \"" : '';
 						
-						$opt .= "<label><input type=\"radio\" name=\"{$tmp_meta}[$tmp_name]\" value=\"$var\" $checked $idcheck $onclick/>&nbsp;$lng</label>";
-					#	$opt .= ( strpos($tmp_type, 'caldays') !== false ) ? "<br />" : "<span style=\"padding:4px;\"></span>";
-						$opt .= ( count($tmp_lang) > 4 || in_array($tmp_meta, array('cash', 'user')) ) ? "<br />" : "<span style=\"padding:4px;\"></span>";
+						$opt .= "<label><input type=\"radio\" name=\"{$tmeta}[$tname]\" value=\"$var\" $checked $idcheck $onclick/>&nbsp;$lng</label>";
+					#	$opt .= ( strpos($ttype, 'caldays') !== false ) ? "<br />" : "<span style=\"padding:4px;\"></span>";
+						$opt .= ( count($tmp_lang) > 4 || in_array($tmeta, array('cash', 'user')) ) ? "<br />" : "<span style=\"padding:4px;\"></span>";
 						
 						$first = false;
 					}
+					*/
 				}
-				else if ( $str == 'radios' )
+				else if ( $type == 'text' )
 				{
-					$sql = 'SELECT authlist_name FROM ' . AUTHLIST . ' ORDER BY authlist_name ASC';
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					$rows = $db->sql_fetchrowset($result);
+					list($size, $max) = explode(';', $option);
 					
-					foreach ( $rows as $value )
-					{
-						$fields[] = $value['authlist_name'];
-					}
+				#	$field_ids	= sprintf('%s_%s', $tmeta, $tname);
+				#	$field_name	= sprintf('%s[%s]', $tmeta, $tname);
 					
-					$cnt = count($fields);
-					$utd = unserialize($tmp_data);
+				#	debug($vars_key, 'vars_opt');
 					
-				#	debug($utd, 'utd');
-
-					if ( empty($utd) )
+					if ( is_array($tdata) )
 					{
-						foreach ( $rows as $value )
-						{
-							$utd[$value['authlist_name']] = 0;
-						}
+					#	debug($tdata);
+						( count($tdata) == 4 ) ? list($value, $order, $default, $url) = array_values($tdata) : list($value, $order, $default) = array_values($tdata);
 					}
-					
-					for ( $i = 0; $i < $cnt; $i++ )
+					else if ( isset($vars_type['params']) && $vars_type['params'] == 'format' )
 					{
-				#		debug($utd[$fields[$i]], $fields[$i]);
-						
-						if ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $data['group_access'] )
-						{
-							$selected_yes	= ( $utd[$fields[$i]] == AUTH_ALLOWED ) ? ' checked="checked"' : '';
-							$selected_no	= ( $utd[$fields[$i]] == AUTH_DISALLOWED ) ? ' checked="checked"' : '';
-						}
-						else if ( $userdata['user_level'] <= $data['group_access'] )
-						{
-							$selected_yes	= ( $utd[$fields[$i]] == AUTH_ALLOWED ) ? ' checked="checked" disabled' : ' disabled';
-							$selected_no	= ( $utd[$fields[$i]] == AUTH_DISALLOWED ) ? ' checked="checked" disabled' : ' disabled';
-						}
-						
-						$opt .= '<label><input type="radio" name="' . sprintf('%s[%s][%s]', $tmp_meta, $tmp_name, $fields[$i]) . '" id="' . $fields[$i] . '" value="1"' . $selected_yes . '>&nbsp;' . $lang['group_allowed'] . '</label><span style="padding:4px;"></span>';
-						$opt .= '<label><input type="radio" name="' . sprintf('%s[%s][%s]', $tmp_meta, $tmp_name, $fields[$i]) . '" id="deactivated" value="0"' . $selected_no . '>&nbsp;' . $lang['group_disallowed'] . ' &bull; ' . $lang['auths'][$fields[$i]] . '</label>';
-						$opt .= ( $cnt != $i+1 ) ? '<br />' : '<br /><a href="#" onClick="check_yes(); return false;">' . $lang['mark_yes'] . '</a> &bull; <a href="#" onClick="check_no(); return false;">' . $lang['mark_no'] . '</a>';
-						
-					#	$template->assign_block_vars('input._auth', array(
-					#		'TITLE'		=> $lang['auths'][$fields[$i]],
-					#		'FIELDS'	=> $fields[$i],
-					#		'SELECT'	=> $select[$i],
-					#	));
-						
-						$template->assign_block_vars("$tpl.auth", array('FIELDS' => $fields[$i]));
-					}
-				}
-				else if ( $str == 'text' )
-				{
-					list($type, $size, $max) = explode(':', $tmp_type);
-						
-					if ( is_array($tmp_data) )
-					{
-						( count($tmp_data) == 4 ) ?
-						list($value, $default, $order, $url) = array_values($tmp_data) :
-						list($value, $default, $order) = array_values($tmp_data);
+					#	debug($tdata, 'format');
+						$value = ( $tdata != '' ) ? date('d.m.Y H:i', $tdata) : (int) 0;
+					#	$value = date('d.m.Y H:i', $tdata);
 					}
 					else
 					{
-				#		$value = ( strpos($tmp_name, 'filesize') !== false ) ? ($tmp_data/1048576) : $tmp_data;
-						$value = $tmp_data;
+						$value = $tdata;
 					}
 					
-					$opt .= '<input type="text"' . ((isset($vars_type['class'])) ? ' class="' . $vars_type['class'] . '"' : '') . ' size="' . $size . '" maxlength="' . $max . '" name="' . sprintf('%s[%s]', $tmp_meta, $tmp_name) . '" id="' . sprintf('%s_%s', $tmp_meta, $tmp_name) . '" value="' . $value . '" />&nbsp;';
-					$opt .= ( $tmp_name == 'path' ) ? is_writable($root_path . $tmp_data) ? img('i_iconn', 'icon_accept', '') : img('i_iconn', 'icon_cancel', '') : '';
+					$opt .= '<input type="text"' . ( isset($vars_type['class'] ) ? ' class="' . $vars_type['class'] . '"' : '') . ' size="' . $size . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '" value="' . $value . '" />&nbsp;';
+					$opt .= ( $tname == 'path' || $vars_key == 'path' ) ? is_writable($root_path . $tdata) ? img('i_iconn', 'icon_accept', '') : img('i_iconn', 'icon_cancel', '') : '';
 					
 					if ( $tmp_opts )
 					{
 						$checked = ( $default ) ? ' checked="checked"' : '';
 						
-						$opt .= ( in_array('url',	$tmp_opts) ) ? "<input type=\"text\" size=\"$size\" maxlength=\"$max\" name=\"{$tmp_meta}[$tmp_name]\" id=\"{$tmp_meta}_{$tmp_name}\" value=\"$url\" />&nbsp;" : '';
-						$opt .= ( in_array('drop',	$tmp_opts) ) ? "" : "";
-						$opt .= ( in_array('radio',	$tmp_opts) ) ? "<input type=\"radio\" name=\"{$tmp_meta}_default\" value=\"$tmp_name\"$checked>" : '';
+						$opt .= ( in_array('url',	$tmp_opts) ) ? "<input type=\"text\" name=\"{$tmeta}_url[$tname]\" id=\"{$tmeta}_{$tname}\" value=\"id\" />&nbsp;" : '';
+						$opt .= ( in_array('drop',	$tmp_opts) ) ? "<input type=\"text\" name=\"{$tmeta}_order[$tname]\" id=\"{$tmeta}_{$tname}\" value=\"$order\" />&nbsp;" : "";
+						$opt .= ( in_array('radio',	$tmp_opts) ) ? "<input type=\"radio\" name=\"{$tmeta}_default\" value=\"$tname\" $checked>" : '';
 					}
 				}
-				else if ( $str == 'textarea' )
+				else if ( $type == 'textarea' )
 				{
-					if ( isset($tmp_parm) )
+					if ( isset($vars_type['params']) )
 					{
-						if ( $tmp_parm == TINY_NORMAL )
+						if ( $vars_type['params'] == TINY_NORMAL )
 						{
-							$template->set_filenames(array('tiny_normal' => 'style/tinymce_normal.tpl'));
-							$template->assign_var_from_handle('TINYMCE', 'tiny_normal');
+							echo '<script type="text/javascript" src="./../includes/js/tiny_mce/jquery.tinymce.js"></script>';
+							echo '<script type="text/javascript" src="./../includes/js/tiny_mce/normal.js"></script>';
+							
+						#	$template->set_filenames(array('tiny_normal' => 'style/tinymce_normal.tpl'));
+						#	$template->assign_var_from_handle('TINYMCE', 'tiny_normal');
 						}
-						else
+						else if ( $vars_type['params'] == TINY_NEWS )
 						{
-							$template->set_filenames(array('tiny_news' => 'style/tinymce_news.tpl'));
-							$template->assign_var_from_handle('TINYMCE', 'tiny_news');
+							echo '<script type="text/javascript" src="./../includes/js/tiny_mce/jquery.tinymce.js"></script>';
+							echo '<script type="text/javascript" src="./../includes/js/tiny_mce/news.js"></script>';
+							
+						#	$template->set_filenames(array('tiny_news' => 'style/tinymce_news.tpl'));
+						#	$template->assign_var_from_handle('TINYMCE', 'tiny_news');
 						}
-					
 					}
 					
-					if ( substr_count($tmp_type, ':') >= 3 )
+					if ( substr_count($ttype, ':') >= 3 )
 					{
-						list($type, $cols, $max) = explode(':', $tmp_type);
+						list($type, $cols, $max) = explode(':', $ttype);
 						
-						$opt .= "<textarea cols=\"$cols\" maxlength=\"$max\" name=\"{$tmp_meta}[$tmp_name]\" id=\"{$tmp_meta}_{$tmp_name}\">$tmp_data</textarea>";
+						$opt .= "<textarea cols=\"$cols\" maxlength=\"$max\" name=\"{$tmeta}[$tname]\" id=\"{$tmeta}_{$tname}\">$tdata</textarea>";
 					}
 					else
 					{
-						list($type, $cols) = explode(':', $tmp_type);
+						list($type, $cols) = explode(':', $ttype);
 						
-						$opt .= "<textarea cols=\"$cols\" name=\"{$tmp_meta}[$tmp_name]\" id=\"{$tmp_meta}_{$tmp_name}\">$tmp_data</textarea>";
+						$opt .= "<textarea cols=\"$cols\" name=\"{$tmeta}[$tname]\" id=\"{$tmeta}_{$tname}\">$tdata</textarea>";
+					#	$opt .= '<br /><a href="javascript:;" onmousedown="$(\'#' . $f_id . '\').tinymce().show();">[Show]</a><a href="javascript:;" onmousedown="$(\'#' . $f_id . '\').tinymce().hide();">[Hide]</a>';
 					}
 				}
-				else if ( $str == 'upload' )
+				else if ( $type == 'upload' )
 				{
-					list($type, $info) = explode(':', $tmp_type);
+				#	list($type, $info) = explode(':', $ttype);
 					
-					$filesize	= $settings["path_$info"]['filesize']	? $settings["path_$info"]['filesize'] : '';
-					$dimension	= $settings["path_$info"]['dimension']	? $settings["path_$info"]['dimension'] : '';				
+					$filesize	= ( $settings['path_' . $option]['filesize'] )	? $settings['path_' . $option]['filesize'] : '';
+					$dimension	= ( $settings['path_' . $option]['dimension'] )	? $settings['path_' . $option]['dimension'] : '';
+					
+				#	debug($option);
 				
 				# sprintf($lang['sprintf_upload_info'], str_replace(':', ' x ', $settings['path_network']['dimension']), round($settings['path_network']['filesize']*1024) )
 				
-					$opt .= "<input type=\"file\" name=\"{$info}_img\">";
-					$opt .= ( $filesize && $dimension ) ? "<br /><span class=\"small\">" . sprintf($lang['sprintf_upload_info'], str_replace(':', ' x ', $dimension), round($filesize*1024)) . "</span>" : '';
-					$opt .= ( $tmp_data ) ? "<br /><br /><img src=\"$dir_path$tmp_data\" alt=\"\" /><br /><br /><label><input type=\"checkbox\" name=\"{$tmp_name}_delete\">&nbsp;{$lang['common_image_delete']}</label>" : '';
+					$opt .= '<input type="file" name="' . $option . '_img">';
+					$opt .= ( $filesize && $dimension ) ? '<br /><span>' . sprintf($lang['sprintf_upload_info'], str_replace(':', ' x ', $dimension), round($filesize*1024)) . '</span>' : '';
+					$opt .= ( $tdata ) ? '<br /><br /><img src="' . $vars_type['params'] . $tdata . '" alt="" /><br /><br /><label><input type="checkbox" name="' . sprintf('%s_delete', $tname) . '">&nbsp;' . $lang['common_image_delete'] . '</label>' : '';
+					$opt .= ( $tdata ) ? '<input type="hidden" name="current_' . $option . '" value="' . $tdata . '" />' : '';
 					
 				# <br /><br /><img src="{IMAGE}" alt="" /><br /><br /><label><input type="checkbox" name="network_image_delete">&nbsp;{L_IMAGE_DELETE}</label>
 				
@@ -1063,14 +1622,47 @@ function build_output($data, $vars, $tpl, $multi = false, $dbsql = false)
 				
 				$explain = isset($vars_type['explain']) ? "{$vars_opt}_explain" : '';
 				
+				if ( isset($vars_type['trid']) )
+				{
+					$trid = $vars_type['trid'];
+					$none = '';
+					
+					if ( isset($data['type']) )
+					{
+						if ( $data['type'] == 0 && in_array($trid, array('main', 'menu_file', 'menu_opts', 'map_info', 'map_file', 'copy', 'forum_desc', 'forum_icons', 'forum_legend', 'forum_status')) )
+						{
+							$none = 'none';
+						}
+						
+						if ( $data['type'] == 1 && in_array($trid, array('menu_file', 'menu_opts', 'map_tag')) )
+						{
+							$none = 'none';
+						}
+					}
+					
+					if ( isset($data['training_on']) )
+					{
+					#	debug($data['training_on']);
+						
+						if ( $data['training_on'] == 0 && in_array($trid, array('training_date', 'training_duration', 'training_maps', 'training_text')) )
+						{
+							$none = 'none';
+						}
+					}
+					
+				#	debug($data);
+					
+				#	debug($none, "$tname");
+				}
+				
 				$template->assign_block_vars("$tpl.row.tab.option", array(
 					'L_NAME'	=> $lngs,
-					'ID'		=> isset($vars_type['trid']) ? 'id="' . $tmp_name . '" style="display:' . ( isset($data[$vars_type['trid']]) ? $data[$vars_type['trid']] <= 0 ? 'none' : '' : '') . ';"' : '',
-					'CSS'		=> isset($vars_type['required']) ? 'row1r' : 'row1',
+					'ID'		=> isset($vars_type['trid']) ? ' id="' . $tname . '" style="display:' . $none . ';"' : '',
+					'CSS'		=> isset($vars_type['required']) ? ' class="red"' : '',
 					'LABEL'		=> "{$vars_key}_{$vars_opt}",
 					'OPTION'	=> $opt,
 					'AUTH'		=> isset($vars_type['simple_auth']) ? '<br /><br />' . $info[1] : '',
-					'EXPLAIN'	=> ( isset($vars_type['explain']) && isset($lang[$explain]) ) ? "title=\"{$lang[$explain]}\"" : '',
+					'EXPLAIN'	=> ( isset($vars_type['explain']) && isset($lang[$explain]) ) ? " title=\"{$lang[$explain]}\"" : '',
 				));
 			}
 		}
@@ -1416,14 +2008,15 @@ function maxa($table, $order, $where)
 	}
 	$return = $db->sql_fetchrow($result);
 	
-	return $return[$order] + 10;
+	return $return[$order] + 1;
 }
 
 function update($table, $index, $move, $index_id)
 {
 	global $db;
 	
-	$sql = "UPDATE $table SET " . $index . "_order = " . $index . "_order+{$move} WHERE " . $index . "_id = $index_id";
+	$sql = "UPDATE $table SET {$index}_order = {$index}_order+{$move} WHERE {$index}_id = $index_id";
+#	$sql = "UPDATE $table SET " . $index . "_order = " . $index . "_order+" . $move . " WHERE " . $index . "_id = " . $index_id;
 	if ( !$db->sql_query($sql) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -1492,11 +2085,12 @@ function orders_new($mode, $type, $id)
 }
 
 #function orders($mode, $type = false, $subs = false)
-function orders($mode, $type = false)
+function orders($mode, $type = '')
 {
+	debug($type);
 	global $db;
 	
-	if ( in_array($mode, array(MENU_CAT, DOWNLOADS_CAT, NEWS_CAT, MAPS_CAT, FORUM_CAT, PROFILE_CAT)) )
+	if ( in_array($mode, array(DOWNLOADS_CAT, NEWS_CAT)) )
 	{
 		$idfield = 'cat_id';
 		$orderfield	= 'cat_order';
@@ -1504,6 +2098,9 @@ function orders($mode, $type = false)
 
 	switch ( $mode )
 	{
+		case MENU2:			$idfield = 'menu_id';		$orderfield = 'menu_order';		$typefield = 'main';				break;
+		
+		
 		case FORMS:			$idfield = 'forum_id';		$orderfield = 'forum_order';	$typefield = 'forum_sub'; /* $subfield = 'forum_sub';*/	break;
 		
 		case GAMES:			$idfield = 'game_id';		$orderfield = 'game_order';		break;
@@ -1512,7 +2109,7 @@ function orders($mode, $type = false)
 		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
 		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
 		
-		case MENU2:			$idfield = 'menu_id';		$orderfield = 'menu_order';		$typefield = 'menu_sub';			break;
+		
 		
 		case DOWNLOADS:		$idfield = 'file_id';		$orderfield = 'file_order';		$typefield = 'cat_id';				break;
 		case MENU:			$idfield = 'file_id';		$orderfield = 'file_order';		$typefield = 'cat_id';				break;
@@ -1551,7 +2148,7 @@ function orders($mode, $type = false)
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
-	$i = 10;
+	$i = 1;
 
 	while ( $row = $db->sql_fetchrow($result) )
 	{
@@ -1561,7 +2158,7 @@ function orders($mode, $type = false)
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
-		$i += 10;
+		$i += 2;
 	}
 }
 
@@ -1847,7 +2444,8 @@ function search_image($type, $mode, $select)
 	}
 	
 	$tmp = $db->sql_fetchrow($result);
-	$key = array_keys($tmp);
+	
+	$key = @array_keys($tmp);
 	$msg = $tmp[$key[0]];
 
 	return $msg;
@@ -1891,11 +2489,12 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 	
 	switch ( $s_table )
 	{
+		case LISTS:			$field_id = 'list_id';		break;
 		case ICONS:			$field_id = 'icon_id';		break;
 		case MAPS:			$field_id = 'map_id';		break;
 		
 		
-		case AUTHLIST:		$field_id = 'authlist_id';	break;
+	#	case AUTHLIST:		$field_id = 'authlist_id';	break;
 		case EVENT:			$field_id = 'event_id';		break;
 		case ERROR:			$field_id = 'error_id';		break;
 		
@@ -1914,11 +2513,11 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 		
 		
 		case FORMS:			$field_id = 'forum_id';		break;
-		case FORMS_AUTH:	$field_id = array('group_id', 'forum_id');		break;
+#		case FORMS_AUTH:	$field_id = array('group_id', 'forum_id');		break;
 		
 		
 		case FORUM:			$field_id = 'forum_id';		break;
-		case FORUM_CAT:		$field_id = 'cat_id';		break;
+	#	case FORUM_CAT:		$field_id = 'cat_id';		break;
 		case GALLERY:		$field_id = 'gallery_id';	break;			
 		case GALLERY_PIC:	$field_id = 'gallery_id';	break;
 		case GAMES:			$field_id = 'game_id';		break;
@@ -1943,7 +2542,7 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 	#	case RATE:			$field_id = 'rate_id';		break;	
 		case SERVER:		$field_id = 'server_id';	break;
 		case SERVER_TYPE:	$field_id = 'type_id';		break;
-		case TEAMSPEAK:		$field_id = 'teamspeak_id';	break;	
+	#	case TEAMSPEAK:		$field_id = 'teamspeak_id';	break;	
 		case THEMES:		$field_id = 'themes_id';	break;
 		case TRAINING:		$field_id = 'training_id';	break;
 		case USERS:			$field_id = 'user_id';		break;
@@ -1972,6 +2571,7 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
 		$where = "WHERE {$field_id[0]} = {$s_where[0]} AND {$field_id[1]} = {$s_where[1]}";
 	}
 	else if (
+		strstr($s_where, 'menu_class') ||
 		strstr($s_where, '-1') ||
 		strstr($s_where, 'cat') ||
 		strstr($s_where, 'sub') ||

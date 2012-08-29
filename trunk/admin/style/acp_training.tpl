@@ -1,6 +1,6 @@
 <!-- BEGIN input -->
-{AJAX}
-{TINYMCE}
+<script type="text/javascript" src="style/ajax_listmaps.js"></script>
+
 <form action="{S_ACTION}" method="post">
 <ul id="navlist">
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
@@ -14,27 +14,27 @@
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<table class="update">
+<div class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
 <!-- BEGIN option -->
-<tr>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+<div{input.row.tab.option.ID}>
+<dl>			
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+</div>
 <!-- END option -->
 <!-- END tab -->
-</table>
+</div>
 <!-- END row -->
 
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END input -->
@@ -42,7 +42,7 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 <ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
 </form>
 

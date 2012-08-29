@@ -49,11 +49,11 @@ $lang = array_merge($lang, array(
 	'Group_SPECIAL'	=> 'Spezial',
 	
 
-	'group_open'		=> 'Gruppe: ohne Anfrage',
-	'group_request'		=> 'Gruppe: mit Anfrage',
-	'group_closed'		=> 'Gruppe: geschlossen',
-	'group_hidden'		=> 'Gruppe: versteckt',
-	'group_system'		=> 'Gruppe: System',
+	'group_open'		=> 'Offen',
+	'group_request'		=> 'Anfragen',
+	'group_closed'		=> 'Geschlossen',
+	'group_hidden'		=> 'Versteckt',
+	'group_system'		=> 'System',
 	
 	'change'			=> 'Rechte geben/nehmen',
 	'request_agree'		=> 'Antrag zustimmen',
@@ -76,6 +76,14 @@ $lang = array_merge($lang, array(
 	),
 	
 	'group_type_ary'	=> array(
+		GROUP_OPEN		=> $lang['group_open'],
+		GROUP_REQUEST	=> $lang['group_request'],
+		GROUP_CLOSED	=> $lang['group_closed'],
+		GROUP_HIDDEN	=> $lang['group_hidden'],
+		GROUP_SYSTEM	=> $lang['group_system'],
+	),
+	
+	'radio:type'	=> array(
 		GROUP_OPEN		=> $lang['group_open'],
 		GROUP_REQUEST	=> $lang['group_request'],
 		GROUP_CLOSED	=> $lang['group_closed'],

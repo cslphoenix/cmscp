@@ -10,7 +10,104 @@ $lang = array_merge($lang, array(
 	'content_direction'	=> 'ltr',
 	'content_footer'	=> '<div class="copyright">powered by <a href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a> &copy; 2009-2012 by Phoenix &bull; Version: %s</div>',
 
-	/* Hauptmenü */
+	
+	
+	
+	/* acp cat */
+	'acp_cat_general'		=> 'Allgemein',
+	'acp_cat_clan'			=> 'Clan',
+	'acp_cat_usergroups'	=> 'Benutzer und Gruppen',
+	'acp_cat_forums'		=> 'Foren',
+	'acp_cat_maintenance'	=> 'Wartung',
+	'acp_cat_template'		=> 'Template',
+	'acp_cat_system'		=> 'System',
+	
+	/* acp label */
+	'acp_label_overview'	=> 'Übersicht',
+	'acp_label_database'	=> 'Datenbank',
+	'acp_label_systeminfo'	=> 'Systeminfos',
+	'acp_label_menu'		=> 'Menüverwaltung',
+	'acp_label_settings'	=> 'Einstellungen',
+	'acp_label_mapspics'	=> 'Spiele & Karten',
+	'acp_label_trainwar'	=> 'Begegnungen & Training',
+	'acp_label_user'		=> 'Benutzer',
+	'acp_label_forum'		=> 'Forum',
+	
+	/* acp module */
+	'acp_index'			=> 'Übersicht',
+	'acp_menu_acp'		=> 'Adminmenü',
+	'acp_menu_mcp'		=> 'Moderatorenmenü',
+	'acp_menu_ucp'		=> 'Benutzermenü',
+	'acp_optimize'		=> 'Optimieren',
+	'acp_phpinfo'		=> 'PHP Info',
+	'acp_server_type'	=> 'Server Typen',
+	'acp_games'			=> 'Spiele',
+	'acp_maps'			=> 'Karten',
+	'acp_match'			=> 'Begegnungen',
+	
+	'acp_training'	=> 'Training',
+	'acp_news'		=> 'News',
+	'acp_event'		=> 'Ereignisse',
+	'acp_users'		=> 'Benutzer',
+	
+	'acp_themes'				=> 'Themes',
+	'acp_addnew'				=> 'Hinzufügen',
+	'acp_create'				=> 'Erstellen',
+	'acp_manage'				=> 'Eingestellungen',
+	'acp_export'				=> 'Exportieren',
+	'acp_votes'				=> 'Umfragen',
+	'acp_settings'			=> 'Einstellungen',
+	'acp_settings_teams'		=> 'Teameinstellungen',
+	'acp_settings_user'		=> 'Benutzereinstellungen',
+	'acp_settings_groups'	=> 'Gruppeneinstellung',
+	'acp_teams_match'		=> 'Begegnungen',
+	'acp_teams_training'		=> 'Training',
+	'acp_teams_settings'		=> 'Einstellung',
+	'acp_news'				=> 'News',
+	'acp_news_cat'			=> 'Kategorie',
+	'acp_index'				=> 'Übersicht',
+	
+	'acp_authlist'			=> 'Berechtigungsf.',
+	'acp_bugtracker'			=> 'Bugtracker',
+	'acp_cash'				=> 'Clankasse',
+	'acp_changelog'			=> 'Changelog',
+	'acp_downloads'			=> 'Downloads',
+	'acp_overview'			=> 'Übersicht',
+	'acp_fightus'			=> 'Fight us',
+	'acp_joinus'				=> 'Join us',
+	'acp_contact'			=> 'Kontakt',
+	'acp_database'			=> 'Datenbank',
+	'acp_backup'				=> 'Backup',
+	'acp_restore'			=> 'Wiederherstellen',
+	'acp_optimize'			=> 'Optimieren',
+	'acp_event'				=> 'Ereignisse',
+	'acp_perm'				=> 'Berechtigung',
+	'acp_perm_list'			=> 'Berechtigungsliste',
+	'acp_logs'				=> 'Protokoll',
+	'acp_logs_error'			=> 'Fehlerprotokoll',
+	
+	'acp_navi'				=> 'Navigation',
+	'acp_news'				=> 'News',
+	'acp_newscat'			=> 'Kategorie',
+	'acp_network'			=> 'Netzwerk',
+	'acp_newsletter'			=> '!Newsletter',
+	'acp_profile'			=> 'Profilefelder',
+	'acp_ranks'				=> 'Ränge',
+	'acp_server'				=> 'Server',
+	'acp_server_type'		=> 'Server Typen',
+	'acp_gameserver'			=> 'Gameserver',
+	'acp_teamspeak'			=> 'Teamspeak',
+	
+	'acp_gallery'			=> 'Galerie',
+	'acp_group'				=> 'Gruppe',
+	'acp_forum'				=> 'Forum',
+	'acp_index'				=> 'Übersicht',
+	'acp_users'				=> 'Benutzer',
+	'acp_group'				=> 'Gruppe',
+	'acp_teams'				=> 'Teams',
+	'acp_menu'				=> 'Menüverwaltung',
+	
+	/* Hauptmenü
 	'hm_contact'	=> 'Kontakt',
 	'hm_database'	=> 'Datenbank',
 	'hm_dev'		=> 'Entwicklung',
@@ -24,7 +121,7 @@ $lang = array_merge($lang, array(
 	'hm_template'	=> 'Themes/Template',
 	'hm_users'		=> 'Benutzer',
 
-	/* Submenü */
+	/* Submenü
 	'sm_themes'				=> 'Themes',
 	'sm_addnew'				=> 'Hinzufügen',
 	'sm_create'				=> 'Erstellen',
@@ -41,7 +138,7 @@ $lang = array_merge($lang, array(
 	'sm_news'				=> 'News',
 	'sm_news_cat'			=> 'Kategorie',
 	'sm_index'				=> 'Übersicht',
-	'sm_training'			=> 'Training',
+	
 	'sm_authlist'			=> 'Berechtigungsf.',
 	'sm_bugtracker'			=> 'Bugtracker',
 	'sm_cash'				=> 'Clankasse',
@@ -60,8 +157,8 @@ $lang = array_merge($lang, array(
 	'sm_perm_list'			=> 'Berechtigungsliste',
 	'sm_logs'				=> 'Protokoll',
 	'sm_logs_error'			=> 'Fehlerprotokoll',
-	'sm_maps'				=> 'Karten',
-	'sm_match'				=> 'Begegnungen',
+	
+	
 	'sm_navi'				=> 'Navigation',
 	'sm_news'				=> 'News',
 	'sm_newscat'			=> 'Kategorie',
@@ -73,7 +170,7 @@ $lang = array_merge($lang, array(
 	'sm_server_type'		=> 'Server Typen',
 	'sm_gameserver'			=> 'Gameserver',
 	'sm_teamspeak'			=> 'Teamspeak',
-	'sm_games'				=> 'Spiele',
+	
 	'sm_gallery'			=> 'Galerie',
 	'sm_group'				=> 'Gruppe',
 	'sm_forum'				=> 'Forum',
@@ -81,7 +178,7 @@ $lang = array_merge($lang, array(
 	'sm_users'				=> 'Benutzer',
 	'sm_group'				=> 'Gruppe',
 	'sm_teams'				=> 'Teams',
-	
+	 */
 	/* added 18.07 */
 	'sm_manage'			=> 'Verwalten',
 	'sm_rights'			=> 'Rechte',
@@ -90,9 +187,11 @@ $lang = array_merge($lang, array(
 	'sprintf_head'			=> '%s Administration',
 	'sprintf_create'		=> '%s hinzufügen',
 	'sprintf_create_cat'	=> '%s hinzufügen',
+	'sprintf_cat_create'	=> '%s hinzufügen',
 	'sprintf_create_user'	=> '%s hinzufügen',
 	'sprintf_update'		=> '%s bearbeiten: %s',
 	'sprintf_update_cat'	=> '%s bearbeiten: %s',
+	'sprintf_cat_update'	=> '%s bearbeiten: %s',
 	'sprintf_update_user'	=> '%s bearbeiten: %s',
 
 	'sprintf_new_create'	=> 'Neue %s erstellen',
@@ -128,7 +227,7 @@ $lang = array_merge($lang, array(
 	'sprintf_auth'				=> '%sberechtigung',
 	'sprintf_comments'			=> '%skommentare erlauben?',
 	'sprintf_create_user'		=> '%s hinzufügen',
-	'sprintf_intern'			=> '<em><b> %s </b></em>',
+	'sprintf_intern'			=> '<em><b>%s</b></em>',
 	'sprintf_list'				=> '%sliste',
 	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',
 	'sprintf_match_name'		=> 'vs. %s',
@@ -183,6 +282,8 @@ $lang = array_merge($lang, array(
 	'common_go'				=> 'Los',
 	'common_no'				=> 'Nein',
 	'common_yes'			=> 'Ja',
+	'common_never'			=> 'Nie',
+	'common_out'			=> 'Niemals',
 	'common_cat'			=> 'Kategorie',
 	'common_required'		=> 'Mit * markierte Felder sind erforderlich!',
 	'common_info_show'		=> 'wird angezeigt',
@@ -262,6 +363,7 @@ $lang = array_merge($lang, array(
 	'msg_empty_text'		=> 'Bitte einen Text eintragen!',
 	
 	'msg_select_type'		=> 'Bitte ein Type auswählen!',
+	'msg_select_newscat'	=> 'Bitte eine Newskategorie auswählen!',
 	
 	
 	'msg_sizedir_empty'		=> 'Leer',
@@ -335,7 +437,8 @@ $lang = array_merge($lang, array(
 	'msg_select_forms'			=> 'Bitte ein Forum auswählen!',	
 	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
 	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
-	'msg_select_game'			=> 'Bitte ein Spiel auswählen!',	
+	'msg_select_game'			=> 'Bitte ein Spiel auswählen!',
+	'msg_select_gametype'		=> 'Bitte ein Spieltype auswählen!', /* 29.07 */
 	'msg_select_game_image'		=> 'Bitte ein Spielbild auswählen!',		
 	
 	'msg_select_map'			=> 'Bitte eine Map auswählen!',	

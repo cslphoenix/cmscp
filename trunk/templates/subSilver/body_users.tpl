@@ -100,7 +100,7 @@ function setRequest(value)
 	else
 	{	request = new ActiveXObject("Microsoft.XMLHTTP"); }
 	
-	if (!request)
+	if ( !request )
 	{	alert("Kann keine XMLHTTP-Instanz erzeugen"); return false; }
 	else
 	{

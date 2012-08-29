@@ -18,16 +18,15 @@ $lang = array_merge($lang, array(
 	'upcoming'	=> 'Anstehende Trainings',
 	'expired'	=> 'Abgelaufen Trainings',
 	
-	'train_vs'		=> 'Training gegen',
-	'train_date'	=> 'Trainingstermin',
-	'train_match'	=> 'Trainingsbegegnung',
-	'train_maps'	=> 'Trainingsmaps',
-	'train_text'	=> 'Trainingsbericht',
-	'train_team'	=> 'Trainingsteam',
-	'train_dura'	=> 'Trainingsdauer',
-	
-	
-	
+	'training_vs'		=> 'Training gegen',
+	'training_date'		=> 'Termin',
+	'training_maps'		=> 'Karte/Karten',
+	'training_text'		=> 'Bericht',
+	'training_duration'	=> 'Dauer',
+	'training_comments'	=> 'Kommentare erlauben',
+	'team_id'			=> 'Team',
+	'match_id'			=> 'Begegnung einbinden',
+
 ));
 
 ?>

@@ -7,7 +7,7 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'match'		=> 'Begegnung',
+	'title'		=> 'Begegnung',
 	'explain'	=> 'Begegnung Details',
 	
 	'upcoming'	=> 'Anstehende Begegnung',
@@ -17,9 +17,11 @@ $lang = array_merge($lang, array(
 	'update'		=> 'Begegnungsdaten erfolgreich geändert.',
 	'delete'		=> 'Die Begegnung wurde gelöscht!',
 	'confirm'		=> 'dass diese Begegnung:',
+	
 	'create_map'	=> 'Neue Map hinzugefügt.',
 	'update_map'	=> 'Mapinfos erfolgreich geändert.',
 	'delete_map'	=> 'Die Map wurde aus der Begegnung gelöscht!',	
+
 	'create_user'	=> 'Neuen Benutzer zum Lineup hinzugefügt.',
 	'update_user'	=> 'Lineup erfolgreich geändert.',
 	'delete_user'	=> 'Der Benutzer wurden aus dem Lineup gelöscht!',
@@ -71,32 +73,38 @@ $lang = array_merge($lang, array(
 		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
 	),
 */
-	'team'				=> 'Team',
-	'type'				=> 'Typ',
-	'war'				=> 'Begegnungstyp',
-	'league'			=> 'Liga',
+	'team_id'				=> 'Team',
+	'match_type'				=> 'Typ',
+	'match_war'				=> 'Begegnungstyp',
+	'match_league'			=> 'Liga',
 	'match_league_url'	=> 'Ligawebsite',
-	'league_match'		=> 'Match-ID',
-	'rival_name'		=> 'Gegner Name',
-	'rival_tag'			=> 'Gegner Clantag',
-	'rival_url'			=> 'Gegner Homepage',
-	'rival_logo'		=> 'Gegner Logo',
-	'rival_lineup'		=> 'Gegner Lineup',
-	'rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
-	'server_ip'			=> 'Server IP',
-	'server_pw'			=> 'Server Passwort',
-	'hltv_ip'			=> 'HLTV-Server IP',
-	'hltv_pw'			=> 'HLTV-Server Passwort',
+	'match_league_match'		=> 'Match-ID',
+	'match_date'			=> 'Datum',
+	'match_public'			=> 'Öffentlich?',
+	'match_comments'		=> 'Kommentare?',
+	'match_rival_name'		=> 'Gegner Name',
+	'match_rival_tag'			=> 'Gegner Clantag',
+	'match_rival_url'			=> 'Gegner Homepage',
+	'match_rival_logo'		=> 'Gegner Logo',
+	'match_rival_lineup'		=> 'Gegner Lineup',
+	'match_rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
+	'match_server_ip'			=> 'Server IP',
+	'match_server_pw'			=> 'Server Passwort',
+	'match_hltv_ip'			=> 'HLTV-Server IP',
+	'match_hltv_pw'			=> 'HLTV-Server Passwort',
 	
-	'comment'		=> 'Kommentar',
-	'comment_exp'	=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
-	'report'		=> 'Report',
-	'report_exp'	=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
+	'match_comment'		=> 'Kommentar',
 	
-	'training'		=> 'Training',
-	'train_date'	=> 'Trainingstermin',
-	'train_maps'	=> 'Trainingsmaps',
-	'train_text'	=> 'Trainingsbericht',
+	'match_report'		=> 'Report',
+	
+	'match_comment_exp'	=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
+	'match_report_exp'	=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
+	
+	'training'			=> 'Training',
+	'training_date'		=> 'Trainingstermin',
+	'training_duration'	=> 'Trainingsdauer',
+	'training_maps'		=> 'Trainingsmaps',
+	'training_text'		=> 'Trainingsbericht',
 	
 	'reset_list'	=> 'Teilnahmen reset?',
 	
@@ -139,12 +147,17 @@ $lang = array_merge($lang, array(
 	'detail_map'			=> 'Map',
 	'detail_points'			=> 'Punkte',
 	'detail_mappic'			=> 'Bild',
+	
+#	'match_type'	=> 'match_type',
+#	'match_war'		=> 'match_war',
+#	'match_league'	=> 'match_league',
 
 	
 ));
 
 $lang = array_merge($lang, array(
-	'match_type' => array(
+	
+	'ary_match_type' => array(
 		'type_unknown'	=> $lang['type_unknown'],
 		'type_two'		=> $lang['type_two'],
 		'type_three'	=> $lang['type_three'],
@@ -152,19 +165,15 @@ $lang = array_merge($lang, array(
 		'type_five'		=> $lang['type_five'],
 		'type_six'		=> $lang['type_six'],
 	),
-));
-
-$lang = array_merge($lang, array(
-	'match_war' => array(
+	
+	'ary_match_war' => array(
 		'war_fun'		=> 'Fun War',
 		'war_training'	=> 'Training War',
 		'war_clan'		=> 'Clan War',
 		'war_league'	=> 'Liga War',
 	),
-));
-
-$lang = array_merge($lang, array(
-	'match_league' => array(
+	
+	'ary_match_league' => array(
 		'league_nope'	=> array('name' => 'keine Liga', 'url' => 'leer'),
 		'league_esl'	=> array('name' => 'ESL', 'url' => 'http://www.esl.eu/'),
 		'league_sk'		=> array('name' => 'Stammkneipe', 'url' => 'http://www.stammkneipe.eu/'),

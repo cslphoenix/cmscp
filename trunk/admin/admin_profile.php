@@ -2,22 +2,15 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-	
-	if ( $userdata['user_level'] == ADMIN )
-	{
-		$module['hm_system']['sm_profile2'] = $root_file;
-	}
-	
 	return;
 }
 else
 {
 	define('IN_CMS', true);
-	
+
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_profile';
+	$current	= 'acp_profile';
 	
 	include('./pagestart.php');
 
@@ -40,7 +33,7 @@ else
 	$data_type	= request('cat_type', INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['profile']);
@@ -85,9 +78,9 @@ else
 				$template->assign_vars(array('FILE' => 'ajax_order'));
 				$template->assign_var_from_handle('AJAX', 'ajax');
 				
-				if ( $mode == 'create' && !(request('submit', TXT)) )
+				if ( $mode == 'create' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 								'profile_name'			=> $field_name,
 								'profile_cat'			=> $cat_id,
 								'profile_type'			=> '0',
@@ -100,13 +93,13 @@ else
 								'profile_order'			=> maxa(PROFILE, 'profile_order', $cat_id),
 							);
 				}
-				else if ( $mode == 'update' && !(request('submit', TXT)) )
+				else if ( $mode == 'update' && !$update )
 				{
-					$data = data(PROFILE, $data_id, false, 1, 1);
+					$data_sql = data(PROFILE, $data_id, false, 1, 1);
 				}
 				else
 				{
-					$data = array(
+					$data_sql = array(
 								'profile_name'			=> request('profile_name', 2),
 								'profile_cat'			=> request('profile_cat', 0),
 								'profile_type'			=> request('profile_type', 0),
@@ -133,7 +126,7 @@ else
 				}
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				$fields .= "<input type=\"hidden\" name=\"current_field\" value=\"" . $data['profile_field'] . "\" />";
 
 				$template->assign_vars(array(
@@ -183,7 +176,7 @@ else
 					'S_FIELDS'	=> $fields,
 				));
 				
-				if ( request('submit', TXT) )
+				if ( $update )
 				{
 					$error[] = ( !$data['profile_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
 					$error[] = ( !$data['profile_field'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_profilefield'] : '';
@@ -195,7 +188,7 @@ else
 						
 						if ( $mode == 'create' )
 						{
-							$db_data = sql(PROFILE, $mode, $data);
+							$db_data = sql(PROFILE, $mode, $data_sql);
 							
 							$sql = "ALTER TABLE " . PROFILE_DATA . " ADD `" . $data['profile_field'] . "`";
 							$sql .= ( $data['profile_type'] ) ? " VARCHAR ( 255 ) NOT NULL;" : " TEXT NOT NULL;";
@@ -209,7 +202,7 @@ else
 						}
 						else
 						{
-							$db_data = sql(PROFILE, $mode, $data, 'profile_id', $data_id);
+							$db_data = sql(PROFILE, $mode, $data_sql, 'profile_id', $data);
 							
 							$sql = "ALTER TABLE " . PROFILE_DATA . " CHANGE `" . request('current_field', 1) . "` `" . $data['profile_field'] . "`";
 							$sql .= ( $data['profile_type'] ) ? " VARCHAR ( 255 ) NOT NULL;" : " TEXT NOT NULL;";
@@ -218,7 +211,7 @@ else
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 							
-							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 						}
 						
 						orders(PROFILE, $data['profile_cat']);
@@ -297,20 +290,20 @@ else
 			
 				$template->assign_block_vars('input_cat', array());
 				
-				if ( $mode == '_create_cat' && !(request('submit', TXT)) )
+				if ( $mode == '_create_cat' && !$update )
 				{
-					$data = array(
+					$data_sql = array(
 								'cat_name'	=> request('cat_name', 2),
 								'cat_order'	=> '',
 							);
 				}
-				else if ( $mode == '_update_cat' && !(request('submit', TXT)) )
+				else if ( $mode == '_update_cat' && !$update )
 				{
-					$data = data(PROFILE_CAT, $data_cat, false, 1, 1);
+					$data_sql = data(PROFILE_CAT, $data_cat, false, 1, 1);
 				}
 				else
 				{
-					$data = array(
+					$data_sql = array(
 								'cat_name'	=> request('cat_name', 2),
 								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
 							);
@@ -332,7 +325,7 @@ else
 					'S_FIELDS'	=> $fields,
 				));
 				
-				if ( request('submit', TXT) )
+				if ( $update )
 				{
 					debug($_POST);
 					
@@ -344,7 +337,7 @@ else
 					{
 						if ( $mode == '_create_cat' )
 						{
-							$db_data = sql(PROFILE_CAT, $mode, $data);
+							$db_data = sql(PROFILE_CAT, $mode, $data_sql);
 							
 							$message = $lang['create_c']
 								. sprintf($lang['return'], check_sid($file), $acp_title);
@@ -394,11 +387,11 @@ else
 				
 			case 'delete_cat':
 			
-				$data = data(PROFILE_CAT, $data_cat, false, 1, 1);
+				$data_sql = data(PROFILE_CAT, $data_cat, false, 1, 1);
 			
 				if ( $data_cat && $confirm )
 				{
-				#	sql(PROFILE_CAT, 'delete', false, 'cat_id', $data_id);
+				#	sql(PROFILE_CAT, 'delete', false, 'cat_id', $data);
 					$sql = "DELETE FROM " . PROFILE_CAT . " WHERE cat_id = $data_cat";
 					if ( !$db->sql_query($sql) )
 					{

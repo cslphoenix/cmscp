@@ -9,6 +9,7 @@ define('INT', 'int');
 define('URL', 'url');
 define('TXT', 'text');
 define('ARY', 'array');
+define('TYP', 'type');
 define('CLN', 'clean');
 
 define('ANONYMOUS',	1);
@@ -28,7 +29,12 @@ define('TYPE_GAME',		0);
 define('TYPE_VOICE',	1);
 define('TYPE_OTHER',	2);
 
-define('TINY_NORMAL', 'tiny_normal');
+define('TYPE_CATEGORY',	0);
+define('TYPE_LABEL',	1);
+define('TYPE_MODULE',	2);
+
+define('TINY_NORMAL',	'tiny_normal');
+define('TINY_NEWS',		'tiny_news');
 
 #define('TYPE_CASH',	0);
 define('TYPE_EVENT',	1);
@@ -310,6 +316,7 @@ define('POST_BUGTRACKER',	'bt');
 define('POST_CHANGELOGS',	'cl');
 define('POST_FIELDS',		'f');
 define('POST_ICONS',		'i');
+define('POST_MOD',			'm');
 
 
 define('POST_VOTES',		'vote');
@@ -333,7 +340,12 @@ define('STATUS_NO',			2);
 define('STATUS_REPLACE',	3);
 
 /* Tabellennamen */
-define('AUTHLIST',			$db_prefix . 'authlist');
+define('ACL_LABEL',			$db_prefix . 'acl_label');
+define('ACL_FIELDS',		$db_prefix . 'acl_fields');
+define('ACL_OPTIONS',		$db_prefix . 'acl_options');
+define('ACL_GROUPS',		$db_prefix . 'acl_groups');
+define('ACL_USERS',			$db_prefix . 'acl_users');
+
 define('CASH',				$db_prefix . 'cash');
 define('COMMENT',			$db_prefix . 'comment');
 define('COMMENT_READ',		$db_prefix . 'comment_read');
@@ -349,7 +361,8 @@ define('GALLERY_PIC',		$db_prefix . 'gallery_pic');
 
 
 define('FORMS',				$db_prefix . 'forum');
-define('FORMS_AUTH',		$db_prefix . 'forum_auth');
+define('AUTH_GROUPS',		$db_prefix . 'acl_groups');
+define('AUTH_USERS',		$db_prefix . 'acl_users');
 
 
 define('BANLIST',			$db_prefix . 'banlist');
@@ -363,12 +376,9 @@ define('POSTS',				$db_prefix . 'forum_posts');
 define('TOPICS',			$db_prefix . 'forum_topics');
 define('TOPICS_READ',		$db_prefix . 'forum_topics_read');
 
-define('GAMES',				$db_prefix . 'game');
 define('GROUPS',			$db_prefix . 'groups');
 define('LOGS',				$db_prefix . 'log');
 define('ERROR',				$db_prefix . 'log_error');
-define('MAPS',				$db_prefix . 'maps');
-define('MAPS_CAT',			$db_prefix . 'maps_cat');
 define('MATCH',				$db_prefix . 'match');
 define('MATCH_MAPS',		$db_prefix . 'match_maps');
 define('MENU2',				$db_prefix . 'menu');
@@ -389,14 +399,11 @@ define('FIELDS_DATA',		$db_prefix . 'fields_data');
 
 
 define('RANKS',				$db_prefix . 'ranks');
-#define('RATE',				$db_prefix . 'rate');
-define('SERVER',			$db_prefix . 'server');
-define('SERVER_TYPE',		$db_prefix . 'server_types');
+
 define('SESSIONS',			$db_prefix . 'sessions');
 define('SESSIONS_KEYS',		$db_prefix . 'sessions_keys');
 define('SETTINGS',			$db_prefix . 'settings');
 define('TEAMS',				$db_prefix . 'teams');
-define('TEAMSPEAK',			$db_prefix . 'teamspeak');
 define('THEMES',			$db_prefix . 'themes');
 define('THEMES_NAME',		$db_prefix . 'themes_name');
 define('TRAINING',			$db_prefix . 'training');
@@ -404,6 +411,15 @@ define('USERS',				$db_prefix . 'users');
 define('LISTS',				$db_prefix . 'users_list');
 define('VOTES',				$db_prefix . 'vote');
 define('VOTES_OPTION',		$db_prefix . 'vote_option');
+
+
+define('GAMES',				$db_prefix . 'game');
+define('MAPS',				$db_prefix . 'maps');
+define('SERVER',			$db_prefix . 'server');
+define('SERVER_TYPE',		$db_prefix . 'server_types');
+#define('TEAMSPEAK',			$db_prefix . 'teamspeak');
+
+define('RATE',				$db_prefix . 'rate');
 
 
 define('CASH_USER',			$db_prefix . 'cash_users');

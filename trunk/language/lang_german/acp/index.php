@@ -20,6 +20,7 @@ $lang = array_merge($lang, array(
 	'path_gallery'		=> 'Galerie',
 	'path_matchs'		=> 'Begegnungen',
 	'path_users'		=> 'Benutzer',
+	'path_groups'		=> 'Gruppen',
 	
 	'dir'	=> 'Verzeichnis',
 	'size'	=> 'Grφίe',

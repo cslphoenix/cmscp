@@ -34,7 +34,7 @@ function set_infos(id,text)
 <ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
@@ -70,7 +70,7 @@ function set_infos(id,text)
 <ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
@@ -109,7 +109,7 @@ function set_infos(id,text)
 </ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
@@ -194,7 +194,7 @@ function fill(thisValue)
 	<li><a href="{S_CREATE_USER}">{L_CREATE_USER}</a></li>
 	<li><a id="setting" href="{S_BANKDATA}">{L_CREATE_BANK}</a></li>
 </ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 

@@ -4,7 +4,7 @@
 	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
 </ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 <ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
 </form>
 
@@ -324,7 +324,7 @@ function fill(thisValue)
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <table class="rows">
 <tr>

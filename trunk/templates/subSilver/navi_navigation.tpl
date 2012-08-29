@@ -3,9 +3,9 @@
 	<!-- BEGIN navi_main -->
 	<li><a class="hide" href="#"><br />{L_NAVI_MAIN}</a>
 		<ul>
-			<!-- BEGIN navi_main_row -->
-			<li>{navi_main.navi_main_row.URL}</li>
-			<!-- END navi_main_row -->
+			<!-- BEGIN row -->
+			<li>{navi_main.row.URL}</li>
+			<!-- END row -->
 		</ul>	
 	</li>
 	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>

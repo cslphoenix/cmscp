@@ -4,7 +4,7 @@
 	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
 	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
 </ul>
-<ul id="navinfo"><li>{L_EXPLAIN}</li></ul>
+<p>{L_EXPLAIN}</p>
 
 <br />
 
@@ -64,33 +64,33 @@
 </ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
-<br /><div align="center">{ERROR_BOX}</div>
+{ERROR_BOX}
 
 <!-- BEGIN row -->
-<table class="update">
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<div class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
 <!-- BEGIN option -->
-<tr>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+<div{input.row.tab.option.ID}>
+<dl>			
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+</div>
 <!-- END option -->
 <!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-</table>
+</div>
 <!-- END row -->
 
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END input -->

@@ -2,22 +2,15 @@
 
 if ( !empty($setmodules) )
 {
-	$root_file = basename(__FILE__);
-
-	if ( $userdata['user_level'] == ADMIN || $userauth['auth_votes'] )
-	{
-		$module['hm_system']['sm_votes'] = $root_file;
-	}
-
 	return;
 }
 else
 {
 	define('IN_CMS', true);
-	
+
 	$root_path	= './../';
 	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'sm_votes';
+	$current	= 'acp_votes';
 	
 	include('./pagestart.php');
 	
@@ -37,7 +30,7 @@ else
 	$data_id	= request($url, INT);
 	$confirm	= request('confirm', TXT);
 	$mode		= request('mode', TXT);
-	$move		= request('move', TXT);
+	$move		= request('move', INT);
 	
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 		
@@ -68,9 +61,9 @@ else
 		#	$template->assign_var_from_handle('AJAX', 'ajax');
 		#	$template->assign_var_from_handle('TINYMCE', 'tiny');
 			
-			if ( $mode == 'create' && !request('submit', TXT) )
+			if ( $mode == 'create' && !$update )
 			{
-				$data = array(
+				$data_sql = array(
 							'vote_title'	=> request('vote_title', 2) ? request('training_vs', 2) : '',
 							'topic_id'		=> '',
 							'vote_text'		=> '',
@@ -78,16 +71,16 @@ else
 							'vote_end'		=> time(),
 						);
 			}
-			else if ( $mode == 'update' && !request('submit', TXT) )
+			else if ( $mode == 'update' && !$update )
 			{
-				$data = data(VOTES, $data_id, false, 1, true);
+				$data_sql = data(VOTES, $data, false, 1, true);
 			}
 			else
 			{
 				$date_start	= mktime(request('shour', 0), request('smin', 0), 00, request('smonth', 0), request('sday', 0), request('syear', 0));
 				$date_end	= mktime(request('ehour', 0), request('emin', 0), 00, request('emonth', 0), request('eday', 0), request('eyear', 0));
 				
-				$data = array(
+				$data_sql = array(
 							'vote_title'	=> request('vote_title', 2),
 							'topic_id'		=> request('topic_id', 0),
 							'vote_text'		=> request('vote_text', 2),
@@ -97,11 +90,11 @@ else
 			}
 			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
-				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['training'], $data['training_vs']),
+				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['training'], $data_sql['training_vs']),
 				'L_VS'			=> $lang['vs'],
 				'L_TEAM'		=> $lang['team'],
 				'L_MATCH'		=> $lang['match'],
@@ -110,7 +103,7 @@ else
 				'L_MAPS'		=> $lang['maps'],
 				'L_TEXT'		=> $lang['text'],
 
-				'VS'			=> $data['training_vs'],
+				'VS'			=> $data_sql['training_vs'],
 				'MAPS'			=> $data['training_maps'],
 				'TEXT'			=> $data['training_text'],
 				
@@ -129,9 +122,9 @@ else
 				'S_FIELDS'		=> $fields,
 			));
 			
-			if ( request('submit', TXT) )
+			if ( $update )
 			{
-				$error[] = ( !$data['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
+				$error[] = ( !$data_sql['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
 				$error[] = ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
 				$error[] = ( !$data['training_maps'] )			? ( $error ? '<br />' : '' ) . $lang['msg_select_map'] : '';
 				$error[] = ( time() >= $data['training_date'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
@@ -143,13 +136,13 @@ else
 					
 					if ( $mode == 'create' )
 					{
-						$sql = sql(VOTES, $mode, $data);
+						$sql = sql(VOTES, $mode, $data_sql);
 						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
-						$sql = sql(VOTES, $mode, $data, 'training_id', $data_id);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$url=$data_id"));
+						$sql = sql(VOTES, $mode, $data_sql, 'training_id', $data);
+						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
 					}
 					
 				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');
@@ -168,16 +161,16 @@ else
 			
 		case 'delete':
 		
-			$data = data(VOTES, $data_id, false, 1, true);
+			$data_sql = data(VOTES, $data, false, 1, true);
 		
-			if ( $data_id && $confirm )
+			if ( $data && $confirm )
 			{
-				$sql = sql(VOTES, $mode, $data, 'training_id', $data_id);
+				$sql = sql(VOTES, $mode, $data_sql, 'training_id', $data);
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
-			#	sql(COMMENTS, $mode, $data, 'training_id', $data_id);
-			#	sql(COMMENTS_READ, $mode, $data, 'training_id', $data_id);
-				sql(VOTES_USERS, $mode, false, 'training_id', $data_id);
+			#	sql(COMMENTS, $mode, $data_sql, 'training_id', $data);
+			#	sql(COMMENTS_READ, $mode, $data_sql, 'training_id', $data);
+				sql(VOTES_USERS, $mode, false, 'training_id', $data);
 					
 			#	$oCache -> deleteCache('subnavi_training_*');
 				
@@ -187,11 +180,11 @@ else
 			else if ( $data_id && !$confirm )
 			{
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$url\" value=\"$data_id\" />";
+				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['training_vs']),
+					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data_sql['training_vs']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,

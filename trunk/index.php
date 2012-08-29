@@ -31,8 +31,6 @@ $template->set_filenames(array(
 	'body' => 'index_body.tpl')
 );
 
-$group_auth_fields = get_authlist();
-
 $group_auth_levels	= array('DISALLOWED', 'ALLOWED');
 $group_auth_const	= array(AUTH_DISALLOWED, AUTH_ALLOWED);
 
