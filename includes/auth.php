@@ -496,6 +496,8 @@ function auth_acp_check($user_id)
 	
 	if ( $uauth_access )
 	{
+		$uaccess = array();
+		
 		foreach ( $uauth_access as $keys => $rows )
 		{
 			if ( $rows['label_id'] != 0 )

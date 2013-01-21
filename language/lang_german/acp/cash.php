@@ -29,16 +29,6 @@ $lang = array_merge($lang, array(
 	'msg_empty_number'	=> 'Bitte Kontonummer eintragen!',
 	'msg_empty_reason'	=> 'Bitte Verwendungszweck eintragen!',
 	
-	'create_bank'	=> 'Bankdaten erfolgreich eingetragen.',
-	'update_bank'	=> 'Bankdaten erfolgreich geändert.',
-	'delete_bank'	=> 'Die Bankdaten wurden gelöscht!',
-	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
-	
-	'create_user'	=> 'Neuen Benutzereintrag hinzugefügt.',
-	'update_user'	=> 'Benutzereintrag erfolgreich geändert.',
-	'delete_user'	=> 'Der Benutzereintrag wurde gelöscht!',
-	'confirm_user'	=> 'das der Benutzereintrag:',
-	
 	'user'		=> 'Benutzer',
 	
 	'amount'	=> 'Betrag',

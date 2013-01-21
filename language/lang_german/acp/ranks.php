@@ -10,22 +10,34 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Rang',
 	'explain'	=> 'Verwalten von Rängen.',
 
-	'create'	=> 'Neuer Rang hinzugefügt.',
-	'update'	=> 'Rangdaten erfolgreich geändert.',
-	'delete'	=> 'Der Rang wurde gelöscht!',
-	'confirm'	=> 'dass dieser Rang:',
-	
-	'rank_page'		=> 'Seitenrang',
-	'rank_forum'	=> 'Forumrang',
-	'rank_team'		=> 'Teamrang',
-	'rank_special'	=> 'Spezial Rang',
-	'rank_min'		=> 'Beiträge',
+	'rank_name'		=> 'Rangname',
 	'rank_image'	=> 'Rangbild',
 	'rank_type'		=> 'Rangtype',
-	'rank_standard'	=> 'Standardrang',
 	
-	'radio:ranks'	=> array(RANK_FORUM => 'Forumrang', RANK_PAGE => 'Seitenrang', RANK_TEAM => 'Teamrang'),
+	'rank_min'		=> 'Beiträge',
+	'rank_special'	=> 'Spezial Rang',	
+	'rank_standard'	=> 'Standardrang',
 
+	'type_1'	=> 'Seitenrang',
+	'type_2'	=> 'Forumrang',
+	'type_3'	=> 'Teamrang',
+	
+	'rank_1'	=> 'Rang auf der Seite',
+	'rank_2'	=> 'Rang im Forum',
+	'rank_3'	=> 'Rang im Team',
+	
+	
+
+));
+
+$lang = array_merge($lang, array(
+
+	'radio:ranks' => array(
+		RANK_PAGE	=> $lang['type_1'],
+		RANK_FORUM	=> $lang['type_2'],
+		RANK_TEAM	=> $lang['type_3'],
+	),
+	
 ));
 
 ?>

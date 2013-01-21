@@ -55,7 +55,7 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	$mode = ( in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata', 'bankdata_delete')) ) ? $mode : '';
+	$mode = (in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata', 'bankdata_delete'))) ? $mode : false;
 	
 		debug($_POST, 'post');
 	
@@ -82,16 +82,16 @@ else
 			$vars = array(
 				'user' => array(
 					'title1' => 'input_data',
-					'user_id'		=> array('validate' => TXT,	'explain' => false, 'type' => 'ajax:25', 'required' => 'input_user', 'params' => array('user', 0, 2)),
-					'user_amount'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:5:5', 'required' => 'input_amount'),
-					'user_interval'	=> array('validate' => TXT,	'explain' => false, 'type' => 'radio:interval'),
+					'user_id'		=> array('validate' => TXT,	'explain' => false,	'type' => 'ajax:25;25', 'required' => 'input_user', 'params' => array('user', 0, 2)),
+					'user_amount'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5', 'required' => 'input_amount'),
+					'user_interval'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:interval'),
 					'user_month'	=> array('validate' => ARY,	'type' => 'check:months'),
 					'time_create'	=> 'hidden',
 					'time_update'	=> 'hidden',
 				),
 			);
 			
-			if ( $mode == 'create' && !$update )
+			if ( $mode == 'create' && !$submit )
 			{
 				$data_sql = array(
 					'user_id'		=> request('user_name', TXT),
@@ -102,7 +102,7 @@ else
 					'time_update'	=> 0,
 				);
 			}
-			else if ( $mode == 'update' && !$update )
+			else if ( $mode == 'update' && !$submit )
 			{
 				$data_sql = data(CASH_USER, $data_id, false, 2, true);
 			}
@@ -122,7 +122,7 @@ else
 					else
 					{
 						$sql = sql(CASH_USER, $mode, $data_sql, 'cash_user_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -195,14 +195,14 @@ else
 			$vars = array(
 				'cash' => array(
 					'title1' => 'input_data',
-					'cash_name'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
-					'cash_amount'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:5:5', 'required' => 'input_amount'),
-					'cash_type'		=> array('validate' => TXT,	'explain' => false, 'type' => 'radio:type'),
-					'cash_interval'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:cinterval'),
+					'cash_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
+					'cash_amount'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5', 'required' => 'input_amount'),
+					'cash_type'		=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:type'),
+					'cash_interval'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:cinterval'),
 				),
 			);
 
-			if ( $mode == 'create_cat' && !$update )
+			if ( $mode == 'create_cat' && !$submit )
 			{
 				$data_sql = array(
 					'cash_name'		=> request('cash_name', TXT),
@@ -211,7 +211,7 @@ else
 					'cash_interval'	=> 0,
 				);
 			}
-			else if ( $mode == 'update_cat' && !$update )
+			else if ( $mode == 'update_cat' && !$submit )
 			{
 				$data_sql = data(CASH, $data_cat, false, 1, true);
 			}
@@ -229,7 +229,7 @@ else
 					else
 					{
 						$sql = sql(CASH, $mode, $data_sql, 'cash_id', $data_cat);
-						$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+						$msg = $lang['update_cat'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -248,7 +248,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> $acp_title,
-				'L_INPUT'			=> sprintf($lang["sprintf_$mode"], $lang['cash_reason'], $data['cash_name']),
+				'L_INPUT'			=> sprintf($lang['sprintf_' . $mode], $lang['cash_reason'], $data['cash_name']),
 				
 				'S_ACTION'			=> check_sid($file),
 				'S_FIELDS'			=> $fields,
@@ -325,7 +325,7 @@ else
 						'LNGS' => $lngs,
 					));
 					
-					if ( !$update )
+					if ( !$submit )
 					{
 						$template->assign_block_vars("$mode.row._option._input", array(
 							'TYPE'	=> $rows['type'],
@@ -348,7 +348,7 @@ else
 				}
 			}
 			
-			if ( $update )
+			if ( $submit )
 			{
 				if ( !$error )
 				{
@@ -358,7 +358,7 @@ else
 						message(GENERAL_ERROR, 'SQL Error', __LINE__, __FILE__, $sql);
 					}
 					
-					$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+					$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 					
 					log_add(LOG_ADMIN, $log, $mode);
 					message(GENERAL_MESSAGE, $msg);

@@ -49,10 +49,9 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
 
 		// Team
 		'team' => array(
-			'score' => array('tickets),
+			'score' => array('tickets'),
+		),
 	);
-
-return $module;
 
 	/**
 	 * Array of packets we want to look up.

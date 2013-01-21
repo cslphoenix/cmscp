@@ -7,24 +7,21 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Ereignisse',
-	'explain'	=> 'Ereignisse verwalten!',
-	
-	'create'	=> 'Neues Event hinzugefügt.',
-	'update'	=> 'Eventdaten erfolgreich geändert.',
-	'delete'	=> 'Das Event wurde gelöscht!',
-	'confirm'	=> 'dass dieses Event:',
+	'title'				=> 'Ereignis',
+	'explain'			=> 'Ereignisse verwalten!',
 	
 	'event_upcoming'	=> 'Anstehendes Event',
 	'event_expired'		=> 'Abgelaufens Event',
 	
-	'event_date'		=> 'Eventdatum',
-	'event_title'		=> 'Eventtitel',
-	'event_desc'		=> 'Eventbeschreibung',
-	'event_userlevel'	=> 'Eventlevel',
-	'event_duration'	=> 'Eventdauer',
-	'event_comments'	=> 'Eventkommentare?',
-
+	'data_input'		=> 'Ereignisdaten',
+	
+	'event_date'		=> 'Datum',
+	'event_title'		=> 'Titel',
+	'event_desc'		=> 'Beschreibung',
+	'event_level'		=> 'Benutzerlevel',
+	'event_duration'	=> 'Dauer',
+	'event_comments'	=> 'Kommentare',
+	
 ));
 
 ?>

@@ -10,11 +10,6 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Datenbank',
 	'explain'	=> 'Hier können Backups erstellt werden usw.',
 
-	'create'	=> 'Neues Spiel hinzugefügt.',
-	'update'	=> 'Spieldaten erfolgreich geändert.',
-	'delete'	=> 'Das Spiel wurde gelöscht!',
-	'confirm'	=> 'dass dieses Spiel:',
-	
 	'data_backup'	=> 'Backup',
 	'data_optimize'	=> 'Optimieren',
 	'data_restore'	=> 'Wiederherstellen',

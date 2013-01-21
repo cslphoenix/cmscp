@@ -16,11 +16,11 @@ else
 {
 	define('IN_CMS', true);
 	
-	$cancel		= true;
+	$cancel		= false;
 	$current	= 'acp_database';
 	
-	include("./pagestart.php");
-	include("{$root_path}includes/sql_parse.php");
+	include('./pagestart.php');
+	include($root_path . '/includes/sql_parse.php');
 	
 	add_lang('database');
 	
@@ -29,15 +29,14 @@ else
 	$fields	= '';
 	
 	$log	= SECTION_DATABASE;
-	$url	= 'file';
-	$file	= basename(__FILE__);
 	$time	= time();
 	
-	$data_id	= request($url, INT);
-	$confirm	= request('confirm', TXT);
-	$mode		= request('action', TXT);
-
-	$dir_path	= "{$root_path}files/";
+	$data	= request('id', INT);
+	$mode	= request('mode', TYP);
+	$accept	= request('accept', TYP);
+	$action	= request('action', TYP);
+	
+	$dir_path	= $root_path . 'files/';
 	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN xor !$userdata['user_founder'] )
@@ -46,7 +45,7 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	define("VERBOSE", INT);
+	define('VERBOSE', 1);
 	@set_time_limit(1200);
 	
 	function gzip_PrintFourChars($Val)
@@ -64,23 +63,21 @@ else
 	
 	$template->set_filenames(array(
 		'body'	=> 'style/acp_database.tpl',
-		'info'	=> 'style/info_message.tpl',
+#		'info'	=> 'style/info_message.tpl',
 	));
 	
-	switch ( $mode )
+	switch ( $action )
 	{
 		case 'backup':
 		
-			$tables		= ( request('table', 4) ) ? request('table', 4) : '';
-			$type		= ( request('type', 1) ) ? request('type', 1) : '';
-			$download	= ( request('download', 1) ) ? request('download', 1) : '';
-			$compress	= ( request('compress', 1) ) ? request('compress', 1) : '';
+			$tables		= ( request('table', ARY) ) ? request('table', ARY) : '';
+			$type		= ( request('type', TYP) ) ? request('type', TYP) : '';
+			$download	= ( request('download', TYP) ) ? request('download', TYP) : '';
+			$compress	= ( request('compress', TYP) ) ? request('compress', TYP) : '';
 			$save_name	= ( $download == 'server' ) ? $type . '_' . $time : 'backup_' . $type . '_' . $db_name . '_' . date('dmY_Hi', $time);
 				
-			if ( !request('backupstart', 1) )
+			if ( !request('backupstart', TYP) )
 			{
-				include('./page_header_admin.php');
-				
 				$template->assign_block_vars('backup', array());
 				
 				$sql = "SHOW TABLE STATUS";
@@ -100,14 +97,11 @@ else
 				
 				$select .= '</select>';
 				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= '<input type="hidden" name="action" value="' . $action . '" />';
 
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
-					'L_BACKUP'		=> $lang['data_backup'],
-					'L_OPTIMIZE'	=> $lang['data_optimize'],
-					'L_RESTORE'		=> $lang['data_restore'],
 
 					'L_TYPE'		=> $lang['type'],
 					'L_TYPE_FULL'	=> $lang['type_full'],
@@ -125,15 +119,13 @@ else
 					'L_DOWNLOAD_FILE'	=> $lang['download_file'],
 					'L_DOWNLOAD_SERVER'	=> $lang['download_server'],
 					
-					'S_TABLE'		=> $select,
+					'S_TABLE'	=> $select,
 					
-					'S_OPTIMIZE'	=> check_sid("$file?mode=_optimize"),
-					'S_RESTORE'		=> check_sid("$file?mode=_restore"),
-					'S_ACTION'		=> check_sid($file),
-					'S_FIELDS'		=> $fields,
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
 				));
 				
-				$template->pparse("body");
+				$template->pparse('body');
 				
 				break;
 			}
@@ -242,7 +234,7 @@ else
 					fclose($handle);
 				}
 				
-				$msg = $lang['save_file'] . sprintf($lang['return'], check_sid("$file?mode=$mode"), $acp_title);
+				$msg = $lang['save_file'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				log_add(LOG_ADMIN, $log, $mode);
 				message(GENERAL_MESSAGE, $msg);
@@ -357,16 +349,16 @@ else
 
 		case 'optimize':
 			
-			include('./page_header_admin.php');
+		#	include('./page_header_admin.php');
 			
 			$template->assign_block_vars('optimize', array());
+			
+			debug($_POST, '_POST');
 	
-			
-			
 			//
 			// If has been clicked the button configure
 			//
-			if ( isset( $HTTP_POST_VARS['configure'] ) || isset( $HTTP_POST_VARS['show_begin_for'] ) )
+			if ( isset($HTTP_POST_VARS['configure']) || isset($HTTP_POST_VARS['show_begin_for']) )
 		#	if ( request('configure', 1) || request('db_show_begin_for', 1) )
 			{
 				$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', 1) . "' WHERE config_name = 'db_show_begin_for'";
@@ -395,7 +387,7 @@ else
 				}
 			}
 
-			if(!isset($HTTP_POST_VARS['optimize']))
+			if ( !request('optimize', TYP) )
 		#	if ( !request('optimize', 1) )
 			{
 				$sql = "SHOW TABLE STATUS LIKE '%" . $config['db_show_begin_for'] . "%'";
@@ -463,7 +455,8 @@ else
 					}
 				}
 				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+#				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+				$fields .= '<input type="hidden" name="action" value="' . $action . '" />';
 
 				if ( $i != 1 )
 				{
@@ -518,11 +511,10 @@ else
 				$template->assign_vars(array(
 					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
-					'L_BACKUP'		=> $lang['data_backup'],
+					
 					'L_OPTIMIZE'	=> $lang['data_optimize'],
-					'L_RESTORE'		=> $lang['data_restore'],
 				
-					'S_SCRIPT'	=> $select_scritp,
+					
 					
 					'L_TABLE'	=> $lang['opt_table'],
 					'L_ROWS'	=> $lang['opt_rows'],
@@ -549,10 +541,10 @@ else
 					
 					"S_SHOW_BEGIN_FOR" => $config['db_show_begin_for'],
 					
-					'S_BACKUP'		=> check_sid("$file?mode=_backup"),
-					'S_RESTORE'		=> check_sid("$file?mode=_restore"),
-					'S_ACTION'		=> check_sid($file),
-					'S_FIELDS'		=> $fields,
+					'S_SCRIPT'	=> $select_scritp,
+					
+					'S_ACTION' => check_sid($file),
+					'S_FIELDS' => $fields,
 					
 				));
 
@@ -562,9 +554,9 @@ else
 			{
 				$sql = "OPTIMIZE TABLE ";
 
-				if ( request('selected_tbl', 4) != '' )
+				if ( request('selected_tbl', ARY) != '' )
 				{
-					foreach ( request('selected_tbl', 4) as $var => $value )
+					foreach ( request('selected_tbl', ARY) as $var => $value )
 					{
 						if ( $value != 'on' )
 						{
@@ -576,16 +568,27 @@ else
 					
 					$sql .= implode(', ', $_sql);
 				}					
-				$sql .= " ;";
+				$sql .= ";";
+				
+				debug($sql);
+				
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
 			
-				if ( !$result = $db->sql_query($sql) )
-				{
-					$msg = $lang['Optimize_NoTableChecked'] . sprintf($lang['return'], check_sid("$file?mode=$mode"), $acp_title);
-				}
-				else
-				{
-					$msg = $lang['Optimize_success'] . sprintf($lang['return'], check_sid("$file?mode=$mode"), $acp_title);
-				}
+			#	if ( !$result = $db->sql_query($sql) )
+			#	{
+			#		$msg = $lang['Optimize_NoTableChecked'] . sprintf($lang['return'], check_sid($file), $acp_title);
+			#	}
+			#	else
+			#	{
+			#		$msg = $lang['Optimize_success'] . sprintf($lang['return'], check_sid($file), $acp_title);
+			#	}
+				
+				$row = $db->sql_fetchrowset($result);
+				
+				debug($row);
 				
 				message(GENERAL_MESSAGE, $msg);
 			}
@@ -639,8 +642,6 @@ else
 					'L_FILE_RESTORE'	=> $lang['file_restore'],
 					'S_SELECT'			=> $select,
 					
-					'S_BACKUP'		=> check_sid("$file?mode=_backup"),
-					'S_OPTIMIZE'	=> check_sid("$file?mode=_optimize"),
 					'S_ACTION'		=> check_sid($file),
 					'S_FIELDS'		=> $fields,
 				));

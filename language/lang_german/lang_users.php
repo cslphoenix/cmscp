@@ -17,9 +17,7 @@ $lang = array_merge($lang, array(
 	'joined'		=> 'beigetreten',
 	'registered'	=> 'registiert',
 	
-	'select_rank'	=> 'Rang setzen &raquo;',
-	'rights_groups'	=> 'Gruppenrechte geben/nehmen',
-	'rights_teams'	=> 'Teamrechte geben/nehmen',
+	
 	
 ));
 

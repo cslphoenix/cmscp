@@ -64,7 +64,7 @@ else
 		}
 	}
 	
-	$mode = ( in_array($mode, array('_error', 'delete', '_delete_all')) ) ? $mode : '';
+	$mode = (in_array($mode, array('_error', 'delete', '_delete_all'))) ? $mode : false;
 	
 	if ( $mode )
 	{

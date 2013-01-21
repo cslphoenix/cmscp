@@ -9,24 +9,18 @@ $lang = array_merge($lang, array(
 	
 	'title'		=> 'Galerie',
 	'explain'	=> 'Hier werden alle Galerien verwaltet. Die Ordnergröße und Anzahl wird immer nur auf die Eigentlichen Bilder bezogen nicht auf die Vorschaubilder, diese werden nicht mit einberechnet!',
-	'explain_d'	=> 'Standarteinstellungen für das erstellen neuer Galerien, es kann aber jede Galerie eingenständig verwaltet werden von den Rechten. Die Rechte sind nur mit den vorhergesehen Gruppen verbunden, Leader Rechte beziehen sich nur auf die Benutzer die in der Gruppe Leader sind. Für weitere Infos einfach auf der Entwicklerhauptseite informieren.',
 	
-	'create'	=> 'Neue Galerie hinzugefügt.',
-	'update'	=> 'Galerie erfolgreich geändert.',
-	'delete'	=> 'Die Galerie wurde gelöscht!',
-	'confirm'	=> 'dass diese Galerie:',
+#	'gallery_name'		=> 'Galeriename',
+#	'gallery_desc'		=> 'Beschreibung',
+#	'gallery_auth'		=> 'Berechtigung',
+#	'gallery_rating'	=> 'Bewertung',
+#	'gallery_comments'	=> 'Kommentare',
 	
-	'gallery_name'		=> 'Galeriename',
-	'gallery_desc'		=> 'Beschreibung',
-	'gallery_auth'		=> 'Berechtigung',
-	'gallery_rating'	=> 'Bewertung',
-	'gallery_comments'	=> 'Kommentare',
+#	'sprintf_size-pic'	=> '%s / %s Bilder',
 	
-	'sprintf_size-pic'	=> '%s / %s Bilder',
-	
-	'update_d'	=> 'Standarteinstellungen erfolgreich geändert.',
-	
-	'update_u'	=> 'Bild/Bilder erfolgreich hochgeladen.',
+#	'update_d'	=> 'Standarteinstellungen erfolgreich geändert.',
+#	
+#	'update_u'	=> 'Bild/Bilder erfolgreich hochgeladen.',
 	
 	
 #	$lang['create_gallery']				= 'Neue Galerie hinzugefügt.';
@@ -38,44 +32,47 @@ $lang = array_merge($lang, array(
 #	$lang['delete_gallery']				= 'Die Galerie wurde gelöscht!';
 #	$lang['delete_gallery_pic']			= 'Das Bilder oder die Bilder wurden gelöscht!';		
 
-	'auth_gallery_guest'	=> 'Gast',
-	'auth_gallery_user'		=> 'Benutzer',
-	'auth_gallery_trial'	=> 'Trialmember',
-	'auth_gallery_member'	=> 'Member',
-	'auth_gallery_coleader'	=> 'Squadleader',
-	'auth_gallery_leader'	=> 'Leader',
-	'auth_gallery_uploader'	=> 'Uploader',
+#	'auth_gallery_guest'	=> 'Gast',
+#	'auth_gallery_user'		=> 'Benutzer',
+#	'auth_gallery_trial'	=> 'Trialmember',
+#	'auth_gallery_member'	=> 'Member',
+#	'auth_gallery_coleader'	=> 'Squadleader',
+#	'auth_gallery_leader'	=> 'Leader',
+#	'auth_gallery_uploader'	=> 'Uploader',
 	
-	'auth_gallery_view'		=> 'Betrachten',
-	'auth_gallery_edit'		=> 'Bearbeiten',
-	'auth_gallery_delete'	=> 'Löschen',
-	'auth_gallery_rate'		=> 'Bewertung',
-	'auth_gallery_upload'	=> 'Upload',
+#	'auth_gallery_view'		=> 'Betrachten',
+#	'auth_gallery_edit'		=> 'Bearbeiten',
+#	'auth_gallery_delete'	=> 'Löschen',
+#	'auth_gallery_rate'		=> 'Bewertung',
+#	'auth_gallery_upload'	=> 'Upload',
 
-	'auth_gallery' => array(
-		'auth_view'		=> 'Bild betrachten',
-		'auth_edit'		=> 'Bild bearbeiten',
-		'auth_delete'	=> 'Bild löschen',
-		'auth_rate'		=> 'Bild bewerten',
-		'auth_upload'	=> 'Bild uploaden',
-	),
+#	'auth_gallery' => array(
+#		'auth_view'		=> 'Bild betrachten',
+#		'auth_edit'		=> 'Bild bearbeiten',
+#		'auth_delete'	=> 'Bild löschen',
+#		'auth_rate'		=> 'Bild bewerten',
+#		'auth_upload'	=> 'Bild uploaden',
+#	),
 	
-	'per_rows'			=> 'Bilder pro Zeile',
-	'per_cols'			=> 'Bilder pro Seite',
-	'max_width'			=> 'Maximale Breite',
-	'max_height'		=> 'Maximale Höhe',
-	'max_filesize'		=> 'Maximale Größe',
-	'preview_list'		=> 'Adminvorschau',
-	'preview_widht'		=> 'Vorschaubreite',
-	'preview_height'	=> 'Vorschauhöhe',
-
-	'list'		=> 'als Liste',
-	'preview'	=> 'nach Vorgabe der Einstellungen',
+#	'per_rows'			=> 'Bilder pro Zeile',
+#	'per_cols'			=> 'Bilder pro Seite',
+#	'max_width'			=> 'Maximale Breite',
+#	'max_height'		=> 'Maximale Höhe',
+#	'max_filesize'		=> 'Maximale Größe',
+#	'preview_list'		=> 'Adminvorschau',
+#	'preview_widht'		=> 'Vorschaubreite',
+#	'preview_height'	=> 'Vorschauhöhe',
+#
+#	'list'		=> 'als Liste',
+#	'preview'	=> 'nach Vorgabe der Einstellungen',
 	
-	'pic'			=> 'Bild',
-	'pic_widht'		=> 'Breite',
-	'pic_height'	=> 'Höhe',
-	'pic_size'		=> 'Größe',
+#	'pic'			=> 'Bild',
+#	'pic_widht'		=> 'Breite',
+#	'pic_height'	=> 'Höhe',
+#	'pic_size'		=> 'Größe',
+	
+	
+	'radio:type'	=> array(0 => 'Ordner', 1 => 'Bild'),
 
 
 ));

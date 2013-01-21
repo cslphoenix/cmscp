@@ -53,10 +53,9 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 
 		// Team
 		'team' => array(
-			//'score' => array('tickets),
+			//'score' => array('tickets'),
+		),
 	);
-
-return $module;
 
 	/**
 	 * Array of packets we want to look up.

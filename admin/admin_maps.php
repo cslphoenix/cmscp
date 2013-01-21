@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_maps',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_maps', 'auth' => 'auth_maps'),
+			'main'	=> array('title' => 'acp_maps'),
 		)
 	);
 }
@@ -15,7 +15,7 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current = 'acp_maps';
 	
@@ -67,9 +67,9 @@ else
 		}
 	}
 	*/
-	debug($_POST);
+	debug($_POST, '_POST');
 	
-	$mode = ( in_array($mode, array('create', 'update', 'list', 'move_down', 'move_up', 'delete')) ) ? $mode : false;
+	$mode = (in_array($mode, array('create', 'update', 'list', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
@@ -83,30 +83,28 @@ else
 				$vars = array(
 					'map' => array(
 						'title' => 'data_input',
-						'map_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name', 'check' => true),
-						'type'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:maps', 'params' => array('combi', false)),
-						'main'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:sub', 'trid' => 'main', 'params' => array('ajax', true, 'map_tag')),
-						'map_tag'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:game', 'trid' => 'map_tag', 'required' => array('select_tag', 'type', 0), 'params' => false, 'check' => true),
-						'map_file'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:file_img', 'trid' => 'map_file', 'params' => $dir_path),
-						'map_info'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'trid' => 'map_info'),
+						'map_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name', 'check' => true),
+						'type'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('combi', false, 'main')),
+						'main'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:sub',	'divbox' => true, 'params' => array('ajax', true, 'map_tag')),
+					#	'map_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:images','divbox' => true, 'params' => array($dir_path, GAMES, false), 'required' => array('select_tag', 'type', 0), 'check' => true),
+						'map_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:tags','divbox' => true, 'params' => array($dir_path, GAMES, false), 'required' => array('select_tag', 'type', 0), 'check' => true),
+						'map_file'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:file',	'divbox' => true, 'params' => $dir_path),
+					#	'map_file'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'divbox' => true),
+						'map_info'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'divbox' => true),
 						'map_order'	=> 'hidden',
 					),
 				);
 				
-				$tmp_cat = data(MAPS, ' main = 0', 'main ASC', 1, false);
-				
-				foreach ( $tmp_cat as $row )
+				if ( $mode == 'create' && !$submit )
 				{
-					$template->assign_block_vars('input.update_image', array(
-							'NAME'  => $row['map_tag'],
-							'PATH'  => $dir_path . $row['map_tag'],
-					));
-				}
-				
-				if ( $mode == 'create' && !$update )
-				{
+					$name = (isset($_POST['map_name'])) ? request('map_name', TXT) : request('map_map', TXT);
+					$type = (isset($_POST['map_name'])) ? 0 : 1;
+					
+				#	debug($type, 'type');
+				#	debug($main, 'main');
+					
 					$data_sql = array(
-						'map_name'	=> request('map_name', TXT),
+						'map_name'	=> $name,
 						'type'		=> $type,
 						'main'		=> $main,
 						'map_tag'	=> '',
@@ -115,7 +113,7 @@ else
 						'map_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(MAPS, $data, false, 1, true);
 				}
@@ -131,20 +129,20 @@ else
 						{
 							$data_sql['map_order'] = maxa(MAPS, 'map_order', $data['main']);
 							
-							$tmp = ( $data_sql['map_type'] == 0 ) ? create_folder($dir_path, $data_sql['map_tag'], false) : '';
+							(!$data_sql['type']) ? create_folder($dir_path, $data_sql['map_tag'], false) : '';
 							
 							$sql = sql(MAPS, $mode, $data_sql);
-							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							if ( !$data_sql['type'] && $_POST['current_tag'] != $data_sql['map_tag'] )
 							{
-								rename($dir_path . $_POST['current_tag'], $dir_path . $data_sql['map_tag']);
+								rename($dir_path . request('current_tag', TXT), $dir_path . $data_sql['map_tag']);
 							}
 														
 							$sql = sql(MAPS, $mode, $data_sql, 'map_id', $data);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 						orders(MAPS, $data['main']);
@@ -158,6 +156,18 @@ else
 					}
 				}
 				
+				$tmp_cat = data(MAPS, 'WHERE main = 0', 'main ASC', 1, false);
+				
+			#	debug($tmp_cat);
+				
+				foreach ( $tmp_cat as $row )
+				{
+					$template->assign_block_vars('input.update_image', array(
+						'NAME'  => $row['map_tag'],
+						'PATH'  => $dir_path . $row['map_tag'],
+					));
+				}
+				
 				build_output(MAPS, $vars, $data_sql);
 				
 			#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
@@ -165,8 +175,8 @@ else
 				$fields .= ( !$data_sql['type'] ) ? '<input type="hidden" name="current_tag" value="' . $data_sql['map_tag'] . '" />' : '';
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['titles']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['map_name']),
+					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['map_name']),
+					'L_EXPLAIN'	=> $lang['common_required'],
 
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -187,6 +197,21 @@ else
 
 				break;
 		*/		
+			case 'move_up':
+			case 'move_down':
+			
+				debug($main, 'main');
+				debug($type, 'type');
+				debug($usub, 'usub');
+				debug($action, 'action');
+			
+				move(MAPS, $mode, $order, $main, $type, $usub, $action);
+				log_add(LOG_ADMIN, $log, $mode);
+			
+				$index = true;
+				
+				break;
+
 			case 'delete':
 
 				$data_sql = data(MAPS, $data, false, 1, true);
@@ -232,14 +257,14 @@ else
 				$vars = array(
 					'map' => array(
 						'title' => 'data_input',
-						'map_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name',	'check' => true),
-						'map_tag'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_tag',	'check' => true),
-						'map_order'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:order'),
+						'map_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name',	'check' => true),
+						'map_tag'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_tag',	'check' => true),
+						'map_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:order'),
 						'map_sub'	=> 'hidden',
 					),
 				);
 
-				if ( $mode == 'create_cat' && !$update )
+				if ( $mode == 'create_cat' && !$submit )
 				{
 					$data_sql = array(
 						'map_name'	=> request('map_name', TXT),
@@ -248,7 +273,7 @@ else
 						'map_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update_cat' && !$update )
+				else if ( $mode == 'update_cat' && !$submit )
 				{
 					$data_sql = data(MAPS, $data, false, 1, true);
 				}
@@ -308,8 +333,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data_sql['map_tag'] . "\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['titles']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['cat'], $data_sql['map_name']),
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['cat'], $data_sql['map_name']),
 				#	'L_NAME'	=> $lang['cat_name'],
 				#	'L_TAG'		=> $lang['cat_tag'],
 				#	'L_DISPLAY'	=> $lang['cat_display'],
@@ -347,6 +372,8 @@ else
 				
 		$tmp = data(MAPS, false, 'main ASC, map_order ASC', 1, false);
 		
+		$cat = $map = array();
+		
 		if ( $tmp )
 		{
 			foreach ( $tmp as $row )
@@ -361,23 +388,16 @@ else
 				}
 			}
 		}
-		else
-		{
-			$cat = $map = array();
-		}
 		
 		$cid	= $cat['map_id'];
+		$ctag	= $cat['map_tag'];
 		$cname	= isset($lang[$cat['map_name']]) ? $lang[$cat['map_name']] : $cat['map_name'];
 		
 		$template->assign_vars(array(
+			'OVERVIEW'	=> href('a_txt', $file, array($file), $lang['acp_overview'], ''),
 			'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cname, $cname),
-			'TAG'		=> $cat['map_tag'],
-			
 			'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
 			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
-			
-			'S_ACTION'	=> check_sid($file),
-			'S_FIELDS'	=> $fields,
 		));
 		
 	#	$cid = $cat['map_id'];
@@ -392,26 +412,26 @@ else
 		
 		if ( $map )
 		{
-			$max = array_pop(end($map));
+			$max = count($map);
 			
-			foreach ( $map as $rows )
+			foreach ( $map as $row )
 			{
-				$id		= $rows['map_id'];
-				$name	= isset($lang[$rows['map_name']]) ? $lang[$rows['map_name']] : $rows['map_name'];
-				$info	= $rows['map_info'];
-				$pic	= $rows['map_file'];
-				$order	= $rows['map_order'];
+				$id		= $row['map_id'];
+				$order	= $row['map_order'];
+				$name	= isset($lang[$row['map_name']]) ? $lang[$row['map_name']] : $row['map_name'];
 				
 				$template->assign_block_vars('list.row', array(
 					'NAME'          => href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-					'FILE'          => $pic,
-					'INFO'          => $info,
-					
-					'MOVE_UP'       => ( $order != '10' ) ? href('a_img', $file, array('mode' => 'list', 'action' => 'order', 'main' => $cid, 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'     => ( $order != $max ) ? href('a_img', $file, array('mode' => 'list', 'action' => 'order', 'main' => $cid, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-	
 					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
 					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					
+					'FILE'          => $row['map_file'],
+					'INFO'          => $row['map_info'],
+					
+					'MOVE_UP'       => ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $cid, 'type' => 1, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'     => ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $cid, 'type' => 1, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+	
+					
 				));
 			}
 		}
@@ -429,36 +449,37 @@ else
 
 		if ( $tmp = data(MAPS, 'WHERE main = 0', 'main ASC, map_order ASC', 1, false) )
 		{
-			$max = array_pop(end($tmp));
+			$max = count($tmp);
 			
 			foreach ( $tmp as $row )
 			{
 				$id		= $row['map_id'];
-				$tag	= $row['map_tag'];
-				$name	= isset($lang[$row['map_name']]) ? $lang[$row['map_name']] : $row['map_name'];
 				$order	= $row['map_order'];
+				$name	= isset($lang[$row['map_name']]) ? $lang[$row['map_name']] : $row['map_name'];
 				
 				$template->assign_block_vars('display.cat', array(
 					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
-					'TAG'		=> $tag,
-					
-					'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => 'order', 'main' => 0, 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => 'order', 'main' => 0, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-	
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
 					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+				
+					'TAG'		=> $row['map_tag'],
+					
+					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				));
 			}
 		}
+		
+		$fields .= '<input type="hidden" name="mode" value="create" />';
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['titles']),
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
 		'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
-		'L_NAME'	=> $lang['map_name'],
+		'L_NAME'	=> $lang['type_0'],
 		'L_EXPLAIN'	=> $lang['explain'],
 		
-		'S_CREATE'	=> check_sid("$file?mode=create_cat"),
+		'S_CREATE'	=> check_sid("$file&mode=create"),
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));

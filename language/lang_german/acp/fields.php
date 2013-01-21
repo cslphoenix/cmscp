@@ -7,20 +7,10 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'profile'	=> 'Profilefelder',
+	'title'	=> 'Profilefelder',
 	'profile_c'	=> 'Profilekategorie',
 	'explain'	=> 'Hier kann man ja halt irgendwas machen xD',
 
-	'create'	=> 'Neues Profilefeld hinzugefügt.',
-	'update'	=> 'Profilefeld erfolgreich geändert.',
-	'delete'	=> 'Das Profilefeld wurde gelöscht!',
-	'confirm'	=> 'dass dieses Profilfeld:',
-	
-	'create_cat'	=> 'Neues Profilekategorie hinzugefügt.',
-	'update_cat'	=> 'Profilekategorie erfolgreich geändert.',
-	'delete_cat'	=> 'Die Profilekategorie wurde gelöscht!',
-	'confirm_sub'	=> 'dass dieses Profilekategorie:',
-	
 	'field'		=> 'Profilefeld',
 	'cat'		=> 'Profilekategrie',
 	'cats'		=> 'Profilekategrien',
@@ -35,11 +25,8 @@ $lang = array_merge($lang, array(
 	'type_area'		=> 'Textfeld',
 	'type_radio'	=> 'Ja/Nein Option',
 	
+	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Feld'),
+	'radio:typ'		=> array(FIELD_TEXT => 'Textzeile', FIELD_AREA => 'Textfeld', FIELD_TYPE => 'Ja/Nein Option'),
 ));
 	
-
-$lang = array_merge($lang, array(	
-	'radio:type'	=> array(0 => $lang['type_text'], 1 => $lang['type_area'], 2 => $lang['type_radio']),
-));
-
 ?>

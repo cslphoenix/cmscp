@@ -72,7 +72,7 @@ $template->assign_vars(array(
 	'L_LOGOUT'	=> $lang['index_logout'],
 	'L_SESSION'	=> $lang['index_session'],
 
-	'L_NAVIGATION'		=> $lang['navi_navigation'],
+#	'L_NAVIGATION'		=> $lang['navi_navigation'],
 
 	'L_INPUT_DATA'		=> $lang['common_input_data'],
 	'L_INPUT_OPTION'	=> $lang['common_input_option'],
@@ -112,6 +112,7 @@ $template->assign_vars(array(
 	'U_LOGOUT'	=> check_sid('./../login.php?logout=true'),
 	'U_SESSION'	=> check_sid('./../login.php?logout=true&admin_session_logout=true'),
 
+	'S_USER_LANG'	=> 'de',
 	'S_CONTENT_ENCODING'	=> $lang['content_encoding'],
 	'S_CONTENT_DIRECTION'	=> $lang['content_direction'],
 	
@@ -132,7 +133,7 @@ else
 header('Expires: 0');
 header('Pragma: no-cache');
 
-$tmp = data(MENU2, "action = 'acp'", 'menu_order ASC', 1, false);
+$tmp = data(MENU, "WHERE action = 'acp'", 'menu_order ASC', 1, false);
 
 foreach ( $tmp as $row )
 {
@@ -168,13 +169,15 @@ foreach ( $sql_cat as $catkey => $catrow )
 	
 	if ( $catkey == $typ )
 	{
-		@reset($sql_lab);
+	#	@reset($sql_lab);
 		
 		if ( isset($sql_lab[$catkey]) )
 		{
 			foreach ( $sql_lab[$catkey] as $labkey => $labrow )
 			{
-				$template->assign_block_vars('ilab', array('NAME' => sprintf($lang['sprintf_select_menu'], (isset($lang[$labrow['menu_name']]) ? $lang[$labrow['menu_name']] : str_replace("_", " ", $labrow['menu_name'])))));
+				$template->assign_block_vars('ilab', array(
+					'NAME' => ($labrow['menu_lang']) ? lang($labrow['menu_name']) : $labrow['menu_name'],
+				));
 				
 				if ( isset($sql_sub[$labkey]) )
 				{

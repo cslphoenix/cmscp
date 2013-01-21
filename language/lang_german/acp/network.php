@@ -8,18 +8,20 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Network',
-	'field'		=> 'Link',
 	'explain'	=> 'Hier kannst Du Links, Partner und Sponsoren verwalten.',
-
-	'create'	=> 'Neuen %s hinzugefügt.',
-	'update'	=> '%sdaten erfolgreich geändert.',
-	'delete'	=> 'Den %s wurde gelöscht!',
-	'confirm'	=> 'das der %s:',
 	
-	'network_url'		=> 'Network Link',
+	'data_input'	=> 'Daten',
+	
+	'network_name'	=> 'Name',
+	'network_url'	=> 'Link',
+	'network_image'	=> 'Bild',
+	'network_type'	=> 'Typ',
+	'network_view'	=> 'Anzeigen',
+
 	'network_link'		=> 'Link',
 	'network_partner'	=> 'Partner',
 	'network_sponsor'	=> 'Sponsor',
+
 ));
 
 $lang = array_merge($lang, array(

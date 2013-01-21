@@ -2,15 +2,16 @@
 
 if ( !empty($setmodules) )
 {
-	$module['sm_teamspeak'] = array(
-		'filename'	=> basename(__FILE__),
-		'modes'		=> array(
-			'addnew'	=> 'sm_addnew',
-			'create'	=> 'sm_create',
-			'export'	=> 'sm_export',
-			'manage'	=> 'sm_manage',
-		),
-	);
+	return false;
+#	return array(
+#		'filename'	=> basename(__FILE__),
+#		'modes'		=> array(
+#			'addnew'	=> 'sm_addnew',
+#			'create'	=> 'sm_create',
+#			'export'	=> 'sm_export',
+#			'manage'	=> 'sm_manage',
+#		),
+#	);
 }
 else
 {
@@ -203,76 +204,76 @@ else
 				//	
 				// DAMN! Thats alot of data to validate...
 				//
-				$updated['theme_name'] = $HTTP_POST_VARS['theme_name'];
-				$updated['template_name'] = $HTTP_POST_VARS['template_name'];
-				$updated['head_themesheet'] = $HTTP_POST_VARS['head_themesheet'];
-				$updated['body_background'] = $HTTP_POST_VARS['body_background'];
-				$updated['body_bgcolor'] = $HTTP_POST_VARS['body_bgcolor'];
-				$updated['body_text'] = $HTTP_POST_VARS['body_text'];
-				$updated['body_link'] = $HTTP_POST_VARS['body_link'];
-				$updated['body_vlink'] = $HTTP_POST_VARS['body_vlink'];
-				$updated['body_alink'] = $HTTP_POST_VARS['body_alink'];
-				$updated['body_hlink'] = $HTTP_POST_VARS['body_hlink'];
-				$updated['tr_color1'] = $HTTP_POST_VARS['tr_color1'];
-				$updated_name['tr_color1_name'] =  $HTTP_POST_VARS['tr_color1_name'];
-				$updated['tr_color2'] = $HTTP_POST_VARS['tr_color2'];
-				$updated_name['tr_color2_name'] = $HTTP_POST_VARS['tr_color2_name'];
-				$updated['tr_color3'] = $HTTP_POST_VARS['tr_color3'];
-				$updated_name['tr_color3_name'] = $HTTP_POST_VARS['tr_color3_name'];
-				$updated['tr_class1'] = $HTTP_POST_VARS['tr_class1'];
-				$updated_name['tr_class1_name'] = $HTTP_POST_VARS['tr_class1_name'];
-				$updated['tr_class2'] = $HTTP_POST_VARS['tr_class2'];
-				$updated_name['tr_class2_name'] = $HTTP_POST_VARS['tr_class2_name'];
-				$updated['tr_class3'] = $HTTP_POST_VARS['tr_class3'];
-				$updated_name['tr_class3_name'] = $HTTP_POST_VARS['tr_class3_name'];
-				$updated['th_color1'] = $HTTP_POST_VARS['th_color1'];
-				$updated_name['th_color1_name'] = $HTTP_POST_VARS['th_color1_name'];
-				$updated['th_color2'] = $HTTP_POST_VARS['th_color2'];
-				$updated_name['th_color2_name'] = $HTTP_POST_VARS['th_color2_name'];
-				$updated['th_color3'] = $HTTP_POST_VARS['th_color3'];
-				$updated_name['th_color3_name'] = $HTTP_POST_VARS['th_color3_name'];
-				$updated['th_class1'] = $HTTP_POST_VARS['th_class1'];
-				$updated_name['th_class1_name'] = $HTTP_POST_VARS['th_class1_name'];
-				$updated['th_class2'] = $HTTP_POST_VARS['th_class2'];
-				$updated_name['th_class2_name'] = $HTTP_POST_VARS['th_class2_name'];
-				$updated['th_class3'] = $HTTP_POST_VARS['th_class3'];
-				$updated_name['th_class3_name'] = $HTTP_POST_VARS['th_class3_name'];
-				$updated['td_color1'] = $HTTP_POST_VARS['td_color1'];
-				$updated_name['td_color1_name'] = $HTTP_POST_VARS['td_color1_name'];
-				$updated['td_color2'] = $HTTP_POST_VARS['td_color2'];
-				$updated_name['td_color2_name'] = $HTTP_POST_VARS['td_color2_name'];
-				$updated['td_color3'] = $HTTP_POST_VARS['td_color3'];
-				$updated_name['td_color3_name'] = $HTTP_POST_VARS['td_color3_name'];
-				$updated['td_class1'] = $HTTP_POST_VARS['td_class1'];
-				$updated_name['td_class1_name'] = $HTTP_POST_VARS['td_class1_name'];
-				$updated['td_class2'] = $HTTP_POST_VARS['td_class2'];
-				$updated_name['td_class2_name'] = $HTTP_POST_VARS['td_class2_name'];
-				$updated['td_class3'] = $HTTP_POST_VARS['td_class3'];
-				$updated_name['td_class3_name'] = $HTTP_POST_VARS['td_class3_name'];
-				$updated['fontface1'] = $HTTP_POST_VARS['fontface1'];
-				$updated_name['fontface1_name'] = $HTTP_POST_VARS['fontface1_name'];
-				$updated['fontface2'] = $HTTP_POST_VARS['fontface2'];
-				$updated_name['fontface2_name'] = $HTTP_POST_VARS['fontface2_name'];
-				$updated['fontface3'] = $HTTP_POST_VARS['fontface3'];
-				$updated_name['fontface3_name'] = $HTTP_POST_VARS['fontface3_name'];
-				$updated['fontsize1'] = intval($HTTP_POST_VARS['fontsize1']);
-				$updated_name['fontsize1_name'] = $HTTP_POST_VARS['fontsize1_name'];
-				$updated['fontsize2'] = intval($HTTP_POST_VARS['fontsize2']);
-				$updated_name['fontsize2_name'] = $HTTP_POST_VARS['fontsize2_name'];
-				$updated['fontsize3'] = intval($HTTP_POST_VARS['fontsize3']);
-				$updated_name['fontsize3_name'] = $HTTP_POST_VARS['fontsize3_name'];
-				$updated['fontcolor1'] = $HTTP_POST_VARS['fontcolor1'];
-				$updated_name['fontcolor1_name'] = $HTTP_POST_VARS['fontcolor1_name'];
-				$updated['fontcolor2'] = $HTTP_POST_VARS['fontcolor2'];
-				$updated_name['fontcolor2_name'] = $HTTP_POST_VARS['fontcolor2_name'];
-				$updated['fontcolor3'] = $HTTP_POST_VARS['fontcolor3'];
-				$updated_name['fontcolor3_name'] = $HTTP_POST_VARS['fontcolor3_name'];
-				$updated['span_class1'] = $HTTP_POST_VARS['span_class1'];
-				$updated_name['span_class1_name'] = $HTTP_POST_VARS['span_class1_name'];
-				$updated['span_class2'] = $HTTP_POST_VARS['span_class2'];
-				$updated_name['span_class2_name'] = $HTTP_POST_VARS['span_class2_name'];
-				$updated['span_class3'] = $HTTP_POST_VARS['span_class3'];
-				$updated_name['span_class3_name'] = $HTTP_POST_VARS['span_class3_name'];
+				$submitd['theme_name'] = $HTTP_POST_VARS['theme_name'];
+				$submitd['template_name'] = $HTTP_POST_VARS['template_name'];
+				$submitd['head_themesheet'] = $HTTP_POST_VARS['head_themesheet'];
+				$submitd['body_background'] = $HTTP_POST_VARS['body_background'];
+				$submitd['body_bgcolor'] = $HTTP_POST_VARS['body_bgcolor'];
+				$submitd['body_text'] = $HTTP_POST_VARS['body_text'];
+				$submitd['body_link'] = $HTTP_POST_VARS['body_link'];
+				$submitd['body_vlink'] = $HTTP_POST_VARS['body_vlink'];
+				$submitd['body_alink'] = $HTTP_POST_VARS['body_alink'];
+				$submitd['body_hlink'] = $HTTP_POST_VARS['body_hlink'];
+				$submitd['tr_color1'] = $HTTP_POST_VARS['tr_color1'];
+				$submitd_name['tr_color1_name'] =  $HTTP_POST_VARS['tr_color1_name'];
+				$submitd['tr_color2'] = $HTTP_POST_VARS['tr_color2'];
+				$submitd_name['tr_color2_name'] = $HTTP_POST_VARS['tr_color2_name'];
+				$submitd['tr_color3'] = $HTTP_POST_VARS['tr_color3'];
+				$submitd_name['tr_color3_name'] = $HTTP_POST_VARS['tr_color3_name'];
+				$submitd['tr_class1'] = $HTTP_POST_VARS['tr_class1'];
+				$submitd_name['tr_class1_name'] = $HTTP_POST_VARS['tr_class1_name'];
+				$submitd['tr_class2'] = $HTTP_POST_VARS['tr_class2'];
+				$submitd_name['tr_class2_name'] = $HTTP_POST_VARS['tr_class2_name'];
+				$submitd['tr_class3'] = $HTTP_POST_VARS['tr_class3'];
+				$submitd_name['tr_class3_name'] = $HTTP_POST_VARS['tr_class3_name'];
+				$submitd['th_color1'] = $HTTP_POST_VARS['th_color1'];
+				$submitd_name['th_color1_name'] = $HTTP_POST_VARS['th_color1_name'];
+				$submitd['th_color2'] = $HTTP_POST_VARS['th_color2'];
+				$submitd_name['th_color2_name'] = $HTTP_POST_VARS['th_color2_name'];
+				$submitd['th_color3'] = $HTTP_POST_VARS['th_color3'];
+				$submitd_name['th_color3_name'] = $HTTP_POST_VARS['th_color3_name'];
+				$submitd['th_class1'] = $HTTP_POST_VARS['th_class1'];
+				$submitd_name['th_class1_name'] = $HTTP_POST_VARS['th_class1_name'];
+				$submitd['th_class2'] = $HTTP_POST_VARS['th_class2'];
+				$submitd_name['th_class2_name'] = $HTTP_POST_VARS['th_class2_name'];
+				$submitd['th_class3'] = $HTTP_POST_VARS['th_class3'];
+				$submitd_name['th_class3_name'] = $HTTP_POST_VARS['th_class3_name'];
+				$submitd['td_color1'] = $HTTP_POST_VARS['td_color1'];
+				$submitd_name['td_color1_name'] = $HTTP_POST_VARS['td_color1_name'];
+				$submitd['td_color2'] = $HTTP_POST_VARS['td_color2'];
+				$submitd_name['td_color2_name'] = $HTTP_POST_VARS['td_color2_name'];
+				$submitd['td_color3'] = $HTTP_POST_VARS['td_color3'];
+				$submitd_name['td_color3_name'] = $HTTP_POST_VARS['td_color3_name'];
+				$submitd['td_class1'] = $HTTP_POST_VARS['td_class1'];
+				$submitd_name['td_class1_name'] = $HTTP_POST_VARS['td_class1_name'];
+				$submitd['td_class2'] = $HTTP_POST_VARS['td_class2'];
+				$submitd_name['td_class2_name'] = $HTTP_POST_VARS['td_class2_name'];
+				$submitd['td_class3'] = $HTTP_POST_VARS['td_class3'];
+				$submitd_name['td_class3_name'] = $HTTP_POST_VARS['td_class3_name'];
+				$submitd['fontface1'] = $HTTP_POST_VARS['fontface1'];
+				$submitd_name['fontface1_name'] = $HTTP_POST_VARS['fontface1_name'];
+				$submitd['fontface2'] = $HTTP_POST_VARS['fontface2'];
+				$submitd_name['fontface2_name'] = $HTTP_POST_VARS['fontface2_name'];
+				$submitd['fontface3'] = $HTTP_POST_VARS['fontface3'];
+				$submitd_name['fontface3_name'] = $HTTP_POST_VARS['fontface3_name'];
+				$submitd['fontsize1'] = intval($HTTP_POST_VARS['fontsize1']);
+				$submitd_name['fontsize1_name'] = $HTTP_POST_VARS['fontsize1_name'];
+				$submitd['fontsize2'] = intval($HTTP_POST_VARS['fontsize2']);
+				$submitd_name['fontsize2_name'] = $HTTP_POST_VARS['fontsize2_name'];
+				$submitd['fontsize3'] = intval($HTTP_POST_VARS['fontsize3']);
+				$submitd_name['fontsize3_name'] = $HTTP_POST_VARS['fontsize3_name'];
+				$submitd['fontcolor1'] = $HTTP_POST_VARS['fontcolor1'];
+				$submitd_name['fontcolor1_name'] = $HTTP_POST_VARS['fontcolor1_name'];
+				$submitd['fontcolor2'] = $HTTP_POST_VARS['fontcolor2'];
+				$submitd_name['fontcolor2_name'] = $HTTP_POST_VARS['fontcolor2_name'];
+				$submitd['fontcolor3'] = $HTTP_POST_VARS['fontcolor3'];
+				$submitd_name['fontcolor3_name'] = $HTTP_POST_VARS['fontcolor3_name'];
+				$submitd['span_class1'] = $HTTP_POST_VARS['span_class1'];
+				$submitd_name['span_class1_name'] = $HTTP_POST_VARS['span_class1_name'];
+				$submitd['span_class2'] = $HTTP_POST_VARS['span_class2'];
+				$submitd_name['span_class2_name'] = $HTTP_POST_VARS['span_class2_name'];
+				$submitd['span_class3'] = $HTTP_POST_VARS['span_class3'];
+				$submitd_name['span_class3_name'] = $HTTP_POST_VARS['span_class3_name'];
 				$theme_id = intval($HTTP_POST_VARS['theme_id']);
 				//
 				// Wheeeew! Thank heavens for copy and paste and search and replace :D
@@ -283,7 +284,7 @@ else
 					$sql = "UPDATE " . THEMES . " SET ";
 					$count = 0;
 	
-					while(list($key, $val) = each($updated))
+					while(list($key, $val) = each($submitd))
 					{
 						if($count != 0)
 						{
@@ -322,7 +323,7 @@ else
 						$sql = "UPDATE " . THEMES_NAME . " 
 							SET ";
 						$count = 0;
-						while(list($key, $val) = each($updated_name))
+						while(list($key, $val) = each($submitd_name))
 						{
 							if($count != 0)
 							{
@@ -342,7 +343,7 @@ else
 						// Nope, no names entry so we create a new one.
 						//
 						$sql = "INSERT INTO " . THEMES_NAME . " (themes_id, ";
-						while(list($key, $val) = each($updated_name))
+						while(list($key, $val) = each($submitd_name))
 						{
 							$fields[] = $key;
 							$vals[] = str_replace("\'", "''", $val);
@@ -386,7 +387,7 @@ else
 					//
 					$sql = "SELECT themes_id 
 						FROM " . THEMES . " 
-						WHERE theme_name = '" . str_replace("\'", "''", $updated['theme_name']) . "'";
+						WHERE theme_name = '" . str_replace("\'", "''", $submitd['theme_name']) . "'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, "Could not query themes table", "", __LINE__, __FILE__, $sql);
@@ -397,7 +398,7 @@ else
 						message(GENERAL_ERROR, $lang['Style_exists'], $lang['Error']);
 					}				
 					
-					while(list($key, $val) = each($updated))
+					while(list($key, $val) = each($submitd))
 					{
 						$field_names[] = $key;
 	
@@ -444,7 +445,7 @@ else
 					// Insert names data
 					//
 					$sql = "INSERT INTO " . THEMES_NAME . " (themes_id, ";
-					while(list($key, $val) = each($updated_name))
+					while(list($key, $val) = each($submitd_name))
 					{
 						$fields[] = $key;
 						$vals[] = $val;

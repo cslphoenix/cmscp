@@ -1,5 +1,36 @@
 <div class="menu">
 <ul>
+	<!-- BEGIN navi -->
+	<!-- BEGIN row_navi -->
+	<li><a class="hide" href="#"><br />{navi.row_navi.NAME}</a>
+		<ul>
+			<!-- BEGIN row_entry -->
+			<li><a href="{navi.row_navi.row_entry.URL}" target="{navi.row_navi.row_entry.TARGET}" title="{navi.row_navi.row_entry.NAME}">{navi.row_navi.row_entry.NAME}</a></li>
+			<!-- END row_entry -->
+		</ul>
+	</li>
+	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
+	<!-- END row_navi -->
+	<!-- END navi -->
+	
+	<!-- BEGIN separate -->
+	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_22.png); height:32px; width:476px;"></li>
+	<!-- BEGIN row_separate -->
+	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
+	<li><a class="hide" href="#"><br />{separate.row_separate.NAME}</a>
+		<ul>
+			<!-- BEGIN row_entry -->
+			<li><a href="{separate.row_separate.row_entry.URL}" target="{separate.row_separate.row_entry.TARGET}" title="{separate.row_separate.row_entry.NAME}">{separate.row_separate.row_entry.NAME}</a></li>
+			<!-- END row_entry -->
+	<!--	
+			<li><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></li>
+			<li>{ADMIN_LINK}</li>
+	-->
+		</ul>
+	</li>
+	<!-- END row_separate -->
+	<!-- END separate -->
+	
 	<!-- BEGIN navi_main -->
 	<li><a class="hide" href="#"><br />{L_NAVI_MAIN}</a>
 		<ul>
@@ -45,7 +76,7 @@
 	</li>	
 	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 	<!-- END navi_misc -->
-	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_22.png); height:32px; width:476px;"></li>
+<!--<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_22.png); height:32px; width:476px;"></li>-->
 	<!-- BEGIN navi_user -->
 	<li style="background-image:url(templates/subSilver/images/page_/democms1.3-schnitt_18.png); height:32px; width:2px;"></li>
 	<li>

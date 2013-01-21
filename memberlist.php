@@ -15,7 +15,7 @@ $start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_USER;
-$url	= POST_USERS;
+#$url	= POST_USERS;
 
 $time	= time();
 $file	= basename(__FILE__);

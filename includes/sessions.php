@@ -354,10 +354,10 @@ function session_pagestart($user_ip, $thispage_id)
 				if ( $current_time - $userdata['session_time'] > 10 )
 				{
 					// A little trick to reset session_admin on session re-usage
-					$update_admin = (!defined('IN_ADMIN') && $current_time - $userdata['session_time'] > ($config['session_length']+60)) ? ', session_admin = 0' : '';
+					$submit_admin = (!defined('IN_ADMIN') && $current_time - $userdata['session_time'] > ($config['session_length']+60)) ? ', session_admin = 0' : '';
 
 					$sql = "UPDATE " . SESSIONS . " 
-						SET session_time = $current_time, session_page = $thispage_id$update_admin
+						SET session_time = $current_time, session_page = $thispage_id$submit_admin
 						WHERE session_id = '" . $userdata['session_id'] . "'";
 					if ( !($result = $db->sql_query($sql)) )
 					{

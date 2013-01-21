@@ -11,6 +11,8 @@ define('TXT', 'text');
 define('ARY', 'array');
 define('TYP', 'type');
 define('CLN', 'clean');
+define('HTM', 'html');
+define('MAL', 'mail');
 
 define('ANONYMOUS',	1);
 
@@ -83,42 +85,42 @@ define('LOG_MOD',		2);
 define('LOG_ADMIN',		3);
 
 /* Log Sektion */
-define('SECTION_AUTHLIST',		0);
-define('SECTION_COMMENT',		1);
+define('SECTION_AUTH',			1234567899);
+define('SECTION_BUGTRACKER',	999);		
+define('SECTION_CALENDAR',		100);	
+define('SECTION_CASH',			21);
+define('SECTION_CHANGELOG',		998);	
+define('SECTION_COMMENT',		1);	
+define('SECTION_DATABASE',		888);	
+define('SECTION_DOWNLOADS',		25);	
 define('SECTION_EVENT',			2);
+define('SECTION_FIELDS',		777);	
 define('SECTION_FORUM',			3);
+define('SECTION_GALLERY',		22);	
 define('SECTION_GAMES',			4);
-define('SECTION_GROUPS',		6);
+define('SECTION_GROUPS',		6);	
+define('SECTION_ICONS',			666);
+define('SECTION_LABEL',			99923123);
 define('SECTION_LOG',			7);
 define('SECTION_LOGIN',			8);
-define('SECTION_MATCH',			9);
-define('SECTION_NAVI',			10);
-define('SECTION_NETWORK',		11);
-define('SECTION_NEWS',			12);
-define('SECTION_NEWS_CAT',		13);
-define('SECTION_NEWSLETTER',	14);
-define('SECTION_PROFILE',		15);
-define('SECTION_RANK',			16);
-define('SECTION_TEAM',			17);
-define('SECTION_TEAMSPEAK',		18);
-define('SECTION_TRAINING',		19);
-define('SECTION_USER',			20);
-define('SECTION_CASH',			21);
-define('SECTION_GALLERY',		22);
 define('SECTION_MAPS',			23);
-define('SECTION_SERVER',		24);
-define('SECTION_DOWNLOADS',		25);
-define('SECTION_CALENDAR',		100);
-define('SECTION_VOTES',			300);
-define('SECTION_SERVER_TYPE', 	444);
-define('SECTION_SETTINGS',		555);
+define('SECTION_MATCH',			9);
 define('SECTION_MENU',			800);
-define('SECTION_DATABASE',		888);
-define('SECTION_FIELDS',		777);
-define('SECTION_ICONS',			666);
-define('SECTION_AUTH',			1234567899);
-define('SECTION_CHANGELOG',		998);
-define('SECTION_BUGTRACKER',	999);
+define('SECTION_NAVI',			10);
+define('SECTION_NETWORK',		11);	
+define('SECTION_NEWS',			12);
+define('SECTION_NEWS_CAT',		13);	
+define('SECTION_NEWSLETTER',	14);		
+define('SECTION_PROFILE',		15);	
+define('SECTION_RANK',			16);
+define('SECTION_SERVER',		24);	
+define('SECTION_SERVER_TYPE', 	444);		
+define('SECTION_SETTINGS',		555);	
+define('SECTION_TEAM',			17);
+define('SECTION_TEAMSPEAK',		18);	
+define('SECTION_TRAINING',		19);	
+define('SECTION_USER',			20);
+define('SECTION_VOTES',			300);
 
 /* Page Numbers for session handling */
 define('PAGE_INDEX',		0);
@@ -148,7 +150,6 @@ define('PAGE_SERVER',		300);
 
 define('PAGE_BUGTRACKER',	-98);
 define('PAGE_CHANGELOG',	-99);
-
 
 /* Navi Types */
 define('NAVI_MAIN',		1);
@@ -261,183 +262,96 @@ define('PRIVMSGS_UNREAD_MAIL',		5);
 define('SESSION_METHOD_COOKIE',		100);
 define('SESSION_METHOD_GET',		101);
 
+/* Profile Felder */
 define('PROFILE_TEXT',	0);
-define('PROFILE_TEXTAREA',	1);
-define('PROFILE_NUMMERIC',	2);
-define('PROFILE_EMAIL',		3);
+define('PROFILE_AREA',	1);
+define('PROFILE_TYPE',	2);
+#define('PROFILE_EMAIL',	3);
 
 /* Page Numbers for session handling */
-
-/* URL PARAMETERS */
-/* global */
-define('POST_CAT',			'c');
-define('POST_PIC',			'p');
-/* special */
-define('POST_GAMES',		'g');
-define('POST_GALLERY',		'g');
-define('POST_GROUPS',		'g');
-define('POST_NEWS',			'n');
-define('POST_EVENT',		'e');
-
-define('POST_AUTHLIST',		'al');
-define('POST_CATEGORY',		'c');
-define('POST_CONTACT',		'c');
-define('POST_FORUM',		'f');
-define('POST_FORUM_CAT',	'fc');
-define('POST_FORUM_SUB',	'fs');
-define('POST_CALENDAR',		'cal');
-
-
-define('POST_AUTH_USERGROUPS', 'ug');
-
-
-define('POST_SUB',			's');
-
-define('POST_SERVER',		's');
-define('POST_SERVER_TYPE',	'st');
-define('POST_LOGS',			'l');
-define('POST_MATCH',		'm');
-define('POST_MATCH_PIC',	'mp');
-define('POST_NAVI',			'n');
-define('POST_NETWORK',		'n');
-define('POST_NEWSLETTER',	'nl');
-define('POST_POST',			'p');
-define('POST_PROFILE',		'p');
-define('POST_RANKS',		'r');
-define('POST_TEAMS',		't');
-define('POST_TEAMSPEAK',	't');
-define('POST_TOPIC',		't');
-define('POST_TRAINING',		'tr');
-define('POST_USER',			'u');
-define('POST_CASH',			'c');
-define('POST_CASH_USER',	'cu');
-define('POST_USERS',		'user');
-define('POST_BUGTRACKER',	'bt');
-define('POST_CHANGELOGS',	'cl');
-define('POST_FIELDS',		'f');
-define('POST_ICONS',		'i');
-define('POST_MOD',			'm');
-
-
-define('POST_VOTES',		'vote');
-
-define('POST_DOWNLOADS',		'd');
-define('POST_DOWNLOADS_CAT',	'c'); # c wie cat
-define('POST_MAPS',			'm');
-define('POST_MAPS_CAT',		'mc');
-
-/* menu */
-define('POST_MENU',		'm');
 
 //	Forum Status
 define('FORUM_UNLOCKED',	0);
 define('FORUM_LOCKED',		1);
 
 /* Spieler Status / Teilnahme Status */
-define('STATUS_NONE',	0);
+define('STATUS_NONE',		0);
 define('STATUS_YES',		1);
 define('STATUS_NO',			2);
 define('STATUS_REPLACE',	3);
 
 /* Tabellennamen */
+define('ACL_FIELDS',		$db_prefix . 'acl_fields');	
+define('ACL_GROUPS',		$db_prefix . 'acl_groups');	
 define('ACL_LABEL',			$db_prefix . 'acl_label');
-define('ACL_FIELDS',		$db_prefix . 'acl_fields');
-define('ACL_OPTIONS',		$db_prefix . 'acl_options');
-define('ACL_GROUPS',		$db_prefix . 'acl_groups');
+define('ACL_OPTIONS',		$db_prefix . 'acl_options');	
 define('ACL_USERS',			$db_prefix . 'acl_users');
 
-define('CASH',				$db_prefix . 'cash');
-define('COMMENT',			$db_prefix . 'comment');
-define('COMMENT_READ',		$db_prefix . 'comment_read');
-define('CONFIG',			$db_prefix . 'config');
-define('CONTACT',			$db_prefix . 'contact');
-define('COUNTER_COUNTER',	$db_prefix . 'counter_counter');
-define('COUNTER_ONLINE',	$db_prefix . 'counter_online');
-define('DOWNLOADS',			$db_prefix . 'downloads');
-define('DOWNLOADS_CAT',		$db_prefix . 'downloads_cat');
-define('EVENT',				$db_prefix . 'event');
-define('GALLERY',			$db_prefix . 'gallery');
-define('GALLERY_PIC',		$db_prefix . 'gallery_pic');
-
-
-define('FORMS',				$db_prefix . 'forum');
-define('AUTH_GROUPS',		$db_prefix . 'acl_groups');
-define('AUTH_USERS',		$db_prefix . 'acl_users');
-
+/* system */
+define('CONFIG',			$db_prefix . 'config');	
+define('SETTINGS',			$db_prefix . 'settings');		
+define('ERROR',				$db_prefix . 'log_error');
+define('LOGS',				$db_prefix . 'log');
 
 define('BANLIST',			$db_prefix . 'banlist');
 define('CAPTCHA',			$db_prefix . 'captcha');
+define('CASH',				$db_prefix . 'cash');
+define('CASH_USER',			$db_prefix . 'cash_users');
+define('COMMENT',			$db_prefix . 'comment');
+define('COMMENT_READ',		$db_prefix . 'comment_read');
+define('CONTACT',			$db_prefix . 'contact');
+define('COUNTER_COUNTER',	$db_prefix . 'counter_counter');
+define('COUNTER_ONLINE',	$db_prefix . 'counter_online');
 define('DISALLOW',			$db_prefix . 'disallow');
+define('DOWNLOAD',			$db_prefix . 'download');
+define('DOWNLOADS',			$db_prefix . 'downloads');
+define('DOWNLOADS_CAT',		$db_prefix . 'downloads_cat');
+define('EVENT',				$db_prefix . 'event');
+
+define('FIELDS',			$db_prefix . 'fields');
+define('FIELDS_DATA',		$db_prefix . 'fields_data');
+define('PROFILE',			$db_prefix . 'profile_fields');
+define('PROFILE_DATA',		$db_prefix . 'profile_data');
+
+define('FORUM',				$db_prefix . 'forum');
 define('FORUM_ACCESS',		$db_prefix . 'forum_access');
-define('FORUM_CAT',			$db_prefix . 'forum_cat');
-
-define('FORUM',				$db_prefix . 'forum_forums');
-define('POSTS',				$db_prefix . 'forum_posts');
-define('TOPICS',			$db_prefix . 'forum_topics');
-define('TOPICS_READ',		$db_prefix . 'forum_topics_read');
-
+define('GALLERY_NEW',		$db_prefix . 'gallery_new');
+define('GALLERY',			$db_prefix . 'gallery');
+define('GALLERY_PIC',		$db_prefix . 'gallery_pic');
+define('GAMES',				$db_prefix . 'game');
 define('GROUPS',			$db_prefix . 'groups');
-define('LOGS',				$db_prefix . 'log');
-define('ERROR',				$db_prefix . 'log_error');
+define('ICONS',				$db_prefix . 'icons');
+define('LISTS',				$db_prefix . 'users_list');
+define('MAPS',				$db_prefix . 'maps');
 define('MATCH',				$db_prefix . 'match');
+define('MATCH_LINEUP',		$db_prefix . 'match_lineup');
 define('MATCH_MAPS',		$db_prefix . 'match_maps');
-define('MENU2',				$db_prefix . 'menu');
-define('MENU',				$db_prefix . 'menu_acp');
-define('MENU_CAT',			$db_prefix . 'menu_acp_cat');
-define('NAVI',				$db_prefix . 'navi');	
+define('MATCH_TYPE',		$db_prefix . 'match_type');
+define('MENU',				$db_prefix . 'menu');
+define('NAVI',				$db_prefix . 'navi');
 define('NETWORK',			$db_prefix . 'network');
 define('NEWS',				$db_prefix . 'news');
 define('NEWS_CAT',			$db_prefix . 'newscat');
 define('NEWSLETTER',		$db_prefix . 'newsletter');
+define('POSTS',				$db_prefix . 'forum_posts');
 define('PRIVMSGS',			$db_prefix . 'privmsgs');
-define('PROFILE',			$db_prefix . 'profile');
-define('PROFILE_CAT',		$db_prefix . 'profile_cat');
-define('PROFILE_DATA',		$db_prefix . 'profile_data');
-
-define('FIELDS',			$db_prefix . 'fields');
-define('FIELDS_DATA',		$db_prefix . 'fields_data');
-
-
 define('RANKS',				$db_prefix . 'ranks');
-
+define('RATE',				$db_prefix . 'rate');
+define('SERVER',			$db_prefix . 'server');
+define('SERVER_TYPE',		$db_prefix . 'server_types');
 define('SESSIONS',			$db_prefix . 'sessions');
 define('SESSIONS_KEYS',		$db_prefix . 'sessions_keys');
-define('SETTINGS',			$db_prefix . 'settings');
 define('TEAMS',				$db_prefix . 'teams');
 define('THEMES',			$db_prefix . 'themes');
 define('THEMES_NAME',		$db_prefix . 'themes_name');
+define('TOPICS',			$db_prefix . 'forum_topics');
+define('TOPICS_READ',		$db_prefix . 'forum_topics_read');
 define('TRAINING',			$db_prefix . 'training');
 define('USERS',				$db_prefix . 'users');
-define('LISTS',				$db_prefix . 'users_list');
 define('VOTES',				$db_prefix . 'vote');
 define('VOTES_OPTION',		$db_prefix . 'vote_option');
 
-
-define('GAMES',				$db_prefix . 'game');
-define('MAPS',				$db_prefix . 'maps');
-define('SERVER',			$db_prefix . 'server');
-define('SERVER_TYPE',		$db_prefix . 'server_types');
-#define('TEAMSPEAK',			$db_prefix . 'teamspeak');
-
-define('RATE',				$db_prefix . 'rate');
-
-
-define('CASH_USER',			$db_prefix . 'cash_users');
-#define('EVENT_USERS',		$db_prefix . 'event_users');	
-#define('GROUPS_USERS',		$db_prefix . 'groups_users');	
-define('MATCH_LINEUP',		$db_prefix . 'match_lineup');	
-#define('MATCH_USERS',		$db_prefix . 'match_users');	
-#define('TEAMS_USERS',		$db_prefix . 'teams_users');	
-#define('TRAINING_USERS',	$db_prefix . 'training_users');		
-#define('VOTES_USERS',		$db_prefix . 'vote_users');	
-
-define('GALLERY_SETTINGS',	$db_prefix . 'gallery_settings');
-define('MATCH_TYPE',		$db_prefix . 'match_type');
-
-/* only main site */
 define('BUGTRACKER',		$db_prefix . 'bugtracker');
 define('CHANGELOG',			$db_prefix . 'changelog');
-
-define('ICONS',				$db_prefix . 'icons');
 
 ?>

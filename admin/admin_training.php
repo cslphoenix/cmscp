@@ -15,7 +15,7 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current = 'acp_training';
 	
@@ -41,8 +41,9 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$team_id	= request(POST_TEAMS, INT);
-	$match_id	= request(POST_MATCH, INT);
+	$team_id	= request('team', INT);
+	$match_id	= request('match', INT);
+	
 	$acp_main	= request('acp_main', INT);
 	
 	$dir_path	= $root_path . 'admin/';
@@ -68,11 +69,11 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	$mode = ( in_array($mode, array('create', 'update', 'delete')) ) ? $mode : '';
+	$mode = (in_array($mode, array('create', 'update', 'delete'))) ? $mode : false;
 	
 	$switch = $settings['switch']['training'];
 	
-	debug($_POST, 'POST');
+	debug($_POST, '_POST');
 	
 	switch ( $mode )
 	{
@@ -84,22 +85,23 @@ else
 			$vars = array(
 				'training' => array(
 					'title' => 'input_data',
-					'training_vs'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',		'required' => 'input_name'),
-					'team_id'			=> array('validate' => INT,	'explain' => false, 'type' => 'drop:team',		'required' => 'select_team', 'params' => array('request', 'training_maps')),
-					'match_id'			=> array('validate' => INT,	'explain' => false, 'type' => 'drop:match'),
-					'training_maps'		=> array('validate' => ARY,	'explain' => false, 'type' => 'drop:maps',		'required' => 'select_maps'),
-				#	'training_date'		=> array('validate' => INT,	'explain' => false, 'type' => 'drop:datetime',	'params' => ( $mode == 'create' ) ? $time : '-1'),
+					'training_vs'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',		'required' => 'input_name'),
+					'team_id'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:team',		'required' => 'select_team', 'params' => array('request', 'training_maps')),
+					'match_id'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:match'),
+					'training_maps'		=> array('validate' => ARY,	'explain' => false,	'type' => 'drop:maps',		'required' => 'select_maps'),
+				#	'training_date'		=> array('validate' => INT,	'explain' => false,	'type' => 'drop:datetime',	'params' => ( $mode == 'create' ) ? $time : '-1'),
 					'training_date'		=> array('validate' => ($switch ? INT : TXT), 'type' => ($switch ? 'drop:datetime' : 'text:25;25'), 'params' => ($switch ? (($mode == 'create') ? $time : '-1') : 'format')),
-					'training_duration'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:duration',	'params' => 'training_date'),
-					'training_text'		=> array('validate' => TXT,	'explain' => false, 'type' => 'textarea:40',	'params' => TINY_NORMAL),
-					'training_comments'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+					'training_duration'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:duration',	'params' => 'training_date'),
+					'training_text'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40',	'params' => TINY_NORMAL),
+					'training_comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 					'time_create'		=> 'hidden',
 					'time_update'		=> 'hidden',
 				),
 			);
 			
-			if ( $mode == 'create' && !$update )
+			if ( $mode == 'create' && !$submit )
 			{
+				debug($team_id);
 				$data_sql = array(
 					'training_vs'		=> ( request('training_vs', TXT) ) ? request('training_vs', TXT) : request('vs', TXT),
 					'team_id'			=> $team_id,
@@ -113,7 +115,7 @@ else
 					'time_update'		=> 0,
 				);
 			}
-			else if ( $mode == 'update' && !$update )
+			else if ( $mode == 'update' && !$submit )
 			{
 				$data_sql = data(TRAINING, $data, false, 1, true);
 			}
@@ -123,7 +125,7 @@ else
 				
 				if ( !$error )
 				{
-				#	$data['training_maps'] = is_array($data['training_maps']) ? serialize($data['training_maps']) : array();
+				#	$data_sql['training_maps'] = is_array($data_sql['training_maps']) ? serialize($data_sql['training_maps']) : array();
 					
 					if ( $mode == 'create' )
 					{
@@ -133,7 +135,7 @@ else
 					else
 					{
 						$sql = sql(TRAINING, $mode, $data_sql, 'training_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');
@@ -152,9 +154,9 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['training_vs']),
+				'L_INPUT'		=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['training_vs']),
 				
-				'S_ACTION'		=> check_sid("$file&mode=$mode&amp;id=$data"),
+				'S_ACTION'		=> check_sid("$file&mode=$mode&id=$data"),
 				'S_FIELDS'		=> $fields,
 			));
 			
@@ -212,7 +214,7 @@ else
 			
 			$teams = data(TEAMS, false, 'team_order', 0, false);
 			
-			$s_sort .= '<select name="' . POST_TEAMS . '" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
+			$s_sort .= '<select name="team" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
 			$s_sort .= '<option value="0">' .  sprintf($lang['sprintf_select_format'], $lang['msg_select_team']) . '</option>';
 			
 			foreach ( $teams as $info => $value )
@@ -223,7 +225,7 @@ else
 			
 			$s_sort .= '</select>';
 			
-			$select_id = ( $team_id >= '1' ) ? "AND tr.team_id = $team_id" : '';
+			$select_id = ( $team_id >= 1 ) ? "AND tr.team_id = $team_id" : '';
 			
 			$sql = "SELECT tr.*, g.game_image
 						FROM " . TRAINING . " tr, " . TEAMS . " t, " . GAMES . " g
@@ -254,8 +256,6 @@ else
 					}
 				}
 				
-			#	debug($old, 'old');
-
 				if ( !$new )
 				{
 					$template->assign_block_vars('display.new_empty', array());
@@ -287,7 +287,6 @@ else
 				else
 				{
 					$cnt_old = count($old);
-				#	debug($start, 'start', true);
 					
 				#	for ( $j = $start; $j < $cnt_old; $j++ )
 					for ( $j = $start; $j < min(5 + $start, $cnt_old); $j++ )
@@ -322,7 +321,7 @@ else
 				'PAGE_PAGING'	=> generate_pagination($file, $cnt_old, 5, $start ),
 				
 				'S_SORT'	=> $s_sort,
-				'S_TEAMS'	=> select_team($team_id, false, POST_TEAMS, false),
+				'S_TEAMS'	=> select_team($team_id, false, 'team', false),
 
 				'S_CREATE'	=> check_sid("$file&mode=create"),
 				'S_ACTION'	=> check_sid($file),

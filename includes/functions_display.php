@@ -19,12 +19,142 @@
 
 */
 
-function display_navi()
+function display_navi($l_login_logout, $u_login_logout)
 {
 	global $db, $root_path, $settings, $template, $userdata, $lang;
 	
+	$sql = "SELECT * FROM " . MENU . " WHERE action = 'pcp' AND menu_show = 1 ORDER BY menu_order ASC";
+	$tmp = _cached($sql, 'dsp_menu', 0);
+	
+	$logout = @unserialize($settings['navi_settings']['navi_logout']);
+	$logout = isset($logout) ? $logout[0] : false;
+	
+	$separate = @unserialize($settings['navi_settings']['navi_modus']);
+	$separate = isset($separate) ? $separate : false;
+	
+#	$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+#	'U_LOGIN_LOGOUT' => check_sid($u_login_logout),	
+#	'L_LOGIN_LOGOUT' => $l_login_logout,
+	
+	foreach ( $tmp as $row )
+	{
+	#	if ( $userdata['user_level'] >= TRIAL && ( $row['navi_intern'] == 0 || $row['navi_intern'] == 1 ) )
+		if ( $row['type'] == 3 )
+		{
+			$ary_cat[] = $row;
+		}
+			
+		if ( $row['type'] == 4 && $userdata['user_level'] >= TRIAL )
+		{
+			$ary_entry[$row['main']][] = $row;
+		}
+		else if ( $row['type'] == 4 && $row['menu_intern'] != 1 )
+		{
+			$ary_entry[$row['main']][] = $row;
+		}
+	}
+	
+	if ( $logout )
+	{
+		$ary_entry[$logout][] = ( $userdata['user_level'] == ADMIN ) ? array('menu_name' => $lang['Admin_panel'], 'menu_lang' => 0, 'menu_target' => 0, 'menu_file' => 'admin/admin_index.php?sid=' . $userdata['session_id']) : false;
+		$ary_entry[$logout][] = array('menu_name' => $l_login_logout, 'menu_lang' => 0, 'menu_target' => 0, 'menu_file' => $u_login_logout);
+		
+	}
+	
+	$_cat_s = array();
+	
+	foreach ( $ary_cat as $row )
+	{
+		if ( $separate && !in_array($row['menu_id'], $separate) )
+		{
+			$_cat[] = $row;
+		}
+		else if ( $separate && in_array($row['menu_id'], $separate) )
+		{
+			$_cat_s[] = $row;
+		}
+		else
+		{
+			$_cat[] = $row;
+		}
+	}
+	
+	if ( $_cat )
+	{
+		$template->assign_block_vars('navi', array());
+		
+		foreach ( $_cat as $row )
+		{
+			$template->assign_block_vars('navi.row_navi', array(
+				'NAME'	=> ($row['menu_lang']) ? lang($row['menu_name']) : $row['menu_name'],
+			));
+			
+			if ( isset($ary_entry[$row['menu_id']]) )
+			{
+				foreach ( $ary_entry[$row['menu_id']] as $erow )
+				{
+					$template->assign_block_vars('navi.row_navi.row_entry', array(
+						'NAME'		=> ($erow['menu_lang']) ? lang($erow['menu_name']) : $erow['menu_name'],
+						'TARGET'	=> ($erow['menu_target']) ? '_blank' : '_self',
+						'URL'		=> $erow['menu_file'],
+					));
+				}
+			}
+			
+		}
+	}
+	
+	if ( $_cat_s )
+	{
+		$template->assign_block_vars('separate', array());
+		
+		foreach ( $_cat_s as $row )
+		{
+			$template->assign_block_vars('separate.row_separate', array(
+				'NAME'	=> ($row['menu_lang']) ? lang($row['menu_name']) : $row['menu_name'],
+			));
+			
+			if ( isset($ary_entry[$row['menu_id']]) )
+			{
+				foreach ( $ary_entry[$row['menu_id']] as $erow )
+				{
+					$template->assign_block_vars('separate.row_separate.row_entry', array(
+						'NAME'		=> ($erow['menu_lang']) ? lang($erow['menu_name']) : $erow['menu_name'],
+						'TARGET'	=> ($erow['menu_target']) ? '_blank' : '_self',
+						'URL'		=> $erow['menu_file'],
+					));
+				}
+			}
+			
+		}
+	}
+	
+		
+	/*
+	if ( is_array($separate) )
+	{
+		foreach ()
+
+	if ( $separate )
+	{
+		$url = $ary[$i]['navi_url'];
+		$tar = $ary[$i]['navi_target'] ? '_blank' : '_self';
+		$name = $ary[$i]['navi_lang'] ? isset($lang[$ary[$i]['navi_name']]) ? $lang[$ary[$i]['navi_name']] : $ary[$i]['navi_name'] : $ary[$i]['navi_name'];
+		
+		$template->assign_block_vars($row_type, array('URL' => "<a href=\"$url\" target=\"$tar\" title=\"$name\">$name</a>"));
+			
+		
+		$template->assign_block_vars('separate', array());
+	}
+	else
+	{
+		$template->assign_block_vars('navi', array());
+	}
+	*/
+
+/*
 	$sql = "SELECT * FROM " . NAVI . " WHERE navi_show = 1 ORDER BY navi_order ASC";
-	$tmp = _cached($sql, 'dsp_navi', INT);
+	$tmp = _cached($sql, 'dsp_navi', 0);
 
 	foreach ( $tmp as $key => $row )
 	{
@@ -63,7 +193,7 @@ function display_navi()
 		
 		$template->assign_block_vars($row_type, array('URL' => "<a href=\"$url\" target=\"$tar\" title=\"$name\">$name</a>"));
 	}
-	
+*/	
 	$template->set_filenames(array('navi' => 'navi_navigation.tpl'));
 	$template->assign_var_from_handle('NAVIGATION', 'navi');
 }
@@ -104,14 +234,14 @@ function display_news()
 		for ( $i = 0; $i < $cnt; $i++ )
 		{
 			$game	= $ary[$i]['news_match'] ? display_gameicon($ary[$i]['game_image']) . '&nbsp;' : '';
-			$url	= check_sid('news.php?' . POST_NEWS . '=' . $ary[$i]['news_id']);
+			$url	= check_sid('news.php?id=' . $ary[$i]['news_id']);
 			$name	= cut_string($ary[$i]['news_title'], $settings['module_news']['length']);
 			$title	= $ary[$i]['news_title'];
 
 			$template->assign_block_vars('sn_news_row', array(
 				'CLASS' 	=> ( $i % 2 ) ? 'row1' : 'row2',
 				'GAME'		=> $game,
-				'URL'		=> href('a_txt', 'news.php', array(POST_NEWS => $ary[$i]['news_id']), $title, $name),
+				'URL'		=> href('a_txt', 'news.php', array('id' => $ary[$i]['news_id']), $title, $name),
 			));
 		}
 	}
@@ -200,7 +330,7 @@ function display_match()
 					'GAME'		=> display_gameicon($match_last[$i]['game_image']),
 					'NAME'		=> $name,
 					'RESULT'	=> sprintf($lang['sprintf_subnavi_match_result'], $result_clan[$i], $result_rival[$i]),
-					'DETAILS'	=> check_sid('match.php?' . POST_MATCH . '=' . $match_last[$i]['match_id']),
+					'DETAILS'	=> check_sid('match.php?id=' . $match_last[$i]['match_id']),
 				));
 			}
 		}
@@ -295,11 +425,11 @@ function display_newusers()
 	for ( $i = 0; $i < $cnt; $i++ )
 	{
 		$id		= $tmp[$i]['user_id'];
-		$url	= check_sid('profile.php?' . POST_USER . '=' . $id);
+		$url	= check_sid('profile.php?id=' . $id);
 		$name	= cut_string($tmp[$i]['user_name'], $settings['module_newusers']['length']);
 		$color	= $tmp[$i]['user_color'] ? $tmp[$i]['user_color'] : '';
 		
-		$template->assign_block_vars('sn_newuers', array('URL' => href('a_style', 'profile.php', array('mode' => 'view', POST_USER => $id), $color, $name)));
+		$template->assign_block_vars('sn_newuers', array('URL' => href('a_style', 'profile.php', array('mode' => 'view', 'id' => $id), $color, $name)));
 	}
 	
 	$template->set_filenames(array('newuers' => 'navi_newusers.tpl'));
@@ -973,7 +1103,7 @@ function display_next_match()
 			
 			$template->assign_block_vars('sn_next_match_row', array(
 				'GAME'	=>  display_gameicon($ary[$i]['game_image']),
-				'NAME'	=> "<a href=\"" . check_sid("match.php?" . POST_MATCH . "=" . $id) . "\">$name</a>",
+				'NAME'	=> "<a href=\"" . check_sid("match.php?id=" . $id) . "\">$name</a>",
 				'DATE'	=> create_date('d H:i', $ary[$i]['match_date'], $userdata['user_timezone']),
 			));
 		}
@@ -1022,7 +1152,7 @@ function display_next_training()
 				
 				$template->assign_block_vars('sn_next_training_row', array(
 					'GAME'	=>  display_gameicon($data[$i]['game_image']),
-					'NAME'	=> "<a href=\"" . check_sid("training.php?" . POST_TRAINING . "=" . $id) . "\">$name</a>",
+					'NAME'	=> "<a href=\"" . check_sid("training.php?id=" . $id) . "\">$name</a>",
 					'DATE'	=> create_date('d H:i', $data[$i]['training_date'], $userdata['user_timezone']),
 				));
 				
@@ -1035,7 +1165,7 @@ function display_next_training()
 		
 		#		$template->assign_block_vars('sn_next_training_row', array(
 		#			'GAME'	=> $game,
-		#			'NAME'	=> "<a href=\"" . check_sid('training.php?' . POST_TRAINING . '=' . $train[$i]['training_id']) . "\">$name</a>",
+		#			'NAME'	=> "<a href=\"" . check_sid('training.php?id=' . $train[$i]['training_id']) . "\">$name</a>",
 		#			'DATE'	=> create_date('d H:i', $train[$i]['training_date'], $userdata['user_timezone']),
 		#		));
 			}

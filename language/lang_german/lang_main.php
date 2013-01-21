@@ -131,7 +131,7 @@ $lang = array_merge($lang, array(
 	'common_moderators'		=> 'Moderatoren',		
 	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
 	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
-	'common_option_select'	=> 'Option wählen',			
+	'common_select_option'	=> 'Option wählen',			
 	'common_overview'		=> 'Übersicht',		
 	'common_reset'			=> 'Zurücksetzen',
 	'common_setting'		=> 'Einstellung',
@@ -542,9 +542,7 @@ $lang['no_entry']			= 'Keine Einträge vorhanden.';
 $lang['new_entry'] = 'Neuer Eintrag';
 $lang['user_name']			= 'Benutzername';
 $lang['joined']				= 'beigetreten';
-$lang['rank_team']			= 'Rang im Team';
-$lang['rank_group']			= 'Rang in Gruppe';
-$lang['rank_site']			= 'Rang auf Seite';
+
 $lang['register']			= 'registiert';
 $lang['status']				= 'Status';
 

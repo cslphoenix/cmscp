@@ -15,7 +15,7 @@ $start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_EVENT;
-$url	= POST_EVENT;
+#$url	= POST_EVENT;
 
 $time	= time();
 $file	= basename(__FILE__);
@@ -107,7 +107,7 @@ if ( $data && $tmp )
 			{
 				$icon = ( $userdata['session_logged_in'] ) ? ( $unreads || ( $unread['read_time'] < $comments[$i]['time_create'] ) ) ? $images['icon_minipost_new'] : $images['icon_minipost'] : $images['icon_minipost'];
 				$name = $comments[$i]['poster_nick'] ? $comments[$i]['poster_nick'] : '<font color="' . $comments[$i]['user_color'] . '">' . $comments[$i]['user_name'] . '</font>';
-				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;' . POST_USER . '=' . $comments[$i]['poster_id'];
+				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;id=' . $comments[$i]['poster_id'];
 				
 				$s_option = '';
 				

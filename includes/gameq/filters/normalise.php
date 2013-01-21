@@ -56,10 +56,9 @@ class GameQ_Filters_Normalise extends GameQ_Filters
 		// Team
 		'team' => array(
 			'name'          => array('name', 'teamname', 'team_t'),
-			'score'         => array('score', 'score_t),
+			'score'         => array('score', 'score_t'),
+		),
 	);
-
-return $module;
 
     /**
      * Normalize the server data
@@ -182,7 +181,7 @@ return $module;
      */
     private function fill($vars, $val = false)
     {
-        $data_sql = array();
+        $data = array();
 
         foreach ($vars as $target => $source)
         {

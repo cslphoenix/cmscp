@@ -5,9 +5,9 @@
 </tr>
 <!-- BEGIN new_row -->
 <tr>
-	<td class="{_list._new_row.CLASS}">{_list._new_row.GAME} {_list._new_row.NAME}</td>
-	<td class="{_list._new_row.CLASS}">{_list._new_row.DATE}</td>
-	<td class="{_list._new_row.CLASS}"><span class="{_list._new_row.CSS}">{_list._new_row.STATUS}</span></td>
+	<td class="{list.new_row.CLASS}">{list.new_row.GAME} {list.new_row.NAME}</td>
+	<td class="{list.new_row.CLASS}">{list.new_row.DATE}</td>
+	<td class="{list.new_row.CLASS}"><span class="{list.new_row.CSS}">{list.new_row.STATUS}</span></td>
 </tr>
 <!-- END new_row -->
 <!-- BEGIN entry_empty_new -->
@@ -23,9 +23,9 @@
 </tr>
 <!-- BEGIN old_row -->
 <tr>
-	<td class="{_list.old_row.CLASS}">{_list.old_row.GAME} {_list.old_row.NAME}</td>
-	<td class="{_list.old_row.CLASS}">{_list.old_row.DATE}</td>
-	<td class="{_list.old_row.CLASS}"><span class="{_list.old_row.CSS}">{_list.old_row.STATUS}</span></td>
+	<td class="{list.old_row.CLASS}">{list.old_row.GAME} {list.old_row.NAME}</td>
+	<td class="{list.old_row.CLASS}">{list.old_row.DATE}</td>
+	<td class="{list.old_row.CLASS}"><span class="{list.old_row.CSS}">{list.old_row.STATUS}</span></td>
 </tr>
 <!-- END old_row -->
 <!-- BEGIN entry_empty_old -->
@@ -44,7 +44,7 @@
 <tr>
 	<th colspan="2">
 		<!-- BEGIN update -->
-		<span class="small" style="float:right;">&nbsp;&bull;&nbsp;{_view._update.UPDATE}&nbsp;&bull;&nbsp;{_view._update.UPDATE_DETAIL}</span>
+		<span class="small" style="float:right;">&nbsp;&bull;&nbsp;{view.update.UPDATE}&nbsp;&bull;&nbsp;{view.update.UPDATE_DETAIL}</span>
 		<!-- END update -->
 		<span class="small" style="float:right;">{OVERVIEW}</span>
 		{L_MAIN}
@@ -72,7 +72,7 @@
 		<!-- BEGIN hltv -->
 		<tr>
 			<td>{L_HLTV}</td>
-			<td>{_view._hltv.HLTV} {_view._hltv.HLTV_PW}</td>
+			<td>{view.hltv.HLTV} {view.hltv.HLTV_PW}</td>
 		</tr>
 		<!-- END hltv -->
 		<!-- BEGIN lineup -->
@@ -95,15 +95,15 @@
 		<br />
 		<table class="type2" width="100%" cellpadding="0" cellspacing="0" border="0">
 		<tr>
-			<th>{_view._maps.ROUND}</th>
-			<th>{_view._maps.POINTS}</th>
+			<th>{view.maps.ROUND}</th>
+			<th>{view.maps.POINTS}</th>
 		</tr>
 		
 		<tr>
-			<td>{_view._maps.PICS}</td>
+			<td>{view.maps.PICS}</td>
 			<td class="top">
 				<!-- BEGIN row -->
-				{_view._maps.row.POINTS_HOME}:{_view._maps.row.POINTS_RIVAL}<br />
+				{view.maps.row.POINTS_HOME}:{view.maps.row.POINTS_RIVAL}<br />
 				<!-- END row -->
 			</td>
 		</tr>
@@ -131,7 +131,7 @@
 				</tr>
 				<!-- BEGIN row -->
 				<tr>
-					<td><span class="right">{_view._status._entry.row.DATE} <span class="{_view._status._entry.row.CLASS}">{_view._status._entry.row.STATUS}</span></span><a href="{_view._status._entry.row.LINK}">{_view._status._entry.row.USER}</a></td>
+					<td><span class="right">{view.status.entry.row.DATE} <span class="{view.status.entry.row.CLASS}">{view.status.entry.row.STATUS}</span></span><a href="{view.status.entry.row.LINK}">{view.status.entry.row.USER}</a></td>
 				</tr>
 				<!-- END row -->
 				</table>

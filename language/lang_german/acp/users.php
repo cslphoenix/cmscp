@@ -8,14 +8,9 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'game'		=> 'Spiel',
-	'explain'	=> 'Hier kannst du die Benutzer verwalten und organisieren.',
+	'title'		=> 'Benutzer',
+	'explain'	=> 'Benutzer',
 
-	'create'	=> 'Neuen Benutzer hinzugefügt.',
-	'update'	=> 'Benutzerdaten erfolgreich geändert.',
-	'delete'	=> 'Der Benutzer wurde gelöscht!',
-	'confirm'	=> 'dass dieser Benutzer:',
-	
 	'update_auth'	=> 'Benutzerberechtigungen erfolgreich geändert.',
 	'update_groups'	=> 'Benutzergruppen & Teams erfolgreich geändert.',
 	'update_fields'	=> 'Profilefelder erfolgreich geändert.',
@@ -64,6 +59,8 @@ $lang = array_merge($lang, array(
 	
 	'active'		=> 'Aktiviert',
 	'birthday'		=> 'Geburtstag',
+	
+	'radio:password'	=> array(0 => 'Generieren', 1 => 'Eintragen'),
 	
 ));
 

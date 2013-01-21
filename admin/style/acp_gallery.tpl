@@ -1,11 +1,30 @@
 <!-- BEGIN input -->
+
+<script type="text/javascript" src="style/ajax_main.js"></script>
 <script type="text/javascript">
-// <![CDATA[
-function set_right(id,text)
+
+function display_options(value)
 {
-	var obj = document.getElementById(id).value = text;
+	if ( value == '0' )
+	{
+		dE('main', -1);
+		dE('copy', 1);
+		dE('gallery_filesize', 1);
+		dE('gallery_dimension', 1);
+		dE('gallery_format', 1);
+		dE('gallery_thumbnail', 1);
+	}
+	else
+	{
+		dE('main', 1);
+		dE('copy', -1);
+		dE('gallery_filesize', -1);
+		dE('gallery_dimension', -1);
+		dE('gallery_format', -1);
+		dE('gallery_thumbnail', -1);
+	}
 }
-// ]]>
+
 </script>
 <form action="{S_ACTION}" method="post">
 {TINYMCE}
@@ -18,26 +37,25 @@ function set_right(id,text)
 	<!-- END overview -->
 </ul>
 <ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
 {ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
+{input.row.tab.option.DIV_START}
 <dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">

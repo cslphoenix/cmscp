@@ -1,4 +1,4 @@
-<h1>{L_WELCOME}</h1>
+<li class="header">{L_WELCOME}</li>
 <p>{L_EXPLAIN}</p>
 
 <br />
@@ -68,7 +68,7 @@
 			<td>{SIZE_GROUPS}</td>
 		</tr>
 		<tr>
-			<td>{L_SIZE_GROUPS}:</td>
+			<td>{L_SIZE_NETWORK}:</td>
 			<td>{SIZE_NETWORK}</td>
 		</tr>
 		</table>

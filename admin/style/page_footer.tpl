@@ -1,6 +1,4 @@
-				</td>
-			</tr>
-			</table>
+			</div>
 		</div>
 		<div id="page-footer">{RUN_STATS_BOX}</div>
 	</div>

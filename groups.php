@@ -489,7 +489,7 @@ if ( $data )
 					'EMAIL_IMG' => $email_img,
 					'EMAIL' => $email,
 					
-					'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id))
+					'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;id=' . $user_id))
 				);
 				
 				if ( $userdata['user_level'] == ADMIN && $view['group_type'] != GROUP_SYSTEM )	
@@ -550,7 +550,7 @@ if ( $data )
 					'YIM_IMG' => $yim_img,
 					'YIM' => $yim,
 					
-					'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id))
+					'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;id=' . $user_id))
 				);
 				
 				if ( ( $is_moderator || $userdata['user_level'] == ADMIN ) && $view['group_type'] != GROUP_SYSTEM )
@@ -619,7 +619,7 @@ if ( $data )
 					'YIM_IMG' => $yim_img,
 					'YIM' => $yim,
 					
-					'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id))
+					'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;id=' . $user_id))
 				);
 			}
 		}

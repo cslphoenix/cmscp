@@ -204,12 +204,12 @@ while( $row = $db->sql_fetchrow($result) )
 
 			if ( $row['user_allow_viewonline'] )
 			{
-				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
+				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
 				$logged_visible_online++;
 			}
 			else
 			{
-				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
+				$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
 				$logged_hidden_online++;
 			}
 

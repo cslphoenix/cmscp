@@ -15,7 +15,7 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current = 'acp_network';
 	
@@ -55,9 +55,10 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete')) ) ? $mode : '';
+	$mode = (in_array($mode, array('create', 'update', 'order', 'delete'))) ? $mode : false;
 	
-	debug($_POST, 'POST');
+#	debug($_POST, '_POST');
+#	debug($_FILES, '_FILES');
 	
 	if ( $mode )
 	{
@@ -71,16 +72,17 @@ else
 				$vars = array(
 					'network' => array(
 						'title' => 'data_input',
-						'network_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
-						'network_url'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_url'),
-						'network_image'	=> array('validate' => TXT,	'explain' => false, 'type' => 'upload:network', 'params' => $dir_path),
-						'network_type'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:network', 'params' => true),
-						'network_view'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+						'network_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
+						'network_url'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_url'),
+					#	'network_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'upload:network', 'params' => $dir_path),
+						'network_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'upload:image',	'params' => array($dir_path, 'network')),
+						'network_type'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:network',	'params' => array(false, true, false)),
+						'network_view'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						'network_order'	=> 'hidden',
 					),
 				);
 
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
 					list($type) = ( isset($_POST['network_type']) ) ? each($_POST['network_type']) : '';
 					$name		= ( isset($_POST['network_name']) ) ? str_replace("\'", "'", $_POST['network_name'][$type]) : '';
@@ -91,10 +93,10 @@ else
 						'network_image'	=> '',
 						'network_type'	=> $type,
 						'network_view'	=> '1',
-				#		'network_order'	=> '0',
+						'network_order'	=> '0',
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(NETWORK, $data, false, 1, true);
 				}
@@ -123,13 +125,11 @@ else
 					$error[] = !$data['network_url']		? ( $error ? '<br />' : '' ) . $lang['msg_empty_url'] : '';
 					$error[] = !$data['network_type']	? ( $error ? '<br />' : '' ) . $lang['msg_select_type'] : '';
 					
-					$data['network_image'] = ( !request('network_image_delete', 1) ) ? ( ( !$pic ) ? $data['network_image'] : image_upload($mode, 'image_network', 'network_image', '', $data['network_image'], '', $dir_path, $pic['temp'], $pic['name'], $pic['size'], $pic['type'], $error) ) : image_delete($data['network_image'], '', $dir_path, 'network_image');
+					$data['network_image'] = ( !request('network_image_delete', 1) ) ? ( ( !$pic ) ? $data['network_image'] : upload_image($mode, 'image_network', 'network_image', '', $data['network_image'], '', $dir_path, $pic['temp'], $pic['name'], $pic['size'], $pic['type'], $error) ) : image_delete($data['network_image'], '', $dir_path, 'network_image');
 					*/
 					if ( !$error )
 					{
 						$info = ( $data_sql['network_type'] != NETWORK_LINK ) ? ( $data_sql['network_type'] == NETWORK_PARTNER ) ? $lang['partner'] : $lang['sponsor'] : $lang['link'];
-						
-						
 						
 						if ( $mode == 'create' )
 						{
@@ -144,8 +144,6 @@ else
 							$msg = sprintf($lang['update'], $info) . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&id=$data"));
 						}
 						
-						orders(NETWORK, $data['network_type']);
-						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
 						message(GENERAL_MESSAGE, $msg);
 					}
@@ -155,47 +153,20 @@ else
 					}
 				}
 				
-				( $data['network_image'] ) ? $template->assign_block_vars('input.image', array()) : false;
+				( $data_sql['network_image'] ) ? $template->assign_block_vars('input.image', array()) : false;
 				
 				build_output(NETWORK, $vars, $data_sql);
 				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-				$fields .= "<input type=\"hidden\" name=\"current_image\" value=\"{$data['network_image']}\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"current_image\" value=\"{$data_sql['network_image']}\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'			=> sprintf($lang["sprintf_$mode"], $lang['field'], $data['network_name']),
-				#	'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['title']),
-				#	'L_TYPE'			=> sprintf($lang['sprintf_type'], $lang['title']),
-				#	'L_IMAGE'			=> sprintf($lang['sprintf_image'], $lang['title']),
-				#	'L_URL'				=> $lang['network_url'],
-				#	'L_TYPE_LINK'		=> $lang['network_link'],
-				#	'L_TYPE_PARTNER'	=> $lang['network_partner'],
-				#	'L_TYPE_SPONSOR'	=> $lang['network_sponsor'],
+					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], lang($data_sql['network_name'])),
+					'L_EXPLAIN'	=> $lang['common_required'],
 				
-				#	'L_VIEW'			=> $lang['common_view'],
-				#	'L_UPLOAD'			=> sprintf($lang['sprintf_upload_info'], str_replace(':', ' x ', $settings['path_network']['dimension']), round($settings['path_network']['filesize']*1024) ),
-				#	'L_IMAGE_DELETE'	=> $lang['common_image_delete'],
-				
-				#	'NAME'				=> $data['network_name'],
-				#	'URL'				=> $data['network_url'],
-				#	'IMAGE'				=> $dir_path . $data['network_image'],
-				
-				#	'CUR_TYPE'		=> $data['network_type'],
-				#	'CUR_ORDER'		=> $data['network_order'],
-
-				#	'S_TYPE_LINK'		=> ( $data['network_type'] == NETWORK_LINK ) ? 'checked="checked"' : '',
-				#	'S_TYPE_PARTNER'	=> ( $data['network_type'] == NETWORK_PARTNER ) ? 'checked="checked"' : '',
-				#	'S_TYPE_SPONSOR'	=> ( $data['network_type'] == NETWORK_SPONSOR ) ? 'checked="checked"' : '',
-
-				#	'S_VIEW_NO'			=> (!$data['network_view'] ) ? 'checked="checked"' : '',
-				#	'S_VIEW_YES'		=> ( $data['network_view'] ) ? 'checked="checked"' : '',
-					
-				#	'S_ORDER'			=> simple_order(NETWORK, $data['network_type'], 'select', $data['network_order']),
-					
-					'S_ACTION'			=> check_sid($file),
-					'S_FIELDS'			=> $fields,
+					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+					'S_FIELDS'	=> $fields,
 				));
 				
 				$template->pparse('body');

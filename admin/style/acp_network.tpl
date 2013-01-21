@@ -1,10 +1,41 @@
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
-<br />
+<!-- BEGIN input -->
+<form action="{S_ACTION}" method="post" enctype="multipart/form-data">
+{ERROR_BOX}
 
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
+	<!-- BEGIN option -->
+	{input.row.tab.option.DIV_START}
+	<dl>			
+		<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+		<dd>{input.row.tab.option.OPTION}</dd>
+	</dl>
+	{input.row.tab.option.DIV_END}
+	<!-- END option -->
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+<!-- END input -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
 	<th>{L_LINK}</th>
@@ -86,43 +117,3 @@
 {S_FIELDS}
 </form>
 <!-- END display -->
-
-<!-- BEGIN input -->
-{AJAX}
-<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
-{ERROR_BOX}
-
-<!-- BEGIN row -->
-<!-- BEGIN hidden -->
-{input.row.hidden.HIDDEN}
-<!-- END hidden -->
-<div class="update">
-<!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
-<!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
-<dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
-	<dd>{input.row.tab.option.OPTION}</dd>
-</dl>
-</div>
-<!-- END option -->
-<!-- END tab -->
-</div>
-<!-- END row -->
-
-<div class="submit">
-<dl>
-	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
-	<dd><input type="reset" value="{L_RESET}"></dd>
-</dl>
-</div>
-{S_FIELDS}
-</form>
-<!-- END input -->

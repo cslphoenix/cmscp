@@ -1,4 +1,4 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -19,19 +19,19 @@ function update_image(newimage)
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
+{input.row.tab.option.DIV_START}
 <dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -48,7 +48,7 @@ function update_image(newimage)
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th>{L_TITLE}</th>
+	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN row -->
@@ -109,7 +109,7 @@ function update_image(newimage)
 <!-- BEGIN sdisplay -->
 <table class="rows">
 <tr>
-	<th>{L_TITLE}</th>
+	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN send_row -->

@@ -9,11 +9,9 @@ $lang = array_merge($lang, array(
 	
 	'title'		=> 'Server',
 	'explain'	=> 'Verwaltung der Gameserver.',
-
-	'create'	=> 'Neuen Server hinzugefügt.',
-	'update'	=> 'Serverdaten erfolgreich geändert.',
-	'delete'	=> 'Der Server wurde gelöscht!',
-	'confirm'	=> 'dass dieser Server:',
+	
+	'type_title'	=> 'Servertypen',
+	'type_explain'	=> 'Hier werden die Server verwaltet die für die GameQ Class wichtig sind.',
 	
 	'server_name'	=> 'Server Name',
 	'server_type'	=> 'Server Typ',
@@ -35,7 +33,24 @@ $lang = array_merge($lang, array(
 	
 	'online'	=> 'Online',
 	'offline'	=> 'Offline',
+	
+	'type_name'		=> 'Name',
+	'type_game'		=> 'GameQ Spiel',
+	'type_dport'	=> 'Standardport',
+	'type_sort'		=> 'Type',
+	
+	'typ_game'		=> 'Gameserver',
+	'typ_voice'	=> 'Voiceserver',
 
+));
+
+$lang = array_merge($lang, array(
+
+	'radio:type' => array(
+		0 => $lang['typ_game'],
+		1 => $lang['typ_voice'],
+	),
+	
 ));
 
 ?>

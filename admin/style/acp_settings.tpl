@@ -27,63 +27,84 @@ function SelectAll(id)
 <!-- BEGIN hidden -->
 {default.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update2">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{default.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{default.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{default.row.tab.option.ID}>
+{default.row.tab.option.DIV_START}
 <dl>			
-	<dt{default.row.tab.option.CSS}><label for="{default.row.tab.option.LABEL}"{default.row.tab.option.EXPLAIN}>{default.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{default.row.tab.option.CSS}"><label for="{default.row.tab.option.LABEL}"{default.row.tab.option.EXPLAIN}>{default.row.tab.option.L_NAME}:</label></dt>
 	<dd>{default.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{default.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 <!-- END default -->
+
+<!-- BEGIN smain -->
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{smain.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{smain.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{smain.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{smain.row.tab.option.CSS}"><label for="{smain.row.tab.option.LABEL}"{smain.row.tab.option.EXPLAIN}>{smain.row.tab.option.L_NAME}:</label></dt>
+	<dd>{smain.row.tab.option.OPTION}</dd>
+</dl>
+{smain.row.tab.option.DIV_END}
+<!-- END option -->
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+<!-- END smain -->
 
 <!-- BEGIN calendar -->
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {calendar.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div style="float:left; width:49%;">
-<div class="update2">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{calendar.row.tab.L_LANG}</a></li></ul>
+<div style="float:left; width:49%;">
+<fieldset>
+	<legend>{calendar.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{calendar.row.tab.option.ID}>
+{calendar.row.tab.option.DIV_START}
 <dl>			
-	<dt{calendar.row.tab.option.CSS}><label for="{calendar.row.tab.option.LABEL}"{calendar.row.tab.option.EXPLAIN}>{calendar.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{calendar.row.tab.option.CSS}"><label for="{calendar.row.tab.option.LABEL}"{calendar.row.tab.option.EXPLAIN}>{calendar.row.tab.option.L_NAME}:</label></dt>
 	<dd>{calendar.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{calendar.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
+</div>
 <!-- END tab -->
-</div>
-</div>
 <!-- END row -->
 <!-- END calendar -->
 
 <!-- BEGIN gallery -->
 <!-- BEGIN row -->
-<table class="update2">
+<!-- BEGIN hidden -->
+{gallery.row.hidden.HIDDEN}
+<!-- END hidden -->
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{gallery.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<fieldset>
+	<legend>{gallery.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<tr>
-	<td class="row1"><label for="{gallery.row.KEY}_{gallery.row.tab.option.KEYS}">{gallery.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{gallery.row.tab.option.OPTION}</td>
-</tr>
+{gallery.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{gallery.row.tab.option.CSS}"><label for="{gallery.row.tab.option.LABEL}"{gallery.row.tab.option.EXPLAIN}>{gallery.row.tab.option.L_NAME}:</label></dt>
+	<dd>{gallery.row.tab.option.OPTION}</dd>
+</dl>
+{gallery.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-</table>
 <!-- END row -->
 <!-- END gallery -->
 
@@ -92,42 +113,42 @@ function SelectAll(id)
 <!-- BEGIN hidden -->
 {rating.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{rating.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{rating.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div {rating.row.tab.option.ID}>
+{rating.row.tab.option.DIV_START}
 <dl>			
-	<dt{rating.row.tab.option.CSS}><label for="{rating.row.tab.option.LABEL}"{rating.row.tab.option.EXPLAIN}>{rating.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{rating.row.tab.option.CSS}"><label for="{rating.row.tab.option.LABEL}"{rating.row.tab.option.EXPLAIN}>{rating.row.tab.option.L_NAME}:</label></dt>
 	<dd>{rating.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{rating.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 <!-- END rating -->
 
 <!-- BEGIN module -->
 <!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{module.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
 <div style="float:left; width:49%;">
-	<table class="update2">
-	<!-- BEGIN tab -->
-	<tr>
-		<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{module.row.tab.L_LANG}</a></li></ul></th>
-	</tr>
-	<!-- BEGIN option -->
-	<tr>
-		<td class="row1"><label for="{module.row.KEY}_{module.row.tab.option.KEYS}">{module.row.tab.option.L_NAME}:</label></td>
-		<td class="row2">{module.row.tab.option.OPTION}</td>
-	</tr>
-	<!-- END option -->
-	<!-- END tab -->
-	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-	</table>
+<fieldset>
+	<legend>{module.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{module.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{module.row.tab.option.CSS}"><label for="{module.row.tab.option.LABEL}"{module.row.tab.option.EXPLAIN}>{module.row.tab.option.L_NAME}:</label></dt>
+	<dd>{module.row.tab.option.OPTION}</dd>
+</dl>
+{module.row.tab.option.DIV_END}
+<!-- END option -->
+</fieldset>
 </div>
+<!-- END tab -->
 <!-- END row -->
 <!-- END module -->
 
@@ -159,42 +180,42 @@ function SelectAll(id)
 <!-- BEGIN hidden -->
 {upload.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{upload.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{upload.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div {upload.row.tab.option.ID}>
+{upload.row.tab.option.DIV_START}
 <dl>			
-	<dt{upload.row.tab.option.CSS}><label for="{upload.row.tab.option.LABEL}"{upload.row.tab.option.EXPLAIN}>{upload.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{upload.row.tab.option.CSS}"><label for="{upload.row.tab.option.LABEL}"{upload.row.tab.option.EXPLAIN}>{upload.row.tab.option.L_NAME}:</label></dt>
 	<dd>{upload.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{upload.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 <!-- END upload -->
 
 <!-- BEGIN other -->
 <!-- BEGIN row -->
-<div style="float:left;width:49%;">
-	<table class="update">
-	<!-- BEGIN tab -->
-	<tr>
-		<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{other.row.tab.L_LANG}</a></li></ul></th>
-	</tr>
-	<!-- BEGIN option -->
-	<tr>
-		<td class="row1"><label for="{other.row.KEY}_{other.row.tab.option.KEYS}">{other.row.tab.option.L_NAME}:</label></td>
-		<td class="row2">{other.row.tab.option.OPTION}</td>
-	</tr>
-	<!-- END option -->
-	<!-- END tab -->
-	<tr>
-		<td colspan="2"></td>
-	</tr>
-	</table>
+<!-- BEGIN hidden -->
+{other.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<div style="float:left; width:49%;">
+<fieldset>
+	<legend>{other.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{other.row.tab.option.DIV_START}
+<dl>			
+	{other.row.tab.option.CSS}<label for="{other.row.tab.option.LABEL}"{other.row.tab.option.EXPLAIN}>{other.row.tab.option.L_NAME}:</label></dt>
+	<dd>{other.row.tab.option.OPTION}</dd>
+</dl>
+{other.row.tab.option.DIV_END}
+<!-- END option -->
+</fieldset>
 </div>
+<!-- END tab -->
 <!-- END row -->
 <!-- END other -->
 
@@ -225,6 +246,27 @@ function SelectAll(id)
 </tr>
 </table>
 <!-- END ftp -->
+
+<!-- BEGIN match -->
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{match.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{match.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{match.row.tab.option.DIV_START}
+<dl>			
+	{match.row.tab.option.CSS}<label for="{match.row.tab.option.LABEL}"{match.row.tab.option.EXPLAIN}>{match.row.tab.option.L_NAME}:</label></dt>
+	<dd>{match.row.tab.option.OPTION}</dd>
+</dl>
+{match.row.tab.option.DIV_END}
+<!-- END option -->
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+<!-- END match -->
 
 <!-- BEGIN match -->
 <!-- BEGIN row -->

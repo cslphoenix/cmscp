@@ -15,9 +15,9 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current	= 'acp_forum';
+	$current = 'acp_forum';
 	
 	include('./pagestart.php');
 	
@@ -53,26 +53,10 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	/*	
-	if ( isset($_POST['add_forum']) || isset($_POST['add_cat']) )
-	{
-		if ( isset($_POST['add_forum']) )
-		{
-			$mode = 'create';
-			$cat_id = key($_POST['add_forum']);
-			$name = request(array('sub_name', $cat_id), TXT);
-		}
-		else
-		{
-			$mode = 'create_cat';
-			$name = request('cat_name', TXT);
-		}
-	}
-	*/
+	debug($_POST, '_POST');
 	
-	debug($_POST);
-	
-	$mode = ( in_array($mode, array('create', 'update', 'list', 'move_down', 'move_up', 'delete')) ) ? $mode : false;
+	$base = ($settings['smain']['forum_switch']) ? 'drop:main' : 'radio:main';
+	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
@@ -83,28 +67,26 @@ else
 				
 				$template->assign_block_vars('input', array());
 				
-			#	$typs = isset($_POST['forum']['type']) ? $_POST['forum']['type'] : 0;
-				
 				$vars = array(
 					'forum' => array(
 						'title1' => 'input_data',
 						'forum_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
 						'type'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type', 'params' => array('combi', false, 'main')),
-						'main'			=> array('validate' => ARY,	'explain' => false,	'type' => 'drop:main',		'trid' => 'main'),
-						'copy'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:copy',		'trid' => 'copy'),
-						'forum_desc'	=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40',	'trid' => 'forum_desc'),
-						'forum_icons'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'trid' => 'forum_icons'),
-						'forum_legend'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:legend',	'trid' => 'forum_legend'),
-						'forum_status'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:status',	'trid' => 'forum_status'),
+						'main'			=> array('validate' => INT,	'explain' => false,	'type' => $base,			'divbox' => true, 'params' => array(false, true, false)),
+						'copy'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:copy',		'divbox' => true),
+						'forum_desc'	=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40',	'divbox' => true, 'params' => ''),
+						'forum_icons'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
+						'forum_legend'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:legend',	'divbox' => true),
+						'forum_status'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:status',	'divbox' => true),
 					)
 				);
 				
-				$keys = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? key($_POST['submit_subforum']) : $main) : 0;
-				$name = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? request(array('forum_subforum', $keys), TXT) : request('forum_forum', TXT) ) : request('forum_name', TXT);
-				$type = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? 2 : 1 ) : 0;
-				
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
+					$keys = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? key($_POST['submit_subforum']) : $main) : 0;
+					$name = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? request(array('forum_subforum', $keys), TXT) : request('forum_forum', TXT) ) : request('forum_name', TXT);
+					$type = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? 2 : 1 ) : 0;
+					
 					$data_sql = array(
 						'forum_name'	=> $name,
 						'type'			=> $type,
@@ -117,15 +99,13 @@ else
 						'forum_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
-					$data_sql = data(FORMS, $data, false, 1, true);
+					$data_sql = data(FORUM, $data, false, 1, true);
 				}
 				else
 				{
-					$data_sql = build_request(FORMS, $vars, $error, $mode, false, array('copy'));
-					
-					debug($data_sql);
+					$data_sql = build_request(FORUM, $vars, $error, $mode, false, array('copy'));
 					
 					if ( $data_sql['type'] == 0 )
 					{
@@ -149,14 +129,14 @@ else
 						
 						if ( $mode == 'create' )
 						{
-							$forums['forum_order'] = maxa(FORMS, 'forum_order', "main = " . $forums['main']);
+							$forums['forum_order'] = maxa(FORUM, 'forum_order', "main = " . $forums['main']);
 							
-							$sql = sql(FORMS, $mode, $forums);
+							$sql = sql(FORUM, $mode, $forums);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(FORMS, $mode, $forums, 'forum_id', $data);
+							$sql = sql(FORUM, $mode, $forums, 'forum_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
@@ -169,11 +149,11 @@ else
 					}
 				}
 				
-				build_output(FORMS, $vars, $data_sql);
+				build_output(FORUM, $vars, $data_sql);
 								
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['forum'], $data['forum_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['forum'], $data['forum_name']),
 				
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -233,7 +213,7 @@ else
 			case 'move_up':
 			case 'move_down':
 			
-				moveset(FORMS, $mode, $order, $main, $type, $usub);
+				move(FORUM, $mode, $order, $main, $type, $usub);
 				log_add(LOG_ADMIN, $log, $mode);
 			
 				$index = true;
@@ -252,7 +232,9 @@ else
 	{
 		$template->assign_block_vars('list', array());
 				
-		$tmp = data(FORMS, false, 'main ASC, forum_order ASC', 1, false);
+		$tmp = data(FORUM, false, 'main ASC, forum_order ASC', 1, false);
+		
+		$cat = $subforum = $forum = array();
 		
 		if ( $tmp )
 		{
@@ -282,20 +264,16 @@ else
 				}
 			}
 		}
-		else
-		{
-			$cat = $subforum = $forum = array();
-		}
 		
-	#	debug($cat, 'cat');
-	#	debug($subforum, 'subforum');
-	#	debug($forum, 'forum');
-		
-		$cid = $cat['forum_id'];
+	#	$cid = $cat['forum_id'];
+		$cid	= $cat['forum_id'];
+		$name	= lang($cat['forum_name']);
 		
 		$template->assign_vars(array(
-			'CAT'	=> href('a_txt', $file, array('action' => 'acp'), strtoupper($action), strtoupper($action)),
-			'NAME'	=> isset($lang[$cat['forum_name']]) ? $lang[$cat['forum_name']] : $cat['forum_name'],
+			'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
+			'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $name, $name),
+			'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
+			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
 			
 			'S_ACTION'	=> check_sid($file),
 			'S_FIELDS'	=> $fields,
@@ -303,49 +281,50 @@ else
 		
 		if ( $forum )
 		{
-			$lmax = array_pop(end($forum));
+			$fmax = array_pop(end($forum));
 			
-			foreach ( $forum as $lrow )
+			foreach ( $forum as $frow )
 			{
-				$lid	= $lrow['forum_id'];
-				$lname	= isset($lang[$lrow['forum_name']]) ? $lang[$lrow['forum_name']] : $lrow['forum_name'];
-				$lorder	= $lrow['forum_order'];
+				$fid	= $frow['forum_id'];
+				$forder	= $frow['forum_order'];
+				$fname	= isset($lang[$frow['forum_name']]) ? $lang[$frow['forum_name']] : $frow['forum_name'];
 				
 				$template->assign_block_vars('list.row', array(
-					'NAME'          => href('a_txt', $file, array('mode' => 'update', 'id' => $lid), $lname, $lname),
+					'NAME'          => href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $fname, $fname),
+					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
+					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'common_delete'),
 					
-					'MOVE_UP'       => ( $lorder != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'order' => $lorder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'     => ( $lorder != $lmax )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $lorder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+					'MOVE_UP'       => ( $forder != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'order' => $forder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'     => ( $forder != $fmax )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $forder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 	
-					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $lid), 'icon_update', 'common_update'),
-					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $lid), 'icon_cancel', 'common_delete'),
-					
-					'S_NAME'	=> "forum_subforum[$lid]",
-					'S_SUBMIT'	=> "submit_subforum[$lid]",
+					'S_NAME'	=> "forum_subforum[$fid]",
+					'S_SUBMIT'	=> "submit_subforum[$fid]",
 				));
 				
-				if ( isset($subforum[$lid]) )
+				if ( isset($subforum[$fid]) )
 				{
-				#	debug($mod[$lid]);
-					$mmax[$lid] = array_pop(end($subforum[$lid]));
+					$smax[$fid] = array_pop(end($subforum[$fid]));
 					
-					foreach ( $subforum[$lid] as $mrow )
+					foreach ( $subforum[$fid] as $srow )
 					{
-						$mid	= $mrow['forum_id'];
-						$msub	= $mrow['main'];
-						$mname	= isset($lang[$mrow['forum_name']]) ? $lang[$mrow['forum_name']] : $mrow['forum_name'];
-						$morder	= $mrow['forum_order'];
+						$sid	= $srow['forum_id'];
+						$sorder	= $srow['forum_order'];
+						$sname	= isset($lang[$srow['forum_name']]) ? $lang[$srow['forum_name']] : $srow['forum_name'];
 						
-						$template->assign_block_vars('list.row.mod', array( 
-							'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $mid), $mname, $mname),
+						$template->assign_block_vars('list.row.sub', array( 
+							'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $sid), $sname, $sname),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $sid), 'icon_update', 'common_update'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $sid), 'icon_cancel', 'common_delete'),
 							
-							'MOVE_UP'	=> ( $morder != '1' )			? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $lid, 'type' => 2, 'order' => $morder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-							'MOVE_DOWN'	=> ( $morder != $mmax[$lid] )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $lid, 'type' => 2, 'order' => $morder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $mid), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $mid), 'icon_cancel', 'common_delete'),
+							'MOVE_UP'	=> ( $sorder != '1' )			? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $fid, 'type' => 2, 'order' => $sorder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+							'MOVE_DOWN'	=> ( $sorder != $smax[$fid] )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $fid, 'type' => 2, 'order' => $sorder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 						));
 					}
+					
+				}
+				else
+				{
+					$template->assign_block_vars('list.row.empty_sub', array());
 				}
 			}
 		}
@@ -356,86 +335,70 @@ else
 		
 		$fields .= '<input type="hidden" name="mode" value="create" />';
 		$fields .= '<input type="hidden" name="main" value="' . $main . '" />';
-		
-		$template->assign_vars(array(
-			'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-			
-			'S_ACTION'	=> check_sid($file),
-			'S_FIELDS'	=> $fields,
-		));
 	}
 	else
 	{
 		$template->assign_block_vars('display', array());
 		
-		$tmp = data(FORMS, false, 'main ASC, forum_order ASC', 1, false);
-		
-		if ( $tmp )
+		$tmp = data(FORUM, "type = 0", 'forum_order ASC', 1, false);
+
+		if ( !$tmp )
 		{
-			foreach ( $tmp as $row )
-			{
-				if ( !$row['type'] )
-				{
-					$db_cat[$row['forum_id']] = $row;
-				}
-				else if ( $row['type'] == 1 )
-				{
-					$db_frs[$row['main']][$row['forum_id']] = $row;
-				}
-				else
-				{
-					$db_sub[$row['main']][$row['forum_id']] = $row;
-				}
-			}
+			$template->assign_block_vars('display.empty', array());
 		}
 		else
 		{
-			$db_cat = $db_frs = $db_sub = array();
-		}
-		
-	#	debug($db_cat);
-	#	debug($db_frs);
-	#	debug($db_sub);
-	
-		if ( $db_cat )
-		{
-			$cmax = array_pop(end($db_cat));
+			$max = count($tmp);
 			
-			foreach ( $db_cat as $ckey => $crow )
+			foreach ( $tmp as $row )
 			{
-				$cid	= $crow['forum_id'];
-				$csub	= $crow['main'];
-				$cname	= $crow['forum_name'];
-				$corder	= $crow['forum_order'];
+				$id		= $row['forum_id'];
+				$sub	= $row['main'];
+				$name	= $row['forum_name'];
+				$order	= $row['forum_order'];
 				
-				$template->assign_block_vars('display.cat', array(
-					'NAME'		=> href('a_txt', $file, array('main' => $cid), $cname, $cname),
+				$template->assign_block_vars('display.row', array(
+					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
 					
-					'MOVE_UP'	=> ( $corder != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $corder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'	=> ( $corder != $cmax )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $corder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 					
-					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
 				));
 			}
 		}
 		
-		$fields	= '<input type="hidden" name="mode" value="create" />';
+		$fields	.= '<input type="hidden" name="mode" value="create" />';
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['title']),
-		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['forum']),
-		'L_CREATE_CAT'		=> sprintf($lang['sprintf_create'], $lang['forum_c']),
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_EXPLAIN'	=> $lang['explain'],
+		'L_NAME'	=> $lang['type_0'],
 		
-		'L_AUTH'			=> sprintf($lang['sprintf_auth'], $lang['forum']),
-		
-		'S_CREATE_CAT'		=> check_sid("$file?mode=_create_cat"),
-		'S_CREATE_FORUM'	=> check_sid("$file?mode=create"),
+		'L_CREATE'			=> sprintf($lang['sprintf_create'], $lang['type_0']),
+		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_create'], $lang['type_1']),
+		'L_CREATE_SUBFORUM'	=> sprintf($lang['sprintf_create'], $lang['type_2']),
 		
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
+	
+#	$template->assign_vars(array(
+#		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+#		'L_EXPLAIN'	=> $lang['explain'],
+#		
+#		'L_CREATE_CAT'		=> sprintf($lang['sprintf_create'], $lang['cat']),
+#		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['forum']),
+#		'L_CREATE_SUBFORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['subforum']),
+#		
+#		'L_EMPTY_FORUM'		=> $lang['empty_forum'],
+#		'L_EMPTY_SUBFORUM'	=> $lang['empty_subforum'],
+#		
+#		'S_ACTION'	=> check_sid($file),
+#		'S_FIELDS'	=> $fields,
+#	));
 }
 
 $template->pparse('body');

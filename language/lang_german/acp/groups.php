@@ -7,25 +7,15 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-
-	
-	
-	
-	'title'		=> 'Gruppe',
-	'titles'	=> 'Gruppen',
+	'title'		=> 'Benutzergruppe',
+	'titles'	=> 'Benutzergruppen',
 	
 	'explain'	=> 'Hier kannst du die Gruppen Verwalten.',
 	'explain_o'	=> 'Hier sind alle Gruppen aufgelistet die es gibt.',
 	
-	'create'	=> 'Neue Gruppe hinzugefügt.',
-	'update'	=> 'Gruppendaten erfolgreich geändert.',
-	'delete'	=> 'Die Gruppe wurde gelöscht!',
-	'confirm'	=> 'das diese Gruppe:',
-	
 	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
 	
-	'data'		=> 'Gruppendaten',
-	'auth'		=> 'Gruppenrechte',
+	'input_data'	=> 'Gruppendaten',
 	
 	'group_name'	=> 'Name',
 	'group_mod'		=> 'Moderator',
@@ -60,6 +50,11 @@ $lang = array_merge($lang, array(
 	'request_deny'		=> 'Antrag verweigern',
 	
 	'pending_members'	=> 'wartende Mitglieder',
+	
+	'member'		=> 'Gruppenmitglied',
+	'members'		=> 'Gruppenmitglieder',
+	'moderator'		=> 'Gruppenmoderator',
+	'moderators'	=> 'Gruppenmoderatoren',
 	
 	
 

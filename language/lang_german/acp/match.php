@@ -13,25 +13,13 @@ $lang = array_merge($lang, array(
 	'upcoming'	=> 'Anstehende Begegnung',
 	'expired'	=> 'Abgelaufen Begegnung',
 
-	'create'		=> 'Neues Begegnung hinzugefügt.',
-	'update'		=> 'Begegnungsdaten erfolgreich geändert.',
-	'delete'		=> 'Die Begegnung wurde gelöscht!',
-	'confirm'		=> 'dass diese Begegnung:',
+	'input_standard'	=> 'Standard',
+	'input_rival'		=> 'Gegner',
+	'input_server'		=> 'Server',
+	'input_message'		=> 'Kommentar & Report',
+	'input_training'	=> 'Training',
 	
-	'create_map'	=> 'Neue Map hinzugefügt.',
-	'update_map'	=> 'Mapinfos erfolgreich geändert.',
-	'delete_map'	=> 'Die Map wurde aus der Begegnung gelöscht!',	
-
-	'create_user'	=> 'Neuen Benutzer zum Lineup hinzugefügt.',
-	'update_user'	=> 'Lineup erfolgreich geändert.',
-	'delete_user'	=> 'Der Benutzer wurden aus dem Lineup gelöscht!',
-	
-	'head_details'	=> 'Matchdeatials',
-	'head_standard'	=> 'Standard Infos',
-	'head_rival'	=> 'Gegner Infos',
-	'head_server'	=> 'Server Infos',
-	'head_message'	=> 'Kommentar / Report',
-	'head_training'	=> 'Training',
+	'head_details'		=> 'Matchdeatials',
 	
 	'type_unknown'	=> 'unbekannt',
 	'type_two'		=> '2on2',
@@ -74,42 +62,42 @@ $lang = array_merge($lang, array(
 	),
 */
 	'team_id'				=> 'Team',
-	'match_type'				=> 'Typ',
+	'match_type'			=> 'Typ',
 	'match_war'				=> 'Begegnungstyp',
 	'match_league'			=> 'Liga',
-	'match_league_url'	=> 'Ligawebsite',
-	'match_league_match'		=> 'Match-ID',
+	'match_league_match'	=> 'Match-ID',
 	'match_date'			=> 'Datum',
-	'match_public'			=> 'Öffentlich?',
-	'match_comments'		=> 'Kommentare?',
+	'match_public'			=> 'Öffentlich',
+	'match_comments'		=> 'Kommentare',
 	'match_rival_name'		=> 'Gegner Name',
-	'match_rival_tag'			=> 'Gegner Clantag',
-	'match_rival_url'			=> 'Gegner Homepage',
+	'match_rival_tag'		=> 'Gegner Clantag',
+	'match_rival_url'		=> 'Gegner Homepage',
 	'match_rival_logo'		=> 'Gegner Logo',
-	'match_rival_lineup'		=> 'Gegner Lineup',
-	'match_rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
-	'match_server_ip'			=> 'Server IP',
-	'match_server_pw'			=> 'Server Passwort',
+	'match_rival_lineup'	=> 'Gegner Lineup',
+	'match_server_ip'		=> 'Server IP',
+	'match_server_pw'		=> 'Server Passwort',
 	'match_hltv_ip'			=> 'HLTV-Server IP',
 	'match_hltv_pw'			=> 'HLTV-Server Passwort',
 	
 	'match_comment'		=> 'Kommentar',
-	
 	'match_report'		=> 'Report',
 	
-	'match_comment_exp'	=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
-	'match_report_exp'	=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
-	
 	'training'			=> 'Training',
-	'training_date'		=> 'Trainingstermin',
-	'training_duration'	=> 'Trainingsdauer',
-	'training_maps'		=> 'Trainingsmaps',
-	'training_text'		=> 'Trainingsbericht',
+	'training_on'		=> 'Training planen',
+	'training_date'		=> 'Datum',
+	'training_duration'	=> 'Dauer',
+	'training_maps'		=> 'Karte(n)',
+	'training_text'		=> 'Zusatz',
 	
 	'reset_list'	=> 'Teilnahmen reset?',
 	
 	'training_create'	=> 'hinzufügen',
 	'training_update'	=> 'Trainingsliste',
+	
+	'match_comment_exp'			=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
+	'match_report_exp'			=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
+	'match_rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
+
 	
 	
 	/* Detail */
@@ -126,18 +114,6 @@ $lang = array_merge($lang, array(
 	
 	'sprintf_round'		=> 'Runde: %s',
 	
-	
-	/* error msg */
-	'msg_select_team'			=> 'Bitte ein Team auswählen!',
-	'msg_select_type'			=> 'Bitte ein Type auswählen!',
-	'msg_select_war'			=> 'Bitte ein Wartype auswählen!',
-	'msg_select_league'			=> 'Bitte eine Liga auswählen!',
-	
-	'msg_select_team_first'		=> 'Bitte ein Team zuerst auswählen!',
-	
-	'msg_empty_rival_name'		=> 'Bitte einen Gegnernamen eintragen!',
-	'msg_empty_rival_tag'		=> 'Bitte einen Gegnerclantag eintragen!',
-	'msg_empty_server'			=> 'Bitte einen Gameserver eintragen!',
 	
 	/* details maps */
 	'detail_maps'			=> 'Maps hinzufügen',

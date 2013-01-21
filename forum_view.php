@@ -78,7 +78,7 @@ if ( !($result = $db->sql_query($sql)) )
 $moderators = array();
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
+	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;id=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
 }
 //	AND g.group_type <> ". GROUP_HIDDEN ."
 $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
@@ -113,7 +113,7 @@ if ( !($result = $db->sql_query($sql)) )
 $moderators = array();
 while( $row = $db->sql_fetchrow($result) )
 {
-	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER . '=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
+	$moderators[] = '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;id=' . $row['user_id']) . '" style="color:#' . $row['user_color'] . '">' . $row['user_name'] . '</a>';
 }
 //	AND g.group_type <> ". GROUP_HIDDEN ."
 $sql = "SELECT g.group_id, g.group_name, g.group_color, g.group_order
@@ -447,7 +447,7 @@ if( $total_topics )
 		
 		$view_topic_url = check_sid("viewtopic.$phpEx?" . POST_TOPIC . "=$topic_id");
 
-		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER . '=' . $topic_rowset[$i]['user_id']) . '">' : '';
+		$topic_author = ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;id=' . $topic_rowset[$i]['user_id']) . '">' : '';
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? $topic_rowset[$i]['user_name'] : ( ( $topic_rowset[$i]['post_user_name'] != '' ) ? $topic_rowset[$i]['post_user_name'] : $lang['Guest'] );
 
 		$topic_author .= ( $topic_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
@@ -456,7 +456,7 @@ if( $total_topics )
 
 		$last_post_time = create_date($board_config['default_dateformat'], $topic_rowset[$i]['post_time'], $board_config['default_timezone']);
 
-		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_user_name2'] != '' ) ? $topic_rowset[$i]['post_user_name2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USER . '='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
+		$last_post_author = ( $topic_rowset[$i]['id2'] == ANONYMOUS ) ? ( ($topic_rowset[$i]['post_user_name2'] != '' ) ? $topic_rowset[$i]['post_user_name2'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid("profile.$phpEx?mode=viewprofile&amp;id='  . $topic_rowset[$i]['id2']) . '">' . $topic_rowset[$i]['user2'] . '</a>';
 
 		$last_post_url = '<a href="' . check_sid("viewtopic.$phpEx?"  . POST_POST . '=' . $topic_rowset[$i]['topic_last_post_id']) . '#' . $topic_rowset[$i]['topic_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" border="0" /></a>';
 

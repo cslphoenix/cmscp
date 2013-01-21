@@ -451,7 +451,7 @@ else if ( $mode == 'view' && $data )
 				'EMAIL_IMG' => $email_img,
 				'EMAIL' => $email,
 				
-				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id)
+				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;id=' . $user_id)
 			));
 			
 			if ( $is_moderator )
@@ -505,7 +505,7 @@ else if ( $mode == 'view' && $data )
 				'YIM_IMG' => $yim_img,
 				'YIM' => $yim,
 				
-				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $user_id)
+				'U_VIEWPROFILE' => check_sid('profile.php?mode=viewprofile&amp;id=' . $user_id)
 			));
 			
 			if ( $is_moderator )

@@ -21,6 +21,7 @@ $lang = array_merge($lang, array(
 	'path_matchs'		=> 'Begegnungen',
 	'path_users'		=> 'Benutzer',
 	'path_groups'		=> 'Gruppen',
+	'path_network'		=> 'Network',
 	
 	'dir'	=> 'Verzeichnis',
 	'size'	=> 'Grφίe',

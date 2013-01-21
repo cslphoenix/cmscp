@@ -6,9 +6,10 @@ if ( !empty($setmodules) )
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_news',
 		'modes'		=> array(
-			'cat'	=> array('title' => 'acp_newscat', 'auth' => array('auth_news', 'auth_news_public')),
-			'news'	=> array('title' => 'acp_news', 'auth' => array('auth_news', 'auth_news_public')),
-			'send'	=> array('title' => 'acp_send', 'auth' => array('auth_news', 'auth_news_public')),
+			'cat'		=> array('title' => 'acp_newscat'),
+			'news'		=> array('title' => 'acp_news'),
+			'letter'	=> array('title' => 'acp_newsletter'),
+			'send'		=> array('title' => 'acp_send'),
 		),
 	);
 }
@@ -17,7 +18,7 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current = 'acp_news';
 	
@@ -58,9 +59,9 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-#	debug($_POST, '_POST');
+	debug($_POST, '_POST');
 	
-	$mode = ( in_array($mode, array('create', 'update', 'cat_create', 'cat_update', 'move_down', 'move_up', 'switch', 'delete', 'sync')) ) ? $mode : '';
+	$mode = (in_array($mode, array('create', 'update', 'cat_create', 'cat_update', 'move_down', 'move_up', 'switch', 'delete', 'sync'))) ? $mode : false;
 	
 	$switch = $settings['switch']['news'];
 	
@@ -77,17 +78,17 @@ else
 				$vars = array(
 					'news' => array(
 						'title1' => 'input_data',
-						'news_title'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
-						'news_cat'		=> array('validate' => INT,	'explain' => false, 'type' => 'drop:images', 'params' => array($dir_path, NEWS_CAT, false), 'required' => 'select_cat'),
-						'news_match'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:match'),
-						'news_vote'		=> array('validate' => INT,	'explain' => false, 'type' => 'drop:vote'),
-						'news_text'		=> array('validate' => TXT,	'explain' => false, 'type' => 'textarea:40',	'required' => 'input_text', 'params' => TINY_NEWS),
-					#	'news_links'	=> array('validate' => ARY,	'explain' => false,	'type' => 'links:20'),
+						'news_title'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',		'required' => 'input_name'),
+						'news_cat'		=> array('validate' => INT,	'explain' => false,	'type' => 'drop:images',	'required' => 'select_newscat', 'params' => array($dir_path, NEWS_CAT, false)),
+						'news_match'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:match'),
+						'news_vote'		=> array('validate' => INT,	'explain' => false,	'type' => 'drop:vote'),
+						'news_text'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40',	'required' => 'input_text', 'params' => TINY_NEWS),
+						'news_links'	=> array('validate' => TXT,	'explain' => false,	'type' => 'links:20'),
 						'news_date'		=> array('validate' => ($switch ? INT : TXT), 'type' => ($switch ? 'drop:datetime' : 'text:25;25'), 'params' => ($switch ? (($mode == 'create') ? $time : '-1') : 'format')),
-						'news_public'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] ) ? array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno') : 'hidden',
-						'news_intern'	=> ( $userdata['user_level'] >= TRIAL )		? array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno') : 'hidden',
-						'news_comments'	=> ( $settings['comments']['match'] )		? array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno') : 'hidden',
-						'news_rate'		=> ( $settings['rating_news']['status'] )	? array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno') : 'hidden',
+						'news_public'	=> ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] ) ? array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno') : 'hidden',
+						'news_intern'	=> ( $userdata['user_level'] >= TRIAL )		? array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno') : 'hidden',
+						'news_comments'	=> ( $settings['comments']['match'] )		? array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno') : 'hidden',
+						'news_rate'		=> ( $settings['rating_news']['status'] )	? array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno') : 'hidden',
 						'user_id'		=> 'hidden',
 						'in_send'		=> 'hidden',
 						'in_note'		=> 'hidden',
@@ -96,7 +97,7 @@ else
 					),
 				);
 				
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
 					$data_sql = array (
 						'news_title'	=> request('news_title', TXT),
@@ -117,7 +118,7 @@ else
 						'time_update'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(NEWS, $data, false, 3, true);
 				}
@@ -139,7 +140,7 @@ else
 						else
 						{
 							$sql = sql(NEWS, $mode, $data_sql, 'news_id', $data);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -157,11 +158,10 @@ else
 				build_output(NEWS, $vars, $data_sql);
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang["title_$act"]),
+					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang["title_$action"], lang($data_sql['news_title'])),
 					'L_EXPLAIN'	=> $lang['common_required'],
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang["title_$act"], $data_sql['news_title']),
 					
-					'S_ACTION'	=> check_sid("$file&mode=$mode&amp;id=$data"),
+					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
 				));
 				
@@ -178,13 +178,13 @@ else
 				$vars = array(
 					'cat' => array(
 						'title1' => 'input_data',
-						'cat_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',	'required' => 'input_name'),
-						'cat_image'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, false)),
+						'cat_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name'),
+						'cat_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), false, false)),
 						'cat_order'	=> 'hidden',
 					),
 				);
 				
-				if ( $mode == 'cat_create' && !$update )
+				if ( $mode == 'cat_create' && !$submit )
 				{
 					$data_sql = array(
 						'cat_name'	=> request('cat_name', TXT),
@@ -192,7 +192,7 @@ else
 						'cat_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'cat_update' && !$update )
+				else if ( $mode == 'cat_update' && !$submit )
 				{
 					$data_sql = data(NEWS_CAT, $data, false, 1, true);
 				}
@@ -228,7 +228,7 @@ else
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang["title_$act"]),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang["title_$act"], $data_sql['cat_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang["title_$act"], $data_sql['cat_name']),
 					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -241,7 +241,7 @@ else
 			case 'move_up':
 			case 'move_down':
 			
-				moveset(NEWS_CAT, $mode, $order);
+				move(NEWS_CAT, $mode, $order);
 				log_add(LOG_ADMIN, $log, $mode);
 			
 				$index = true;
@@ -378,7 +378,7 @@ else
 					
 					$public	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )	? href('a_txt', $file, array('mode' => 'switch', 'id' => $id), $status, '') : img('i_icon', 'icon_news_denied', '');
 					$title	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $data[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, '') : $title : $title;
-					$update	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $data[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update');
+					$submit	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $data[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update');
 					$delete	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $data[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete') : img('i_icon', 'icon_update2', 'common_update');
 					
 					$template->assign_block_vars('ndisplay.row', array(
@@ -387,7 +387,7 @@ else
 						'DATE'		=> create_date($userdata['user_dateformat'], $data[$i]['news_date'], $userdata['user_timezone']),
 						'STATUS'	=> $status,
 						'PUBLIC'	=> $public,
-						'UPDATE'	=> $update,
+						'UPDATE'	=> $submit,
 						'DELETE'	=> $delete,
 					));
 				}
@@ -483,7 +483,7 @@ else
 						
 						$public	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )	? href('a_txt', $file, array('mode' => 'switch', 'id' => $id), $status, '') : img('i_icon', 'icon_news_denied', '');
 						$title	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, '') : $title : $title;
-						$update	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update');
+						$submit	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update');
 						$delete	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete') : img('i_icon', 'icon_update2', 'common_update');
 						
 						$template->assign_block_vars('display.news_row', array(
@@ -491,7 +491,7 @@ else
 							'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_date'], $userdata['user_timezone']),
 							'STATUS'	=> $status,
 							'PUBLIC'	=> $public,
-							'UPDATE'	=> $update,
+							'UPDATE'	=> $submit,
 							'DELETE'	=> $delete,
 						));
 					}
@@ -521,7 +521,7 @@ else
 						
 						$public	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news_public'] )	? href('a_txt', $file, array('mode' => 'switch', 'id' => $id), $status, '') : img('i_icon', 'icon_news_denied', '');
 						$title	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $send[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, '') : $title : $title;
-						$update	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $send[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update');
+						$submit	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $send[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update');
 						$delete	= ( $userdata['user_level'] == ADMIN || $userauth['auth_news'] ) ? ( $userdata['user_level'] == ADMIN || $send[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete') : img('i_icon', 'icon_update2', 'common_update');
 						
 						$list = explode('; ', $send[$i]['in_send']);
@@ -533,7 +533,7 @@ else
 							'SEND'		=> $send,
 							'STATUS'	=> $status,
 							'PUBLIC'	=> $public,
-							'UPDATE'	=> $update,
+							'UPDATE'	=> $submit,
 							'DELETE'	=> $delete,
 						));
 					}
@@ -545,9 +545,9 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang["title_$act"]),
-		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang["title_$act"]),
-		'L_TITLE'	=> sprintf($lang['sprintf_title'], $lang["title_$act"]),
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang["title_$action"]),
+		'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang["title_$action"]),
+		'L_NAME'	=> $lang["title_$action"],
 		
 		'L_EXPLAIN'	=> $lang["explain_$act"],
 	

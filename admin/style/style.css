@@ -29,35 +29,55 @@ table.db label { display: block; }
 
 .error	{ color:#bcbcbc; font-weight:bold; font-size:1em; }
 
+<!--select { padding:0px; font-size: 10px; }-->
+
+
+
+/* Browser Reset 
+input:invalid {
+box-shadow:none;
+}
+ ersetzt Asterisk 
+input:required + label::after {
+content:" *";
+color:#f00;
+}
+ nicht oder falsch ausgefuellte Felder rot markieren 
+input:focus:invalid {
+border-color:#f00;
+}
+ richtig ausgefuellte Felder gruen markieren 
+input:required:focus:valid {
+border-color:#0c0;
+}
+ Buttons mit grauem Gradient und runden Ecken 
+button {
+background:-moz-linear-gradient(top,#fff,#ccc);
+background:-webkit-linear-gradient(top,#fff,#ccc);
+background:-ms-linear-gradient(top,#fff,#ccc);
+background:-o-linear-gradient(top,#fff,#ccc);
+background:linear-gradient(top,#fff,#ccc);
+border-radius:5px;
+}
+ Submit-Buttons mit blauem Verlauf 
+button[type="submit"] {
+background:-moz-linear-gradient(top,#0cc,#08c);
+background:-webkit-linear-gradient(top,#0cc,#08c);
+background:-ms-linear-gradient(top,#0cc,#08c);
+background:-o-linear-gradient(top,#0cc,#09c);
+background:linear-gradient(top,#0cc,#08c);
+}
+*/
 input[type="radio"]
 { background:none; border-style:none; }
 
 input[type="text"], input[type="submit"], input[type="reset"], input[type="password"], select, textarea, input.more
-{ background:#F0EFEF; color:#000; border:#000 1px solid; padding:1px; padding-top:0px; padding-bottom:0px; margin:0px; font-size: 11px; }
+{ background:#F0EFEF; color:#000; border:#000 1px solid; padding:2px; font-size: 0.9em; }
+
+select { padding:0px; }
 
 input[type="submit"], input[type="reset"], input.more
 { padding:0px 2px; font-size: 10px; }
-
-<!--select { padding:0px; font-size: 10px; }-->
-
-select {
-	font-family: Verdana, Helvetica, Arial, sans-serif;
-	font-size: 0.85em;
-	font-weight: normal;
-	font-style: normal;
-	cursor: pointer;
-	vertical-align: middle;
-	width: auto;
-	color: #000;
-}
-
-dd select {
-	font-size: 100%;
-	font-size: 1em;
-	width: auto;
-	max-width: 100%;
-	margin: -2px 0;
-}
 
 input[type="submit"], input[type="submit"]:hover, input.more, input.more:hover
 { font-weight:bold; }
@@ -223,15 +243,19 @@ table.update tr:hover td.row1r	{ border-right:1px #39F solid; color:#F00; }
 table.update td span			{ font-weight:normal; font-size: 10px; }
 
 /*DL, DT, DD TAGS LIST DATA*/
-div.update dl				{  }
-div.update dl dt			{ float:left; text-align:right; font-weight:bold; padding:6px; width:35%; font-size: 11px; }
-div.update dl dt.red		{ color:#900; }
-div.update dl dd			{ padding:6px; border-left:1px #FFF solid;  }
-div.update dd				{ margin: 0 0 0 37%; padding:0; vertical-align: top; }
-div.update dl:hover			{ color:#000; }
-div.update dl:hover	dd		{ border-left:1px #39F solid; }
-div.update dl:hover dt.red	{ color:#F00; }
-img.img		{ padding-top: 5px; }
+
+fieldset dl					{  }
+fieldset dl dt				{ float:left; text-align:right; font-weight:bold; padding:4px; width:35%; font-size: 11px; }
+fieldset dl dt.red			{ color:#900; }
+fieldset dt.u				{ text-decoration: underline; }
+fieldset dl dd				{ padding:4px; border-left:1px #FFF solid; }
+fieldset dd					{ margin: 0 0 0 36%; padding: 4px 4px 0 4px; }
+fieldset dl:hover			{ color:#000; }
+fieldset dl:hover     dd	{ border-left:1px #39F solid; }
+fieldset dl:hover dt.red	{ color:#F00; }
+fieldset img.img			{ padding-top: 5px; }
+
+
 
 div.update2 dl				{  }
 div.update2 dl dt			{ float:left; text-align:right; font-weight:bold; padding:3px; width:35%; font-size: 11px; }
@@ -242,11 +266,11 @@ div.update2 dl:hover		{ color:#000; }
 div.update2 dl:hover dd		{ border-left:1px #39F solid; }
 div.update2 dl:hover dt.red	{ color:#F00; }
 
-.ttabs					{ padding:2px; }
-.ttabs th				{ white-space:nowrap; background-color:#DFE7EB; padding:3px; text-align:center; }
-.ttabs th:first-child	{ white-space:nowrap; text-align:left; width:100%; }
-.ttabs td:first-child	{ white-space:nowrap; text-align:left;  padding: 5px; }
-.ttabs td				{ white-space:nowrap; padding: 5px; }
+.ttabs					{ padding:2px; border-spacing:1px; border-style:none; border-collapse:separate; }
+.ttabs th				{ white-space:nowrap; background-color:#DFE7EB; padding:1px; text-align:center; width:5%; }
+.ttabs th:first-child	{ white-space:nowrap; text-align:left; width:75%; }
+.ttabs td				{ white-space:nowrap; text-align:center; padding: 1px; }
+.ttabs td:first-child	{ white-space:nowrap; text-align:left;  padding: 1px; }
 .ttabs a:hover			{ }
 .ttabs tr:hover			{ color:#000; }
 
@@ -273,8 +297,8 @@ div.update dl dd {
 div.update dl:hover dt		{ border-right:1px #39F solid; }
 */
 
-div.submit dt		{ float:left; text-align:right; padding:6px; width:35%; font-size: 11px; border-right:1px #FFF solid; }
-div.submit dd		{ margin: 0 0 0 37%; padding:6px; border: none; vertical-align: top; }
+div.submit dt		{ float:left; text-align:right; padding:3px; width:50%; font-size: 11px; border-right:1px #FFF solid; }
+div.submit dd		{ padding:3px; border: none; vertical-align: top; }
 
 table.update2					{ width:100%; border:none; border-spacing:0px; font-size: 11px; }
 table.update2 td				{ padding:3px; cursor:default; }
@@ -321,9 +345,11 @@ table.db td:nth-child(2)	{ text-align:center; }
 table.db td:nth-child(3)	{ text-align:right; }
 table.db td:nth-child(4)	{ text-align:center; }
 
-table.footer					{ font-size:10px; vertical-align:top; }
-table.footer td					{ padding:1px; white-space:nowrap; vertical-align:top; }
-table.footer td:last-child		{ white-space:nowrap; width:100%; vertical-align:top; text-align:right; }
+table.footer					{ font-size:10px; border:none; width:100%; border-spacing:0px; padding:0px; }
+table.footer td					{ padding:1px; }
+table.footer td:first-child		{ vertical-align:top; white-space:nowrap; text-align:left; width:1%;  }
+table.footer td:nth-child(2)	{ vertical-align:top; white-space:nowrap; }
+table.footer td:last-child		{ vertical-align:top; white-space:nowrap; text-align:right; width:99%; }
 
 table.lfooter					{ font-size:10px; border:none; width:100%; border-spacing:0px; padding:0px; }
 table.lfooter td				{ padding:1px; }
@@ -372,3 +398,122 @@ td.row_error	{ background-color:#F66;}
 td.row_class1	{ background-color:#E6EDF0; /* DFE7EB */ }
 td.row_class2	{ background-color:#CEE1EB; /* F0EFEF */ }
 td.row_class3	{ background-color:#F0F8FF; /* B8DEEB */ }
+
+fieldset {
+	margin: 5px 0;
+	padding: 5px;
+	border-top: 1px solid #D7D7D7;
+	border-right: 1px solid #D7D7D7;
+	border-bottom: 1px solid #D7D7D7;
+	border-left: 1px solid #D7D7D7;
+	background-color: #FFFFFF;
+	position: relative;
+}
+
+.rtl fieldset {
+	border-top: 1px solid #D7D7D7;
+	border-right: 1px solid #D7D7D7;
+	border-bottom: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+}
+
+* html fieldset {
+	padding: 0 10px 5px 10px;
+}
+
+fieldset p {
+	font-size: 0.85em;
+}
+
+legend {
+	padding: 2px 4px;
+	border: 1px solid #D7D7D7;
+	font-size: 1em;
+	font-weight: bold;
+	color: #115098;
+	margin-top: 0.4em;
+	position: relative;
+	text-transform: none;
+	line-height: 1.2em;
+	top: -.2em;
+	background-color:#FFF;
+	vertical-align: middle;
+}
+
+* html legend {
+	margin: 0 0 -10px -7px;
+	line-height: 1em;
+	font-size: .85em;
+}
+
+#cmain {
+	float: left;
+	width: 79%;
+	margin: 0 0 0 3%;
+	min-height: 350px;
+}
+
+.rtl #cmain {
+	float: right;
+	margin: 0 3% 0 0;
+}
+
+* html #cmain {
+	height: 350px;
+}
+
+#header {
+	float: left;
+	width: 100%;
+}
+
+/* Menu */
+#cmenu {
+	float: left;
+	width: 18%;
+	font-size: 1.00em;
+	padding: 0;
+}
+
+#cmenu p {
+	font-size: 0.9em;
+}
+
+#cmenu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Default list state */
+#cmenu li {
+	padding: 0;
+	margin: 0;
+	font-size: 0.9em;
+	font-weight: bold;
+	display: inline;
+}
+
+#cmenu li.header {
+	font-family: Tahoma, Helvetica, sans-serif;
+	display: block;
+/*	font-weight: bold; */
+	color: #000;
+	border-bottom: 1px solid #ccc;
+	padding: 4px 0 2px;
+	margin-top: 15px;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+
+#cmain li.header {
+	font-family: Tahoma, Helvetica, sans-serif;
+	display: block;
+	font-weight: bold;
+	color: #000;
+	border-bottom: 1px solid #ccc;
+	padding: 4px 0 2px;
+	margin-top: 15px;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
