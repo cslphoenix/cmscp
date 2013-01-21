@@ -177,7 +177,7 @@ if ( $cats )
 	
 									$last_post = $last_post_time . '<br>';
 	
-									$last_post .= ( $forms[$j]['user_id'] == ANONYMOUS ) ? ( ($forms[$j]['post_user_name'] != '' ) ? $forms[$j]['post_user_name'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;' . POST_USER . '='  . $forms[$j]['user_id']) . '">' . $forms[$j]['user_name'] . '</a> ';
+									$last_post .= ( $forms[$j]['user_id'] == ANONYMOUS ) ? ( ($forms[$j]['post_user_name'] != '' ) ? $forms[$j]['post_user_name'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . check_sid('profile.$phpEx?mode=viewprofile&amp;id='  . $forms[$j]['user_id']) . '">' . $forms[$j]['user_name'] . '</a> ';
 									
 									$last_post .= '<a href="' . check_sid('viewtopic.php?'  . POST_POST . '=' . $forms[$j]['forum_last_post_id']) . '#' . $forms[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
 								}

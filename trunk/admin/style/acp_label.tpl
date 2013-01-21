@@ -1,33 +1,27 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
 <script type="text/javascript" src="style/ajax_main.js"></script>
 <script type="text/javascript">
 
-function display_options(value)
+function mark_options(id, s)
 {
-	if ( value == '0' )
+	var t = document.getElementById(id);
+
+	if (!t)
 	{
-		dE('main', 1);
-		dE('profile_field', -1);
-		dE('profile_typ', -1);
-		dE('profile_lang', -1);
-		dE('profile_show_user', -1);
-		dE('profile_show_member', -1);
-		dE('profile_show_register', -1);
-		dE('profile_required', -1);
+		return;
 	}
-	else
+
+	var rb = t.getElementsByTagName('input');
+
+	for (var r = 0; r < rb.length; r++)
 	{
-		dE('main', 1);
-		dE('profile_field', 1);
-		dE('profile_typ', 1);
-		dE('profile_lang', 1);
-		dE('profile_show_user', 1);
-		dE('profile_show_member', 1);
-		dE('profile_show_register', 1);
-		dE('profile_required', 1);
+		if (rb[r].id.substr(rb[r].id.length-1) == s)
+		{
+			rb[r].checked = true;
+		}
 	}
 }
 
@@ -54,6 +48,41 @@ function display_options(value)
 <!-- END tab -->
 <!-- END row -->
 
+<br />
+<br />
+
+<div>
+	<div align="center">
+	<div class="tabs" align="right">
+	<ul>
+		<!-- BEGIN cats -->
+		<li><a {input.cats.AUTH} href="#{input.cats.CAT}">{input.cats.NAME}</a></li>
+		<!-- END cats -->
+	</ul>
+	<!-- BEGIN cats -->
+	<div name="#{input.cats.CAT}" id="{input.cats.OPTIONS}">
+		<table class="ttabs">
+		<tr>
+			<th>{L_SETTINGS}</th>
+			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'y'); return false;">{OPT_YES}Ja</a></th>
+			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'u'); return false;">{OPT_UNSET}Nein</a></th>
+			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'n'); return false;">{OPT_NEVER}Nie</a></th>
+		</tr>
+		<!-- BEGIN auths -->
+		<tr>
+			<td>{input.cats.auths.LANG}</td>
+			<td>{input.cats.auths.OPT_YES}</td>
+			<td>{input.cats.auths.OPT_UNSET}</td>
+			<td>{input.cats.auths.OPT_NEVER}</td>
+		</tr>
+		<!-- END auths -->
+		</table>
+	</div>
+	<!-- END cats -->
+	</div>
+	</div>
+</div>
+
 <div class="submit">
 <dl>
 	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
@@ -63,32 +92,6 @@ function display_options(value)
 {S_FIELDS}
 </form>
 <!-- END input -->
-
-<!-- BEGIN list -->
-<form action="{S_ACTION}" method="post">
-<table class="rows">
-<tr>
-	<th>{CAT} :: {NAME}</th>
-	<th><span class="right">{UPDATE}{DELETE}</span></th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td>{list.row.NAME}</td>
-	<td>{list.row.MOVE_DOWN}{list.row.MOVE_UP}{list.row.UPDATE}{list.row.DELETE}</td>
-</tr>
-<!-- END row -->
-</table>
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="profile_field" /></td>
-	<td><input type="submit" value="{L_CREATE_FIELD}" /></td>
-</tr>
-</table>
-<br />
-
-{S_FIELDS}
-</form>
-<!-- END list -->
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
@@ -113,8 +116,8 @@ function display_options(value)
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="profile_name" /></td>
-	<td><input type="submit" value="{L_CREATE_CAT}" /></td>
+	<td><input type="text" name="label_name" /></td>
+	<td><input type="submit" value="{L_CREATE}" /></td>
 </tr>
 </table>
 {S_FIELDS}

@@ -70,7 +70,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['authlist_field']),
+				'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['authlist_field']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
 				'L_RESET'		=> $lang['common_reset'],
@@ -109,7 +109,7 @@ else
 			#$oCache -> deleteCache('authlist');
 			
 			$message = $lang['create_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php'));
-			log_add(LOG_ADMIN, SECTION_AUTHLIST, 'create_authlist');
+			log_add(LOG_ADMIN, SECTION_CHANGELOG, 'create_authlist');
 			message(GENERAL_MESSAGE, $message);
 
 			break;
@@ -142,7 +142,7 @@ else
 			$message = $lang['update_authlist']
 				. sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php') . '">', '</a>')
 				. sprintf($lang['return_update'], '<a href="' . check_sid("admin_authlist.php?mode=_update&amp;' . POST_AUTHLIST . '=' . $authlist_id"));
-			log_add(LOG_ADMIN, SECTION_AUTHLIST, 'update_authlist');
+			log_add(LOG_ADMIN, SECTION_CHANGELOG, 'update_authlist');
 			message(GENERAL_MESSAGE, $message);
 			
 			break;
@@ -169,7 +169,7 @@ else
 				#$oCache -> deleteCache('authlist');
 				
 				$message = $lang['delete_authlist'] . sprintf($lang['click_return_authlist'], '<a href="' . check_sid('admin_authlist.php'));
-				log_add(LOG_ADMIN, SECTION_AUTHLIST, 'delete_authlist');
+				log_add(LOG_ADMIN, SECTION_CHANGELOG, 'delete_authlist');
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $authlist_id && !$confirm )

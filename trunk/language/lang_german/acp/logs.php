@@ -34,7 +34,6 @@ $lang = array_merge($lang, array(
 #	'delete_log_error'			=> 'Der oder die Fehlermeldungen wurde gelöscht!',
 	
 	'section'	=> array(
-		SECTION_AUTHLIST	=> 'Berechtigungsfelder',
 		SECTION_COMMENT		=> 'Kommentare',
 		SECTION_EVENT		=> 'Ergeinisse',
 		SECTION_FORUM		=> 'Forum',

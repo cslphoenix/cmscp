@@ -15,7 +15,7 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current = 'acp_games';
 	
@@ -33,11 +33,7 @@ else
 	$data	= request('id', INT);
 	$start	= request('start', INT);
 	$order	= request('order', INT);
-	$sub	= request('sub', TYP);
-	$subs	= request('subs', TYP);
 	$mode	= request('mode', TYP);
-	$sort	= request('sort', TYP) ;
-	$type	= request('type', TYP);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
@@ -57,9 +53,9 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	debug($_POST, 'POST');
+	debug($_POST, '_POST');
 	
-	$mode = ( in_array($mode, array('create', 'update', 'order', 'delete')) ) ? $mode : '';
+	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
@@ -69,19 +65,18 @@ else
 			case 'update':
 			
 				$template->assign_block_vars('input', array());
-				$template->assign_vars(array('IPATH' => $dir_path));
 				
 				$vars = array(
 					'game' => array(
 						'title' => 'input_data',
-						'game_name'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
-						'game_tag'		=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:server','required' => 'select_tag',	'check' => true, 'params' => true),
-						'game_image'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:image', 'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
+						'game_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
+						'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:server','required' => 'select_tag',	'check' => true, 'params' => true),
+						'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
 						'game_order'	=> 'hidden',
 					),
 				);
 				
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
 					$data_sql = array(
 						'game_name'		=> request('game_name', TXT),
@@ -90,7 +85,7 @@ else
 						'game_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(GAMES, $data, false, 1, true);
 				}
@@ -110,10 +105,8 @@ else
 						else
 						{
 							$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
-						
-						orders(GAMES);
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
 						message(GENERAL_MESSAGE, $msg);
@@ -127,8 +120,10 @@ else
 				build_output(GAMES, $vars, $data_sql);
 
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['game_name']),
+				#	'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['game_name']),
+					'L_EXPLAIN'	=> $lang['common_required'],
+					
 					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -137,16 +132,15 @@ else
 				$template->pparse('body');
 
 				break;
-
-			case 'order':
-
-				update(GAMES, 'game', $move, $data_id);
-				orders(GAMES);
-
+			
+			case 'move_up':
+			case 'move_down':
+			
+				move(GAMES, $mode, $order);
 				log_add(LOG_ADMIN, $log, $mode);
-
+			
 				$index = true;
-
+				
 				break;
 
 			case 'delete':
@@ -197,7 +191,6 @@ else
 
 	$fields	= '<input type="hidden" name="mode" value="create" />';
 	
-	$max = maxi(GAMES, 'game_order', '');
 	$tmp = data(GAMES, '', 'game_order ASC', 1, false);
 
 	if ( !$tmp )
@@ -206,31 +199,31 @@ else
 	}
 	else
 	{
-		$cnt = count($tmp);
+		$max = count($tmp);
 
-		for ( $i = 0; $i < $cnt; $i++ )
+		foreach ( $tmp as $row )
 		{
-			$id		= $tmp[$i]['game_id'];
-			$name	= $tmp[$i]['game_name'];
-			$order	= $tmp[$i]['game_order'];
+			$id		= $row['game_id'];
+			$name	= $row['game_name'];
+			$order	= $row['game_order'];
 
 			$template->assign_block_vars('display.row', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'TAG'		=> $tmp[$i]['game_tag'],
-				'GAME'		=> $tmp[$i]['game_image'] ? display_gameicon($tmp[$i]['game_image']) : img('i_icon', 'icon_spacer', ''),
-				
-				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => 'order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => 'order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+				
+				'TAG'		=> $row['game_tag'],
+				'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
+				
+				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 			));
 		}
 	}
 
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-		'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 
 		'L_NAME'	=> $lang['game_name'],

@@ -10,15 +10,7 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Team',
 	'explain'	=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
 
-	'create'	=> 'Neues Team hinzugefügt.',
-	'update'	=> 'Teamdaten erfolgreich geändert.',
-	'delete'	=> 'Das Team wurde gelöscht!',
-	'confirm'	=> 'dass dieses Team:',
-	
-	
 	'count'		=> 'Anzahl',
-	'members'	=> 'Mitglieder',
-	
 	
 	'input_data'	=> 'Teamdaten',
 	

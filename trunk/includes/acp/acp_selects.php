@@ -1,24 +1,57 @@
 <?php
 
 /*
-	function select_path()				//	acp_settings
-	function select_perms()				//	acp_settings
-	function select_box_image();		//	acp_news
-	function select_team();				//	acp_teams
-	function select_level();			//
-	function select_box();				//
-	function select_box_files();		//	acp_games, acp_newscat
-!	function select_box_game();			//
-	function select_rank();				//
-!	function select_newscategory();		//
-	function select_lang_box();			//
-	function _select_match();			//
-	function page_mode_select();		//
-	function select_cat();				//
-	function select_order_cat();		//
-	function select_order();			//
-	function select_add_lang();			//
-*/
+ * nicht wichtig im moment
+ */
+function select_navi($type, $data, $tpl)
+{
+	global $lang, $db, $settings;
+
+	$settings_key = array_keys($settings);
+	
+	foreach ( $settings_key as $row )
+	{
+		if ( strpos($row, 'module_') !== false )
+		{
+			$mod[] = $row;
+		}
+	}
+	
+	$cnt = count($data);
+	$select = '';
+	
+	for ( $i = 0; $i < $cnt; $i++ )
+	{
+		$select .= ( in_array($type, array('navi_left', 'navi_right')) ) ? '<div><div>' : '';
+		$select .= "<select name=\"{$tpl}[$type][]\" id=\"\">";
+		$select .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_item']) . "</option>";
+		
+		for ( $j = 0; $j < count($mod); $j++ )
+		{
+			$marked = ( $data[$i] == $mod[$j] ) ? ' selected="selected"' : '';
+			$select .= "<option value=\"{$mod[$j]}\"$marked>" . sprintf($lang['sprintf_select_format'], $mod[$j]) . "</option>";
+		}
+		
+		$select .= "</select>";
+		$select .= ( in_array($type, array('navi_left', 'navi_right')) ) ?  "&nbsp;<input type=\"button\" class=\"more\" value=\"" . $lang['common_more'] . "\" onclick=\"clone(this)\"></div></div>" : '<br />';
+	}
+	
+	return $select;
+}
+
+function select_menu($default, $meta, $name)
+{					#$tdata, $tmeta, $tname, $data
+	global $db, $lang;
+	
+	$sql = 'SELECT * FROM ' . MENU . ' WHERE action = "pcp" AND type = 3 ORDER BY main ASC, menu_order ASC';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$tmp = $db->sql_fetchrowset($result);
+	
+	debug($tmp);
+}
 
 function select_main($default, $meta, $name, $data)
 {
@@ -26,53 +59,65 @@ function select_main($default, $meta, $name, $data)
 	
 	switch ( $meta )
 	{
-		case 'menu':	$tbl = MENU2; $field_id = $meta . '_id'; $field_name = $meta . '_name'; $field_order = $meta . '_order'; break;
-		case 'forum':	$tbl = FORMS; $field_id = $meta . '_id'; $field_name = $meta . '_name'; $field_order = $meta . '_order'; break;
-	}
+		case 'dl':		$tbl = DOWNLOAD;	break;
+		case 'gallery':	$tbl = GALLERY_NEW;	break;
+		case 'profile':	$tbl = PROFILE;		break;
 		
-	$sql = 'SELECT * FROM ' . $tbl . ' ORDER BY main ASC, ' . $field_order . ' ASC';
+		case 'forum':	$tbl = FORUM;		break;
+		case 'menu':	$tbl = MENU;		break;
+	}
+	
+	$field_id		= $meta . '_id';
+	$field_name		= $meta . '_name';
+	$field_order	= $meta . '_order';
+		
+	$sql = 'SELECT * FROM ' . $tbl . (($data['type'] == 4) ? ' WHERE action = \'pcp\'' : '') . ' ORDER BY main ASC, ' . $field_order . ' ASC';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
+	$cat = $lab = array();
+	
 	if ( $db->sql_numrows($result) )
 	{
 		$tmp = $db->sql_fetchrowset($result);
 		
-		foreach ( $tmp as $rows )
+		foreach ( $tmp as $row )
 		{
-			if ( !$rows['type'] )
+			if ( !$row['type'] )
 			{
-				$cat[$rows[$field_id]] = $rows;
+				$cat[$row[$field_id]] = $row;
 			}
-			else if ( $rows['type'] == 1 )
+			else if ( $row['type'] == 1 )
 			{
-				$lab[$rows['main']][$rows[$field_id]] = $rows;
+				$lab[$row['main']][$row[$field_id]] = $row;
 			}
-			else
+			else if ( $row['type'] == 2 )
 			{
-				$sub[$rows['main']][$rows[$field_id]] = $rows;
+				$sub[$row['main']][$row[$field_id]] = $row;
+			}
+			else if ( $row['type'] == 3 )
+			{
+				$cat[$row[$field_id]] = $row;
+			}
+			else if ( $row['type'] == 4 )
+			{
+				$lab[$row['main']][$row[$field_id]] = $row;
 			}
 		}
+		
+		ksort($cat);
+		ksort($lab);
 	}
-	
-	ksort($cat);
-	ksort($lab);
-	
-#	debug($cat);
-#	debug($sub);
-#	debug($lab);
 
-#	debug($default);
-	
 	$return = '<div id="close"><select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
 	
 	foreach ( $cat as $ckey => $crow )
 	{
 		$lng = isset($lang[$crow[$field_name]]) ? $lang[$crow[$field_name]] : $crow[$field_name];
 		
-		$return .= '<option value="' . $crow[$field_id] . '"' . (( $crow[$field_id] == $default ) ? ' selected="selected"' : '') . (( $data['type'] == 2 ) ? ' disabled="disabled"': '') . '>' . $lng . '</option>';
+		$return .= '<option value="' . $crow[$field_id] . '"' . (( $crow[$field_id] == $default ) ? ' selected="selected"' : '') . (( $data['type'] == 2 ) ? ' disabled="disabled"': '') . '>' . $lng . '</option>' . "\n";
 			
 		if ( isset($lab[$ckey]) )
 		{
@@ -80,7 +125,7 @@ function select_main($default, $meta, $name, $data)
 			{
 				$lng = isset($lang[$lrow[$field_name]]) ? $lang[$lrow[$field_name]] : $lrow[$field_name];
 				
-				$return .= '<option value="' . $lrow[$field_id] . '"' . (( $lrow[$field_id] == $default ) ? ' selected="selected"' : '') . (( $data['type'] == 1 ) ? ' disabled="disabled"': '') . '>&nbsp; &nbsp;' . $lng . '</option>';
+				$return .= '<option value="' . $lrow[$field_id] . '"' . (( $lrow[$field_id] == $default ) ? ' selected="selected"' : '') . (( $data['type'] == 1 ) ? ' disabled="disabled"': '') . '>&nbsp; &nbsp;' . $lng . '</option>' . "\n";
 			}
 		}
 	}
@@ -94,9 +139,9 @@ function select_forms($default, $meta, $name, $params)
 {
 	global $db, $lang;
 	
-#	$tmp_db = data(FORMS, false, 'main ASC, forum_order ASC', 1, false);
+#	$tmp_db = data(FORUM, false, 'main ASC, forum_order ASC', 1, false);
 	
-	$sql = "SELECT * FROM " . FORMS . " ORDER BY main ASC, forum_order ASC";
+	$sql = "SELECT * FROM " . FORUM . " ORDER BY main ASC, forum_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -203,7 +248,7 @@ function select_path()
 		/* image files */
 		$settings['path_games'], $settings['path_maps'], $settings['path_newscat'], $settings['path_ranks'],
 		/* upload files */
-		$settings['path_downloads'], $settings['path_gallery'], $settings['path_groups']['path'], $settings['path_matchs']['path'], $settings['path_network']['path'], $settings['path_team_flag']['path'], $settings['path_team_logo']['path'], $settings['path_users']['path'],
+		$settings['path_downloads'], $settings['path_gallery'], $settings['path_group']['path'], $settings['path_matchs']['path'], $settings['path_network']['path'], $settings['path_team_flag']['path'], $settings['path_team_logo']['path'], $settings['path_users']['path'],
 	);
 	
 	$select_path = '<select name="path" class="selectsmall">';
@@ -316,7 +361,6 @@ function select_box_image($class, $table, $field, $default = '')
 	return $select;
 }
 
-
 #select_team($tmp_data, $tmp_meta, $tmp_name, 'request')
 function select_team($default, $meta, $name, $select, $css = false)
 {
@@ -351,7 +395,7 @@ function select_team($default, $meta, $name, $select, $css = false)
 		
 		if ( is_array($select) )
 		{
-			list($type, $params) = array_values($select);
+			list($type, $params) = $select;
 		}
 		else
 		{
@@ -369,7 +413,8 @@ function select_team($default, $meta, $name, $select, $css = false)
 		}
 		else if ( $type == 'request' )
 		{
-			$return .= ( $params ) ? '<select ' . $css . ' name="' . $field_name . '" id="' . $field_id . '" onchange="setRequest(this.options[selectedIndex].value, \''. $meta . '\', \'' . $name . '\');">' : "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
+			$return .= ( $params ) ? '<select ' . $css . ' name="' . $field_name . '" id="' . $field_id . '" onchange="setRequest(this.options[selectedIndex].value, \''. $meta . '\', \'' . $params . '\');">' : "<select $css name=\"$field_name\" id=\"$field_id\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
+			/* edit: 8.10.12 training maps */
 		}
 		else
 		{
@@ -403,7 +448,7 @@ function select_level($default, $name, $level = '')
 	$s_select = '';
 	
 	$s_select .= "<select name=\"$name\" id=\"$name\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
-	$s_select .= "<option value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_userlevel']) . "</option>";
+	$s_select .= "<option value=\"-1\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_level']) . "</option>";
 	
 	$lang_level = $lang['switch_level'];
 	
@@ -534,7 +579,7 @@ function select_box($table, $default = '', $switch = '')
 		}
 		
 		$table = str_replace($db_prefix, '', $table);
-		
+
 	#	$select .= "<option value=\"" . isset($start) ? $start : '' . "\">" . sprintf($lang['sprintf_select_format'], $lang["msg_select_$type"]) . "</option>";
 		$select .= "<option value=\"$start\">" . sprintf($lang['sprintf_select_format'], $lang["msg_select_$table"]) . "</option>";
 		
@@ -713,31 +758,6 @@ function select_rank($default, $type)
 	return $func_select;
 }
 
-/*
-function select_newscategory($default)
-{
-	global $db, $lang;
-		
-	$sql = 'SELECT * FROM ' . NEWS_CAT . " ORDER BY cat_order";
-	if (!($result = $db->sql_query($sql)))
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-
-	$func_select = '<select name="news_cat" class="post" onchange="update_image(this.options[selectedIndex].value);">';
-	$func_select .= '<option value="0">' . $lang['cat_select'] . '</option>';
-	
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$selected = ( $row['cat_id'] == $default ) ? ' selected="selected"' : '';
-		$func_select .= '<option value="' . $row['cat_image'] . '"' . $selected . '>&raquo;&nbsp;' . $row['cat_title'] . '&nbsp;</option>';
-	}
-	$func_select .= '</select>';
-
-	return $func_select;
-}
-*/
-
 function select_lang_box($var, $name, $default, $class)
 {
 	global $lang;
@@ -776,18 +796,26 @@ function select_match($default, $main, $name)
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
+	$tmp = $db->sql_fetchrowset($result);
 	
-	$select = "<select name=\"{$main}[$name]\" id=\"{$main}_$name\">";
-	$select .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_match']) . '</option>';
+	$select = '';
 	
-	while ( $row = $db->sql_fetchrow($result) )
+	if ( $tmp )
 	{
-	#	debug($row);
-		$selected = ( $row['match_id'] == $default ) ? ' selected="selected"' : '';
-		$select .= "<option value='" . $row['match_id'] . "'$selected>" . sprintf($lang['sprintf_select_format'], sprintf('%s :: %s :: %s', create_date($userdata['user_dateformat'], $row['match_date'], $userdata['user_timezone']), $row['match_rival_name'], $row['match_rival_tag'])) . "</option>";
+		$select .= '<select name="' . sprintf('%s[%s]', $main, $name) . '" id="' . sprintf('%s_%s', $main, $name) . '">';
+		$select .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_match']) . '</option>';
+		
+		foreach ( $tmp as $row )
+		{
+			$select .= '<option value="' . $row['match_id'] . '"' . (($row['match_id'] == $default) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], sprintf('%s :: %s :: %s', create_date($userdata['user_dateformat'], $row['match_date'], $userdata['user_timezone']), $row['match_rival_name'], $row['match_rival_tag'])) . "</option>\n";
+		}
+		$select .= '</select>';
 	}
-	$select .= '</select>';
-
+	else
+	{
+		$select = $lang['msg_select_match_no'];
+	}
+		
 	return $select;
 }
 
@@ -1090,6 +1118,7 @@ function select_add_lang($class, $field, $field_lang, $type, $data)
 	return $select;
 }
 
+/*
 function select_maps($tag = '')
 {
 	global $db, $lang;
@@ -1127,7 +1156,91 @@ function select_maps($tag = '')
 	
 	return $select;
 }
+*/
 
+function select_maps($tdata, $tmeta, $tname, $data)
+{
+	global $db, $lang;
+	
+	$f_id	= sprintf('%s_%s', $tmeta, $tname);
+	$f_name	= sprintf('%s[%s][]', $tmeta, $tname);
+	
+	$opt = '<div id="close">';
+								
+	if ( $data['team_id'] > 0 )
+	{
+		$sql = "SELECT m.*
+					FROM " . MAPS . " m
+						LEFT JOIN " . TEAMS . " t ON t.team_id = {$data['team_id']}
+						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+				WHERE m.map_tag = g.game_tag";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$tmp = $db->sql_fetchrow($result);
+		
+		if ( $tmp )
+		{
+			$sql = "SELECT * FROM " . MAPS . " WHERE main = {$tmp['map_id']} ORDER BY map_order ASC";
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			$maps = $db->sql_fetchrowset($result);
+			
+			if ( $maps )
+			{
+				$un_tdata = unserialize($tdata);
+				
+				if ( is_array($un_tdata) && !empty($un_tdata) )
+				{
+					foreach ( $un_tdata as $data_key )
+					{
+						$opt .= '<div><div><select name="' . $f_name . '" id="' . $f_id . '">';
+						$opt .= '<option selected="selected" value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . '</option>';
+					
+						foreach ( $maps as $map )
+						{
+							$opt .= '<option value="' . $map['map_id'] . '"' . (($map['map_id'] == $data_key) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $map['map_name']) . '</option>';
+						}
+						
+						$opt .= '</select>&nbsp;<input type="button" class="more" value="' . $lang['common_remove'] . '" onclick="this.parentNode.parentNode.removeChild(this.parentNode);"></div></div>';
+					}
+				}
+				
+				$opt .= '<div><div><select name="' . sprintf('%s[%s][]', $tmeta, $tname) . '" id="' . $f_id . '">';
+				$opt .= '<option selected="selected" value="-1">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . '</option>';
+				
+				for ( $j = 0; $j < count($maps); $j++ )
+				{
+					$map_id		= $maps[$j]['map_id'];
+					$map_name	= $maps[$j]['map_name'];
+		
+					$opt .= '<option value="' . $map_id . '">' . sprintf($lang['sprintf_select_format'], $map_name) . '</option>';
+				}
+				
+				$opt .= '</select>&nbsp;<input type="button" class="more" value="' . $lang['common_more'] . '" onclick="clone(this)"></div></div>';
+			}
+			else
+			{
+				$opt .= sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+			}
+		}
+		else
+		{
+			$opt .= sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+		}
+	}
+	else
+	{
+		$opt .= sprintf($lang['sprintf_select_format'], $lang['msg_select_team_first']);
+	}
+	
+	$opt .= '</div><div id="ajax_content"></div>';
+	
+	return $opt;
+}
 //
 //	Date Select
 //
@@ -1440,188 +1553,7 @@ function simple_order($table, $where, $current_order, $main_array, $field)
 	{
 		$s_select = '<div id="close">' . $lang['no_entry'] . '</div><div id="ajax_content"></div>';
 	}
-
-/*
-function simple_order($mode, $option, $css, $default)
-{
-	//require: acp_game, acp_group, acp_map, acp_navi, acp_network, acp_newscat, acp_profile, acp_rank
-
-	global $db, $lang;
-
-	$cats = '';
-
-	$filter = array(NEWS_CAT, MENU_CAT, DOWNLOADS_CAT, MAPS_CAT, PROFILE_CAT);
-
-	if ( in_array($mode, $filter) )
-	{
-		$field = 'cat';
-				
-		$sql = "SELECT * FROM $mode ORDER BY cat_order ASC";
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-
-		
-	}
 	
-	if ( isset($option) )
-	{
-		$where = "WHERE $option";
-	}
-	else
-	{
-		$where = '';
-	}
-	
-	switch ( $mode )
-	{
-		case TEAMS:		$field = 'team';	break;
-		case MENU:		$field = 'file';	break;
-		case FIELDS:	$field = 'field';	break;
-		case SERVER:	$field = 'server';	break;
-		case GAMES:		$field = 'game';	break;
-		case GROUPS:	$field = 'group';	break;
-		case GALLERY:	$field = 'gallery';	break;
-
-		case MAPS:
-		
-			$field = 'map';
-		
-			$sql = "SELECT cat_id AS cat_type, cat_name FROM " . MAPS_CAT . " WHERE cat_id = $option ORDER BY cat_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$cats = $db->sql_fetchrowset($result);
-			
-			$sql = "SELECT map_name, map_order, cat_id AS map_type FROM " . MAPS . " WHERE cat_id = $option ORDER BY cat_id, map_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-		
-		case NAVI:
-		
-			$field = 'navi';
-		
-			$cats = array(
-				'0' => array('cat_type' => NAVI_MAIN,	'cat_name' => $lang['main']),
-				'1' => array('cat_type' => NAVI_CLAN,	'cat_name' => $lang['clan']),
-				'2' => array('cat_type' => NAVI_COM,	'cat_name' => $lang['com']),
-				'3' => array('cat_type' => NAVI_MISC,	'cat_name' => $lang['misc']),
-				'4' => array('cat_type' => NAVI_USER,	'cat_name' => $lang['user']),
-			);
-			
-			$sql = "SELECT * FROM " . NAVI . " WHERE navi_type = $option ORDER BY navi_type, navi_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-			
-		case NETWORK:
-		
-			$field = 'network';
-			
-			$cats = array(
-				'0' => array('cat_type' => NETWORK_LINK,	'cat_name' => $lang['link']),
-				'1' => array('cat_type' => NETWORK_PARTNER,	'cat_name' => $lang['partner']),
-				'2' => array('cat_type' => NETWORK_SPONSOR,	'cat_name' => $lang['sponsor']),
-			);
-			
-			$sql = "SELECT * FROM " . NETWORK . " WHERE network_type = $option ORDER BY network_type, network_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-			
-		case RANKS:
-		
-			$field = 'rank';	
-				
-			$cats = array(
-				'0' => array('cat_type' => RANK_PAGE,	'cat_name' => $lang['page']),
-				'1' => array('cat_type' => RANK_FORUM,	'cat_name' => $lang['forum']),
-				'2' => array('cat_type' => RANK_TEAM,	'cat_name' => $lang['team']),
-			);
-			
-			$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = $option ORDER BY rank_type, rank_order ASC";
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			break;
-	}
-	
-	$sql = "SELECT * FROM $mode $where ORDER BY {$field}_order ASC";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$entries = $db->sql_fetchrowset($result);
-	
-	$s_select = '';
-	
-	if ( $entries )	
-	{
-		$s_select .= "<div id=\"close\"><select name=\"{$css}[{$field}_order_new]\" id=\"{$css}_{$field}_order\">";
-		$s_select .= "<option selected=\"selected\" value=\"$default\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
-		
-		if ( $cats )
-		{
-			for ( $i = 0; $i < count($cats); $i++ )
-			{
-				$entry = '';
-				
-				$cat_name = $cats[$i]['cat_name'];
-				$cat_type = $cats[$i]['cat_type'];
-				
-				for ( $j = 0; $j < count($entries); $j++ )
-				{
-					$name = $entries[$j][$field . '_name'];
-					$type = $entries[$j][$field . '_type'];
-					$order = $entries[$j][$field . '_order'];
-					
-					if ( $cat_type == $type )
-					{
-						$disabled = ( $entries[$j][$field . '_order'] == $default ) ? ' disabled="disabled"' : '';
-						
-						$entry .= ( $order == 10 ) ? "<option value=\"5\"$disabled>" . sprintf($lang['sprintf_select_before'], $name) . "</option>" : '';
-						$entry .= "<option value=\"" . ( $order + 5 ) . "\"$disabled>" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
-					}
-				}
-				
-				$s_select .= ( $entry != '' ) ? "<optgroup label=\"$cat_name\">$entry</optgroup>" : '';
-			}
-		}
-		else
-		{
-			for ( $j = 0; $j < count($entries); $j++ )
-			{
-				$name = $entries[$j][$field . '_name'];
-				$order = $entries[$j][$field . '_order'];
-				
-				$disabled = ( $entries[$j][$field . '_order'] == $default ) ? ' disabled="disabled"' : '';
-					
-				$s_select .= ( $order == 10 ) ? "<option value=\"5\"$disabled>" . sprintf($lang['sprintf_select_before'], $name) . "</option>" : '';
-				$s_select .= "<option value=\"" . ( $order + 5 ) . "\"$disabled>" . sprintf($lang['sprintf_select_order'], $name) . "</option>";
-			}
-		}
-		
-		$s_select .= "</select></div><div id=\"ajax_content\"></div>";
-	}
-	else
-	{
-		$s_select = $lang['no_entry'];
-	}
-	*/
 	return $s_select;
 }
 

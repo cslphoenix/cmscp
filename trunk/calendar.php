@@ -15,13 +15,11 @@ $start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_CALENDAR;
-$url	= POST_CALENDAR;
 
 $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, INT);	
 $mode	= request('mode', TXT);
 
 $error	= '';
@@ -37,8 +35,8 @@ $page_title = $lang['header_calendar'];
 
 main_header();
 
-$sy	= request('year', 1);
-$sm	= request('month', 1);
+$sy	= request('year', INT);
+$sm	= request('month', INT);
 
 if ( $sm && $sy )
 {
@@ -276,8 +274,6 @@ if ( $viewer )
 	
 	$wcs = $wbmk_wechsel[$edmk];
 	
-	debug($wcs);
-	
 #	debug($monat_data);
 	
 	for ( $i = 1; $i < $tage + 1; $i++ )
@@ -340,7 +336,7 @@ if ( $viewer )
 					$name	= $news[$k]['news_title'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[]	= "<a title=\"$name\" href=\"news.php?mode=view&" . POST_NEWS . "=$id\">$cut</a>";
+					$ary[]	= "<a title=\"$name\" href=\"news.php?mode=view&id=$id\">$cut</a>";
 				}
 				
 				$num = $num + 1;
@@ -361,7 +357,7 @@ if ( $viewer )
 						$name	= $event[$k]['event_title'];
 						$cut	= cal_cut($name, 20);
 						
-						$ary[] = "<a title=\"$name\" href=\"event.php?mode=view&" . POST_EVENT . "=$id\">$cut</a>";
+						$ary[] = "<a title=\"$name\" href=\"event.php?mode=view&id=$id\">$cut</a>";
 					}
 				}
 				
@@ -384,7 +380,7 @@ if ( $viewer )
 					$name	= $match[$k]['match_rival_name'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[] = "<a title=\"$name\" href=\"match.php?mode=view&" . POST_MATCH . "=$id\">$cut</a>";
+					$ary[] = "<a title=\"$name\" href=\"match.php?mode=view&id=$id\">$cut</a>";
 				}
 				
 				$num = $num + 1;
@@ -403,7 +399,7 @@ if ( $viewer )
 					$name	= $train[$k]['training_vs'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[] = "<a title=\"$name\" href=\"training.php?mode=view&" . POST_TRAINING . "=$id\">$cut</a>";
+					$ary[] = "<a title=\"$name\" href=\"training.php?mode=view&id=$id\">$cut</a>";
 				}
 				
 				$css = 'trains';
@@ -525,7 +521,7 @@ else
 					$name	= $tmp[$k]['news_title'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[]	= "<a title=\"$name\" href=\"news.php?" . POST_NEWS . "=$id\">$cut</a>";
+					$ary[]	= "<a title=\"$name\" href=\"news.php?id=$id\">$cut</a>";
 				}
 				
 				$day = $i;
@@ -557,7 +553,7 @@ else
 						
 						$diff	= ( $date == $dura ) ? "am gesamten Tag" : "von $time_a bis $time_b";
 						
-						$ary[] = "<a href=\"event.php?" . POST_EVENT . "=$id\">$title: $diff</a>";
+						$ary[] = "<a href=\"event.php?id=$id\">$title: $diff</a>";
 					}
 				}
 				
@@ -591,8 +587,8 @@ else
 					$team_name	= $tmp[$k]['team_name'];
 					$team_image	= display_gameicon($tmp[$k]['game_image']);
 					
-				#	$ary[] = $team_image . " <a href=\"match.php?mode=view&" . POST_MATCH . "=$match_id\">$match_vs - $match_time</a>";
-					$ary[] = "<a title=\"$name\" href=\"match.php?" . POST_MATCH . "=$id\">$cut</a>";
+				#	$ary[] = $team_image . " <a href=\"match.php?mode=view&id=$match_id\">$match_vs - $match_time</a>";
+					$ary[] = "<a title=\"$name\" href=\"match.php?id=$id\">$cut</a>";
 				}
 				
 				$day = $i;
@@ -618,7 +614,7 @@ else
 					$team_name		= $tmp[$k]['team_name'];
 					$team_image		= display_gameicon($tmp[$k]['game_image']);
 					
-					$ary[] = $team_image . " <a href=\"training.php?" . POST_TRAINING . "=$training_id\">$training_vs - $training_time</a>";
+					$ary[] = $team_image . " <a href=\"training.php?id=$training_id\">$training_vs - $training_time</a>";
 				}
 				
 				$day = $i;

@@ -29,6 +29,7 @@ function image_check_type(&$type)
 	return false;
 }
 
+/*
 function image_upload($image_mode, $image_path, $image_realname, $image_filesize, $image_filetype)
 {
 	global $db, $lang, $settings;
@@ -250,7 +251,7 @@ function image_upload($image_mode, $image_path, $image_realname, $image_filesize
 		message(GENERAL_ERROR, 'einfach ein fehler -.-\'' . $error_msg, '', __LINE__, __FILE__);
 	}
 }
-
+*/
 function check_image_type(&$type)
 {
 	global $lang;

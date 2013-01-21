@@ -21,7 +21,7 @@
 <tbody class="trhover" id="form_sub" style="display:{S_SUB}">
 <tr>
 	<td class="row1"><label>{L_MAIN}:</label></td>
-	<td>{S_FORMS}</td>
+	<td>{S_FORUM}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="forum_order">{L_ORDER}:</label></td>
@@ -230,7 +230,7 @@ function interpretRequest2()
 <tbody id="form_sub" style="display:{S_SUB}">
 <tr>
 	<td class="row1"><label>{L_MAIN}:</label></td>
-	<td>{S_FORMS}</td>
+	<td>{S_FORUM}</td>
 </tr>
 <tr>
 	<td class="row1"><label for="forum_order">{L_ORDER}:</label></td>

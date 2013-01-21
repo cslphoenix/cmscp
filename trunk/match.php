@@ -15,20 +15,21 @@ $start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_MATCH;
-$url	= POST_MATCH;
 
 $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, INT);	
-$mode	= request('mode', TXT);
-$smode	= request('smode', 1);
+$data	= request('id', INT);	
+$mode	= request('mode', TYP);
+$smode	= request('smode', TYP);
 
 $dir_path	= $root_path . $settings['path_matchs']['path'];
 
 $error	= '';
 $fields	= '';
+
+$submit	= ( isset($_POST['submit']) ) ? true : false;
 
 $template->set_filenames(array(
 	'body'		=> 'body_match.tpl',
@@ -50,6 +51,8 @@ $sql = "SELECT DISTINCT m.*, m.match_rival_lineup AS lineup_rival, t.team_id, t.
 #}
 #$tmp = $db->sql_fetchrowset($result);
 $tmp = _cached($sql, 'data_match');
+
+debug($_POST);
 
 if ( $data && $tmp )
 {
@@ -74,7 +77,7 @@ if ( $data && $tmp )
 	
 #	if ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] )
 #	{
-#		$template->assign_block_vars('view._update', array(
+#		$template->assign_block_vars('view.update', array(
 #			'UPDATE'		=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_update&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_update'] . "</a>",
 #			'UPDATE_DETAIL'	=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_detail&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_detail'] . "</a>",
 #		));
@@ -85,7 +88,7 @@ if ( $data && $tmp )
 	/* Lineup Clan und Lineup Gegner - es fehlt noch der clantag vom clan selber */
 	if ( $view['lineup_clan'] || $view['lineup_rival'] )
 	{
-		$template->assign_block_vars('view._lineup', array());
+		$template->assign_block_vars('view.lineup', array());
 		
 		$sql = "SELECT ml.user_id, ml.user_status, u.user_name, u.user_color
 					FROM " . LISTS . " ml, " . USERS . " u
@@ -115,7 +118,7 @@ if ( $data && $tmp )
 
         if ( $player )
         {
-			$template->assign_block_vars('view._lineup._clan', array());
+			$template->assign_block_vars('view.lineup.clan', array());
 
 			$player = implode(', ', $player);
 			$replace = $replace ? implode(', ', $replace) : '';
@@ -126,7 +129,7 @@ if ( $data && $tmp )
 		/* Filter beim eintragen noch bearbeiten damit alle gleich eingetragen sind mit syntax ', ' */
 		if ( $view['lineup_rival'] )
 		{
-			$template->assign_block_vars('view._lineup._rival', array());
+			$template->assign_block_vars('view.lineup.rival', array());
 			
 			$rivals = explode(', ', $view['lineup_rival']);
 			
@@ -143,7 +146,7 @@ if ( $data && $tmp )
 	
 	if ( $view['match_hltv_ip'] )
 	{
-		$template->assign_block_vars('view._hltv', array(
+		$template->assign_block_vars('view.hltv', array(
 			'HLTV'		=> '<a href="hlsw://' . $view['match_hltv_ip'] . '">' . $lang['hltv'] . '</a>',
 			'HLTV_PW'	=> ( $userdata['user_level'] >= TRIAL ) ? $view['match_hltv_pw'] : '',
 		));
@@ -202,7 +205,7 @@ if ( $data && $tmp )
 				$pics[$rnd] = '';
 			}
 			
-			$template->assign_block_vars('view._maps', array(
+			$template->assign_block_vars('view.maps', array(
 				'ROUND'		=> $rnd,
 				'PICS'		=> $pics[$rnd],
 				'POINTS'	=> sprintf('%d:%d', $hpoint, $rpoint),
@@ -223,10 +226,10 @@ if ( $data && $tmp )
 					$phome	= $rows['map_points_home'];
 					$prival	= $rows['map_points_rival'];
 					
-				#	$show ? false : $template->assign_block_vars('lobby._news', array());
+				#	$show ? false : $template->assign_block_vars('lobby.news', array());
 					
 					
-					$template->assign_block_vars('view._maps._row', array(
+					$template->assign_block_vars('view.maps.row', array(
 						
 						'POINTS_HOME'	=> $phome,
 						'POINTS_RIVAL'	=> $prival,
@@ -243,7 +246,7 @@ if ( $data && $tmp )
 	/* Teilnahme - nur sichtbar für eingeloggte und mit dem Status ab Trail sichtbar */
 	if ( $userdata['session_logged_in'] && $userdata['user_level'] >= TRIAL )
 	{
-		$template->assign_block_vars('view._status', array());
+		$template->assign_block_vars('view.status', array());
 
 		$sql = "SELECT mu.*, u.user_name, u.user_color
 					FROM " . LISTS . " mu, " . USERS . " u
@@ -254,9 +257,11 @@ if ( $data && $tmp )
 		}
 		$status = $db->sql_fetchrowset($result);
 		
+		debug($status, 'status');
+		
 		if ( $status )
 		{
-			$template->assign_block_vars('view._status._entry', array());
+			$template->assign_block_vars('view.status.entry', array());
 
 			for ( $i = 0; $i < count($status); $i++ )
 			{
@@ -275,7 +280,7 @@ if ( $data && $tmp )
 				$time_update = create_shortdate($userdata['user_dateformat'], $status[$i]['time_update'], $userdata['user_timezone']);
 				$time_create = create_shortdate($userdata['user_dateformat'], $status[$i]['time_create'], $userdata['user_timezone']);
 				
-				$template->assign_block_vars('view._status._entry._row', array(
+				$template->assign_block_vars('view.status.entry.row', array(
 					'USER'		=> $player,
 					'CLASS'		=> $css,
 					'STATUS'	=> $lng,
@@ -294,7 +299,7 @@ if ( $data && $tmp )
 			
 			if ( $db->sql_numrows($result) )
 			{
-				$template->assign_block_vars('view._status._switch', array());
+				$template->assign_block_vars('view.status.switch', array());
 
 				$sql = "SELECT user_status FROM " . LISTS . " WHERE type = " . TYPE_MATCH . " AND user_id = $user AND type_id = $data";
 				if ( !($result = $db->sql_query($sql)) )
@@ -351,12 +356,10 @@ if ( $data && $tmp )
 		}
 	}
 	
-	
-	
 	/* Kommentarfunktion - Nur wenn die Generelle Funktion aktiviert ist und für das Match selber */
 	if ( $settings['comments']['match'] && $view['match_comments'] )
 	{
-		$template->assign_block_vars('view._comment', array());
+		$template->assign_block_vars('view.comment', array());
 
 		$sql = "SELECT c.*, u.user_id, u.user_name, u.user_color, u.user_email
 					FROM " . COMMENT . " c
@@ -371,7 +374,7 @@ if ( $data && $tmp )
 		
 		if ( !$comments )
 		{
-			$template->assign_block_vars('view._comment._empty', array());
+			$template->assign_block_vars('view.comment.empty', array());
 			
 			$last_entry = array('poster_ip' => '', 'time_create' => '');
 		}
@@ -392,11 +395,11 @@ if ( $data && $tmp )
 			{
 				$icon = ( $userdata['session_logged_in'] ) ? ( $unreads || ( $unread['read_time'] < $comments[$i]['time_create'] ) ) ? $images['icon_minipost_new'] : $images['icon_minipost'] : $images['icon_minipost'];
 				$name = $comments[$i]['poster_nick'] ? $comments[$i]['poster_nick'] : '<font color="' . $comments[$i]['user_color'] . '">' . $comments[$i]['user_name'] . '</font>';
-				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;' . POST_USER . '=' . $comments[$i]['poster_id'];
+				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;id=' . $comments[$i]['poster_id'];
 				
 				$s_option = '';
 				
-				$template->assign_block_vars('view._comment._row', array(
+				$template->assign_block_vars('view.comment.row', array(
 					'CLASS'	=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 					'ICON'	=> $icon,
 
@@ -423,7 +426,7 @@ if ( $data && $tmp )
 		/* Kommentare für Gäste */
 		if ( $settings['comments']['match_guest'] && !$userdata['session_logged_in'] )
 		{
-			$template->assign_block_vars('view._comment._guest', array());
+			$template->assign_block_vars('view.comment.guest', array());
 		}
 	#	if ( request('submit', TXT) && ( $last_entry['poster_ip'] != $userdata['session_ip'] || ($last_entry['time_create'] + $settings['spam_comments']['match']) < $time ) )
 		if ( request('submit', TXT) && $smode == 'msg' && ( $last_entry['poster_ip'] != $userdata['session_ip'] || ($last_entry['time_create'] + $settings['spam_comments']['news']) < $time ) )
@@ -491,8 +494,10 @@ if ( $data && $tmp )
 		$template->assign_var_from_handle('COMMENTS', 'comments');
 	}
 	
-	if ( request('submit', TXT) )
+	if ( $submit )
 	{
+		debug($_POST, 'POST');
+		
 		if ( $smode == 'change' )
 		{
 			$status		= request('status', INT);
@@ -516,7 +521,7 @@ if ( $data && $tmp )
 			$template->assign_vars(array("META" => '<meta http-equiv="refresh" content="3;url=' . check_sid("$file?$url=$data") . '">'));
 		
 			log_add(LOG_USERS, SECTION_MATCH, 'uchange');
-			message(GENERAL_MESSAGE, $msg);
+		#	message(GENERAL_MESSAGE, $msg);
 		}
 		else if ( $smode == 'msg' )
 		{
@@ -566,7 +571,7 @@ if ( $data && $tmp )
 					$oCache->deleteCache('detail_match_comments_' . $data);
 					
 					$sql = sql(COMMENT_READ, 'update', array('read_time' => $time), array('type', 'type_id', 'user_id'), array(READ_MATCH, $data, $user));
-					$msg = $lang['add_comment'] . sprintf($lang['click_return_match'],  '<a href="' . check_sid('match.php?mode=details&amp;' . POST_MATCH . '=' . $data) . '">', '</a>');
+					$msg = $lang['add_comment'] . sprintf($lang['click_return_match'],  '<a href="' . check_sid('match.php?mode=details&amp;id=' . $data) . '">', '</a>');
 					
 					msg_add(MATCH, $data, $user, $poster_msg, $poster_nick, $poster_mail, $poster_hp);
 					message(GENERAL_MESSAGE, $msg);
@@ -618,7 +623,7 @@ if ( $data && $tmp )
 		
 		'S_FIELDE'		=> $fielde,
 		'S_FIELDS'		=> $fields,
-		'S_ACTION'		=> check_sid("$file?$url=$data"),
+		'S_ACTION'		=> check_sid("$file?id=$data"),
 	));
 }
 else
@@ -631,8 +636,8 @@ else
 	
 	if ( !$tmp )
 	{
-		$template->assign_block_vars('list._entry_empty_new', array());
-		$template->assign_block_vars('list._entry_empty_old', array());
+		$template->assign_block_vars('list.entry_empty_new', array());
+		$template->assign_block_vars('list.entry_empty_old', array());
 	}
 	else
 	{
@@ -670,7 +675,7 @@ else
 
 		if ( !$new )
 		{
-			$template->assign_block_vars('list._entry_empty_new', array());
+			$template->assign_block_vars('list.entry_empty_new', array());
 		}
 		else
 		{
@@ -695,11 +700,11 @@ else
 				$css	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? 'yes' : 'replace' : 'no' : 'none';
 				$pos	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? $lang['yes'] : $lang['replace'] : $lang['no'] : $lang['join_none'];
 				
-				$template->assign_block_vars('list._new_row', array(
+				$template->assign_block_vars('list.new_row', array(
 					'CLASS'	=> ( $i % 2 ) ? 'row1' : 'row2',
 					
 					'GAME'	=> display_gameicon($new[$i]['game_image']),
-					'NAME'	=> "<a href=\"" . check_sid("$file?$url=$match_id") . "\" >$name</a>",
+					'NAME'	=> "<a href=\"" . check_sid("$file?id=$match_id") . "\" >$name</a>",
 					'DATE'	=> create_date($userdata['user_dateformat'], $new[$i]['match_date'], $userdata['user_timezone']),
 					
 					'CSS'		=> $css,
@@ -710,7 +715,7 @@ else
 		
 		if ( !$old )
 		{
-			$template->assign_block_vars('list._entry_empty_old', array());
+			$template->assign_block_vars('list.entry_empty_old', array());
 		}
 		else
 		{
@@ -735,11 +740,11 @@ else
 				$css	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? 'yes' : 'replace' : 'no' : 'none';
 				$pos	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? $lang['yes'] : $lang['replace'] : $lang['no'] : $lang['join_none'];
 				
-				$template->assign_block_vars('list._old_row', array(
+				$template->assign_block_vars('list.old_row', array(
 					'CLASS'	=> ( $i % 2 ) ? 'row1' : 'row2',
 					
 					'GAME'	=> display_gameicon($old[$i]['game_image']),
-					'NAME'	=> "<a href=\"" . check_sid("$file?$url=$match_id") . "\" >$name</a>",
+					'NAME'	=> "<a href=\"" . check_sid("$file?id=$match_id") . "\" >$name</a>",
 					'DATE'	=> create_date($userdata['user_dateformat'], $old[$i]['match_date'], $userdata['user_timezone']),
 					
 					'CSS'		=> $css,

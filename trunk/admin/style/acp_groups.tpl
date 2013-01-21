@@ -1,3 +1,6 @@
+<li class="header">{L_HEAD}<span class="right">{L_OPTION}</span></li>
+<p>{L_EXPLAIN}</p>
+
 <!-- BEGIN input -->
 <!--
 <script type="text/JavaScript">
@@ -54,35 +57,26 @@ function check_no()
 // ]]>
 </script>
 -->
-<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-	<!-- BEGIN update -->
-	<li><a href="{S_MEMBER}">{L_VIEWMEMBER}</a></li>
-	<!-- END update -->
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
+<form action="{S_ACTION}" method="post" enctype="multipart/form-data">
 {ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
+{input.row.tab.option.DIV_START}
 <dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -92,103 +86,11 @@ function check_no()
 </dl>
 </div>
 {S_FIELDS}
-
-<!--
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_DATA}</a></li>
-	<li><a href="#" id="right" onclick="return false;">{L_AUTH}</a></li>
-</ul>
-<table>
-<tr>
-	<td valign="top" width="100%">
-		<table class="update">
-		<tr>
-			<td class="row1r"><label for="group_name">{L_NAME}:</label></td>
-			<td class="row2"><input type="text" name="group_name" id="group_name" value="{NAME}"></td>
-		</tr>
-		<!-- BEGIN create ->
-		<tr>
-			<td class="row1r"><label for="user_name">{L_MOD}:</label></td>
-			<td class="row2"><input type="text" name="user_id" id="user_name" value="{MOD}" onkeyup="lookup(this.value);" onblur="fill();" autocomplete="off">
-				<div class="suggestionsBox" id="suggestions" style="display:none;">
-					<div class="suggestionList" id="autoSuggestionsList"></div>
-				</div>
-			</td>
-		</tr>
-		<!-- END create ->
-		<tr>
-			<td class="row1"><label for="group_access">{L_ACCESS}:</label></td>
-			<td class="row2">{S_ACCESS}</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="group_type">{L_TYPE}:</label></td>
-			<td class="row2">{S_TYPE}</td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="group_desc">{L_DESC}:</label></td>
-			<td class="row2"><textarea class="textarea" name="group_desc" id="group_desc" cols="40">{GROUP_DESC}</textarea></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="group_color">{L_COLOR}:</label></td>
-			<td class="row2"><input size="7" class="color post" type="text" name="group_color" id="group_color" value="{COLOR}"></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="group_legend">{L_LEGEND}:</label></td>
-			<td class="row2"><label><input type="radio" name="group_legend" id="group_legend" value="1" {S_LEGEND_YES} />&nbsp;{L_SHOW}</label><span style="padding:4px;"></span><label><input type="radio" name="group_legend" value="0" {S_LEGEND_NO} />&nbsp;{L_NOSHOW}</label></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="rank_id">{L_RANK}:</label></td>
-			<td class="row2">{S_RANK}</td>
-		</tr>
-		<!-- BEGIN image ->
-		<tr>
-			<td class="row1">{L_IMAGE_CURRENT}:</td>
-			<td class="row2"><img src="{IMAGE}" alt="" /><br /><input type="checkbox" name="group_image_delete">&nbsp;{L_IMAGE_DELETE}</td>
-		</tr>
-		<!-- END image ->
-		<tr>
-			<td class="row1"><label for="ufile">{L_IMAGE_UPLOAD}:</label></td>
-			<td class="row2"><input type="file" class="post" name="group_img" /></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="group_order">{L_ORDER}:</label></td>
-			<td class="row2">{S_ORDER}</td>
-		</tr>
-		</table>
-	</td>
-	<td valign="top" nowrap="nowrap">
-		<table class="update3">
-		<!-- BEGIN auth ->
-		<tr>
-			<td class="row1"><label for="{_input._auth.FIELDS}">{_input._auth.TITLE}:</label></td>
-			<td class="row2">{_input._auth.SELECT}</td>
-		</tr>
-		<!-- END auth ->
-		<tr>
-			<td class="row2 right"><a href="#" onclick="activated(); return false;">{L_MARK_YES}</a></td>
-			<td class="row2"><a href="#" onclick="deactivated(); return false;">{L_MARK_NO}</a></td>
-		</tr>
-		</table>
-	</td>
-</tr>
-<tr>
-	<td colspan="2"></td>
-</tr>
-</table>
-
-<br/>
--->
 </form>
 <!-- END input -->
 
 <!-- BEGIN member -->
 <form action="{S_ACTION}" method="post" name="post" id="list">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_UPDATE}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_VIEWMEMBER}</a></li></ul>
-<p>{L_EXPLAIN}</p>
-
 {ERROR_BOX}
 
 <table class="normal db">
@@ -287,50 +189,8 @@ function check_no()
 </form>
 <!-- END member -->
 
-<!-- BEGIN overview -->
-<form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-	<li><a href="#" id="right" onclick="return false;">{L_OVERVIEW}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_OVERVIEW_EXPLAIN}</li></ul>
-
-<br />
-
-<table class="update3 list">
-<tr>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_OPTION}</a></li></ul></th>
-	<!-- BEGIN grp_name -->
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{_overview._grp_name.NAME}</a></li></ul></th>
-	<!-- END grp_name -->
-</tr>
-<!-- BEGIN grp_auth -->
-<tr>
-	<td class="row1"><label>{_overview._grp_auth.NAME}:</label></td>
-	<!-- BEGIN auth -->
-	<td class="row2">{_overview._grp_auth._auth.INFO}</td>
-	<!-- END auth -->
-</tr>
-<!-- END grp_auth -->
-<tr>
-	<td colspan="{COLSPAN}" class="small"><span class="right">{PAGE_PAGING}</span>{PAGE_NUMBER}</td>
-</tr>
-<tr>
-	<td colspan="{COLSPAN}" align="center"><input type="submit" name="submit" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END overview -->
-
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li><li><a id="setting" href="{S_OVERVIEW}">{L_OVERVIEW}</a></li></ul>
-<p>{L_EXPLAIN}</p>
-
-<br />
-
 <table class="rows">
 <tr>
 	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>

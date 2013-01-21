@@ -14,16 +14,6 @@ $lang = array_merge($lang, array(
 	'forum_c'	=> 'Kategorie',
 	'explain'	=> 'Hier kann man die Kategorien, Foren und Subforen alle samt Verwalten.',
 
-	'create'	=> 'Neues Forum hinzugefügt.',
-	'update'	=> 'Forumdaten erfolgreich geändert.',
-	'delete'	=> 'Das Forum wurde gelöscht!',
-	'confirm'	=> 'dass dieses Forum:',
-
-	'create_c'	=> 'Neue Kategorie hinzugefügt.',
-	'update_c'	=> 'Kategoriedaten erfolgreich geändert.',
-	'delete_c'	=> 'Die Kategorie wurde gelöscht!',
-	'confirm_c'	=> 'dass diese Kategorie:',
-	
 	'icon'		=> 'Forumicon',
 	'sub'		=> 'Subforum',
 	'main'		=> 'Hauptforum',

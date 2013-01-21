@@ -4,6 +4,35 @@
 					acp_gallery.tpl
 					acp_match.tpl
 	*/
+	/*
+	function clone(objButton)
+	{
+		if ( objButton.parentNode )
+		{
+			tmpNode		= objButton.parentNode.cloneNode(true);
+			target		= objButton.parentNode.parentNode;
+			arrInput	= tmpNode.getElementsByTagName("input");
+			
+			for ( var i = 0; i < arrInput.length; i++ )
+			{
+				if ( arrInput[i].type == 'text' )
+				{
+					arrInput[i].value = '';
+				}
+				
+				if ( arrInput[i].type=='file' )
+				{
+					arrInput[i].value='';
+				}
+			}
+			
+			target.appendChild(tmpNode);
+			objButton.value="{L_REMOVE}";
+			objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
+		}
+	}
+	*/
+	
 	function clone(objButton)
 	{
 		if ( objButton.parentNode )

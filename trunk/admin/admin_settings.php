@@ -15,6 +15,7 @@ if ( !empty($setmodules) )
 			'match'		=> array('title' => 'acp_match'),
 			'gallery'	=> array('title' => 'acp_gallery'),
 			'rating'	=> array('title' => 'acp_rating'),
+			'smain'		=> array('title' => 'acp_smain'),
 			'ftp'		=> array('title' => 'acp_ftp'),
 			'phpinfo'	=> array('title' => 'acp_phpinfo'),
 		)
@@ -24,8 +25,8 @@ else
 {
 	define('IN_CMS', true);
 	
-	$cancel = true;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$cancel = false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current	= 'acp_settings';
 	
@@ -50,14 +51,12 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	$mode = ( in_array($mode, array('default', 'calendar', 'module', 'subnavi', 'upload', 'other', 'match', 'gallery', 'rating', 'ftp', 'phpinfo')) ) ? $mode : 'default';
+	$mode = (in_array($mode, array('default', 'calendar', 'module', 'subnavi', 'upload', 'other', 'match', 'gallery', 'smain', 'rating', 'ftp', 'phpinfo')) ) ? $mode : 'default';
 	
 	$s_mode = '<select name="action" onkeyup="if (this.options[this.selectedIndex].value != \'\') this.form.submit();" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
 	
 	$key = $value = '';
-	
-	
-	
+
 	foreach ( $lang['settings_option'] as $key => $value )
 	{
 		$selected = ( $mode == $key ) ? ' selected="selected"' : '';
@@ -98,46 +97,87 @@ else
 	{
 		case 'default':
 			
-			include('./page_header_admin.php');
+		#	include('./page_header_admin.php');
 			
-			$display_vars = array(
+			$vars = array(
 				'config'	=> array(
-					'title1'	=> 'default',
-					'server_name'	=> array('type' => 'text:25;25',	'validate' => TXT,	'explain' => true),
-					'server_port'	=> array('type' => 'text:4;4',		'validate' => INT,		'explain' => true),
-					'page_path'		=> array('type' => 'text:25;25',	'validate' => TXT,	'explain' => true),
-					'page_name'		=> array('type' => 'text:25;25',	'validate' => TXT,	'explain' => true),
-					'page_desc'		=> array('type' => 'textarea:35:255',	'validate' => TXT),
-					'page_gzip'		=> array('type' => 'radio:yesno',	'validate' => INT,		'explain' => true),
+					'tab1' => 'default',
+					'server_name'			=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25'),
+					'server_port'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;4'),
+					'page_path'				=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25'),
+					'page_name'				=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25'),
+					'page_desc'				=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:25;255'),
+					'page_gzip'				=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:yesno'),
 				
-					'title2'	=> 'clan',
-					'clan_name'		=> array('type' => 'text:25;25',	'validate' => TXT,	'explain' => true),
-					'clan_tag'		=> array('type' => 'text:25;25',	'validate' => TXT,	'explain' => true),
-					'clan_tag_show'	=> array('type' => 'radio:yesno',	'validate' => INT,		'explain' => true),
+					'tab2' => 'clan',
+					'clan_name'				=> array('validate' => TXT, 'type' => 'text:25;25'),
+					'clan_tag'				=> array('validate' => TXT, 'type' => 'text:25;25'),
+					'clan_tag_show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 					
-					'title3'	=> 'standards',
-					'default_dateformat'	=> array('type' => 'text:25;25',	'validate' => TXT,	'explain' => true),
-					'default_timezone'		=> array('type' => 'drop:tz',		'validate' => TXT,	'explain' => true),	// select_tz($new['default_timezone'], 'default_timezone')
-					'default_lang'			=> array('type' => 'drop:lang',		'validate' => TXT,	'explain' => true),	// select_lang($new['default_lang'], 'default_lang', "language")
-					'default_style'			=> array('type' => 'drop:style',	'validate' => TXT,	'explain' => true),	// select_style($new['default_style'], 'default_style', "../templates")
-					'override_user_style'	=> array('type' => 'radio:yesno',	'validate' => INT,		'explain' => true),
+					'tab3' => 'standards',
+					'default_dateformat'	=> array('validate' => TXT, 'type' => 'text:25;25'),
+					'default_timezone'		=> array('validate' => TXT, 'type' => 'drop:tz'),	// select_tz($new['default_timezone'], 'default_timezone')
+					'default_lang'			=> array('validate' => TXT, 'type' => 'drop:lang'),	// select_lang($new['default_lang'], 'default_lang', "language")
+					'default_style'			=> array('validate' => TXT, 'type' => 'drop:style'),	// select_style($new['default_style'], 'default_style', "../templates")
+					'override_user_style'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 					
-					'title4'	=> 'maintenance',
-					'page_disable'		=> array('type' => 'radio:yesno',	'validate' => TXT,	'explain' => true),
-					'page_disable_msg'	=> array('type' => 'textarea:35:255',	'validate' => TXT,	'explain' => true),
-					'page_disable_mode'	=> array('type' => 'drop:disable',	'validate' => 'array',	'explain' => true),		// page_mode_select($config['page_disable_mode'])
+					'tab4' => 'maintenance',
+					'page_disable'			=> array('validate' => TXT, 'type' => 'radio:yesno'),
+					'page_disable_msg'		=> array('validate' => TXT, 'type' => 'textarea:25;255'),
+					'page_disable_mode'		=> array('validate' => ARY,	'type' => 'drop:disable'), // page_mode_select($config['page_disable_mode'])
 				),
 			);
 			
-			$sql = 'SELECT * FROM ' . CONFIG;
-			if ( !($result = $db->sql_query($sql)) )
+			if ( $submit )
 			{
-				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			else
-			{
-				while ( $con = $db->sql_fetchrow($result) )
+				$request = build_request(CONFIG, $vars, $error, $mode, 'config');
+			#	$request = build_request(MENU, $vars, $error, $mode);
+				
+				$sql = 'SELECT * FROM ' . CONFIG;
+				if ( !($result = $db->sql_query($sql)) )
 				{
+					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				while ( $row = $db->sql_fetchrow($result) )
+				{
+					$config_name	= $row['config_name'];
+					$config_value	= $row['config_value'];
+					
+				#	$old[$config_name] = isset($_POST['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
+				#	$new[$config_name] = isset($_POST[$config_name] ) ? $_POST[$config_name] : $old[$config_name];
+					
+					if ( request('submit', TXT))
+					{
+						if ( isset($request[$config_name]) )
+						{
+							$new[$config_name] = ( isset($request[$config_name]) ) ? $request[$config_name] : $request[$config_name];
+						}
+						
+						if ( isset($new[$config_name]) )
+						{
+							$request[$config_name] = ( is_array($request[$config_name]) ) ? serialize($request[$config_name]) : $request[$config_name];
+						
+							$con_name = $request[$config_name];
+							$con_value = $request[$config_name];
+							
+							
+							$sql = "UPDATE " . CONFIG . " SET config_value = '{$request[$config_name]}' WHERE config_name = '$config_name'";
+							if ( !$db->sql_query($sql) )
+							{
+								message(GENERAL_ERROR, 'SQL Error: ' . $config_name, '', __LINE__, __FILE__, $sql);
+							}
+						}
+					}
+					
+					/*
+				#	debug($request, 'request');
+					
+				#	$data[$row['config_name']] = build_request(CONFIG, $vars, $error, $mode, $row['config_name']);
+					
+				#	debug($data_sql);
+				#	$data_sql = build_request(MENU, $vars, $error, $mode);
+					/*
 					$config_name	= $con['config_name'];
 					$config_value	= $con['config_value'];
 					
@@ -148,7 +188,7 @@ else
 					{
 						if ( isset($_POST['config'][$config_name]) )
 						{
-							$request = build_request($config_name, $display_vars, 'config', $error);
+					#		$request = build_request($config_name, $vars, 'config', $error);
 							
 							$new[$config_name] = $request;
 							
@@ -169,24 +209,26 @@ else
 						}
 						
 						$sql = "UPDATE " . CONFIG . " SET config_value = '" . str_replace("\'", "''", $new[$config_name]) . "' WHERE config_name = '$config_name'";
-						if ( !$db->sql_query($sql) )
-						{
-							message(GENERAL_ERROR, 'SQL Error: ' . $config_name, '', __LINE__, __FILE__, $sql);
-						}
+						debug($sql);
+					#	if ( !$db->sql_query($sql) )
+					#	{
+					#		message(GENERAL_ERROR, 'SQL Error: ' . $config_name, '', __LINE__, __FILE__, $sql);
+					#	}
 					}
+				*/
 				}
 			}
 			
-			if ( request('submit', TXT) )
-			{
-				$oCache->deleteCache('cfg_config');
-				
-				$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode"));
-				
-				message(GENERAL_MESSAGE, $msg);
-			}
+		#	if ( request('submit', TXT) )
+		#	{
+		#		$oCache->deleteCache('cfg_config');
+		#		
+		#		$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode"));
+		#		
+		#		message(GENERAL_MESSAGE, $msg);
+		#	}
 			
-			build_output($config, $display_vars, $config, 'default');
+			build_output($config, $vars, $config, $mode);
 			
 			$template->assign_vars(array(
 				'S_MODE'	=> $s_mode,
@@ -199,46 +241,47 @@ else
 			break;
 		
 		case 'calendar':
+		case 'gallery':
+		case 'match':
 		case 'module':
+		case 'other':
+		case 'rating':
 		case 'subnavi':
 		case 'upload':
-		case 'other':
-		case 'match':
-		case 'rating':
-		case 'gallery':
-		
-			include('./page_header_admin.php');
+		case 'smain':
+
+		#	include('./page_header_admin.php');
 			
 			switch ( $mode )
 			{
 				case 'calendar':	
 					
-					$display_vars = array(
+					$vars = array(
 						// Kalendereinstellungen
 						'calendar' => array(
 							'tab1'	=> 'calendar',
-							'show'	=> array('type' => 'radio:calview',	'validate' => INT, 'params' => array(false, true)),
-							'time'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'start'	=> array('type' => 'radio:caldays',	'validate' => INT, 'params' => array(false, true)),
-							'bday'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'news'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'event'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'match'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'train'	=> array('type' => 'radio:yesno',	'validate' => INT),
+							'show'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:calview', 'params' => array(false, true, false)),
+							'time'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'start'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
+							'bday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'news'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'train'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 						// Minikalendereinstellungen
 						'module_calendar' => array(
 							'tab2'	=> 'module_calendar',
-							'show'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'start'	=> array('type' => 'radio:caldays',	'validate' => INT, 'params' => array(false, true)),
-							'bday'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'news'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'event'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'match'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'train'	=> array('type' => 'radio:yesno',	'validate' => INT),
+							'show'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'start'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
+							'bday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'news'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'train'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 					);
 					
@@ -246,7 +289,7 @@ else
 				
 				case 'gallery':
 					
-					$display_vars = array(
+					$vars = array(
 						'gallery' => array(
 							'tab1'	=> 'gallery',
 						#	'auth_view'		=> array('validate' => ARY,	'type' => 'drop:auth_view',	),
@@ -254,7 +297,7 @@ else
 						#	'auth_delete'	=> array('validate' => ARY,	'type' => 'drop:auth_delete'),
 						#	'auth_rate'		=> array('validate' => ARY,	'type' => 'drop:auth_rate'),
 						#	'auth_upload'	=> array('validate' => ARY,	'type' => 'drop:auth_upload'),
-							'auth'			=> array('validate' => ARY, 'type' => 'drop:auth'),
+						#	'auth'			=> array('validate' => ARY, 'type' => 'drop:auth'),
 							'filesize'		=> array('validate' => INT, 'type' => 'text:4;5'),
 							'dimension'		=> array('validate' => INT, 'type' => 'double:4;5'),
 							'format'		=> array('validate' => INT, 'type' => 'double:4;5'),
@@ -263,123 +306,255 @@ else
 						)
 					);
 					
+					break;
+					
+				case 'match':
+				
+					$vars = array(
+						'match_type' => array(
+							'tab1' => 'match_type',
+							'show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:match'),
+							'type_unknown'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'type_two'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'type_three'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'type_four'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'type_five'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'type_six'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							
+						),
+						'match_war' => array(
+							'tab2' => 'match_war',
+							'show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:match'),
+							'war_fun'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'war_training'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'war_clan'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'war_league'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+						),
+						
+						'match_league' => array(
+							'tab3' => 'match_league',
+							'show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:match'),
+							'league_nope'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_esl'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_sk'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_liga'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_lgz'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_te'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_xgc'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_ncsl'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+						),
+						
+					);
+					
 					break;	
 				
 				case 'module':
 					
-					$display_vars = array(
+					$vars = array(
 						// News -> Top
 						'module_news' => array(
-							'tab1'	=> 'sn_news',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'tab1' => 'sn_news',
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Match -> Top
 						'module_match' => array(
-							'tab2'	=> 'sn_match',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'tab2' => 'sn_match',
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Topics -> Top
 						'module_topics' => array(
 							'tab3'	=> 'sn_topics',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Download -> Top
 						'module_downloads' => array(
-							'tab4'	=> 'sn_downloads',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'tab4' => 'sn_downloads',
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Neue Benutzer -> Left
 						'module_newusers' => array(
-							'tab5'	=> 'sn_newusers',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'tab5' => 'sn_newusers',
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Teams -> Left
 						'module_teams' => array(
-							'tab6'	=> 'sn_teams',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'tab6' => 'sn_teams',
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Links/Partner/Sponsor -> Left
 						'module_network' => array(
-							'tab7'	=> 'sn_network',
-							'show_links'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'show_partner'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'show_sponsor'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'cache'			=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'			=> array('type' => 'text:4;5',		'validate' => INT),
+							'tab7' => 'sn_network',
+							'show_links'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show_partner'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show_sponsor'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'cache'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// Stats Header: Counter/Online Navi: Counter/Online -> Left
 						'module_stats' => array(
-							'tab8'	=> 'sn_stats',
-							'counter'				=> array('type' => 'radio:yesno',	'validate' => INT),
-							'counter_start'			=> array('type' => 'text:4;5',		'validate' => INT),
-							'show_header_counter'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'show_header_online'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'show_navi_counter'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'show_navi_online'		=> array('type' => 'radio:yesno',	'validate' => INT),
+							'tab8' => 'sn_stats',
+							'counter'				=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'counter_start'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'show_header_counter'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show_header_online'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show_navi_counter'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show_navi_online'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 						// Minikalendereinstellungen -> Right
 						'module_calendar' => array(
-							'tab9'	=> 'sn_mini2',
-							'show'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'start'	=> array('type' => 'radio:caldays',	'validate' => INT),
-							'bday'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'news'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'event'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'match'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'train'	=> array('type' => 'radio:yesno',	'validate' => INT),
+							'tab9' => 'sn_mini2',
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
+							'bday'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'news'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'train'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 						// Serverviewer -> Right
 						'module_server' => array(
 							'tab10'	=> 'sn_server',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// nächste Wars -> Right
 						'module_next_match' => array(
 							'tab11'	=> 'sn_next_match',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						// nächste Trainings -> Right
 						'module_next_training' => array(
 							'tab12'	=> 'sn_next_train',
-							'show'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'length'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'cache'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'time'		=> array('type' => 'text:4;5',		'validate' => INT),
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+					);
+					
+					break;
+					
+				case 'other':
+					
+					$vars = array(
+						'per_page_entry' => array(
+							'tab' => 'path_games',
+							'site'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'comments'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'ucp'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'mcp'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'acp'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'index'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+						'comments' => array(
+							'tab' => 'path_games',
+							'news'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'news_guest'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event_guest'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match_guest'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'train'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						),
+						'lobby' => array(
+							'tab' => 'path_games',
+							'date'			=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;15'),
+							'news_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'event_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'match_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'train_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'news_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'event_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'match_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'train_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+						'spam_comments' => array(
+							'tab' => 'path_games',
+							'news'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'event'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'match'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'train'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+						'news' => array(
+							'tab' => 'path_games',
+							'browse'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:news'),
+							'limit'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'words'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+						'userlist' => array(
+							'tab' => 'path_games',
+							'groups'		=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:yesno'),
+							'teams'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'mail'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'private'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						),
+					);
+					
+					break;
+					
+				case 'rating':
+					
+					$vars = array(
+						'rating_news' => array(
+							'tab' => 'path_games',
+							'site'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'ucp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'mcp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'acp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'index'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+						'rating_gallery' => array(
+							'tab' => 'path_games',
+							'site'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'ucp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'mcp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'acp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'index'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+						),
+						'rating_downloads' => array(
+							'tab' => 'path_games',
+							'site'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'ucp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'mcp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'acp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'index'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 					);
 					
@@ -387,14 +562,17 @@ else
 					
 				case 'subnavi':
 					
-					$display_vars = array(
+					$vars = array(
 						'navi_settings' => array(
 							'tab1' => 'navi_top',
-							'navi_top' => array('type' => 'drop:navi_top',		'validate' => 'array'),
+							'navi_top'		=> array('validate' => ARY,	'explain' => false,	'type' => 'drop:navi_top'),
 							'tab2' => 'navi_left',
-							'navi_left' => array('type' => 'drop:navi_left',	'validate' => 'array'),
+							'navi_left'		=> array('validate' => ARY,	'explain' => false,	'type' => 'drop:navi_left'),
 							'tab3' => 'navi_right',
-							'navi_right' => array('type' => 'drop:navi_right',	'validate' => 'array'),
+							'navi_right'	=> array('validate' => ARY,	'explain' => false,	'type' => 'drop:navi_right'),
+							'tab4' => 'navi_modus',
+							'navi_logout'	=> array('validate' => ARY,	'explain' => false,	'type' => 'select:navi_user'),
+							'navi_modus'	=> array('validate' => ARY,	'explain' => false,	'type' => 'select:navi_menu'),
 						),
 					);
 					
@@ -402,233 +580,88 @@ else
 				
 				case 'upload':
 				
-					$display_vars = array(
+					$vars = array(
 						'path' => array(
-							'tab'	=> 'path',
-							'games'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
-							'icons'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
-							'maps'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
-							'newscat'	=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
-							'ranks'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
-							'downloads'	=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
-							'gallery'	=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15'),
+							'tab' => 'path',
+							'games'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'icons'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'maps'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'newscat'	=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'ranks'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'downloads'	=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'gallery'	=> array('validate' => TXT, 'type' => 'text:25;25'),
 						),
-						
 						'path_group' => array(
-							'tab'	=> 'path_group',
-							'path'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15',),
-							'filesize'	=> array('validate' => INT, 'explain' => false, 'type' => 'text:4;5'),
-							'dimension'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
+							'tab' => 'path_group',
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
-						
 						'path_matchs' => array(
-							'tab'	=> 'path_matchs',
-							'path'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15',),
-							'filesize'	=> array('validate' => INT, 'explain' => false, 'type' => 'text:4;5'),
-							'dimension'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
-							'preview'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
+							'tab' => 'path_matchs',
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
+							'preview'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
-						
 						'path_network' => array(
-							'tab'	=> 'path_network',
-							'path'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15',),
-							'filesize'	=> array('validate' => INT, 'explain' => false, 'type' => 'text:4;5'),
-							'dimension'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
-						),
-						
-						'path_users' => array(
-							'tab'	=> 'path_users',
-							'path'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15',),
-							'filesize'	=> array('validate' => INT, 'explain' => false, 'type' => 'text:4;5'),
-							'dimension'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
-						),
-						
-						'path_team_flag' => array(
-							'tab'	=> 'path_teamflag',
-							'path'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15',),
-							'filesize'	=> array('validate' => INT, 'explain' => false, 'type' => 'text:4;5'),
-							'dimension'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
-							'upload'	=> array('type' => 'radio:yesno',	'validate' => INT),
-						),
-						
-						'path_team_logo' => array(
-							'tab'	=> 'path_team_logo',
-							'path'		=> array('validate' => TXT, 'explain' => false, 'type' => 'text:14;15',),
-							'filesize'	=> array('validate' => INT, 'explain' => false, 'type' => 'text:4;5'),
-							'dimension'	=> array('validate' => INT, 'explain' => false, 'type' => 'double:4;5'),
-							'upload'	=> array('type' => 'radio:yesno',	'validate' => INT),
-						),
-					);
-					
-				#	debug($display_vars, 'vars');
-					
-					/*
-					$display_vars = array(
-						'path_games' => array(
-							'tab'	=> 'path_games',
-							'path'	=> array('type' => 'text:14;15', 'validate' => TXT)
-						),
-						'path_maps' => array(
-							'tab'	=> 'path_maps',
-							'path'	=> array('type' => 'text:14;15', 'validate' => TXT)
-						),
-						'path_newscat' => array(
-							'tab'	=> 'path_newscat',
-							'path'	=> array('type' => 'text:14;15', 'validate' => TXT)
-						),
-						'path_ranks' => array(
-							'tab'	=> 'path_ranks',
-							'path'	=> array('type' => 'text:14;15', 'validate' => TXT)
-						),
-						'path_downloads' => array(
-							'tab'	=> 'path_downloads',
-							'path'	=> array('type' => 'text:14;15', 'validate' => TXT)),
-						'path_gallery' => array(
-							'tab'	=> 'path_gallery',
-							'path'	=> array('type' => 'text:14;15', 'validate' => TXT)),
-						'path_groups' => array(
-							'tab'		=> 'path_groups',
-							'path'		=> array('type' => 'text:14;15',	'validate' => TXT),
-							'filesize'	=> array('type' => 'text:14;15',	'validate' => INT),
-							'dimension'	=> array('type' => 'double:4;5',	'validate' => INT),
-						),
-						'path_matchs' => array(
-							'tab'	=> 'path_matchs',
-							'path'		=> array('type' => 'text:14;15',	'validate' => TXT),
-							'filesize'	=> array('type' => 'text:14;15',	'validate' => INT),
-							'dimension'	=> array('type' => 'double:4;5',	'validate' => INT),
-							'preview'	=> array('type' => 'double:4;5',	'validate' => INT),
-						),
-						'path_network'	=> array(
-							'tab'	=> 'path_network',
-							'path'		=> array('type' => 'text:14;15',	'validate' => TXT),
-							'filesize'	=> array('type' => 'text:14;15',	'validate' => INT),
-							'dimension'	=> array('type' => 'double:4;5',	'validate' => INT),
+							'tab' => 'path_network',
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_users' => array(
-							'tab'	=> 'path_users',
-							'path'		=> array('type' => 'text:14;15',	'validate' => TXT),
-							'filesize'	=> array('type' => 'text:14;15',	'validate' => INT),
-							'dimension'	=> array('type' => 'double:4;5',	'validate' => INT),
+							'tab' => 'path_users',
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_team_flag' => array(
-							'tab'	=> 'path_team_flag',
-							'path'		=> array('type' => 'text:14;15',	'validate' => TXT),
-							'filesize'	=> array('type' => 'text:14;15',	'validate' => INT),
-							'dimension'	=> array('type' => 'double:4;5',	'validate' => INT),
-							'upload'	=> array('type' => 'radio:yesno',	'validate' => INT),
+							'tab' => 'path_teamflag',
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'upload'	=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_team_logo' => array(
-							'tab'	=> 'path_team_logo',
-							'path'		=> array('type' => 'text:14;15',	'validate' => TXT),
-							'filesize'	=> array('type' => 'text:14;15',	'validate' => INT),
-							'dimension'	=> array('type' => 'double:4;5',	'validate' => INT),
-							'upload'	=> array('type' => 'radio:yesno',	'validate' => INT),
-						),
-					);
-					*/
-					break;
-														
-				case 'other':
-					
-					$display_vars = array(
-						'per_page_entry' => array(
-							'tab'	=> 'path_games',
-							'site'		=> array('type' => 'text:4;5',	'validate' => INT),
-							'comments'	=> array('type' => 'text:4;5',	'validate' => INT),
-							'ucp'		=> array('type' => 'text:4;5',	'validate' => INT),
-							'mcp'		=> array('type' => 'text:4;5',	'validate' => INT),
-							'acp'		=> array('type' => 'text:4;5',	'validate' => INT),
-							'index'		=> array('type' => 'text:4;5',	'validate' => INT),
-						),
-						'comments' => array(
-							'tab'	=> 'path_games',
-							'news'			=> array('type' => 'radio:yesno',	'validate' => INT),
-							'news_guest'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'event'			=> array('type' => 'radio:yesno',	'validate' => INT),
-							'event_guest'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'match'			=> array('type' => 'radio:yesno',	'validate' => INT),
-							'match_guest'	=> array('type' => 'radio:yesno',	'validate' => INT),
-							'train'			=> array('type' => 'radio:yesno',	'validate' => INT),
-						),
-						'lobby' => array(
-							'tab'	=> 'path_games',
-							'date'			=> array('type' => 'text:15;15',	'validate' => TXT),
-							'news_limit'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'event_limit'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'match_limit'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'train_limit'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'news_future'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'event_future'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'match_future'	=> array('type' => 'text:4;5',		'validate' => INT),
-							'train_future'	=> array('type' => 'text:4;5',		'validate' => INT),
-						),
-						'spam_comments' => array(
-							'tab'	=> 'path_games',
-							'news'	=> array('type' => 'text:4;5',	'validate' => INT),
-							'event'	=> array('type' => 'text:4;5',	'validate' => INT),
-							'match'	=> array('type' => 'text:4;5',	'validate' => INT),
-							'train'	=> array('type' => 'text:4;5',	'validate' => INT),
-						),
-						'news' => array(
-							'tab'	=> 'path_games',
-							'browse'	=> array('type' => 'radio:news',	'validate' => INT),
-							'limit'		=> array('type' => 'text:4;5',		'validate' => INT),
-							'words'		=> array('type' => 'text:4;5',		'validate' => INT),
-						),
-						'userlist' => array(
-							'tab'	=> 'path_games',
-							'groups'	=> array('type' => 'radio:yesno',	'validate' => TXT),
-							'teams'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'mail'		=> array('type' => 'radio:yesno',	'validate' => INT),
-							'private'	=> array('type' => 'radio:yesno',	'validate' => INT),
+							'tab' => 'path_team_logo',
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'upload'	=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 					);
 					
 					break;
 					
-				case 'match':
+				case 'smain':
 				
-					$display_vars = array(
-						'match_type' => array(
-							'tab1' => 'match_type',
-							'show'			=> array('validate' => INT,	'type' => 'radio:match'),
-							'type_unknown'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_two'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_three'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_four'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_five'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_six'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							
+					$vars = array(
+						'smain' => array(
+							'tab1'	=> 'dl',
+							'dl_switch'			=> array('validate' => INT, 'type' => 'radio:switch'),
+							'dl_entrys'			=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'tab2'	=> 'profile',
+							'profile_switch'	=> array('validate' => INT, 'type' => 'radio:switch'),
+							'profile_entrys'	=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'tab3'	=> 'gallery',
+							'gallery_switch'	=> array('validate' => INT, 'type' => 'radio:switch'),
+							'gallery_entrys'	=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'tab4'	=> 'forum',
+							'forum_switch'		=> array('validate' => INT, 'type' => 'radio:switch'),
+							'forum_entrys'		=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'forum_subs'		=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'tab5'	=> 'menu',
+							'menu_switch'		=> array('validate' => INT, 'type' => 'radio:switch'),
+							'menu_entrys'		=> array('validate' => INT, 'type' => 'radio:yesno'),
+							'menu_subs'			=> array('validate' => INT, 'type' => 'radio:yesno'),
 						),
-						'match_war' => array(
-							'tab2' => 'match_war',
-							'show'			=> array('validate' => INT,	'type' => 'radio:match'),
-							'war_fun'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'war_training'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'war_clan'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'war_league'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-						),
-						
-						'match_league' => array(
-							'tab3' => 'match_league',
-							'show'			=> array('validate' => INT,	'type' => 'radio:match'),
-							'league_nope'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_esl'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_sk'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_liga'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_lgz'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_te'		=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_xgc'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_ncsl'	=> array('validate' => TXT,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-						),
-						
 					);
 					
 					break;
 			}
 			
-		#	debug($_POST, 'post');
+			debug($_POST, '_POST');
 			
 			$sql = 'SELECT * FROM ' . SETTINGS;
 			if ( !($result = $db->sql_query($sql)) )
@@ -649,7 +682,7 @@ else
 					{
 						if ( isset($_POST[$settings_name]) )
 						{
-							$request = build_request($settings_name, $display_vars, true, $error);
+							$request = build_request($settings_name, $vars, $error, $mode, $settings_name);
 						#	debug($request, 'debug data');
 							$new[$settings_name] = serialize($request);
 							
@@ -657,6 +690,7 @@ else
 						}
 						
 						$sql = "UPDATE " . SETTINGS . " SET settings_value = '{$new[$settings_name]}' WHERE settings_name = '$settings_name'";
+					#	debug($sql);
 						if ( !$db->sql_query($sql) )
 						{
 							message(GENERAL_ERROR, 'SQL Error: ' . $settings_name, '', __LINE__, __FILE__, $sql);
@@ -680,8 +714,8 @@ else
 			
 		#	debug($setting);
 			
-			build_output(false, $display_vars, $setting, $mode, true);
-		#	build_output(MENU2, $vars, $data_sql);
+			build_output(false, $vars, $setting, $mode, true);
+		#	build_output(false, $vars, $config, $mode, true);
 			
 			$template->assign_vars(array(
 				'S_MODE'	=> $s_mode,
@@ -695,8 +729,6 @@ else
 			
 		case 'ftp':
 		
-			include('./page_header_admin.php');
-			
 			$template->pparse('body');
 		
 			break;
@@ -705,9 +737,9 @@ else
 		
 			if ( !(request('submit', TXT)) )
 			{
-				include('./page_header_admin.php');
-				
 				$phpinfo = parsePHPInfo();
+				
+				debug($phpinfo);
 				
 				$core = ( $_SERVER['HTTP_HOST'] == 'localhost' ) ? 'Core' : 'PHP Core';
 				

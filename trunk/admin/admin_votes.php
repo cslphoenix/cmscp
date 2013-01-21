@@ -2,7 +2,7 @@
 
 if ( !empty($setmodules) )
 {
-	return;
+	return false;
 }
 else
 {
@@ -61,7 +61,7 @@ else
 		#	$template->assign_var_from_handle('AJAX', 'ajax');
 		#	$template->assign_var_from_handle('TINYMCE', 'tiny');
 			
-			if ( $mode == 'create' && !$update )
+			if ( $mode == 'create' && !$submit )
 			{
 				$data_sql = array(
 							'vote_title'	=> request('vote_title', 2) ? request('training_vs', 2) : '',
@@ -71,7 +71,7 @@ else
 							'vote_end'		=> time(),
 						);
 			}
-			else if ( $mode == 'update' && !$update )
+			else if ( $mode == 'update' && !$submit )
 			{
 				$data_sql = data(VOTES, $data, false, 1, true);
 			}
@@ -94,7 +94,7 @@ else
 			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['training']),
-				'L_INPUT'		=> sprintf($lang["sprintf_$mode"], $lang['training'], $data_sql['training_vs']),
+				'L_INPUT'		=> sprintf($lang['sprintf_' . $mode], $lang['training'], $data_sql['training_vs']),
 				'L_VS'			=> $lang['vs'],
 				'L_TEAM'		=> $lang['team'],
 				'L_MATCH'		=> $lang['match'],
@@ -122,7 +122,7 @@ else
 				'S_FIELDS'		=> $fields,
 			));
 			
-			if ( $update )
+			if ( $submit )
 			{
 				$error[] = ( !$data_sql['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
 				$error[] = ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
@@ -142,7 +142,7 @@ else
 					else
 					{
 						$sql = sql(VOTES, $mode, $data_sql, 'training_id', $data);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');

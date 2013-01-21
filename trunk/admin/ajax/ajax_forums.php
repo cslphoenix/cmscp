@@ -17,7 +17,7 @@ if ( isset($_POST['type']) )
 	$meta = $_POST['meta'];
 	$name = $_POST['name'];
 	
-	$sql = "SELECT * FROM " . FORMS . " ORDER BY main ASC, forum_order ASC";
+	$sql = "SELECT * FROM " . FORUM . " ORDER BY main ASC, forum_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

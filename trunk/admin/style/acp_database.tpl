@@ -5,13 +5,6 @@
 
 <!-- BEGIN backup -->
 <form action="{S_ACTION}" method="post">
-
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_BACKUP}</a></li>
-	<li><a href="{S_OPTIMIZE}">{L_OPTIMIZE}</a></li>
-	<li><a href="{S_RESTORE}">{L_RESTORE}</a></li>
-</ul>
-
 <table class="update">
 <tr>
 	<td class="row1"><label for="full">{L_TYPE}:</label></td>
@@ -46,11 +39,6 @@
 <!-- BEGIN optimize -->
 <form action="{S_ACTION}" method="post">
 {S_SCRIPT}
-<ul id="navlist">
-	<li><a href="{S_BACKUP}">{L_BACKUP}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_OPTIMIZE}</a></li>
-	<li><a href="{S_RESTORE}">{L_RESTORE}</a></li>
-</ul>
 <table class="update">
 <tr>
 	<td class="row1">{L_SHOW_NOT_OPTIMIZED}:</td>
@@ -104,7 +92,7 @@
 
 <table class="footer">
 <tr>
-	<td><input type="submit" class="button2" name="optimize" value="{L_OPTIMIZE}"></td>
+	<td><input type="submit" name="optimize" value="{L_OPTIMIZE}"></td>
 	<td></td>
 	<td></td>
 	<td><a href="#" onclick="setCheckboxes('tablesForm', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', false); return false;">{L_MARK_DEALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="setCheckboxes('tablesForm', 'invert'); return false;">{L_MARK_INVERT}</a></td>
@@ -116,11 +104,6 @@
 
 <!-- BEGIN restore -->
 <form action="{S_ACTION}" method="post" name="tablesForm" enctype="multipart/form-data">
-<ul id="navlist">
-	<li><a href="{S_BACKUP}">{L_BACKUP}</a></li>
-	<li><a href="{S_OPTIMIZE}">{L_OPTIMIZE}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_RESTORE}</a></li>
-</ul>
 <table class="update">
 <tr>
 	<td class="row1">{L_FILE}:</td>

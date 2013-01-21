@@ -1,6 +1,6 @@
 <?php
 
-function img_check_type($type, $error)
+function img_check_type($type, &$error)
 {
 	global $lang, $error;
 
@@ -15,36 +15,43 @@ function img_check_type($type, $error)
 		case 'png':	return '.png';
 			break;
 		
-		default:	$error = $error ? $error . '<br />' . '1dateitype' : '2dateitype';	break;
+		default:
+		
+			if ( $error )
+			{
+				$error[] = 'dateitype';
+			}
+			
+			break;
 	}
 	
 	return false;
 }
 
-function image_delete($image_current, $image_preview, $image_path, $mode_sql = '')
+function image_delete($cur_img, $pre_img, $path_img, $sql_type = '')
 {
-	echo $image_path . $image_current;
+#	echo $path_img . $cur_img;
 	
-	if ( $image_current != '' )
+	if ( $cur_img != '' )
 	{
-		if ( @file_exists($image_path . '/' . $image_current) )
+		if ( @file_exists($path_img . '/' . $cur_img) )
 		{
-			@unlink($image_path . '/' . $image_current);
+			@unlink($path_img . '/' . $cur_img);
 		}
 	}	
 	
-	if ( $image_preview != '' )
+	if ( $pre_img != '' )
 	{
-		if ( @file_exists($image_path . '/' . $image_preview) )
+		if ( @file_exists($path_img . '/' . $pre_img) )
 		{
-			@unlink($image_path . '/' . $image_preview);
+			@unlink($path_img . '/' . $pre_img);
 		}
 	}
 	
 	/*
-	$sql = explode(', ', $mode_sql);
+	$sql = explode(', ', $sql_type);
 	
-	if ( !strstr($mode_sql, 'team') )
+	if ( !strstr($sql_type, 'team') )
 	{
 		$return = ( count($sql) == '1' ) ? $sql[0] . " = ''" : $sql[0] . " = '', " . $sql[1] . " = ''";
 	}
@@ -59,7 +66,8 @@ function image_delete($image_current, $image_preview, $image_path, $mode_sql = '
 	return $return;
 }
 
-function upload_dl($file_info, $path, $types, $maxsize, &$error)
+function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
+#function upload_file($mode, $category, $sql_type, $mode_preview, $cur_dl, $pre_dl, $path_dl, $data_dl, &$error, $main, $maxsize, $types)
 {
 #	global $lang, $settings, $error;
 	global $lang, $settings;
@@ -68,25 +76,31 @@ function upload_dl($file_info, $path, $types, $maxsize, &$error)
 	
 	$type = '';
 	
-	$ftemp = $file_info['temp'];
-	$fname = $file_info['name'];
-	$ftype = $file_info['type'];
-	$fsize = $file_info['size'];
+	$ftemp = $data_dl['temp'];
+	$fname = $data_dl['name'];
+	$ftype = $data_dl['type'];
+	$fsize = $data_dl['size'];
+	
+	$maxsize = $maxsize*1048576;
+	
+#	debug($ftype);
+#	debug($types);
+	debug($maxsize);
 	
 	if ( file_exists(realpath($ftemp)) )
 	{
 		if ( $fsize <= $maxsize && $fsize > 0 )
 		{
-			if ( !in_array($ftype, explode(', ', $types)) )
+			if ( !in_array($ftype, $types) )
 			{
-				$error .= ( $error ? '<br />' : '' ) . sprintf($lang['up_filetype'], $ftype);
+				$error[] = sprintf($lang['up_filetype'], $types);
 			
 				return;
 			}
 		}
 		else
 		{
-			$error .= ( $error ? '<br />' : '' ) . sprintf($lang['up_filesize'], round($maxsize/1024));
+			$error[] = sprintf($lang['up_filesize'], round($maxsize/1024));
 			
 			return;
 		}
@@ -98,28 +112,39 @@ function upload_dl($file_info, $path, $types, $maxsize, &$error)
 	{
 		message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
-	
+	debug($error, 'error');
 	if ( $error )
 	{
 		@unlink($ftemp);
 		return false;
 	}
 	
-	$move_file($ftemp, $path . "/$fname");
-	@chmod($path . "/$fname", 0644);
+	$move_file($ftemp, $path_dl . "/$fname");
+	@chmod($path_dl . "/$fname", 0644);
 	
-	$info['file_filename'] = $fname;
-	$info['file_type'] = $ftype;
-	$info['file_size'] = $fsize;
+#	$info['dl_name'] = $fname;
+#	$info['dl_type'] = $ftype;
+#	$info['dl_size'] = $fsize;
+
+	$info = sprintf('%s;%s;%s', $fname, $ftype, $fsize);
+	
+	debug($info, 'info');
 	
 	return $info;
 }
 
-function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_current, $image_preview, $image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, &$error)
+function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre_img, $path_img, $data_img, &$error, $main = false, $maxsize = false, $types = false)
 {
-	global $db, $lang, $settings, $error;
-	debug($mode_category);
-	switch ( $mode_category )
+#	global $db, $lang, $settings, $error;
+	global $db, $lang, $settings;
+	
+	$image_filename = $data_img['temp'];
+	$image_realname = $data_img['name'];
+	$image_filetype = $data_img['type'];
+	$image_filesize = $data_img['size'];
+
+#	debug($category);
+	switch ( $category )
 	{
 		
 		/* system_filesize = sfz */
@@ -299,20 +324,20 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 				case '.jpeg':
 				case '.pjpeg':
 				case '.jpg':
-					imagejpeg($image_p, $image_path . "/$new_filename_preview", 100);
+					imagejpeg($image_p, $path_img . "/$new_filename_preview", 100);
 				break;
 				case '.gif':
-					imagegif($image_p, $image_path . "/$new_filename_preview");
+					imagegif($image_p, $path_img . "/$new_filename_preview");
 				break;
 				case '.png':
-					imagepng($image_p, $image_path . "/$new_filename_preview");
+					imagepng($image_p, $path_img . "/$new_filename_preview");
 				break;
 			}
 		}
 		
-		if ( $image_current )
+		if ( $cur_img )
 		{
-			image_delete($image_current, $image_preview, $image_path, $mode_sql);
+			image_delete($cur_img, $pre_img, $path_img, $sql_type);
 		}
 		
 		$move_file = ( @$ini_val('open_basedir') != '' ) ? 'move_uploaded_file' : 'copy';
@@ -328,13 +353,13 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 			return false;
 		}
 		
-		$move_file($image_filename, $image_path . "/$new_filename");
-		@chmod($image_path . "/$new_filename", 0644);
+		$move_file($image_filename, $path_img . "/$new_filename");
+		@chmod($path_img . "/$new_filename", 0644);
 		
 		if ( $mode )
 		{
 			/*
-			$sql_pic = ( $mode == 'update' ) ?  "$mode_sql = '$new_filename'," : $new_filename;
+			$sql_pic = ( $mode == 'update' ) ?  "$sql_type = '$new_filename'," : $new_filename;
 			geändert zwecks umstellung der speichermechanismus der daten im acp
 			*/
 			$sql_pic = $new_filename;
@@ -357,7 +382,7 @@ function image_upload($mode, $mode_category, $mode_sql, $mode_preview, $image_cu
 	return $sql_pic;
 }
 
-function gallery_upload($image_path, $image_filename, $image_realname, $image_filesize, $image_filetype, $max_width, $max_height, $max_filesize, $pic_preview_widht, $pic_preview_height)
+function gallery_upload($path_img, $image_filename, $image_realname, $image_filesize, $image_filetype, $max_width, $max_height, $max_filesize, $pic_preview_widht, $pic_preview_height)
 {
 	global $db, $lang, $settings, $error;
 
@@ -454,13 +479,13 @@ function gallery_upload($image_path, $image_filename, $image_realname, $image_fi
 			case '.jpeg':
 			case '.pjpeg':
 			case '.jpg':
-				imagejpeg($image_p, './../' . $settings['path_gallery'] . '/' . $image_path . "/$new_filename_preview", 100);
+				imagejpeg($image_p, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename_preview", 100);
 				break;
 			case '.gif':
-				imagegif($image_p, './../' . $settings['path_gallery'] . '/' . $image_path . "/$new_filename_preview");
+				imagegif($image_p, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename_preview");
 				break;
 			case '.png':
-				imagepng($image_p, './../' . $settings['path_gallery'] . '/' . $image_path . "/$new_filename_preview");
+				imagepng($image_p, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename_preview");
 			break;
 		}
 		
@@ -478,8 +503,8 @@ function gallery_upload($image_path, $image_filename, $image_realname, $image_fi
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 		}
 		
-		$move_file($image_filename, './../' . $settings['path_gallery'] . '/' . $image_path . "/$new_filename");
-		@chmod('./../' . $settings['path_gallery'] . '/' . $image_path . "/$new_filename", 0644);
+		$move_file($image_filename, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename");
+		@chmod('./../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename", 0644);
 		
 		$pic['pic_filename'] = $new_filename;
 		$pic['pic_preview'] = $new_filename_preview;

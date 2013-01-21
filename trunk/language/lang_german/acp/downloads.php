@@ -8,26 +8,22 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 
 	'title'		=> 'Download',
-	'file'		=> 'Datei',
-	'cat'		=> 'Kategorie',
 	'explain'	=> 'Downloads halt',
 
-	'create'	=> 'Neuen Download hinzugefügt.',
-	'update'	=> 'Downloaddaten erfolgreich geändert.',
-	'delete'	=> 'Der Download wurde gelöscht!',
-	'confirm'	=> 'dass dieser Datei:',
+	'input_data'	=> 'Downloaddaten',
 	
-	'data'		=> 'Downloaddaten',
+	'dl_name'		=> 'Name',
+	'type'			=> 'Type',
+	'main'			=> 'Kategorie',
+	'dl_desc'		=> 'Beschreibung',
+	'dl_icon'		=> 'Icon',
+	'dl_types'		=> 'Art',
+	'dl_file'		=> 'Datei',
+	'dl_size'		=> 'Maximale Größe',
+	'dl_rate'		=> 'Bewertung',
+	'dl_comment'	=> 'Kommentare',
 	
-	'download_name'		=> 'Name',
-
-	
-	'create_cat'	=> 'Neue Downloadkategorie hinzugefügt.',
-	'update_cat'	=> 'Downloadkategorie erfolgreich geändert.',
-	'delete_cat'	=> 'Die Downloadkategorie wurde gelöscht!',
-	'confirm_cat'	=> 'dass diese Downloadkategorie:',
-	
-	'data_cat'		=> 'Kategoriedaten',
+	'dl_size_explain'	=> 'Maximale Größe',
 	
 	
 	'name_cat'			=> 'Name',
@@ -44,12 +40,12 @@ $lang = array_merge($lang, array(
 	
 	/* http://www.php.net/manual/de/function.mime-content-type.php#87856 */
 	/* image http://www.iconfinder.com/search/?q=file+extension# */
-	'meta_application'	=> 'Anwendung',
-	'meta_image'		=> 'Bilder',
-	'meta_text'			=> 'Text',
-	'meta_video'		=> 'Audio / Video',
+	'mime_application'	=> 'Anwendung',
+	'mime_image'		=> 'Bilder',
+	'mime_text'			=> 'Text',
+	'mime_video'		=> 'Audio / Video',
 	
-	'type_application'	=> array(
+	'mime_application_type'	=> array(
 		'ai, eps, ps'	=> 'application/postscript',		
 		'cab'			=> 'application/vnd.ms-cab-compressed',
 		'doc'			=> 'application/msword',
@@ -69,7 +65,7 @@ $lang = array_merge($lang, array(
 		'torrent'		=> 'application/x-bittorrent',
 	),
 	
-	'type_image' => array(
+	'mime_image_type' => array(
 		'bmp'				=> 'image/bmp',
 		'gif'				=> 'image/gif',
 		'png'				=> 'image/png',
@@ -80,13 +76,13 @@ $lang = array_merge($lang, array(
 	#	'svg, svgz'			=> 'image/svg+xml',	
 	),
 	
-	'type_text' => array(
+	'mime_text_type' => array(
 		'css'				=> 'text/css',
 		'htm, html, php'	=> 'text/html',			
 		'txt'				=> 'text/plain',
 	),
 	
-	'type_video' => array(
+	'mime_video_type' => array(
 		'mp3'		=> 'audio/mpeg',
 		'flv'		=> 'video/x-flv',
 		'qt, mov'	=> 'video/quicktime',
@@ -94,17 +90,11 @@ $lang = array_merge($lang, array(
 
 	'up_filesize'	=> 'Die Dateigröße muss kleiner als %d KB sein.',
 	'up_filetype'	=> 'Die Dateitype entspricht nicht den vorgaben: %s.',
-	
-	'msg_empty_name'	=> 'Bitte ein Namen eintragen!',
-	'msg_select_file'	=> 'Bitte eine Datei auswählen!',
-	
 
-	'forms_public'		=> 'Öffentlich',
-	'forms_register'	=> 'Registriert',
-	'forms_trial'		=> 'Trial',
-	'forms_member'		=> 'Mitglieder',
-	'forms_mod'		=> 'Moderatoren',
-	'forms_admin'		=> 'Administrator',
+	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Datei'),
+	
+	'type_0' => 'Kategorie',
+	'type_1' => 'Datei',
 	
 ));
 

@@ -3,7 +3,7 @@
 <h1>{L_HEAD}</h1>
 <p>{L_EXPLAIN}</p>
 
-{S_FORMS}
+{S_FORUM}
 
 <table class="lfooter">
 <tr>

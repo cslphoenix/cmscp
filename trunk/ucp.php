@@ -76,7 +76,6 @@ if ( $userdata['session_logged_in'] )
 		
 		if ( $tmp )
 		{
-			$posturl = POST_NEWS;
 			$new_ids = $new_ary = '';
 			
 			foreach ( $tmp as $row )
@@ -123,7 +122,7 @@ if ( $userdata['session_logged_in'] )
 						$template->assign_block_vars('lobby.news.news_row', array(
 							'DATE'	=> create_date($lobby_dateformat, $new_ary[$i]['news_date'], $userdata['user_timezone']),
 							'DATEI'	=> create_date($userdata['user_dateformat'], $new_ary[$i]['news_date'], $userdata['user_timezone']),
-							'TITLE'	=> href('a_txt_ly', 'news.php', array($posturl => $nid), $ntitle, $ntitle, $comment),
+							'TITLE'	=> href('a_txt_ly', 'news.php', array('id' => $nid), $ntitle, $ntitle, $comment),
 						));
 					}
 				}
@@ -138,7 +137,6 @@ if ( $userdata['session_logged_in'] )
 		{
 			$template->assign_block_vars('lobby.event', array());
 			
-			$posturl = POST_EVENT;
 			$new_ids = $old_ids = $new_ary = $old_ary = '';
 			
 			foreach ( $tmp as $row )
@@ -202,7 +200,7 @@ if ( $userdata['session_logged_in'] )
 						
 						$template->assign_block_vars('lobby.event.new.new_row', array(
 							'DATE'		=> create_date($lobby_dateformat, $new_ary[$i]['event_date'], $userdata['user_timezone']),
-							'TITLE'		=> href($switch, 'event.php', array($posturl => $eid), $etitle, $etitle, $comment),
+							'TITLE'		=> href($switch, 'event.php', array('id' => $eid), $etitle, $etitle, $comment),
 							'OPTION'	=> href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_EVENT, 'op' => 1, 'id' => $eid), $css, $lang['yes']) . '&nbsp;&bull;&nbsp;' . href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_EVENT, 'op' => 2, 'id' => $eid), $css, $lang['no']),
 						));
 					}
@@ -236,7 +234,7 @@ if ( $userdata['session_logged_in'] )
 						
 						$template->assign_block_vars('lobby.event.old.old_row', array(
 							'DATE'	=> create_date($lobby_dateformat, $old_ary[$i]['event_date'], $userdata['user_timezone']),
-							'TITLE'	=> href('a_txt_ly', 'event.php', array($posturl => $eid), $etitle, $etitle, $comment),
+							'TITLE'	=> href('a_txt_ly', 'event.php', array('id' => $eid), $etitle, $etitle, $comment),
 						));
 					}
 				}
@@ -252,7 +250,6 @@ if ( $userdata['session_logged_in'] )
 			$template->assign_block_vars('lobby.match', array());
 			
 			$show = 0;
-			$posturl = POST_MATCH;
 			$new_ids = $old_ids = $new_ary = $old_ary = '';
 			
 			foreach ( $match as $key => $row )
@@ -325,7 +322,7 @@ if ( $userdata['session_logged_in'] )
 					
 					$template->assign_block_vars('lobby.match.new.new_row', array(
 						'DATE'		=> create_date($lobby_dateformat, $new_ary[$i]['match_date'], $userdata['user_timezone']),
-						'TITLE'		=> href($switch, 'match.php', array($posturl => $mid), $mrival, $mrival, $comment),
+						'TITLE'		=> href($switch, 'match.php', array('id' => $mid), $mrival, $mrival, $comment),
 						'OPTION'	=> href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_MATCH, 'op' => STATUS_YES, 'id' => $mid), $css, $lang['yes']) . '&nbsp;&bull;&nbsp;' . href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_MATCH, 'op' => STATUS_NO, 'id' => $mid), $css, $lang['no']) . '&nbsp;&bull;&nbsp;' . href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_MATCH, 'op' => STATUS_REPLACE, 'id' => $mid), $css, $lang['replace']),
 					));
 				}
@@ -357,7 +354,7 @@ if ( $userdata['session_logged_in'] )
 						
 						$template->assign_block_vars('lobby.match.old.old_row', array(
 							'DATE'	=> create_date($lobby_dateformat, $old_ary[$i]['match_date'], $userdata['user_timezone']),
-							'TITLE'	=> href('a_txt_ly', 'match.php', array($posturl => $mid), $etitle, $mrival, $comment),
+							'TITLE'	=> href('a_txt_ly', 'match.php', array('id' => $mid), $etitle, $mrival, $comment),
 						));
 					}
 				}
@@ -374,7 +371,6 @@ if ( $userdata['session_logged_in'] )
 			{
 				$template->assign_block_vars('lobby.train', array());
 				
-				$posturl = POST_TRAINING;
 				$new_ids = $old_ids = $new_ary = $old_ary = '';
 				
 				foreach ( $tmp as $row )
@@ -435,7 +431,7 @@ if ( $userdata['session_logged_in'] )
 							
 							$template->assign_block_vars('lobby.train.new.new_row', array(
 								'DATE'		=> create_date($lobby_dateformat, $new_ary[$i]['training_date'], $userdata['user_timezone']),
-								'TITLE'		=> href($switch, 'training.php', array($posturl => $tid), $tvs, $tvs, $comment),
+								'TITLE'		=> href($switch, 'training.php', array('id' => $tid), $tvs, $tvs, $comment),
 								'OPTION'	=> href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_TRAINING, 'op' => STATUS_YES, 'id' => $tid), $css, $lang['yes']) . '&nbsp;&bull;&nbsp;' . href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_TRAINING, 'op' => STATUS_NO, 'id' => $tid), $css, $lang['no']) . '&nbsp;&bull;&nbsp;' . href('a_css', $file, array('mode' => 'lobby', 'smode' => 'switch', 'type' => TYPE_TRAINING, 'op' => STATUS_REPLACE, 'id' => $tid), $css, $lang['replace']),
 							));
 						}
@@ -468,7 +464,7 @@ if ( $userdata['session_logged_in'] )
 														
 							$template->assign_block_vars('lobby.train.old.old_row', array(
 								'DATE'	=> create_date($lobby_dateformat, $old_ary[$i]['training_date'], $userdata['user_timezone']),
-								'TITLE'	=> href('a_txt_ly', 'training.php', array($posturl => $tid), $tvs, $tvs, $comment),
+								'TITLE'	=> href('a_txt_ly', 'training.php', array('id' => $tid), $tvs, $tvs, $comment),
 							));
 							
 							$show++;

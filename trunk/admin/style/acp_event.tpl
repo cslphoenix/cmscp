@@ -1,28 +1,27 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
-
 {ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
+{input.row.tab.option.DIV_START}
 <dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -37,8 +36,6 @@
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
-<p>{L_EXPLAIN}</p>
 <ul id="navopts"><li>{L_SORT}: {S_LEVEL}</li></ul>
 </form>
 

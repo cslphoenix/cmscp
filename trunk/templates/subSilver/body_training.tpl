@@ -5,9 +5,9 @@
 </tr>
 <!-- BEGIN new_row -->
 <tr>
-	<td class="{_list._new_row.CLASS}">{_list._new_row.GAME} {_list._new_row.NAME}</td>
-	<td class="{_list._new_row.CLASS}">{_list._new_row.DATE}</td>
-	<td class="{_list._new_row.CLASS}"><span class="{_list._new_row.CSS}">{_list._new_row.STATUS}</span></td>
+	<td class="{list.new_row.CLASS}">{list.new_row.GAME} {list.new_row.NAME}</td>
+	<td class="{list.new_row.CLASS}">{list.new_row.DATE}</td>
+	<td class="{list.new_row.CLASS}"><span class="{list.new_row.CSS}">{list.new_row.STATUS}</span></td>
 </tr>
 <!-- END new_row -->
 <!-- BEGIN entry_empty_new -->
@@ -23,9 +23,9 @@
 </tr>
 <!-- BEGIN old_row -->
 <tr>
-	<td class="{_list.old_row.CLASS}">{_list.old_row.GAME} {_list.old_row.NAME}</td>
-	<td class="{_list.old_row.CLASS}">{_list.old_row.DATE}</td>
-	<td class="{_list.old_row.CLASS}"><span class="{_list.old_row.CSS}">{_list.old_row.STATUS}</span></td>
+	<td class="{list.old_row.CLASS}">{list.old_row.GAME} {list.old_row.NAME}</td>
+	<td class="{list.old_row.CLASS}">{list.old_row.DATE}</td>
+	<td class="{list.old_row.CLASS}"><span class="{list.old_row.CSS}">{list.old_row.STATUS}</span></td>
 </tr>
 <!-- END old_row -->
 <!-- BEGIN entry_empty_old -->

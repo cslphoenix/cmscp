@@ -1,16 +1,23 @@
 <?php
 
-if ( !empty($setmodules) )
+if ( isset($setmodules) )
 {
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_profile',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_profile'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
-
-	$root_path	= './../';
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'acp_profile';
+	
+	$cancel = ( isset($_POST['cancel']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
+	
+	$current = 'acp_profile';
 	
 	include('./pagestart.php');
 
@@ -21,22 +28,18 @@ else
 	$fields	= '';
 	
 	$log	= SECTION_PROFILE;
-	$url	= POST_PROFILE;
-	$cat	= POST_CAT;
-	$file	= basename(__FILE__);
-	
-	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
-	$start	= ( $start < 0 ) ? 0 : $start;
-	
-	$data_id	= request($url, INT);
-	$data_cat	= request($cat, INT);
-	$data_type	= request('cat_type', INT);
-	$confirm	= request('confirm', TXT);
-	$mode		= request('mode', TXT);
-	$move		= request('move', INT);
-	
-	$dir_path	= $root_path . $settings['path_games'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['profile']);
+
+	$data	= request('id', INT);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
+	$main	= request('main', TYP);
+	$usub	= request('usub', TYP);
+	$mode	= request('mode', TYP);
+	$type	= request('type', TYP);
+	$accept	= request('accept', TYP);
+	$action	= request('action', TYP);
+
+	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN )
 	{
@@ -44,186 +47,131 @@ else
 		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
 	}
 	
-	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_profile.tpl',
-		'ajax'		=> 'style/ajax_order.tpl',
-		'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	if ( request('add_field', 1) || request('add_cat', 1) )
-	{
-		$mode = ( request('add_field', 1) ) ? 'create' : '_create_cat';
-	
-		if ( $mode == 'create' )
-		{
-			list($cat_id) = each($_POST['add_field']);
-			$cat_id = intval($cat_id);
-			
-			$field_name = trim(htmlentities(str_replace("\'", "'", $_POST['field_name'][$cat_id]), ENT_COMPAT));
-		}
-	}
+	$base = ($settings['smain']['profile_switch']) ? 'drop:main' : 'radio:main';
+	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
 		switch ( $mode )
 		{
 			case 'create':
-		case 'update':
+			case 'update':
 			
 				$template->assign_block_vars('input', array());
 				
-				$template->assign_vars(array('FILE' => 'ajax_order'));
-				$template->assign_var_from_handle('AJAX', 'ajax');
+				$vars = array(
+					'profile' => array(
+						'title1' => 'input_data',
+						'profile_name'			=> array('validate' => TYP,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name', 'check' => true),
+						'type'					=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('combi', false, 'main')),
+						'main'					=> array('validate' => INT,	'explain' => false,	'type' => $base,		'divbox' => true, 'params' => array(false, true, false)),
+						'profile_field'			=> array('validate' => TXT,	'explain' => true,	'type' => 'text:25;25',	'divbox' => true, 'required' => array('input_fields', 'type', '1'), 'check' => true, 'prefix' => 'field_'),
+						'profile_typ'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:typ',	'divbox' => true, 'params' => array(false, true, false)),
+						'profile_lang'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+						'profile_show_user'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+						'profile_show_member'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+						'profile_show_register'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+						'profile_required'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+						'profile_order'			=> 'hidden',
+					)
+				);
 				
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
+					$name = ( isset($_POST['profile_name']) ) ? request('profile_name', TXT) : request('profile_field', TXT);
+					$type = ( isset($_POST['profile_name']) ) ? 0 : 1;
+					
 					$data_sql = array(
-								'profile_name'			=> $field_name,
-								'profile_cat'			=> $cat_id,
-								'profile_type'			=> '0',
-								'profile_field'			=> '',
-								'profile_language'		=> '0',
-								'profile_necessary'		=> '0',
-								'profile_show_guest'	=> '0',
-								'profile_show_member'	=> '0',
-								'profile_show_register'	=> '0',
-								'profile_order'			=> maxa(PROFILE, 'profile_order', $cat_id),
-							);
+						'profile_name'			=> $name,
+						'main'					=> $main,
+						'type'					=> $type,
+						'profile_field'			=> 'field_' . str_replace(' ', '_', strtolower($name)),
+						'profile_lang'			=> 0,
+						'profile_typ'			=> 0,
+						'profile_show_user'		=> 0,
+						'profile_show_member'	=> 0,
+						'profile_show_register'	=> 0,
+						'profile_required'		=> 0,
+						'profile_order'			=> 0,
+					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
-					$data_sql = data(PROFILE, $data_id, false, 1, 1);
+					$data_sql = data(PROFILE, $data, false, 1, true);
 				}
 				else
 				{
-					$data_sql = array(
-								'profile_name'			=> request('profile_name', 2),
-								'profile_cat'			=> request('profile_cat', 0),
-								'profile_type'			=> request('profile_type', 0),
-								'profile_field'			=> strtolower(str_replace('profile_', '', request('profile_field', 2))),
-								'profile_language'		=> request('profile_language', 0),
-								'profile_necessary'		=> request('profile_necessary', 0),
-								'profile_show_guest'	=> request('profile_show_guest', 0),
-								'profile_show_member'	=> request('profile_show_member', 0),
-								'profile_show_register'	=> request('profile_show_register', 0),
-								'profile_order'			=> request('profile_order', 0) ? request('profile_order', 0) : request('profile_order_new', 0),
-							);
-				}
-			
-				$data_cat = data(PROFILE_CAT, false, 'cat_order ASC', 1, false);
-				
-				for ( $i = 0; $i < count($data_cat); $i++ )
-				{
-					$template->assign_block_vars('input._cat', array(
-						'CAT_ID'	=> $data_cat[$i]['cat_id'],
-						'CAT_NAME'	=> $data_cat[$i]['cat_name'],
-
-						'S_MARK'	=> ( $data_cat[$i]['cat_id'] == $data['profile_cat'] ) ? 'checked="checked"' : '',
-					));
-				}
-				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-				$fields .= "<input type=\"hidden\" name=\"current_field\" value=\"" . $data['profile_field'] . "\" />";
-
-				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['field'], $data['profile_name']),
-				
-					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['field']),
-					'L_FIELD'		=> $lang['field'],
-					'L_CAT'			=> $lang['common_cat'],
-					'L_LANGUAGE'	=> $lang['common_language'],
-					'L_TYPE'		=> sprintf($lang['sprintf_type'], $lang['field']),
-					
-					'L_SHOW'		=> $lang['common_view'],
-					'L_GUEST'		=> sprintf($lang['sprintf_select_format'], $lang['show_guest']),
-					'L_MEMBER'		=> sprintf($lang['sprintf_select_format'], $lang['show_member']),
-					'L_REGISTER'	=> sprintf($lang['sprintf_select_format'], $lang['show_register']),
-					
-					'L_NECESSARY'	=> $lang['necessary'],
-
-					'L_TYPE_TEXT'	=> $lang['type_text'],
-					'L_TYPE_AREA'	=> $lang['type_area'],
-					
-					'NAME'			=> $data['profile_name'],
-					
-					'CUR_CAT'	=> $data['profile_cat'],
-					'CUR_ORDER'	=> $data['profile_order'],
-					
-					'FIELD'			=> str_replace('profile_', '', $data['profile_field']),
-					
-					'S_TYPE_AREA'	=> (!$data['profile_type'] ) ? ' checked="checked"' : '',
-					'S_TYPE_TEXT'	=> ( $data['profile_type'] ) ? ' checked="checked"' : '',
-					'S_LANG_NO'		=> (!$data['profile_language'] ) ? ' checked="checked"' : '',
-					'S_LANG_YES'	=> ( $data['profile_language'] ) ? ' checked="checked"' : '',
-					
-					'S_GUEST_NO'		=> (!$data['profile_show_guest'] ) ? ' checked="checked"' : '',
-					'S_GUEST_YES'		=> ( $data['profile_show_guest'] ) ? ' checked="checked"' : '',
-					'S_MEMBER_NO'		=> (!$data['profile_show_member'] ) ? ' checked="checked"' : '',
-					'S_MEMBER_YES'		=> ( $data['profile_show_member'] ) ? ' checked="checked"' : '',
-					'S_REGISTER_NO'		=> (!$data['profile_show_register'] ) ? ' checked="checked"' : '',
-					'S_REGISTER_YES'	=> ( $data['profile_show_register'] ) ? ' checked="checked"' : '',
-					'S_NECESSARY_NO'	=> (!$data['profile_necessary'] ) ? ' checked="checked"' : '',
-					'S_NECESSARY_YES'	=> ( $data['profile_necessary'] ) ? ' checked="checked"' : '',
-					
-					'S_ORDER'	=> simple_order(PROFILE, $data['profile_cat'], 'select', $data['profile_order']),
-					
-					'S_ACTION'	=> check_sid($file),
-					'S_FIELDS'	=> $fields,
-				));
-				
-				if ( $update )
-				{
-					$error[] = ( !$data['profile_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_name'] : '';
-					$error[] = ( !$data['profile_field'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_profilefield'] : '';
+					$data_sql = build_request(PROFILE, $vars, $error, $mode);
 					
 					if ( !$error )
 					{
-						$data['profile_field'] = 'profile_' . $data['profile_field'] . '';
-						$data['profile_order'] = ( !$data['profile_order'] ) ? maxa(PROFILE, 'profile_order', $data['profile_cat']) : $data['profile_order'];
+						$current_typ	= request('current_typ', INT);
+						$current_field	= request('current_field', TXT);
+						
+						if ( !$data_sql['type'] )
+						{
+							$data_sql['main'] = 0;
+							$data_sql['profile_field'] = '';
+						}
+						
+						switch ( $data_sql['profile_typ'] )
+						{
+							case PROFILE_TEXT: $typ = 'VARCHAR(255) NOT NULL'; break;
+							case PROFILE_AREA: $typ = 'TEXT NOT NULL'; break;
+							case PROFILE_TYPE: $typ = 'TINYINT(1) UNSIGNED NOT NULL'; break;
+						}
 						
 						if ( $mode == 'create' )
 						{
-							$db_data = sql(PROFILE, $mode, $data_sql);
+							$data_sql['profile_order'] = maxa(PROFILE, 'profile_order', 'main = ' . $data_sql['main']);
 							
-							$sql = "ALTER TABLE " . PROFILE_DATA . " ADD `" . $data['profile_field'] . "`";
-							$sql .= ( $data['profile_type'] ) ? " VARCHAR ( 255 ) NOT NULL;" : " TEXT NOT NULL;";
-							if ( !$db->sql_query($sql) )
+							if ( $data_sql['type'] )
 							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								sql(PROFILE_DATA, 'alter', array('part' => 'ADD `' . $data_sql['profile_field'] . '`', 'type' => $typ));
 							}
 							
-							$message = $lang['create']
-								. sprintf($lang['return'], check_sid($file), $acp_title);
+							$sql = sql(PROFILE, $mode, $data_sql);
+							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$db_data = sql(PROFILE, $mode, $data_sql, 'profile_id', $data);
-							
-							$sql = "ALTER TABLE " . PROFILE_DATA . " CHANGE `" . request('current_field', 1) . "` `" . $data['profile_field'] . "`";
-							$sql .= ( $data['profile_type'] ) ? " VARCHAR ( 255 ) NOT NULL;" : " TEXT NOT NULL;";
-							if ( !$db->sql_query($sql) )
+							if ( $data_sql['type'] && $current_field != $data_sql['profile_field'] )
 							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								sql(PROFILE_DATA, 'alter', array('part' => 'CHANGE `' . $current_field . '` `' . $data_sql['profile_field'] . '`', 'type' => $typ));
 							}
 							
-							$message = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$sql = sql(PROFILE, $mode, $data_sql, 'field_id', $data);
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
-						orders(PROFILE, $data['profile_cat']);
-						
-						log_add(LOG_ADMIN, $log, $mode, $db_data);
-						message(GENERAL_MESSAGE, $message);
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
 					}
 					else
 					{
 						error('ERROR_BOX', $error);
 					}
+					
 				}
+				
+				build_output(PROFILE, $vars, $data_sql);
+				
+				$fields .= '<input type="hidden" name="current_field" value="' . $data_sql['profile_field'] . '" />';
+
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['profile_name']),
+
+					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+					'S_FIELDS'	=> $fields,
+				));
 				
 				$template->pparse('body');
 				
@@ -285,149 +233,7 @@ else
 //				
 //				break;
 			
-			case 'create_cat':
-			case 'update_cat':
 			
-				$template->assign_block_vars('input_cat', array());
-				
-				if ( $mode == '_create_cat' && !$update )
-				{
-					$data_sql = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_order'	=> '',
-							);
-				}
-				else if ( $mode == '_update_cat' && !$update )
-				{
-					$data_sql = data(PROFILE_CAT, $data_cat, false, 1, 1);
-				}
-				else
-				{
-					$data_sql = array(
-								'cat_name'	=> request('cat_name', 2),
-								'cat_order'	=> request('cat_order', 0) ? request('cat_order', 0) : request('cat_order_new', 0),
-							);
-				}
-				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
-				
-				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
-					'L_INPUT'	=> sprintf($lang['sprintf' . str_replace('_cat', '', $mode)], $lang['profile_c'], $data['cat_name']),
-					'L_NAME'	=> sprintf($lang['sprintf_cat'], $lang['field']),
-					
-					'NAME'		=> $data['cat_name'],
-					
-					'S_ORDER'	=> simple_order(PROFILE_CAT, false, 'select', $data['cat_order']),
-					
-					'S_ACTION'	=> check_sid($file),
-					'S_FIELDS'	=> $fields,
-				));
-				
-				if ( $update )
-				{
-					debug($_POST);
-					
-					$data['cat_order'] = ( !$data['cat_order'] ) ? maxa(PROFILE_CAT, 'cat_order', false) : $data['cat_order'];
-					
-					$error[] = ( !$data['cat_name'] ) ? ( $error ? '<br />' : '' ) . $lang['msg_empty_name'] : '';
-					
-					if ( !$error )
-					{
-						if ( $mode == '_create_cat' )
-						{
-							$db_data = sql(PROFILE_CAT, $mode, $data_sql);
-							
-							$message = $lang['create_c']
-								. sprintf($lang['return'], check_sid($file), $acp_title);
-						}
-						else
-						{
-							foreach ( $data as $key => $var )
-							{
-								$input[] = "$key = '$var'";
-							}
-							
-							$sql = "UPDATE " . PROFILE_CAT . " SET " . implode(', ', $input) . " WHERE cat_id = $data_cat";
-						#	$sql = "UPDATE " . PROFILE_CAT . " SET cat_name = '$cat_name' WHERE cat_id = $data_cat";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							
-							$message = $lang['update_c'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&amp;$cat=$data_cat"));
-						}
-						
-						orders(PROFILE_CAT);
-						
-						log_add(LOG_ADMIN, $log, $mode, $data['cat_name']);
-						message(GENERAL_MESSAGE, $message);
-					}
-					else
-					{
-						error('ERROR_BOX', $error);
-					}
-				}
-				
-				$template->pparse('body');
-			
-				break;
-			
-			case 'order_cat':
-				
-				update(PROFILE_CAT, 'cat', $move, $data_cat);
-				orders(PROFILE_CAT);
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				
-				$index = true;
-				
-				break;
-				
-			case 'delete_cat':
-			
-				$data_sql = data(PROFILE_CAT, $data_cat, false, 1, 1);
-			
-				if ( $data_cat && $confirm )
-				{
-				#	sql(PROFILE_CAT, 'delete', false, 'cat_id', $data);
-					$sql = "DELETE FROM " . PROFILE_CAT . " WHERE cat_id = $data_cat";
-					if ( !$db->sql_query($sql) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					$message = $lang['delete_c'] . sprintf($lang['return'], check_sid($file), $acp_title);
-					
-					#$oCache -> sCachePath = './../cache/';
-					#$oCache -> deleteCache('_display_navi_news');
-					
-					orders(PROFILE_CAT);
-					
-					log_add(LOG_ADMIN, $log, $mode, $data['cat_name']);
-					message(GENERAL_MESSAGE, $message);
-				}
-				else if ( $data_cat && !$confirm )
-				{
-					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"$cat\" value=\"$data_cat\" />";
-		
-					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm_c'], $data['cat_name']),
-
-						'S_ACTION'	=> check_sid($file),
-						'S_FIELDS'	=> $fields,
-					));
-				}
-				else { message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['profile_cat'])); }
-				
-				$template->pparse('confirm');
-				
-				break;
-				
-			default: message(GENERAL_ERROR, $lang['msg_select_module']); break;
 		}
 	
 		if ( $index != true )
@@ -437,107 +243,117 @@ else
 		}
 	}
 	
-	$template->assign_block_vars('display', array());
-			
-	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['profile']),
-		'L_EXPLAIN'	=> $lang['explain'],
-		
-		'L_CREATE_CAT'		=> sprintf($lang['sprintf_create'], $lang['cat']),
-		'L_CREATE_FIELD'	=> sprintf($lang['sprintf_new_creates'], $lang['field']),
-		
-		'S_ACTION'	=> check_sid($file),
-	));
-	
-	$max = maxi(PROFILE_CAT, 'cat_order', '');
-	$tmp = data(PROFILE_CAT, false, 'cat_order ASC', 1, false);
-	
-	if ( $tmp )
+	if ( $main )
 	{
-		$cnt = count($tmp);
+		$template->assign_block_vars('list', array());
 		
-		for ( $i = 0; $i < $cnt; $i++ )
+		$tmp = data(PROFILE, false, 'main ASC, profile_order ASC', 1, false);
+		
+		$cat = $field = array();
+		
+		if ( $tmp )
 		{
-			$cid	= $tmp[$i]['cat_id'];
-			$name	= $tmp[$i]['cat_name'];
-			$order	= $tmp[$i]['cat_order'];
-			
-			$profile = data(PROFILE, 'profile_cat = ' . $cid, 'profile_cat, profile_order ASC', 1, false);
-			
-			$sql = "SELECT MAX(profile_order) AS max$cid FROM " . PROFILE . " WHERE profile_cat = $cid";
-			if ( !($result = $db->sql_query($sql)) )
+			foreach ( $tmp as $row )
 			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$max_profile = $db->sql_fetchrow($result);
-			
-			
-			
-			$template->assign_block_vars('display.cat_row', array( 
-				'ID'		=> $tmp[$i]['cat_id'],
-			#	'NAME'		=> $tmp[$i]['cat_name'],
-				
-				'NAME'		=> href('a_txt', $file, array('mode' => '_update_cat', $cat => $cid), $name, $name),
-				
-				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order_cat', 'move' => '-15', $cat => $cid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order_cat', 'move' => '+15', $cat => $cid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $cat => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $cat => $cid), 'icon_cancel', 'common_delete'),
-				
-			#	'MOVE_UP'	=> ( $tmp[$i]['cat_order'] != '10' )		? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=-15&amp;$cat=$cid") . '"><img src="' . $images['icon_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_u2'] . '" alt="" /></a>',
-			#	'MOVE_DOWN'	=> ( $tmp[$i]['cat_order'] != $max )	? '<a id="right" href="' . check_sid("$file?mode=_order_cat&amp;move=+15&amp;$cat=$cid") . '"><img src="' . $images['icon_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_d2'] . '" alt="" /></a>',
-				
-			#	'U_UPDATE'	=> check_sid("$file?mode=_update_cat&amp;$cat=$cid"),
-			#	'U_DELETE'	=> check_sid("$file?mode=_delete_cat&amp;$cat=$cid"),
-				
-				'S_NAME'	=> "field_name[$cid]",
-				'S_SUBMIT'	=> "add_field[$cid]",
-			));
-			
-			if ( !$profile )
-			{
-				$template->assign_block_vars('display.catrow._entry_empty', array());
-			}
-			else
-			{
-				for ( $j = 0; $j < count($profile); $j++ )
+				if ( $row['profile_id'] == $main )
 				{
-				#	$profile_id = $profile[$j]['profile_id'];
-				#	$profile_cat = $profile[$j]['profile_cat'];
-					
-					$pid	= $profile[$j]['profile_id'];
-					$pcat	= $profile[$j]['profile_cat'];
-					$name	= $profile[$j]['profile_name'];
-					$field	= $profile[$j]['profile_field'];
-					$order	= $profile[$j]['profile_order'];
-	
-					if ( $pcat == $cid )
-					{
-						$template->assign_block_vars('display.catrow._profile_row', array(
-							'NAME'		=> href('a_txt', $file, array('mode' => 'update', $url => $pid), $name, $name),
-							'FIELD'		=> $field,
-						
-							'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', $url => $pid), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-							'MOVE_DOWN'	=> ( $order != $max_profile['max' . $cid] ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', $url => $pid), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-			
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', $url => $pid), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', $url => $pid), 'icon_cancel', 'common_delete'),
-						#
-						#	'NAME'	=> $profile[$j]['profile_name'],
-						#	'FIELD'	=> $profile[$j]['profile_field'],
-							
-						#	'MOVE_UP'	=> ( $profile[$j]['profile_order'] != '10' )						? '<a href="' . check_sid("$file?mode=_order_field&amp;cat_type=$cid&amp;move=-15&amp;$url=$pid") . '"><img src="' . $images['icon_arrow_u'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_u2'] . '" alt="" />',
-						#	'MOVE_DOWN'	=> ( $profile[$j]['profile_order'] != $max_profile['max' . $cid] )	? '<a href="' . check_sid("$file?mode=_order_field&amp;cat_type=$cid&amp;move=+15&amp;$url=$pid") . '"><img src="' . $images['icon_arrow_d'] . '" alt="" /></a>' : '<img src="' . $images['icon_arrow_d2'] . '" alt="" />',
-							
-						#	'U_UPDATE' => check_sid("$file?mode=_update&amp;$url=$pid"),
-						#	'U_DELETE' => check_sid("$file?mode=_delete&amp;$url=$pid"),
-						));
-					}
+					$cat = $row;
+				}
+				else if ( $row['main'] == $main )
+				{
+					$field[] = $row;
 				}
 			}
+			
+			$cid = $cat['profile_id'];
+		
+			$template->assign_vars(array(
+				'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
+				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cat['profile_name'], $cat['profile_name']),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+				
+				'S_NAME'	=> "profile_fields[$cid]",
+				'S_SUBMIT'	=> "submit_field[$cid]",
+				
+				'S_ACTION'	=> check_sid($file),
+				'S_FIELDS'	=> $fields,
+			));
+			
 		}
+		
+		if ( $field )
+		{
+			$max = count($field);
+			
+			foreach ( $field as $row )
+			{
+				$fid	= $row['profile_id'];
+				$order	= $row['profile_order'];
+				$name	= isset($lang[$row['profile_name']]) ? $lang[$row['profile_name']] : $row['profile_name'];
+				
+				$template->assign_block_vars('list.row', array(
+					'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $name, $name),
+					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'common_delete'),
+					
+					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $cid, 'type' => 2, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $cid, 'type' => 2, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+					
+					
+				));
+			}
+		}
+		else
+		{
+			$template->assign_block_vars('list.empty', array());
+		}
+		
+		$fields .= '<input type="hidden" name="mode" value="create" />';
+		$fields .= '<input type="hidden" name="main" value="' . $main . '" />';
 	}
+	else
+	{
+		$template->assign_block_vars('display', array());
+		
+		$tmp = data(PROFILE, 'type = 0', 'profile_order ASC', 1, false);
+		
+		if ( $tmp )
+		{
+			$cnt = count($tmp);
+		
+			foreach ( $tmp as $row )
+			{
+				$id	= $row['profile_id'];
+				$order	= $row['profile_order'];
+				
+				$name	= ( isset($lang[$row['profile_name']]) ) ? $lang[$row['profile_name']] : $row['profile_name'];
+				
+				$template->assign_block_vars('display.row', array( 
+					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
+					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					
+					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'	=> ( $order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				));
+			}
+		}
+		
+		$fields	.= '<input type="hidden" name="mode" value="create" />';
+	}
+	
+	$template->assign_vars(array(
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_EXPLAIN'	=> $lang['explain'],
+		'L_NAME'	=> $lang['type_0'],
+		
+		'L_CREATE_CAT'		=> sprintf($lang['sprintf_create'], $lang['type_0']),
+		'L_CREATE_FIELD'	=> sprintf($lang['sprintf_create'], $lang['type_1']),
+		
+		'S_ACTION'	=> check_sid($file),
+		'S_FIELDS'	=> $fields,
+	));
 
 	$template->pparse('body');
 

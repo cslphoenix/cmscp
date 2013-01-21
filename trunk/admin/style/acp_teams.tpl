@@ -1,42 +1,37 @@
+<li class="header">{L_HEAD}<span class="right">{L_OPTION}</span></li>
+<p>{L_EXPLAIN}</p>
+
 <!-- BEGIN input -->
 <script type="text/javascript">
-// <![CDATA[
 
 function update_image(newimage)
 {
 	document.getElementById('image').src = (newimage) ? "{IPATH}" + encodeURI(newimage) : "./../images/spacer.gif";
 }
 
-// ]]>
 </script>
-{TINYMCE}
-<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
-<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-<!-- BEGIN member -->
-<li><a href="{S_MEMBER}">{L_MEMBER}</a></li>
-<!-- END member -->
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
+<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
+<br />
 {ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
-<!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
-<dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
-	<dd>{input.row.tab.option.OPTION}</dd>
-</dl>
-</div>
-<!-- END option -->
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
+	<!-- BEGIN option -->
+	{input.row.tab.option.DIV_START}
+	<dl>			
+		<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+		<dd>{input.row.tab.option.OPTION}</dd>
+	</dl>
+	{input.row.tab.option.DIV_END}
+	<!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -52,13 +47,7 @@ function update_image(newimage)
 <!-- BEGIN member -->
 {AJAX}
 <form action="{S_ACTION}" method="post" id="list" name="list">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_INPUT}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBER}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_MEMBERS_EXPLAIN}</li></ul>
-
+<br />
 {ERROR_BOX}
 
 <table class="normal">
@@ -68,15 +57,15 @@ function update_image(newimage)
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_JOIN}</a></li></ul></th>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_RANK}</a></li></ul></th>
 </tr>
-<!-- BEGIN mod -->
-<tr onclick="checked({member.mod.ID})" class="hover">
-	<td>{member.mod.NAME}</td>
-	<td>{member.mod.REG}</td>
-	<td>{member.mod.JOIN}</td>
-	<td>{member.mod.RANK}</td>
-	<td><input type="checkbox" name="member[]" value="{member.mod.ID}" id="check_{member.mod.ID}"></td>
+<!-- BEGIN moderators -->
+<tr onclick="checked({member.moderators.ID})" class="hover">
+	<td>{member.moderators.NAME}</td>
+	<td>{member.moderators.REG}</td>
+	<td>{member.moderators.JOIN}</td>
+	<td>{member.moderators.RANK}</td>
+	<td><input type="checkbox" name="member[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
 </tr>
-<!-- END mod -->
+<!-- END moderators -->
 <!-- BEGIN no_moderators -->
 <tr>
 	<td class="empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
@@ -93,19 +82,19 @@ function update_image(newimage)
 	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_JOIN}</a></li></ul></th>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_RANK}</a></li></ul></th>
 </tr>
-<!-- BEGIN mem -->
+<!-- BEGIN members -->
 <!--<tr class="hover">-->
 <tr>
-	<td><label for="check_{member.mem.ID}">{member.mem.NAME}</label></td>
-	<td><label for="check_{member.mem.ID}">{member.mem.REG}</label></td>
-	<td><label for="check_{member.mem.ID}">{member.mem.JOIN}</label></td>
-	<td><label for="check_{member.mem.ID}">{member.mem.RANK}</label></td>
-	<td><input type="checkbox" name="member[]" value="{member.mem.ID}" id="check_{member.mem.ID}"></td>
+	<td><label for="check_{member.members.ID}">{member.members.NAME}</label></td>
+	<td><label for="check_{member.members.ID}">{member.members.REG}</label></td>
+	<td><label for="check_{member.members.ID}">{member.members.JOIN}</label></td>
+	<td><label for="check_{member.members.ID}">{member.members.RANK}</label></td>
+	<td><input type="checkbox" name="member[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
 </tr>
-<!-- END mem -->
+<!-- END members -->
 <!-- BEGIN no_members -->
 <tr>
-	<td class="empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
+	<td class="empty" colspan="5" align="center">{L_NO_MEMBERS}</td>
 </tr>
 <!-- END no_members -->
 </table>
@@ -113,7 +102,7 @@ function update_image(newimage)
 <table class="rfooter">
 <tr>
 	<td>{S_OPTIONS}</td>
-	<td><div id="ajax_content"></div></td>
+	<td><div id="close"></div><div id="ajax_content"></div></td>
 	<td><input type="submit" value="{L_SUBMIT}" /></td>
 </tr>
 <tr>
@@ -163,14 +152,6 @@ function update_image(newimage)
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<p>{L_EXPLAIN}</p>
-
-<br />
-
 <table class="rows">
 <tr>
 	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
@@ -179,7 +160,7 @@ function update_image(newimage)
 <!-- BEGIN row -->
 <tr>
 	<td><span class="right">{display.row.COUNT}</span>{display.row.GAME}{display.row.NAME}</td>
-	<td>{display.row.MEMBER}{display.row.MOVE_UP}{display.row.MOVE_DOWN}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.MEMBER}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
 <!-- BEGIN empty -->

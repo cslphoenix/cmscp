@@ -30,6 +30,8 @@ $lang = array_merge($lang, array(
 	'site_gallery_explain'	=> 'Standarteinstellungen für das erstellen neuer Galerien, es kann aber jede Galerie eingenständig verwaltet werden von den Rechten. Die Rechte sind nur mit den vorhergesehen Gruppen verbunden, Leader Rechte beziehen sich nur auf die Benutzer die in der Gruppe Leader sind. Für weitere Infos einfach auf der Entwicklerhauptseite informieren.',
 	'site_rating'			=> 'Bewertungseinstellungen',
 	'site_rating_explain'	=> 'blub2',
+	'site_smain'			=> 'Einstellungen für Subansichten',
+	'site_smain_explain'	=> 'blub2',
 	'site_ftp'				=> 'FTP Rechte',
 	'site_ftp_explain'		=> 'Hier kannst Du Notfalls FTP Rechte eingestellt werden, FTP-Benutzername und FTP-Passwort sind notwendig!',
 	'site_phpinfo'			=> 'Support Infos',
@@ -276,6 +278,30 @@ $lang = array_merge($lang, array(
 	'auth_gallery_leader'	=> 'Leader',
 	'auth_gallery_uploader'	=> 'Uploader',
 	
+	'radio:switch'	=> array(0 => 'Dropdown', 1 => 'Radio-Buttons'),
+	
+	'dl'	=> 'Download',
+	'dl_switch' => 'Anzeige',
+	'dl_entrys' => 'Einträge',
+	
+	'profile'	=> 'Profilfelder',
+	'profile_switch' => 'Anzeige',
+	'profile_entrys' => 'Felder anzeigen',
+	
+	'gallery'	=> 'Galerie',
+	'gallery_switch' => 'Anzeige',
+	'gallery_entrys' => 'Bilder anzeigen',
+	
+	'forum'	=> 'Galerie',
+	'forum_switch' => 'Anzeige',
+	'forum_entrys' => 'Foren anzeigen',
+	'forum_subs' => 'Unterforen anzeigen',
+	
+	'menu'	=> 'Menü',
+	'menu_switch' => 'Anzeige',
+	'menu_entrys' => 'Labels anzeigen',
+	'menu_subs' => 'Menüpunkte anzeigen',
+	
 ));
 
 $lang = array_merge($lang, array(
@@ -289,6 +315,7 @@ $lang = array_merge($lang, array(
 		'match'		=> $lang['site_match'],
 		'gallery'	=> $lang['site_gallery'],
 		'rating'	=> $lang['site_rating'],
+		'smain'		=> $lang['site_smain'],
 		'ftp'		=> $lang['site_ftp'],
 		'phpinfo'	=> $lang['site_phpinfo'],
 	),

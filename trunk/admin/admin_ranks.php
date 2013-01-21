@@ -15,7 +15,7 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$update = ( isset($_POST['submit']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
 	$current = 'acp_ranks';
 	
@@ -53,7 +53,7 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	$mode = ( in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete')) ) ? $mode : '';
+	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down'))) ? $mode : false;
 	
 	debug($_POST, '_POST');
 	
@@ -69,17 +69,18 @@ else
 								
 				$vars = array(
 					'rank' => array(
-						'title1' => 'input',
-						'rank_name'			=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
-						'rank_image'		=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:image', 'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
-						'rank_type'			=> array('validate' => INT,	'explain' => false, 'type' => 'radio:ranks', 'params' => true, 'ajax' => 'ajax_order:ajax_order'),
-						'rank_special'		=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
-						'rank_min'			=> array('validate' => INT,	'explain' => false, 'type' => 'text:5;5', 'trid' => true),
+						'title1' => 'input_data',
+						'rank_name'			=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
+						'rank_image'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image', 'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
+						'rank_type'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:ranks', 'params' => array('type', true, false)),
+						'rank_special'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'params' => array(false, false, false), 'divbox' => true),
+						'rank_standard'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'params' => array(false, false, false), 'divbox' => true),
+						'rank_min'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:5;5', 'divbox' => true),
 						'rank_order'		=> 'hidden',
 					)
 				);
 				
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
 					$type = ( isset($_POST['rank_type']) ) ? key($_POST['rank_type']) : '';
 					$name = ( isset($_POST['rank_name']) ) ? $_POST['rank_name'][$type] : '';
@@ -91,47 +92,33 @@ else
 						'rank_special'	=> 0,
 						'rank_image'	=> '',
 						'rank_standard'	=> 0,
-					#	'rank_order'	=> maxa(RANKS, 'rank_order', "rank_type = $type"),
 						'rank_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(RANKS, $data, false, 1, true);
 				}
 				else
 				{
-					$data_sql = array(
-						'rank_name'		=> request('rank_name', 2),
-						'rank_type'		=> request('rank_type', 0),
-						'rank_min'		=> request('rank_min', 0),
-						'rank_image'	=> request('rank_image', 2),
-						'rank_special'	=> request('rank_special', 0),						
-						'rank_standard'	=> request('rank_standard', 0),
-						'rank_order'	=> request('rank_order', 0) ? request('rank_order', 0) : request('rank_order_new', 0),
-					);
-					
 					$data_sql = build_request(RANKS, $vars, $error, $mode);
-					
-				#	$error[] = check(RANKS, array('rank_name' => $data['rank_name'], 'rank_id' => $data_id), $error);
 					
 					if ( !$error )
 					{
-						$data['rank_order'] = !$data['rank_order'] ? maxa(RANKS, 'rank_order', 'rank_type = ' . $data['rank_type']) : $data['rank_order'];
-						( $data['rank_standard'] ) ? sql(RANKS, 'update', array('rank_standard' => '0'), 'rank_type', $data['rank_type']) : '';
+						($data_sql['rank_standard']) ? sql(RANKS, 'update', array('rank_standard' => '0'), 'rank_type', $data_sql['rank_type']) : '';
 												
 						if ( $mode == 'create' )
 						{
+							$data_sql['rank_order'] = maxa(RANKS, 'rank_order', 'rank_type = ' . $data_sql['rank_type']);
+							
 							$sql = sql(RANKS, $mode, $data_sql);
 							$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
 							$sql = sql(RANKS, $mode, $data_sql, 'rank_id', $data);
-							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
-						
-						orders(RANKS, $data['rank_type']);
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
 						message(GENERAL_MESSAGE, $msg);
@@ -144,13 +131,9 @@ else
 				
 				build_output(RANKS, $vars, $data_sql);
 				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-				
 				$template->assign_vars(array(
-					'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'			=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['rank_name']),
-					'L_NAME'			=> sprintf($lang['sprintf_name'], $lang['title']),
+					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], lang($data_sql['rank_name'])),
+					'L_EXPLAIN'	=> $lang['common_required'],
 					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -159,66 +142,17 @@ else
 				$template->pparse('body');
 				
 				break;
-			
+				
 			case 'move_up':
 			case 'move_down':
 			
-				$sql = "SELECT rank_id, rank_order FROM RANKS WHERE rank_type = $data_type ORDER BY rank_order ASC";
-			#	debug($sql);
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				while ( $row = $db->sql_fetchrow($result) )
-				{
-					$menu[$row['rank_id']] = $row['rank_order'];
-				}
-				
-			#	debug($menu);
-				
-				foreach ( $menu as $keys => $value )
-				{
-					if ( $value == $data_order )
-					{
-						$menu[$keys] = $value + (($mode == 'move_up') ? - '1.5' : + '1.5');
-					}
-				}
-				
-			#	debug($menu);
-				
-				asort($menu);
-				
-				$i = 1;
-	
-				foreach ( $menu as $key => $row )
-				{
-					$sql = 'UPDATE ' . RANKS . ' SET rank_order = ' . $i . ' WHERE rank_id = ' . $key;
-					if ( !$db->sql_query($sql) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					$i += 1;
-				}
-				
+				move(RANKS, $mode, $order, false, false, false, false, $type);
 				log_add(LOG_ADMIN, $log, $mode);
 			
 				$index = true;
 				
 				break;
 			
-			case 'order':
-				
-				update(RANKS, 'rank', $move, $data_id);
-				orders(RANKS, $data_type);
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				
-				$index = true;
-				
-				break;
-				
 			case 'delete':
 			
 				/*	im moment wird der rang einfach gelöscht, sollte aber meldung geben falls rang verwendet wird und löschung sperren!	*/
@@ -265,8 +199,6 @@ else
 				break;
 		}
 	
-	
-
 		if ( $index != true )
 		{
 			include('./page_footer_admin.php');
@@ -375,19 +307,21 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-		'L_CREATE'		=> sprintf($lang['sprintf_new_createn'], $lang['title']),
-		'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['title']),
-		'L_EXPLAIN'		=> $lang['explain'],
+		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_EXPLAIN'	=> $lang['explain'],
 		
-		'L_PAGE'		=> $lang['rank_page'],
-		'L_FORUM'		=> $lang['rank_forum'],
-		'L_TEAM'		=> $lang['rank_team'],
+		'L_PAGE'		=> $lang['rank_1'],
+		'L_FORUM'		=> $lang['rank_2'],
+		'L_TEAM'		=> $lang['rank_3'],
+		
 		'L_SPECIAL'		=> $lang['rank_special'],
 		'L_STANDARD'	=> $lang['rank_standard'],
 		'L_MIN'			=> $lang['rank_min'],
 		
-		'S_CREATE'		=> check_sid("$file?mode=create"),
+		'L_CREATE_PAGE'		=> sprintf($lang['sprintf_create'], $lang['type_1']),
+		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_create'], $lang['type_2']),
+		'L_CREATE_TEAM'		=> sprintf($lang['sprintf_create'], $lang['type_3']),
+		
 		'S_ACTION'		=> check_sid($file),
 		'S_FIELDS'		=> $fields,
 	));

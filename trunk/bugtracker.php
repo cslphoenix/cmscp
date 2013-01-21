@@ -128,8 +128,8 @@ if ( $mode == 'list' )
 			{ 
 				$time = sprintf($lang['yesterday_at'], create_date($config['default_timeformat'], $bugtracker_data[$i]['bugtracker_create'], $userdata['user_timezone'])); 
 			}
-			$user	= '<a href="' . check_sid('profile.php?' . POST_USER . '=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
-			$user2	= '<a href="' . check_sid('profile.php?' . POST_USER . '=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
+			$user	= '<a href="' . check_sid('profile.php?id=' . $bugtracker_data[$i]['user_id1']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name1'] . '</a>';
+			$user2	= '<a href="' . check_sid('profile.php?id=' . $bugtracker_data[$i]['user_id2']) . '" style="color:' . $bugtracker_data[$i]['user_color1'] . '">' . $bugtracker_data[$i]['user_name2'] . '</a>';
 			
 			foreach ( $lang['bt_error'] as $key_t => $value_t )
 			{
@@ -425,7 +425,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 			}
 
 			$comment = html_entity_decode($comment_entry[$i]['poster_text'], ENT_QUOTES);
-			$userurl = '<a href="' . check_sid('profile.php?mode=details&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['user_name'] . '</a>';
+			$userurl = '<a href="' . check_sid('profile.php?mode=details&amp;id=' . $row['user_id']) . '"' . $comment_entry[$i]['user_color'] .'>' . $comment_entry[$i]['user_name'] . '</a>';
 
 			$template->assign_block_vars('details.bt_comment.row', array(
 				'CLASS' 		=> $class,
@@ -435,8 +435,8 @@ else if ( $mode == 'details' && $bugtracker_id )
 				'DATE'			=> create_date($userdata['user_dateformat'], $comment_entry[$i]['time_create'], $userdata['user_timezone']),
 				'ICON'			=> $icon,
 
-				'U_EDIT'		=> check_sid('match.php?mode=edit&amp;' . POST_MATCH . '=' . $comment_entry[$i]['bugtracker_id']),
-				'U_DELETE'		=> check_sid('match.php?mode=delete&amp;' . POST_MATCH . '=' . $comment_entry[$i]['bugtracker_id'])
+				'U_EDIT'		=> check_sid('match.php?mode=edit&amp;id=' . $comment_entry[$i]['bugtracker_id']),
+				'U_DELETE'		=> check_sid('match.php?mode=delete&amp;id=' . $comment_entry[$i]['bugtracker_id'])
 			));
 		}
 	
@@ -553,7 +553,7 @@ else if ( $mode == 'details' && $bugtracker_id )
 //		'MATCH_MAIN'			=> '<a href="' . check_sid('match.php') . '">&raquo; Übersicht</a>',
 //	
 //		'S_HIDDEN_FIELDB'		=> $s_hidden_fieldb,
-//		'S_MATCH_ACTION'		=> check_sid('match.php?mode=details&amp;' . POST_MATCH . '=' . $bugtracker_id)
+//		'S_MATCH_ACTION'		=> check_sid('match.php?mode=details&amp;id=' . $bugtracker_id)
 	));
 }
 else

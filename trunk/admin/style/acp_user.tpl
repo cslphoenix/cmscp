@@ -1,10 +1,8 @@
+<li class="header">{L_HEAD}</li>
+<p>{L_EXPLAIN}</p>
+
 <!-- BEGIN head -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-</ul>
-<p>{L_EXPLAIN}</p>
 <ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
 </form>
 
@@ -96,6 +94,78 @@
 </table>
 {S_FIELDS}
 </form>
+
+<script type="text/javascript">
+
+function display_options(value)
+{
+	if ( value == '0' )
+	{
+		dE('password_input', -1);
+		dE('password_random', 1);
+	}
+	else
+	{
+		dE('password_input', 1);
+		dE('password_random', -1);
+	}
+}
+</script>
+<form action="{S_ACTION}" method="post">
+{ERROR_BOX}
+
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{input.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+{input.row.tab.option.DIV_END}
+<!-- END option -->
+
+<div id="password_input" style="display:{NONE_INPUT};">
+<dl>
+	<dt><label for="password_new">{L_PASSWORD}:</label></dt>
+	<dd><input type="password" name="password_new" id="password_new" value="" autocomplete="off"></dd>
+</dl>
+<dl>
+	<dt><label for="password_confirm">{L_PASSWORD_CONFIRM}:</label></dt>
+	<dd><input type="password" name="password_confirm" id="password_confirm" value="" autocomplete="off"></dd>
+</dl>
+</div>
+
+<div id="password_random" style="display:{NONE_PASSWORD};">
+<dl>
+	<dt><label>{L_PASSWORD}:</label></dt>
+	<dd><label><input type="radio" name="password" value="0" /> {PASS_1}</label><br />
+		<label><input type="radio" name="password" value="1" /> {PASS_2}</label><br />
+		<label><input type="radio" name="password" value="2" /> {PASS_3}</label><br />
+		<label><input type="radio" name="password" value="3" /> {PASS_4}</label><br />
+		<label><input type="radio" name="password" value="4" /> {PASS_5}</label><br />
+		<label><input type="radio" name="password" value="5" /> {PASS_6}</label>
+	</dd>
+</dl>
+</div>
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+
 <!-- END input -->
 
 <!-- BEGIN settings -->
@@ -186,16 +256,50 @@ function activate_checkbox(name)
 }
 </script>
 
+<fieldset>
+	<legend>{L_GROUPS}</legend>
+	<!-- BEGIN row_group -->
+	<dl>			
+		<dt><label for="{groups.row_group.GROUP_FIELD}" title="{groups.row_group.GROUP_INFO}">{groups.row_group.GROUP_NAME}:</label></dt>
+		<dd><label><input type="radio" onClick="activate_checkbox('checkbox_group_{groups.row_group.S_MARK_ID}');" name="{groups.row_group.S_MARK_NAME}" id="{groups.row_group.GROUP_FIELD}" value="{groups.row_group.S_MARK_ID}" {groups.row_group.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.row_group.S_MARK_ID}');" name="{groups.row_group.S_MARK_NAME}" value="{groups.row_group.S_NEG_MARK_ID}" {groups.row_group.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.row_group.S_MARK_ID}" name="mod_group_{groups.row_group.S_MARK_ID}" {groups.row_group.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.row_group.RIGHT} {groups.row_group.U_USER_PENDING}</dd>
+	</dl>
+	<!-- END row_group -->
+	<br />
+	<dl>			
+		<dt><label for="email_group">{L_MAIL}</label></dt>
+		<dd><label><input type="radio" name="email_group" id="email_group" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_group" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
+	</dl>
+	
+</fieldset>
+
+<br />
+
+<fieldset>
+	<legend>{L_TEAMS}</legend>
+	<!-- BEGIN row_team -->
+	<dl>			
+		<dt>{groups.row_team.U_TEAM_NAME}</dt>
+		<dd><label><input type="radio" onClick="activate_checkbox('checkbox_team_{groups.row_team.S_MARK_ID}');" name="{groups.row_team.S_MARK_NAME}" value="{groups.row_team.S_MARK_ID}" {groups.row_team.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.row_team.S_MARK_ID}');" name="{groups.row_team.S_MARK_NAME}" value="{groups.row_team.S_NEG_MARK_ID}" {groups.row_team.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.row_team.S_MARK_ID}" name="mod_team_{groups.row_team.S_MARK_ID}" {groups.row_team.S_MOD_TEAM} />&nbsp;{L_MOD}</label></dd>
+	</dl>
+	<!-- END row_team -->
+	<br />
+	<dl>			
+		<dt><label for="email_group">{L_MAIL}</label></dt>
+		<dd><label><input type="radio" name="email_team" id="email_team" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_team" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
+	</dl>
+	
+</fieldset>
+
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_GROUPS}</a></li></ul>
 
 <table class="update2">
-<!-- BEGIN group_row -->
+<!-- BEGIN group_row ->
 <tr>
 	<td class="row1"><label for="{groups.group_row.GROUP_FIELD}" title="{groups.group_row.GROUP_INFO}">{groups.group_row.GROUP_NAME}:</label></td>
 	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_group_{groups.group_row.S_MARK_ID}');" name="{groups.group_row.S_MARK_NAME}" id="{groups.group_row.GROUP_FIELD}" value="{groups.group_row.S_MARK_ID}" {groups.group_row.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.group_row.S_MARK_ID}');" name="{groups.group_row.S_MARK_NAME}" value="{groups.group_row.S_NEG_MARK_ID}" {groups.group_row.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.group_row.S_MARK_ID}" name="mod_group_{groups.group_row.S_MARK_ID}" {groups.group_row.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.group_row.RIGHT} {groups.group_row.U_USER_PENDING}
 	</td>
 </tr>
-<!-- END group_row -->
+<-- END group_row -->
 <tr>
 	<td colspan="2"></td>
 </tr>
@@ -209,12 +313,12 @@ function activate_checkbox(name)
 <tr>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_TEAMS}</a></li></ul></th>
 </tr>
-<!-- BEGIN team_row -->
+<!-- BEGIN team_row ->
 <tr>
 	<td class="row1">{groups.team_row.U_TEAM_NAME}</td>
 	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_team_{groups.team_row.S_MARK_ID}');" name="{groups.team_row.S_MARK_NAME}" value="{groups.team_row.S_MARK_ID}" {groups.team_row.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.team_row.S_MARK_ID}');" name="{groups.team_row.S_MARK_NAME}" value="{groups.team_row.S_NEG_MARK_ID}" {groups.team_row.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.team_row.S_MARK_ID}" name="mod_team_{groups.team_row.S_MARK_ID}" {groups.team_row.S_MOD_TEAM} />&nbsp;{L_MOD}</label></td>
 </tr>
-<!-- END team_row -->
+<-- END team_row -->
 <tr>
 	<td colspan="2"></td>
 </tr>
@@ -320,12 +424,6 @@ function fill(thisValue)
 
 </script>
 <form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_CREATE}">{L_CREATE}</a></li>
-</ul>
-<p>{L_EXPLAIN}</p>
-
 <table class="rows">
 <tr>
 	<th>{L_NAME}</th>
@@ -342,12 +440,12 @@ function fill(thisValue)
 <table class="footer">
 <tr>
 	<td>
-		<input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 1, 0);" onblur="fill();" autocomplete="off"> <input type="submit" class="button2" value="{L_UPDATE} / {L_CREATE}">
+		<input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 1, 0);" onblur="fill();" autocomplete="off">
 		<div class="suggestionsBox" id="suggestions" style="display:none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
 		</div>
 	</td>
-	<td></td>
+	<td><input type="submit" value="{L_UPDATE} / {L_CREATE}"></td>
 	<td></td>
 	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>

@@ -18,7 +18,7 @@ if ( isset($_POST['type']) )
 	$meta = $_POST['meta'];
 	$name = $_POST['name'];
 	
-	$sql = "SELECT * FROM " . MENU2 . " ORDER BY main ASC, menu_order ASC";
+	$sql = "SELECT * FROM " . MENU . " ORDER BY main ASC, menu_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);

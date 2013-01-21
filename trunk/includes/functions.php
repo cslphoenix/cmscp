@@ -1,20 +1,21 @@
 <?php
 
 /*
+ * Prüft ob der Eintrag im Langarray vorhanden ist.
+ */
+function lang($lng)
+{
+	global $lang;
+	
+	return isset($lang[$lng]) ? $lang[$lng] : $lng;
+}
+
+/*
  * Idee von phpBB3
  */
 
 function request($request_var, $request_type, $filter = '')
 {
-#	global $_POST, $_GET;
-#	global $_SERVER;
-
-#	debug($_SERVER);
-	
-#	$request = $_SERVER['REQUEST_METHOD'];
-	
-#	debug($_SERVER);
-
 	$tmp = '';
 	
 	if ( is_array($request_var) )
@@ -36,7 +37,7 @@ function request($request_var, $request_type, $filter = '')
 	}
 	else
 	{
-		$tmp = ( isset($_POST[$request_var]) || isset($_GET[$request_var]) ) ? ( isset($_POST[$request_var]) ) ? $_POST[$request_var] : $_GET[$request_var] : '';
+		$tmp = ( isset($_POST[$request_var]) || isset($_GET[$request_var]) ) ? (isset($_POST[$request_var])) ? $_POST[$request_var] : $_GET[$request_var] : '';
 #		$tmp = ( $request == 'POST' ) ? $_POST[$request_var] : $_GET[$request_var];
 	}
 	
@@ -46,6 +47,88 @@ function request($request_var, $request_type, $filter = '')
 	
 #	if ( $tmp != '' )
 #	{
+#	debug($request_type, $tmp);
+
+	if ( is_array($tmp) )
+	{
+	#	if ( is_array($tmp) && ( count($tmp) >= 1 || ( $opt == 'user_month' || $typ == 'training' || $typ == 'match' ) ) )
+	#	{
+		#	debug($tmp, print_r($request_var));
+		
+	#	debug($tmp, 'tmp');
+		
+		foreach ( $tmp as $key => $value )
+		{
+			if ( is_array($value) )
+			{
+				$v_tmp = array();
+				
+				foreach ( $value as $k_key => $v_value )
+				{
+					if ( $request_type == INT )
+					{
+						$v_tmp[$key][] = intval($v_value);
+					}
+					else if ( $request_type == TXT )
+					{
+						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT));
+					}
+					else
+					{
+						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT));
+					}
+				}
+				
+				$var[$key] = $v_tmp[$key];
+			}
+			else
+			{
+				if ( $request_type == INT )
+				{
+					$_tmp[$key] = intval($value);
+				}
+				else if ( $request_type == TXT )
+				{
+					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT));
+				}
+				else
+				{#
+					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT));
+				}
+				
+				$var[$key] = $_tmp[$key];
+			}
+		}
+	}
+	else
+	{
+		switch ( $request_type )
+		{
+			case INT: $var = ( isset($tmp) ) ? intval($tmp) : ''; break;
+			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? intval($tmp) : trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT)) : ''; break;
+			case URL:
+				
+				if ( $tmp != '' )
+				{
+					if ( !preg_match('#^http[s]?:\/\/#i', $tmp) )
+					{
+						$tmp = 'http://' . $tmp;
+					}
+			
+					if ( !preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $tmp) )
+					{
+						$tmp = '';
+					}
+				}
+				
+				break;	
+		}
+	}
+
+		/*
 		switch ( $request_type )
 		{
 			//	int = Zahlen
@@ -57,16 +140,12 @@ function request($request_var, $request_type, $filter = '')
 			//	ulr = URL
 			//	image = Image	not work
 
-			case 'int':		$var = ( isset($tmp) ) ? (int) $tmp : (int) 0; break;
-			case 'type':	$var = ( isset($tmp) ) ? ( is_numeric($tmp) ) ? (int) $tmp : (string) trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
-			
-			
-			case 'text':	$var = ( isset($tmp) ) ? (string) trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
-			
-			case 'clean':	$var = ( isset($tmp) ) ? (string) trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
-			case 'html':	$var = ( isset($tmp) ) ? (string) trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT)) : ''; break;
-			case 'array':	
-							$tmp_tmp = '';
+			case INT: $var = ( isset($tmp) ) ? intval($tmp) : ''; break;
+			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? intval($tmp) : trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT)) : ''; break;
+			case ARY: $tmp_tmp = '';
 							
 					#		debug($typ, 'opt');
 					#		debug($tmp, 'ary request!');
@@ -84,8 +163,8 @@ function request($request_var, $request_type, $filter = '')
 									{
 										switch ( $filter )
 										{
-											case 'int':	$tmp_var = intval($tmp_value); break;
-											case 'text':$tmp_var = trim(str_replace("'", "\'", $tmp_value)); break;
+											case 'int':	$tmp_var = (int) $tmp_value; break;
+											case 'text':$tmp_var = trim(htmlspecialchars($tmp_value, ENT_COMPAT)); break;
 											case 'url': if ( !preg_match('#^http[s]?:\/\/#i', $tmp_value) )
 														{
 															$tmp_var = 'http://' . $tmp_value;
@@ -96,7 +175,7 @@ function request($request_var, $request_type, $filter = '')
 															$tmp_var = '';
 														}
 														break;
-											default: $tmp_var = str_replace("'", "\'", $tmp_value); break;
+											default: $tmp_var = trim(htmlspecialchars($tmp_value, ENT_COMPAT)); break;
 										}
 									}
 									
@@ -126,8 +205,9 @@ function request($request_var, $request_type, $filter = '')
 							}
 					break;	
 					
-			default:	$var = str_replace("'", "\'", $tmp); break;
+			default:	$var = trim(htmlspecialchars($var, ENT_COMPAT)); break;
 		}
+		*/
 #	}
 #	else
 #	{
@@ -140,6 +220,8 @@ function request($request_var, $request_type, $filter = '')
 function request_file($request_var)
 {
 	global $_FILES;
+	
+	debug($request_var);
 	
 	$var['temp'] = $_FILES[$request_var]['tmp_name'];
 	$var['name'] = $_FILES[$request_var]['name'];
@@ -476,11 +558,11 @@ function generate_user_info(&$row, $date_format, $group_mod, &$from, &$posts, &$
 		$email = '&nbsp;';
 	}
 
-	$temp_url = check_sid('profile.php?mode=viewprofile&amp;' . POST_USER . '=' . $row['user_id']);
+	$temp_url = check_sid('profile.php?mode=viewprofile&amp;id=' . $row['user_id']);
 	$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
 	$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
 
-	$temp_url = check_sid('privmsg.php?mode=post&amp;' . POST_USER . '=' . $row['user_id']);
+	$temp_url = check_sid('privmsg.php?mode=post&amp;id=' . $row['user_id']);
 	$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
 	$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
 
@@ -2281,12 +2363,12 @@ function main_header($page_title = '')
 	
 				if ( $row['user_allow_viewonline'] )
 				{
-					$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
+					$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $row['user_id']) . '"' . $style_color .'>' . $row['user_name'] . '</a>';
 					$logged_visible_online++;
 				}
 				else
 				{
-					$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
+					$user_online_link = '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $row['user_id']) . '"' . $style_color .'><i>' . $row['user_name'] . '</i></a>';
 					$logged_hidden_online++;
 				}
 	
@@ -2443,22 +2525,22 @@ function main_header($page_title = '')
 		}
 	}
 	
-	$userauth = auth_acp_check($userdata['user_id']);
+#	$userauth = auth_acp_check($userdata['user_id']);
 
-	$auth = array();
+#	$auth = array();
 	
-	foreach ( $userauth as $key => $value )
-	{
-		if ( $value != '0' )
-		{
-			$auth[$key] = $value;
-		}
-	}
+#	foreach ( $userauth as $key => $value )
+#	{
+#		if ( $value != '0' )
+#		{
+#			$auth[$key] = $value;
+#		}
+#	}
 	
 	//
 	// Show the overall footer.
 	//
-	$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+	$admin_link = (	$userdata['user_level'] == ADMIN ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 	
 	//$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
 	//if ( !($result = $db->sql_query($sql)) )
@@ -2603,7 +2685,7 @@ function main_header($page_title = '')
 		
 	);
 	
-	display_navi();
+	display_navi($l_login_logout, $u_login_logout);
 	
 #	if ( $settings['subnavi_newusers'] )	{ display_newusers(); }
 #	if ( $settings['subnavi_teams'] )		{ display_teams(); }

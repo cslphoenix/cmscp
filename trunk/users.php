@@ -440,7 +440,7 @@ else if ( in_array($mode, array('g', 't')) )
 		}
 		
 		$s_opt .= "<select class=\"postselect\" name=\"smode\" id=\"smode\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
-		$s_opt .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['common_option_select']) . "</option>";
+		$s_opt .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['common_select_option']) . "</option>";
 		$s_opt .= "<option value=\"_user_level\">" . sprintf($lang['sprintf_select_format'], ( $mode == 'g' ) ? $lang['rights_groups'] : $lang['rights_teams']) . "</option>";
 		$s_opt .= ( $mode == 'g' ) ? "" : "<option value=\"_user_setrank\">" . sprintf($lang['sprintf_select_format'], $lang['select_rank']) . "</option>";
 		$s_opt .= "<option value=\"_user_delete\">" . sprintf($lang['sprintf_select_format'], $lang['common_delete']) . "</option>";

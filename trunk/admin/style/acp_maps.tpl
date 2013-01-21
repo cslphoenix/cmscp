@@ -3,7 +3,6 @@
 
 <!-- BEGIN input -->
 <script type="text/javascript">
-// <![CDATA[
 
 var request = false;
 
@@ -53,18 +52,17 @@ function interpretRequest()
 
 function display_options(value)
 {
-	
 	if ( value == '0' )
 	{
-		dE('map_tag', 1);
 		dE('main', -1);
+		dE('map_tag', 1);
 		dE('map_info', -1);
 		dE('map_file', -1);
 	}
 	else
 	{
-		dE('map_tag', -1);
 		dE('main', 1);
+		dE('map_tag', -1);
 		dE('map_info', 1);
 		dE('map_file', 1);
 	}
@@ -75,17 +73,13 @@ function update_image_{input.update_image.NAME}(newimage)
 {
 	document.getElementById('image').src = (newimage) ? "{input.update_image.PATH}/" + encodeURI(newimage) : "./../admin/style/images/spacer.gif";
 }
-<!-- END update_image -->
 
-<!-- BEGIN update_image -->
 function update_ajax_{input.update_image.NAME}(newimage)
 {
 	document.getElementById('image2').src = (newimage) ? "{input.update_image.PATH}/" + encodeURI(newimage) : "./../admin/style/images/spacer.gif";
 }
 <!-- END update_image -->
 
-
-// ]]>
 </script>
 <form action="{S_ACTION}" method="post">
 {ERROR_BOX}
@@ -94,19 +88,19 @@ function update_ajax_{input.update_image.NAME}(newimage)
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
+{input.row.tab.option.DIV_START}
 <dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -123,8 +117,8 @@ function update_ajax_{input.update_image.NAME}(newimage)
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th>{NAME} :: {TAG}</th>
-	<th>{UPDATE}{DELETE}</th>
+	<th>{OVERVIEW} :: {NAME}</th>
+	<th><span class="right">{UPDATE}{DELETE}</span></th>
 </tr>
 <!-- BEGIN row -->
 <tr>
@@ -141,7 +135,7 @@ function update_ajax_{input.update_image.NAME}(newimage)
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="map_name" /></td>
+	<td><input type="text" name="map_map" /></td>
 	<td><input type="submit" value="{L_CREATE}"></td>
 </tr>
 </table>
@@ -152,10 +146,14 @@ function update_ajax_{input.update_image.NAME}(newimage)
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
+<tr>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
 <!-- BEGIN cat -->
 <tr>
-	<th><span class="right">{display.cat.TAG}</span>{display.cat.NAME}</th>
-	<th>{display.cat.MOVE_DOWN}{display.cat.MOVE_UP}{display.cat.UPDATE}{display.cat.DELETE}</th>
+	<td><span class="right">{display.cat.TAG}</span>{display.cat.NAME}</td>
+	<td>{display.cat.MOVE_DOWN}{display.cat.MOVE_UP}{display.cat.UPDATE}{display.cat.DELETE}</td>
 </tr>
 <!-- END cat -->
 <!-- BEGIN empty -->

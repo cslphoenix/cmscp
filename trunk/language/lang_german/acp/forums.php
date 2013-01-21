@@ -8,21 +8,19 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 
 	'title'		=> 'Forum',
-	'cat'		=> 'Kategorie',
-	
-	'forum'		=> 'Forum',
-	'forum_c'	=> 'Kategorie',
 	'explain'	=> 'Hier kann man die Kategorien, Foren und Subforen alle samt Verwalten.',
-
-	'create'	=> 'Neues Forum hinzugefügt.',
-	'update'	=> 'Forumdaten erfolgreich geändert.',
-	'delete'	=> 'Das Forum wurde gelöscht!',
-	'confirm'	=> 'dass dieses Forum:',
-
-	'create_c'	=> 'Neue Kategorie hinzugefügt.',
-	'update_c'	=> 'Kategoriedaten erfolgreich geändert.',
-	'delete_c'	=> 'Die Kategorie wurde gelöscht!',
-	'confirm_c'	=> 'dass diese Kategorie:',
+	
+	'type_0'		=> 'Kategorie',
+	'type_1'		=> 'Forum',
+	'type_2'		=> 'Subforum',
+	
+	'cat'		=> 'Kategorie',
+	'forum'		=> 'Forum',
+	'subforum'	=> 'Subforum',
+	
+	'empty_forum'		=> 'Keine Foren eingetragen',
+	'empty_subforum'	=> 'Keine Subforen eingetragen',
+	
 	
 	'icon'		=> 'Forumicon',
 	'sub'		=> 'Subforum',

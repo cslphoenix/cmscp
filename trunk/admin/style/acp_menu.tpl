@@ -1,52 +1,9 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
+<script type="text/javascript" src="style/ajax_main.js"></script>
 <script type="text/javascript">
-// <![CDATA[
-
-var request = false;
-
-function setRequest(value, meta, name)
-{
-	if ( window.XMLHttpRequest ) { request = new XMLHttpRequest(); } else { request = new ActiveXObject("Microsoft.XMLHTTP"); }
-	
-	if ( !request )
-	{
-		alert("Kann keine XMLHTTP-Instanz erzeugen");
-		return false;
-	}
-	else
-	{
-		var url = "ajax/ajax_main.php";
-		
-		request.open('post', url, true);
-		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		request.send('type='+value+'&meta='+meta+'&name='+name);
-		request.onreadystatechange = interpretRequest;
-	}
-}
-
-function interpretRequest()
-{
-	switch (request.readyState)
-	{
-		case 4:
-		
-			if (request.status != 200)
-			{
-				alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
-			}
-			else
-			{
-				var content = request.responseText;
-				document.getElementById('ajax_content').innerHTML = content;
-			}
-			break;
-		
-		default: document.getElementById('close').style.display = "none"; break;
-	}
-}
 
 function display_options(value)
 {
@@ -55,24 +12,47 @@ function display_options(value)
 		dE('main', -1);
 		dE('menu_file', -1);
 		dE('menu_opts', -1);
+		dE('menu_lang', 1);
+		dE('menu_show', 1);
 	}
 	else if ( value == '1' )
 	{
 		dE('main', 1);
 		dE('menu_file', -1);
 		dE('menu_opts', -1);
+		dE('menu_lang', 1);
+		dE('menu_show', 1);
 	}
-	else
+	else if ( value == '2' )
 	{
 		dE('main', 1);
 		dE('menu_file', 1);
 		dE('menu_opts', 1);
+		dE('menu_lang', 1);
+		dE('menu_show', 1);
+	}
+	else if ( value == '3' )
+	{
+		dE('main', -1);
+		dE('menu_file', -1);
+		dE('menu_lang', 1);
+		dE('menu_show', 1);
+		dE('menu_target', -1);
+		dE('menu_intern', -1);
+	}
+	else if ( value == '4' )
+	{
+		dE('main', 1);
+		dE('menu_file', 1);
+		dE('menu_lang', 1);
+		dE('menu_show', 1);
+		dE('menu_target', 1);
+		dE('menu_intern', 1);
 	}
 }
 
 function display_modes(value)
 {
-//	alert(value);
 	// Find the old select tag
 	var item = document.getElementById('menu_menu_opts');
 
@@ -103,7 +83,7 @@ function display_modes(value)
 	// select first item
 	item.options[0].selected = true;
 }
-// ]]>
+
 </script>
 <form action="{S_ACTION}" method="post">
 {ERROR_BOX}
@@ -112,19 +92,19 @@ function display_modes(value)
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div class="update">
 <!-- BEGIN tab -->
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<div{input.row.tab.option.ID}>
+{input.row.tab.option.DIV_START}
 <dl>			
-	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
-</div>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -137,12 +117,12 @@ function display_modes(value)
 </form>
 <!-- END input -->
 
-<!-- BEGIN list -->
+<!-- BEGIN menu -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
 	<th>{CAT} :: {NAME}</th>
-	<th>{UPDATE}{DELETE}</th>
+	<th><span class="right">{UPDATE}{DELETE}</span></th>
 </tr>
 </table>
 <table class="lfooter">
@@ -155,39 +135,78 @@ function display_modes(value)
 <!-- BEGIN row -->
 <table class="rows">
 <tr>
-	<th>{list.row.NAME}</th>
-	<th>{list.row.MOVE_DOWN}{list.row.MOVE_UP}{list.row.UPDATE}{list.row.DELETE}</th>
+	<th>{menu.row.NAME}</th>
+	<th>{menu.row.MOVE_DOWN}{menu.row.MOVE_UP}{menu.row.UPDATE}{menu.row.DELETE}</th>
 </tr>
 <!-- BEGIN mod -->
 <tr>
-	<td>{list.row.mod.NAME}</td>
-	<td>{list.row.mod.MOVE_DOWN}{list.row.mod.MOVE_UP}{list.row.mod.UPDATE}{list.row.mod.DELETE}</td>
+	<td>{menu.row.mod.NAME}</td>
+	<td>{menu.row.mod.MOVE_DOWN}{menu.row.mod.MOVE_UP}{menu.row.mod.UPDATE}{menu.row.mod.DELETE}</td>
 </tr>
 <!-- END mod -->
 </table>
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="{list.row.S_NAME}" /></td>
-	<td><input type="submit" name="{list.row.S_SUBMIT}" value="{L_CREATE_MODULE}" /></td>
+	<td><input type="text" name="{menu.row.S_NAME}" /></td>
+	<td><input type="submit" name="{menu.row.S_SUBMIT}" value="{L_CREATE_MODULE}" /></td>
 </tr>
 </table>
 <br />
 <!-- END row -->
 {S_FIELDS}
 </form>
-<!-- END list -->
+<!-- END menu -->
 
+<!-- BEGIN navi -->
+<form action="{S_ACTION}" method="post">
+<table class="rows">
+<tr>
+	<th>{CAT} :: {NAME}</th>
+	<th><span class="right">{UPDATE}{DELETE}</span></th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td>{navi.row.NAME}</td>
+	<td>{navi.row.MOVE_DOWN}{navi.row.MOVE_UP}{navi.row.UPDATE}{navi.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
+</table>
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="profile_field" /></td>
+	<td><input type="submit" value="{L_CREATE_FIELD}" /></td>
+</tr>
+</table>
+<br />
+
+{S_FIELDS}
+</form>
+<!-- END navi -->
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 
 <table class="rows">
-<!-- BEGIN cat -->
 <tr>
-	<th>{display.cat.NAME}</th>
-	<th>{display.cat.MOVE_DOWN}{display.cat.MOVE_UP}{display.cat.UPDATE}{display.cat.DELETE}</th>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
-<!-- END cat -->
+<!-- BEGIN row -->
+<tr>
+	<td>{display.row.NAME}</td>
+	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
 </table>
 
 <table class="lfooter">

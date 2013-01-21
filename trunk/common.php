@@ -332,6 +332,8 @@ else
 $settings['per_page_entry_site'] = $settings['per_page_entry']['site'];
 $settings['ppec'] = $settings['per_page_entry']['comments'];
 
+$settings['ppe_acp'] = $settings['per_page_entry']['acp'];
+
 if ( file_exists('install') )
 {
 	message(GENERAL_MESSAGE, 'Please_remove_install_contrib');

@@ -62,7 +62,7 @@ else
 	}
 	
 	
-	$mode = ( in_array($mode, array('append', 'modify', 'create', 'update', 'order', 'delete')) ) ? $mode : '';
+	$mode = (in_array($mode, array('append', 'modify', 'create', 'update', 'order', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
@@ -77,15 +77,15 @@ else
 				$template->assign_block_vars('append', array());
 				
 				$vars = array(
-					'icon_path'		=> array('validate' => TXT,	'explain' => false, 'type' => 'info'),
-					'icon_width'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:5:5'),
-					'icon_height'	=> array('validate' => INT,	'explain' => false, 'type' => 'text:5:5'),
-					'icon_posting'	=> array('validate' => INT,	'explain' => false, 'type' => 'checkbox:posting'),
-					'icon_download'	=> array('validate' => INT,	'explain' => false, 'type' => 'checkbox:download'),
-				#	'icon_order'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
+					'icon_path'		=> array('validate' => TXT,	'explain' => false,	'type' => 'info'),
+					'icon_width'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5'),
+					'icon_height'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5'),
+					'icon_posting'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:posting'),
+					'icon_download'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:download'),
+				#	'icon_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 				);
 				
-				if ( $mode == 'append' && !$update )
+				if ( $mode == 'append' && !$submit )
 				{
 					$files = array_diff(scandir($dir_path), array('.', '..', 'index.htm'));
 					
@@ -101,14 +101,14 @@ else
 					}
 				}
 				
-				else if ( $mode == 'modify' && !$update )
+				else if ( $mode == 'modify' && !$submit )
 				{
 					$data_sql = data(ICONS, false, 'icon_order ASC', 1, false);
 				}
 				
 				else
 				{
-					$data_sql = build_request_list($vars, $error);
+				#	$data_sql = build_request_list($vars, $error);
 					
 				#	debug($data, 'request_list');
 					
@@ -124,7 +124,7 @@ else
 						else
 						{
 					#		$sql = sql(ICONS, $mode, $data_sql, 'server_id', $data);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 					#	orders(ICONS);
@@ -154,7 +154,7 @@ else
 				*/
 			#	debug($data);
 				
-				build_output_list($data, $vars, 'append', 'path_icons');
+			#	build_output_list($data, $vars, 'append', 'path_icons');
 				
 			#	build_output($data, $vars, 'append', false, ICONS);
 				
@@ -163,7 +163,7 @@ else
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['title']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -181,21 +181,21 @@ else
 				$vars = array(
 					'server' => array(
 						'title'	=> 'data_input',
-						'server_name'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_name'),
-						'server_game'	=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:server', 'required' => 'input_game'),
-						'server_ip'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25', 'required' => 'input_ip'),
-						'server_port'	=> array('validate' => TXT,	'explain' => false, 'type' => 'text:10:10', 'required' => 'input_port'),
-						'server_pw'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:10:10'),
-						'server_live'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
-						'server_list'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
-						'server_show'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
-						'server_own'	=> array('validate' => INT,	'explain' => false, 'type' => 'radio:yesno'),
-						'server_order'	=> array('validate' => INT,	'explain' => false, 'type' => 'drop:order'),
+						'server_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
+						'server_game'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:server', 'required' => 'input_game'),
+						'server_ip'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_ip'),
+						'server_port'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:10:10', 'required' => 'input_port'),
+						'server_pw'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:10:10'),
+						'server_live'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						'server_list'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						'server_show'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						'server_own'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						'server_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:order'),
 						'server_type'	=> 'hidden',
 					)
 				);
 				
-				if ( $mode == 'create' && !$update )
+				if ( $mode == 'create' && !$submit )
 				{
 					$data_sql = array(
 						'server_name'	=> request('server_name', TXT),
@@ -211,13 +211,13 @@ else
 						'server_order'	=> 0,
 					);
 				}
-				else if ( $mode == 'update' && !$update )
+				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(ICONS, $data, false, 1, true);
 				}
 				else
 				{
-					$data_sql = build_request(ICONS, $vars, 'server', $error);
+				#	$data_sql = build_request(ICONS, $vars, 'server', $error);
 					
 					if ( !$error )
 					{
@@ -231,7 +231,7 @@ else
 						else
 						{
 							$sql = sql(ICONS, $mode, $data_sql, 'server_id', $data);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 						orders(ICONS);
@@ -245,14 +245,14 @@ else
 					}
 				}
 				
-				build_output($data, $vars, 'input', false, ICONS);
+			#	build_output($data, $vars, 'input', false, ICONS);
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang["sprintf_$mode"], $lang['title'], $data_sql['server_name']),
+					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['server_name']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,

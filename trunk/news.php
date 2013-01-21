@@ -10,17 +10,16 @@ $userdata = session_pagestart($user_ip, PAGE_NEWS);
 
 init_userprefs($userdata);
 
-$start	= ( request('start', INT) ) ? request('start', INT) : 0;
-$start	= ( $start < 0 ) ? 0 : $start;
+$start	= request('start', INT);
 
 $log	= SECTION_NEWS;
-$url	= POST_NEWS;
+#$url	= POST_NEWS;
 
 $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, INT);
+$data	= request('id', INT);
 $mode	= request('mode', TXT);
 
 $error	= '';
@@ -190,7 +189,7 @@ if ( $data && $tmp )
 			{
 				$icon = ( $userdata['session_logged_in'] ) ? ( $unreads || ( $unread['read_time'] < $comments[$i]['time_create'] ) ) ? $images['icon_minipost_new'] : $images['icon_minipost'] : $images['icon_minipost'];
 				$name = $comments[$i]['poster_nick'] ? $comments[$i]['poster_nick'] : '<font color="' . $comments[$i]['user_color'] . '">' . $comments[$i]['user_name'] . '</font>';
-				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;' . POST_USER . '=' . $comments[$i]['poster_id'];
+				$link = $comments[$i]['poster_nick'] ? $userdata['session_logged_in'] ? 'mailto:' . $comments[$i]['poster_email'] : $comments[$i]['poster_nick'] : 'profile.php?mode=view&amp;id=' . $comments[$i]['poster_id'];
 				
 				$s_option = '';
 				
@@ -380,13 +379,13 @@ else if ( $mode == 'archiv' )
 				'CLASS'		=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 				
 				'TITLE'		=> href('a_txt', $file, array('mode' => 'view', $url => $news_id), $ary[$i]['news_title'], $ary[$i]['news_title']),
-				'AUTHOR'	=> href('a_user', 'profile.php', array('mode' => 'view', POST_USER => $ary[$i]['user_id']), $ary[$i]['user_color'], $ary[$i]['user_name']),
+				'AUTHOR'	=> href('a_user', 'profile.php', array('mode' => 'view', 'id' => $ary[$i]['user_id']), $ary[$i]['user_color'], $ary[$i]['user_name']),
 				'CAT'		=> $ary[$i]['cat_name'],
 				'COMMENTS'	=> ( $comment != 0 ) ? (( $comment == 1 ) ? $lang['sprintf_comment'] : sprintf($lang['sprintf_comments'], $comment)) : $lang['sprintf_comment_no'],
 				'DATE'		=> create_shortdate($userdata['user_dateformat'], $ary[$i]['news_date'], $userdata['user_timezone']),
 				
 			#	'TITLE'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$news_id") . '">' . $ary[$i]['news_title'] . '</a>',	
-			#	'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
+			#	'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
 			));
 		}
 	}
@@ -545,7 +544,7 @@ else
 				'TEXT'		=> truncate2($txt_tmp, 100, '...'),
 				'DATE'		=> create_shortdate($userdata['user_dateformat'], $ary[$i]['news_date'], $userdata['user_timezone']),
 				'COMMENTS'	=> ( $comments != 0 ) ? ( $comments == 1 ) ? $lang['sprintf_comment'] : sprintf($lang['sprintf_comments'], $comments) : $lang['sprintf_comment_no'],
-				'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;' . POST_USER . '=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
+				'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
 				
 				'NC_TITLE'	=> ( $ary[$i]['cat_name'] ) ? $ary[$i]['cat_name'] : '',
 				'NC_IMAGE'	=> ( $ary[$i]['cat_image'] ) ? $root_path . $settings['path_newscat'] . '/' . $ary[$i]['cat_image'] : '',
@@ -557,7 +556,7 @@ else
 				'RATING'	=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, 5),
 				#{list.row.R_CNT} Votes &oslash; {list.row.R_SUM} / 5
 				
-				'U_NEWS'	=> check_sid("$file?$url=$news_id"),
+				'U_NEWS'	=> check_sid("$file?id=$news_id"),
 			));
 			
 			/*
