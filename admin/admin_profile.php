@@ -39,13 +39,7 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -56,6 +50,8 @@ else
 	
 	$base = ($settings['smain']['profile_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
+	
+	debug($_POST, '_POST');
 	
 	if ( $mode )
 	{
@@ -105,15 +101,21 @@ else
 				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(PROFILE, $data, false, 1, true);
+					
+					debug($data_sql, 'edit');
 				}
 				else
 				{
 					$data_sql = build_request(PROFILE, $vars, $error, $mode);
 					
+					debug($data_sql, 'after');
+					
 					if ( !$error )
 					{
 						$current_typ	= request('current_typ', INT);
 						$current_field	= request('current_field', TXT);
+						
+						debug($current_typ);
 						
 						if ( !$data_sql['type'] )
 						{
@@ -142,13 +144,15 @@ else
 						}
 						else
 						{
-							if ( $data_sql['type'] && $current_field != $data_sql['profile_field'] )
+							if ( $data_sql['type'] == $current_typ && $current_field != $data_sql['profile_field'] )
 							{
 								sql(PROFILE_DATA, 'alter', array('part' => 'CHANGE `' . $current_field . '` `' . $data_sql['profile_field'] . '`', 'type' => $typ));
 							}
 							
-							$sql = sql(PROFILE, $mode, $data_sql, 'field_id', $data);
+							$sql = sql(PROFILE, $mode, $data_sql, 'profile_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+							
+							orders(PROFILE, $data_sql['type']);
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -163,11 +167,12 @@ else
 				
 				build_output(PROFILE, $vars, $data_sql);
 				
+				$fields .= '<input type="hidden" name="current_typ" value="' . $data_sql['type'] . '" />';
 				$fields .= '<input type="hidden" name="current_field" value="' . $data_sql['profile_field'] . '" />';
 
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['profile_name']),
+					'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['profile_name']),
 
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -176,6 +181,18 @@ else
 				$template->pparse('body');
 				
 				break;
+				
+			case 'move_up':
+			case 'move_down':
+			
+				move(MENU, $mode, $order, $main, $type, $usub, $action);
+				log_add(LOG_ADMIN, $log, $mode);
+			
+				$index = true;
+				
+				break;
+
+			
 			
 			case 'order_field':
 				
@@ -214,11 +231,11 @@ else
 //					$fields .= '<input type="hidden" name="' . $cat . '" value="' . $profile_id . '" />';
 //		
 //					$template->assign_vars(array(
-//						'MESSAGE_TITLE'		=> $lang['common_confirm'],
+//						'MESSAGE_TITLE'		=> $lang['com_confirm'],
 //						'MESSAGE_TEXT'		=> $lang['confirm_delete_profile'],
 //		
-//						'L_YES'				=> $lang['common_yes'],
-//						'L_NO'				=> $lang['common_no'],
+//						'L_YES'				=> $lang['com_yes'],
+//						'L_NO'				=> $lang['com_no'],
 //		
 //						'S_ACTION'	=> check_sid($file),
 //						'S_FIELDS'	=> $fields,
@@ -238,7 +255,7 @@ else
 	
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -271,7 +288,7 @@ else
 				'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cat['profile_name'], $cat['profile_name']),
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
 				
 				'S_NAME'	=> "profile_fields[$cid]",
 				'S_SUBMIT'	=> "submit_field[$cid]",
@@ -295,7 +312,7 @@ else
 				$template->assign_block_vars('list.row', array(
 					'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $name, $name),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'com_delete'),
 					
 					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $cid, 'type' => 2, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $cid, 'type' => 2, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -316,7 +333,7 @@ else
 	{
 		$template->assign_block_vars('display', array());
 		
-		$tmp = data(PROFILE, 'type = 0', 'profile_order ASC', 1, false);
+		$tmp = data(PROFILE, 'WHERE type = 0', 'profile_order ASC', 1, false);
 		
 		if ( $tmp )
 		{
@@ -332,7 +349,7 @@ else
 				$template->assign_block_vars('display.row', array( 
 					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 					
 					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 					'MOVE_DOWN'	=> ( $order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -344,12 +361,12 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 		'L_NAME'	=> $lang['type_0'],
 		
-		'L_CREATE_CAT'		=> sprintf($lang['sprintf_create'], $lang['type_0']),
-		'L_CREATE_FIELD'	=> sprintf($lang['sprintf_create'], $lang['type_1']),
+		'L_CREATE_CAT'		=> sprintf($lang['stf_create'], $lang['type_0']),
+		'L_CREATE_FIELD'	=> sprintf($lang['stf_create'], $lang['type_1']),
 		
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
@@ -357,7 +374,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

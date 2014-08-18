@@ -33,7 +33,8 @@ if ( isset($_POST['new_mode']) )
 	$sql = "SELECT * FROM $new_mode WHERE {$db_field}_{$suborcat} = $new_opt ORDER BY {$db_field}_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$entries = $db->sql_fetchrowset($result);
 	
@@ -46,7 +47,7 @@ if ( isset($_POST['new_mode']) )
 	else
 	{
 		$s_select .= "<select class=\"select\" name=\"{$new_mode}_order_new\" id=\"{$new_mode}_order\">";
-		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $j = 0; $j < count($entries); $j++ )
 		{
@@ -160,7 +161,7 @@ if ( isset($_POST['new_mode']) )
 	else
 	{
 		$s_select .= "<select class=\"select\" name=\"$new_mode order_new\" id=\"$new_mode order\">";
-		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($cats); $i++ )
 		{

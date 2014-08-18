@@ -215,7 +215,7 @@ else
 					}
 				}
 				
-				debug($access);
+				debug($access, 'access');
 
 				break;
 		}
@@ -278,6 +278,8 @@ else
 		
 						$simple_auth = '<select name="' . sprintf('l_%s[%s]', $forum_id, $group_id) . '" id="' . sprintf('s%sg%s', $forum_id, $group_id) . '" onchange="set_permission(this.options[selectedIndex].value, \'' . $forum_id . '\', \'' . $group_id . '\');">';
 						
+					#	debug($access_label, 'access_label');
+						
 						foreach ( $acl_labels as $labels )
 						{
 							$selected = ( @$access_label[$forum_id][$group_id] == $labels['label_id'] ) ? ' selected="selected"' : '';
@@ -329,6 +331,8 @@ else
 			#	$group_name = $group_data['group_name'];
 		
 				$simple_auth = '<select name="' . sprintf('simpleauthg%s', $ids) . '" id="' . sprintf('g%s', $ids) . '" onchange="set_permission(this.options[selectedIndex].value, \'' . $ids . '\');">';
+				
+			#	debug($access_label, 'access_label');
 				
 				foreach ( $acl_labels as $options )
 				{

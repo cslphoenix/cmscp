@@ -201,8 +201,6 @@ else if ( $mode == 'view' && $data )
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			group_set_auth($user_id, $team_id);
-
 			$team_name = $team_info['team_name'];
 
 		/*
@@ -317,11 +315,6 @@ else if ( $mode == 'view' && $data )
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					for( $k = 0; $k < count($members); $k++)
-					{
-						group_set_auth($members[$k]['user_id'], $team_id);
-					}
-					
 					$sql_select = 'SELECT user_email FROM ' . USERS . ' WHERE user_id IN (' . $sql_in . ')';
 				}
 				else if ( isset($HTTP_POST_VARS['deny']) || $mode == 'remove' )
@@ -330,11 +323,6 @@ else if ( $mode == 'view' && $data )
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					for( $i = 0; $i < count($members); $i++ )
-					{
-						group_reset_auth($members[$i]['user_id'], $team_id);
 					}
 				}
 

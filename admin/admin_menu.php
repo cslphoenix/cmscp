@@ -25,6 +25,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('menu');
+	acl_auth(array('a_menu', 'a_menu_site'));
 	
 	$error	= '';
 	$index	= '';
@@ -43,13 +44,7 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . 'admin/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang[$action]);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_menu'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang[$action]);
 	
 	($cancel) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -57,12 +52,11 @@ else
 		'body'		=> 'style/acp_menu.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
+
+	debug($_POST, '_POST');
 	
 	$base = ($settings['smain']['menu_switch']) ? 'drop:main' : 'radio:main';
-#	$path = ($action != 'pcp') ? $dir_path : $root_path;
 	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
-	
-	debug($_POST, '_POST');
 	
 	if ( $mode )
 	{
@@ -70,26 +64,23 @@ else
 		{
 			case 'create':
 			case 'update':
-
+			
 				$template->assign_block_vars('input', array());
 				
 				$vars = array(
 					'menu' => array(
 						'title1' => 'input_data',
 						'menu_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name'),
+						'menu_lang'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+						'menu_show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
 						'type'			=> array('validate' => INT,	'explain' => false,	'type' => ($action != 'pcp') ? 'radio:type' : 'radio:navi', 'params' => array('combi', false, 'main')),
 						'main'			=> array('validate' => INT,	'explain' => false,	'type' => $base,		'divbox' => true, 'params' => array(false, true, false)),
-						'menu_lang'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
-						'menu_show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
-						'menu_intern'	=> ($action != 'pcp') ? 'hidden' : array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
-						'menu_target'	=> ($action != 'pcp') ? 'hidden' : array('validate' => INT,	'explain' => false,	'type' => 'radio:target',	'divbox' => true, 'params' => array(false, false, false)),
 						'menu_file'		=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:files', 'divbox' => true, 'params' => (($action != 'pcp') ? array($dir_path, '.php', 'mode', 'menu') : array($root_path, '.php', 'self', 'navi'))),
 						'menu_opts'		=> ($action != 'pcp') ? array('validate' => TXT, 'explain' => false, 'type' => 'drop:iopts', 'divbox' => true, 'params' => $dir_path) : 'hidden',
+						'menu_intern'	=> ($action != 'pcp') ? 'hidden' : array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
+						'menu_target'	=> ($action != 'pcp') ? 'hidden' : array('validate' => INT,	'explain' => false,	'type' => 'radio:target',	'divbox' => true, 'params' => array(false, false, false)),
 						'action'		=> 'hidden',
 						'menu_order'	=> 'hidden',
-						
-					#	array('validate' => TXT,	'explain' => false, 'type' => 'drop:files', 'divbox' => true, 'params' => array($path, '.php', 'mode', 'menu'))
-					#	array('validate' => TXT,	'explain' => false,	'type' => 'drop:files', 'divbox' => true, 'params' => array('./../', '.php', 'self', 'navi'))
 					),
 				);
 				
@@ -103,6 +94,7 @@ else
 					}
 					else
 					{
+						$keys = ( !isset($_POST['menu_name']) ) ? (( isset($_POST['submit_module']) ) ? key($_POST['submit_module']) : $main ) : 0;
 						$name = ( !isset($_POST['menu_name']) ) ? (( isset($_POST['submit_module']) ) ? request(array('menu_module', $keys), TXT) : request('menu_label', TXT) ) : request('menu_name', TXT);
 						$type = ( !isset($_POST['menu_name']) ) ? 4 : 3;
 					}
@@ -110,7 +102,7 @@ else
 					$data_sql = array(
 						'menu_name'		=> $name,
 						'type'			=> $type,
-						'main'			=> '',
+						'main'			=> $keys,
 						'menu_lang'		=> 0,
 						'menu_show'		=> 1,
 						'menu_file'		=> '',
@@ -131,32 +123,20 @@ else
 
 					if ( !$error )
 					{
-						if ( !$data_sql['type'] )
+						if ( !$data_sql['type'] || $data_sql['type'] == 3 )
 						{
 							$data_sql['main'] = 0;
 							
-							unset($data_sql['menu_file']);
-							unset($data_sql['menu_opts']);
+							unset($data_sql['menu_file'], $data_sql['menu_opts']);
 						}
 						else if ( $data_sql['type'] == 1 )
 						{
-							unset($data_sql['menu_file']);
-							unset($data_sql['menu_opts']);
-						}
-						else if ( $data_sql['type'] == 3 )
-						{
-							$data_sql['main'] = 0;
-							
-							unset($data_sql['menu_file']);
-							unset($data_sql['menu_opts']);
-							unset($data_sql['menu_lang']);
-							unset($data_sql['menu_show']);
+							unset($data_sql['menu_file'], $data_sql['menu_opts']);
 						}
 						else if ( $data_sql['type'] == 4 )
 						{
 							$data_sql['menu_file'] = ($data_sql['menu_target']) ? set_http($data_sql['menu_file']) : './' . $data_sql['menu_file'];
 							unset($data_sql['menu_opts']);
-						#	unset($data_sql['menu_show']);
 						}
 						
 						if ( $mode == 'create' )
@@ -169,9 +149,9 @@ else
 						else
 						{
 							$sql = sql(MENU, $mode, $data_sql, 'menu_id', $data);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid("$file&main="), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
-
+						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
 						message(GENERAL_MESSAGE, $msg);
 					}
@@ -182,12 +162,17 @@ else
 				}
 				
 				build_output(MENU, $vars, $data_sql);
+				
+				$fields .= build_fields(array(
+					'mode'	=> $mode,
+					'id'	=> $data,
+				));
 
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], lang($data_sql['menu_name'])),
-					'L_EXPLAIN'	=> $lang['common_required'],
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['menu_name'])),
+					'L_EXPLAIN'	=> $lang['com_required'],
 
-					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 
@@ -208,35 +193,47 @@ else
 			case 'delete':
 
 				$data_sql = data(MENU, $data, false, 1, true);
-
-				if ( $data && $confirm )
+				
+				if ( $accept && $data )				
 				{
-					$sql = sql(MENU, $mode, $data_sql, 'file_id', $data);
+					switch ( $data_sql['type'] )
+					{
+						case 0:
+						
+							sql(MENU, $mode, $data_sql, 'menu_id', $data);
+							sql(MENU, $mode, $data_sql, 'menu_id', $data);
+							
+							break;
+							
+						case 1:
+						
+							sql(MENU, $mode, $data_sql, 'main', $data);
+							
+							break;
+					}
+					
+					$sql = sql(MENU, $mode, $data_sql, 'menu_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
-
-					orders(MENU);
-
+					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
 				}
-				else if ( $data_id && !$confirm )
+				else if ( !$accept && $data )
 				{
-					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-
+					$fields .= build_fields(array(
+						'mode'	=> $mode,
+						'id'	=> $data,
+					));
+			
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['file_name']),
+						'M_TITLE'	=> $lang['com_confirm'],
+						'M_TEXT'	=> sprintf($lang["notice_confirm{$data_sql['type']}_delete"], $lang["confirm_{$data_sql['type']}"], lang($data_sql['menu_name'])),
 
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
 					));
 				}
-				else
-				{
-					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
-				}
-
+				
 				$template->pparse('confirm');
 
 				break;
@@ -244,14 +241,14 @@ else
 
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
 	
 	if ( $main )
 	{
-		$tmp = data(MENU, false, 'main ASC, menu_order ASC', 1, false);
+		$tmp = data(MENU, false, 'main ASC, menu_order ASC', 1, 0);
 		
 		$cat = $module = $label = array();
 		
@@ -288,7 +285,7 @@ else
 				'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $name, $name),
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
 				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
@@ -307,7 +304,7 @@ else
 					$template->assign_block_vars('menu.row', array(
 						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $lid), $lname, $lname),
 						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $lid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $lid), 'icon_cancel', 'common_delete'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $lid), 'icon_cancel', 'com_delete'),
 						
 						'MOVE_UP'	=> ( $lorder != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'order' => $lorder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 						'MOVE_DOWN'	=> ( $lorder != $lmax )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $lorder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -330,7 +327,7 @@ else
 							$template->assign_block_vars('menu.row.mod', array( 
 								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $mid), $mname, $mname),
 								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $mid), 'icon_update', 'common_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $mid), 'icon_cancel', 'common_delete'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $mid), 'icon_cancel', 'com_delete'),
 								
 								'MOVE_UP'	=> ( $morder != '1' )			? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $lid, 'type' => 2, 'order' => $morder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 								'MOVE_DOWN'	=> ( $morder != $mmax[$lid] )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $lid, 'type' => 2, 'order' => $morder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -348,7 +345,7 @@ else
 		{
 			$template->assign_block_vars('navi', array());
 			
-			$cat = $module = $label = array();
+			$cat = $module = $label = $field = array();
 			
 			if ( $tmp )
 			{
@@ -370,7 +367,7 @@ else
 					'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
 					'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cat['menu_name'], $cat['menu_name']),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
 					
 					'S_NAME'	=> "profile_fields[$cid]",
 					'S_SUBMIT'	=> "submit_field[$cid]",
@@ -394,12 +391,10 @@ else
 					$template->assign_block_vars('navi.row', array(
 						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $name, $name),
 						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'common_delete'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'com_delete'),
 						
 						'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $cid, 'type' => 4, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 						'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $cid, 'type' => 4, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-						
-						
 					));
 				}
 			}
@@ -418,7 +413,7 @@ else
 		
 		$typ = ( $action != 'pcp' ) ? 0 : 3;
 		
-		$tmp = data(MENU, "action = '$action' AND type = $typ", 'menu_order ASC', 1, false);
+		$tmp = data(MENU, "WHERE action = '$action' AND type = $typ", 'menu_order ASC', 1, false);
 		
 		if ( !$tmp )
 		{
@@ -437,7 +432,7 @@ else
 				$template->assign_block_vars('display.row', array( 
 					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 					
 					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down', 'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -449,13 +444,13 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang[$action]),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang[$action]),
 		'L_EXPLAIN'	=> $lang['explain_' . $action],
 		'L_NAME'	=> $lang['type_0'],
 		
-		'L_CREATE'			=> sprintf($lang['sprintf_create'], $lang['type_0']),
-		'L_CREATE_LABEL'	=> sprintf($lang['sprintf_create'], $lang['type_1']),
-		'L_CREATE_MODULE'	=> sprintf($lang['sprintf_create'], $lang['type_2']),
+		'L_CREATE'			=> sprintf($lang['stf_create'], $lang['type_0']),
+		'L_CREATE_LABEL'	=> sprintf($lang['stf_create'], $lang['type_1']),
+		'L_CREATE_MODULE'	=> sprintf($lang['stf_create'], $lang['type_2']),
 		
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
@@ -463,7 +458,7 @@ else
 	
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

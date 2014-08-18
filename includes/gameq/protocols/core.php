@@ -46,6 +46,9 @@ abstract class GameQ_Protocols_Core
 	const PACKET_STATUS = 'status';
 	const PACKET_RULES = 'rules';
 	const PACKET_VERSION = 'version';
+	
+	const PACKET_SERVERGROUPS = 'servergroups';
+	const PACKET_CHANNELGROUPS = 'channelgroups';
 
 	/*
 	 * Transport constants

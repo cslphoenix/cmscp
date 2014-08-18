@@ -10,42 +10,42 @@ function display_options(value)
 	if ( value == '0' )
 	{
 		dE('main', -1);
-		dE('menu_file', -1);
-		dE('menu_opts', -1);
 		dE('menu_lang', 1);
 		dE('menu_show', 1);
+		dE('menu_file', -1);
+		dE('menu_opts', -1);
 	}
 	else if ( value == '1' )
 	{
 		dE('main', 1);
-		dE('menu_file', -1);
-		dE('menu_opts', -1);
 		dE('menu_lang', 1);
 		dE('menu_show', 1);
+		dE('menu_file', -1);
+		dE('menu_opts', -1);
 	}
 	else if ( value == '2' )
 	{
 		dE('main', 1);
-		dE('menu_file', 1);
-		dE('menu_opts', 1);
 		dE('menu_lang', 1);
 		dE('menu_show', 1);
+		dE('menu_file', 1);
+		dE('menu_opts', 1);
 	}
 	else if ( value == '3' )
 	{
 		dE('main', -1);
-		dE('menu_file', -1);
 		dE('menu_lang', 1);
 		dE('menu_show', 1);
+		dE('menu_file', -1);		
 		dE('menu_target', -1);
 		dE('menu_intern', -1);
 	}
 	else if ( value == '4' )
 	{
 		dE('main', 1);
-		dE('menu_file', 1);
 		dE('menu_lang', 1);
 		dE('menu_show', 1);
+		dE('menu_file', 1);		
 		dE('menu_target', 1);
 		dE('menu_intern', 1);
 	}
@@ -107,12 +107,10 @@ function display_modes(value)
 <!-- END tab -->
 <!-- END row -->
 
-<div class="submit">
-<dl>
+<dl class="submit">
 	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
 	<dd><input type="reset" value="{L_RESET}"></dd>
 </dl>
-</div>
 {S_FIELDS}
 </form>
 <!-- END input -->

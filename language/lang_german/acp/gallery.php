@@ -10,13 +10,26 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Galerie',
 	'explain'	=> 'Hier werden alle Galerien verwaltet. Die Ordnergröße und Anzahl wird immer nur auf die Eigentlichen Bilder bezogen nicht auf die Vorschaubilder, diese werden nicht mit einberechnet!',
 	
-#	'gallery_name'		=> 'Galeriename',
-#	'gallery_desc'		=> 'Beschreibung',
-#	'gallery_auth'		=> 'Berechtigung',
-#	'gallery_rating'	=> 'Bewertung',
-#	'gallery_comments'	=> 'Kommentare',
+	'data_input'	=> 'Galerie-Daten',
 	
-#	'sprintf_size-pic'	=> '%s / %s Bilder',
+	'gallery_name'		=> 'Name',
+	'type'				=> 'Typ',
+	'main'				=> 'Kategorie',
+	'copy'				=> 'Rechte kopieren',
+	'gallery_desc'		=> 'Beschreibung',
+	'gallery_comments'	=> 'Kommentare',
+	'gallery_rate'		=> 'Bewertung',
+	'gallery_filesize'	=> 'Größe',
+	'gallery_dimension'	=> 'Abmessung',
+	'gallery_format'	=> 'Darstellung',
+	'gallery_thumbnail'	=> 'Vorschau',
+	
+	'sprintf_size-pic'	=> '%s / %s Bilder',
+	
+	'input_data'	=> 'Galeriedaten',
+	
+	'rating'	=> 'Bewertung',
+	'comment'	=> 'Kommentare',
 	
 #	'update_d'	=> 'Standarteinstellungen erfolgreich geändert.',
 #	
@@ -99,7 +112,7 @@ $lang['msg_filetype']			= 'Das Bild muss im GIF-, JPG- oder PNG-Format sein.';
 $lang['msg_filesize']			= 'Die Dateigröße muss kleiner als %d KB sein.';
 $lang['msg_imagesize']			= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
-$lang['sprintf_size-pic']		= '%s / %s Bilder';
+
 
 $lang['auth_gallery_guest']		= 'Gast';
 $lang['auth_gallery_user']		= 'Benutzer';

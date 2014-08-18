@@ -96,7 +96,7 @@ class GameQ
 		}
 		catch (Exception $e)
 		{
-			throw new GameQException($e->getMessage(), $e->getMessage(), $e);
+			throw new GameQException($e->getMessage(), $e->getCode(), $e);
 			die;
 		}
 	}
@@ -135,7 +135,7 @@ class GameQ
 		'filters' => array(),
 
         // Advanced settings
-	    'stream_timeout' => 100, // See http://www.php.net/manual/en/function.stream-select.php for more info
+	    'stream_timeout' => 400000, // See http://www.php.net/manual/en/function.stream-select.php for more info
 	);
 
 	/**
@@ -161,20 +161,6 @@ class GameQ
 	public function __construct()
 	{
 		// @todo: Add PHP version check?
-
-		// Check for Bzip2
-		if(!function_exists('bzdecompress'))
-		{
-			throw new GameQException('Bzip2 is not installed.  See http://www.php.net/manual/en/book.bzip2.php for more info.', 0);
-			return FALSE;
-		}
-
-		// Check for Zlib
-		if(!function_exists('gzuncompress'))
-		{
-			throw new GameQException('Zlib is not installed.  See http://www.php.net/manual/en/book.zlib.php for more info.', 0);
-			return FALSE;
-		}
 	}
 
 	/**

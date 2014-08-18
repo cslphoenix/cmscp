@@ -17,10 +17,10 @@ if ( isset($_POST['mode']) )
 	$mode = (string) $_POST['mode'];
 	
 	$sql = "SELECT cat_tag FROM " . MAPS_CAT . " WHERE cat_id = $mode";
-	debug($sql);
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$cat = $db->sql_fetchrow($result);
 	
@@ -49,14 +49,14 @@ if ( isset($_POST['mode']) )
 		if ( $clear_files )
 		{
 			$s_select .= '<select class="select" name="map_file" id="map_file" onchange="update_ajax_' . $cat['cat_tag'] . '(this.options[selectedIndex].value);">';
-			$s_select .= '<option value="./../admin/style/images/spacer.gif">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_map_file']) . '</option>';
+			$s_select .= '<option value="./../admin/style/images/spacer.gif">' . sprintf($lang['stf_select_format'], $lang['msg_select_map_file']) . '</option>';
 			
 			foreach ( $clear_files as $files )
 			{
 				$filter = str_replace(substr($files, strrpos($files, '.')), "", $files);
 		
 		#		$marked = ( $files == $default ) ? ' selected="selected"' : '';
-				$s_select .= '<option value="' . $files . '" >' . sprintf($lang['sprintf_select_format'], $filter) . '</option>';
+				$s_select .= '<option value="' . $files . '" >' . sprintf($lang['stf_select_format'], $filter) . '</option>';
 			}
 			
 			$s_select .= '</select><br /><img src="" id="image2" alt="" /></td></tr>';	
@@ -90,7 +90,7 @@ if ( isset($_POST['mode']) )
 	if ( $entries )	
 	{
 		$s_select .= "<select class=\"select\" name=\"$mode order_new\" id=\"$mode order\">";
-		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($cats); $i++ )
 		{

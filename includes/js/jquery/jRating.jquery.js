@@ -1,45 +1,52 @@
 /************************************************************************
 *************************************************************************
 @Name :       	jRating - jQuery Plugin
-@Revison :    	2.2
-@Date : 		26/01/2011
+@Revison :    	3.0
+@Date : 		28/01/2013 
 @Author:     	 ALPIXEL - (www.myjqueryplugins.com - www.alpixel.fr) 
 @License :		 Open Source - MIT License : http://www.opensource.org/licenses/mit-license.php
  
 **************************************************************************
 *************************************************************************/
-(function($)
-{
-	$.fn.jRating = function(op)
-	{
+(function($) {
+	$.fn.jRating = function(op) {
 		var defaults = {
 			/** String vars **/
 			bigStarsPath : './images/jquery/stars.png', // path of the icon stars.png
 			smallStarsPath : './images/jquery/small.png', // path of the icon small.png
 			phpPath : './includes/ajax/jRating.php', // path of the php file jRating.php
 			type : 'big', // can be set to 'small' or 'big'
-			
+
 			/** Boolean vars **/
 			step:false, // if true,  mouseover binded star by star,
 			isDisabled:false,
 			showRateInfo: true,
-			
+			canRateAgain : false,
+
 			/** Integer vars **/
 			length:5, // number of star to display
 			decimalLength : 0, // number of decimals.. Max 3, but you can complete the function 'getNote'
 			rateMax : 20, // maximal rate - integer from 0 to 9999 (or more)
 			rateInfosX : -45, // relative position in X axis of the info box when mouseover
 			rateInfosY : 5, // relative position in Y axis of the info box when mouseover
-			
+			nbRates : 1,
+
 			/** Functions **/
 			onSuccess : null,
 			onError : null
 		}; 
-		
-		if ( this.length > 0 )
-		return this.each(function()
-		{
-			var opts = $.extend(defaults, op), newWidth = 0, starWidth = 0, starHeight = 0, bgPath = '';
+
+		if(this.length>0)
+		return this.each(function() {
+			/*vars*/
+			var opts = $.extend(defaults, op),    
+			newWidth = 0,
+			starWidth = 0,
+			starHeight = 0,
+			bgPath = '',
+			hasRated = false,
+			globalWidth = 0,
+			nbOfRates = opts.nbRates;
 
 			if($(this).hasClass('jDisabled') || opts.isDisabled)
 				var jDisabled = true;
@@ -49,12 +56,12 @@
 			getStarWidth();
 			$(this).height(starHeight);
 
-			var average = parseFloat($(this).attr('id').split('_')[0]),
-			idbox = parseInt($(this).attr('id').split('_')[1]), // get the id of the box
-			type = parseInt($(this).attr('id').split('_')[2]), // get the id of the box
+			var average = parseFloat($(this).attr('data-average')), // get the average of all rates
+			idbox = parseInt($(this).attr('data-id')), // get the id of the box
+			type = parseInt($(this).attr('data-type')), // get the type of the box
 			widthRatingContainer = starWidth*opts.length, // Width of the Container
 			widthColor = average/opts.rateMax*widthRatingContainer, // Width of the color Container
-			
+
 			quotient = 
 			$('<div>', 
 			{
@@ -63,7 +70,7 @@
 					width:widthColor
 				}
 			}).appendTo($(this)),
-			
+
 			average = 
 			$('<div>', 
 			{
@@ -85,11 +92,11 @@
 					background: 'url('+bgPath+') repeat-x'
 				}
 			}).appendTo($(this));
-
+			
 			$(this).css({width: widthRatingContainer,overflow:'hidden',zIndex:1,position:'relative'});
 
 			if(!jDisabled)
-			$(this).bind({
+			$(this).unbind().bind({
 				mouseenter : function(e){
 					var realOffsetLeft = findRealLeft(this);
 					var relativeX = e.pageX - realOffsetLeft;
@@ -109,7 +116,8 @@
 				},
 				mouseout : function(){
 					$(this).css('cursor','default');
-					average.width(0);
+					if(hasRated) average.width(globalWidth);
+					else average.width(0);
 				},
 				mousemove : function(e){
 					var realOffsetLeft = findRealLeft(this);
@@ -128,7 +136,15 @@
 					$("p.jRatingInfos").remove();
 				},
 				click : function(e){
-					$(this).unbind().css('cursor','default').addClass('jDisabled');
+                    var element = this;
+					
+					/*set vars*/
+					hasRated = true;
+					globalWidth = newWidth;
+					nbOfRates--;
+					
+					if(!opts.canRateAgain || parseInt(nbOfRates) <= 0) $(this).unbind().css('cursor','default').addClass('jDisabled');
+					
 					if (opts.showRateInfo) $("p.jRatingInfos").fadeOut('fast',function(){$(this).remove();});
 					e.preventDefault();
 					var rate = getNote(newWidth);
@@ -181,7 +197,7 @@
 						bgPath = opts.bigStarsPath;
 				}
 			};
-			
+
 			function findRealLeft(obj) {
 			  if( !obj ) return 0;
 			  return obj.offsetLeft + findRealLeft( obj.offsetParent );

@@ -83,6 +83,8 @@ $lang = array_merge($lang, array(
 	'closed' => 'Gesperrt',
 	'opened' => 'Geöffnet',
 	
+	'label'		=> 'Label',
+	
 	/* added 19.07 */
 	
 	'f_view'	=> 'Kann das Forum sehen',
@@ -111,7 +113,7 @@ $lang = array_merge($lang, array(
 	'forum_access_full'				=> 'Voller Zugang',
 	
 	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Forum', 2 => 'Subforum'),
-
+	
 ));
 
  
@@ -120,7 +122,7 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'radio:status'	=> array(0 => $lang['opened'], 1 => $lang['closed']),
-	'radio:legend'	=> array(1 => $lang['common_view'], 0 => $lang['common_noview']),
+	'radio:legend'	=> array(1 => $lang['com_view'], 0 => $lang['com_noview']),
 	
 ));
 

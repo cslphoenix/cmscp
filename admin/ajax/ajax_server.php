@@ -18,7 +18,8 @@ if ( isset($_POST['queryString']) )
 		$sql = "SELECT server_name, server_ip, server_port FROM " . SERVER . " WHERE server_ip LIKE '$queryString%' OR server_name LIKE '$queryString%'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp = $db->sql_fetchrowset($result);
 

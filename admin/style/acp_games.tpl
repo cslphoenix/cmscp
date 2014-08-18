@@ -1,4 +1,4 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->

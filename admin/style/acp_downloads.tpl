@@ -1,3 +1,6 @@
+<li class="header">{L_HEAD}</li>
+<p>{L_EXPLAIN}</p>
+
 <!-- BEGIN input -->
 <script type="text/javascript" src="style/ajax_main.js"></script>
 <script type="text/javascript">

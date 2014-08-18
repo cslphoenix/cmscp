@@ -49,39 +49,39 @@ function mark_options(id, s)
 <!-- END row -->
 
 <br />
-<br />
 
-<div>
-	<div align="center">
-	<div class="tabs" align="right">
-	<ul>
-		<!-- BEGIN cats -->
-		<li><a {input.cats.AUTH} href="#{input.cats.CAT}">{input.cats.NAME}</a></li>
-		<!-- END cats -->
-	</ul>
-	<!-- BEGIN cats -->
-	<div name="#{input.cats.CAT}" id="{input.cats.OPTIONS}">
-		<table class="ttabs">
-		<tr>
-			<th>{L_SETTINGS}</th>
-			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'y'); return false;">{OPT_YES}Ja</a></th>
-			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'u'); return false;">{OPT_UNSET}Nein</a></th>
-			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'n'); return false;">{OPT_NEVER}Nie</a></th>
-		</tr>
-		<!-- BEGIN auths -->
-		<tr>
-			<td>{input.cats.auths.LANG}</td>
-			<td>{input.cats.auths.OPT_YES}</td>
-			<td>{input.cats.auths.OPT_UNSET}</td>
-			<td>{input.cats.auths.OPT_NEVER}</td>
-		</tr>
-		<!-- END auths -->
-		</table>
-	</div>
-	<!-- END cats -->
-	</div>
+<fieldset>
+	<legend>{L_PERMISSION}</legend>
+<div align="center">
+    <div class="tabs">
+        <ul>
+            <!-- BEGIN cats -->
+            <li><a {input.cats.AUTH} href="#{input.cats.CAT}">{input.cats.NAME}</a></li>
+            <!-- END cats -->
+        </ul>
+        <!-- BEGIN cats -->
+        <div name="#{input.cats.CAT}" id="{input.cats.OPTIONS}">
+            <table class="ttabs" cellpadding="1" cellspacing="1">
+            <tr>
+                <th>{L_SETTINGS}</th>
+                <th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'y'); return false;">{OPT_YES}Ja</a></th>
+                <th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'u'); return false;">{OPT_UNSET}Nein</a></th>
+                <th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'n'); return false;">{OPT_NEVER}Nie</a></th>
+            </tr>
+            <!-- BEGIN auths -->
+            <tr>
+                <td>{input.cats.auths.LANG}</td>
+                <td>{input.cats.auths.OPT_YES}</td>
+                <td>{input.cats.auths.OPT_UNSET}</td>
+                <td>{input.cats.auths.OPT_NEVER}</td>
+            </tr>
+            <!-- END auths -->
+            </table>
+        </div>
+        <!-- END cats -->
 	</div>
 </div>
+</fieldset>
 
 <div class="submit">
 <dl>

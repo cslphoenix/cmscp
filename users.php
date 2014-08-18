@@ -20,10 +20,10 @@ $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$mode	= request('mode', TXT);
-$smode	= request('smode', 1);
 $data	= request('id', INT);
-$sid	= request('sid', 1);
+$mode	= request('mode', TYP);
+$smode	= request('smode', TYP);
+$sid	= request('sid', TYP);
 
 $error	= '';
 $fields	= '';
@@ -36,6 +36,9 @@ $template->set_filenames(array(
 add_lang('lang_users');
 
 $type = ( $mode == 'g' ) ? 'g' : 't';
+
+main_header();
+debug($_POST, '_POST');
 
 $settings['userlist_private']	= $settings['userlist']['private'];
 $settings['userlist_mail']		= $settings['userlist']['mail'];
@@ -60,7 +63,7 @@ if ( in_array($mode, array('m', 'u')) )
 	
 	if ( $settings['userlist_groups'] )
 	{
-		$template->assign_block_vars('list._groups', array());
+		$template->assign_block_vars('list.groups', array());
 		
 		$sql = "SELECT g.group_id, g.group_name, g.group_type, ul.user_id
 					FROM " . GROUPS . " g
@@ -85,7 +88,7 @@ if ( in_array($mode, array('m', 'u')) )
 	
 	if ( $settings['userlist_teams'] )
 	{
-		$template->assign_block_vars('list._teams', array());
+		$template->assign_block_vars('list.teams', array());
 		
 		$sql = "SELECT t.team_id, t.team_name, ul.user_id, g.game_image
 					FROM " . TEAMS . " t
@@ -138,7 +141,7 @@ if ( in_array($mode, array('m', 'u')) )
 			$uteams = implode('<br />', $t_ary[$user_id]);
 		}
 		
-		$template->assign_block_vars('list._row', array(
+		$template->assign_block_vars('list.row', array(
 			'CLASS'		=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 			'USERNAME'	=> $username,
 			'GROUPS'	=> $ugroups,
@@ -147,12 +150,12 @@ if ( in_array($mode, array('m', 'u')) )
 		
 		if ( $settings['userlist_groups'] )
 		{
-			$template->assign_block_vars('list.row._groups', array());
+			$template->assign_block_vars('list.row.groups', array());
 		}
 		
 		if ( $settings['userlist_teams'] )
 		{
-			$template->assign_block_vars('list.row._teams', array());
+			$template->assign_block_vars('list.row.teams', array());
 		}
 	}
 	
@@ -313,8 +316,6 @@ else if ( in_array($mode, array('g', 't')) )
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					( $mode == 'g' ) ? group_set_auth($user_id, $data) : '';
-					
 					$msg = 'user eingetragen';
 				}
 				else
@@ -395,11 +396,6 @@ else if ( in_array($mode, array('g', 't')) )
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					for( $k = 0; $k < count($members); $k++)
-					{
-						group_set_auth($members[$k]['user_id'], $data);
-					}
-					
 					$sql_select = 'SELECT user_email FROM ' . USERS . ' WHERE user_id IN (' . $sql_in . ')';
 				}
 				else if ( isset($HTTP_POST_VARS['deny']) || $smode == '_user_delete' )
@@ -408,11 +404,6 @@ else if ( in_array($mode, array('g', 't')) )
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					for( $i = 0; $i < count($members); $i++ )
-					{
-						group_reset_auth($members[$i]['user_id'], $data);
 					}
 				}
 
@@ -440,10 +431,10 @@ else if ( in_array($mode, array('g', 't')) )
 		}
 		
 		$s_opt .= "<select class=\"postselect\" name=\"smode\" id=\"smode\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
-		$s_opt .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['common_select_option']) . "</option>";
-		$s_opt .= "<option value=\"_user_level\">" . sprintf($lang['sprintf_select_format'], ( $mode == 'g' ) ? $lang['rights_groups'] : $lang['rights_teams']) . "</option>";
-		$s_opt .= ( $mode == 'g' ) ? "" : "<option value=\"_user_setrank\">" . sprintf($lang['sprintf_select_format'], $lang['select_rank']) . "</option>";
-		$s_opt .= "<option value=\"_user_delete\">" . sprintf($lang['sprintf_select_format'], $lang['common_delete']) . "</option>";
+		$s_opt .= "<option value=\"\">" . sprintf($lang['stf_select_format'], $lang['com_select_option']) . "</option>";
+		$s_opt .= "<option value=\"_user_level\">" . sprintf($lang['stf_select_format'], $lang['notice_select_permission']) . "</option>";
+		$s_opt .= ( $mode == 'g' ) ? "" : "<option value=\"_user_setrank\">" . sprintf($lang['stf_select_format'], $lang['select_rank']) . "</option>";
+		$s_opt .= "<option value=\"_user_delete\">" . sprintf($lang['stf_select_format'], $lang['com_delete']) . "</option>";
 		$s_opt .= "</select>";
 		
 	#	$s_opt = "<select class=\"postselect\" name=\"smode\">";
@@ -499,15 +490,15 @@ else if ( in_array($mode, array('g', 't')) )
 		{
 			if ( !$cnt_mod )
 			{
-				$template->assign_block_vars('block._no_mod', array());
+				$template->assign_block_vars('block.no_mod', array());
 			}
 			else
 			{
-				$template->assign_block_vars('block._mod', array());
+				$template->assign_block_vars('block.mod', array());
 				
 				if ( $userdata['user_level'] == ADMIN && $system )	
 				{
-					$template->assign_block_vars('block._mod._switch_admin', array());
+					$template->assign_block_vars('block.mod.switch_admin', array());
 				}
 				
 				for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, $cnt_mod); $i++ )
@@ -516,7 +507,7 @@ else if ( in_array($mode, array('g', 't')) )
 					
 					gen_userinfo($ary_mod[$i], $username, $join, $posts, $comments);
 					
-					$template->assign_block_vars('block._mod._row', array(
+					$template->assign_block_vars('block.mod.row', array(
 						'CLASS'	=> ($i % 2) ? $theme['td_class1'] : $theme['td_class2'],
 						
 						'USER'	=> $user_id,
@@ -529,22 +520,22 @@ else if ( in_array($mode, array('g', 't')) )
 					
 					if ( $userdata['user_level'] == ADMIN && $system )	
 					{
-						$template->assign_block_vars('block._mod.row._switch_admin', array());
+						$template->assign_block_vars('block.mod.row.switch_admin', array());
 					}
 				}
 			}
 			
 			if ( !$cnt_mem )
 			{
-				$template->assign_block_vars('block._no_mem', array());
+				$template->assign_block_vars('block.no_mem', array());
 			}
 			else
 			{
-				$template->assign_block_vars('block._mem', array());
+				$template->assign_block_vars('block.mem', array());
 				
 				if ( ( $userdata['user_level'] == ADMIN || $is_mod ) && $system )
 				{
-					$template->assign_block_vars('block._mem._switch_moderator', array());
+					$template->assign_block_vars('block.mem.switch_moderator', array());
 				}
 				
 				for ( $i = $start; $i < min($settings['per_page_entry_site'] + $start, $cnt_mem); $i++ )
@@ -553,7 +544,7 @@ else if ( in_array($mode, array('g', 't')) )
 					
 					gen_userinfo($ary_mem[$i], $username, $join, $posts, $comments);
 					
-					$template->assign_block_vars('block._mem._row', array(
+					$template->assign_block_vars('block.mem.row', array(
 						'CLASS'	=> ($i % 2) ? $theme['td_class1'] : $theme['td_class2'],
 						
 						'USER'	=> $user_id,
@@ -566,7 +557,7 @@ else if ( in_array($mode, array('g', 't')) )
 					
 					if ( ( $userdata['user_level'] == ADMIN || $is_mod ) && $system )
 					{
-						$template->assign_block_vars('block._mem.row._switch_moderator', array());
+						$template->assign_block_vars('block.mem.row.switch_moderator', array());
 					}
 				}
 			}
@@ -579,7 +570,7 @@ else if ( in_array($mode, array('g', 't')) )
 					
 					gen_userinfo($ary_pen[$i], $username, $join, $posts, $comments);
 					
-					$template->assign_block_vars('block._pen', array(
+					$template->assign_block_vars('block.pen', array(
 						'CLASS'	=> ($i % 2) ? $theme['td_class1'] : $theme['td_class2'],
 						
 						'USER'	=> $user_id,
@@ -595,13 +586,13 @@ else if ( in_array($mode, array('g', 't')) )
 		
 		if ( !$is_mem && !$is_mod && !$hidden )
 		{
-			$template->assign_block_vars('block._hidden_group', array());
+			$template->assign_block_vars('block.hidden_group', array());
 			$template->assign_vars(array('L_HIDDEN_MEMBERS' => $lang['Group_hidden_members']));
 		}
 		
 		if ( $is_mod || $userdata['user_level'] == ADMIN && $system )
 		{
-			$template->assign_block_vars('block._add_member', array());
+			$template->assign_block_vars('block.add_member', array());
 		}
 		
 		$fields .= '<input type="hidden" name="sid" value="' . $userdata['session_id'] . '" />';
@@ -631,7 +622,7 @@ else if ( in_array($mode, array('g', 't')) )
 			
 			'S_FIELDS'	=> $fields,
 			'S_OPTION'	=> $s_opt,
-			'S_ACTION'	=> check_sid("$file?" . POST_GROUPS . "=$data"),
+			'S_ACTION'	=> check_sid("$file?id=$data"),
 		));
 	}
 	else
@@ -656,7 +647,7 @@ else if ( in_array($mode, array('g', 't')) )
 				
 				if ( $groups )
 				{
-					$template->assign_block_vars('listg._in_groups', array());
+					$template->assign_block_vars('listg.in_groups', array());
 				
 					foreach ( $groups as $group => $row )
 					{
@@ -674,7 +665,7 @@ else if ( in_array($mode, array('g', 't')) )
 				
 					if ( $is_member )
 					{
-						$template->assign_block_vars('listg._in_groups._is_member', array());
+						$template->assign_block_vars('listg.in_groups.is_member', array());
 				
 						for ( $i = 0; $i < count($is_member); $i++ )
 						{
@@ -687,7 +678,7 @@ else if ( in_array($mode, array('g', 't')) )
 								case GROUP_SYSTEM:	$group_type = $lang['Group_system'];	break;
 							}
 							
-							$template->assign_block_vars('listg._in_groups._is_member._row', array(
+							$template->assign_block_vars('listg.in_groups.is_member.row', array(
 								'CLASS'	=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 								'NAME' => "<a href=" . check_sid("$file?mode=g&amp;id=" . $is_member[$i]['group_id']) . ">" . $is_member[$i]['group_name'] . "</a>",
 								'DESC' => ( $is_member[$i]['group_desc'] ) ? ' :: ' . $is_member[$i]['group_desc'] : '',
@@ -698,7 +689,7 @@ else if ( in_array($mode, array('g', 't')) )
 				
 					if ( $is_pending )
 					{
-						$template->assign_block_vars('listg._in_groups._is_pending', array());
+						$template->assign_block_vars('listg.in_groups.is_pending', array());
 					
 						for ($i = 0; $i < count($is_pending); $i++)
 						{
@@ -711,7 +702,7 @@ else if ( in_array($mode, array('g', 't')) )
 								case GROUP_SYSTEM:	$group_type = $lang['Group_system'];	break;
 							}
 					
-							$template->assign_block_vars('listg._in_groups._is_pending._row', array(
+							$template->assign_block_vars('listg.in_groups.is_pending.row', array(
 								'CLASS'	=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 								'NAME' => "<a href=" . check_sid("$file?mode=g&amp;id=" . $is_pending[$i]['group_id']) . ">" . $is_pending[$i]['group_name'] . "</a>",
 								'DESC' => ( $is_pending[$i]['group_desc'] ) ? ' :: ' . $is_pending[$i]['group_desc'] : '',
@@ -735,7 +726,7 @@ else if ( in_array($mode, array('g', 't')) )
 			
 				if ( $no_group )
 				{
-					$template->assign_block_vars('listg._no_group', array());
+					$template->assign_block_vars('listg.no_group', array());
 					
 					for ( $i = 0; $i < count($no_group); $i++ )
 					{
@@ -750,7 +741,7 @@ else if ( in_array($mode, array('g', 't')) )
 						
 						if ( $no_group[$i]['group_type'] != GROUP_HIDDEN )
 						{
-							$template->assign_block_vars('listg._no_group._row', array(
+							$template->assign_block_vars('listg.no_group.row', array(
 								'CLASS'	=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 								'NAME' => "<a href=" . check_sid("$file?mode=g&amp;id=" . $no_group[$i]['group_id']) . ">" . $no_group[$i]['group_name'] . "</a>",
 								'DESC' => ( $no_group[$i]['group_desc'] ) ? ' :: ' . $no_group[$i]['group_desc'] : '',
@@ -797,7 +788,7 @@ else if ( in_array($mode, array('g', 't')) )
 					$class = 0;	
 					$game_id = $games[$i]['game_id'];
 					
-					$template->assign_block_vars('listt._game_row', array('L_GAME' => $games[$i]['game_name']));
+					$template->assign_block_vars('listt.game_row', array('L_GAME' => $games[$i]['game_name']));
 																	 
 					for ( $j = 0; $j < $cnt_teams; $j++ )
 					{
@@ -806,10 +797,10 @@ else if ( in_array($mode, array('g', 't')) )
 						
 						if ( $team_game == $game_id )
 						{
-							$template->assign_block_vars('listt._gamerow._team_row', array(
+							$template->assign_block_vars('listt.game_row.team_row', array(
 								'CLASS'	=> ( $class % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 								'NAME'	=> '<a href="' . check_sid("$file?mode=t&amp;id=$team_id") . '">' . $teams[$j]['team_name'] . '</a>',
-								'GAME'	=> display_gameicon($games[$i]['game_size'], $games[$i]['game_image']),
+								'GAME'	=> display_gameicon($games[$i]['game_image']),
 								
 							#	'JOINUS'	=> $teams[$j]['team_join']	? '<a href="' . check_sid("contact.php?mode=joinus&amp;$url=$team_id") . '">' . $lang['match_joinus'] . '</a>'  : '',
 							#	'FIGHTUS'	=> $teams[$j]['team_fight']	? '<a href="' . check_sid("contact.php?mode=fightus&amp;$url=$team_id") . '">' . $lang['match_fightus'] . '</a>'  : '',
@@ -827,11 +818,7 @@ else if ( in_array($mode, array('g', 't')) )
 else
 {
 	$template->assign_block_vars('default', array());
-	
-	echo 'default';
 }
-
-main_header();
 
 $template->pparse('body');
 

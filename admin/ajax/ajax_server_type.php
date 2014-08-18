@@ -27,7 +27,8 @@ if ( isset($_POST['mode']) )
 		$sql = "SELECT * FROM " . SERVER_TYPE . " WHERE type_sort = $key";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp = $db->sql_fetchrowset($result);
 		
@@ -38,7 +39,7 @@ if ( isset($_POST['mode']) )
 			foreach ( $tmp as $row )
 			{
 			#	$selected = ( $default == $row['type_game'] ) ? ' selected="selected"' : '';
-				$s_select .= "<option value=\"" . $row['type_game'] . "\">" . sprintf($lang['sprintf_select_format'], $row['type_name']) . "</option>";
+				$s_select .= "<option value=\"" . $row['type_game'] . "\">" . sprintf($lang['stf_select_format'], $row['type_name']) . "</option>";
 			}
 			$s_select .= "</select>";
 			

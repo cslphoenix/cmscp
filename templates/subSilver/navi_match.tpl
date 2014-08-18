@@ -14,7 +14,7 @@ $(function() { $("#matchstats").sparkline('html',{type:'tristate', posBarColor:'
 <!-- END sn_match_row -->
 <!-- BEGIN sn_match_empty -->
 <tr>
-	<td colspan="3" class="empty">{L_EMPTY}</td>
+	<td colspan="3" class="empty">{sn_match_empty.L_EMPTY}</td>
 </tr>
 <!-- END sn_match_empty -->
 </table>

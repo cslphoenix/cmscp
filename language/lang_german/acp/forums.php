@@ -128,7 +128,7 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'radio:status'	=> array(0 => $lang['opened'], 1 => $lang['closed']),
-	'radio:legend'	=> array(1 => $lang['common_view'], 0 => $lang['common_noview']),
+	'radio:legend'	=> array(1 => $lang['com_view'], 0 => $lang['com_noview']),
 	
 ));
 

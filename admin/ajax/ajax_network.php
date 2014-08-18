@@ -25,7 +25,8 @@ if ( isset($_POST['name']) )
 	$sql = "SELECT * FROM " . NETWORK . "$type ORDER BY network_type, network_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$entries = $db->sql_fetchrowset($result);
 	
@@ -34,7 +35,7 @@ if ( isset($_POST['name']) )
 	if ( $entries )	
 	{
 		$s_select .= "<select class=\"select\" name=\"network_order_new\" id=\"network_order\">";
-		$s_select .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($cats); $i++ )
 		{
@@ -69,7 +70,7 @@ if ( isset($_POST['name']) )
 }
 else
 {
-	echo sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+	echo sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
 }
 
 ?>

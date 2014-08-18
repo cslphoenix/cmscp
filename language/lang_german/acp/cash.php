@@ -6,12 +6,23 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
+
+	'bank'		=> 'Bankdaten',
+	'user'		=> 'Benutzer',
+	'type'		=> 'Clankassen-Art',
+
 	
 	'title'		=> 'Clankasse',
 	'explain'	=> 'Clankassen verwaltung!',
 	
-	'cash_bank'		=> 'Bank',
 	'cash_reason'	=> 'Kosten',
+	'cash_interval'	=> 'Zahlungsintervall',
+	'cash_postage'	=> 'Gesammtbetrag',
+	
+	
+	
+	'cash_bank'		=> 'Bank',
+	
 	'cash_user'		=> 'Benutzer',
 	
 	'bank_data'		=> 'Kontodaten',
@@ -44,7 +55,7 @@ $lang = array_merge($lang, array(
 	'type_voice'	=> 'Voiceserver',
 	'type_other'	=> 'sonstiges',
 	
-	'postage' => 'Gesammtbetrag',
+	
 	
 	'cash_received'		=> 'Bezahlt',
 	'cast_notreceived'	=> 'nicht Bezahlt',
@@ -59,6 +70,10 @@ $lang = array_merge($lang, array(
 	'cash_interval'	=> 'Zahlungsintervall',
 	
 	
+	'ccreate'	=> 'hinzugefügt',
+	'cupdate'	=> 'geändert',
+	
+	
 	
 ));
 
@@ -66,6 +81,12 @@ $lang = array_merge($lang, array(
 	'radio:interval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_only']),
 	'radio:cinterval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_weeks'], 2 => $lang['interval_weekly']),
 	'radio:type'		=> array(0 => $lang['type_game'], 1 => $lang['type_voice'], 2 => $lang['type_other']),
+));
+
+$lang = array_merge($lang, array(	
+	'radio:user'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_only']),
+	'radio:type'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_weeks'], 2 => $lang['interval_weekly']),
+	'radio:ctype'	=> array(0 => $lang['type_game'], 1 => $lang['type_voice'], 2 => $lang['type_other']),
 ));
 
 /*

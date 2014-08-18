@@ -19,7 +19,8 @@ if ( isset($_POST['name']) )
 	$sql = "SELECT * FROM " . FORUM . " WHERE forum_sub = $forum_id ORDER BY forum_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$forms = $db->sql_fetchrowset($result);
 	
@@ -28,7 +29,7 @@ if ( isset($_POST['name']) )
 	if ( $forms )
 	{
 		$s_select .= "<select class=\"select\" name=\"forum_suborder\" id=\"forum_suborder\">";
-		$s_select .= "<option selected=\"selected\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($forms); $i++ )
 		{
@@ -50,7 +51,7 @@ if ( isset($_POST['name']) )
 }
 else
 {
-	echo sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+	echo sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
 }
 
 ?>

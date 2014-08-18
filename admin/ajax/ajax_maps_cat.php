@@ -24,7 +24,8 @@ if ( isset($_POST['string']) )
 		$sql = "SELECT DISTINCT * FROM " . GAMES . " WHERE game_id != '-1' AND (LOWER(game_name) LIKE '%$string%' OR LOWER(game_tag) LIKE '%$string%')";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp = $db->sql_fetchrowset($result);
 		

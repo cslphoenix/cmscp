@@ -12,11 +12,11 @@ include($root_path . 'common.php');
 
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
-
-if ( isset($_POST['user_name']) || isset($_POST['user_id']) )
+debug($_POST);
+if ( isset($_POST['cash_name']) || isset($_POST['user_name']) || isset($_POST['user_id']) )
 {
-	$fill_type	= isset($_POST['user_name']) ? 'fill' : 'set_user_id';
-	$user_name	= isset($_POST['user_name']) ? str_replace("'", "\'", $_POST['user_name']) : str_replace("'", "\'", $_POST['user_id']);
+	$fill_type	= isset($_POST['user_name']) ? 'fill' : (isset($_POST['cash_name']) ? 'set_cash_name' : 'set_user_id');
+	$user_name	= isset($_POST['user_name']) ? str_replace("'", "\'", $_POST['user_name']) : ((isset($_POST['cash_name']) ? str_replace("'", "\'", $_POST['cash_name']) : str_replace("'", "\'", $_POST['user_id'])));
 	$user_name	= str_replace('*', '%', strtolower($user_name));
 	$user_new	= isset($_POST['user_new']) ? str_replace("'", "\'", $_POST['user_new']) : '';
 	$user_level	= isset($_POST['user_level']) ? "AND user_level >= " . str_replace("'", "\'", $_POST['user_level']) : false;
@@ -24,7 +24,8 @@ if ( isset($_POST['user_name']) || isset($_POST['user_id']) )
 	$sql = "SELECT user_id, user_name, user_level, user_regdate, user_lastvisit, user_dateformat FROM " . USERS . " WHERE LOWER(user_name) LIKE '%$user_name%' AND user_id != 1 $user_level";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$tmp = $db->sql_fetchrowset($result);
 	
@@ -51,11 +52,11 @@ if ( isset($_POST['user_name']) || isset($_POST['user_id']) )
 				default: $lvl = $tmp[$i]['user_level'];	break;
 			}				
 			
-			echo "<li onclick=\"$fill_type('$name');\">" . sprintf($lang['sprintf_ajax_users'], $name, $lvl, $reg, $log) . "</li>";
+			echo "<li onclick=\"$fill_type('$name');\">" . sprintf($lang['stf_ajax_users'], $name, $lvl, $reg, $log) . "</li>";
 			
 			if ( $i == 4 )
 			{
-				echo '&nbsp;&raquo;&nbsp;' . sprintf($lang['sprintf_ajax_more'], $num) . '';
+				echo '&nbsp;&raquo;&nbsp;' . sprintf($lang['stf_ajax_more'], $num) . '';
 				break;
 			}
 		}
@@ -68,13 +69,13 @@ if ( isset($_POST['user_name']) || isset($_POST['user_id']) )
 		}
 		else
 		{
-			echo sprintf($lang['sprintf_select_format'], $lang['no_entry']);
+			echo sprintf($lang['stf_select_format'], $lang['no_entry']);
 		}
 	}
 }
 else
 {
-	echo sprintf($lang['sprintf_select_format'], $lang['no_entry']);
+	echo sprintf($lang['stf_select_format'], $lang['no_entry']);
 }
 
 ?>

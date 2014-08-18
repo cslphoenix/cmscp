@@ -12,7 +12,6 @@ function update_image(newimage)
 </script>
 
 <form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
-<br />
 {ERROR_BOX}
 
 <!-- BEGIN row -->
@@ -46,24 +45,27 @@ function update_image(newimage)
 
 <!-- BEGIN member -->
 {AJAX}
-<form action="{S_ACTION}" method="post" id="list" name="list">
+<form action="{S_ACTION}" method="post" name="post" id="list">
 <br />
 {ERROR_BOX}
 
-<table class="normal">
+<table class="users">
 <tr>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MODERATORS}</a></li></ul></th>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_REGISTER}</a></li></ul></th>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_JOIN}</a></li></ul></th>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_RANK}</a></li></ul></th>
+	<th>{L_MODERATORS}</th>
+	<th>{L_RANK}</th>
+	<th>{L_MAIN}</th>
+	<th>{L_JOIN}</th>
+	<th>{L_REGISTER}</th>
+	<th>&nbsp;</th>
 </tr>
 <!-- BEGIN moderators -->
 <tr onclick="checked({member.moderators.ID})" class="hover">
 	<td>{member.moderators.NAME}</td>
-	<td>{member.moderators.REG}</td>
-	<td>{member.moderators.JOIN}</td>
 	<td>{member.moderators.RANK}</td>
-	<td><input type="checkbox" name="member[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
+	<td>{member.moderators.MAIN}</td>
+	<td>{member.moderators.JOIN}</td>
+	<td>{member.moderators.REG}</td>
+	<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
 </tr>
 <!-- END moderators -->
 <!-- BEGIN no_moderators -->
@@ -75,21 +77,23 @@ function update_image(newimage)
 
 <br />
 
-<table class="normal">
+<table class="users">
 <tr>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBERS}</a></li></ul></th>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_REGISTER}</a></li></ul></th>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_JOIN}</a></li></ul></th>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_RANK}</a></li></ul></th>
+	<th>{L_MEMBERS}</th>
+	<th>{L_RANK}</th>
+	<th>{L_MAIN}</th>
+	<th>{L_JOIN}</th>
+	<th>{L_REGISTER}</th>
+	<th>&nbsp;</th>
 </tr>
 <!-- BEGIN members -->
-<!--<tr class="hover">-->
-<tr>
-	<td><label for="check_{member.members.ID}">{member.members.NAME}</label></td>
-	<td><label for="check_{member.members.ID}">{member.members.REG}</label></td>
-	<td><label for="check_{member.members.ID}">{member.members.JOIN}</label></td>
-	<td><label for="check_{member.members.ID}">{member.members.RANK}</label></td>
-	<td><input type="checkbox" name="member[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
+<tr onclick="checked({member.members.ID})" class="hover">
+	<td>{member.members.NAME}</td>
+	<td>{member.members.RANK}</td>
+	<td>{member.members.MAIN}</td>
+	<td>{member.members.JOIN}</td>
+	<td>{member.members.REG}</td>
+	<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
 </tr>
 <!-- END members -->
 <!-- BEGIN no_members -->
@@ -99,6 +103,8 @@ function update_image(newimage)
 <!-- END no_members -->
 </table>
 
+<br />
+
 <table class="rfooter">
 <tr>
 	<td>{S_OPTIONS}</td>
@@ -106,13 +112,12 @@ function update_image(newimage)
 	<td><input type="submit" value="{L_SUBMIT}" /></td>
 </tr>
 <tr>
-	<td align="right" colspan="3"><a href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
+	<td align="right" colspan="3"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
 
-<!-- BEGIN add -->
 <form action="{S_ACTION}" method="post" name="post" id="list">
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBERS_ADD}</a></li></ul>
 
@@ -126,16 +131,16 @@ function update_image(newimage)
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="row1"><label for="moderator" title="{L_MEMBER_ADD_MOD}">{L_MEMBER_ADD_MOD}:</label></td>
-	<td class="row2"><label><input type="radio" name="moderator" id="moderator" value="1" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="moderator" value="0" checked="checked" />&nbsp;{L_NO}</label></td>
+	<td class="row1"><label for="status" title="{L_MEMBER_ADD_MOD}">{L_MEMBER_ADD_MOD}:</label></td>
+	<td class="row2"><label><input type="radio" name="status" id="status" value="1" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_NO}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="rank_id">{L_MEMBER_ADD_RANK}:</label></td>
 	<td>{S_RANK_SELECT}</td>
 </tr>
 <tr>
-	<td class="row1"><label for="members">{L_USERNAME}:</label></td>
-	<td class="row2"><textarea class="textarea" name="members" style="width:50%" rows="5"></textarea><br />{S_USERS}</td>
+	<td class="row1"><label for="textarea">{L_USERNAME}:</label></td>
+	<td class="row2"><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea></td>
 </tr>
 </table>
 
@@ -145,9 +150,8 @@ function update_image(newimage)
 </tr>
 </table>
 {S_FIELDS}
-<input type="hidden" name="smode" value="user_create" />
+<input type="hidden" name="mode" value="ucreate" />
 </form>
-<!-- END add -->
 <!-- END member -->
 
 <!-- BEGIN display -->

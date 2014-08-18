@@ -30,7 +30,7 @@ $lobby_dateformat		= $settings['lobby']['date'];
 $lobby_limit_news		= $settings['lobby']['news_limit']*86400;
 $lobby_limit_event		= $settings['lobby']['event_limit']*86400;
 $lobby_limit_match		= $settings['lobby']['match_limit']*86400;
-$lobby_limit_training	= $settings['lobby']['train_limit']*86400;
+$lobby_limit_training	= $settings['lobby']['training_limit']*86400;
 
 $template->set_filenames(array('body' => 'body_ucp.tpl'));
 
@@ -723,7 +723,7 @@ if ( $userdata['session_logged_in'] )
 						{
 							$checked_yes	= ( $value == 1 ) ? 'checked="checked"' : '';
 							$checked_no		= ( $value == 0 ) ? 'checked="checked"' : '';
-							$input = "<label><input type=\"radio\" name=\"$field\" value=\"1\" $checked_yes/>&nbsp;{$lang['common_yes']}</label><span style=\"padding:4px;\"></span><label><input type=\"radio\" name=\"$field\" value=\"0\" $checked_no/>&nbsp;{$lang['common_no']}</label>";
+							$input = "<label><input type=\"radio\" name=\"$field\" value=\"1\" $checked_yes/>&nbsp;{$lang['com_yes']}</label><span style=\"padding:4px;\"></span><label><input type=\"radio\" name=\"$field\" value=\"0\" $checked_no/>&nbsp;{$lang['com_no']}</label>";
 						}
 						
 						$template->assign_block_vars("update.cat.field", array(

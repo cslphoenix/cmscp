@@ -19,7 +19,7 @@ $lang = array_merge($lang, array(
 		'update'	=> 'Erforderliche Daten',
 		'settings'	=> '!Einstellungen',
 		'pics'		=> '!Foto & Avatar',
-		'auth'		=> 'Benutzerberechtigungen',
+		'permission'=> 'Benutzerberechtigungen',
 		'groups'	=> 'Benutzergruppen & Teams',		
 		'fields'	=> 'Profilfelder',
 		'overview'	=> '!Übersicht',
@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'auth_disallowed'	=> 'Nein',
 	
 	'mail'	=> 'eMail verschicken?',
-	'mod'	=> 'Moderatorstatus',
+	'mod'	=> 'Rechte',
 
 	'all_default' => 'Vorgabe aktivieren',
 	'all_special' => 'Spezial aktivieren',
@@ -64,7 +64,7 @@ $lang = array_merge($lang, array(
 	
 ));
 
-$lang['Membership_pending'] = '<span title="Ja für Annehmen, Nein für Ablehnen">warten auf Freigabe<sup>I</sup></span>';
+$lang['Membership_pending'] = '<span title="Ja für Annehmen, Nein für Ablehnen"><u>Freigabe</u></span>';
 
 /*
 $lang['user_pass_random']	= 'Beispiel: %s';

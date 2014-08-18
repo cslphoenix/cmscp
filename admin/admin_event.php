@@ -22,6 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('event');
+	acl_auth('a_event');
 	
 	$error	= '';
 	$index	= '';
@@ -36,13 +37,7 @@ else
 	$accept	= request('accept', TYP);
 	
 	$acp_main	= request('acp_main', INT);
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_event'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 
 	( $cancel && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
 	( $cancel && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
@@ -51,12 +46,11 @@ else
 		'body'		=> 'style/acp_event.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
-
-	$mode = (in_array($mode, array('create', 'update', 'delete'))) ? $mode : false;
 	
-	$switch = $settings['switch']['event'];
-
 #	debug($_POST, '_POST');
+
+	$base	= $settings['switch']['event'];
+	$mode = (in_array($mode, array('create', 'update', 'delete'))) ? $mode : false;
 
 	switch ( $mode )
 	{
@@ -69,10 +63,9 @@ else
 				'event' => array(
 					'title' => 'data_input',
 					'event_title'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',		'required' => 'input_title'),
-					'event_desc'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:50',	'required' => 'input_desc', 'params' => TINY_NORMAL),
+					'event_desc'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:50',	'required' => 'input_desc', 'params' => TINY_NORMAL, 'class' => 'tinymce'),
 					'event_level'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:userlevel', 'required' => 'select_level', 'params' => 'user_level'),
-					'event_date'		=> $switch ? array('validate' => INT,	'explain' => false,	'type' => 'drop:datetime', 'params' => ($mode == 'create') ? $time : '-1') : array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'params' => 'format'),
-				#	'event_date'		=> array('validate' => ($switch ? INT : TXT), 'type' => ($switch ? 'drop:datetime' : 'text:25;25'), 'params' => ($switch ? (($mode == 'create') ? $time : '-1') : 'format')),
+					'event_date'		=> array('validate' => ($base ? INT : TXT), 'explain' => false, 'type' => ($base ? 'drop:datetime' : 'text:25;25'), 'params' => ($base ? (($mode == 'create') ? $time : '-1') : 'format')),
 					'event_duration'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:duration',	'params' => 'event_date'),
 					'event_comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 					'time_create'		=> 'hidden',
@@ -88,9 +81,9 @@ else
 					'event_level'		=> '-1',
 					'event_date'		=> $time,
 					'event_duration'	=> 0,
-					'event_comments'	=> 1,
+					'event_comments'	=> $settings['comments']['event'],
 					'time_create'		=> $time,
-					'time_update'		=> 0,
+					'time_update'		=> $time,
 				);
 			}
 			else if ( $mode == 'update' && !$submit )
@@ -132,8 +125,8 @@ else
 			build_output(EVENT, $vars, $data_sql);
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], lang($data_sql['event_title'])),
-				'L_EXPLAIN'	=> $lang['common_required'],
+				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['event_title'])),
+				'L_EXPLAIN'	=> $lang['com_required'],
 
 				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 				'S_FIELDS'	=> $fields,
@@ -148,7 +141,7 @@ else
 			if ( $data && $confirm )
 			{
 				$file = ( $acp_main ) ? check_sid('index.php') : check_sid($file);
-				$name = ( $acp_main ) ? $lang['header_acp'] : $acp_title;
+				$name = ( $acp_main ) ? $lang['acp_overview'] : $acp_title;
 				
 				$sql = sql(EVENT, $mode, $data_sql, 'event_id', $data);
 				$msg = $lang['delete'] . sprintf($lang['return'], $file, $name);
@@ -170,8 +163,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
 				
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['event_title']),
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['event_title']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -236,7 +229,7 @@ else
 						$template->assign_block_vars('display.new', array(
 							'TITLE'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, $title),
 							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 							
 							'DATE'		=> sprintf($lang['sprintf_event'], $date, $time, $dura),
 						));
@@ -262,7 +255,7 @@ else
 						$template->assign_block_vars('display.old', array(
 							'TITLE'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, $title),
 							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 							
 							'DATE'		=> sprintf($lang['sprintf_event'], $date, $time, $dura),
 						));
@@ -273,8 +266,8 @@ else
 			$current_page = (!$cnt_old) ? 1 : ceil($cnt_old/$settings['ppe_acp']);
 
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
+				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+				'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
 				'L_EXPLAIN'	=> $lang['explain'],
 
 				'L_DATE'		=> $lang['event_date'],
@@ -295,7 +288,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

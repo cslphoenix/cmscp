@@ -31,7 +31,8 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 				WHERE mc.cat_tag = g.game_tag";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$cats = $db->sql_fetchrow($result);
 		
@@ -52,7 +53,7 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 			if ( $maps )
 			{
 				$s_select .= "<div><div><select class=\"selectsmall\" name=\"training_maps[]\" id=\"training_maps\">";
-				$s_select .= "<option selected=\"selected\" >" . sprintf($lang['sprintf_select_format'], $lang['msg_select_map']) . "</option>";
+				$s_select .= "<option selected=\"selected\" >" . sprintf($lang['stf_select_format'], $lang['notice_select_map']) . "</option>";
 				
 				$s_maps = '';
 					
@@ -62,7 +63,7 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 					$map_cat	= $maps[$j]['cat_id'];
 					$map_name	= $maps[$j]['map_name'];
 		
-					$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['sprintf_select_format'], $map_name) . "</option>" : '';
+					$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['stf_select_format'], $map_name) . "</option>" : '';
 				}
 				
 				$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
@@ -70,24 +71,24 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 			}
 			else
 			{
-				$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+				$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
 			}
 		}
 		else
 		{
-			$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_maps']);
+			$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
 		}
 	}
 	else
 	{
-		$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_select_team_first']);
+		$s_select = sprintf($lang['stf_select_format'], $lang['notice_select_team_first']);
 	}
 	
 	echo $s_select;
 }
 else
 {
-	echo sprintf($lang['sprintf_select_format'], $lang['msg_select_team_first']);
+	echo sprintf($lang['stf_select_format'], $lang['notice_select_team_first']);
 }
 
 ?>

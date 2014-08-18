@@ -1,6 +1,6 @@
 <?php
 
-function _cached($sql, $sCacheName, $rows = '', $time = '')
+function _cached($sql, $sCacheName, $rows = 0, $time = '')
 {
 	/*
 		@param string $sql		enthï¿½lt die SQL Abfrage
@@ -13,6 +13,8 @@ function _cached($sql, $sCacheName, $rows = '', $time = '')
 	
 	global $db, $oCache;
 	
+#	debug($sql, $sCacheName);
+	
 	if ( defined('CACHE') )
 	{
 		if ( ( $data = $oCache->readCache($sCacheName) ) === false )
@@ -23,7 +25,12 @@ function _cached($sql, $sCacheName, $rows = '', $time = '')
 			}
 			
 			$data = ( $rows == '1' ) ? $db->sql_fetchrow($result) : $db->sql_fetchrowset($result);
-			$time = ( $time != '' ) ? $oCache->writeCache($sCacheName, $data, (int) $time) : $oCache->writeCache($sCacheName, $data);
+			
+			if ( $data != NULL )
+			{
+			#	debug($data, $sCacheName, true);
+				( $time != '' ) ? $oCache->writeCache($sCacheName, $data, (int) $time) : $oCache->writeCache($sCacheName, $data);
+			}
 			
 			$db->sql_freeresult($result);
 		}
@@ -115,6 +122,25 @@ function cached($type, $data, $name, $ary = '', $time = '')
 	}
 	
 	return $tmp;
+}
+
+function cached_gameq($online, $sCacheName, $time = '')
+{
+	global $oCache;
+	
+	if ( ( $sContent = $oCache->readCache($sCacheName) ) === false )
+	{
+		$gq = new GameQ(); // or $gq = GameQ::factory();
+		$gq->setOption('timeout', 1); // Seconds
+	#	$gq->setOption('debug', TRUE);
+		$gq->setFilter('normalise');
+		$gq->addServers($online);
+		$sContent = $gq->requestData();
+		
+		$time = ( $time != '' ) ? $oCache->writeCache($sCacheName, $sContent, (int) $time) : $oCache->writeCache($sCacheName, $sContent);
+	}
+	
+	return $sContent;
 }
 
 function cached_file($tmp, $sCacheName, $time = '')

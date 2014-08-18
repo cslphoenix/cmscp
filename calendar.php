@@ -40,21 +40,24 @@ $sm	= request('month', INT);
 
 if ( $sm && $sy )
 {
-	$tag	= ( $sm == date('m') ) ? date("d", $time) : '';
-	$jahr	= ( $sy ) ? $sy : date('Y');
-	$monat	= ( $sm ) ? $sm : date('m');
-	$monat	= ( $monat < 10 ) ? '0' . $monat : $monat;
-	$tage	= date("t", mktime(0, 0, 0, $monat, 1, $jahr));
-	$erster	= date("w", mktime(0, 0, 0, $monat, 1, $jahr));
+	$cur_day	= ( $sm == date('m') ) ? date('d', $time) : '';
+	$cur_year	= ( $sy ) ? $sy : date('Y');
+	$cur_month	= ( $sm ) ? $sm : date('m');
+	$cur_month	= ( $cur_month < 10 ) ? '0' . $cur_month : $cur_month;
+	$cur_days	= date('t', mktime(0, 0, 0, $cur_month, 1, $cur_year));
+	$cur_first	= date('w', mktime(0, 0, 0, $cur_month, 1, $cur_year));
 }
 else
 {
-	$tage	= date("t");
-	$tag	= date("d", $time);
-	$jahr	= date("Y", $time);
-	$monat	= date("m", $time);
-	$erster	= date("w", mktime(0, 0, 0, $monat, 1, $jahr));
+	$cur_days	= date('t');
+	$cur_day	= date('d', $time);
+	$cur_year	= date('Y', $time);
+	$cur_month	= date('m', $time);
+	$cur_first	= date('w', mktime(0, 0, 0, $cur_month, 1, $cur_year));
 }
+
+$prev_month = ( $cur_month == 1 ) ? '12' : $cur_month-1;
+$prev_days = date('t', mktime(0, 0, 0, $prev_month, 1, $cur_year));
 
 $tag_der_woche	= date("w"); // Welcher Tag in der Woch: z. B. "0 / Sonntag"
 $arr_woche_kurz	= array('So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa');
@@ -74,17 +77,19 @@ $monate = array(
 	'12'	=> $lang['datetime']['month_12'],
 );
 
-$sm = $monate[$monat];
+$sm = $monate[$cur_month];
 
 if ( defined('CACHE') )
 {
-	$sCacheName = "data_calendar_$monat$jahr";
+	$sCacheName = "data_calendar_$cur_month$cur_year";
 
 	if ( ($monat_data = $oCache -> readCache($sCacheName)) === false )
 	{
-		$bday = $news = $event = $match = $train = array();
+		$db_birthday = $db_news = $db_event = $db_match = $db_training = array();
 		
-		$sql = "SELECT user_id, user_name, user_birthday FROM " . USERS . " WHERE MONTH(user_birthday) = $monat";
+		$sql = "SELECT user_id, user_name, user_birthday
+					FROM " . USERS . "
+				WHERE MONTH(user_birthday) = $cur_month";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -94,7 +99,7 @@ if ( defined('CACHE') )
 		{
 			$tmp = explode('-', $row['user_birthday']);
 			
-			$bday[$tmp[2]][] = $row;
+			$db_birthday[$tmp[2]][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
@@ -103,7 +108,7 @@ if ( defined('CACHE') )
 						LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$monat.$jahr'";
+				WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$cur_month.$cur_year'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -111,11 +116,13 @@ if ( defined('CACHE') )
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$news[date('d', $row['news_date'])][] = $row;
+			$db_news[date('d', $row['news_date'])][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
-		$sql = "SELECT event_id, event_date, event_duration, event_title, event_level FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$monat.$jahr'";
+		$sql = "SELECT event_id, event_date, event_duration, event_title, event_level
+					FROM " . EVENT . "
+				WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$cur_month.$cur_year'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -123,15 +130,15 @@ if ( defined('CACHE') )
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$event[date('d', $row['event_date'])][] = $row;
+			$db_event[date('d', $row['event_date'])][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
-		$sql = "SELECT m.match_id, m.match_rival_name, m.match_date, g.game_image, t.team_name
+		$sql = "SELECT m.match_id, m.match_rival_name, m.match_public, m.match_date, g.game_image, t.team_name
 					FROM " . MATCH . " m
 						LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%m.%Y') = '$monat.$jahr'";
+				WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%m.%Y') = '$cur_month.$cur_year'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -139,7 +146,7 @@ if ( defined('CACHE') )
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$match[date('d', $row['match_date'])][] = $row;
+			$db_match[date('d', $row['match_date'])][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
@@ -147,7 +154,7 @@ if ( defined('CACHE') )
 					FROM " . TRAINING . " tr
 						LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
 						LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id	
-				WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%m.%Y') = '$monat.$jahr'";
+				WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%m.%Y') = '$cur_month.$cur_year'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -155,17 +162,19 @@ if ( defined('CACHE') )
 		
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			$train[date('d', $row['training_date'])][] = $row;
+			$db_training[date('d', $row['training_date'])][] = $row;
 		}
 		$db->sql_freeresult($result);
 		
-		$monat_data = array_merge(array('bday' => $bday), array('news' => $news), array('event' => $event), array('match' => $match), array('train' => $train));
+		$monat_data = array_merge(array('birthday' => $db_birthday), array('news' => $db_news), array('event' => $db_event), array('match' => $db_match), array('training' => $db_training));
 		( $settings['calendar']['time'] != '' ) ? $oCache->writeCache($sCacheName, $monat_data, (int) $settings['calendar']['time']) : $oCache->writeCache($sCacheName, $monat_data);
 	}
 }
 else
 {
-	$sql = "SELECT user_id, user_name, user_birthday FROM " . USERS . " WHERE MONTH(user_birthday) = $monat";
+	$sql = "SELECT user_id, user_name, user_birthday
+				FROM " . USERS . "
+			WHERE MONTH(user_birthday) = $cur_month";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -174,7 +183,7 @@ else
 	{
 		$tmp = explode('-', $row['user_birthday']);
 		
-		$bday[$tmp[2]] = $row;
+		$db_birthday[$tmp[2]] = $row;
 	}
 	$db->sql_freeresult($result);
 	
@@ -183,7 +192,7 @@ else
 					LEFT JOIN " . MATCH . " m ON n.news_match = m.match_id
 					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$monat.$sy'";
+			WHERE n.news_date < " . time() . " AND news_public = 1 AND DATE_FORMAT(FROM_UNIXTIME(news_date), '%m.%Y') = '$cur_month.$cur_year'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -191,11 +200,13 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$news[date('d', $row['news_date'])][] = $row;
+		$db_news[date('d', $row['news_date'])][] = $row;
 	}
 	$db->sql_freeresult($result);
 	
-	$sql = "SELECT event_id, event_date, event_duration, event_title, event_level FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$monat.$sy'";
+	$sql = "SELECT event_id, event_date, event_duration, event_title, event_level
+				FROM " . EVENT . "
+			WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$cur_month.$cur_year'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -203,7 +214,7 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$event[date('d', $row['event_date'])][] = $row;
+		$db_event[date('d', $row['event_date'])][] = $row;
 	}
 	$db->sql_freeresult($result);
 	
@@ -211,7 +222,7 @@ else
 				FROM " . MATCH . " m
 					LEFT JOIN " . TEAMS . " t ON m.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-				WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%m.%Y') = '$monat.$sy'";
+			WHERE DATE_FORMAT(FROM_UNIXTIME(match_date), '%m.%Y') = '$cur_month.$cur_year'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -219,7 +230,7 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$match[date('d', $row['match_date'])][] = $row;
+		$db_match[date('d', $row['match_date'])][] = $row;
 	}
 	$db->sql_freeresult($result);
 	
@@ -227,7 +238,7 @@ else
 				FROM " . TRAINING . " tr
 					LEFT JOIN " . TEAMS . " t ON tr.team_id = t.team_id
 					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id	
-				WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%m.%Y') = '$monat.$sy'";
+			WHERE DATE_FORMAT(FROM_UNIXTIME(training_date), '%m.%Y') = '$cur_month.$cur_year'";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -235,11 +246,11 @@ else
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$train[date('d', $row['training_date'])][] = $row;
+		$db_training[date('d', $row['training_date'])][] = $row;
 	}
 	$db->sql_freeresult($result);
 
-	$monat_data = array_merge(array('bday' => $bday), array('news' => $news), array('event' => $event), array('match' => $match), array('train' => $train));
+	$monat_data = array_merge(array('birthday' => $db_birthday), array('news' => $db_news), array('event' => $db_event), array('match' => $db_match), array('training' => $db_training));
 }
 
 $viewer = $settings['calendar']['show'];
@@ -248,11 +259,12 @@ if ( $viewer )
 {
 	$template->assign_block_vars('month', array());
 	
-	$ws = $settings['calendar']['start'];
+	$week_start = $settings['calendar']['start'];
 	
-	$edmk = $arr_woche_kurz[$erster];
+	$edmk = $arr_woche_kurz[$cur_first];
 	$wbmk = $arr_woche_kurz;
-	for ( $i = 0; $i < $ws; $i++ )
+	
+	for ( $i = 0; $i < $week_start; $i++ )
 	{
 		$wechsel = array_shift($wbmk);
 		$wbmk[] = $wechsel;
@@ -260,158 +272,165 @@ if ( $viewer )
 	$wbmk_wechsel = array_flip($wbmk);
 	
 	$days = '<tr>';
+	
 	for ( $i = 0; $i < 7; $i++ )
 	{
-		$days .= '<th>' . $wbmk[$i] . '</th>';
+		$days .= sprintf('<th>%s</th>', $wbmk[$i]);
 	}
 	$days .= '</tr>';
 	
 	$day = '<tr>';
-	for ( $i = 0; $i < $wbmk_wechsel[$edmk]; $i++ )
+	
+	if ( $settings['calendar']['compact'] )
 	{
-		$day .= '<td>&nbsp;</td>';
+		$prev_day = ($prev_days - $wbmk_wechsel[$edmk]);
+		
+		for ( $i = $prev_day + 1; $i < $prev_days + 1; $i++ )
+		{
+			$day .= sprintf('<td><span class="right">%s</span></td>', $i);
+		}
+	}
+	else
+	{
+		for ( $i = 0; $i < $wbmk_wechsel[$edmk]; $i++ )
+		{
+			$day .= '<td>&nbsp;</td>';
+		}
 	}
 	
 	$wcs = $wbmk_wechsel[$edmk];
 	
-#	debug($monat_data);
-	
-	for ( $i = 1; $i < $tage + 1; $i++ )
+	for ( $i = 1; $i < $cur_days + 1; $i++ )
 	{
 		$i = ( $i < 10 ) ? "0$i" : $i;
 		
-		$bday	= isset($monat_data['bday'][$i]) ? $monat_data['bday'][$i] : '';
-		$news	= isset($monat_data['news'][$i]) ? $monat_data['news'][$i] : '';
-		$event	= isset($monat_data['event'][$i]) ? $monat_data['event'][$i] : '';
-		$match	= isset($monat_data['match'][$i]) ? $monat_data['match'][$i] : '';
-		$train	= isset($monat_data['train'][$i]) ? $monat_data['train'][$i] : '';
+		$cur_news		= isset($monat_data['news'][$i]) ? $monat_data['news'][$i] : false;
+		$cur_event		= isset($monat_data['event'][$i]) ? $monat_data['event'][$i] : false;
+		$cur_match		= isset($monat_data['match'][$i]) ? $monat_data['match'][$i] : false;
+		$cur_birthday	= isset($monat_data['birthday'][$i]) ? $monat_data['birthday'][$i] : false;
+		$cur_training	= isset($monat_data['training'][$i]) ? $monat_data['training'][$i] : false;
 		
-		if ( $i == $tag || is_array($bday) || is_array($news) || is_array($event) || is_array($match) || is_array($train) )
+		if ( $i == $cur_day || is_array($cur_news) || is_array($cur_event) || is_array($cur_match) || is_array($cur_birthday) || is_array($cur_training) )
 		{
-			$css = '';
-			$act = '';
-			$num = '0';
+			$style = '';
+			$event = '';
+			$count = 0;
 			
-			if ( $i == $tag )
+			if ( $i == $cur_day )
 			{
-				$num = $num + 1;
-				$css = 'today';
-				$act = "<span class=\"today\" title=\"{$lang['cal_today']}\">{$lang['cal_today']}</span>";
+				$style = CAL_TODAY;
+				$event = "<span class=\"today\" title=\"{$lang['cal_today']}\">{$lang['cal_today']}</span>";
+				$count = $count + 1;
 			}
 			
-			if ( is_array($bday) && $settings['calendar']['bday'] )
+			if ( is_array($cur_news) && $settings['calendar']['news'] )
 			{
-				$ary = array();
-				$cnt = count($bday);
+				$action = array();
 				
-				for ( $k = 0; $k < $cnt; $k++ )
+				foreach ( $cur_news as $row )
 				{
-					$alter	= 0;
-					$gebdt	= explode('-', $bday[$k]['user_birthday']);
-					$gebdt	= $gebdt[0].$gebdt[1].$gebdt[2];
-					$now	= date('Ymd', time());
-					
-					while ( $gebdt < $now - 9999 )
-					{
-						$alter++;
-						$gebdt = $gebdt + 10000;
-					}
-	
-					$ary[] = sprintf($lang['cal_birth'], $bday[$k]['user_name'], $alter);
-				}
-				
-				$num = $num + 1;
-				$css  = 'birthday';
-				$act .= cal_string($act, $css, ( count($ary) == '1' ) ? $lang['cal_birthday'] : $lang['cal_birthdays'], $ary, false);
-			}
-			
-			if ( is_array($news) && $settings['calendar']['news'] )
-			{
-				$ary = array();
-				$cnt = count($news);
-				
-				for ( $k = 0; $k < $cnt; $k++ )
-				{
-					$id		= $news[$k]['news_id'];
-					$name	= $news[$k]['news_title'];
+					$id		= $row['news_id'];
+					$name	= $row['news_title'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[]	= "<a title=\"$name\" href=\"news.php?mode=view&id=$id\">$cut</a>";
+					$action[]	= "<a title=\"$name\" href=\"news.php?mode=view&id=$id\">$cut</a>";
 				}
 				
-				$num = $num + 1;
-				$css = 'news';
-				$act .= cal_string($act, $css, $lang['cal_news'], $ary, false);
+				$style = CAL_NEWS;
+				$event .= cal_string($event, $style, $lang['cal_news'], $action, false);
+				$count = $count + 1;
 			}
-					
-			if ( is_array($event) && $settings['calendar']['event'] )
+			
+			if ( is_array($cur_event) && $settings['calendar']['event'] )
 			{
-				$ary = array();
-				$cnt = count($event);
+				$action = array();				
 				
-				for ( $k = 0; $k < $cnt; $k++ )
+				foreach ( $cur_event as $row )
 				{
-					if ( $userdata['user_level'] >= $event[$k]['event_level'] )
+					if ( $userdata['user_level'] >= $row['event_level'] )
 					{
-						$id		= $event[$k]['event_id'];
-						$name	= $event[$k]['event_title'];
+						$id		= $row['event_id'];
+						$name	= $row['event_title'];
 						$cut	= cal_cut($name, 20);
 						
-						$ary[] = "<a title=\"$name\" href=\"event.php?mode=view&id=$id\">$cut</a>";
+						$action[] = "<a title=\"$name\" href=\"event.php?mode=view&id=$id\">$cut</a>";
 					}
 				}
 				
-				if ( !empty($ary) )
+				if ( !empty($action) )
 				{
-					$num = $num + 1;
-					$css = 'events';
-					$act .= cal_string($act, $css, ( count($ary) == '1' ) ? $lang['cal_event'] : $lang['cal_events'], $ary, false);
+					$style = CAL_EVENT;
+					$event .= cal_string($event, $style, ( count($action) == '1' ) ? $lang['cal_event'] : $lang['cal_events'], $action, false);
+					$count = $count + 1;
 				}
 			}
 			
-			if ( is_array($match) && $settings['calendar']['match'] )
+			if ( is_array($cur_match) && $settings['calendar']['match'] )
 			{
-				$ary = array();
-				$cnt = count($match);
+				$action = array();
 				
-				for ( $k = 0; $k < $cnt; $k++ )
+				foreach ( $cur_match as $row )
 				{
-					$id		= $match[$k]['match_id'];
-					$name	= $match[$k]['match_rival_name'];
+					$id		= $row['match_id'];
+					$name	= $row['match_rival_name'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[] = "<a title=\"$name\" href=\"match.php?mode=view&id=$id\">$cut</a>";
+					$action[] = "<a title=\"$name\" href=\"match.php?mode=view&id=$id\">$cut</a>";
 				}
 				
-				$num = $num + 1;
-				$css = 'wars';
-				$act .= cal_string($act, $css, ( count($ary) == '1' ) ? $lang['cal_match'] : $lang['cal_matchs'], $ary, false);
+				$style = CAL_MATCH;
+				$event .= cal_string($event, $style, ( count($action) == '1' ) ? $lang['cal_match'] : $lang['cal_matchs'], $action, false);
+				$count = $count + 1;
 			}
 			
-			if ( is_array($train) && $userdata['user_level'] >= TRIAL && $settings['calendar']['train'] )
+			if ( is_array($cur_birthday) && $settings['calendar']['birthday'] )
 			{
-				$ary = array();
-				$cnt = count($train);
+				$action = array();
 				
-				for ( $k = 0; $k < $cnt; $k++ )
+				foreach ( $cur_birthday as $row )
 				{
-					$id		= $train[$k]['training_id'];
-					$name	= $train[$k]['training_vs'];
+					$alter	= 0;
+					$gebdt	= explode('-', $row['user_birthday']);
+					$gebdt	= $gebdt[0].$gebdt[1].$gebdt[2];
+					$now	= date('Ymd', mktime(0, 0, 0, $cur_month, 1, $cur_year));
+					
+					while ( $gebdt < $now - 10000 )
+					{
+						$alter++;
+						$gebdt = $gebdt + 9999;
+					}
+					
+					$action[] = "<a title=\"". $row['user_name'] . "\" href=\"user.php?mode=u&id=" . $row['user_id'] . "\">" . sprintf($lang['cal_birth'], $row['user_name'], $alter) . "</a>";
+				}
+				
+				$style = CAL_BIRTHDAY;
+				$event .= cal_string($event, $style, ( count($action) == '1' ) ? $lang['cal_birthday'] : $lang['cal_birthdays'], $action, false);
+				$count = $count + 1;
+			}
+			
+			if ( is_array($cur_training) && $settings['calendar']['training'] && $userdata['user_level'] >= TRIAL )
+			{
+				$action = array();
+				
+				foreach ( $cur_training as $row )
+				{
+					$id		= $row['training_id'];
+					$name	= $row['training_vs'];
 					$cut	= cal_cut($name, 20);
 					
-					$ary[] = "<a title=\"$name\" href=\"training.php?mode=view&id=$id\">$cut</a>";
+					$action[] = "<a title=\"$name\" href=\"training.php?mode=view&id=$id\">$cut</a>";
 				}
 				
-				$css = 'trains';
-				$act .= cal_string($act, $css, ( count($ary) == '1' ) ? $lang['cal_training'] : $lang['cal_trainings'], $ary, false);
-				$num = $num + 1;
+				$style = CAL_TRAINING;
+				$event .= cal_string($action, $style, ( count($action) == '1' ) ? $lang['cal_training'] : $lang['cal_trainings'], $action, false);
+				$count = $count + 1;
 			}
 			
-			if ( $num )
+			if ( $count )
 			{
-				$class = ( $num > 1 ) ? 'more' : $css;
+				$class = ( $count > 1 ) ? 'more' : $style;
 				
-				$day .= "<td class=\"$class\" ><a class=\"$class right\" href=\"" . check_sid("calendar.php?mode=view") . "\">$i</a><span class=\"$css\">$act</span></td>";
+				$day .= "<td class=\"$class\" ><a class=\"$class right\" href=\"" . check_sid("calendar.php?mode=view") . "\">$i</a><span class=\"$style\">$event</span></td>";
 			}
 			else
 			{
@@ -435,12 +454,58 @@ if ( $viewer )
 		}
 	}
 	
-	for ( $wcs; $wcs < 7; $wcs++ )
+	if ( $settings['calendar']['compact'] )
 	{
-		$day .= '<td>&nbsp;</td>';
-	}
+		$next_days = 42 - $cur_days - $wbmk_wechsel[$edmk];
+		
+	#	debug($next_days, 'next_days');
 	
-	$day .= '</tr>';
+		if ( $next_days < 7 )
+		{
+			for ( $next_day = 1; $next_day <= $next_days; $next_day++ )
+			{
+			#	$day .= sprintf('<td><span class="right">%s</span></td>', $i);
+				$day .= "<td><span class=\"next right\">$next_day</span></td>";
+			}
+		}
+		else
+		{
+			$next_day = $next_days - 7;
+			
+			if ( $next_day >= 7 )
+			{
+				for ( $i = 1; $i < $next_days+1; $i++ )
+				{
+					$day .= "<td><span class=\"next right\">$i</span></td>";
+				}
+			}
+			else
+			{
+				for ( $i = 1; $i < $next_day+1; $i++ )
+				{
+					$day .= "<td><span class=\"next right\">$i</span></td>";
+				}
+				
+				$day .= '</tr><tr>';
+				
+				for ( $j = $i; $j < $next_days+1; $j++ )
+				{
+					$day .= "<td><span class=\"next right\">$j</span></td>";
+				}	
+			}
+		}
+		
+		$day .= '</tr>';
+	}
+	else
+	{
+		for ( $wcs; $wcs < 7; $wcs++ )
+        {
+                $day .= '<td>&nbsp;</td>';
+        }
+        
+        $day .= '</tr>';
+	}
 	
 	$template->assign_vars(array(
 		'DAY' => $days,
@@ -461,17 +526,17 @@ else
 	$div_middle	= '</ul><ul>';
 	$div_end	= '</u></div>';
 	
-	for ( $i = 1; $i < $tage + 1; $i++ )
+	for ( $i = 1; $i < $cur_days + 1; $i++ )
 	{
-		$weekday = $arr_woche_kurz[date("w", mktime(0, 0, 0, $monat, $i, $jahr))];
+		$weekday = $arr_woche_kurz[date("w", mktime(0, 0, 0, $cur_month, $i, $cur_year))];
 		
 		$i = ( $i < 10 ) ? '0' . $i : $i;
 		
-	#	if ( $i == $tag ||  || is_array($bday) || is_array($event) || is_array($match) || is_array($train) )
+	#	if ( $i == $cur_day ||  || is_array($bday) || is_array($event) || is_array($match) || is_array($train) )
 	#	{
 			$act = '';
 			
-			if ( $i == $tag && $jahr == $sy )
+			if ( $i == $cur_day && $cur_year == $sy )
 			{
 				$day = $i;
 				$act = "$div_start<span class=\"today\">{$lang['cal_today']}</span><br/>";
@@ -488,7 +553,7 @@ else
 					$alter	= 0;
 					$gebdt	= explode("-", $tmp[$k]['user_birthday']);
 					$gebdt	= $gebdt[0] . $gebdt[1] . $gebdt[2];
-					$date	= mktime(0, 0, 0, $monat, $tag, $jahr);
+					$date	= mktime(0, 0, 0, $cur_month, $cur_day, $cur_year);
 					$now	= date("Ymd", $date);
 					
 					while ($gebdt < $now - 9999)
@@ -618,7 +683,7 @@ else
 				}
 				
 				$day = $i;
-				$css = 'trains';
+				$css = CAL_TRAINING;
 				$act .= cal_string($act, $css, ( count($ary) == '1' ) ? $lang['cal_training'] : $lang['cal_trainings'], $ary, true);
 			}
 			else
@@ -646,14 +711,14 @@ else
 	}
 }
 
-$nm = ( ($monat+1) == 13 ) ? 1 : $monat + 1;
-$ny = ( ($monat+1) == 13 ) ? $jahr + 1 : $jahr;
+$nm = ( ($cur_month+1) == 13 ) ? 1 : $cur_month + 1;
+$ny = ( ($cur_month+1) == 13 ) ? $cur_year + 1 : $cur_year;
 
-$pm = ( ($monat-1) == 0 ) ? 12 : $monat - 1;
-$py = ( ($monat-1) == 0 ) ? $jahr - 1 : $jahr;
+$pm = ( ($cur_month-1) == 0 ) ? 12 : $cur_month - 1;
+$py = ( ($cur_month-1) == 0 ) ? $cur_year - 1 : $cur_year;
 
 $template->assign_vars(array(
-	'CAL_MONTH'	=> sprintf($lang['sprintf_empty_line'], $sm, $jahr),
+	'CAL_MONTH'	=> sprintf($lang['sprintf_empty_line'], $sm, $cur_year),
 	
 	'NEXT'		=> "?month=$nm&year=$ny",
 	'PREV'		=> "?month=$pm&year=$py",

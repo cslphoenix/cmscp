@@ -1,0 +1,1 @@
+<div class="right_box"><p>{RIGHT_MESSAGE}</p></div>

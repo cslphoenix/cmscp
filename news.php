@@ -39,6 +39,7 @@ $template->set_filenames(array(
  * @param string $ending
  * @return string
  */
+ 
 function truncate($text, $limit = 25, $ending = '...')
 {
 	if ( strlen($text) > $limit)
@@ -328,7 +329,7 @@ if ( $data && $tmp )
 		'OVERVIEW'		=> '<a href="' . check_sid($file) . '">' . $lang['header_overview'] . '</a>',
 		
 		'S_FIELDS'		=> $fields,
-		'S_ACTION'		=> check_sid("$file?$url=$data"),
+		'S_ACTION'		=> check_sid("$file?id=$data"),
 	));
 }
 else if ( $mode == 'archiv' )
@@ -378,7 +379,7 @@ else if ( $mode == 'archiv' )
 			$template->assign_block_vars('archiv.row', array(
 				'CLASS'		=> ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 				
-				'TITLE'		=> href('a_txt', $file, array('mode' => 'view', $url => $news_id), $ary[$i]['news_title'], $ary[$i]['news_title']),
+				'TITLE'		=> href('a_txt', "$file?", array('mode' => 'view', 'id' => $news_id), $ary[$i]['news_title'], $ary[$i]['news_title']),
 				'AUTHOR'	=> href('a_user', 'profile.php', array('mode' => 'view', 'id' => $ary[$i]['user_id']), $ary[$i]['user_color'], $ary[$i]['user_name']),
 				'CAT'		=> $ary[$i]['cat_name'],
 				'COMMENTS'	=> ( $comment != 0 ) ? (( $comment == 1 ) ? $lang['sprintf_comment'] : sprintf($lang['sprintf_comments'], $comment)) : $lang['sprintf_comment_no'],
@@ -393,7 +394,7 @@ else if ( $mode == 'archiv' )
 	$template->assign_vars(array(
 		'L_MAIN'	=> $page_title,
 		
-		'OVERVIEW'	=> href('a_txt', $file, false, $ary[$i]['header_overview'], $ary[$i]['header_overview']),
+	#	'OVERVIEW'	=> href('a_txt', $file, false, $ary[$i]['header_overview'], $ary[$i]['header_overview']),
 		
 		'S_FIELDS'	=> $fields,
 		'S_ACTION'	=> check_sid($file),
@@ -403,17 +404,22 @@ else
 {
 	$template->assign_block_vars('list', array());
 	
-	foreach ( $tmp as $row )
+	$ary = array();
+	
+	if ( $tmp )
 	{
-		if ( $userdata['user_level'] >= TRIAL && $row['news_public'] == 1 )
+		foreach ( $tmp as $row )
 		{
-			$ids[] = $row['news_id'];
-			$ary[] = $row;
-		}
-		else if ( $row['news_intern'] == 0 && $row['news_public'] == 1 )
-		{
-			$ids[] = $row['news_id'];
-			$ary[] = $row;
+			if ( $userdata['user_level'] >= TRIAL && $row['news_public'] == 1 )
+			{
+				$ids[] = $row['news_id'];
+				$ary[] = $row;
+			}
+			else if ( $row['news_intern'] == 0 && $row['news_public'] == 1 )
+			{
+				$ids[] = $row['news_id'];
+				$ary[] = $row;
+			}
 		}
 	}
 	
@@ -429,7 +435,7 @@ else
 	{
 	#	debug($settings['rating_news']['guests']);
 		
-		$sql = "SELECT rate_type_id, rate_value, rate_userid, rate_userip FROM " . RATE . " WHERE rate_type = 1 AND rate_type_id IN (" . implode(', ', $ids)  . ")";
+		$sql = "SELECT rate_type_id, rate_value, rate_userid, rate_userip FROM " . RATE . " WHERE rate_type = " . RATE_NEWS . " AND rate_type_id IN (" . implode(', ', $ids)  . ")";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -459,7 +465,7 @@ else
 		
 		for ( $i = $start; $i < min($settings['news']['limit'] + $start, $cnt_ary); $i++ )
 		{
-			$rate_cnt = $rate_sum = $average = 0;
+			$rate_cnt = $rate_sum = $rate_ave = $average = 0;
 			
 			if ( $ary[$i]['news_rate'] )
 			{
@@ -488,34 +494,6 @@ else
 					$rate_ave	= round(($rate_sum/$rate_cnt), 1);
 				}
 
-				#debug($rate_ids);
-				#debug(in_array($userdata['user_id'], $rate_ids), 'inary');
-				
-				/*
-				if ( in_array($userdata['user_id'], $rate_ids) )
-				{
-					if ( $userdata['user_id'] == ANONYMOUS )
-					{
-						if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
-						{
-							$rate_check = 'true';
-						}
-						else
-						{
-							$rate_check = 'false';
-						}
-					}
-					else
-					{
-						$rate_check = 'true';
-					}
-				}
-				else if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
-				{
-					$rate_check = 'true';
-				}
-				*/
-				
 				if ( in_array($userdata['user_id'], $rate_ids) )
 				{
 					$rate_check = ( $userdata['user_id'] == ANONYMOUS ) ? ( in_array(iptoint($userdata['session_ip']), $rate_ips) ) ? 'true' : 'false' : 'true';
@@ -529,7 +507,6 @@ else
 					'ID'	=> $ary[$i]['news_id'],
 					'RATE'	=> $rate_check,
 				));
-				
 			}
 			
 			$news_id	= $ary[$i]['news_id'];
@@ -553,7 +530,7 @@ else
 				'R_CNT'		=> ( $rate_cnt ) ? $rate_cnt : 0,
 				'R_SUM'		=> ( $rate_ave ) ? $rate_ave : 0,
 				
-				'RATING'	=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, 5),
+				'RATING'	=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, $settings['rating_news']['maximal']),
 				#{list.row.R_CNT} Votes &oslash; {list.row.R_SUM} / 5
 				
 				'U_NEWS'	=> check_sid("$file?id=$news_id"),
@@ -643,9 +620,17 @@ else
 		}
 		
 		$template->assign_vars(array(
-			'L_MAIN' => $page_title,
+			'RATE_LENGTH'	=> $settings['rating_news']['number'],
+			'RATE_STEP'		=> $settings['rating_news']['fullstep'] ? true : false,
+			'RATE_MAX'		=> $settings['rating_news']['maximal'],
+			'RATE_TYPE'		=> $settings['rating_news']['images'] ? 'big' : 'small',
+
 		));
 	}
+	
+	$template->assign_vars(array(
+		'L_MAIN' => $page_title,
+	));
 }
 
 main_header($page_title);

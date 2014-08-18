@@ -6,13 +6,11 @@
 <ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
 </form>
 
-<br /><div>{ERROR_BOX}</div>
-
 <form action="{S_ACTION}" method="post" autocomplete="off">
 <!-- END head -->
 
 <!-- BEGIN input -->
-
+<!--
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
 
 <table class="update">
@@ -20,7 +18,7 @@
 	<td class="row1r"><label for="user_name">{L_NAME}:</label></td>
 	<td class="row2"><input class="post" type="text" name="user_name" id="user_name" value="{USERNAME}"></td>
 </tr>
-<!-- BEGIN update -->
+<!-- BEGIN update >
 <tr>
 	<td class="row1"><label>{L_REGISTER}:</label></td>
 	<td class="row2">{REGISTER}</td>
@@ -29,7 +27,7 @@
 	<td class="row1"><label>{L_LASTLOGIN}:</label></td>
 	<td class="row2">{LASTLOGIN}</td>
 </tr>
-<!-- END update -->
+<!-- END update >
 <tr>
 	<td class="row1"><label for="user_founder">{L_FOUNDER}:</label></td>
 	<td class="row2"><label><input type="radio" name="user_founder" value="1" {S_FOUNDER_YES} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="user_founder" id="user_founder" value="0" {S_FOUNDER_NO} />&nbsp;{L_NO}</label></td>
@@ -94,7 +92,7 @@
 </table>
 {S_FIELDS}
 </form>
-
+-->
 <script type="text/javascript">
 
 function display_options(value)
@@ -111,7 +109,6 @@ function display_options(value)
 	}
 }
 </script>
-<form action="{S_ACTION}" method="post">
 {ERROR_BOX}
 
 <!-- BEGIN row -->
@@ -256,80 +253,43 @@ function activate_checkbox(name)
 }
 </script>
 
+<!-- BEGIN group -->
+<div style="float: {S_FLOAT_BEGIN}; width: {S_WIDTH}%;">
 <fieldset>
 	<legend>{L_GROUPS}</legend>
 	<!-- BEGIN row_group -->
-	<dl>			
-		<dt><label for="{groups.row_group.GROUP_FIELD}" title="{groups.row_group.GROUP_INFO}">{groups.row_group.GROUP_NAME}:</label></dt>
-		<dd><label><input type="radio" onClick="activate_checkbox('checkbox_group_{groups.row_group.S_MARK_ID}');" name="{groups.row_group.S_MARK_NAME}" id="{groups.row_group.GROUP_FIELD}" value="{groups.row_group.S_MARK_ID}" {groups.row_group.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.row_group.S_MARK_ID}');" name="{groups.row_group.S_MARK_NAME}" value="{groups.row_group.S_NEG_MARK_ID}" {groups.row_group.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.row_group.S_MARK_ID}" name="mod_group_{groups.row_group.S_MARK_ID}" {groups.row_group.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.row_group.RIGHT} {groups.row_group.U_USER_PENDING}</dd>
+	<dl class="test">
+		<dt style="width: 45%;"><label for="{groups.group.row_group.FIELD}">{groups.group.row_group.NAME}:</label></dt>
+		<dd style="margin-left: 45%;"><label><input type="radio" onclick="activate_checkbox('checkbox_group_{groups.group.row_group.S_MARK_ID}');" name="{groups.group.row_group.S_MARK_NAME}" id="{groups.group.row_group.FIELD}" value="{groups.group.row_group.S_MARK_ID}" {groups.group.row_group.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.group.row_group.S_MARK_ID}');" name="{groups.group.row_group.S_MARK_NAME}" value="{groups.group.row_group.S_NEG_MARK_ID}" {groups.group.row_group.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.group.row_group.S_MARK_ID}" name="mod_group_{groups.group.row_group.S_MARK_ID}" {groups.group.row_group.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.group.row_group.RIGHT} {groups.group.row_group.U_USER_PENDING}</dd>
 	</dl>
 	<!-- END row_group -->
 	<br />
-	<dl>			
-		<dt><label for="email_group">{L_MAIL}</label></dt>
-		<dd><label><input type="radio" name="email_group" id="email_group" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_group" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
+	<dl>
+		<dt style="width: 45%;"><label for="email_group">{L_MAIL}</label></dt>
+		<dd style="margin-left: 45%;"><label><input type="radio" name="email_group" id="email_group" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_group" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
 	</dl>
 	
 </fieldset>
-
-<br />
-
+</div>
+<!-- END group -->
+<!-- BEGIN team -->
+<div style="float: {S_FLOAT_END}; width: {S_WIDTH}%;">
 <fieldset>
 	<legend>{L_TEAMS}</legend>
 	<!-- BEGIN row_team -->
 	<dl>			
-		<dt>{groups.row_team.U_TEAM_NAME}</dt>
-		<dd><label><input type="radio" onClick="activate_checkbox('checkbox_team_{groups.row_team.S_MARK_ID}');" name="{groups.row_team.S_MARK_NAME}" value="{groups.row_team.S_MARK_ID}" {groups.row_team.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.row_team.S_MARK_ID}');" name="{groups.row_team.S_MARK_NAME}" value="{groups.row_team.S_NEG_MARK_ID}" {groups.row_team.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.row_team.S_MARK_ID}" name="mod_team_{groups.row_team.S_MARK_ID}" {groups.row_team.S_MOD_TEAM} />&nbsp;{L_MOD}</label></dd>
+		<dt style="width: 45%;"><label for="{groups.team.row_team.FIELD}">{groups.team.row_team.NAME}:</label></dt>
+		<dd style="margin-left: 45%;"><label><input type="radio" onclick="activate_checkbox('checkbox_team_{groups.team.row_team.S_MARK_ID}');" name="{groups.team.row_team.S_MARK_NAME}" id="{groups.team.row_team.FIELD}" value="{groups.team.row_team.S_MARK_ID}" {groups.team.row_team.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.team.row_team.S_MARK_ID}');" name="{groups.team.row_team.S_MARK_NAME}" value="{groups.team.row_team.S_NEG_MARK_ID}" {groups.team.row_team.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.team.row_team.S_MARK_ID}" name="mod_team_{groups.team.row_team.S_MARK_ID}" {groups.team.row_team.S_MOD_TEAM} />&nbsp;{L_MOD}</label></dd>
 	</dl>
 	<!-- END row_team -->
 	<br />
 	<dl>			
-		<dt><label for="email_group">{L_MAIL}</label></dt>
-		<dd><label><input type="radio" name="email_team" id="email_team" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_team" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
+		<dt style="width: 45%;"><label for="email_group">{L_MAIL}</label></dt>
+		<dd style="margin-left: 45%;"><label><input type="radio" name="email_team" id="email_team" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_team" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
 	</dl>
-	
 </fieldset>
-
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_GROUPS}</a></li></ul>
-
-<table class="update2">
-<!-- BEGIN group_row ->
-<tr>
-	<td class="row1"><label for="{groups.group_row.GROUP_FIELD}" title="{groups.group_row.GROUP_INFO}">{groups.group_row.GROUP_NAME}:</label></td>
-	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_group_{groups.group_row.S_MARK_ID}');" name="{groups.group_row.S_MARK_NAME}" id="{groups.group_row.GROUP_FIELD}" value="{groups.group_row.S_MARK_ID}" {groups.group_row.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.group_row.S_MARK_ID}');" name="{groups.group_row.S_MARK_NAME}" value="{groups.group_row.S_NEG_MARK_ID}" {groups.group_row.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.group_row.S_MARK_ID}" name="mod_group_{groups.group_row.S_MARK_ID}" {groups.group_row.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.group_row.RIGHT} {groups.group_row.U_USER_PENDING}
-	</td>
-</tr>
-<-- END group_row -->
-<tr>
-	<td colspan="2"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="email_group">{L_MAIL}</label></td>
-	<td class="row2"><label><input type="radio" name="email_group" id="email_group" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_group" value="0" checked="checked">&nbsp;{L_NO}</label></td>
-</tr>
-</table>
-
-<table class="update2">
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_TEAMS}</a></li></ul></th>
-</tr>
-<!-- BEGIN team_row ->
-<tr>
-	<td class="row1">{groups.team_row.U_TEAM_NAME}</td>
-	<td class="row2"><label><input type="radio" onClick="activate_checkbox('checkbox_team_{groups.team_row.S_MARK_ID}');" name="{groups.team_row.S_MARK_NAME}" value="{groups.team_row.S_MARK_ID}" {groups.team_row.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.team_row.S_MARK_ID}');" name="{groups.team_row.S_MARK_NAME}" value="{groups.team_row.S_NEG_MARK_ID}" {groups.team_row.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.team_row.S_MARK_ID}" name="mod_team_{groups.team_row.S_MARK_ID}" {groups.team_row.S_MOD_TEAM} />&nbsp;{L_MOD}</label></td>
-</tr>
-<-- END team_row -->
-<tr>
-	<td colspan="2"></td>
-</tr>
-<tr>
-	<td class="row1"><label for="email_team">{L_MAIL}</label></td>
-	<td class="row2"><label><input type="radio" name="email_team" id="email_team" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_team" value="0" checked="checked">&nbsp;{L_NO}</label></td>
-</tr>
-</table>
-
-<br/>
-
+</div>
+<!-- END team -->
 <table class="submit">
 <tr>
 	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>

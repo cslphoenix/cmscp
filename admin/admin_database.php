@@ -23,6 +23,7 @@ else
 	include($root_path . '/includes/sql_parse.php');
 	
 	add_lang('database');
+	acl_auth(array('a_database_backup', 'a_database_optimize', 'a_database_restore'), true);
 	
 	$error	= '';
 	$index	= '';
@@ -37,13 +38,7 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . 'files/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN xor !$userdata['user_founder'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
 	define('VERBOSE', 1);
 	@set_time_limit(1200);
@@ -66,9 +61,11 @@ else
 #		'info'	=> 'style/info_message.tpl',
 	));
 	
+#	debug($_POST, '_POST');
+	
 	switch ( $action )
 	{
-		case 'backup':
+		case 'backup':	acl_auth('a_database_backup', true);
 		
 			$tables		= ( request('table', ARY) ) ? request('table', ARY) : '';
 			$type		= ( request('type', TYP) ) ? request('type', TYP) : '';
@@ -92,7 +89,7 @@ else
 				foreach ( $table as $key => $value )
 				{
 					$name = str_replace($db_prefix, '', $value['Name']);
-					$select .= '<option value="' . $name . '" >' . sprintf($lang['sprintf_select_format'], $value['Name']) . '</option>';
+					$select .= '<option value="' . $name . '" >' . sprintf($lang['stf_select_format'], $value['Name']) . '</option>';
 				}
 				
 				$select .= '</select>';
@@ -100,7 +97,7 @@ else
 				$fields .= '<input type="hidden" name="action" value="' . $action . '" />';
 
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
 
 					'L_TYPE'		=> $lang['type'],
@@ -347,21 +344,17 @@ else
 			
 			break;
 
-		case 'optimize':
+		case 'optimize':	acl_auth('a_database_optimize', true);
 			
-		#	include('./page_header_admin.php');
+			$template->assign_block_vars($action, array());
 			
-			$template->assign_block_vars('optimize', array());
-			
-			debug($_POST, '_POST');
-	
 			//
 			// If has been clicked the button configure
 			//
 			if ( isset($HTTP_POST_VARS['configure']) || isset($HTTP_POST_VARS['show_begin_for']) )
 		#	if ( request('configure', 1) || request('db_show_begin_for', 1) )
 			{
-				$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', 1) . "' WHERE config_name = 'db_show_begin_for'";
+				$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', TXT) . "' WHERE config_name = 'db_show_begin_for'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -373,13 +366,13 @@ else
 					//
 					// Update optimize database cronfiguration
 					//
-					$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', 1) . "' WHERE config_name = 'db_show_begin_for'";
+					$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', TXT) . "' WHERE config_name = 'db_show_begin_for'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_not_optimized', 1) . "' WHERE config_name = 'db_show_not_optimized'";
+					$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_not_optimized', TXT) . "' WHERE config_name = 'db_show_not_optimized'";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -509,7 +502,7 @@ else
 				}
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
 					
 					'L_OPTIMIZE'	=> $lang['data_optimize'],
@@ -522,7 +515,7 @@ else
 					'L_STATUS'	=> $lang['opt_status'],
 				
 					'TOTAL_TBLS'	=> $total_tbls+1,
-					'TOTAL_ROWS'	=> $total_rows,
+					'TOTAL_ROWS'	=> number_format($total_rows),
 					'TOTAL_SIZE'	=> _size($total_size, 1),
 					'TOTAL_FREE'	=> _size($total_free, 1),
 					
@@ -570,12 +563,10 @@ else
 				}					
 				$sql .= ";";
 				
-				debug($sql);
-				
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
+			#	if ( !($result = $db->sql_query($sql)) )
+			#	{
+			#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			#	}
 			
 			#	if ( !$result = $db->sql_query($sql) )
 			#	{
@@ -585,24 +576,22 @@ else
 			#	{
 			#		$msg = $lang['Optimize_success'] . sprintf($lang['return'], check_sid($file), $acp_title);
 			#	}
-				
-				$row = $db->sql_fetchrowset($result);
-				
-				debug($row);
+			
+				$msg = (( !$result = $db->sql_query($sql) ) ? $lang['opt_nocheck'] : $lang['opt_success']) . sprintf($lang['return'], check_sid($file), $acp_title);
 				
 				message(GENERAL_MESSAGE, $msg);
+				
+			
 			}
 			
 			break;
 			
-		case 'restore':
+		case 'restore':	acl_auth('a_database_restore', true);
 		
-			$template->assign_block_vars('restore', array());
+			$template->assign_block_vars($action, array());
 				
 			if ( !isset($HTTP_POST_VARS['restore_start']) )
 			{
-				include('./page_header_admin.php');
-				
 				if ( is_dir("{$root_path}files/") )
 				{
 					$files = array_diff(scandir("{$root_path}files/", 1), array('.', '..', '.htaccess'));
@@ -619,7 +608,7 @@ else
 								$_times = create_date($userdata['user_dateformat'], $_files, $userdata['user_timezone']);
 								$_sizes = size_round(@filesize("{$root_path}files/$_file"), 2);
 							
-								$select .= '<option value="' . $_file . '">' . sprintf($lang['sprintf_select_format'], sprintf($lang['sprintf_empty_line'], $_times, $_sizes)) . '</option>';
+								$select .= '<option value="' . $_file . '">' . sprintf($lang['stf_select_format'], sprintf($lang['sprintf_empty_line'], $_times, $_sizes)) . '</option>';
 								
 							#	break;
 							}
@@ -632,7 +621,7 @@ else
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
+					'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
 					'L_BACKUP'		=> $lang['data_backup'],
 					'L_OPTIMIZE'	=> $lang['data_optimize'],
@@ -742,6 +731,6 @@ else
 		}
 }
 
-include('./page_footer_admin.php');
+acp_footer();
 
 ?>

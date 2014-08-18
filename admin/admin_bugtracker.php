@@ -33,7 +33,7 @@ else
 	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_games'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
+	$acp_title	= sprintf($lang['stf_head'], $lang['game']);
 	
 	define('IN_CMS', true);
 	
@@ -67,7 +67,7 @@ else
 	if ( $userdata['user_level'] != ADMIN )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 	}
 	
 	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
@@ -129,7 +129,7 @@ else
 			$fields = '<input type="hidden" name="mode" value="_detail_save" /><input type="hidden" name="id" value="' . $data_id . '" />';
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['bugtracker']),
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['bugtracker']),
 				'L_PROC'		=> sprintf($lang['sprintf_processing'], $lang['bugtracker_field']),
 				
 				'L_TITLE'		=> $lang['bugtracker_field'],
@@ -237,11 +237,11 @@ else
 			$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['per_page_entry']['acp'] );
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['bugtracker']),
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['bugtracker']),
 				'L_NAME'		=> $lang['bugtracker_fields'],
 				'L_EXPLAIN'		=> $lang['bugtracker_explain'],
 				
-				'L_DELETE'		=> $lang['common_delete'],
+				'L_DELETE'		=> $lang['com_delete'],
 				'L_DETAIL'		=> $lang['common_details'],
 				'L_SETTINGS'	=> $lang['common_settings'],
 				
@@ -257,6 +257,6 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 ?>

@@ -188,7 +188,7 @@ if ( defined('DEBUG') )
 {
 	include($root_path . 'includes/functions_debug.php');
 	
-	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE | E_USER_ERROR);
 	set_error_handler('error_handler');
 }
 else

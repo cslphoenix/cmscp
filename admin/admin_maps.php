@@ -22,6 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('maps');
+	acl_auth(array('a_map', 'a_map_create', 'a_map_delete'));
 	
 	$error	= '';
 	$index	= '';
@@ -39,13 +40,7 @@ else
 	$accept	= request('accept', TYP);
 	
 	$dir_path	= $root_path . $settings['path_maps'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_maps'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -53,21 +48,8 @@ else
 		'body'		=> 'style/acp_maps.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
-	/*
-	if ( request('add_map', 1) || request('add_cat', 1) )
-	{
-		$mode = ( request('add_map', 1) ) ? 'create' : 'create_cat';
 	
-		if ( $mode == 'create' )
-		{
-			list($cat_id)	= each($_POST['add_map']);
-			$cat_id			= intval($cat_id);
-			
-			$map_name		= trim(htmlentities(str_replace("\'", "'", $_POST['map_name'][$cat_id]), ENT_COMPAT));
-		}
-	}
-	*/
-	debug($_POST, '_POST');
+#	debug($_POST, '_POST');
 	
 	$mode = (in_array($mode, array('create', 'update', 'list', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 	
@@ -75,8 +57,8 @@ else
 	{
 		switch ( $mode )
 		{
-			case 'create':
-			case 'update':
+			case 'create':	acl_auth('a_map_create');
+			case 'update':	acl_auth('a_map');
 
 				$template->assign_block_vars('input', array());
 				
@@ -87,7 +69,7 @@ else
 						'type'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('combi', false, 'main')),
 						'main'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:sub',	'divbox' => true, 'params' => array('ajax', true, 'map_tag')),
 					#	'map_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:images','divbox' => true, 'params' => array($dir_path, GAMES, false), 'required' => array('select_tag', 'type', 0), 'check' => true),
-						'map_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:tags','divbox' => true, 'params' => array($dir_path, GAMES, false), 'required' => array('select_tag', 'type', 0), 'check' => true),
+						'map_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:tags',	'divbox' => true, 'params' => array($dir_path, GAMES, false), 'required' => array('select_tag', 'type', 0), 'check' => true),
 						'map_file'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:file',	'divbox' => true, 'params' => $dir_path),
 					#	'map_file'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'divbox' => true),
 						'map_info'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'divbox' => true),
@@ -99,9 +81,6 @@ else
 				{
 					$name = (isset($_POST['map_name'])) ? request('map_name', TXT) : request('map_map', TXT);
 					$type = (isset($_POST['map_name'])) ? 0 : 1;
-					
-				#	debug($type, 'type');
-				#	debug($main, 'main');
 					
 					$data_sql = array(
 						'map_name'	=> $name,
@@ -175,8 +154,8 @@ else
 				$fields .= ( !$data_sql['type'] ) ? '<input type="hidden" name="current_tag" value="' . $data_sql['map_tag'] . '" />' : '';
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['map_name']),
-					'L_EXPLAIN'	=> $lang['common_required'],
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['map_name']),
+					'L_EXPLAIN'	=> $lang['com_required'],
 
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -230,8 +209,8 @@ else
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data_sql['map_name']),
+						'M_TITLE'	=> $lang['com_confirm'],
+						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['map_name']),
 						
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -333,8 +312,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"current_tag\" value=\"" . $data_sql['map_tag'] . "\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['cat'], $data_sql['map_name']),
+					'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['cat'], $data_sql['map_name']),
 				#	'L_NAME'	=> $lang['cat_name'],
 				#	'L_TAG'		=> $lang['cat_tag'],
 				#	'L_DISPLAY'	=> $lang['cat_display'],
@@ -361,7 +340,7 @@ else
 	
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -397,7 +376,7 @@ else
 			'OVERVIEW'	=> href('a_txt', $file, array($file), $lang['acp_overview'], ''),
 			'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cname, $cname),
 			'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
 		));
 		
 	#	$cid = $cat['map_id'];
@@ -423,7 +402,7 @@ else
 				$template->assign_block_vars('list.row', array(
 					'NAME'          => href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
 					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 					
 					'FILE'          => $row['map_file'],
 					'INFO'          => $row['map_info'],
@@ -460,7 +439,7 @@ else
 				$template->assign_block_vars('display.cat', array(
 					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				
 					'TAG'		=> $row['map_tag'],
 					
@@ -474,8 +453,8 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-		'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
 		'L_NAME'	=> $lang['type_0'],
 		'L_EXPLAIN'	=> $lang['explain'],
 		
@@ -486,7 +465,7 @@ else
 
 	$template->pparse('body');
 	
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

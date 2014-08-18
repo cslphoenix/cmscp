@@ -11,16 +11,14 @@ function SelectAll(id)
 </script>
 
 <form action="{S_ACTION}" method="post" name="mode" id="mode">
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 <ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
 </form>
 
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEADING}</a></li></ul>
-<ul id="navinfo"><li>{L_HEADING_EXPLAIN}</li></ul>
-
-<br />
+<li class="header">{L_HEADING}</li>
+<p>{L_HEADING_EXPLAIN}</p>
 
 <!-- BEGIN default -->
 <!-- BEGIN row -->
@@ -65,6 +63,22 @@ function SelectAll(id)
 <!-- END smain -->
 
 <!-- BEGIN calendar -->
+<script type="text/javascript" src="style/ajax_main.js"></script>
+<script type="text/javascript">
+
+function display_options(value)
+{
+	if ( value == '0' )
+	{
+		dE('compact', -1);
+	}
+	else 
+	{
+		dE('compact', 1);
+	}
+}
+
+</script>
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {calendar.row.hidden.HIDDEN}
@@ -208,7 +222,7 @@ function SelectAll(id)
 <!-- BEGIN option -->
 {other.row.tab.option.DIV_START}
 <dl>			
-	{other.row.tab.option.CSS}<label for="{other.row.tab.option.LABEL}"{other.row.tab.option.EXPLAIN}>{other.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{other.row.tab.option.CSS}"><label for="{other.row.tab.option.LABEL}"{other.row.tab.option.EXPLAIN}>{other.row.tab.option.L_NAME}:</label></dt>
 	<dd>{other.row.tab.option.OPTION}</dd>
 </dl>
 {other.row.tab.option.DIV_END}
@@ -258,34 +272,13 @@ function SelectAll(id)
 <!-- BEGIN option -->
 {match.row.tab.option.DIV_START}
 <dl>			
-	{match.row.tab.option.CSS}<label for="{match.row.tab.option.LABEL}"{match.row.tab.option.EXPLAIN}>{match.row.tab.option.L_NAME}:</label></dt>
+	<dt class="{other.row.tab.option.CSS}"><label for="{match.row.tab.option.LABEL}"{match.row.tab.option.EXPLAIN}>{match.row.tab.option.L_NAME}:</label></dt>
 	<dd>{match.row.tab.option.OPTION}</dd>
 </dl>
 {match.row.tab.option.DIV_END}
 <!-- END option -->
 </fieldset>
 <!-- END tab -->
-<!-- END row -->
-<!-- END match -->
-
-<!-- BEGIN match -->
-<!-- BEGIN row -->
-<table class="update2">
-<!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{match.row.tab.L_LANG}</a></li></ul></th>
-</tr>
-<!-- BEGIN option -->
-<tr>
-	<td class="row1"><label for="{match.row.KEY}_{match.row.tab.option.KEYS}">{match.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{match.row.tab.option.OPTION}</td>
-</tr>
-<!-- END option -->
-<!-- END tab -->
-<tr>
-	<td colspan="2">&nbsp;</td>
-</tr>
-</table>
 <!-- END row -->
 <!-- END match -->
 
@@ -378,7 +371,7 @@ function SelectAll(id)
 </tr>
 <tr>
 	<td colspan="2" class="row3">
-<textarea class="selectsmall" name="phpinfo" style="width:97%;height:430px" readonly="readonly" id="txtarea" onClick="SelectAll('txtarea');">
+<textarea class="selectsmall" name="phpinfo" style="width:97%;height:430px" readonly id="txtarea" onClick="SelectAll('txtarea');">
 /**********************************************
  * {L_SUPPORT_COMMON}
  **********************************************

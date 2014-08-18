@@ -1,21 +1,21 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li {TAB_AKTIV0} href="{S_ACTION}">{L_HEAD}</a></li>
-	<!-- BEGIN contact -->
-	<li {TAB_AKTIV1} href="{S_NORMAL}">{L_CONTACT}</a></li>
-	<!-- END contact -->
-	<!-- BEGIN joinus -->
-	<li {TAB_AKTIV2} href="{S_JOINUS}">{L_JOINUS}</a></li>
-	<!-- END joinus -->
-	<!-- BEGIN fightus -->
-	<li {TAB_AKTIV3} href="{S_FIGHTUS}">{L_FIGHTUS}</a></li>
-	<!-- END fightus -->
-</ul>
-<p>{L_EXPLAIN}</p>
-
+<!-- BEGIN type -->
+<table class="rows">
+<!-- BEGIN row -->
+<tr>
+	<td>{display.type.row.CONTACT_FROM}</td>
+	<td>{display.type.row.CONTACT_GAME}</td>
+	<td>{display.type.row.CONTACT_TYPE}</td>
+	<td>{display.type.row.CONTACT_STATUS}</td>
+	<td>{display.type.row.CONTACT_FROM}</td>
+	<td>{display.type.row.CONTACT_DATE}</td>
+	
+</tr>
+<!-- END row -->
+</table>
 <br />
-
+<!-- END type -->
 <table class="rows">
 <tr>
 	<td class="rowHead" colspan="5" width="100%">{L_CONTACT_DETAILS}</td>

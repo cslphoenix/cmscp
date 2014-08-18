@@ -1,3 +1,6 @@
+<li class="header">{L_HEAD}</li>
+<p>{L_EXPLAIN}</p>
+
 <!-- BEGIN input -->
 <script type="text/javascript">
 // <![CDATA[
@@ -21,23 +24,25 @@ function rank_posts(row)
 
 function display_options(value)
 {
-	if ( value == '1' )
+	if ( value == '1' || value == '3' )
 	{
 		dE('rank_special', -1);
 		dE('rank_min', -1);
-		de('rank_standard', 1);
+		dE('rank_standard', 1);
 	}
 	else if ( value == '2' )
 	{
 		dE('rank_special', 1);
 		dE('rank_min', 1);
-		de('rank_standard', -1);
+		dE('rank_standard', -1);
 	}
-	else if ( value == '3' )
+	else if ( value == '4' )
 	{
-		dE('rank_special', -1);
 		dE('rank_min', -1);
-		de('rank_standard', 1);
+	}
+	else if ( value == '5' )
+	{
+		dE('rank_min', 1);
 	}
 }
 
@@ -78,91 +83,29 @@ function display_options(value)
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<h1>{L_HEAD}</h1>
-<p>{L_EXPLAIN}</p>
-
-<br />
 
 <table class="rows">
 <tr>
-	<th>{L_PAGE}</th>
+	<th>{L_RANKS}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN page_row -->
+<!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.page_row.STANDARD}</span>{display.page_row.NAME}</td>
-	<td>{display.page_row.IMAGE}{display.page_row.MOVE_DOWN}{display.page_row.MOVE_UP}{display.page_row.UPDATE}{display.page_row.DELETE}</td>
+	<td><span class="right">{display.row.SPECIAL}</span>{display.row.NAME}</td>
+	<td>{display.row.IMAGE}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
-<!-- END page_row -->
-<!-- BEGIN page_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END page_empty -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="rank_name[1]"></td>
-	<td><input type="submit" class="button2" name="rank_type[1]" value="{L_CREATE_PAGE}"></td>
-</tr>
-</table>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_FORUM}</th>
-	<th>{L_SPECIAL}</th>
-	<th>{L_MIN}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN forum_row -->
-<tr>
-	<td>{display.forum_row.NAME}</td>
-	<td>{display.forum_row.SPECIAL}</td>
-	<td>{display.forum_row.MIN}</td>
-	<td>{display.forum_row.IMAGE}{display.forum_row.MOVE_DOWN}{display.forum_row.MOVE_UP}{display.forum_row.UPDATE}{display.forum_row.DELETE}</td>
-</tr>
-<!-- END forum_row -->
-<!-- BEGIN forum_empty -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
 	<td class="empty" colspan="4">{L_EMPTY}</td>
 </tr>
-<!-- END forum_empty -->
+<!-- END empty -->
 </table>
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="rank_name[2]"></td>
-	<td><input type="submit" class="button2" name="rank_type[2]" value="{L_CREATE_FORUM}"></td>
-</tr>
-</table>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_TEAM}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN team_row -->
-<tr>
-	<td><span class="right">{display.team_row.STANDARD}</span>{display.team_row.NAME}</td>
-	<td>{display.team_row.IMAGE}{display.team_row.MOVE_DOWN}{display.team_row.MOVE_UP}{display.team_row.UPDATE}{display.team_row.DELETE}</td>
-</tr>
-<!-- END team_row -->
-<!-- BEGIN team_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END team_empty -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="rank_name[3]"></td>
-	<td><input type="submit" class="button2" name="rank_type[3]" value="{L_CREATE_TEAM}"></td>
+	<td><input type="text" name="rank_name"></td>
+	<td><input type="submit" class="button2" name="rank_type" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}

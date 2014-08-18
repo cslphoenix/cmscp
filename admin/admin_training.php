@@ -22,6 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('training');
+	acl_auth(array('a_training', 'a_training_create', 'a_training_delete', 'a_training_manage'));
 	
 	$error	= '';
 	$index	= '';
@@ -41,21 +42,14 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$team_id	= request('team', INT);
-	$match_id	= request('match', INT);
+	$m_id	= request('m_id', INT);
+	$t_id	= request('t_id', INT);
 	
 	$acp_main	= request('acp_main', INT);
 	
-	$dir_path	= $root_path . 'admin/';
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_menu'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
-	
-	( $cancel && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel && !$acp_main )	? redirect('admin/' . check_sid(basename(__FILE__) . $adds, true)) : false;
 	( $cancel && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
 	
 	$template->set_filenames(array(
@@ -63,37 +57,29 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_training'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
-	
+	$base = $settings['switch']['training'];
+	$comt = $settings['comments']['training'];
 	$mode = (in_array($mode, array('create', 'update', 'delete'))) ? $mode : false;
-	
-	$switch = $settings['switch']['training'];
-	
-	debug($_POST, '_POST');
 	
 	switch ( $mode )
 	{
-		case 'create':
-		case 'update':
+		case 'create':	acl_auth('a_training_create');
+		case 'update':	acl_auth('a_training');
 		
 			$template->assign_block_vars('input', array());
 
 			$vars = array(
 				'training' => array(
 					'title' => 'input_data',
-					'training_vs'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',		'required' => 'input_name'),
+					'training_vs'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',		'required' => 'input_rival'),
 					'team_id'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:team',		'required' => 'select_team', 'params' => array('request', 'training_maps')),
 					'match_id'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:match'),
 					'training_maps'		=> array('validate' => ARY,	'explain' => false,	'type' => 'drop:maps',		'required' => 'select_maps'),
 				#	'training_date'		=> array('validate' => INT,	'explain' => false,	'type' => 'drop:datetime',	'params' => ( $mode == 'create' ) ? $time : '-1'),
-					'training_date'		=> array('validate' => ($switch ? INT : TXT), 'type' => ($switch ? 'drop:datetime' : 'text:25;25'), 'params' => ($switch ? (($mode == 'create') ? $time : '-1') : 'format')),
+					'training_date'		=> array('validate' => ($base ? INT : TXT), 'type' => ($base ? 'drop:datetime' : 'text:25;25'), 'params' => ($base ? (($mode == 'create') ? $time : '-1') : 'format')),
 					'training_duration'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:duration',	'params' => 'training_date'),
-					'training_text'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40',	'params' => TINY_NORMAL),
-					'training_comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+					'training_text'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40',	'params' => TINY_NORMAL, 'class' => 'tinymce'),
+					'training_comments'	=> ( $comt ) ? array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno') : 'hidden',
 					'time_create'		=> 'hidden',
 					'time_update'		=> 'hidden',
 				),
@@ -101,16 +87,15 @@ else
 			
 			if ( $mode == 'create' && !$submit )
 			{
-				debug($team_id);
 				$data_sql = array(
 					'training_vs'		=> ( request('training_vs', TXT) ) ? request('training_vs', TXT) : request('vs', TXT),
-					'team_id'			=> $team_id,
-					'match_id'			=> $match_id,
+					'team_id'			=> $t_id,
+					'match_id'			=> $m_id,
 					'training_maps'		=> 'a:0:{}',
 					'training_date'		=> $time,
 					'training_duration'	=> '',
 					'training_text'		=> '',
-					'training_comments'	=> 0,
+					'training_comments'	=> $settings['comments']['training'],
 					'time_create'		=> $time,
 					'time_update'		=> 0,
 				);
@@ -153,23 +138,23 @@ else
 			build_output(TRAINING, $vars, $data_sql);
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_INPUT'		=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['training_vs']),
+				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['training_vs']),
+				'L_EXPLAIN'	=> $lang['com_required'],
 				
-				'S_ACTION'		=> check_sid("$file&mode=$mode&id=$data"),
-				'S_FIELDS'		=> $fields,
+				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+				'S_FIELDS'	=> $fields,
 			));
 			
 			break;
 			
-		case 'delete':
+		case 'delete':	acl_auth('a_training_delete');
 		
 			$data_sql = data(TRAINING, $data, false, 1, true);
 		
 			if ( $data && $confirm )
 			{
 				$file = ( $acp_main ) ? check_sid('index.php') : check_sid($file);
-				$name = ( $acp_main ) ? $lang['header_acp'] : $acp_title;
+				$name = ( $acp_main ) ? $lang['acp_overview'] : $acp_title;
 				
 				$sql = sql(TRAINING, $mode, $data_sql, 'training_id', $data);
 				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $name);
@@ -190,8 +175,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
 	
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data_sql['training_vs']),
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['training_vs']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -210,27 +195,14 @@ else
 		
 			$template->assign_block_vars('display', array());
 			
-			$s_sort = $new = $cnt_new = $old = $cnt_old = '';
+			$new = $cnt_new = $old = $cnt_old = '';
 			
-			$teams = data(TEAMS, false, 'team_order', 0, false);
-			
-			$s_sort .= '<select name="team" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
-			$s_sort .= '<option value="0">' .  sprintf($lang['sprintf_select_format'], $lang['msg_select_team']) . '</option>';
-			
-			foreach ( $teams as $info => $value )
-			{
-				$selected = ( $value['team_id'] == $team_id ) ? ' selected="selected"' : '';
-				$s_sort .= '<option value="' . $value['team_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $value['team_name']) . '</option>';
-			}
-			
-			$s_sort .= '</select>';
-			
-			$select_id = ( $team_id >= 1 ) ? "AND tr.team_id = $team_id" : '';
+			$select_id = ( $t_id > 0 ) ? "AND tr.team_id = $t_id" : '';
 			
 			$sql = "SELECT tr.*, g.game_image
 						FROM " . TRAINING . " tr, " . TEAMS . " t, " . GAMES . " g
-						WHERE tr.team_id = t.team_id AND t.team_game = g.game_id $select_id
-					ORDER BY training_date";
+							WHERE tr.team_id = t.team_id AND t.team_game = g.game_id $select_id
+						ORDER BY training_date";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -244,7 +216,7 @@ else
 			}
 			else
 			{
-				foreach ( $training as $training => $row )
+				foreach ( $training as $data => $row )
 				{
 					if ( $row['training_date'] > time() )
 					{
@@ -275,7 +247,7 @@ else
 							'DATE'		=> create_date($userdata['user_dateformat'], $new[$i]['training_date'], $userdata['user_timezone']),
 							
 							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 						));
 					}
 				}
@@ -289,7 +261,7 @@ else
 					$cnt_old = count($old);
 					
 				#	for ( $j = $start; $j < $cnt_old; $j++ )
-					for ( $j = $start; $j < min(5 + $start, $cnt_old); $j++ )
+					for ( $j = $start; $j < min($settings['ppe_acp'] + $start, $cnt_old); $j++ )
 					{
 						$id = $old[$j]['training_id'];
 						$vs = $old[$j]['training_vs'];
@@ -300,7 +272,7 @@ else
 							'DATE'		=> create_date($userdata['user_dateformat'], $old[$j]['training_date'], $userdata['user_timezone']),
 							
 							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 						));
 					}
 				}
@@ -311,8 +283,8 @@ else
 			$fields = '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['title']),
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
+				'L_CREATE'		=> sprintf($lang['stf_create'], $lang['title']),
 				'L_EXPLAIN'		=> $lang['explain'],
 				'L_UPCOMING'	=> $lang['upcoming'],
 				'L_EXPIRED'		=> $lang['expired'],
@@ -320,8 +292,11 @@ else
 				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / 5 ) + 1 ), $current_page),
 				'PAGE_PAGING'	=> generate_pagination($file, $cnt_old, 5, $start ),
 				
-				'S_SORT'	=> $s_sort,
-				'S_TEAMS'	=> select_team($team_id, false, 'team', false),
+			#	'S_SORT'	=> select_team($t_id, '', 't_id', 'submit', 'selectsmall'),
+			#	'S_TEAMS'	=> select_team($t_id, false, 't_id', false),
+				
+				'S_SORT'	=> select_team($t_id, '', 't_id', 'submit', 'selectsmall'),
+				'S_TEAM'	=> select_team($t_id, '', 't_id', false, 'selectsmall'),
 
 				'S_CREATE'	=> check_sid("$file&mode=create"),
 				'S_ACTION'	=> check_sid($file),
@@ -333,7 +308,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

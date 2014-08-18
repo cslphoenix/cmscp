@@ -5,6 +5,14 @@ if ( !defined('IN_CMS') )
 	die('Hacking attempt');
 }
 
+define('CAL_TRAINING',	'training');
+define('CAL_TODAY',		'today');
+define('CAL_EVENT',		'event');
+define('CAL_NEWS',		'news');
+define('CAL_MATCH', 	'match');
+define('CAL_BIRTHDAY',	'birthday');
+
+
 define('INT', 'int');
 define('URL', 'url');
 define('TXT', 'text');
@@ -120,7 +128,9 @@ define('SECTION_TEAM',			17);
 define('SECTION_TEAMSPEAK',		18);	
 define('SECTION_TRAINING',		19);	
 define('SECTION_USER',			20);
+define('SECTION_CONTACT',		500);
 define('SECTION_VOTES',			300);
+define('SECTION_RATE',			400);
 
 /* Page Numbers for session handling */
 define('PAGE_INDEX',		0);
@@ -158,10 +168,20 @@ define('NAVI_COM',		3);
 define('NAVI_MISC',		4);
 define('NAVI_USER',		5);
 
-/* Rank Types */
+/*
+	Rank Types
+	page = für Gruppen / Benutzer
+	forum = für Forenbeiträge
+	team = für Teams
+*/
 define('RANK_PAGE',		1);
 define('RANK_FORUM',	2);
 define('RANK_TEAM',		3);
+
+/* Rating Types */
+define('RATE_NEWS',		1);
+define('RATE_DOWNLOAD',	2);
+define('RATE_GALLERY',	3);
 
 /* Network Types */
 define('NETWORK_LINK',		1);
@@ -281,10 +301,15 @@ define('STATUS_NO',			2);
 define('STATUS_REPLACE',	3);
 
 /* Tabellennamen */
-define('ACL_FIELDS',		$db_prefix . 'acl_fields');	
+#define('ACL_FIELDS',		$db_prefix . 'acl_fields');	
+#define('ACL_GROUPS',		$db_prefix . 'acl_groups');	
+#define('ACL_LABEL',			$db_prefix . 'acl_label');
+#define('ACL_OPTIONS',		$db_prefix . 'acl_options');	
+#define('ACL_USERS',			$db_prefix . 'acl_users');
 define('ACL_GROUPS',		$db_prefix . 'acl_groups');	
 define('ACL_LABEL',			$db_prefix . 'acl_label');
-define('ACL_OPTIONS',		$db_prefix . 'acl_options');	
+define('ACL_LABEL_DATA',	$db_prefix . 'acl_label_data');	
+define('ACL_OPTION',		$db_prefix . 'acl_option');	
 define('ACL_USERS',			$db_prefix . 'acl_users');
 
 /* system */
@@ -295,6 +320,7 @@ define('LOGS',				$db_prefix . 'log');
 
 define('BANLIST',			$db_prefix . 'banlist');
 define('CAPTCHA',			$db_prefix . 'captcha');
+define('CASH2',				$db_prefix . 'cash_new');
 define('CASH',				$db_prefix . 'cash');
 define('CASH_USER',			$db_prefix . 'cash_users');
 define('COMMENT',			$db_prefix . 'comment');
@@ -304,8 +330,6 @@ define('COUNTER_COUNTER',	$db_prefix . 'counter_counter');
 define('COUNTER_ONLINE',	$db_prefix . 'counter_online');
 define('DISALLOW',			$db_prefix . 'disallow');
 define('DOWNLOAD',			$db_prefix . 'download');
-define('DOWNLOADS',			$db_prefix . 'downloads');
-define('DOWNLOADS_CAT',		$db_prefix . 'downloads_cat');
 define('EVENT',				$db_prefix . 'event');
 
 define('FIELDS',			$db_prefix . 'fields');
@@ -319,6 +343,7 @@ define('GALLERY_NEW',		$db_prefix . 'gallery_new');
 define('GALLERY',			$db_prefix . 'gallery');
 define('GALLERY_PIC',		$db_prefix . 'gallery_pic');
 define('GAMES',				$db_prefix . 'game');
+define('GAMEQ',				$db_prefix . 'gameq');
 define('GROUPS',			$db_prefix . 'groups');
 define('ICONS',				$db_prefix . 'icons');
 define('LISTS',				$db_prefix . 'users_list');
@@ -338,7 +363,7 @@ define('PRIVMSGS',			$db_prefix . 'privmsgs');
 define('RANKS',				$db_prefix . 'ranks');
 define('RATE',				$db_prefix . 'rate');
 define('SERVER',			$db_prefix . 'server');
-define('SERVER_TYPE',		$db_prefix . 'server_types');
+
 define('SESSIONS',			$db_prefix . 'sessions');
 define('SESSIONS_KEYS',		$db_prefix . 'sessions_keys');
 define('TEAMS',				$db_prefix . 'teams');

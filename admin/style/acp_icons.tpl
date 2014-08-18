@@ -94,6 +94,7 @@
 </tr>
 <!-- END empty -->
 </table>
+{LIST}
 
 <table class="lfooter">
 <tr>
@@ -104,3 +105,20 @@
 {S_FIELDS}
 </form>
 <!-- END display -->
+
+<!-- BEGIN list -->
+<table>
+<tr>
+	<!-- BEGIN name_option -->
+	<th>{list.name_option.NAME}</th>
+	<!-- END name_option -->
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<!-- BEGIN type_option -->
+	<td align="center">{list.row.type_option.TYPE}</td>
+	<!-- END type_option -->
+</tr>
+<!-- END row -->
+</table>
+<!-- END list -->

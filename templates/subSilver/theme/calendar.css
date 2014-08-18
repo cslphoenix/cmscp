@@ -2,9 +2,10 @@
 .today, a.today				{ color:#F00; font-weight:normal; }
 .more, a.more				{ color:#FFF; font-weight:normal; }
 .birthday, a.birthday		{ color:#0F0; font-weight:normal; }
-.events, a.events			{ color:#FF0; font-weight:normal; }
-.wars, a.wars				{ color:#0FF; font-weight:normal; }
-.trains, a.trains 			{ color:#09F; font-weight:normal; }
+.event, a.event				{ color:#FF0; font-weight:normal; }
+.war, a.war					{ color:#0FF; font-weight:normal; }
+.match, a.match				{ color:#0FF; font-weight:normal; }
+.training, a.training 		{ color:#09F; font-weight:normal; }
 em.news, span.news, a.news 	{ color:#F90; font-weight:normal; }
 
 table.cal				{ padding:1px; text-align:left; width:100%; border:none; }

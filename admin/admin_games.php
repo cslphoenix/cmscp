@@ -22,6 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('games');
+	acl_auth(array('a_game', 'a_game_create', 'a_game_delete'));
 	
 	$error	= '';
 	$index	= '';
@@ -38,24 +39,16 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_games'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_games'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
-	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__) . $adds, true)) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_games.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	debug($_POST, '_POST');
-	
-	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
+	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down'))) ? $mode : false;
 	
 	if ( $mode )
 	{
@@ -70,7 +63,7 @@ else
 					'game' => array(
 						'title' => 'input_data',
 						'game_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
-						'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:server','required' => 'select_tag',	'check' => true, 'params' => true),
+						'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq',	'required' => 'select_tag',	'check' => true, 'params' => '0'),
 						'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
 						'game_order'	=> 'hidden',
 					),
@@ -95,14 +88,14 @@ else
 					
 					if ( !$error )
 					{
-						if ( $mode == 'create' )
+						if ( $mode == 'create' && acl_auth('a_game_create') )
 						{
 							$data_sql['game_order'] = maxa(GAMES, 'game_order', false);
 							
 							$sql = sql(GAMES, $mode, $data_sql);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
-						else
+						else if ( acl_auth('a_game') ) 
 						{
 							$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
@@ -120,10 +113,8 @@ else
 				build_output(GAMES, $vars, $data_sql);
 
 				$template->assign_vars(array(
-				#	'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['game_name']),
-					'L_EXPLAIN'	=> $lang['common_required'],
-					
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['game_name']),
+					'L_EXPLAIN'	=> $lang['com_required'],
 					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -134,7 +125,7 @@ else
 				break;
 			
 			case 'move_up':
-			case 'move_down':
+			case 'move_down':	acl_auth('a_game');
 			
 				move(GAMES, $mode, $order);
 				log_add(LOG_ADMIN, $log, $mode);
@@ -143,11 +134,11 @@ else
 				
 				break;
 
-			case 'delete':
+			case 'delete':	acl_auth('a_game_delete');
 
 				$data_sql = data(GAMES, $data, false, 1, true);
 
-				if ( $data && $confirm )
+				if ( $data && $accept )
 				{
 					$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
@@ -157,14 +148,14 @@ else
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
 				}
-				else if ( $data_id && !$confirm )
+				else if ( $data && !$accept )
 				{
 					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['game_name']),
+						'M_TITLE'	=> $lang['com_confirm'],
+						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['game_name']),
 
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -182,7 +173,7 @@ else
 
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -191,17 +182,17 @@ else
 
 	$fields	= '<input type="hidden" name="mode" value="create" />';
 	
-	$tmp = data(GAMES, '', 'game_order ASC', 1, false);
+	$games = data(GAMES, '', 'game_order ASC', 1, false);
 
-	if ( !$tmp )
+	if ( !$games )
 	{
 		$template->assign_block_vars('display.empty', array());
 	}
 	else
 	{
-		$max = count($tmp);
+		$max = count($games);
 
-		foreach ( $tmp as $row )
+		foreach ( $games as $row )
 		{
 			$id		= $row['game_id'];
 			$name	= $row['game_name'];
@@ -210,7 +201,7 @@ else
 			$template->assign_block_vars('display.row', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				
 				'TAG'		=> $row['game_tag'],
 				'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
@@ -222,8 +213,8 @@ else
 	}
 
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-		'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 
 		'L_NAME'	=> $lang['game_name'],
@@ -234,7 +225,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

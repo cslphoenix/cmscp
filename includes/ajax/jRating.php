@@ -9,9 +9,9 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-if( isset($_POST['action']) )
+if ( isset($_POST['action']) )
 {
-	if( $_POST['action'] == 'rating' )
+	if ( $_POST['action'] == 'rating' )
 	{
 		$type	= floatval($_POST['type']);
 		$typeid	= intval($_POST['idbox']);
@@ -39,7 +39,7 @@ if( isset($_POST['action']) )
 		{
 		#	$sql = "SELECT news_id, count_comment AS count FROM " . NEWS . " WHERE news_id = '$typeid'";
 		#	$sql = "SELECT rate_type_id, rate_userid, rate_value FROM " . RATE . " WHERE = '$typeid'";
-			$sql = "SELECT  rate_value FROM " . RATE . " WHERE rate_type = '$type' AND rate_type_id = '$typeid'";
+			$sql = "SELECT rate_value FROM " . RATE . " WHERE rate_type = '$type' AND rate_type_id = '$typeid'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -57,8 +57,15 @@ if( isset($_POST['action']) )
 			
 		#	debug($count);
 		#	debug($value);
+		
+			switch ( $type )
+			{
+				case RATE_NEWS: 	$ttype = $settings['rating_news']['maximal'];
+				case RATE_DOWNLOAD: $ttype = $settings['rating_download']['maximal'];
+				case RATE_GALLERY:	$ttype = $settings['rating_gallery']['maximal'];
+			}
 			
-			$return = sprintf('%s %s &oslash; %s/%s', $count, $lang['common_rating'], round(($value/$count), 1), $settings['rating_news']['maximal']);
+			$return = sprintf('%s %s &oslash; %s/%s', $count, $lang['common_rating'], round(($value/$count), 1), $ttype);
 			
 		#	$aResponse = '';
 		#	$aResponse['message'] = 'Your rate has been successfuly recorded. Thanks for your rate :)';

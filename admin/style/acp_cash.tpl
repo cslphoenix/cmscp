@@ -1,4 +1,8 @@
+<li class="header">{L_HEAD}</li>
+<p>{L_EXPLAIN}</p>
+
 <!-- BEGIN input -->
+<form action="{S_ACTION}" method="post">
 <script type="text/JavaScript">
 <!-- BEGIN ajax -->
 function look_{input.ajax.NAME}({input.ajax.NAME}, user_new, user_level)
@@ -30,37 +34,33 @@ function set_infos(id,text)
 	var obj = document.getElementById(id).value = text;
 }
 </script>
-<form action="{S_ACTION}" method="post">	
-<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
 {ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<table class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<tr {input.row.tab.option.ID}>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+{input.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</table>
 <!-- END row -->
 
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END input -->
@@ -232,41 +232,42 @@ function fill(thisValue)
 <br />
 <!-- END bank -->
 
+
+<!-- END display -->
+
+<!-- BEGIN bank -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th>{L_REASON}</th>
-	<th>{L_INTERVAL}</th>
-	<th>{L_SETTINGS}</th>
+	<th colspan="2">{L_BANK}</th>
 </tr>
-<!-- BEGIN cash_row -->
 <tr>
-	<td><span class="right">{display.cash_row.AMOUNT}&nbsp;</span>{display.cash_row.TYPE} {display.cash_row.NAME}</td>
-	<td>{display.cash_row.DATE}</td>
-	<td>{display.cash_row.UPDATE}{display.cash_row.DELETE}</td>
+	<td class="row_class1">{L_HOLDER}</td>
+	<td class="row_class2">{display.bank.HOLDER}</td>
 </tr>
-<!-- END cash_row -->
-<!-- BEGIN empty -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="row_class1">{L_NAME} / {L_BLZ}</td>
+	<td class="row_class2">{display.bank.NAME} / {display.bank.BLZ}</td>
 </tr>
-<!-- END empty -->
 <tr>
-	<th><span class="right">{POSTAGE_CASH}&nbsp;</span></th>
-	<th colspan="2">{L_POSTAGE}</th>
+	<td class="row_class1">{L_NUMBER}</td>
+	<td class="row_class2">{display.bank.NUMBER}</td>
+</tr>
+<tr>
+	<td class="row_class1">{L_REASON}</td>
+	<td class="row_class2">{display.bank.REASON}</td>
 </tr>
 </table>
 
-<table class="lfooter">
+<table class="rfooter">
 <tr>
-	<td><input type="hidden" name="mode" value="create_cat" /><input type="text" name="cash_name" /></td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+	<td><input type="hidden" name="mode" value="bankdata_delete" /><input type="submit" class="button" value="{L_DELETE}" /></td>
 </tr>
 </table>
 </form>
+<!-- END bank -->
 
-<br />
-
+<!-- BEGIN user -->
 <form action="{S_ACTION}" method="post">
 <table class="rows" cellspacing="1">
 <tr>
@@ -274,19 +275,19 @@ function fill(thisValue)
 	<th>{L_INTERVAL}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN user_row -->
+<!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.user_row.TIME}&nbsp;&bull;&nbsp;({display.user_row.MONTH})</span>{display.user_row.USER}</td>
-	<td>{display.user_row.AMOUNT}</td>
-	<td>{display.user_row.INTERVAL}</td>
-	<td>{display.user_row.UPDATE}{display.user_row.DELETE}</td>		
+	<td><span class="right">{user.row.MONTH}</span><span title="{user.row.TIME}">{user.row.USER}</span></td>
+	<td>{user.row.AMOUNT}</td>
+	<td>{user.row.INTERVAL}</td>
+	<td>{user.row.UPDATE}{user.row.DELETE}</td>		
 </tr>
-<!-- END user_row -->
-<!-- BEGIN empty_user -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
 	<td class="empty" colspan="4">{L_EMPTY}</td>
 </tr>
-<!-- END empty_user -->
+<!-- END empty -->
 <tr>
 	<th colspan="2"><span class="{POSTAGE_CLASS} right">{POSTAGE}</span>&nbsp;</th>
 	<th colspan="2">{L_POSTAGE}</th>
@@ -295,7 +296,7 @@ function fill(thisValue)
 
 <table class="footer">
 <tr>
-	<td><input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 0, 2);" onblur="fill();" autocomplete="off"></td>
+	<td><input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 0, 5);" onblur="fill();" autocomplete="off"></td>
 	<td><input type="submit" value="{L_CREATE_USER}"></td>
 	<td></td>
 	<td rowspan="2">{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
@@ -309,6 +310,42 @@ function fill(thisValue)
 	<td></td>
 	</tr>
 </table>
-<input type="hidden" name="mode" value="create" />
+{S_FIELDS}
 </form>
-<!-- END display -->
+<!-- END user -->
+
+<!-- BEGIN type -->
+<form action="{S_ACTION}" method="post">
+<table class="rows">
+<tr>
+	<th>{L_REASON}</th>
+	<th>{L_INTERVAL}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span class="right">{type.row.AMOUNT}&nbsp;</span>{type.row.TYPE} {type.row.NAME}</td>
+	<td>{type.row.DATE}</td>
+	<td>{type.row.UPDATE}{type.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="3">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
+<tr>
+	<th><span class="right">{POSTAGE_CASH}&nbsp;</span></th>
+	<th colspan="2">{L_POSTAGE}</th>
+</tr>
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="cash_type" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END type -->

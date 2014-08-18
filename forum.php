@@ -9,14 +9,44 @@ include($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, PAGE_FORUM);
 init_userprefs($userdata);
 
-$viewcat = ( !empty($HTTP_GET_VARS[POST_CATEGORY]) ) ? $HTTP_GET_VARS[POST_CATEGORY] : -1;
+#$viewcat = ( !empty($_GET[POST_CATEGORY]) ) ? $_GET[POST_CATEGORY] : -1;
 
-$sql = "SELECT * FROM " . FORUM_CAT . " ORDER BY cat_order";
-if ( !($result = $db->sql_query($sql)) )
+$viewcat = request('id', INT);
+
+debug($viewcat, 'viewcat');
+
+$tmp = data(FORUM, false, 'main ASC, forum_order ASC', 1, false);
+		
+$cats = $subforum = $forum = array();
+
+if ( $tmp )
 {
-	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	foreach ( $tmp as $rows )
+	{
+		if ( $rows['forum_id'] == $viewcat )
+		{
+			$cats = $rows;
+		}
+		else if ( $rows['main'] == $viewcat )
+		{
+			$forum[$rows['forum_id']] = $rows;
+		}
+	}
+	
+	if ( $forum )
+	{
+		$keys_labels = array_keys($forum);
+		
+		foreach ( $tmp as $rows )
+		{
+			if ( in_array($rows['main'], $keys_labels) )
+			{
+				$subforum[$rows['main']][] = $rows;
+			}
+			
+		}
+	}
 }
-$cats = $db->sql_fetchrowset($result);
 
 $template->set_filenames(array('body' => 'body_forum.tpl'));	
 

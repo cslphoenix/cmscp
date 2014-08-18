@@ -16,9 +16,8 @@ include($root_path . 'includes/acp/acp_selects.php');
 include($root_path . 'includes/acp/acp_upload.php');
 
 $userdata = session_pagestart($user_ip, PAGE_ADMIN);
-init_userprefs($userdata);
-
 $userauth = auth_acp_check($userdata['user_id']);
+init_userprefs($userdata);
 
 if ( !$userdata['session_logged_in'] )
 {
@@ -39,7 +38,15 @@ if ( !$userdata['session_admin'] )
 
 if ( empty($cancel) )
 {
-	include('./page_header_admin.php');
+	$typ = request('i', INT) ? request('i', INT) : 1;
+	$act = request('action', TYP);
+	
+	$action = $act ? "&action=$act" : '';
+	
+	$adds = "?i=$typ$action";
+	$file = basename($_SERVER['PHP_SELF']) . $adds;
+	
+	acp_header($file, $adds, $typ);
 }
 
 ?>
