@@ -75,7 +75,7 @@ if ( $data && $tmp )
 	
 	main_header($page_title);
 	
-#	if ( $userdata['user_level'] == ADMIN || $userauth['auth_match'] )
+#	if ( $userdata['user_level'] == ADMIN || $userauth['auth_mmanage'] )
 #	{
 #		$template->assign_block_vars('view.update', array(
 #			'UPDATE'		=> "<a href=\"" . check_sid("admin/admin_match.php?mode=_update&amp;$url=$data&amp;sid=" . $userdata['session_id']) . "\">" . $lang['match_update'] . "</a>",

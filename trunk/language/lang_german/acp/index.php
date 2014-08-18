@@ -7,6 +7,9 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
+	'title'		=> 'Hauptseite Clanportal',
+	'explain'	=> 'Willkommen im Adminbereich des Clanportals von CMS-Phoenix.de usw.',
+
 	'page_start'	=> 'Seite installiert',
 	'page_version'	=> 'CMS Version',
 	'page_backup'	=> 'letztes Backup',
@@ -21,6 +24,7 @@ $lang = array_merge($lang, array(
 	'path_matchs'		=> 'Begegnungen',
 	'path_users'		=> 'Benutzer',
 	'path_groups'		=> 'Gruppen',
+	'path_teams'		=> 'Teams',
 	'path_network'		=> 'Network',
 	
 	'dir'	=> 'Verzeichnis',

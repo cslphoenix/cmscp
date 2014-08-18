@@ -1,14 +1,14 @@
 <li class="header">{L_WELCOME}</li>
 <p>{L_EXPLAIN}</p>
 
-<br />
-
 <table>
 <tr>
 	<td width="50%" class="top">
 		<table class="info">
-		<th><ul id="navlist"><li><a href="#" id="right" onclick="return false;">{L_INFO}</a></li></ul></th>
-		<th><ul id="navlist"><li><a href="#" id="current" onclick="return false;">{L_VALUE}</a></li></ul></th>
+		<tr>
+			<th>{L_INFO}</th>
+			<th>{L_VALUE}</th>
+		</tr>
 		<tr>
 			<td>{L_PAGE_STARTED}:</td>
 			<td>{PAGE_STARTED}</td>
@@ -37,8 +37,14 @@
 	</td>
 	<td width="50%" class="top">
 		<table class="info">
+		<tr>
+			<th>{L_DIR}</th>
+			<th>{L_SIZE}</th>
+		</tr>
+		<!--
 		<th><ul id="navlist"><li><a href="#" id="right" onclick="return false;">{L_DIR}</a></li></ul></th>
 		<th><ul id="navlist"><li><a href="#" id="current" onclick="return false;">{L_SIZE}</a></li></ul></th>
+		-->
 		<tr>
 			<td>{L_SIZE_CACHE}:</td>
 			<td>{SIZE_CACHE}</td>
@@ -67,6 +73,10 @@
 			<td>{L_SIZE_GROUPS}:</td>
 			<td>{SIZE_GROUPS}</td>
 		</tr>
+        <tr>
+			<td>{L_SIZE_TEAMS}:</td>
+			<td>{SIZE_TEAMS}</td>
+		</tr>
 		<tr>
 			<td>{L_SIZE_NETWORK}:</td>
 			<td>{SIZE_NETWORK}</td>
@@ -79,90 +89,74 @@
 <br />
 {ERROR_BOX}
 
-<table>
-<tr>
-	<td class="top" width="50%">
-		<ul id="navlist"><li><a href="{U_NEWS}" id="current"><img src="{I_NEWS}" width="12" height="12" alt="" />&nbsp;{L_NEWS}</a></li></ul>
-		<table class="index">
+<div class="index">
+	<fieldset class="info">
+		<legend><img src="{I_NEWS}" width="12" height="12" alt="" /> <a href="{U_NEWS}">{L_NEWS}</a></legend>
 		<!-- BEGIN news_row -->
-		<tr>
-			<td><span class="right">{news_row.DATE}</span>{news_row.GAME} {news_row.TITLE}</td>
-			<td>{news_row.PUBLIC}{news_row.UPDATE}{news_row.DELETE}</td>
-		</tr>
+		<dl>
+			<dt><span class="right">{news_row.DATE}</span>{news_row.GAME} {news_row.TITLE}</dt>
+			<dd>{news_row.PUBLIC}{news_row.UPDATE}{news_row.DELETE}</dd>
+		</dl>
 		<!-- END news_row -->
 		<!-- BEGIN news_empty -->
-		<tr>
-			<td class="empty" colspan="4" align="center">{L_EMPTY}</td>
-		</tr>
+		<ul align="center">{L_EMPTY}</ul>
 		<!-- END news_empty -->
-		</table>
-	</td>
-	<td class="top" width="50%">
-		<ul id="navlist"><li><a href="{U_EVENT}" id="right"><img src="{I_EVENT}" width="12" height="12" alt="" />&nbsp;{L_EVENT}</a></li></ul>
-		<table class="index">
+	</fieldset>
+</div>
+
+<div class="index right">
+	<fieldset class="info">
+		<legend><img src="{I_EVENT}" width="12" height="12" alt="" /> <a href="{U_EVENT}">{L_EVENT}</a></legend>
 		<!-- BEGIN event_row -->
-		<tr>
-			<td><span class="right">{event_row.DATE}</span>{event_row.LEVEL} {event_row.TITLE}</td>
-			<td>{event_row.UPDATE}{event_row.DELETE}</td>
-		</tr>
+		<dl>
+			<dt><span class="right">{event_row.DATE}</span>{event_row.LEVEL} {event_row.TITLE}</dt>
+			<dd>{event_row.UPDATE}{event_row.DELETE}</dd>
+		</dl>
 		<!-- END event_row -->
 		<!-- BEGIN event_empty -->
-		<tr>
-			<td class="empty" colspan="4" align="center">{L_EMPTY}</td>
-		</tr>
+		<ul align="center">{L_EMPTY}</ul>
 		<!-- END event_empty -->
-		</table>
-	</td>
-</tr>
-</table>
+	</fieldset>
+</div>
 
-<br />
-
-<table>
-<tr>
-	<td class="top" width="50%">
-		<ul id="navlist"><li><a href="{U_MATCH}" id="current"><img src="{I_MATCH}" width="12" height="12" alt="" />&nbsp;{L_MATCH}</a></li></ul>
-		<table class="index">
+<div class="index">
+	<fieldset class="info">
+		<legend><img src="{I_MATCH}" width="12" height="12" alt="" /> <a href="{U_MATCH}">{L_MATCH}</a></legend>
 		<!-- BEGIN match_row -->
-		<tr>
-			<td><span class="right">{match_row.DATE}</span>{match_row.GAME} {match_row.RIVAL}</td>
-			<td>{match_row.DETAIL}{match_row.UPDATE}{match_row.DELETE}</td>
-		</tr>
+		<dl>
+			<dt><span class="right">{match_row.DATE}</span>{match_row.GAME} {match_row.RIVAL}</dt>
+			<dd>{match_row.DETAIL}{match_row.UPDATE}{match_row.DELETE}</dd>
+		</dl>
 		<!-- END match_row -->
 		<!-- BEGIN match_empty -->
-		<tr>
-			<td class="empty" align="center">{L_EMPTY}</td>
-		</tr>
+		<ul align="center">{L_EMPTY}</ul>
 		<!-- END match_empty -->
-		</table>
-	</td>
-	<td class="top" width="50%">
-		<ul id="navlist"><li><a href="{U_TRAIN}" id="right"><img src="{I_TRAIN}" width="12" height="12" alt="" />&nbsp;{L_TRAIN}</a></li></ul>
-		<table class="index">
+	</fieldset>
+</div>
+
+<div class="index right">
+	<fieldset class="info">
+		<legend><img src="{I_TRAIN}" width="12" height="12" alt="" /> <a href="{U_TRAIN}">{L_TRAIN}</a></legend>
 		<!-- BEGIN training_row -->
-		<tr>
-			<td><span class="right">{training_row.DATE}</span>{training_row.GAME} {training_row.VS}</td>
-			<td>{training_row.UPDATE}{training_row.DELETE}</td>
-		</tr>
+		<dl>
+			<dt><span class="right">{training_row.DATE}</span>{training_row.GAME} {training_row.VS}</dt>
+			<dd>{training_row.UPDATE}{training_row.DELETE}</dd>
+		</dl>
 		<!-- END training_row -->
 		<!-- BEGIN training_empty -->
-		<tr>
-			<td class="empty">{L_EMPTY}</td>
-		</tr>
+		<ul align="center">{L_EMPTY}</ul>
 		<!-- END training_empty -->
-		</table>
-	</td>
-</tr>
-</table>
+	</fieldset>
+</div>
 
-<br />
-
-<ul id="navlist"><li><a href="{U_USERS}" id="current"><img src="{I_USERS}" width="12" height="12" alt="" />&nbsp;{L_USERS}</a></li></ul>
-<table class="index">
-<!-- BEGIN user_row -->
-<tr>
-	<td><span class="right">{user_row.REGDATE}</span>{user_row.LEVEL} {user_row.NAME}</td>
-	<td>{user_row.AUTH}{user_row.UPDATE}{user_row.DELETE}</td>
-</tr>
-<!-- END user_row -->
-</table>
+<div class="index large">
+	<fieldset class="full">
+		<legend><img src="{I_USERS}" width="12" height="12" alt="" /> <a href="{U_USERS}">{L_USERS}</a></legend>
+		<!-- BEGIN user_row -->
+		<dl>
+			<dt><span class="right">{user_row.REGDATE}</span>{user_row.LEVEL} {user_row.NAME}</dt>
+			<dd>{user_row.AUTH}{user_row.UPDATE}{user_row.DELETE}</dd>
+		</dl>
+		<!-- END user_row -->
+	</fieldset>
+</div>

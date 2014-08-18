@@ -33,30 +33,19 @@
 	}
 	*/
 	
-	function clone(objButton)
+	/*	
+		require:	acp_logs.tpl
+					acp_match.tpl
+	*/
+	function checked(id)
 	{
-		if ( objButton.parentNode )
+		if ( document.getElementById('check_'+id).checked == true )
 		{
-			tmpNode		= objButton.parentNode.cloneNode(true);
-			target		= objButton.parentNode.parentNode;
-			arrInput	= tmpNode.getElementsByTagName("input");
-			
-			for ( var i = 0; i < arrInput.length; i++ )
-			{
-				if ( arrInput[i].type == 'text' )
-				{
-					arrInput[i].value = '';
-				}
-				
-				if ( arrInput[i].type=='file' )
-				{
-					arrInput[i].value='';
-				}
-			}
-			
-			target.appendChild(tmpNode);
-			objButton.value="{L_REMOVE}";
-			objButton.onclick=new Function('f1','this.parentNode.parentNode.removeChild(this.parentNode)');
+			document.getElementById('check_'+id).checked = false;
+		}
+		else
+		{
+			document.getElementById('check_'+id).checked = true;
 		}
 	}
 	

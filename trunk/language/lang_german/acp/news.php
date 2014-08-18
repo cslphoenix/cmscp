@@ -30,6 +30,9 @@ $lang = array_merge($lang, array(
 	'news_intern'		=> 'Interne News',
 	'news_comments'		=> 'Kommentare',
 	'news_rate'		=> 'Bewertung',
+	
+	'cat_name'	=> 'Name',
+	'cat_image'	=> 'Bild',
 
 	
 ));

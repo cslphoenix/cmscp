@@ -99,14 +99,6 @@ function display_options(value)
 
 </script>
 <form action="{S_ACTION}" method="post" name="form">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_TITLE}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li>
-	<!-- BEGIN update -->
-	<li><a href="{S_DETAIL}">{L_DETAIL}</a></li>
-	<!-- END update -->
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 {ERROR_BOX}
 
 <!-- BEGIN row -->
@@ -336,8 +328,6 @@ function display_options(value)
 <ul id="navinfo"><li><a href="{U_SYNC}">{L_SYNC}</a></li></ul>
 <ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
 </form>
-
-<br />
 
 <table class="rows">
 <tr>

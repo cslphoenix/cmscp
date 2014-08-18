@@ -5,10 +5,11 @@ $(document).ready(function()
 {
 	<!-- BEGIN info -->
 	$(".rate_{list.info.ID}").jRating({
-		length:5,
-		step:true,
-		rateMax:5,
-		showRateInfo:false,
+		length:{RATE_LENGTH},
+		step:{RATE_STEP},
+		rateMax:{RATE_MAX},
+		type:'{RATE_TYPE}',
+		showRateInfo:true,
 		isDisabled:{list.info.RATE},
 	});
 	<!-- END info -->
@@ -52,7 +53,7 @@ $(document).ready(function()
 	</td>
 </tr>
 <tr style="display:{list.row.R_SHOW};">
-	<td><div class="rate_{list.row.ID}" id="{list.row.R_SUM}_{list.row.ID}_1"></div><div id="close_{list.row.ID}">{list.row.RATING}</div><div id="ajax_{list.row.ID}"></div></td>
+	<td><div class="rate_{list.row.ID}" data-average="{list.row.R_SUM}" data-id="{list.row.ID}" data-type="1"></div><div id="close_{list.row.ID}">{list.row.RATING}</div><div id="ajax_{list.row.ID}"></div></td>
 </tr>
 <!-- END row -->
 <!-- BEGIN empty -->

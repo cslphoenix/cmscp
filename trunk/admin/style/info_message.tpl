@@ -1,6 +1,4 @@
-<div id="navcontainer">
-	<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{MESSAGE_TITLE}</a></li></ul>
-</div>
+<li class="header">{MESSAGE_TITLE}</li>
 
 <table class="edit" border="0" cellspacing="0" cellpadding="0">
 <tr>

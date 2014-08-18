@@ -15,13 +15,12 @@ $start	= ( request('start', INT) ) ? request('start', INT) : 0;
 $start	= ( $start < 0 ) ? 0 : $start;
 
 $log	= SECTION_SERVER;
-$url	= POST_SERVER;
 
 $time	= time();
 $file	= basename(__FILE__);
 $user	= $userdata['user_id'];
 
-$data	= request($url, INT);	
+$data	= request('id', INT);	
 $mode	= request('mode', TXT);
 
 $error	= '';
@@ -38,10 +37,10 @@ if ( !($result = $db->sql_query($sql)) )
 {
 	message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 }
-$server = $db->sql_fetchrowset($result);
+$tmp = $db->sql_fetchrowset($result);
 #$server = _cached($sql, 'data_server');
 
-if ( $mode == '' )
+if ( $tmp && !$mode )
 {
 	$template->assign_block_vars('list', array());
 	
@@ -49,68 +48,71 @@ if ( $mode == '' )
 	
 	main_header();
 
-	if ( !$server )
+	if ( !$tmp )
 	{
-		$template->assign_block_vars('list._entry_empty_game', array());
-		$template->assign_block_vars('list._entry_empty_voice', array());
+		$template->assign_block_vars('list.empty_game', array());
+		$template->assign_block_vars('list.empty_voice', array());
 	}
 	else
 	{
-		include($root_path . 'includes/class_gameq.php');
-		
-		$game = $voice = $ary = array();
+		$game = $voice = $online = array();
 			
-		foreach ( $server as $keys => $row )
+		foreach ( $tmp as $row )
 		{
-			if ( $row['server_type'] == TYPE_GAME )
+			if ( !$row['server_type'] )
 			{
 				$game[] = $row;
 			}
-			else if ( $row['server_type'] == TYPE_VOICE )
+			else
 			{
 				$voice[] = $row;
 			}
 			
-		#	if ( $row['server_live'] == '1' )
-		#	{
-		#		$ary[$row['server_id']] = array($row['server_game'], $row['server_ip'], $row['server_port']);
-		#	}
-			
-			if ( $row['server_live'] == '1' )
+			if ( $row['server_live'] )
 			{
-				$ary[] = array('id' => $row['server_name'], 'type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port']);
+				$online[] = array('type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port'], 'id' => $row['server_id']);
 			}
 		}
 		
-		$gq = new GameQ();
-		$gq->addServers($ary);
-		$gq->setOption('timeout', 2); // Seconds
-		$gq->setFilter('normalise');
-		$gq_serv = cached_file($gq->requestData(), 'data_servers', 120);
+	#	debug($online);
+		
+		include($root_path . 'includes/class_gameq.php');
+		
+	#	$gq = new GameQ(); // or $gq = GameQ::factory();
+	#	$gq->setOption('timeout', 1); // Seconds
+	#	$gq->setOption('debug', TRUE);
+	#	$gq->setFilter('normalise');
+	#	$gq->addServers($online);
+	#	$gq_serv = $gq->requestData();
+		$gq_serv = cached_gameq($online, 'data_servers', 240);
 		
 	#	$gq = new GameQ();
 	#	$gq->addServers($ary);
 	#	$gq->setOption('timeout', 200);
 	#	$serv = $gq->requestData();
-		
+	
+	#	debug($gq_serv);
+	
 		if ( !$game )
 		{
-			$template->assign_block_vars('list._entry_empty_game', array());
+			$template->assign_block_vars('list.entry_empty_game', array());
 		}
 		else
 		{
-			for ( $i = 0; $i < count($game); $i++ )
+			foreach ( $game as $row )
+		#	for ( $i = 0; $i < count($game); $i++ )
 			{
-				$server_id	= $game[$i]['server_id'];
-				$name		= $game[$i]['server_name'];
-			
-				$template->assign_block_vars('list._game_row', array(
-					'CLASS'		=> ( $i % 2 ) ? 'row1r' : 'row2r',
+				$id		= $row['server_id'];
+				$name	= $row['server_name'];
+				
+				$template->assign_block_vars('list.game_row', array(
+			#		'CLASS'		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					
 			#		'GAME'		=> display_gameicon($new[$i]['game_size'], $new[$i]['game_image']),
-					'NAME'		=> "<a href=\"" . check_sid("$file?mode=view&$url=$server_id") . "\" >$name</a>",
+					'NAME'		=> "<a href=\"" . check_sid("$file?mode=view&id=$id") . "\" >$name</a>",
 					
-					'STATUS'	=> ( isset($serv[$name]['gq_online']) ) ? 'Online' : 'Offline',
+			#		'USERS'		=> ( isset($gq_serv[$id]['gq_online']) && $gq_serv[$id]['gq_online'] ) ? 'Online' : 'Offline',
+					'STATUS'	=> ( isset($gq_serv[$id]['gq_online']) && $gq_serv[$id]['gq_online'] ) ? 'Online' : 'Offline',
 				));
 			}
 		}
@@ -121,20 +123,21 @@ if ( $mode == '' )
 		}
 		else
 		{
-			for ( $i = 0; $i < count($voice); $i++ )
+			foreach ( $voice as $row )
+		#	for ( $i = 0; $i < count($voice); $i++ )
 			{
-				$server_id	= $voice[$i]['server_id'];
-				$name		= $voice[$i]['server_name'];
-			
-				$template->assign_block_vars('list._voice_row', array(
-					'CLASS'		=> ( $i % 2 ) ? 'row1r' : 'row2r',
+				$id		= $row['server_id'];
+				$name	= $row['server_name'];
+				
+				$template->assign_block_vars('list.voice_row', array(
+			#		'CLASS'		=> ( $i % 2 ) ? 'row1r' : 'row2r',
 					
 			#		'GAME'		=> display_gameicon($old[$i]['game_size'], $old[$i]['game_image']),
-					'NAME'		=> "<a href=\"" . check_sid("$file?mode=view&$url=$server_id") . "\" >$name</a>",
+					'NAME'		=> "<a href=\"" . check_sid("$file?mode=view&id=$id") . "\" >$name</a>",
 			#		'DATE'		=> create_date($userdata['user_dateformat'], $old[$i]['match_date'], $userdata['user_timezone']),
 					
 			#		'CSS'		=> $css,
-					'STATUS'	=> ( isset($serv[$server[$i]['server_id']]['gq_online']) ) ? 'Online' : 'Offline',
+					'STATUS'	=> ( isset($gq_serv[$id]['gq_online']) && $gq_serv[$id]['gq_online'] ) ? 'Online' : 'Offline',
 				));
 			}
 		}
@@ -151,11 +154,11 @@ if ( $mode == '' )
 }
 else if ( $mode == 'view' && $data )
 {
-	include($root_path . 'includes/server/gameq/GameQ.php');
+	include($root_path . 'includes/class_gameq.php');
 	
 	$template->assign_block_vars('view', array());
 	
-	foreach ( $server as $key => $row )
+	foreach ( $tmp as $row )
 	{
 		if ( $row['server_id'] == $data )
 		{
@@ -169,23 +172,52 @@ else if ( $mode == 'view' && $data )
 	}
 	
 #	$page_title = sprintf($lang['server_head_info'], $view['match_rival_name']);
+
+#	$live[] = array('type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port'], 'id' => $row['server_id']);
 	
 	main_header();
 	
-	$serv[] = array($view['server_game'], $view['server_ip'], $view['server_port']);
-	$gq = new GameQ();
-	$gq->addServers($serv);
-	$gq->setOption('timeout', 200);
+#	$serv[] = array($view['server_game'], $view['server_ip'], $view['server_port']);
+	$serv[] = array('type' => $view['server_game'], 'host' => $view['server_ip'] . ':' . $view['server_port'], 'id' => $view['server_id']);
+	$gq = new GameQ(); // or $gq = GameQ::factory();
+	$gq->setOption('timeout', 1); // Seconds
+	$gq->setOption('debug', TRUE);
 	$gq->setFilter('normalise');
-	$gq->setFilter('sortplayers', 'gq_name');
-	$serv = $gq->requestData();
+	$gq->addServers($serv);
+	$gq_server = $gq->requestData();
+#	$gq_server = cached_file($gq->requestData(), "data_server_$data", 120);
+
+#	debug($gq_server);
+
+	function time_convert($played)
+	{
+		$uptime = round($played);
+			
+		$d = floor($uptime / 86400);
+		$h = $uptime - ($d * 86400);
+		$h = floor($h / 3600);
+		$m = $uptime - ($h * 3600);
+		$m = floor($m / 60);
+		$s = $uptime - (($h * 3600) + ($m * 60));
+		
+		$h = ( $h < 10 ) ? 0 . $h : $h;
+		$m = ( $m < 10 ) ? 0 . $m : $m;
+		$s = ( $s < 10 ) ? 0 . $s : $s;
+		
+		return sprintf('%s:%s:%s', $h, $m, $s);
+	}
 	
-	debug($serv);
+	$cl = $gq_server[$view['server_id']]['teams'];
+	$pl = $gq_server[$view['server_id']]['players'];
 	
-	$cl = $serv[0]['teams'];
-	$pl = $serv[0]['players'];
+	$chan = $gq_server[$view['server_id']]['teams'];
 	
-	$chan = $serv[0]['teams'];
+#	debug($gq_server);
+
+	$server = $gq_server[$view['server_id']];
+	
+#	debug($gq_server);
+	
 	
 	if ( $view['server_game'] == 'ts2' )
 	{
@@ -302,6 +334,312 @@ else if ( $mode == 'view' && $data )
 		$template->assign_vars(array(
 			'SERV'	=>  $pwd . $serv[0]['gq_hostname'],
 		));
+	}
+	else if ( $view['server_game'] == 'teamspeak3' )
+	{
+		$template->assign_block_vars('view.ts3', array());
+		
+		$channels = $gq_server[$view['server_id']]['teams'];
+		$players = $gq_server[$view['server_id']]['players'];
+		$servergroups = $gq_server[$view['server_id']]['servergroups'];
+		$channelgroups = $gq_server[$view['server_id']]['channelgroups'];
+		
+	#	debug($channels);
+	#	debug($players);
+	#	debug($servergroups);
+	#	debug($channelgroups);
+		
+		foreach ( $channelgroups as $row )
+		{
+			$channelgroup[$row['cgid']] = array(
+				'cgid'	=> $row['cgid'],
+				'name'	=> $row['name'],
+				'icon'	=> $row['iconid'],
+			);
+		}
+		
+		foreach ( $servergroups as $row )
+		{
+			$servergroup[$row['sgid']] = array(
+				'sgid'	=> $row['sgid'],
+				'name'	=> $row['name'],
+				'icon'	=> $row['iconid'],
+			);
+		}
+				
+		foreach ( $channels as $row )
+		{
+			if ( !$row['pid'] )
+			{
+				$channel[$row['cid']] = array(
+					'c_id'		=> $row['cid'],	// channel id
+					'p_id'		=> $row['pid'],	// parent id
+					'c_order'	=> $row['channel_order'], // channel order
+					'c_name'	=> $row['channel_name'], // channel name
+					'c_topic'	=> $row['channel_topic'], // channel topic
+					'c_pass'	=> $row['channel_flag_password'],
+					'c_type'	=> array(
+						'c_default'	=> $row['channel_flag_default'],
+						'c_tpower'	=> $row['channel_needed_talk_power'],
+					),
+				);
+			}
+			else
+			{
+				$subchannel[$row['pid']][] = array(
+					'c_id'		=> $row['cid'],	// channel id
+					'p_id'		=> $row['pid'],	// parent id
+					'c_order'	=> $row['channel_order'], // channel order
+					'c_name'	=> $row['channel_name'], // channel name
+					'c_topic'	=> $row['channel_topic'], // channel topic
+					'c_pass'	=> $row['channel_flag_password'],
+					'c_type'	=> array(
+						'c_default'	=> $row['channel_flag_default'],
+						'c_tpower'	=> $row['channel_needed_talk_power'],
+					),
+					
+				);
+			}
+		}
+		
+		foreach ( $players as $row )
+		{
+			$player[$row['cid']][] = array(
+				'c_id'		=> $row['cid'],
+				'u_name'	=> $row['gq_name'],
+				'u_away'	=> $row['client_away'],
+				'm_input'	=> $row['client_input_muted'],
+				'm_output'	=> $row['client_output_muted'],
+				'm_hinput'	=> $row['client_input_hardware'],
+				'm_houtput'	=> $row['client_output_hardware'],
+				'u_groups'	=> $row['client_servergroups'],
+				'u_channel'	=> $row['client_channel_group_id'],
+			);
+		}
+		
+	#	debug($channel);
+		
+		function ts_channelicon($ary)
+		{
+			
+		}
+		
+		function ts_img($img, $name = '')
+		{
+			return '<img src="./images/teamspeak/' . $img . '" alt="' . $name . '" border="0">&nbsp;';
+		}
+		
+		function ts_user($away, $m_input, $m_output, $m_hinput, $m_houtput)
+		{
+			if ( $away )
+			{
+				return '<img src="./images/teamspeak/16x16_away.png" alt="" border="0">&nbsp;';
+			}
+			else
+			{
+				if ( $m_input && !$m_output && $m_hinput && $m_houtput )
+				{
+					return '<img src="./images/teamspeak/16x16_input_muted.png" alt="" border="0">&nbsp;';
+				}
+				else if ( !$m_input && $m_output && $m_hinput && $m_houtput )
+				{
+					return '<img src="./images/teamspeak/16x16_output_muted.png" alt="" border="0">&nbsp;';
+				}
+				else if ( !$m_input && !$m_output && !$m_hinput && $m_houtput )
+				{
+					return '<img src="./images/teamspeak/16x16_hardware_input_muted.png" alt="" border="0">&nbsp;';
+				}
+				else if ( !$m_input && !$m_output && $m_hinput && !$m_houtput )
+				{
+					return '<img src="./images/teamspeak/16x16_hardware_output_muted.png" alt="" border="0">&nbsp;';
+				}
+				else
+				{
+					return '<img src="./images/teamspeak/16x16_player_off.png" alt="" border="0">&nbsp;';
+				}
+			}
+		}
+		
+		function ts_user_icons($in_group, $in_channel)
+		{
+			global $servergroup, $channelgroup;
+			
+			$explode = explode(',', $in_group);
+			$grps = array();
+			
+			if ( in_array($in_channel, array_keys($channelgroup)) )
+			{
+				if ( in_array($channelgroup[$in_channel]['icon'], array(100, 200, 300, 500, 600)) )
+				{
+					$grps[] = '<img src="./images/teamspeak/group_' . $channelgroup[$in_channel]['icon'] . '.png" alt="" title="' . $channelgroup[$in_channel]['name'] . '" border="0">';
+				}
+				else if ( $channelgroup[$in_channel]['icon'] != 0 )
+				{
+					$grps[] = '<img src="./images/teamspeak/group_custom.png" alt="" title="' . $channelgroup[$in_channel]['name'] . '" border="0">';
+				}
+			}
+		
+			foreach ( $explode as $row )
+			{
+				if ( in_array($row, array_keys($servergroup)) )
+				{
+					if ( in_array($servergroup[$row]['icon'], array(100, 200, 300, 500, 600)) )
+					{
+						$grps[] = '<img src="./images/teamspeak/group_' . $servergroup[$row]['icon'] . '.png" alt="" title="' . $servergroup[$row]['name'] . '" border="0">';
+					}
+					else if ( $servergroup[$row]['icon'] != 0 )
+					{
+						$grps[] = '<img src="./images/teamspeak/group_custom.png" alt="" title="' . $servergroup[$row]['name'] . '" border="0">';
+					}
+				}
+			}
+			
+			return implode('', $grps);
+		}
+	
+		$template->assign_vars(array(
+			'SERV' => ts_img('16x16_server_green.png') . utf8_decode($server['gq_hostname']),
+		));
+		
+		$lc = end(array_keys($channel));
+		
+		$ts_end = ts_img('16x16_tree_end.gif');
+		$ts_mid = ts_img('16x16_tree_mid.gif');
+		$ts_line = ts_img('16x16_tree_line.gif');
+		$ts_blank = ts_img('16x16_tree_blank.png');
+		
+		foreach ( $channel as $ck => $c )
+		{
+			$tree_icon = ($lc == $ck && !isset($player[$c['c_id']])) ? $ts_end : $ts_mid;
+			$chan_icon = ($c['c_pass']) ? ts_img('16x16_channel_private.png') : ts_img('16x16_channel_green.png');
+			
+			$template->assign_block_vars('view.ts3.channel', array(
+				'CHANNEL' => $tree_icon . $chan_icon . utf8_decode($c['c_name']) . ts_channelicon($c['c_type'])
+			));
+			
+			if ( isset($player[$c['c_id']]) )
+			{
+				$lu = end(array_keys($player[$c['c_id']]));
+				
+				foreach ( $player[$c['c_id']] as $pk => $p )
+				{
+					$utree_icon = $ts_line . (($lu == $pk && !isset($subchannel[$c['c_id']])) ? $ts_end : $ts_mid);
+					
+					$template->assign_block_vars('view.ts3.channel.user', array(
+						'USER' => $utree_icon . ts_user($p['u_away'], $p['m_input'], $p['m_output'], $p['m_hinput'], $p['m_houtput']) . $p['u_name'] . ts_user_icons($p['u_groups'], $p['u_channel'])
+					));
+				}
+			}
+			
+			if ( isset($subchannel[$c['c_id']]) )
+			{
+				$ls = end(array_keys($subchannel[$c['c_id']]));
+				
+				foreach ( $subchannel[$c['c_id']] as $sk => $s )
+				{
+					$stree_icon = (($lc == $ck) ? $ts_blank : $ts_line) . (($ls == $sk && !isset($player[$sk])) ? $ts_end : $ts_mid);
+					$schan_icon = ($s['c_pass']) ? ts_img('16x16_channel_private.png') : ts_img('16x16_channel_green.png');
+					
+					$template->assign_block_vars('view.ts3.channel.subchannel', array(
+						'CHANNEL' => $stree_icon . $schan_icon . utf8_decode($s['c_name']) . ts_channelicon($s['c_type'])
+					));
+					
+					if ( isset($player[$s['c_id']]) )
+					{
+						$lsu = end(array_keys($player[$s['c_id']]));
+						
+						foreach ( $player[$s['c_id']] as $suk => $us )
+						{
+						#	if ( $lsu == $suk && isset($subchannel[$sk]) )
+						#	{
+						#		$sutree_icon = $ts_line . $ts_line . $ts_end;
+						#	}
+						#	else
+						#	{
+						#		$sutree_icon = $ts_line . $ts_blank . $ts_mid;
+						#	}
+							
+							$sutree_icon = $ts_line . (($ls == $sk) ? $ts_blank : $ts_line) . (($lsu == $suk && !isset($player[$sk])) ? $ts_end : $ts_mid);
+							
+							$template->assign_block_vars('view.ts3.channel.subchannel.user', array(
+								'USER' => $sutree_icon . ts_user($us['u_away'], $us['m_input'], $us['m_output'], $us['m_hinput'], $us['m_houtput']) . $us['u_name'] . ts_user_icons($us['u_groups'], $us['u_channel'])
+							));
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+	#	debug($gq_server, 'server');
+		
+	#	foreach ( $pl as $row )
+	#	{
+	#		debug(time_convert($row['time']));
+	#	}
+	
+	#	debug($gq_server[$view['server_id']], 'server');
+		
+		$players = $gq_server[$view['server_id']]['players'];
+		
+	#	debug($players);
+		
+		foreach ( $players as $p )
+		{
+			$player[] = array(
+				'name'	=> $p['name'],
+				'score'	=> $p['score'],
+				'time'	=> round($p['time']),
+			);
+		}
+		
+		$players = $player;
+		
+		$details = array(
+			'gq_address'	=> $gq_server[$view['server_id']]['gq_address'],
+			'gq_port'		=> $gq_server[$view['server_id']]['gq_port'],
+            'gq_hostname'	=> $gq_server[$view['server_id']]['gq_hostname'],
+            'gq_mapname'	=> $gq_server[$view['server_id']]['gq_mapname'],
+            'gq_maxplayers'	=> $gq_server[$view['server_id']]['gq_maxplayers'],
+            'gq_mod'		=> $gq_server[$view['server_id']]['gq_mod'],
+            'gq_numplayers'	=> $gq_server[$view['server_id']]['gq_numplayers'],
+            'gq_online'		=> $gq_server[$view['server_id']]['gq_online'],
+            'gq_password'	=> $gq_server[$view['server_id']]['gq_password'],
+            'gq_protocol'	=> $gq_server[$view['server_id']]['gq_protocol'],
+            'gq_type'		=> $gq_server[$view['server_id']]['gq_type'],
+			'gq_nextmap'	=> $gq_server[$view['server_id']]['sm_nextmap'],
+		);
+		
+		$template->assign_block_vars('view.' . $details['gq_mod'], array());
+		
+		switch ( $details['gq_mod'] )
+		{
+			case 'cstrike': $protocol = sprintf('steam://connect/%s:%s', $details['gq_address'], $details['gq_port']); break;
+		}
+		
+	#	debug($players);
+		debug($details);
+	
+		$template->assign_vars(array(
+			'L_DETAILS' => $lang['server_details'],
+			
+			'L_HOSTNAME'	=> $lang['server_hostname'],
+			'L_ADDRESS' 	=> $lang['server_address'],
+			'L_JOIN' 		=> $lang['server_join'],
+			'L_MAP'			=> $lang['server_map'],
+			'L_NEXTMAP'		=> $lang['server_nextmap'],
+			'L_PLAYERS' 	=> $lang['server_players'],
+			
+			'HOSTNAME'	=> $details['gq_hostname'],
+			'ADDRESS' 	=> sprintf('%s:%s', $details['gq_address'], $details['gq_port']),
+			'JOIN'		=> '<a href="' . $protocol . '">connect</a>',
+			'MAP'		=> $details['gq_mapname'],
+			'NEXTMAP'	=> $details['gq_nextmap'],
+			'PLAYERS' 	=> sprintf('%s / %s', $details['gq_numplayers'], $details['gq_maxplayers']),
+			
+		));
+	
 	}
 }
 else

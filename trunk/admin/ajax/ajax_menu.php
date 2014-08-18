@@ -21,7 +21,8 @@ if ( isset($_POST['type']) )
 	$sql = "SELECT * FROM " . MENU . " ORDER BY main ASC, menu_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$tmp_db = $db->sql_fetchrowset($result);
 	

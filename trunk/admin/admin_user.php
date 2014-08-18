@@ -5,6 +5,7 @@ if ( !empty($setmodules) )
 	return array(
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_user',
+		'cat'		=> 'usergroups',
 		'modes'		=> array(
 			'main'	=> array('title' => 'acp_user'),
 		)
@@ -22,7 +23,8 @@ else
 	include('./pagestart.php');
 	
 	add_lang('users');
-	
+	acl_auth(array('a_user', 'a_user_create', 'a_user_delete', 'a_user_fields', 'a_user_settings', 'a_team_manage', 'a_group_manage'));
+
 	$error	= '';
 	$index	= '';
 	$fields = '';
@@ -41,13 +43,7 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_users']['path'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['user']);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_user'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['user']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -87,6 +83,8 @@ else
 			$mode = 'create';
 		}
 	}
+	
+	debug($_POST, '_POST');
 	
 	$temp = ( $mode == 'create' || $mode == 'update' ) ? 'input' : (!$mode ? 'display' : $mode);
 	
@@ -146,7 +144,7 @@ else
 					'user_regdate'		=> ($mode != 'create') ? array('validate' => INT,	'explain' => false,	'type' => 'show:time') : 'hidden',
 					'user_lastvisit'	=> ($mode != 'create') ? array('validate' => INT,	'explain' => false,	'type' => 'show:time') : 'hidden',
 					
-					'user_level'		=> array('validate' => INT,	'explain' => false,	'type' => 'drop:userlevel'),
+					'user_level'		=> array('validate' => INT,	'explain' => false,	'type' => 'drop:userlevel', 'params' => 'user_level'),
 					'user_founder'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 					'user_active'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 					'user_birthday'		=> array('validate' => TXT,	'explain' => false, 'type' => 'text:25;25'),
@@ -177,7 +175,7 @@ else
 				
 			#	if ( $userdata['user_level'] < $data['user_level'] )
 			#	{
-			#		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+			#		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 			#	}
 			}
 			else
@@ -311,7 +309,7 @@ else
 			}
 			
 			( $mode == 'update' ) ? $template->assign_block_vars($temp . '.update', array()) : '';
-			
+			/*
 			if ( $userdata['user_founder'] )
 			{
 				$check_founder_no	= (!$data['user_founder'] ) ? ' checked="checked"' : '';
@@ -322,7 +320,7 @@ else
 				$check_founder_no	= (!$data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
 				$check_founder_yes	= ( $data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
 			}
-			
+			*/
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			$fields .= "<input type=\"hidden\" name=\"user_regdate\" value=\"" . $data['user_regdate'] . "\" />";
@@ -330,23 +328,23 @@ else
 			$fields .= "<input type=\"hidden\" name=\"user_lastvisit\" value=\"" . $data['user_lastvisit'] . "\" />";
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['user'], $data['user_name']),
-				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['user']),
-				'L_EMAIL'	=> $lang['email'],
-				'L_CONFIRM'	=> $lang['email_confirm'],
+			#	'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+			#	'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['user'], $data['user_name']),
+			#	'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['user']),
+			#	'L_EMAIL'	=> $lang['email'],
+			#	'L_CONFIRM'	=> $lang['email_confirm'],
 				
-				'L_REGISTER'	=> $lang['register'],
-				'L_LASTLOGIN'	=> $lang['lastlogin'],
-				'L_FOUNDER'		=> $lang['founder'],
-				'L_ACTIVE'		=> $lang['active'],
-				'L_LEVEL'		=> $lang['common_userlevel'],
-				'L_BIRTHDAY'	=> $lang['birthday'],
+			#	'L_REGISTER'	=> $lang['register'],
+			#	'L_LASTLOGIN'	=> $lang['lastlogin'],
+			#	'L_FOUNDER'		=> $lang['founder'],
+			#	'L_ACTIVE'		=> $lang['active'],
+			#	'L_LEVEL'		=> $lang['common_userlevel'],
+			#	'L_BIRTHDAY'	=> $lang['birthday'],
 				
-				'L_PASSWORD'			=> $lang['password'],
-				'L_PASSWORD_CONFIRM'	=> $lang['password_confirm'],
-				'L_PASSWORD_INPUT'		=> $lang['password_input'],
-				'L_PASSWORD_RANDOM'		=> $lang['password_generate'],
+			#	'L_PASSWORD'			=> $lang['password'],
+			#	'L_PASSWORD_CONFIRM'	=> $lang['password_confirm'],
+			#	'L_PASSWORD_INPUT'		=> $lang['password_input'],
+			#	'L_PASSWORD_RANDOM'		=> $lang['password_generate'],
 				
 				'PASS_1'	=> sprintf($lang['password_random'], $password_random[0]),
 				'PASS_2'	=> sprintf($lang['password_random'], $password_random[1]),
@@ -355,44 +353,44 @@ else
 				'PASS_5'	=> sprintf($lang['password_random'], $password_random[4]),
 				'PASS_6'	=> sprintf($lang['password_random'], $password_random[5]),
 				
-				'USERNAME'	=> $data['user_name'],
-				
-				'REGISTER'	=> create_date($userdata['user_dateformat'], $data['user_regdate'], $userdata['user_timezone']),
-				'LASTLOGIN'	=> create_date($userdata['user_dateformat'], $data['user_lastvisit'], $userdata['user_timezone']),
-				
-				'USEREMAIL' => $data['user_email'],
-				
-				'BIRTHDAY'	=> bday($data['user_birthday']),
-				
-				'S_INPUT'	=> request('pass_switch', 0) ? 'checked="checked"' : '',
-				'S_RANDOM'	=> request('pass_switch', 0) ? '' : 'checked="checked"',
-				
-				'RANDOM'	=> request('pass_switch', 0) ? '' : 'none',
-				'INPUT'		=> request('pass_switch', 0) ? 'none' : '',
-				
-				'S_FOUNDER_NO'	=> $check_founder_no,
-				'S_FOUNDER_YES'	=> $check_founder_yes,
-				
-				'S_ACTIVE_NO'	=> (!$data['user_active'] ) ? ' checked="checked"' : '',
-				'S_ACTIVE_YES'	=> ( $data['user_active'] ) ? ' checked="checked"' : '',
-				
-				'S_LEVEL'	=> select_level($data['user_level'], 'user_level', 0),
-				
-				'S_MODE'	=> $s_mode,
-				
-				'S_ACTION'	=> check_sid($file),
-				'S_FIELDS'	=> $fields,
-				
-				'NONE_INPUT'	=> ($data_sql['password_type']) ? '' : 'none',
-				'NONE_PASSWORD'	=> (!$data_sql['password_type']) ? '' : 'none',
+			#	'USERNAME'	=> $data['user_name'],
+			#	
+			#	'REGISTER'	=> create_date($userdata['user_dateformat'], $data['user_regdate'], $userdata['user_timezone']),
+			#	'LASTLOGIN'	=> create_date($userdata['user_dateformat'], $data['user_lastvisit'], $userdata['user_timezone']),
+			#	
+			#	'USEREMAIL' => $data['user_email'],
+			#	
+			#	'BIRTHDAY'	=> bday($data['user_birthday']),
+			#	
+			#	'S_INPUT'	=> request('pass_switch', 0) ? 'checked="checked"' : '',
+			#	'S_RANDOM'	=> request('pass_switch', 0) ? '' : 'checked="checked"',
+			#	
+			#	'RANDOM'	=> request('pass_switch', 0) ? '' : 'none',
+			#	'INPUT'		=> request('pass_switch', 0) ? 'none' : '',
+			#	
+			#	'S_FOUNDER_NO'	=> $check_founder_no,
+			#	'S_FOUNDER_YES'	=> $check_founder_yes,
+			#	
+			#	'S_ACTIVE_NO'	=> (!$data['user_active'] ) ? ' checked="checked"' : '',
+			#	'S_ACTIVE_YES'	=> ( $data['user_active'] ) ? ' checked="checked"' : '',
+			#	
+			#	'S_LEVEL'	=> select_level($data['user_level'], 'user_level', 0),
+			#	
+			#	'S_MODE'	=> $s_mode,
+			#	
+			#	'S_ACTION'	=> check_sid($file),
+			#	'S_FIELDS'	=> $fields,
+			#	
+			#	'NONE_INPUT'	=> ($data_sql['password_type']) ? '' : 'none',
+			#	'NONE_PASSWORD'	=> (!$data_sql['password_type']) ? '' : 'none',
 			));
 			
 			
 			build_output(USERS, $vars, $data_sql);
 
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], lang($data_sql['user_name'])),
-				'L_EXPLAIN'	=> $lang['common_required'],
+				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['user_name'])),
+				'L_EXPLAIN'	=> $lang['com_required'],
 
 				'S_MODE'	=> $s_mode,
 				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
@@ -440,8 +438,8 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf_update'], $lang['user'], $data['user_name']),
+				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'S_MODE'	=> $s_mode,
 				'S_ACTION'	=> check_sid($file),
@@ -481,29 +479,29 @@ else
 							$name	= $row['profile_name'];
 							$field	= $row['profile_field'];
 							$req	= $row['profile_required'] ? 'r' : '';
-							$value	= request($field, 'text') ? request($field, 'text') : $info[$field];
+							$valuea	= request($field, 'text') ? request($field, 'text') : $info[$field];
 							
 							$request['user_id'] = $data;
-							$request[$field] = $value;
+							$request[$field] = $valuea;
 						
 							if ( $row['profile_required'] )
 							{
-								$error[] = !$value ? ( $error ? '<br />' : '' ) . sprintf($lang['msg_select_profile_field'], $name) : '';
+								$error[] = !$valuea ? ( $error ? '<br />' : '' ) . sprintf($lang['notice_select_profile'], $name) : '';
 							}
 							
 							if ( $row['profile_typ'] == 0 )
 							{
-								$input = '<input type="text" name="' . $field . '" id="' . $field . '" value="' . $value . '" />';
+								$input = '<input type="text" name="' . $field . '" id="' . $field . '" value="' . $valuea . '" />';
 							}
 							else if ( $row['profile_typ'] == 1 )
 							{
-								$input = '<textarea name="' . $field . '" id="' . $field . '" cols="30\" />' . $value . '</textarea>';
+								$input = '<textarea name="' . $field . '" id="' . $field . '" cols="30\" />' . $valuea . '</textarea>';
 							}
 							else if ( $row['profile_typ'] == 2 )
 							{
-								$checked_yes = ($value) ? 'checked="checked"' : '';
-								$checked_no = (!$value) ? 'checked="checked"' : '';
-								$input = '<label><input type="radio" name="' . $field . '" value="1" ' . $checked_yes . ' />&nbsp;' . $lang['common_yes'] . '</label><span style="padding:4px;"></span><label><input type="radio" name="' . $field . '" value="0" ' . $checked_no . ' />&nbsp;' . $lang['common_no'] . '</label>';
+								$checked_yes = ($valuea) ? 'checked="checked"' : '';
+								$checked_no = (!$valuea) ? 'checked="checked"' : '';
+								$input = '<label><input type="radio" name="' . $field . '" value="1" ' . $checked_yes . ' />&nbsp;' . $lang['com_yes'] . '</label><span style="padding:4px;"></span><label><input type="radio" name="' . $field . '" value="0" ' . $checked_no . ' />&nbsp;' . $lang['com_no'] . '</label>';
 							}
 							
 							$template->assign_block_vars("$temp.cat.field", array(
@@ -524,7 +522,7 @@ else
 			{
 				if ( !$error )
 				{
-					$sql = ( !$info ) ? sql(FIELDS_DATA, 'create', $request) : sql(FIELDS_DATA, 'update', $request, 'user_id', $data);
+					$sql = ( !$info ) ? sql(PROFILE_DATA, 'create', $request) : sql(PROFILE_DATA, 'update', $request, 'user_id', $data);
 					$msg = $lang['update_fields'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -540,8 +538,8 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf_update'], $lang['user'], $data['user_name']),
+				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'S_MODE'	=> $s_mode,
 				'S_ACTION'	=> check_sid($file),
@@ -560,7 +558,7 @@ else
 			
 				if ( $userdata['user_level'] < $data['user_level'] )
 				{
-					message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+					message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 				}			
 
 				log_add(LOG_ADMIN, $log, 'ACP_USER_DELETE', $user_info['user_name']);
@@ -579,11 +577,11 @@ else
 				$fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="id" value="' . $data . '" />';
 	
 				$template->assign_vars(array(
-					'MESSAGE_TITLE'		=> $lang['common_confirm'],
+					'MESSAGE_TITLE'		=> $lang['com_confirm'],
 					'MESSAGE_TEXT'		=> $lang['confirm_delete_user'],
 	
-					'L_YES'				=> $lang['common_yes'],
-					'L_NO'				=> $lang['common_no'],
+					'L_YES'				=> $lang['com_yes'],
+					'L_NO'				=> $lang['com_no'],
 	
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -602,10 +600,10 @@ else
 			
 			if ( $userdata['user_level'] < $data['user_level'] )
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+				message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 			}
 			
-			$sql = "SELECT group_id, group_type, group_name, group_color FROM " . GROUPS . " ORDER BY group_order";
+			$sql = "SELECT group_id, group_type, group_name, group_access, group_color FROM " . GROUPS . " ORDER BY group_order";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -648,226 +646,93 @@ else
 			}
 			$db->sql_freeresult($result);
 			
-			foreach ( $groups as $key => $row )
+			if ( @$userauth['a_group_manage'] && $groups )
 			{
-				$group_id	= $row['group_id'];
-				$group_name	= $row['group_name'];
-				$group_info	= '';
+				$template->assign_block_vars('groups.group', array());
 				
-				$member = (isset($in_groups[TYPE_GROUP][$key])) ? true : false;
-				$neg_group_id = -1 * $group_id;
-				
-				$ustatus	= ($member) ? $in_groups[TYPE_GROUP][$key]['user_status'] : false;
-				$upending	= ($member) ? $in_groups[TYPE_GROUP][$key]['user_pending'] : false;
-				
-				if ( $row['group_type'] == GROUP_SYSTEM )
+				foreach ( $groups as $key => $row )
 				{
-					$s_assigned_group	= ( $member && !$upending ) ? 'disabled checked="checked"' : 'disabled';
-					$s_unassigned_group	= ( $member ) ? 'disabled' : 'disabled checked="checked"';
-					$s_mod_group		= ( $ustatus ) ? 'disabled checked' : 'disabled';
-				}
-				else if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
-				{
-					$s_assigned_group	= ( $member && !$upending ) ? ' checked="checked"' : '';
-					$s_unassigned_group	= ( $member ) ? '' : 'checked="checked"';
-					$s_mod_group		= ( $ustatus ) ? 'checked="checked"' : '';
-				}
-				else if ( $userdata['user_id'] == $data['user_id'] )
-				{
-					$s_assigned_group	= ( $member && !$upending ) ? 'checked="checked"' : '';
-					$s_unassigned_group	= ( $member ) ? '' : 'checked="checked"';
-					$s_mod_group		= ( $ustatus ) ? 'checked="checked"' : '';
-				}
-				else if ( $userdata['user_level'] > $row['group_access'] )
-				{
-					$s_assigned_group	= ( $member && !$upending ) ? ' checked="checked"' : '';
-					$s_unassigned_group	= ( $member ) ? ' ' : 'checked="checked"';
-					$s_mod_group		= ( $ustatus ) ? 'checked="checked"' : '';
-				}
-				else
-				{
-					$s_assigned_group	= ( $member && !$upending ) ? 'disabled checked="checked"' : 'disabled';
-					$s_unassigned_group	= ( $member ) ? 'disabled' : 'disabled checked="checked"';
-					$s_mod_group		= ( $ustatus ) ? 'disabled checked' : 'disabled';
-				}
-				
-				$s_mod_group .= ( !$member ) ? ' disabled' : '';
-				
-				$template->assign_block_vars('groups.row_group', array(
-					'GROUP_NAME'	=> $group_name,
-					'GROUP_INFO'	=> $group_info,
-					'GROUP_FIELD'	=> "group_" . $group_id,
+					$group_id	= $row['group_id'];
+					$group_name	= $row['group_name'];
+									
+					$member = (isset($in_groups[TYPE_GROUP][$key])) ? true : false;
+					$neg_group_id = -1 * $group_id;
 					
-					'S_MARK_NAME'			=> "marks_group[$group_id]",
-					'S_MARK_ID'				=> $group_id,
-					'S_NEG_MARK_ID'			=> $neg_group_id,
-					'S_ASSIGNED_GROUP'		=> $s_assigned_group,
-					'S_UNASSIGNED_GROUP'	=> $s_unassigned_group,
-					'S_MOD_GROUP'			=> $s_mod_group,
-					'U_USER_PENDING'		=> ( $upending ) ? $lang['Membership_pending'] : '',
+					$ustatus	= ($member) ? $in_groups[TYPE_GROUP][$key]['user_status'] : false;
+					$upending	= ($member) ? $in_groups[TYPE_GROUP][$key]['user_pending'] : false;
 					
-				));
-			}
-			
-			foreach ( $teams as $key => $row )
-			{
-				$team_id	= $row['team_id'];
-				$team_name	= $row['team_name'];
-				
-				$member = (isset($in_groups[TYPE_TEAM][$key])) ? true : false;
-				$neg_team_id = -1 * $team_id;
-				
-				$ustatus = ($member) ? $in_groups[TYPE_TEAM][$key]['user_status'] : false;
-				
-				$s_assigned_team	= ( $member ) ? 'checked="checked"' : '';
-				$s_unassigned_team	= ( $member ) ? '' : 'checked="checked"';
-				$s_mod_team	= ( $ustatus ) ? 'checked="checked"' : '';
-				$s_mod_team .= ( !$member ) ? ' disabled' : '';
-				
-				$template->assign_block_vars('groups.row_team', array(
-					'S_MARK_NAME'		=> "marks_team[$team_id]",
-					'S_MARK_ID'			=> $team_id,
-					'S_NEG_MARK_ID'		=> $neg_team_id,
-					
-					'S_ASSIGNED_TEAM'	=> $s_assigned_team,
-					'S_UNASSIGNED_TEAM'	=> $s_unassigned_team,
-					'S_MOD_TEAM'		=> $s_mod_team,
-					
-					'U_TEAM_NAME'		=> $team_name
-				));
-			}
-			
-		#	debug($groups);
-		#	debug($teams);
-		#	debug($in_groups);
-			/*
-			$sql = "SELECT * FROM " . GROUPS . " ORDER BY group_order";
-			if ( !($groups = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $group = $db->sql_fetchrow($groups) )
-			{
-				$_auth = '';
-				
-				$auth = unserialize($group['group_auth']);
-				
-				foreach ( $auth as $key => $value )
-				{
-					if ( $value )
+					if ( ($row['group_type'] == GROUP_SYSTEM) || ($userdata['user_level'] > $row['group_access']) )
 					{
-						$_auth[] = $lang[$key];
+						$s_assigned_group	= ( $member && !$upending ) ? 'disabled checked="checked"' : 'disabled';
+						$s_unassigned_group	= ( $member ) ? 'disabled' : 'disabled checked="checked"';
+						$s_mod_group		= ( $ustatus ) ? 'disabled checked' : 'disabled';
 					}
-				}
-				
-				$group_id	= $group['group_id'];
-				$group_name	= $group['group_name'];
-				$group_info	= is_array($_auth) ? sprintf($lang['auth_for'], implode(', ', $_auth)) : '';
-				
-				$sql = "SELECT user_id, user_pending, user_status FROM " . LISTS . " WHERE type = " . TYPE_GROUP . " AND type_id = $group_id AND user_id = $data";
-				if ( !($result_user = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				$member = ( $row = $db->sql_fetchrow($result_user) ) ? true : false;
-				$neg_group_id = -1 * $group_id;
-				
-				if ( $group['group_type'] == GROUP_SYSTEM )
-				{
-					$s_assigned_group	= ( $member && !$row['user_pending'] ) ? 'disabled checked="checked"' : 'disabled';
-					$s_unassigned_group	= ( $member ) ? 'disabled' : 'disabled checked="checked"';
-					$s_mod_group		= ( $row['user_status'] ) ? 'disabled checked' : 'disabled';
-				}
-				else if ( $userdata['user_level'] == ADMIN && $userdata['user_founder'] )
-				{
-					$s_assigned_group	= ( $member && !$row['user_pending'] ) ? ' checked="checked"' : '';
-					$s_unassigned_group	= ( $member ) ? '' : 'checked="checked"';
-					$s_mod_group		= ( $row['user_status'] ) ? 'checked="checked"' : '';
-				}
-				else if ( $userdata['user_id'] == $data['user_id'] )
-				{
-					$s_assigned_group	= ( $member && !$row['user_pending'] ) ? 'checked="checked"' : '';
-					$s_unassigned_group	= ( $member ) ? '' : 'checked="checked"';
-					$s_mod_group		= ( $row['user_status'] ) ? 'checked="checked"' : '';
-				}
-				else if ( $userdata['user_level'] > $group['group_access'] )
-				{
-					$s_assigned_group	= ( $member && !$row['user_pending'] ) ? ' checked="checked"' : '';
-					$s_unassigned_group	= ( $member ) ? ' ' : 'checked="checked"';
-					$s_mod_group		= ( $row['user_status'] ) ? 'checked="checked"' : '';
-				}
-				else
-				{
-					$s_assigned_group	= ( $member && !$row['user_pending'] ) ? 'disabled checked="checked"' : 'disabled';
-					$s_unassigned_group	= ( $member ) ? 'disabled' : 'disabled checked="checked"';
-					$s_mod_group		= ( $row['user_status'] == '1' ) ? 'disabled checked' : 'disabled';
-				}
-				
-				$s_mod_group .= ( !$member ) ? ' disabled' : '';
-				
-				$template->assign_block_vars('groups.group_row', array(
-					'GROUP_NAME'	=> $group_name,
-					'GROUP_INFO'	=> $group_info,
-					'GROUP_FIELD'	=> "group_" . $group_id,
+					else
+					{
+						$s_assigned_group	= ( $member && !$upending ) ? ' checked="checked"' : '';
+						$s_unassigned_group	= ( $member ) ? '' : ' checked="checked"';
+						$s_mod_group		= ( $ustatus ) ? ' checked' : '';
+					}
 					
-					'S_MARK_NAME'			=> "marks_group[$group_id]",
-					'S_MARK_ID'				=> $group_id,
-					'S_NEG_MARK_ID'			=> $neg_group_id,
-					'S_ASSIGNED_GROUP'		=> $s_assigned_group,
-					'S_UNASSIGNED_GROUP'	=> $s_unassigned_group,
-					'S_MOD_GROUP'			=> $s_mod_group,
-					'U_USER_PENDING'		=> ( $row['user_pending'] ) ? $lang['Membership_pending'] : '',
+					$s_mod_group .= ( !$member ) ? ' disabled' : '';
 					
-				));
-			}
-			$db->sql_freeresult($result);
-			
-			$sql = "SELECT team_id, team_name FROM " . TEAMS . " ORDER BY team_order";
-			if ( !($teams = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					$template->assign_block_vars('groups.group.row_group', array(
+						'NAME'	=> $group_name,
+						'FIELD'	=> "group_" . $group_id,
+						
+						'S_MARK_NAME'			=> "marks_group[$group_id]",
+						'S_MARK_ID'				=> $group_id,
+						'S_NEG_MARK_ID'			=> $neg_group_id,
+						'S_ASSIGNED_GROUP'		=> $s_assigned_group,
+						'S_UNASSIGNED_GROUP'	=> $s_unassigned_group,
+						'S_MOD_GROUP'			=> $s_mod_group,
+						'U_USER_PENDING'		=> ( $upending ) ? $lang['Membership_pending'] : '',
+						
+					));
+				}
 			}
 			
-			while ( $team = $db->sql_fetchrow($teams) )
+			if ( @$userauth['a_team_manage'] && $teams )
 			{
-				$team_id	= $team['team_id'];
-				$team_name	= $team['team_name'];
-
-				$sql = "SELECT user_id, user_status FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND type_id = $team_id AND user_id = $data";
-				if ( !($result = $db->sql_query($sql)) )
+				$template->assign_block_vars('groups.team', array());
+				
+				foreach ( $teams as $key => $row )
 				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					$team_id	= $row['team_id'];
+					$team_name	= $row['team_name'];
+					
+					$member = (isset($in_groups[TYPE_TEAM][$key])) ? true : false;
+					$neg_team_id = -1 * $team_id;
+					
+					$ustatus = ($member) ? $in_groups[TYPE_TEAM][$key]['user_status'] : false;
+					
+					$s_assigned_team	= ( $member ) ? 'checked="checked"' : '';
+					$s_unassigned_team	= ( $member ) ? '' : 'checked="checked"';
+					$s_mod_team	= ( $ustatus ) ? 'checked="checked"' : '';
+					$s_mod_team .= ( !$member ) ? ' disabled' : '';
+					
+					$template->assign_block_vars('groups.team.row_team', array(
+						
+						'NAME'	=> $team_name,
+						'FIELD'	=> "team_" . $team_id,
+						
+						'S_MARK_NAME'		=> "marks_team[$team_id]",
+						'S_MARK_ID'			=> $team_id,
+						'S_NEG_MARK_ID'		=> $neg_team_id,
+						
+						'S_ASSIGNED_TEAM'	=> $s_assigned_team,
+						'S_UNASSIGNED_TEAM'	=> $s_unassigned_team,
+						'S_MOD_TEAM'		=> $s_mod_team,
+					));
 				}
-				
-				$member = ( $row = $db->sql_fetchrow($result) ) ? TRUE : FALSE;
-				$neg_team_id = -1 * $team_id;
-				
-				$s_assigned_team	= ( $member ) ? 'checked="checked"' : '';
-				$s_unassigned_team	= ( $member ) ? '' : 'checked="checked"';
-				$s_mod_team	= ( $row['user_status'] ) ? 'checked="checked"' : '';
-				$s_mod_team .= ( !$member ) ? ' disabled' : '';
-				
-				$template->assign_block_vars('groups.team_row', array(
-					'S_MARK_NAME'		=> "marks_team[$team_id]",
-					'S_MARK_ID'			=> $team_id,
-					'S_NEG_MARK_ID'		=> $neg_team_id,
-					
-					'S_ASSIGNED_TEAM'	=> $s_assigned_team,
-					'S_UNASSIGNED_TEAM'	=> $s_unassigned_team,
-					'S_MOD_TEAM'		=> $s_mod_team,
-					
-					'U_TEAM_NAME'		=> $team_name
-				));
 			}
-			*/	
+			
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf_update'], $lang['user'], $data['user_name']),
+				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'L_GROUPS'	=> $lang['usergroups'],
 				'L_TEAMS'	=> $lang['teams'],
@@ -876,6 +741,10 @@ else
 				'L_MOD'		=> $lang['mod'],
 				
 				'S_MODE'	=> $s_mode,
+				
+				'S_FLOAT_BEGIN'	=> (@$userauth['a_group_manage'] && @$userauth['a_team_manage']) ? 'left' : '',
+				'S_FLOAT_END'	=> (@$userauth['a_group_manage'] && @$userauth['a_team_manage']) ? 'right' : '',
+				'S_WIDTH'		=> (@$userauth['a_group_manage'] && @$userauth['a_team_manage']) ? '49' : '',
 								
 				'S_ACTION'	=> check_sid($file),		
 				'S_FIELDS'	=> $fields,
@@ -942,7 +811,6 @@ else
 								$temp_count = 1;
 							}
 						}
-						group_set_auth($data, $marks_groups[$i]);
 						
 						$sql = "SELECT user_status FROM " . LISTS . " WHERE user_id = $data AND type = " . TYPE_GROUP . " AND type_id = {$marks_groups[$i]}";
 						if ( !($result = $db->sql_query($sql) ) )
@@ -990,7 +858,6 @@ else
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
 						}
-						group_reset_auth($data, $group_id);
 					}
 				}
 				
@@ -1120,22 +987,20 @@ else
 		
 			break;
 		
-		case 'auth':
-		
-		debug($_POST);
+		case 'permission':
 		
 			$data_sql = data(USERS, $data, false, 1, true);
 			
 			if ( $userdata['user_level'] < $data['user_level'] )
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+				message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 			}
 			
 			/* Sonderrechte */
 			$user_auth = unserialize($data['user_gauth']);
 			
 			/* Gruppenrechte */
-			$sql = "SELECT g.group_id, g.group_name, g.group_auth
+			$sql = "SELECT g.group_id, g.group_name
 						FROM " . GROUPS . " g, " . LISTS . " ul
 						WHERE g.group_id = ul.type_id
 							AND ul.type = " . TYPE_GROUP . "
@@ -1240,8 +1105,8 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf_update'], $lang['user'], $data['user_name']),
+				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				'L_AUTH'	=> $lang['auth'],
 				'L_EXPLAIN'	=> $lang['auth_explain'],
 				
@@ -1283,7 +1148,7 @@ else
 		
 		default:
 		
-			$fields .= '<input type="hidden" name="mode" value="create" />';
+			$fields = '<input type="hidden" name="mode" value="create" />';
 	
 			$tmp = data(USERS, 'user_id != 1', 'user_id DESC', 1, false);
 			
@@ -1306,12 +1171,12 @@ else
 				}
 				
 				$template->assign_block_vars('display.row', array(
-					'USERNAME'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'] ) ? href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name) : img('a_txt', $name, $name),
-					'AUTH'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'auth', 'id' => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
-					'FIELD'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'fields', 'id' => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
-					'GROUP'		=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'groups', 'id' => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
-					'UPDATE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-					'DELETE'	=> ( $userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'] ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete') : img('i_icon', 'icon_cancel2', 'common_delete'),
+					'USERNAME'	=> ( @$userauth['a_user'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name) : $name,
+					'AUTH'		=> ( @$userauth['a_user'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'auth', 'id' => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
+					'FIELD'		=> ( @$userauth['a_user_fields'] /*&&	($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'fields', 'id' => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
+					'GROUP'		=> ( @$userauth['a_team_manage'] || @$userauth['a_group_manage'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'groups', 'id' => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
+					'UPDATE'	=> ( @$userauth['a_user'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'DELETE'	=> ( @$userauth['a_user_delete'] /*&&	($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					
 					'REGISTER'	=> create_date($userdata['user_dateformat'], $tmp[$i]['user_regdate'], $userdata['user_timezone']),
 					'LEVEL'		=> $user_level,
@@ -1321,9 +1186,9 @@ else
 			$current_page = ( !count($data) ) ? 1 : ceil($cnt/$settings['ppe_acp']);
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['user']),
-				'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['user']),
-				'L_INPUT'	=> sprintf($lang['sprintf_create'], $lang['user']),
+				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_CREATE'	=> sprintf($lang['stf_create'], $lang['user']),
+				'L_INPUT'	=> sprintf($lang['stf_create'], $lang['user']),
 				'L_NAME'	=> $lang['user'],
 				'L_EXPLAIN'	=> $lang['explain'],
 				
@@ -1340,7 +1205,7 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

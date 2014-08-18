@@ -34,28 +34,29 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 	 *
 	 * @var array
 	 */
-	protected $normalize = array(
-		// General
-		'general' => array(
-			'dedicated' => array('dedicated'),
-			'hostname' => array('virtualservername'),
-			'password' => array('virtualserverflag_password'),
-			'numplayers' => array('virtualserverclientsonline'),
-			'maxplayers' => array('virtualservermaxclients'),
-	        'players' => array('players'),
-			'teams' => array('teams'),
-		),
+    protected $normalize = array(
+        // General
+        'general' => array(
+            'dedicated' => array('dedicated'),
+            'hostname' => array('virtualservername'),
+            'password' => array('virtualserverflagpassword'),
+            'numplayers' => array('virtualserverclientsonline'),
+            'maxplayers' => array('virtualservermaxclients'),
+            'players' => array('players'),
+            'teams' => array('teams'),
+        ),
 
-		// Player
-		'player' => array(
-	        //'score' => array('score'),
-		),
+        // Player
+        'player' => array(
+            'name' => array('clientnickname'),
+            'team' => array('clid'),
+        ),
 
-		// Team
-		'team' => array(
-			//'score' => array('tickets'),
-		),
-	);
+        // Team
+        'team' => array(
+            'name' => array('channelname'),
+        ),
+    );
 
 	/**
 	 * Array of packets we want to look up.
@@ -65,10 +66,12 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 	 */
 	protected $packets = array(
 		self::PACKET_DETAILS => "use port=%d\x0Aserverinfo\x0A",
-		self::PACKET_PLAYERS => "use port=%d\x0Aclientlist\x0A",
-		self::PACKET_CHANNELS => "use port=%d\x0Achannellist -topic\x0A",
+		self::PACKET_PLAYERS => "use port=%d\x0Aclientlist -uid -away -voice -times -groups -info -country\x0A",
+		self::PACKET_CHANNELS => "use port=%d\x0Achannellist -topic -flags -voice -limits\x0A",
+		self::PACKET_SERVERGROUPS => "use port=%d\x0Aservergrouplist\x0A",
+		self::PACKET_CHANNELGROUPS => "use port=%d\x0Achannelgrouplist\x0A",
 	);
-
+	
 	/**
 	 * Methods to be run when processing the response(s)
 	 *
@@ -78,6 +81,8 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 		"process_details",
 		"process_channels",
 		"process_players",
+		"process_servergroups",
+		"process_channelgroups",
 	);
 
 	/**
@@ -161,7 +166,6 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 		return TRUE;
 	}
 
-
     /*
      * Internal methods
      */
@@ -193,7 +197,7 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 
 		// Process the buffer response
 		$data = $this->parse_response($buffer);
-
+		
 		// Shift off the first item
 		$data = array_shift($data);
 
@@ -230,7 +234,7 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 
 		// Process the buffer response
 		$data = $this->parse_response($buffer);
-
+		
 		// Set the result to a new result instance
 		$result = new GameQ_Result();
 
@@ -257,10 +261,10 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 
 		// Let's preprocess the status
 		$buffer = $this->preProcess($this->packets_response[self::PACKET_PLAYERS]);
-
+		
 		// Process the buffer response
 		$data = $this->parse_response($buffer);
-
+		
 		// Set the result to a new result instance
 		$result = new GameQ_Result();
 
@@ -282,8 +286,73 @@ class GameQ_Protocols_Teamspeak3 extends GameQ_Protocols
 
 		return $result->fetch();
 	}
+	
+	protected function process_servergroups()
+	{
+		// Make sure we have a valid response
+		if(!$this->hasValidResponse(self::PACKET_SERVERGROUPS))
+		{
+			return array();
+		}
 
+		// Let's preprocess the status
+		$buffer = $this->preProcess($this->packets_response[self::PACKET_SERVERGROUPS]);
+		
+		// Process the buffer response
+		$data = $this->parse_response($buffer);
+		
+		// Set the result to a new result instance
+		$result = new GameQ_Result();
+		
+		foreach ($data AS $servergroups)
+		{
+			if ($servergroups['type'] == 0)
+			{
+	        	continue;
+			}
+			
+			foreach ($servergroups AS $key => $value)
+			{
+				$result->addServergroup($key, $value);
+			}
+		}
 
+		unset($data, $buffer, $servergroups, $key, $value);
+
+		return $result->fetch();
+	}
+	
+	protected function process_channelgroups()
+	{
+		if(!$this->hasValidResponse(self::PACKET_CHANNELGROUPS))
+		{
+			return array();
+		}
+
+		$buffer = $this->preProcess($this->packets_response[self::PACKET_CHANNELGROUPS]);
+		
+		$data = $this->parse_response($buffer);
+		
+		$result = new GameQ_Result();
+		
+		foreach ($data AS $channelgroups)
+		{
+			if ($channelgroups['type'] == 0)
+			{
+				continue;
+			}
+		
+			foreach ($channelgroups AS $key => $value)
+			{
+				$result->addChannelgroup($key, $value);
+			}
+		}
+
+		unset($data, $buffer, $channelgroups, $key, $value);
+
+		return $result->fetch();
+	}
+	
 	/**
 	 * Verify the header of the returned response packet
 	 *

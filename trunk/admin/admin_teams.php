@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_teams',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_teams', 'auth' => 'auth_teams'),
+			'main'	=> array('title' => 'acp_teams'),
 		)
 	);
 }
@@ -15,14 +15,15 @@ else
 	define('IN_CMS', true);
 	
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$tmpsub	= ( isset($_POST['cancel_sub']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
+	$c_user	= ( isset($_POST['c_user']) ) ? true : false;
 	
 	$current = 'acp_teams';
 	
 	include('./pagestart.php');
 	
 	add_lang('teams');
+	acl_auth(array('a_team', 'a_team_create', 'a_team_delete', 'a_team_manage'));
 
 	$error	= '';
 	$index	= '';
@@ -36,24 +37,16 @@ else
 	$order	= request('order', INT);
 	$mode	= request('mode', TYP);
 	$accept	= request('accept', TYP);
-	
+	$action	= request('action', TYP);
 	
 	$dir_flag	= $root_path . $settings['path_team_flag']['path'];
 	$dir_logo	= $root_path . $settings['path_team_logo']['path'];
 	$dir_games	= $root_path . $settings['path_games'];
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_teams'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
 	( $cancel )	? redirect('admin/' . check_sid($file, true)) : false;
-	( $tmpsub )	? redirect('admin/' . check_sid("$file?mode=member&id=$data")) : false;
-	
-#	( $smode == 'user_delete' ) ? $mode = 'user_delete' : false;
+	( $c_user )	? redirect('admin/' . check_sid("$file?mode=member&id=$data")) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_teams.tpl',
@@ -61,17 +54,17 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-#	debug($_GET, '_GET');
 	debug($_POST, '_POST');
+#	debug($_FILES, '_FILES');
 	
-#	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down', 'user_create', 'user_ranks', 'user_level', 'user_delete'))) ? $mode : false;
+#	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down', 'ucreate', 'uranks', 'uchange', 'udelete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
 		switch ( $mode )
 		{
-			case 'create':
-			case 'update':
+			case 'create':	acl_auth('a_team_create');
+			case 'update':	acl_auth('a_team');
 			
 				$template->assign_block_vars('input', array());
 				$template->assign_vars(array('IPATH' => $dir_games));
@@ -81,7 +74,7 @@ else
 						'title1' => 'input_data',
 						'team_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
 						'team_game'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:images', 'required' => 'select_game', 'params' => array($dir_games, GAMES, true)),
-						'team_desc'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40', 'params' => TINY_NORMAL, 'required' => 'input_desc'),
+						'team_desc'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:40', 'params' => TINY_NORMAL, 'class' => 'tinymce', 'required' => 'input_desc'),
 						'team_navi'		=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:yesno'),
 						'team_awards'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:yesno'),
 						'team_wars'		=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:yesno'),
@@ -136,6 +129,8 @@ else
 						{
 							$sql = sql(TEAMS, $mode, $data_sql, 'team_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+							
+							update_main_id($data);
 						}
 						
 						orders(TEAMS);
@@ -152,11 +147,11 @@ else
 				build_output(TEAMS, $vars, $data_sql);
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data_sql['team_name']),
-					'L_EXPLAIN'	=> $lang['common_required'],
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['team_name']),
+					'L_EXPLAIN'	=> $lang['com_required'],
 					
-					'S_ACTION'			=> check_sid("$file&amp;mode=$mode&amp;id=$data"),
-					'S_FIELDS'			=> $fields,
+					'S_ACTION'	=> check_sid("$file&amp;mode=$mode&amp;id=$data"),
+					'S_FIELDS'	=> $fields,
 				));
 				
 				$template->pparse('body');
@@ -209,8 +204,8 @@ else
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['team_name']),
+						'M_TITLE'	=> $lang['com_confirm'],
+						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['team_name']),
 						
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -224,228 +219,206 @@ else
 				$template->pparse('body');
 				
 				break;
+				
+			case 'ucreate':
+			case 'uchange':
+			case 'uranks':
+			case 'udefault':
 	
-			case 'user_create':
-			case 'user_ranks':
-			case 'user_level':
+					$status		= request('status', TYP) ? 1 : 0 ;
+					$default	= request('default', TYP) ? 1 : 0 ;
+					$textarea	= request('textarea' , ARY);
+					$rank_id	= request('rank_id' , INT);
+					$members	= request('members', ARY);
 					
-					if ( $mode == 'user_create' )
+					if ( $members )
 					{
-						$members	= request('members', TXT);
-						$members_s	= request('members_select', ARY);
-						$rank_id	= request('rank_id', INT);
-						$moderator	= request('moderator', INT);
-							
-						if ( $members )
+						$ary_ids = implode(', ', $members);
+						$ary_userids = $members;
+					}
+					else if ( $textarea )
+					{
+						$result = get_user_name_id($ary_ids, $textarea);
+						
+						if ( !sizeof($ary_ids) || $result !== false )
 						{
-							$members = trim($members, ', ');
-							$members = trim($members, ',');
-							
-							$user_name_ary = array_unique(explode(', ', $members));
-							
-							$which_ary = 'user_name_ary';
-							
-							if ( $$which_ary && !is_array($$which_ary))
-							{
-								$$which_ary = array($$which_ary);
-							}
-							
-							$sql_in = $$which_ary;
-							unset($$which_ary);
-							
-							$sql_in = implode("', '", $sql_in);
-							
-							$user_id_ary = $user_name_ary = array();
-							
-							$sql = 'SELECT * FROM ' . USERS . ' WHERE user_name IN ("' . $sql_in . '")';
-							if ( !($result = $db->sql_query($sql)) )
-							{
-								message(GENERAL_MESSAGE, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-							
-							if ( !($row = $db->sql_fetchrow($result)) )
-							{
-								$db->sql_freeresult($result);
-								
-								$error[] = $lang['msg_select_nomembers'];
-							}
-							
-							do
-							{
-								$user_name_ary[$row['user_id']] = $row['user_name'];
-								$user_id_ary[] = $row['user_id'];
-							}
-							while ($row = $db->sql_fetchrow($result));
-							$db->sql_freeresult($result);
+							$error[] = $lang['error_input_user'];
 						}
-						
-						$user_id_ary = ( $members ) ? $user_id_ary : $members_s;
-							
-						$user_id_ary_im = implode(', ', $user_id_ary);
-						
-						$sql = "SELECT user_id FROM " . LISTS . " WHERE user_id IN ($user_id_ary_im) AND type = " . TYPE_TEAM . " AND type_id = $data";
+					}
+					else
+					{
+						$error[] = $lang['error_select_user'];
+					}
+					
+					if ( $mode == 'ucreate' && $textarea && !$error )
+					{
+						$sql = "SELECT user_id FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $ary_ids) . ")";
 						if ( !($result = $db->sql_query($sql)) )
 						{
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
 						
-						$add_id_ary = $user_id_ary_im = array();
+						$add_id_ary = array();
 						
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$add_id_ary[] = (int) $row['user_id'];
 						}
 						$db->sql_freeresult($result);
-							
-						$add_id_ary = array_diff($user_id_ary, $add_id_ary);
 						
-						if ( !$add_id_ary )
+						$add_id_ary = array_diff($ary_ids, $add_id_ary);
+						
+						if ( !sizeof($add_id_ary) )
 						{
-							$error[] = $lang['msg_select_nomembers'];
+							$error[] = $lang['error_empty_ucreate'];
 						}
 						
-						if (sizeof($add_id_ary))
-						{
-							$sql_ary = array();
-					
-							foreach ($add_id_ary as $user_id)
-							{
-								$sql_ary[] = array(
-									'user_id'		=> (int) $user_id,
-									'type'			=> (int) TYPE_TEAM,
-									'type_id'		=> (int) $data,
-									'user_rank'		=> (int) $rank_id,
-									'user_status'	=> (int) $moderator,
-									'time_create'	=> (int) $time,
-								);
-							}
-					
-							if (!sizeof($sql_ary))
-							{
-								message(GENERAL_ERROR, 'Fehler', '', __LINE__, __FILE__, $sql);
-							}
-							
-							$ary = array();
-							foreach ($sql_ary as $id => $_sql_ary)
-							{
-								$values = array();
-								foreach ($_sql_ary as $key => $var)
-								{
-									$values[] = intval($var);
-								}
-								$ary[] = '(' . implode(', ', $values) . ')';
-							}
+						$sql_ary = array();
 				
-							
-							$sql = 'INSERT INTO ' . LISTS . ' (' . implode(', ', array_keys($sql_ary[0])) . ') VALUES ' . implode(', ', $ary);
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-						}
-						
-						$lang_type = 'create_team_user';
-					}
-					else
-					{
-						$member = request('member',	ARY);
-						$rankid = request('rank_id', INT);
-						
-						if ( $member && $mode == 'user_level')
+						foreach ( $add_id_ary as $user_id )
 						{
-							$sql = "SELECT user_id FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_status = 1 AND user_id IN (" . implode(', ', $member) . ")";
-							if ( !($result = $db->sql_query($sql)) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+							$sql_ary[] = array(
+								'type'			=> (int) TYPE_TEAM,
+								'type_id'		=> (int) $data,
+								'user_id'		=> (int) $user_id,
+								'user_rank'		=> (int) $rank_id,
+								'user_status'	=> (int) $status,
+								'time_create'	=> (int) $time,
+							);
+						}
+					}
+					
+					if ( !$error )
+					{
+						switch ( $mode )
+						{
+							case 'ucreate':
+								
+								foreach ( $sql_ary as $id => $_sql_ary )
+								{
+									$values = array();
+									
+									foreach ($_sql_ary as $key => $var)
+									{
+										$values[] = (int) $var;
+									}
+									
+									$ary[] = '(' . implode(', ', $values) . ')';
+								}
+								
+								$sql = 'INSERT INTO ' . LISTS . ' (' . implode(', ', array_keys($sql_ary[0])) . ') VALUES ' . implode(', ', $ary);
+								if ( !$db->sql_query($sql) )
+								{
+									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								}
+								
+								update_main_id($data, $ary_ids);
+								
+								$lang_type = 'update_create';
+								
+								break;
 							
-							$team_mods = array();
-							while ( $row = $db->sql_fetchrow($result) )
-							{
-								$team_mods[] = $row['user_id'];
-							}
-							$db->sql_freeresult($result);
-		
-							if ( count($team_mods) > 0 )
-							{
-								$sql = "UPDATE " . LISTS . " SET user_status = 0, time_update = $time WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $team_mods) . ")";
+							case 'uchange':
+								
+								$ary = '';
+									
+								$sql = "SELECT user_id FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_status = 1 AND user_id IN ($ary_ids)";
 								if ( !($result = $db->sql_query($sql)) )
 								{
 									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 								}
-							}
+								
+								if ( $db->sql_numrows($result) )
+								{
+									while ( $row = $db->sql_fetchrow($result) )
+									{
+										$ary[] = $row['user_id'];
+									}
+								
+									$sql = "UPDATE " . LISTS . " SET user_status = 0, time_update = '$time' WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $ary) . ")";
+									if ( !$db->sql_query($sql) )
+									{
+										message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+									}
+								}
+								
+								$sql_in = empty($ary) ? '' : ' AND NOT user_id IN (' . implode(', ', $ary) . ')';
+								
+								$sql = "UPDATE " . LISTS . " SET user_status = 1, time_update = '$time' WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $members) . ")" . $sql_in;
+								if ( !$db->sql_query($sql) )
+								{
+									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								}
+								
+								$lang_type = 'update_change';
+								
+								break;
+								
+							case 'udefault':
 							
-							$sql_in = ( empty($team_mods ) ? '' : ' AND NOT user_id IN (' . implode(', ', $team_mods) . ')');
+								update_main_id($data, $ary_userids);
+								
+								$lang_type = 'update_default';
 							
-							$sql = "UPDATE " . LISTS . " SET user_status = 1, time_update = $time WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $member) . ")" . $sql_in;
-							if ( !($result = $db->sql_query($sql)) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
+								break;
+							
+							case 'uranks':
+							
+								$sql = "UPDATE " . LISTS . " SET user_rank = $rank_id, time_update = $time WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $members) . ")";
+								if ( !$db->sql_query($sql) )
+								{
+									message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+								}
+		
+								$lang_type = 'update_ranks';
+								
+								break;
+						}
 						
-							$lang_type = ( count($member) > 1 ) ? 'update_rights' : 'update_right';
-						}
-						else if ( $member && $mode == 'user_ranks' )
-						{
-							$sql = "UPDATE " . LISTS . " SET user_rank = $rankid, time_update = $time WHERE type = " . TYPE_TEAM . " AND type_id = $data AND user_id IN (" . implode(', ', $member) . ")";
-							if ( !$db->sql_query($sql) )
-							{
-								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-							}
-	
-							$lang_type = ( count($member) > 1 ) ? 'update_ranks' : 'update_rank';
-						}
-						else
-						{
-							$error[] = 'empty user';
-						}
+						log_add(LOG_ADMIN, $log, $mode, $lang_type);
+						right('ERROR_BOX', lang($lang_type));
+					}
+					else
+					{
+						error('ERROR_BOX', $error);
 					}
 					
-				#	if ( !$error )
-				#	{
-				#		$msg = $lang[$lang_type] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&amp;id=$data"));
-				#		
-				#		log_add(LOG_ADMIN, $log, $smode, $lang_type);
-				#		message(GENERAL_MESSAGE, $msg);
-				#	}
-				#	else
-				#	{
-				#		error('ERROR_BOX', $error);
-				#	}
-				
 					$index = true;
 				
 				break;
-
-			case 'user_delete':
-
-				$data		= get_data(TEAMS, $data, 1);
-				$members	= request('members', 4);
 				
-				if ( $members && $confirm )
+			case 'udelete':
+			
+				$data_sql	= data(TEAMS, $data, false, 1, true);
+				$members	= request('members', ARY);
+							
+				if ( $members && $accept )
 				{
-					$sql = "DELETE FROM " . LISTS . " WHERE user_id IN ($members) AND type = " . TYPE_TEAM . " AND type_id = $data";
-					if ( !$db->sql_query($sql) )
+					$sql = "DELETE FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND type_id = $data AND  user_id IN ($members)";
+					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					log_add(LOG_ADMIN, $log, 'ACP_TEAM_USER_DELETE', $data['team_name']);
+					$members = explode(', ', $members);
 					
-					#$oCache -> sCachePath = './../cache/';
+					log_add(LOG_ADMIN, $log, $mode, 'update_delete');
+					right('ERROR_BOX', lang('update_delete'));
+					
 					#$oCache -> deleteCache('list_teams');
 					#$oCache -> deleteCache('subnavi_list_teams');
-					
-					$message = $lang['delete_team_user'] . sprintf($lang['click_return_team'], '<a href="' . check_sid($file));
-					message(GENERAL_MESSAGE, $message);
+										
+					$index = true;
 				}
-				else if ( $members && !$confirm )
+				else if ( $members && !$accept )
 				{
-					$template->set_filenames(array('body' => 'style/info_confirmsub.tpl'));
+					$template->set_filenames(array('body' => 'style/info_confirm_user.tpl'));
 
 					$sql_in = implode(', ', $members);
 					
-					$fields = '<input type="hidden" name="mode" value="_user_delete" /><input type="hidden" name="' . 'id' . '" value="' . $data . '" /><input type="hidden" name="members" value="' . $sql_in . '" />';
+					$fields .= '<input type="hidden" name="mode" value="udelete" />';
+					$fields .= '<input type="hidden" name="id" value="' . $data . '" />';
+					$fields .= '<input type="hidden" name="members" value="' . $sql_in . '" />';
 					
 					$sql = "SELECT user_name, user_id FROM " . USERS . " WHERE user_id IN ($sql_in)";
 					if ( !($result = $db->sql_query($sql)) )
@@ -456,7 +429,7 @@ else
 							
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$ary_userid[]	= (int)		$row['user_id'];
+						$ary_userid[]		= (int)		$row['user_id'];
 						$ary_user_name[]	= (string)	$row['user_name'];
 					}
 					$db->sql_freeresult($result);
@@ -464,16 +437,12 @@ else
 					$user_names = implode(', ', $ary_user_name);
 
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'	=> $lang['common_confirm'],
-						'MESSAGE_TEXT'	=> sprintf($lang['msg_confirm_delete'], sprintf($lang['delete_confirm_team_user'], $user_names), $data['team_name']),
+						'MESSAGE_TITLE'	=> $lang['com_confirm'],
+						'MESSAGE_TEXT'	=> sprintf($lang['notice_confirm_delete'], sprintf($lang['notice_confirm_group'], $user_names), $data_sql['group_name']),
 					
 						'S_FIELDS'		=> $fields,
 						'S_ACTION'		=> check_sid($file),
 					));
-				}
-				else
-				{
-					message(GENERAL_MESSAGE, $lang['msg_must_select_team']);
 				}
 				
 				$template->pparse('body');
@@ -483,7 +452,7 @@ else
 	
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -546,23 +515,22 @@ else
 					
 					'MEMBER'	=> href('a_img', $file, array('id' => $id), 'icon_member', 'common_member'),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				));
 			}
 		}
 		
 		$template->assign_vars(array(
-			'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['team']),
-			'L_CREATE'	=> sprintf($lang['sprintf_create'], $lang['team']),
+			'L_HEAD'	=> sprintf($lang['stf_head'], $lang['team']),
+			'L_CREATE'	=> sprintf($lang['stf_create'], $lang['team']),
 			'L_NAME'	=> $lang['teams'],
 			
 			'L_EXPLAIN'	=> $lang['explain'],
 			
 			'L_COUNT'	=> $lang['count'],
-			'L_MEMBER'	=> $lang['common_member'],
+			'L_MEMBER'	=> $lang['common_members'],
 			
-		#	'S_CREATE'	=> check_sid("$file?mode=create"),
-		#	'S_ACTION'	=> check_sid($file),
+			'S_ACTION'	=> check_sid($file),
 			'S_FIELDS'	=> $fields,
 		));
 	}
@@ -577,18 +545,17 @@ else
 		
 		$sql_id = $team_mods = $team_members = $s_options = $s_users = '';
 		
-		$sql = "SELECT ul.user_rank, ul.time_create, ul.user_status, u.user_id, u.user_name, u.user_regdate, r.rank_name
+		$sql = "SELECT u.team_id, ul.user_rank, ul.time_create, ul.user_status, u.user_id, u.user_name, u.user_regdate, r.rank_name
 					FROM " . USERS . " u, " . LISTS . " ul
 						LEFT JOIN " . RANKS . " r ON r.rank_id = ul.user_rank
 					WHERE type = " . TYPE_TEAM . " AND ul.type_id = $data AND ul.user_id = u.user_id
-				ORDER BY r.rank_order";
+				ORDER BY r.rank_order ASC, ul.time_create ASC, u.user_name ASC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
-		$members = $db->sql_fetchrowset($result);
 		
-		if ( !$members )
+		if ( !$members = $db->sql_fetchrowset($result) )
 		{
 			$template->assign_block_vars('member.no_moderators', array());
 			$template->assign_block_vars('member.no_members', array());
@@ -600,6 +567,8 @@ else
 		#	{
 		#		$ids[] = $member['user_id'];
 		#	}
+		
+			$team_moderators = $team_members = array();
 			
 			foreach ( $members as $row )
 			{
@@ -611,11 +580,7 @@ else
 				{
 					$team_members[] = $row;
 				}
-				
-				$users[] = $row['user_id'];
 			}
-			
-			$sql_id .= " AND NOT user_id IN (" . implode(', ', $users) . ")";
 			
 			if ( !$team_moderators )
 			{
@@ -624,14 +589,14 @@ else
 			else
 			{
 				foreach ( $team_moderators as $row )
-			#	for ( $i = 0; $i < count($team_moderators); $i++ )
 				{
 					$template->assign_block_vars('member.moderators', array(
 						'ID'	=> $row['user_id'],
 						'NAME'	=> $row['user_name'],
 						'RANK'	=> $row['rank_name'],
-						'REG'	=> create_date($userdata['user_dateformat'], $row['user_regdate'], $userdata['user_timezone']),
+						'MAIN'	=> ($row['team_id'] == $data) ? $lang['com_yes'] : $lang['com_no'],
 						'JOIN'	=> create_date($userdata['user_dateformat'], $row['time_create'], $userdata['user_timezone']),
+						'REG'	=> create_date($userdata['user_dateformat'], $row['user_regdate'], $userdata['user_timezone']),						
 					));
 				}
 			}
@@ -643,12 +608,12 @@ else
 			else
 			{
 				foreach ( $team_members as $row )
-			#	for ( $i = 0; $i < count($team_members); $i++ )
 				{
 					$template->assign_block_vars('member.members', array(
 						'ID'	=> $row['user_id'],
 						'NAME'	=> $row['user_name'],
 						'RANK'	=> $row['rank_name'],
+						'MAIN'	=> ($row['team_id'] == $data) ? $lang['com_yes'] : $lang['com_no'],
 						'REG'	=> create_date($userdata['user_dateformat'], $row['user_regdate'], $userdata['user_timezone']),
 						'JOIN'	=> create_date($userdata['user_dateformat'], $row['time_create'], $userdata['user_timezone']),
 					));
@@ -657,32 +622,12 @@ else
 		}
 		
 		$s_options .= '<select name="mode" onchange="setRequest(this.options[selectedIndex].value);">';
-		$s_options .= '<option>' . sprintf($lang['sprintf_select_format'], $lang['common_select_option']) . '</option>';
-		$s_options .= '<option value="user_level">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_rights_team']) . '</option>';
-		$s_options .= '<option value="user_ranks">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_set_rank']) . '</option>';
-		$s_options .= '<option value="user_delete">' . sprintf($lang['sprintf_select_format'], $lang['common_delete']) . '</option>';
+		$s_options .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['com_select_option']) . "</option>\n";
+		$s_options .= '<option value="uchange">' . sprintf($lang['stf_select_format'], $lang['notice_select_permission']) . "</option>\n";
+		$s_options .= '<option value="uranks">' . sprintf($lang['stf_select_format'], $lang['notice_select_rank']) . "</option>\n";
+		$s_options .= '<option value="udefault">' . sprintf($lang['stf_select_format'], $lang['notice_select_default']) . "</option>\n";
+		$s_options .= '<option value="udelete">' . sprintf($lang['stf_select_format'], $lang['com_delete']) . "</option>\n";
 		$s_options .= '</select>';
-		
-		$sql = "SELECT user_name, user_id FROM " . USERS . " WHERE user_id <> " . ANONYMOUS . $sql_id;
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		$missing_users = $db->sql_fetchrowset($result);
-		
-		if ( $missing_users )
-		{
-			$template->assign_block_vars('member.add', array());
-			
-			$s_users .= "<select class=\"select\" name=\"members_select[]\" rows=\"5\" multiple>";
-			
-			foreach ( $missing_users as $info => $value )
-			{
-				$s_users .= "<option value=\"" . $value['user_id'] . "\">" . sprintf($lang['sprintf_select_format'], $value['user_name']) . "</option>";
-			}
-			
-			$s_users .= "</select>";
-		}				
 		
 		$default_rank = data(RANKS, "rank_type = " . RANK_TEAM . " AND rank_standard = 1", '', 1, true);
 		
@@ -690,13 +635,13 @@ else
 	#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 		
 		$template->assign_vars(array(
-			'L_HEAD'	=> sprintf($lang['sprintf_member'], $lang['title'], $data_sql['team_name']),
-			'L_EXPLAIN'	=> $lang['common_required'],
+			'L_HEAD'	=> sprintf($lang['stf_member'], $lang['title'], $data_sql['team_name']),
+			'L_EXPLAIN'	=> $lang['explain_user'],
 			
 			'L_OPTION'	=> href('a_txt', $file, array('mode' => 'update', 'id' => $data), $lang['input_data'], $lang['input_data']),
 		
-	#		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['team']),
-	#		'L_INPUT'	=> sprintf($lang['sprintf_update'], $lang['team'], $data['team_name']),
+	#		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['team']),
+	#		'L_INPUT'	=> sprintf($lang['stf_update'], $lang['team'], $data['team_name']),
 			'L_MEMBER'	=> $lang['members'],
 		#	'L_EXPLAIN'	=> $lang['team_member_explain'],
 			
@@ -717,8 +662,7 @@ else
 			'L_NO_MEMBERS'		=> $lang['no_members'],
 			'L_NO_MODERATORS'	=> $lang['no_moderators'],
 			
-			'S_RANK_SELECT'			=> select_box(RANKS, $default_rank['rank_id'], RANK_TEAM),
-			'S_USERS'	=> $s_users,
+			'S_RANK_SELECT'			=> select_rank($default_rank['rank_id'], RANK_TEAM),
 			'S_OPTIONS'	=> $s_options,
 			
 			'S_ACTION'	=> check_sid("$file&id=$data"),
@@ -728,7 +672,7 @@ else
 	
 	$template->pparse('body');
 			
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

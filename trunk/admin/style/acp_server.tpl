@@ -1,7 +1,53 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
+<script type="text/javascript">
+
+var request = false;
+
+function setRequest(type, game)
+{
+	if ( window.XMLHttpRequest ) { request = new XMLHttpRequest(); } else { request = new ActiveXObject("Microsoft.XMLHTTP"); }
+	
+	if ( !request )
+	{
+		alert("Kann keine XMLHTTP-Instanz erzeugen");
+		return false;
+	}
+	else
+	{
+		var url = "ajax/ajax_gameq.php";
+		
+		request.open('post', url, true);
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		request.send('type='+type+'&game='+game);
+		request.onreadystatechange = interpretRequest;
+	}
+}
+
+function interpretRequest()
+{
+	switch (request.readyState)
+	{
+		case 4:
+		
+			if (request.status != 200)
+			{
+				alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
+			}
+			else
+			{
+				var content = request.responseText;
+				document.getElementById('ajax_content').innerHTML = content;
+			}
+			break;
+		
+		default: document.getElementById('close').style.display = "none"; break;
+	}
+}
+
+</script>
 <form action="{S_ACTION}" method="post">
 {ERROR_BOX}
 
@@ -38,15 +84,15 @@
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th>{L_NAME}</th>
+	<th><span class="right">{LIST_VOICE}</span>{L_VOICE}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN row -->
+<!-- BEGIN voice_row -->
 <tr>
-	<td><span style="float: right;">{display.row.USERS} {display.row.STATUS}</span>{display.row.TYPE} {display.row.NAME}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE} {display.row.DELETE}</td>
+	<td><span style="float: right;">{display.voice_row.USERS} {display.voice_row.STATUS}</span>{display.voice_row.TYPE} {display.voice_row.NAME}</td>
+	<td>{display.voice_row.MOVE_DOWN}{display.voice_row.MOVE_UP}{display.voice_row.UPDATE} {display.voice_row.DELETE}</td>
 </tr>
-<!-- END row -->
+<!-- END voice_row -->
 <!-- BEGIN empty -->
 <tr>
 	<td class="empty" colspan="3">{L_EMPTY}</td>
@@ -56,7 +102,37 @@
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="server_name" /></td>
+	<td><input type="text" name="voice_name" /></td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+
+<br />
+
+<form action="{S_ACTION}" method="post">
+<table class="rows">
+<tr>
+	<th><span class="right">{LIST_GAME}</span>{L_GAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN game_row -->
+<tr>
+	<td><span style="float: right;">{display.game_row.USERS} {display.game_row.STATUS}</span>{display.game_row.TYPE} {display.game_row.NAME}</td>
+	<td>{display.game_row.MOVE_DOWN}{display.game_row.MOVE_UP}{display.game_row.UPDATE} {display.game_row.DELETE}</td>
+</tr>
+<!-- END game_row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="3">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="game_name" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
@@ -64,17 +140,44 @@
 </form>
 <!-- END display -->
 
-<!-- BEGIN type_display -->
+<!-- BEGIN server_list -->
+<form action="{S_ACTION}" method="post">
+{ERROR_BOX}
+<table>
+<tr>
+	<!-- BEGIN name_option -->
+	<th>{server_list.name_option.NAME}</th>
+	<!-- END name_option -->
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<!-- BEGIN type_option -->
+	<td align="center">{server_list.row.type_option.TYPE}</td>
+	<!-- END type_option -->
+</tr>
+<!-- END row -->
+</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+<!-- END server_list -->
+
+<!-- BEGIN gameq -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th>{L_VOICE}</th>
+	<th><span class="right">{LIST_VOICE}</span>{L_VOICE}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN voice_row -->
 <tr>
-	<td><span class="righti">{type_display.voice_row.GAME} &bull; {type_display.voice_row.DPORT}</span>{type_display.voice_row.NAME}</td>
-	<td>{type_display.voice_row.UPDATE} {type_display.voice_row.DELETE}</td>
+	<td><span class="righti">{gameq.voice_row.GAME} &bull; {gameq.voice_row.DPORT}</span>{gameq.voice_row.NAME}</td>
+	<td>{gameq.voice_row.UPDATE} {gameq.voice_row.DELETE}</td>
 </tr>
 <!-- END voice_row -->
 <!-- BEGIN voice_empty -->
@@ -88,13 +191,13 @@
 
 <table class="rows">
 <tr>
-	<th>{L_GAME}</th>
+	<th><span class="right">{LIST_GAME}</span>{L_GAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN game_row -->
 <tr>
-	<td><span class="righti">{type_display.game_row.GAME} &bull; {type_display.game_row.DPORT}</span>{type_display.game_row.NAME}</td>
-	<td>{type_display.game_row.UPDATE} {type_display.game_row.DELETE}</td>
+	<td><span class="righti">{gameq.game_row.GAME} &bull; {gameq.game_row.DPORT}</span>{gameq.game_row.NAME}</td>
+	<td>{gameq.game_row.UPDATE} {gameq.game_row.DELETE}</td>
 </tr>
 <!-- END game_row -->
 <!-- BEGIN game_empty -->
@@ -106,10 +209,37 @@
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="type_name" /></td>
+	<td><input type="text" name="gameq_name" /></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>
 {S_FIELDS}
 </form>
-<!-- END type_display -->
+<!-- END gameq -->
+
+<!-- BEGIN gameq_list -->
+<form action="{S_ACTION}" method="post">
+{ERROR_BOX}
+<table>
+<tr>
+	<!-- BEGIN name_option -->
+	<th>{gameq_list.name_option.NAME}</th>
+	<!-- END name_option -->
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<!-- BEGIN type_option -->
+	<td align="center">{gameq_list.row.type_option.TYPE}</td>
+	<!-- END type_option -->
+</tr>
+<!-- END row -->
+</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+<!-- END gameq_list -->

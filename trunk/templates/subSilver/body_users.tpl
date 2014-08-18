@@ -166,12 +166,12 @@ function interpretRequest()
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td class="{_block._mod.row.CLASS}">{_block._mod.row.NAME}</td>
-	<td class="{_block._mod.row.CLASS}">{_block._mod.row.POSTS}</td>
-	<td class="{_block._mod.row.CLASS}">{_block._mod.row.COMMENTS}</td>
-	<td class="{_block._mod.row.CLASS}">{_block._mod.row.JOIN}</td>
+	<td class="{block.mod.row.CLASS}">{block.mod.row.NAME}</td>
+	<td class="{block.mod.row.CLASS}">{block.mod.row.POSTS}</td>
+	<td class="{block.mod.row.CLASS}">{block.mod.row.COMMENTS}</td>
+	<td class="{block.mod.row.CLASS}">{block.mod.row.JOIN}</td>
 	<!-- BEGIN switch_admin -->
-	<td class="{_block._mod.row.CLASS}"><input type="checkbox" name="members[]" value="{_block._mod.row.USER}"></td>
+	<td class="{block.mod.row.CLASS}"><input type="checkbox" name="members[]" value="{block.mod.row.USER}"></td>
 	<!-- END switch_admin -->
 </tr>
 <!-- END row -->
@@ -197,12 +197,12 @@ function interpretRequest()
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td class="{_block._mem.row.CLASS}">{_block._mem.row.NAME}</td>
-	<td class="{_block._mem.row.CLASS}">{_block._mem.row.POSTS}</td>
-	<td class="{_block._mem.row.CLASS}">{_block._mem.row.COMMENTS}</td>
-	<td class="{_block._mem.row.CLASS}">{_block._mem.row.JOIN}</td>
+	<td class="{block.mem.row.CLASS}">{block.mem.row.NAME}</td>
+	<td class="{block.mem.row.CLASS}">{block.mem.row.POSTS}</td>
+	<td class="{block.mem.row.CLASS}">{block.mem.row.COMMENTS}</td>
+	<td class="{block.mem.row.CLASS}">{block.mem.row.JOIN}</td>
 	<!-- BEGIN switch_moderator -->
-	<td class="{_block._mem.row.CLASS}"><input type="checkbox" name="members[]" value="{_block._mem.row.USER}"></td>
+	<td class="{block.mem.row.CLASS}"><input type="checkbox" name="members[]" value="{block.mem.row.USER}"></td>
 	<!-- END switch_moderator -->
 </tr>
 <!-- END row -->
@@ -237,9 +237,9 @@ function interpretRequest()
 <table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <!-- BEGIN row -->
 <tr>
-	<td class="{_block._pen.row.CLASS}">{_block._pen.NAME}</td>
-	<td class="{_block._pen.row.CLASS}">{_block._pen.JOIN}</td>
-	<td class="{_block._pen.row.CLASS}"><input type="checkbox" name="members[]" value="{_block._pen.USER}"></td>
+	<td class="{block.pen.row.CLASS}">{block.pen.NAME}</td>
+	<td class="{block.pen.row.CLASS}">{block.pen.JOIN}</td>
+	<td class="{block.pen.row.CLASS}"><input type="checkbox" name="members[]" value="{block.pen.USER}"></td>
 </tr>
 <!-- END row -->
 </table>
@@ -259,8 +259,8 @@ function interpretRequest()
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td class="{_listg._in_groups._is_member.row.CLASS}">{_listg._in_groups._is_member.row.NAME}{_listg._in_groups._is_member.row.DESC}</td>
-	<td class="{_listg._in_groups._is_member.row.CLASS}">{_listg._in_groups._is_member.row.TYPE}</td>
+	<td class="{listg.in_groups.is_member.row.CLASS}">{listg.in_groups.is_member.row.NAME}{listg.in_groups.is_member.row.DESC}</td>
+	<td class="{listg.in_groups.is_member.row.CLASS}">{listg.in_groups.is_member.row.TYPE}</td>
 </tr>
 <!-- END row -->
 <tr>
@@ -273,8 +273,8 @@ function interpretRequest()
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td class="{_listg._in_groups._is_pending.row.CLASS}">{_listg._in_groups._is_pending.row.NAME}{_listg._in_groups._is_pending.row.DESC}</td>
-	<td class="{_listg._in_groups._is_pending.row.CLASS}">{_listg._in_groups._is_pending.row.TYPE}</td>
+	<td class="{listg.in_groups.is_pending.row.CLASS}">{listg.in_groups.is_pending.row.NAME}{listg.in_groups.is_pending.row.DESC}</td>
+	<td class="{listg.in_groups.is_pending.row.CLASS}">{listg.in_groups.is_pending.row.TYPE}</td>
 </tr>
 <!-- END row -->
 <!-- END pending -->
@@ -288,8 +288,8 @@ function interpretRequest()
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td class="{_listg._no_group.row.CLASS}">{_listg._no_group.row.NAME}{_listg._no_group.row.DESC}</td>
-	<td class="{_listg._no_group.row.CLASS}">{_listg._no_group.row.TYPE}</td>
+	<td class="{listg.no_group.row.CLASS}">{listg.no_group.row.NAME}{listg.no_group.row.DESC}</td>
+	<td class="{listg.no_group.row.CLASS}">{listg.no_group.row.TYPE}</td>
 </tr>
 <!-- END row -->
 <!-- END no_group -->
@@ -300,15 +300,15 @@ function interpretRequest()
 <table class="type1" width="100%" cellpadding="0" cellspacing="0" border="0">
 <!-- BEGIN game_row -->
 <tr>
-	<th colspan="4">{_listt._gamerow.L_GAME}</th>
+	<th colspan="4">{listt.game_row.L_GAME}</th>
 </td>
 </tr>
 <!-- BEGIN team_row -->
 <tr>
-	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.GAME} {_listt._gamerow._teamrow.NAME}</td>
-	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.FIGHTUS}</td>
-	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.JOINUS}</td>
-	<td class="{_listt._gamerow._teamrow.CLASS}">{_listt._gamerow._teamrow.MATCH}</td>
+	<td class="{listt.game_row.team_row.CLASS}">{listt.game_row.team_row.GAME} {listt.game_row.team_row.NAME}</td>
+	<td class="{listt.game_row.team_row.CLASS}">{listt.game_row.team_row.FIGHTUS}</td>
+	<td class="{listt.game_row.team_row.CLASS}">{listt.game_row.team_row.JOINUS}</td>
+	<td class="{listt.game_row.team_row.CLASS}">{listt.game_row.team_row.MATCH}</td>
 </tr>
 <!-- END team_row -->
 <tr>

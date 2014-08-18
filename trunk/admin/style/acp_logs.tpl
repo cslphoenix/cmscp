@@ -1,11 +1,8 @@
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post" id="list" name="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li>
-	<li><a href="{S_ERROR}">{L_ERROR}</a></li></ul>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
-<br />
-
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post" id="list" name="post">
 <table class="logs">
 <tr>
 	<th>{L_LOGS_USERNAME}</th>
@@ -20,7 +17,7 @@
 	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}">{display.row.IP}</label></td>
 	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}">{display.row.DATE}</label></td>
 	<td class="{display.row.CLASS}"><label for="check_{display.row.LOG_ID}"><strong>{display.row.SEKTION}</strong>&nbsp;&raquo;&nbsp;<strong>{display.row.MESSAGE}</strong>{display.row.DATA}</label></td>
-	<td align="center" width="1%"><input type="checkbox" name="log_id[]" id="check_{display.row.LOG_ID}" value="{display.row.LOG_ID}"> {display.row.LOG_ID}</td>
+	<td align="center" width="1%"><input type="checkbox" name="log_id[]" id="check_{display.row.LOG_ID}" value="{display.row.LOG_ID}"></td>
 </tr>
 <!-- END row -->
 <!-- BEGIN no_entry -->
@@ -62,48 +59,40 @@
 
 <!-- BEGIN error -->
 <form action="{S_ACTION}" method="post" id="list" name="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_ERROR}</a></li></ul>
-<p>{L_EXPLAIN}</p>
-
-<br />
-
-<table class="row" cellspacing="1">
-
-<!-- BEGIN error_row -->
+<table class="errors" cellspacing="1">
+<!-- BEGIN row -->
 <tr>
-	<td class="{_error._errorrow.CLASS}" rowspan="6" align="left" valign="top" nowrap="nowrap"><b>{_error._errorrow.TIME}</b><br>Error ID: {_error._errorrow.ID}<br>		User ID: {_error._errorrow.USER}</td>
-	<td class="{_error._errorrow.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Line:</b></td>
-	<td class="{_error._errorrow.CLASS}" align="left" valign="top">{_error._errorrow.FILE_LINE}<b> in File: </b>{_error._errorrow.FILE}</td>
-	<td class="{_error._errorrow.CLASS}" rowspan="6" align="center"><input type="checkbox" name="log_id[]" value="{_error._errorrow.ERROR_ID}"></td>
+	<td class="{error.row.CLASS}" rowspan="6" align="left" valign="top" nowrap="nowrap"><b>{error.row.TIME}</b><br>Error ID: {error.row.ID}<br>		User ID: {error.row.USER}</td>
+	<td class="{error.row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Line:</b></td>
+	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.FILE_LINE}<b> in File: </b>{error.row.FILE}</td>
+	<td class="{error.row.CLASS}" rowspan="6" align="center"><input type="checkbox" name="log_id[]" value="{error.row.ERROR_ID}"></td>
 </tr>
 <tr>
-	<td class="{_error._errorrow.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error:</b></td>
-	<td class="{_error._errorrow.CLASS}" align="left" valign="top">{_error._errorrow.MSG_TITLE}</td>
+	<td class="{error.row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error:</b></td>
+	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.MSG_TITLE}</td>
 	</tr>
 <tr>
-	<td class="{_error._errorrow.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error Text:</b></td>
-	<td class="{_error._errorrow.CLASS}" align="left" valign="top">{_error._errorrow.MSG_TEXT}</td>
+	<td class="{error.row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>Error Text:</b></td>
+	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.MSG_TEXT}</td>
 	</tr>
 <tr>
-	<td class="{_error._errorrow.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Code:</b></td>
-	<td class="{_error._errorrow.CLASS}" align="left" valign="top">{_error._errorrow.SQL_CODE}</td>
+	<td class="{error.row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Code:</b></td>
+	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.SQL_CODE}</td>
 	</tr>
 <tr>
-	<td class="{_error._errorrow.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Text:</b></td>
-	<td class="{_error._errorrow.CLASS}" align="left" valign="top">{_error._errorrow.SQL_TEXT}</td>
+	<td class="{error.row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Text:</b></td>
+	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.SQL_TEXT}</td>
 </tr>
 <tr>
-	<td class="{_error._errorrow.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Store:</b></td>
-	<td class="{_error._errorrow.CLASS}" align="left" valign="top">{_error._errorrow.SQL_STORE}</td>
+	<td class="{error.row.CLASS}" align="right" valign="top" nowrap="nowrap"><b>SQL Store:</b></td>
+	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.SQL_STORE}</td>
 </tr>
-<!-- END error_row -->
-<!-- BEGIN no_entry -->
+<!-- END row -->
+<!-- BEGIN empty -->
 <tr>
 	<td class="row_class1" colspan="4" align="center">{L_EMPTY}</td>
 </tr>
-<!-- END no_entry -->
+<!-- END empty -->
 </table>
 
 <table class="footer">
@@ -112,18 +101,6 @@
 	<td></td>
     <td></td>
     <td>{PAGE_NUMBER}<br />{PAGE_PAGING}<br /><a href="#" onclick="marklist('list', 'log_id', true); return false;">&raquo; {L_MARK_ALL}</a>&nbsp;<a href="#" onclick="marklist('list', 'log_id', false); return false;">&raquo; {L_MARK_DEALL}</a></td>
-</tr>
-</table>
-
-<table class="footer" cellspacing="2">
-<tr>
-	<td colspan="2" align="right">
-		
-		
-	</td>
-</tr>
-<tr>
-	<td colspan="2" align="right"></td>
 </tr>
 </table>
 {S_FIELDS}

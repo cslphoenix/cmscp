@@ -18,7 +18,7 @@ $lang = array_merge($lang, array(
 	
 	'menu_name'		=> 'Name',
 	'type'			=> 'Type',
-	'main'			=> 'Übergeordnete Kategorie/Label',
+	'main'			=> 'Kategorie/Label',
 	'menu_lang'		=> 'Sprachdatei',
 	'menu_show'		=> 'Anzeigen',
 	'menu_intern'	=> 'Intern',
@@ -39,6 +39,21 @@ $lang = array_merge($lang, array(
 	'target'		=> 'Ziel',
 	'target_new'	=> 'Neue Seite',
 	'target_self'	=> 'Selbe Seite',
+	
+	'teams'			=> 'Teams',
+	'usergroups'	=> 'Benutzergruppen',
+	'none'			=> 'Keine Kategorie',
+	'permission'	=> 'Berechtigungnen',
+	'dir'			=> 'Hauptverzeichnis',
+	'settings'		=> 'Einstellungen',
+	
+	'confirm_0'				=> 'das diese Kategorie:',
+	'confirm_1'				=> 'das diese Menü-Label:',
+	'confirm_2'				=> 'das diese Menü-Punkt:',
+	
+	'notice_confirm0_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> und alle Menü-Label und alle Menü-Punkte gelöscht werden soll?',
+	'notice_confirm1_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> und alle Menü-Punkte gelöscht werden soll?',
+	'notice_confirm2_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?',
 	
 ));
 

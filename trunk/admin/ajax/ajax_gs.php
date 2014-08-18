@@ -29,14 +29,16 @@ if ( isset($_POST['match_server_ip']) || isset($_POST['match_hltv_ip']) )
 		$sql = "SELECT server_name, server_ip, server_port FROM " . SERVER . " WHERE server_type = '0' AND (server_ip LIKE '%$post%' OR server_name LIKE '%$post%')";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp_s = $db->sql_fetchrowset($result);
 		
 		$sql = "SELECT DISTINCT match_server_ip FROM " . MATCH . " WHERE match_server_ip LIKE '%$post%'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp_m = $db->sql_fetchrowset($result);
 		
@@ -53,7 +55,7 @@ if ( isset($_POST['match_server_ip']) || isset($_POST['match_hltv_ip']) )
 					
 					if ( $i == 4 && !$cnt_s )
 					{
-						echo '<li class="more">&nbsp;&raquo;&nbsp;' . sprintf($lang['sprintf_ajax_more'], $num_s) . '</li>';
+						echo '<li class="more">&nbsp;&raquo;&nbsp;' . sprintf($lang['stf_ajax_more'], $num_s) . '</li>';
 						break;
 					}
 				}
@@ -70,7 +72,7 @@ if ( isset($_POST['match_server_ip']) || isset($_POST['match_hltv_ip']) )
 					
 					if ( $i == 4 )
 					{
-						echo '<li class="more">&nbsp;&raquo;&nbsp;' . sprintf($lang['sprintf_ajax_more'], $num_m) . '</li>';
+						echo '<li class="more">&nbsp;&raquo;&nbsp;' . sprintf($lang['stf_ajax_more'], $num_m) . '</li>';
 						break;
 					}
 				}

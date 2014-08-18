@@ -27,16 +27,16 @@ if ( isset($_POST['mode']) )
 		
 		if ( !$tmp )
 		{
-			$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_ranks']);
+			$s_select = sprintf($lang['stf_select_format'], $lang['msg_empty_ranks']);
 		}
 		else
 		{
 			$s_select .= "<select name=\"rank_id\" id=\"rank_id\">";
-			$s_select .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_ranks']) . "</option>";
+			$s_select .= "<option value=\"\">" . sprintf($lang['stf_select_format'], $lang['notice_select_rank']) . "</option>";
 			
 			foreach ( $tmp as $info => $value )
 			{
-				$s_select .= "<option value=\"" . $value['rank_id'] . "\">" . sprintf($lang['sprintf_select_format'], sprintf($lang['msg_select_rank_set'], $value['rank_name'])) . "</option>";
+				$s_select .= "<option value=\"" . $value['rank_id'] . "\">" . sprintf($lang['stf_select_format'], sprintf($lang['msg_select_rank_set'], $value['rank_name'])) . "</option>";
 			}
 			
 			$s_select .= "</select>";

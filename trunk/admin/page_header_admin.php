@@ -41,9 +41,9 @@ if ( $config['page_gzip'] )
 }
 
 $template->set_filenames(array(
-	'header'	=> $root_path . 'admin/style/page_header.tpl',
+	'header'	=> 'style/page_header.tpl',
 #	'nav'		=> $root_path . 'admin/style/page_navigate.tpl',
-	'footer'	=> $root_path . 'admin/style/page_footer.tpl'
+	'footer'	=> 'style/page_footer.tpl'
 ));
 
 $l_timezone = explode('.', $config['default_timezone']);
@@ -64,33 +64,35 @@ $adds = "?i=$typ$action";
 $file = basename($_SERVER['PHP_SELF']) . $adds;
 
 $template->assign_vars(array(
-	'L_HEADER'	=> $current_page,
-	'L_TIME'	=> sprintf($lang['current_time'], create_date($userdata['user_dateformat'], time(), $userdata['user_timezone'])),
-	'L_ACP'		=> $lang['header_acp'],
-	'L_SITE'	=> $config['page_name'],
-	'L_USER'	=> $userdata['user_name'],
-	'L_LOGOUT'	=> $lang['index_logout'],
-	'L_SESSION'	=> $lang['index_session'],
+	'L_HEADER'		=> $current_page,
+	'L_TIME'		=> sprintf($lang['current_time'], create_date($userdata['user_dateformat'], time(), $userdata['user_timezone'])),
+	'L_OVERVIEW'	=> $lang['acp_overview'],
+	'L_SITE'		=> $config['page_name'],
+	'L_USER'		=> $userdata['user_name'],
+	'L_LOGOUT'		=> $lang['acp_logout'],
+	'L_SESSION'		=> $lang['acp_session'],
 
 #	'L_NAVIGATION'		=> $lang['navi_navigation'],
 
-	'L_INPUT_DATA'		=> $lang['common_input_data'],
-	'L_INPUT_OPTION'	=> $lang['common_input_option'],
-	'L_INPUT_UPLOAD'	=> $lang['common_input_upload'],
-	'L_INPUT_STANDARD'	=> $lang['common_input_standard'],
+#	'L_INPUT_DATA'		=> $lang['common_input_data'],
+#	'L_INPUT_OPTION'	=> $lang['common_input_option'],
+#	'L_INPUT_UPLOAD'	=> $lang['common_input_upload'],
+#	'L_INPUT_STANDARD'	=> $lang['common_input_standard'],
+	
+	'L_UPLOAD_DATA'	=> $lang['common_input_upload'],
 
-	'L_EMPTY'		=> $lang['common_empty'],
+	'L_EMPTY'		=> $lang['com_empty'],
 	'L_ORDER'		=> $lang['common_order'],
 	'L_MORE'		=> $lang['common_more'],
-	'L_REMOVE'		=> $lang['common_remove'],
+	'L_REMOVE'		=> $lang['com_remove'],
 	'L_SORT'		=> $lang['common_sort'],
-	'L_GO'			=> $lang['common_go'],
-	'L_NO'			=> $lang['common_no'],
-	'L_YES'			=> $lang['common_yes'],
+	'L_GO'			=> $lang['com_go'],
+	'L_NO'			=> $lang['com_no'],
+	'L_YES'			=> $lang['com_yes'],
 	'L_RESET'		=> $lang['common_reset'],
 	'L_SUBMIT'		=> $lang['common_submit'],
 	'L_UPDATE'		=> $lang['common_update'],
-	'L_DELETE'		=> $lang['common_delete'],
+	'L_DELETE'		=> $lang['com_delete'],
 	'L_DELETE_ALL'	=> $lang['common_delete_all'],
 	'L_SETTINGS'	=> $lang['common_settings'],
 
@@ -107,14 +109,18 @@ $template->assign_vars(array(
 
 	'CONTENT_FOOTER'	=> sprintf($lang['content_footer'], $config['page_version']),
 
-	'U_ACP'		=> check_sid('admin_index.php?i=1'),
-	'U_SITE'	=> check_sid('../index.php'),
-	'U_LOGOUT'	=> check_sid('./../login.php?logout=true'),
-	'U_SESSION'	=> check_sid('./../login.php?logout=true&admin_session_logout=true'),
+	'U_OVERVIEW'	=> check_sid('admin_index.php?i=1'),
+	'U_SITE'		=> check_sid('../index.php'),
+	'U_LOGOUT'		=> check_sid('./../login.php?logout=true'),
+	'U_SESSION'		=> check_sid('./../login.php?logout=true&admin_session_logout=true'),
 
 	'S_USER_LANG'	=> 'de',
 	'S_CONTENT_ENCODING'	=> $lang['content_encoding'],
 	'S_CONTENT_DIRECTION'	=> $lang['content_direction'],
+
+	'L_AUTH_CREATE' => $lang['common_auth-create'],	
+	'L_AUTH_UPDATE' => $lang['common_auth-update'],
+	'L_AUTH_DELETE' => $lang['common_auth-delete'],
 	
 	'S_ACTION' => check_sid($file),
 ));
@@ -151,6 +157,35 @@ foreach ( $tmp as $row )
 	}
 }
 
+$active_file = basename($_SERVER['PHP_SELF']);
+$active_module = $_SERVER['QUERY_STRING'];
+
+function find_active($db_file, $db_action, $active_file, $active_module)
+{
+	$active_module = explode('&', $active_module);
+	
+	foreach ( $active_module as $module )
+	{
+		if ( strpos($module, 'action') !== false )
+		{
+			list($active, $active_action) = explode('=', $module);
+		}
+	}
+	
+	if ( $active_file == $db_file && isset($active_action) )
+	{
+		if ( $active_action == $db_action )
+		{
+			return ' class="red"';
+		}
+	}
+	else if ( $active_file == $db_file )
+	{
+		return ' class="red"';
+	}
+	
+}
+
 foreach ( $sql_cat as $catkey => $catrow )
 {
 	if ( isset($sql_lab[$catkey]) )
@@ -183,13 +218,16 @@ foreach ( $sql_cat as $catkey => $catrow )
 				{
 					foreach ( $sql_sub[$labkey] as $subrow )
 					{
-						$active = '';
-
+					#	find_active($db_file, $db_action, $active_file, $active_module)
+						$active = find_active($subrow['menu_file'], $subrow['menu_opts'], $active_file, $active_module);
+						
+						#debug($active);
+						
 						$menu_file = $subrow['menu_file'];
 						$menu_opts = ( $subrow['menu_opts'] != 'main' ) ? '&amp;action=' . $subrow['menu_opts'] : '';
 						
 						$template->assign_block_vars('ilab.isub', array(
-							'L_MODULE'	=> sprintf($lang['sprintf_select_menu'], (isset($lang[$subrow['menu_name']]) ? $lang[$subrow['menu_name']] : str_replace("_", " ", $subrow['menu_name']))),
+							'L_MODULE'	=> sprintf($lang['stf_select_menu'], (isset($lang[$subrow['menu_name']]) ? $lang[$subrow['menu_name']] : str_replace("_", " ", $subrow['menu_name']))),
 							'U_MODULE'	=> check_sid($menu_file . '?i=' . $catkey . $menu_opts),
 							
 							'CLASS'		=> $active,
@@ -206,15 +244,13 @@ foreach ( $sql_cat as $catkey => $catrow )
 				$menu_opts = $subrow['menu_opts'];
 				
 				$template->assign_block_vars('isub', array(
-					'L_MODULE'	=> sprintf($lang['sprintf_select_menu'], (isset($lang[$subrow['menu_name']]) ? $lang[$subrow['menu_name']] : str_replace("_", " ", $subrow['menu_name']))),
+					'L_MODULE'	=> sprintf($lang['stf_select_menu'], (isset($lang[$subrow['menu_name']]) ? $lang[$subrow['menu_name']] : str_replace("_", " ", $subrow['menu_name']))),
 					'U_MODULE'	=> check_sid($menu_file . '?i=' . $catkey . '&amp;' . $menu_opts),
 				));
 			}
 		}
 	}
 }
-
-$oCache->sCachePath = './../cache/';
 
 $template->pparse('header');
 

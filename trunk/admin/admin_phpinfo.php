@@ -4,9 +4,9 @@ if ( !empty($setmodules) )
 {
 	return array(
 		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_phpinfo',
+		'title'		=> 'phpinfo',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_phpinfo', 'auth' => false),
+			'main'	=> array('title' => 'acp_phpinfo'),
 		),
 	);
 }
@@ -14,24 +14,22 @@ else
 {
 	define('IN_CMS', true);
 
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
+	$header	= ( isset($_POST['cancel']) ) ? true : false;
+	
 	$current	= 'acp_phpinfo';
 
 	include('./pagestart.php');
 
-	add_lang('types');
+	add_lang('phpinfo');
+	acl_auth('a_phpinfo');
 
 	$file	= basename(__FILE__);
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	if ( $userdata['user_level'] != ADMIN xor !$userdata['user_founder'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
-	
-	$template->set_filenames(array('body' => 'style/acp_phpinfo.tpl'));
+	$template->set_filenames(array(
+		'body' => 'style/acp_phpinfo.tpl'
+	));
 	
 	ob_start();
 	phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_VARIABLES);
@@ -128,17 +126,15 @@ else
 	 }
 	 */
 	$template->assign_vars(array(
-	#	'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+		'L_EXPLAIN'	=> $lang['explain'],
 		
 		'INFO'	=> $output,
-		
-		'S_ACTION'	=> check_sid($file),
-	#	'S_FIELDS'	=> $fields,
 	));
 
 	$template->pparse('body');
 	
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

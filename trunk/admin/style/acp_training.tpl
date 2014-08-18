@@ -64,7 +64,7 @@
 <table class="lfooter">
 <tr>
 	<td><input type="text" name="training_vs" /></td>
-	<td>{S_TEAMS}</td>
+	<td>{S_TEAM}</td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 </tr>
 </table>

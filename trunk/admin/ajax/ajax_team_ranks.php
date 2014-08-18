@@ -16,27 +16,28 @@ if ( isset($_POST['mode']) )
 {
 	$s_select = '';
 	
-	if ( $_POST['mode'] == 'user_ranks' )
+	if ( $_POST['mode'] == 'uranks' )
 	{
 		$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = " . RANK_TEAM . " ORDER BY rank_special DESC, rank_order ASC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp = $db->sql_fetchrowset($result);
 		
 		if ( !$tmp )
 		{
-			$s_select = sprintf($lang['sprintf_select_format'], $lang['msg_empty_ranks']);
+			$s_select = sprintf($lang['stf_select_format'], $lang['msg_empty_ranks']);
 		}
 		else
 		{
 			$s_select .= "<select name=\"rank_id\" id=\"rank_id\">";
-			$s_select .= "<option value=\"\">" . sprintf($lang['sprintf_select_format'], $lang['msg_select_ranks']) . "</option>";
+			$s_select .= "<option value=\"\">" . sprintf($lang['stf_select_format'], $lang['notice_select_rank']) . "</option>";
 			
 			foreach ( $tmp as $info => $value )
 			{
-				$s_select .= "<option value=\"" . $value['rank_id'] . "\">" . sprintf($lang['sprintf_select_format'], sprintf($lang['msg_select_rank_set'], $value['rank_name'])) . "</option>";
+				$s_select .= "<option value=\"" . $value['rank_id'] . "\">" . sprintf($lang['stf_select_format'], sprintf($lang['notice_select_rank_set'], $value['rank_name'])) . "</option>";
 			}
 			
 			$s_select .= "</select>";

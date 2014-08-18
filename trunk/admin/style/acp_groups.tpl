@@ -2,61 +2,6 @@
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
-<!--
-<script type="text/JavaScript">
-<!-- BEGIN ajax ->
-function look_{input.ajax.NAME}({input.ajax.NAME}, user_new, user_level)
-{
-	if ( {input.ajax.NAME}.length == 0 )
-	{
-		$('#{input.ajax.NAME}').hide();
-	}
-	else
-	{
-		$.post("./ajax/{input.ajax.FILE}", {{input.ajax.NAME}: ""+{input.ajax.NAME}+"", user_new: ""+user_new+"", user_level: ""+user_level+""}, function(data) {
-				if ( data.length > 0 )
-				{
-					$('#{input.ajax.NAME}').show();
-					$('#auto_{input.ajax.NAME}').html(data);
-				}
-			}
-		);
-	}
-}
-function set_{input.ajax.NAME}(thisValue)
-{
-	$('#group_{input.ajax.NAME}').val(thisValue);
-	setTimeout("$('#{input.ajax.NAME}').hide();", 200);
-}
-<!-- END ajax ->
-function set_infos(id,text)
-{
-	var obj = document.getElementById(id).value = text;
-}
-</script>
-
-<script type="text/JavaScript">
-// <![CDATA[
-function check_yes()
-{
-	<!-- BEGIN auth ->
-	document.getElementById("{input.auth.FIELDS}").checked = true;
-	<!-- END auth ->
-}
-
-function check_no()
-{
-	var radios = document.forms["post"].elements["deactivated"];
-	
-	for ( var i = 0; i < radios.length; i++ )
-	{
-		radios[i].checked = true;
-	}
-}
-
-// ]]>
-</script>
--->
 <form action="{S_ACTION}" method="post" enctype="multipart/form-data">
 {ERROR_BOX}
 
@@ -93,69 +38,90 @@ function check_no()
 <form action="{S_ACTION}" method="post" name="post" id="list">
 {ERROR_BOX}
 
-<table class="normal db">
-<tr>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MODERATOR}</a></li></ul></th>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="right" onclick="return false;">{L_REGISTER}</a></li></ul></th>
-</tr>
-<!-- BEGIN mod -->
-<tr>
-	<td><label for="u{member.mod.USER_ID}">{member.mod.USERNAME}</label></td>
-	<td>{member.mod.REGISTER}</td>
-	<td><input type="checkbox" name="members[]" value="{member.mod.USER_ID}" id="u{member.mod.USER_ID}" /></td>
-</tr>
-<!-- END mod -->
-<!-- BEGIN mod_no -->
-<tr>
-	<td class="empty" colspan="3">{L_MODERATOR_NO}</td>
-</tr>
-<!-- END mod_no -->
-</table>
+<fieldset>
+	<legend>{L_USERS}</legend>
+	<table class="users">
+	<tr>
+		<th>{L_MODERATOR}</th>
+		<th>{L_MAIN}</th>
+		<th>{L_JOIN}</th>
+		<th>{L_REGISTER}</th>
+		<th>&nbsp;</th>
+	</tr>
+	<!-- BEGIN moderators -->
+	<tr onclick="checked({member.moderators.ID})" class="hover">
+		<td>{member.moderators.NAME}</td>
+		<td>{member.moderators.MAIN}</td>
+		<td>{member.moderators.JOIN}</td>
+		<td>{member.moderators.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
+	</tr>
+	<!-- END moderators -->
+	<!-- BEGIN no_moderators -->
+	<tr>
+		<td class="empty" colspan="3">{L_MODERATOR_NO}</td>
+	</tr>
+	<!-- END no_moderators -->
+	</table>
 
-<br />
+	<br />
 
-<table class="normal db">
-<tr>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBER}</a></li></ul></th>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="right" onclick="return false;">{L_REGISTER}</a></li></ul></th>
-</tr>
-<!-- BEGIN mem -->
-<tr>
-	<td><label for="u{member.mem.USER_ID}">{member.mem.USERNAME}</label></td>
-	<td>{member.mem.REGISTER}</td>
-	<td><input type="checkbox" name="members[]" value="{member.mem.USER_ID}" id="u{member.mem.USER_ID}" /></td>
-</tr>
-<!-- END mem -->
-<!-- BEGIN mem_no -->
-<tr>
-	<td class="empty" colspan="3">{L_MEMBER_NO}</td>
-</tr>
-<!-- END mem_no -->
-</table>
+	<table class="users">
+	<tr>
+		<th>{L_MEMBER}</th>
+		<th>{L_MAIN}</th>
+		<th>{L_JOIN}</th>
+		<th>{L_REGISTER}</th>
+		<th>&nbsp;</th>
+	</tr>
+	<!-- BEGIN members -->
+	<tr onclick="checked({member.members.ID})" class="hover">
+		<td>{member.members.NAME}</td>
+		<td>{member.members.MAIN}</td>
+		<td>{member.members.JOIN}</td>
+		<td>{member.members.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
+	</tr>
+	<!-- END members -->
+	<!-- BEGIN no_members -->
+	<tr>
+		<td class="empty" colspan="3">{L_MEMBER_NO}</td>
+	</tr>
+	<!-- END no_members -->
+	</table>
+	
+	<br />
 
-<table class="rfooter">
-<tr>
-	<td colspan="2" align="right">{S_OPTIONS}&nbsp;<input type="submit" class="button2" value="{L_SUBMIT}" /></td>
-</tr>
-<tr>
-	<td colspan="2" align="right" class="row5"><a href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
-</tr>
-</table>
+</fieldset>
+
+	<!-- BEGIN options -->
+	<table class="rfooter">
+	<tr>
+		<td colspan="2" align="right">{S_OPTIONS}&nbsp;<input type="submit" class="button2" value="{L_SUBMIT}" /></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="right" class="row5"><a href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
+	</tr>
+	</table>
+	<!-- END options -->
 <!-- BEGIN pending -->
 <br />
 
-<table class="normal db">
+<table class="users">
 <tr>
-	<th><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_PENDING}</a></li></ul></th>
-	<th colspan="2" align="right"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_REGISTER}</a></li></ul></th>
+	<th>{L_PENDING}</th>
+	<th>{L_JOIN}</th>
+	<th>{L_REGISTER}</th>
+	<th>&nbsp;</th>
 </tr>
-<!-- BEGIN pending_row -->
-<tr>
-	<td>{member.pending.pen.USERNAME}</td>
-	<td>{member.pending.pen.REGISTER}</td>
-	<td><input type="checkbox" name="pendingmembers[]" value="{member.pending.pen.USER_ID}" checked="checked"></td>
+<!-- BEGIN row_pending -->
+<tr onclick="checked({member.pending.row_pending.ID})" class="hover">
+	<td>{member.pending.row_pending.NAME}</td>
+    <td>{member.pending.row_pending.JOIN}</td>
+	<td>{member.pending.row_pending.REG}</td>
+	<td><input type="checkbox" name="pending[]" value="{member.pending.row_pending.ID}" id="check_{member.pending.row_pending.ID}" checked="checked"></td>
 </tr>
-<!-- END pending_row -->
+<!-- END row_pending -->
 </table>
 
 <table class="rfooter">
@@ -168,23 +134,29 @@ function check_no()
 </form>
 
 <form action="{S_ACTION}" method="post" name="post">
+<fieldset>
+	<legend>{L_ADD}</legend>
+	<dl>			
+		<dt><label for="status">{L_MOD}:</label></dt>
+		<dd><label><input type="radio" name="status" value="1" id="status" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_NO}</label></dd>
+	</dl>
+	<dl>			
+		<dt><label for="default">{L_MAIN}:</label></dt>
+		<dd><label><input type="radio" name="default" value="1" id="default" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="default" value="0" checked="checked" />&nbsp;{L_NO}</label></dd>
+	</dl>
+	<dl>			
+		<dt><label for="textarea">{L_USERNAME}:</label></dt>
+		<dd><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea></dd>
+	</dl>
+</fieldset>
+	<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd></dd>
+</dl>
+</div>
 
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_ADD_MEMBER}</a></li></ul>
-<ul id="navinfo"><li>{L_ADD_MEMBER_EX}</li></ul>
-
-<table class="update">
-<tr>
-	<td width="50%"><textarea class="textarea" name="textarea" style="width:100%" rows="5"></textarea></td>
-	<td>{S_USERS}</td>
-</tr>
-<tr>
-	<td colspan="2"><input type="checkbox" name="mod" /> Moderatorstatus</td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_SUBMIT}"></td>
-</tr>
-</table>
-<input type="hidden" name="smode" value="_add" />
+<input type="hidden" name="mode" value="ucreate" />
 {S_FIELDS}
 </form>
 <!-- END member -->

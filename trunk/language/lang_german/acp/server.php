@@ -10,8 +10,8 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Server',
 	'explain'	=> 'Verwaltung der Gameserver.',
 	
-	'type_title'	=> 'Servertypen',
-	'type_explain'	=> 'Hier werden die Server verwaltet die für die GameQ Class wichtig sind.',
+	'gameq_title'	=> 'Servertypen',
+	'gameq_explain'	=> 'Hier werden die Server verwaltet die für die GameQ Class wichtig sind.',
 	
 	'server_name'	=> 'Server Name',
 	'server_type'	=> 'Server Typ',
@@ -28,19 +28,22 @@ $lang = array_merge($lang, array(
 	
 	'cur_max'	=> '%s / %s',
 	
-	'gameserver'	=> 'Gameserver',
-	'voiceserver'	=> 'Voiceserver',
+#	'gameserver'	=> 'Gameserver',
+#	'voiceserver'	=> 'Voiceserver',
 	
 	'online'	=> 'Online',
 	'offline'	=> 'Offline',
 	
-	'type_name'		=> 'Name',
-	'type_game'		=> 'GameQ Spiel',
-	'type_dport'	=> 'Standardport',
-	'type_sort'		=> 'Type',
+	'gameq_name'	=> 'Name',
+	'gameq_game'	=> 'GameQ Spiel',
+	'gameq_dport'	=> 'Standardport',
+	'gameq_type'	=> 'Type',
+	'gameq_viewer'	=> 'Viewer',
 	
 	'typ_game'		=> 'Gameserver',
-	'typ_voice'	=> 'Voiceserver',
+	'typ_voice'		=> 'Voiceserver',
+	
+	'all_update'	=> 'alle bearbeiten',
 
 ));
 

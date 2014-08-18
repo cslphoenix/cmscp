@@ -221,7 +221,7 @@ class stat_run_class
 				// for mysql & postgresql, explain request
 				$request_explain = '';
 				
-				if ( !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER|OPTIMIZE|DROP|CREATE)/i', $trc_sql[$i]['sql']) )
+				if ( !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER|OPTIMIZE|DROP|CREATE|REPLACE)/i', $trc_sql[$i]['sql']) )
 				{
 					// get explainations
 					$sql = 'EXPLAIN ' . $trc_sql[$i]['sql'];

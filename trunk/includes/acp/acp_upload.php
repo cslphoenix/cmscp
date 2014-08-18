@@ -85,7 +85,7 @@ function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
 	
 #	debug($ftype);
 #	debug($types);
-	debug($maxsize);
+#	debug($maxsize);
 	
 	if ( file_exists(realpath($ftemp)) )
 	{
@@ -112,7 +112,7 @@ function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
 	{
 		message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 	}
-	debug($error, 'error');
+#	debug($error, 'error');
 	if ( $error )
 	{
 		@unlink($ftemp);
@@ -128,7 +128,7 @@ function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
 
 	$info = sprintf('%s;%s;%s', $fname, $ftype, $fsize);
 	
-	debug($info, 'info');
+#	debug($info, 'info');
 	
 	return $info;
 }
@@ -374,7 +374,7 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 	}
 	else
 	{
-		$error[] = sprintf($lang['sprintf_imagesize'], $smw, $smh);
+		$error[] = sprintf($lang['error_imagesize'], $smw, $smh);
 		
 		return;
 	}
@@ -506,9 +506,9 @@ function gallery_upload($path_img, $image_filename, $image_realname, $image_file
 		$move_file($image_filename, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename");
 		@chmod('./../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename", 0644);
 		
-		$pic['pic_filename'] = $new_filename;
-		$pic['pic_preview'] = $new_filename_preview;
-		$pic['pic_size'] = $image_filesize;
+		$pic['gallery_picture'] = $new_filename;
+		$pic['gallery_preview'] = $new_filename_preview;
+		$pic['gallery_filesize'] = $image_filesize;
 		
 		return $pic;
 	}

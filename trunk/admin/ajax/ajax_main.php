@@ -21,14 +21,16 @@ if ( isset($_POST['type']) )
 	$mode = $_POST['mode'];
 	$data = $_POST['data'];
 	
+	$label = $menu = false;
+	
 	switch ( $meta )
 	{
-		case 'dl':		$tbl = DOWNLOAD;	$simple = true;	break;
-		case 'gallery':	$tbl = GALLERY_NEW;	$simple = true;	break;
-		case 'profile':	$tbl = PROFILE;		$simple = true;	break;
+		case 'dl':		$tbl = DOWNLOAD;	break;
+		case 'gallery':	$tbl = GALLERY_NEW;	break;
+		case 'profile':	$tbl = PROFILE;		break;
 		
-		case 'forum':	$tbl = FORUM;	$simple = false;	break;
-		case 'menu':	$tbl = MENU;	$simple = false;	break;
+		case 'forum':	$tbl = FORUM;	$label = true;	break;
+		case 'menu':	$tbl = MENU;	$label = ($type == 4) ? true : false; $menu = true;	break;
 	}
 	
 	$f_id		= $meta . '_id';
@@ -36,13 +38,14 @@ if ( isset($_POST['type']) )
 	$f_lang		= $meta . '_lang';
 	$f_order	= $meta . '_order';
 	
-	$sql = 'SELECT * FROM ' . $tbl . (($type == 4) ? ' WHERE action = \'pcp\'' : '') . ' ORDER BY main ASC, ' . $f_order . ' ASC';
+	$sql = "SELECT * FROM $tbl " . ($menu ? (($type == 4) ? "WHERE action = 'acp'" : "WHERE action = 'pcp'") : '') . " ORDER BY main ASC, $f_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	
-	$cat = $entry = array();
+	$cat = $lab = $sub = array();
 
 	if ( $db->sql_numrows($result) )
 	{
@@ -54,42 +57,38 @@ if ( isset($_POST['type']) )
 			}
 			else if ( in_array($row['type'], array(1, 4)) )
 			{
-				$entry[$row['main']][$row[$f_id]] = $row;
+				$lab[$row['main']][$row[$f_id]] = $row;
 			}
 			else
 			{
 				$sub[$row['main']][$row[$f_id]] = $row;
 			}
 		}
-		
-		ksort($cat);
-		ksort($entry);
 	}
 	
-#	debug($cat);
-#	debug($lab);
-
 	$switch = $settings['smain'][$meta . '_switch'];
 	$entrys = $settings['smain'][$meta . '_entrys'];
-	$subs	= (isset($settings['smain'][$meta . '_subs'])) ? $settings['smain'][$meta . '_subs'] : false;
+	
+#	debug($entrys, 'entrys', true);
+#	$subs	= (isset($settings['smain'][$meta . '_subs'])) ? $settings['smain'][$meta . '_subs'] : false;
 	
 	$sort = array();
 	
-	foreach ( $cat as $ckey => $crow )
+	foreach ( $cat as $c_key => $c_row )
 	{
-		$sort[] = array('id' => $crow[$f_id], 'typ' => 1, 'lng' => (isset($crow[$f_lang])) ? lang($crow[$f_name]) : $crow[$f_name]);
+		$sort[] = array('id' => $c_row[$f_id], 'typ' => 1, 'lng' => lang($c_row[$f_name]));
 
-		if ( isset($entry[$ckey]) && $entrys )
+		if ( isset($lab[$c_key]) && ($label ? true : $entrys) )
 		{
-			foreach ( $entry[$ckey] as $hkey => $hrow )
+			foreach ( $lab[$c_key] as $l_key => $h_row )
 			{
-				$sort[] = array('id' => $hrow[$f_id],'typ' => 2, 'lng' => (isset($hrow[$f_lang])) ? lang($hrow[$f_name]) : $hrow[$f_name]);
+				$sort[] = array('id' => $h_row[$f_id],'typ' => 2, 'lng' => lang($h_row[$f_name]));
 				
-				if ( isset($sub[$hkey]) && $subs )
+				if ( isset($sub[$l_key]) && $entrys )
 				{
-					foreach ( $sub[$hkey] as $skey => $srow )
+					foreach ( $sub[$l_key] as $s_key => $s_row )
 					{
-						$sort[] = array('id' => $srow[$f_id], 'typ' => 3, 'lng' => (isset($srow[$f_lang])) ? lang($srow[$f_name]) : $srow[$f_name]);
+						$sort[] = array('id' => $s_row[$f_id], 'typ' => 3, 'lng' => lang($s_row[$f_name]));
 					}
 				}
 			}
@@ -118,20 +117,20 @@ if ( isset($_POST['type']) )
 							switch ( $row['typ'] )
 							{
 								case 1: $opt .= '<option value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-								case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-								case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+								case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+								case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 							}
 							
 							break;
 							
 						case 2:
 						case 4:
-						
+							
 							switch ( $row['typ'] )
 							{
 								case 1: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-								case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-								case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+								case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+								case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 							}
 							
 							break;
@@ -156,20 +155,20 @@ if ( isset($_POST['type']) )
 									switch ( $row['typ'] )
 									{
 										case 1: $opt .= '<option value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-										case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+										case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 									}
 									
 									break;
 									
 								case 2:
 								case 4:
-								
+									
 									switch ( $row['typ'] )
 									{
 										case 1: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-										case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+										case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 									}
 									
 									break;
@@ -195,8 +194,8 @@ if ( isset($_POST['type']) )
 								switch ( $row['typ'] )
 								{
 									case 1: $opt .= '<option value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-									case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-									case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+									case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp; &nbsp;;' . $row['lng'] . "</option>\n"; break;									
+									case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 								}
 								
 								break;
@@ -207,8 +206,8 @@ if ( isset($_POST['type']) )
 								switch ( $row['typ'] )
 								{
 									case 1: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-									case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-									case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+									case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+									case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 								}
 								
 								break;
@@ -217,19 +216,17 @@ if ( isset($_POST['type']) )
 				}
 				else if ( $type != $curt && !in_array($meta, array('forum', 'menu')) ) /* move und delte immer */
 				{
-					echo 'Test';
-					
 					if ( $type < $curt )
 					{
 						echo ' Test <';
-						$opt .= '<option value="0">Keine Aktion' . "</option>\n";
+						$opt .= "Keine Aktion\n";
 					}
 					else if ( $type > $curt )
 					{
-						echo ' Test >';
-						$opt .= '<label><input type="radio" value="0" name="test" checked="checked">&nbsp;' . $lang['common_delete'] . "</label><br />\n";
-						$opt .= '<label><input type="radio" value="1" name="test">&nbsp;' . $lang['common_move'] . "</label>:\n";
-						$opt .= '<select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
+						echo ':convert:';
+						$opt .= '<label><input type="radio" value="0" name="main" checked="checked">&nbsp;' . $lang['com_delete'] . "</label><br />\n";
+						$opt .= '<label><input type="radio" name="main">&nbsp;' . $lang['common_move'] . "</label>:\n";
+						$opt .= '<select name="' . sprintf('%s[main]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
 						
 						foreach ( $sort as $row )
 						{
@@ -241,8 +238,8 @@ if ( isset($_POST['type']) )
 									switch ( $row['typ'] )
 									{
 										case 1: $opt .= '<option value="' . $row['id'] . '"' . (($data == $row['id']) ? ' disabled="disabled"' : '') . '>' . $row['lng'] . "</option>\n"; break;
-										case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+										case 2: $opt .= '<option value="' . $row['id'] . '" disabled="disabled">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 									}
 									
 									break;
@@ -253,19 +250,18 @@ if ( isset($_POST['type']) )
 									switch ( $row['typ'] )
 									{
 										case 1: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">' . $row['lng'] . "</option>\n"; break;
-										case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;									
-										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp;&not;&nbsp;' . $row['lng'] . "</option>\n"; break;
+										case 2: $opt .= '<option value="' . $row['id'] . '">&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;									
+										case 3: $opt .= '<option disabled="disabled" value="' . $row['id'] . '">&nbsp; &nbsp;&nbsp; &nbsp;' . $row['lng'] . "</option>\n"; break;
 									}
 									
 									break;
 							}
 						}
 					}
-					
-					
 				}
 				else
 				{
+					echo 'Test =';
 					$opt .= '<option disabled="disabled">test2' . "</option>\n";
 					echo 'Test2';
 				}
@@ -290,13 +286,33 @@ if ( isset($_POST['type']) )
 		{
 			foreach ( $sort as $row )
 			{
+				$checked = ( $row['id'] == $data )	? ' checked="checked"' : '';
+				
 				if ( $type == 2 )
 				{
-					$opt .= ($row['cat']) ? '<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . "</label><br />\n" : '&nbsp; &nbsp;<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $row['id'] . '" />&nbsp;' . $row['lng'] . "</label><br />\n";
+					switch ( $row['typ'] )
+					{
+						case 1: $opt .= '<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 3:	$opt .= '&nbsp; &nbsp;&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
+					}
+				}
+				else if ( $type == 4 )
+				{
+					switch ( $row['typ'] )
+					{
+						case 1: $opt .= '<label><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
+					}
 				}
 				else
 				{
-					$opt .= ($row['cat']) ? '<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $row['id'] . '" />&nbsp;' . $row['lng'] . "</label><br />\n" : (($entrys) ? '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . "</label><br />\n" : '');
+					switch ( $row['typ'] )
+					{
+						case 1: $opt .= '<label><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 3:	$opt .= '&nbsp; &nbsp;&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
+					}
 				}
 			}
 		}

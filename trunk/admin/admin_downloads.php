@@ -22,7 +22,8 @@ else
 	include('./pagestart.php');
 	
 	add_lang('downloads');
-	
+	acl_auth(array('a_download', 'a_download_create', 'a_download_delete'));
+
 	$error	= '';
 	$index	= '';
 	$fields = '';
@@ -42,14 +43,10 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
+	$usub	= request('usub', TYP);
+	
 	$dir_path	= $root_path . $settings['path_downloads'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_download'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 
@@ -61,14 +58,9 @@ else
 	/* $settings['download_types'] ??? */
 	$mime_types = array('meta_application', 'meta_image', 'meta_text', 'meta_video');
 	
-#	debug($mode);
-#	debug($_GET);
-#	debug($_POST);
-#	debug($_FILES);
+#	debug($_POST, '_POST');
 
-	debug($_POST, '_POST');
-
-	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
+	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 
 	if ( $mode )
 	{
@@ -147,7 +139,7 @@ else
 							$data_sql['dl_size'] = (isset($t_info[2])) ? $t_info[2] : $data_sql['dl_size'];
 						}
 						
-						debug($data_sql, 'data_sql');
+					#	debug($data_sql, 'data_sql');
 						
 						if ( $mode == 'create' )
 						{
@@ -175,8 +167,8 @@ else
 				build_output(DOWNLOAD, $vars, $data_sql);
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], $data['dl_name']),
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['dl_name']),
+					'L_EXPLAIN'	=> $lang['com_required'],
 
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -184,6 +176,16 @@ else
 
 				$template->pparse('body');
 
+				break;
+				
+			case 'move_up':
+			case 'move_down':
+			
+				move(DOWNLOAD, $mode, $order, $main, $type, $usub, $action);
+				log_add(LOG_ADMIN, $log, $mode);
+			
+				$index = true;
+				
 				break;
 
 			case 'order':
@@ -220,8 +222,8 @@ else
 					$fields = '<input type="hidden" name="mode" value="_delete" /><input type="hidden" name="' . $cat . '" value="' . $data_id . '" />';
 
 					$template->assign_vars(array(
-						'MESSAGE_TITLE'	=> $lang['common_confirm'],
-						'MESSAGE_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['delete_confirm_download_cat'], $data['cat_title']),
+						'MESSAGE_TITLE'	=> $lang['com_confirm'],
+						'MESSAGE_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['delete_confirm_download_cat'], $data['cat_title']),
 
 						'S_FIELDS'		=> $fields,
 						'S_ACTION'		=> check_sid($file),
@@ -239,7 +241,7 @@ else
 	
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -271,7 +273,7 @@ else
 			$template->assign_vars(array(
 				'CAT'		=> href('a_txt', $file, array('action' => $action), $lang['acp_overview'], $lang['acp_overview']),
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
 				
 				'NAME'		=> isset($lang[$cat['dl_name']]) ? $lang[$cat['dl_name']] : $cat['dl_name'],
 				
@@ -297,7 +299,7 @@ else
 					'MOVE_DOWN'     => ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 	
 					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 					
 					'S_NAME'	=> "dl_module[$id]",
 					'S_SUBMIT'	=> "submit_module[$id]",
@@ -336,10 +338,10 @@ else
 				$template->assign_block_vars('display.row', array( 
 					'NAME'		=> href('a_txt', $file, array('main' => $dl_id), $dl_name, $dl_name),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $dl_id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $dl_id), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $dl_id), 'icon_cancel', 'com_delete'),
 					
 					'MOVE_UP'	=> ( $dl_order != '1' )		? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $dl_order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'	=> ( $dl_order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'main' => 0, 'order' => $dl_order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+					'MOVE_DOWN'	=> ( $dl_order != $cnt )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $dl_order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				));
 			}
 		}
@@ -348,11 +350,13 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 		
-		'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['type_0']),
-		'L_CREATE_FILE'	=> sprintf($lang['sprintf_create'], $lang['type_1']),
+		'L_NAME'	=> $lang['type_0'],
+		
+		'L_CREATE'		=> sprintf($lang['stf_create'], $lang['type_0']),
+		'L_CREATE_FILE'	=> sprintf($lang['stf_create'], $lang['type_1']),
 		
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
@@ -365,9 +369,9 @@ else
 	$fields .= '<input type="hidden" name="mode" value="create" />';
 
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
-		'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['file']),
-		'L_CREATE_CAT'	=> sprintf($lang['sprintf_create'], $lang['cat']),
+		'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
+		'L_CREATE'		=> sprintf($lang['stf_create'], $lang['file']),
+		'L_CREATE_CAT'	=> sprintf($lang['stf_create'], $lang['cat']),
 		
 		'L_TITLE'		=> sprintf($lang['sprintf_title'], $lang['cat']),
 		'L_EXPLAIN'		=> $lang['explain'],
@@ -422,7 +426,7 @@ else
 
 				'RESYNC'	=> $cfiles ? href('a_img', $file, array('mode' => 'rescny_cat', $cat => $cid), 'icon_resync', 'common_resync') : img('i_icon', 'icon_resync2', 'common_resync'),
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', $cat => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', $cat => $cid), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', $cat => $cid), 'icon_cancel', 'com_delete'),
 				
 				'S_NAME'	=> "file_name[$cid]",
 				'S_SUBMIT'	=> "add_file[$cid]",
@@ -457,7 +461,7 @@ else
 							
 							'U_RESYNC' => check_sid("$file?mode=_resync&amp;$url=$file_id"),
 							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$file_id") . '"><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
-							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$file_id") . '"><img src="' . $images['icon_cancel'] . '" title="' . $lang['common_delete'] . '" alt="" /></a>',
+							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$file_id") . '"><img src="' . $images['icon_cancel'] . '" title="' . $lang['com_delete'] . '" alt="" /></a>',
 						));
 					}
 				}
@@ -468,7 +472,7 @@ else
 
 	$template->pparse('body');
 			
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

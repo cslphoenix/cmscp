@@ -20,7 +20,8 @@ if ( isset($_POST['type']) )
 	$sql = "SELECT * FROM " . FORUM . " ORDER BY main ASC, forum_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$tmp_db = $db->sql_fetchrowset($result);
 				
@@ -78,7 +79,7 @@ if ( isset($_POST['type']) )
 }
 else
 {
-	echo sprintf($lang['sprintf_select_format'], $lang['msg_empty_forums']);
+	echo sprintf($lang['stf_select_format'], $lang['msg_empty_forums']);
 }
 
 ?>

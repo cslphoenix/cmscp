@@ -1,4 +1,4 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -20,11 +20,8 @@ function setRequest(value, meta, name)
 		var url = "ajax/ajax_path.php";
 		
 		request.open('post', url, true);
-		
 		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		
 		request.send('cat='+value);
-		
 		request.onreadystatechange = interpretRequest;
 	}
 }

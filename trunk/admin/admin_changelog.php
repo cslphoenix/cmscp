@@ -30,13 +30,13 @@ else
 	$mode		= request('mode', TXT);
 	$move		= request('move', INT);
 	$dir_path	= $root_path . $settings['path_games'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['game']);
+	$acp_title	= sprintf($lang['stf_head'], $lang['game']);
 	$fields	= '';
 	
 	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
 	{
 		log_add(LOG_ADMIN, SECTION_CASH, 'auth_fail' . $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 	}
 	
 	( $header ) ? redirect('admin/' . check_sid('admin_changelog.php', true)) : false;
@@ -69,8 +69,8 @@ else
 			$fields = '<input type="hidden" name="mode" value="' . $new_mode . '" /><input type="hidden" name="' . POST_AUTHLIST . '" value="' . $authlist_id . '" />';
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['authlist']),
-				'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['authlist_field']),
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['authlist']),
+				'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['authlist_field']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
 				
 				'L_RESET'		=> $lang['common_reset'],
@@ -178,8 +178,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['authlist_name']),
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['authlist_name']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -201,7 +201,7 @@ else
 			$fields .= '<input type="hidden" name="mode" value="create" />';
 					
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['changelog']),
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['changelog']),
 				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['changelog']),
 				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['changelog']),
 				'L_EXPLAIN'		=> $lang['changelog_explain'],
@@ -232,6 +232,6 @@ else
 
 	$template->pparse('body');
 
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 ?>

@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_network',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_network', 'auth' => 'auth_network'),
+			'main'	=> array('title' => 'acp_network'),
 		)
 	);
 }
@@ -22,6 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('network');
+	acl_auth('a_network');
 
 	$error	= '';
 	$index	= '';
@@ -40,13 +41,7 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_network']['path'];
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_network'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -54,12 +49,11 @@ else
 		'body'		=> 'style/acp_network.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
+
+#	debug($_POST, '_POST');
 	
 	$mode = (in_array($mode, array('create', 'update', 'order', 'delete'))) ? $mode : false;
-	
-#	debug($_POST, '_POST');
-#	debug($_FILES, '_FILES');
-	
+
 	if ( $mode )
 	{
 		switch ( $mode )
@@ -141,7 +135,7 @@ else
 						else
 						{
 							$sql = sql(NETWORK, $mode, $data_sql, 'network_id', $data);
-							$msg = sprintf($lang['update'], $info) . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode&id=$data"));
+							$msg = sprintf($lang['update'], $info) . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -162,8 +156,8 @@ else
 			#	$fields .= "<input type=\"hidden\" name=\"current_image\" value=\"{$data_sql['network_image']}\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_' . $mode], $lang['title'], lang($data_sql['network_name'])),
-					'L_EXPLAIN'	=> $lang['common_required'],
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['network_name'])),
+					'L_EXPLAIN'	=> $lang['com_required'],
 				
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -207,8 +201,8 @@ else
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 		
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], sprintf($lang['confirm'], $info), $data['network_name']),
+						'M_TITLE'	=> $lang['com_confirm'],
+						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], sprintf($lang['confirm'], $info), $data['network_name']),
 						
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -226,7 +220,7 @@ else
 	
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -236,16 +230,16 @@ else
 	$fields .= '<input type="hidden" name="mode" value="create" />';
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 		
 		'L_LINK'	=> $lang['network_link'],
 		'L_PARTNER'	=> $lang['network_partner'],
 		'L_SPONSOR'	=> $lang['network_sponsor'],
 		
-		'L_CREATE_LINK'		=> sprintf($lang['sprintf_new_createn'], $lang['network_link']),
-		'L_CREATE_PARTNER'	=> sprintf($lang['sprintf_new_createn'], $lang['network_partner']),
-		'L_CREATE_SPONSOR'	=> sprintf($lang['sprintf_new_createn'], $lang['network_sponsor']),
+		'L_CREATE_LINK'		=> sprintf($lang['stf_create'], $lang['network_link']),
+		'L_CREATE_PARTNER'	=> sprintf($lang['stf_create'], $lang['network_partner']),
+		'L_CREATE_SPONSOR'	=> sprintf($lang['stf_create'], $lang['network_sponsor']),
 				
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
@@ -282,7 +276,7 @@ else
 				'MOVE_DOWN'	=> ( $order != $max_link )	? href('a_img', $file, array('mode' => '_order', 'type' => NAVI_MAIN, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 			));
 		}
 	}
@@ -310,7 +304,7 @@ else
 				'MOVE_DOWN'	=> ( $order != $max_partner )	? href('a_img', $file, array('mode' => 'order', 'type' => NAVI_MAIN, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 			));
 		}
 	}
@@ -338,14 +332,14 @@ else
 				'MOVE_DOWN'	=> ( $order != $max_sponsor )	? href('a_img', $file, array('mode' => '_order', 'type' => NAVI_MAIN, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 				
 				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 			));
 		}
 	}
 		
 	$template->pparse('body');
 			
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

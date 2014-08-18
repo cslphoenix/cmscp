@@ -19,7 +19,8 @@ if ( isset($_POST['cat']) )
 	$sql = 'SELECT * FROM ' . MAPS . ' WHERE map_id = ' . $cat . ' ORDER BY main ASC, map_order ASC';
 	if ( !($result = $db->sql_query($sql)) )
 	{
-		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+		exit;
 	}
 	$tmp_db = $db->sql_fetchrow($result);
 	
@@ -58,7 +59,7 @@ if ( isset($_POST['cat']) )
 				
 				$mask = str_replace(substr($row, strrpos($row, '.')), "", $row);
 	
-				$opt .= '<option value="' . $row . '">' . sprintf($lang['sprintf_select_format'], $mask) . '</option>';
+				$opt .= '<option value="' . $row . '">' . sprintf($lang['stf_select_format'], $mask) . '</option>';
 			}
 			
 			$opt .= '</select><br /><img src="' . $current_image . '" id="image2" alt="" /></div><div id="ajax_content"></div>';

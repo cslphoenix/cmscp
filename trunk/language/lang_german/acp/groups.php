@@ -7,61 +7,55 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'title'		=> 'Benutzergruppe',
-	'titles'	=> 'Benutzergruppen',
+	'title'			=> 'Benutzergruppe',
+	'titles'		=> 'Benutzergruppen',
 	
-	'explain'	=> 'Hier kannst du die Gruppen Verwalten.',
-	'explain_o'	=> 'Hier sind alle Gruppen aufgelistet die es gibt.',
-	
-	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
-	
-	'input_data'	=> 'Gruppendaten',
+	'explain'		=> 'Hier kannst du die Gruppen Verwalten.',
+	'explain_user'	=> 'Benutzer verwalten',
+
+	'data_input'	=> 'Gruppendaten',	
 	
 	'group_name'	=> 'Name',
-	'group_mod'		=> 'Moderator',
-	'group_access'	=> 'Zugriffslevel',
-	'group_type'	=> 'Anfragentyp',
 	'group_desc'	=> 'Beschreibung',
-	'group_color'	=> 'Farbe',
+	'group_access'	=> 'Benutzerlevel',
+	'group_type'	=> 'Anfragentyp',
 	'group_legend'	=> 'Legende',
+	'group_color'	=> 'Farbe',
 	'group_rank'	=> 'Rang',
 	'group_image'	=> 'Bild',
-	'group_order'	=> 'Reihenfolge',
 	
-	'count'		=> 'Mitgliederanzahl',
-	'view_member'	=> 'Mitglieder Übersicht',
-	
-	'group_allowed'		=> 'Ja',
-	'group_disallowed'	=> 'Nein',
-	
-	'select_group_mod'	=> '&raquo; Gruppenmoderator auswählen',
-	'Group_DEFAULT'	=> 'Vorgabe',
-	'Group_SPECIAL'	=> 'Spezial',
-	
+	'group_open'	=> 'Offen',
+	'group_request'	=> 'Anfragen',
+	'group_closed'	=> 'Geschlossen',
+	'group_hidden'	=> 'Versteckt',
+	'group_system'	=> 'System',
 
-	'group_open'		=> 'Offen',
-	'group_request'		=> 'Anfragen',
-	'group_closed'		=> 'Geschlossen',
-	'group_hidden'		=> 'Versteckt',
-	'group_system'		=> 'System',
-	
-	'change'			=> 'Rechte geben/nehmen',
-	'request_agree'		=> 'Antrag zustimmen',
-	'request_deny'		=> 'Antrag verweigern',
-	
-	'pending_members'	=> 'wartende Mitglieder',
-	
+	'request_agree'	=> 'Antrag zustimmen',
+	'request_deny'	=> 'Antrag verweigern',
+
 	'member'		=> 'Gruppenmitglied',
 	'members'		=> 'Gruppenmitglieder',
 	'moderator'		=> 'Gruppenmoderator',
 	'moderators'	=> 'Gruppenmoderatoren',
+	'pending'		=> 'wartende Mitglieder',
 	
+	'type_main'		=> 'Hauptgruppe',
 	
+	'mod'			=> 'Moderatorenstatus',
+	'main'			=> 'Hauptgruppe setzen',
+	
+	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
+	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
+	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
+	
+	'users_count'	=> 'Mitgliederanzahl',
+	
+	'notice_select_default'		=> 'zur Hauptgruppe machen',
 
 ));
 
 $lang = array_merge($lang, array(
-	
+/*	
 	'group_access_ary'	=> array(
 		USER	=> 'Benutzer',
 		TRIAL	=> 'Trial',
@@ -77,7 +71,7 @@ $lang = array_merge($lang, array(
 		GROUP_HIDDEN	=> $lang['group_hidden'],
 		GROUP_SYSTEM	=> $lang['group_system'],
 	),
-	
+*/	
 	'radio:type'	=> array(
 		GROUP_OPEN		=> $lang['group_open'],
 		GROUP_REQUEST	=> $lang['group_request'],
@@ -85,11 +79,20 @@ $lang = array_merge($lang, array(
 		GROUP_HIDDEN	=> $lang['group_hidden'],
 		GROUP_SYSTEM	=> $lang['group_system'],
 	),
+	
+	'radio:access'	=> array(
+		USER	=> $lang['auth_user'],
+		TRIAL	=> $lang['auth_trial'],
+		MEMBER	=> $lang['auth_member'],
+		MOD		=> $lang['auth_mod'],
+		ADMIN	=> $lang['auth_admin'],
+	),
+	
 ));
 
 $lang = array_merge($lang, array(
 	
-	'radio:legend'	=> array(1 => $lang['common_view'], 0 => $lang['common_noview']),
+	'radio:legend'	=> array(1 => $lang['com_view'], 0 => $lang['com_noview']),
 	
 ));
 

@@ -5,8 +5,11 @@ if ( !empty($setmodules) )
 	return array(
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_cash',
+		'cat'		=> 'teams',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_cash'),
+			'bank'	=> array('title' => 'acp_cashbank'),
+			'user'	=> array('title' => 'acp_cashuser'),
+			'type'	=> array('title' => 'acp_cashtype'),
 		)
 	);
 }
@@ -14,63 +17,52 @@ else
 {
 	define('IN_CMS', true);
 
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
+	$cancel = ( isset($_POST['cancel']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
+	
 	$current	= 'acp_cash';
 	
 	include('./pagestart.php');
 	
 	add_lang('cash');
+	acl_auth(array('a_cashtype', 'a_cashuser', 'a_cashuser_create', 'a_cashuser_delete'));
 	
 	$error	= '';
 	$index	= '';
 	$fields	= '';
 	
 	$log	= SECTION_CASH;
-	$url	= POST_CASH_USER;
-	$cat	= POST_CASH;
-	$file	= basename(__FILE__);
 	$time	= time();
 	
-	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
-	$start	= ( $start < 0 ) ? 0 : $start;
+	$data	= request('id', INT);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
+	$sub	= request('sub', TYP);
+	$subs	= request('subs', TYP);
+	$mode	= request('mode', TYP);
+	$sort	= request('sort', TYP) ;
+	$type	= request('type', TYP);
+	$accept	= request('accept', TYP);
+	$action	= request('action', TYP);
 	
-	$data_id	= request($url, INT);
-	$data_cat	= request($cat, INT);
-	$confirm	= request('confirm', TXT);
-	$mode		= request('mode', TXT);
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_cash'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
-	
-	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_cash.tpl',
-	#	'error'		=> 'style/info_error.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	$mode = (in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata', 'bankdata_delete'))) ? $mode : false;
+	debug($_POST, 'post');
 	
-		debug($_POST, 'post');
-	
-	$test = '101010101010';
+#	$mode = (in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata', 'bankdata_delete'))) ? $mode : false;
+#	$test = '101010101010';
 	
 #	debug(explode('', $test));
-	
 #	for ($i = 0; $i < strlen($test); $i++)
-#    $tests[] = $test{$i};
-	
-	debug(str_split($test));
-	
-
-	
-	debug($_POST);
+#	$tests[] = $test{$i};
+#	debug(str_split($test));
 	
 	switch ( $mode )
 	{
@@ -80,12 +72,15 @@ else
 			$template->assign_block_vars('input', array());
 			
 			$vars = array(
-				'user' => array(
-					'title1' => 'input_data',
-					'user_id'		=> array('validate' => TXT,	'explain' => false,	'type' => 'ajax:25;25', 'required' => 'input_user', 'params' => array('user', 0, 2)),
-					'user_amount'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5', 'required' => 'input_amount'),
-					'user_interval'	=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:interval'),
-					'user_month'	=> array('validate' => ARY,	'type' => 'check:months'),
+				$action => array(
+					'title' => 'data_input',
+					'cash_name'		=> array('validate' => TXT,	'explain' => false,	'type' => ($action == 'user' ? 'ajax:25;25' : 'text:25;25'), 'required' => ($action == 'user' ? 'input_user' : 'input_name'), 'params' => ($action == 'user' ? array('user:0:5') : '')),
+					'cash_type'		=> ($action == 'type' ? array('validate' => INT, 'explain' => false, 'type' => 'radio:ctype', 'params' => array(false, true, false)) : 'hidden'),
+					'cash_amount'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5;5', 'required' => 'input_amount'),
+					'cash_interval'	=> array('validate' => INT,	'explain' => false,	'type' => "radio:$action", 'params' => array(false, true, false)),
+					'cash_month'    => ($action == 'user' ? array('validate' => ARY, 'explain' => false, 'type' => 'check:months', 'required' => 'select_month') : 'hidden'),
+					'type'			=> 'hidden',
+					'cash_paid'		=> 'hidden',
 					'time_create'	=> 'hidden',
 					'time_update'	=> 'hidden',
 				),
@@ -94,35 +89,39 @@ else
 			if ( $mode == 'create' && !$submit )
 			{
 				$data_sql = array(
-					'user_id'		=> request('user_name', TXT),
-					'user_amount'	=> '',
-					'user_month'	=> date("n", $time),
-					'user_interval'	=> 1,
+					'cash_name'		=> ($action == 'type') ? request('cash_type', TXT) : request('user_name', TXT),
+					'cash_type'		=> 0,
+					'cash_amount'	=> '',
+					'cash_interval'	=> 0,
+					'cash_month'	=> ($action == 'user') ? serialize(array(date("n", $time) => date("n", $time))) : '',
+					'type'			=> ($action == 'user') ? 1 : 0,
+					'cash_paid'		=> 'a:0:{}',
 					'time_create'	=> $time,
 					'time_update'	=> 0,
 				);
 			}
 			else if ( $mode == 'update' && !$submit )
 			{
-				$data_sql = data(CASH_USER, $data_id, false, 2, true);
+				$data_sql = data(CASH2, $data, false, 1, true);
 			}
 			else
 			{
-				$data_sql = build_request(CASH_USER, $vars, $error, $mode);
+				$data_sql = build_request(CASH2, $vars, $error, $mode);
 				
 				if ( !$error )
 				{
-					$data['user_id'] = ( !is_numeric($data['user_id']) ) ? ( $data['user_id'] != '' ) ? search_user('id', $data['user_id']) : '' : $data['user_id'];
+					$data_sql['cash_type']	= ($data_sql['type']) ? search_user('id', $data_sql['cash_name']) : 0;
+					$data_sql['cash_month']	= ($data_sql['type']) ? $data_sql['cash_month'] : '';
 					
 					if ( $mode == 'create' )
 					{
-						$sql = sql(CASH_USER, $mode, $data_sql);
+						$sql = sql(CASH2, $mode, $data_sql);
 						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
 					else
 					{
-						$sql = sql(CASH_USER, $mode, $data_sql, 'cash_user_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$sql = sql(CASH2, $mode, $data_sql, 'cash_id', $data);
+						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid($file));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -134,19 +133,21 @@ else
 				}
 			}
 			
-			build_output($data, $vars, 'input', false, CASH_USER);
+			debug($data_sql);
+			
+			build_output(CASH2, $vars, $data_sql);
+			
+			$fields = build_fields(array(
+				'mode'	=> $mode,
+				'id'	=> $data,
+			));
 
-			$user_name = '';
-			
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-			
 			$template->assign_vars(array(
-				'L_HEAD'			=> sprintf($lang['sprintf_head'], $lang['title']),
-				'L_INPUT'			=> sprintf($lang["sprintf_{$mode}"], $lang['user'], $user_name),
+				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang[$action], $data_sql['cash_name']),
+				'L_EXPLAIN'	=> $lang['com_required'],
 
-				'S_ACTION'			=> check_sid($file),
-				'S_FIELDS'			=> $fields,
+				'S_ACTION'	=> check_sid($file),
+				'S_FIELDS'	=> $fields,
 			));
 			
 			break;
@@ -165,7 +166,7 @@ else
 				
 				$message = $lang['delete_user'] . sprintf($lang['return'], check_sid($file), $acp_title);
 				
-				log_add(LOG_ADMIN, $log, $mode, $data['user_name']);
+				log_add(LOG_ADMIN, $log, $mode, $data['cash_name']);
 				message(GENERAL_MESSAGE, $message);
 			}
 			else if ( $data_user && !$confirm )
@@ -176,8 +177,8 @@ else
 				$fields .= '<input type="hidden" name="' . $url_u . '" value="' . $data_user . '" />';
 				
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm_user'], $data['user_name']),
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm_user'], $data['cash_name']),
 
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -248,7 +249,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'			=> $acp_title,
-				'L_INPUT'			=> sprintf($lang['sprintf_' . $mode], $lang['cash_reason'], $data['cash_name']),
+				'L_INPUT'			=> sprintf($lang['stf_' . $mode], $lang['cash_reason'], $data['cash_name']),
 				
 				'S_ACTION'			=> check_sid($file),
 				'S_FIELDS'			=> $fields,
@@ -276,8 +277,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['common_confirm'],
-					'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['cash_name']),
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['cash_name']),
 
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -372,7 +373,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['sprintf_head'], $lang['title']),
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
 				'L_BANKDATA'	=> $lang['cash_bank'],
 				
 				'S_ACTION'		=> check_sid($file),
@@ -412,7 +413,7 @@ else
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 	
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['common_confirm'],
+					'M_TITLE'	=> $lang['com_confirm'],
 					'M_TEXT'	=> $lang['confirm_bank'],
 
 					'S_ACTION'	=> check_sid($file),
@@ -423,148 +424,165 @@ else
 			break;
 		
 		default:
-			
-			$template->assign_block_vars('display', array());
+		
+			$template->assign_block_vars($action, array());
+		
+			$fields	= '<input type="hidden" name="mode" value="create" />';
 			
 			$postage_cash = $postage_cashuser = 0;
-			
-			$cash = data(CASH, false, true, 0, false);
-			$bank = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
-			
-			$sql = "SELECT cu.*, u.user_name, u.user_color
-						FROM " . CASH_USER . " cu
-							LEFT JOIN " . USERS . " u ON cu.user_id = u.user_id
-						WHERE u.user_id <> " . ANONYMOUS . "
-					ORDER BY cu.user_id, cu.user_interval";
-			if ( !($result = $db->sql_query($sql)) )
+		
+			switch ( $action )
 			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			$user = $db->sql_fetchrowset($result);
-			
-			if ( !$cash )
-			{
-				$template->assign_block_vars('display.empty', array());
-			}
-			else
-			{
-				$cnt_cash = count($cash);
+				case 'bank':
 				
-				for ( $i = 0; $i < $cnt_cash; $i++ )
-				{
-					$id		= $cash[$i]['cash_id'];
-					$name	= $cash[$i]['cash_name'];
-					$type	= $cash[$i]['cash_type'];
-					$amount	= $cash[$i]['cash_amount'];
-					$val	= $cash[$i]['cash_interval'];
-					
-					$template->assign_block_vars('display.cash_row', array(
-						'NAME'		=> href('a_txt', $file, array('mode' => 'update_cat', $cat => $id), $name, $name),
-						'TYPE'		=> ( $type != '0' ) ? ( ( $type == '1' ) ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_other', '') ) : img('i_icon', 'icon_match', ''),
-						'AMOUNT'	=> $amount,
-						
-						'DATE'		=> ( $val != 2 ) ? ( $val != 1 ) ? $lang['interval_month'] : $lang['interval_weeks'] : $lang['interval_weekly'],
-						
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', $cat => $id), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', $cat => $id), 'icon_cancel', 'common_delete'),
+					$bank = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
+				
+					$template->assign_vars(array(
+						'HOLDER'	=> $bank['bank_data']['bank_holder']['value'],
+						'NAME'		=> $bank['bank_data']['bank_name']['value'],
+						'BLZ'		=> $bank['bank_data']['bank_blz']['value'],
+						'NUMBER'	=> $bank['bank_data']['bank_number']['value'],
+						'REASON'	=> $bank['bank_data']['bank_reason']['value'],
 					));
-					
-				#	$postage_cash += ( $val != 2 ) ? ( $val != 1 ) ? $amount : 2 * str_replace(',', '.', $amount) : 4 * str_replace(',', '.', $amount);
-				}
-			}
-			
-			if ( !$user )
-			{
-				$template->assign_block_vars('display.empty_user', array());
-			}
-			else
-			{
-				$cnt_user = count($user);
 				
-				for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, $cnt_user); $i++ )
-				{
-					$uid	= $user[$i]['cash_user_id'];
-					$month_cur	= date("m", $time);
-					$month_user	= explode(', ', $user[$i]['user_month']);
+					break;
 					
-					if ( $month_cur == $month_user || in_array($month_cur, $month_user) )
-					{
-						$postage_cashuser += $user[$i]['user_amount'];
-					}
-					else if ( !$user[$i]['user_interval'] && in_array($month_cur, $month_user) )
-					{
-						$postage_cashuser += $user[$i]['user_amount'];
-					}
-					
-					$lng	= ( $user[$i]['time_update'] ) ? 'update' : 'create';
-					$time	= ( $user[$i]['time_update'] ) ? $user[$i]['time_update'] : $user[$i]['time_create'];
-										
-					$template->assign_block_vars('display.user_row', array(
-						'USER'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $uid), $user[$i]['user_name'], $user[$i]['user_name']),
-						
-						'MONTH'		=> $user[$i]['user_month'],
-						'AMOUNT'	=> $user[$i]['user_amount'],
-						'INTERVAL'	=> $user[$i]['user_interval'] ? $lang['interval_only'] : $lang['interval_month'],
-						
-						'TIME'		=> sprintf('%s: %s', $lang[$lng], create_date($userdata['user_dateformat'], $time, $userdata['user_timezone'])),
-						
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $uid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $uid), 'icon_cancel', 'common_delete'),
-					));
-				}
+				case 'user':
 				
-				$current_page = $cnt_user ? ceil($cnt_user/$settings['per_page_entry']['acp']) : 1;
+					$sql = "SELECT c.*, u.user_name, u.user_color
+								FROM " . CASH2 . " c
+									LEFT JOIN " . USERS . " u ON c.cash_type = u.user_id
+								WHERE u.user_id <> " . ANONYMOUS . " AND c.type = 1
+							ORDER BY c.cash_type, c.cash_interval";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$user = $db->sql_fetchrowset($result);
+					
+					if ( !$user )
+					{
+						$template->assign_block_vars("$action.empty", array());
+					}
+					else
+					{
+						$cnt_user = count($user);
+						
+						for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, $cnt_user); $i++ )
+						{
+							$id			= $user[$i]['cash_id'];							
+							$uid		= $user[$i]['cash_type'];
+							$month_cur	= date("m", $time);
+							$cash_month = unserialize($user[$i]['cash_month']);
+							$month_user	= implode(', ', $cash_month);
+							
+							if ( $month_cur == $month_user || in_array($month_cur, $cash_month) )
+							{
+								$postage_cashuser += $user[$i]['cash_amount'];
+							}
+							else if ( !$user[$i]['cash_interval'] && in_array($month_cur, $cash_month) )
+							{
+								$postage_cashuser += $user[$i]['cash_amount'];
+							}
+							
+							$time = ( $user[$i]['time_update'] ) ? $user[$i]['time_update'] : $user[$i]['time_create'];
+												
+							$template->assign_block_vars("$action.row", array(
+								'USER'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $user[$i]['cash_name'], $user[$i]['cash_name']),
+								
+								'MONTH'		=> $month_user,
+								'AMOUNT'	=> $user[$i]['cash_amount'],
+								'INTERVAL'	=> $user[$i]['cash_interval'] ? $lang['interval_only'] : $lang['interval_month'],
+								
+								'TIME'		=> sprintf('%s: %s', lang(($user[$i]['time_update']) ? 'cupdate' : 'ccreate'), create_date($userdata['user_dateformat'], $time, $userdata['user_timezone'])),
+								
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+							));
+						}
+						
+						$current_page = $cnt_user ? ceil($cnt_user/$settings['per_page_entry']['acp']) : 1;
+					}
+				
+					break;
+					
+				case 'type':
+				
+					$type = data(CASH2, 'type = 0', false, 1, false);
+				
+					if ( !$type )
+					{
+						$template->assign_block_vars("$action.empty", array());
+					}
+					else
+					{
+						foreach ( $type as $row )
+						{
+							$id		= $row['cash_id'];
+							$name	= $row['cash_name'];
+							$type	= $row['cash_type'];
+							$amount	= $row['cash_amount'];
+							$val	= $row['cash_interval'];
+							
+							$template->assign_block_vars("$action.row", array(
+								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
+								'TYPE'		=> ( $type != '0' ) ? ( ( $type == '1' ) ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_other', '') ) : img('i_icon', 'icon_match', ''),
+								'AMOUNT'	=> $amount,
+								
+								'DATE'		=> ( $val != 2 ) ? ( $val != 1 ) ? $lang['interval_month'] : $lang['interval_weeks'] : $lang['interval_weekly'],
+								
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', 'id' => $id), 'icon_update', 'common_update'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', 'id' => $id), 'icon_cancel', 'com_delete'),
+							));
+							
+							$postage_cash += ( $val != 2 ) ? ( $val != 1 ) ? $amount : 2 * str_replace(',', '.', $amount) : 4 * str_replace(',', '.', $amount);
+						}
+					}
+				
+					break;
 			}
-			
-			if ( $bank['bank_data']['bank_holder']['value'] || $bank['bank_data']['bank_name']['value'] || $bank['bank_data']['bank_blz']['value'] || $bank['bank_data']['bank_number']['value'] || $bank['bank_data']['bank_reason']['value'] )
-			{
-				$template->assign_block_vars('display.bank', array(
-					'HOLDER'	=> $bank['bank_data']['bank_holder']['value'],
-					'NAME'		=> $bank['bank_data']['bank_name']['value'],
-					'BLZ'		=> $bank['bank_data']['bank_blz']['value'],
-					'NUMBER'	=> $bank['bank_data']['bank_number']['value'],
-					'REASON'	=> $bank['bank_data']['bank_reason']['value'],
-				));
-			}
-			
-			$postage		= $postage_cashuser - $postage_cash;
-			$postage_class	= ( $postage < 0 ) ? ( $postage > 0 ) ? 'draw' : 'lose' : 'win';
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> $acp_title,
-				'L_CREATE'		=> sprintf($lang['sprintf_create'], $lang['cash_reason']),
-				'L_CREATE_USER'	=> sprintf($lang['sprintf_create'], $lang['cash_user']),
-				'L_CREATE_BANK'	=> $lang['cash_bank'],
-				'L_EXPLAIN'		=> $lang['explain'],
-				
-				'L_BANK'		=> $lang['bank_data'],
+				'L_HEAD'		=> sprintf($lang['stf_head'], $lang[$action]),
+				'L_CREATE'		=> sprintf($lang['stf_create'], $lang[$action]),
+			#	'L_CREATE'		=> sprintf($lang['stf_create'], $lang['cash_reason']),
+			#	'L_CREATE_USER'	=> sprintf($lang['stf_create'], $lang['cash_user']),
+			#	'L_CREATE_BANK'	=> $lang['cash_bank'],
+			#	'L_EXPLAIN'		=> $lang['explain'],
+			
 				'L_REASON'		=> $lang['cash_reason'],
-			#	'L_NAME'		=> $lang['cash_name'],
-				'L_USERNAME'	=> $lang['user_name'],
-				'L_INTERVAL'	=> $lang['interval'],
-				'L_POSTAGE'		=> $lang['postage'],
-			#	'L_BD'			=> $lang['cash_bankdata'],
-				'L_HOLDER'		=> $lang['bank_holder'],
-				'L_NAME'		=> $lang['bank_name'],
-				'L_BLZ'			=> $lang['bank_blz'],
-				'L_NUMBER'		=> $lang['bank_number'],
-				'L_REASON'		=> $lang['bank_reason'],
-				'L_DELETE'		=> $lang['bank_delete'],
+				'L_INTERVAL'	=> $lang['cash_interval'],
+				'L_POSTAGE'		=> $lang['cash_postage'],
 				
-				'POSTAGE'			=> $postage,
-			#	'POSTAGE_CASH'		=> $postage_cash,
+			#	'L_BANK'		=> $lang['bank_data'],
+			#	
+			#	'L_NAME'		=> $lang['cash_name'],
+			#	'L_USERNAME'	=> $lang['cash_name'],
+			#	
+			#	
+			#	'L_BD'			=> $lang['cash_bankdata'],
+			#	'L_HOLDER'		=> $lang['bank_holder'],
+			#	'L_NAME'		=> $lang['bank_name'],
+			#	'L_BLZ'			=> $lang['bank_blz'],
+			#	'L_NUMBER'		=> $lang['bank_number'],
+			#	'L_REASON'		=> $lang['bank_reason'],
+			#	'L_DELETE'		=> $lang['bank_delete'],
+				
+				'POSTAGE'			=> $postage_cashuser,
+				'POSTAGE_CASH'		=> $postage_cash,
 			#	'POSTAGE_CASHUSER'	=> $postage_cashuser,
 			#	'POSTAGE_CLASS'		=> $postage_class,
 				
-				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], (floor($start/$settings['per_page_entry']['acp'])+1), $current_page),
-				'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_user, $settings['per_page_entry']['acp'], $start),
+			#	'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], (floor($start/$settings['per_page_entry']['acp'])+1), $current_page),
+			#	'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_user, $settings['per_page_entry']['acp'], $start),
 
-				
 			#	'S_CREATE_USER_BOX'	=> select_box('user', 'selectsmall', 'user_id', 'user_name'),
-				'S_BANKDATA'		=> check_sid("$file?mode=bankdata"),				
-				'S_CREATE_USER'		=> check_sid("$file?mode=create"),
-				'S_CREATE'			=> check_sid("$file?mode=create_cat"),
-				'S_ACTION'			=> check_sid($file),
+			#	'S_BANKDATA'		=> check_sid("$file?mode=bankdata"),				
+			#	'S_CREATE_USER'		=> check_sid("$file?mode=create"),
+			#	'S_CREATE'			=> check_sid("$file?mode=create_cat"),
+				
+				'S_ACTION'	=> check_sid($file),
+				'S_FIELDS'	=> $fields,
 			));
 			
 			break;
@@ -572,7 +590,7 @@ else
 
 	$template->pparse('body');
 	
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

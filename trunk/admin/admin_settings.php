@@ -43,14 +43,10 @@ else
 #	$mode	= request('mode', TYP);
 	$mode	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-
-	if ( $userdata['user_level'] != ADMIN && !$userdata['user_founder'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	debug($_POST, '_POST');
 	
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+
 	$mode = (in_array($mode, array('default', 'calendar', 'module', 'subnavi', 'upload', 'other', 'match', 'gallery', 'smain', 'rating', 'ftp', 'phpinfo')) ) ? $mode : 'default';
 	
 	$s_mode = '<select name="action" onkeyup="if (this.options[this.selectedIndex].value != \'\') this.form.submit();" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
@@ -260,28 +256,30 @@ else
 						// Kalendereinstellungen
 						'calendar' => array(
 							'tab1'	=> 'calendar',
-							'show'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:calview', 'params' => array(false, true, false)),
-							'time'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'cache'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'start'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
-							'bday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'news'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'event'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'match'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'train'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:calview', 'params' => array('type', true, 'compact')),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
+							'compact'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+							'birthday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'news'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'training'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 						// Minikalendereinstellungen
 						'module_calendar' => array(
 							'tab2'	=> 'module_calendar',
-							'show'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'time'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'cache'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'start'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
-							'bday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'news'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'event'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'match'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'train'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
+							'compact'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'birthday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'news'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'training'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 					);
 					
@@ -302,7 +300,7 @@ else
 							'dimension'		=> array('validate' => INT, 'type' => 'double:4;5'),
 							'format'		=> array('validate' => INT, 'type' => 'double:4;5'),
 							'preview'		=> array('validate' => INT, 'type' => 'double:4;5'),
-							'preview_list'	=> array('validate' => INT, 'type' => 'radio:gallery'),
+							'acpview'		=> array('validate' => INT, 'type' => 'radio:acpview'),
 						)
 					);
 					
@@ -452,6 +450,7 @@ else
 							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'period'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:period', 'params' => array(false, true, false)),
 							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
@@ -461,6 +460,7 @@ else
 							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'period'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:period', 'params' => array(false, true, false)),
 							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
@@ -472,7 +472,7 @@ else
 					
 					$vars = array(
 						'per_page_entry' => array(
-							'tab' => 'path_games',
+							'tab' => 'per_page_entry',
 							'site'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'comments'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'ucp'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
@@ -481,46 +481,53 @@ else
 							'index'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						'comments' => array(
-							'tab' => 'path_games',
+							'tab' => 'comments',
 							'news'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'news_guest'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'event'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'event_guest'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'match'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'match_guest'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'train'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'training'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 						'lobby' => array(
-							'tab' => 'path_games',
-							'date'			=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;15'),
-							'news_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'event_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'match_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'train_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'news_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'event_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'match_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'train_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'tab' => 'lobby',
+							'date'				=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;15'),
+							'news_limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'event_limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'match_limit'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'training_limit'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'news_future'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'event_future'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'match_future'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'training_future'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						'spam_comments' => array(
-							'tab' => 'path_games',
+							'tab' => 'spam_comments',
 							'news'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'event'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'match'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'train'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'training'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						'news' => array(
-							'tab' => 'path_games',
+							'tab' => 'news',
 							'browse'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:news'),
 							'limit'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'words'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 						),
 						'userlist' => array(
-							'tab' => 'path_games',
+							'tab' => 'userlist',
 							'groups'		=> array('validate' => TXT,	'explain' => false,	'type' => 'radio:yesno'),
 							'teams'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'mail'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'private'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+						),
+						'switch' => array(
+							'tab' => 'switch',
+							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:switch'),
+							'training'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:switch'),
+							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:switch'),
+							'news'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:switch'),
 						),
 					);
 					
@@ -530,31 +537,31 @@ else
 					
 					$vars = array(
 						'rating_news' => array(
-							'tab' => 'path_games',
-							'site'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'ucp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'mcp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'acp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'index'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'tab' => 'rating_news',
+							'status'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_s'),
+							'images'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_i'),
+							'guests'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_g'),
+							'number'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:4;5'),
+							'maximal'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:4;5'),
+							'fullstep'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_f'),
 						),
 						'rating_gallery' => array(
-							'tab' => 'path_games',
-							'site'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'ucp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'mcp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'acp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'index'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'tab' => 'rating_gallery',
+							'status'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_s'),
+							'images'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_i'),
+							'guests'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_g'),
+							'number'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:4;5'),
+							'maximal'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:4;5'),
+							'fullstep'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_f'),
 						),
 						'rating_downloads' => array(
-							'tab' => 'path_games',
-							'site'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'comments'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'ucp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'mcp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'acp'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
-							'index'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'tab' => 'rating_downloads',
+							'status'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_s'),
+							'images'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_i'),
+							'guests'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_g'),
+							'number'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:4;5'),
+							'maximal'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:4;5'),
+							'fullstep'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:rate_f'),
 						),
 					);
 					
@@ -639,29 +646,27 @@ else
 					$vars = array(
 						'smain' => array(
 							'tab1'	=> 'dl',
-							'dl_switch'			=> array('validate' => INT, 'type' => 'radio:switch'),
+							'dl_switch'			=> array('validate' => INT, 'type' => 'radio:smain'),
 							'dl_entrys'			=> array('validate' => INT, 'type' => 'radio:yesno'),
 							'tab2'	=> 'profile',
-							'profile_switch'	=> array('validate' => INT, 'type' => 'radio:switch'),
+							'profile_switch'	=> array('validate' => INT, 'type' => 'radio:smain'),
 							'profile_entrys'	=> array('validate' => INT, 'type' => 'radio:yesno'),
 							'tab3'	=> 'gallery',
-							'gallery_switch'	=> array('validate' => INT, 'type' => 'radio:switch'),
+							'gallery_switch'	=> array('validate' => INT, 'type' => 'radio:smain'),
 							'gallery_entrys'	=> array('validate' => INT, 'type' => 'radio:yesno'),
 							'tab4'	=> 'forum',
-							'forum_switch'		=> array('validate' => INT, 'type' => 'radio:switch'),
+							'forum_switch'		=> array('validate' => INT, 'type' => 'radio:smain'),
 							'forum_entrys'		=> array('validate' => INT, 'type' => 'radio:yesno'),
-							'forum_subs'		=> array('validate' => INT, 'type' => 'radio:yesno'),
+						#	'forum_subs'		=> array('validate' => INT, 'type' => 'radio:yesno'),
 							'tab5'	=> 'menu',
-							'menu_switch'		=> array('validate' => INT, 'type' => 'radio:switch'),
+							'menu_switch'		=> array('validate' => INT, 'type' => 'radio:smain'),
 							'menu_entrys'		=> array('validate' => INT, 'type' => 'radio:yesno'),
-							'menu_subs'			=> array('validate' => INT, 'type' => 'radio:yesno'),
+						#	'menu_subs'			=> array('validate' => INT, 'type' => 'radio:yesno'),
 						),
 					);
 					
 					break;
 			}
-			
-			debug($_POST, '_POST');
 			
 			$sql = 'SELECT * FROM ' . SETTINGS;
 			if ( !($result = $db->sql_query($sql)) )
@@ -738,8 +743,6 @@ else
 			if ( !(request('submit', TXT)) )
 			{
 				$phpinfo = parsePHPInfo();
-				
-				debug($phpinfo);
 				
 				$core = ( $_SERVER['HTTP_HOST'] == 'localhost' ) ? 'Core' : 'PHP Core';
 				
@@ -841,6 +844,6 @@ else
 	}
 }
 
-include('./page_footer_admin.php');
+acp_footer();
 
 ?>

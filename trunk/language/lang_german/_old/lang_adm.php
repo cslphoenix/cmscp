@@ -262,7 +262,7 @@ $lang['teamspeak_server_currentchannels']			= 'momentane Channelanzahl';
 //
 
 $lang['required']		= 'Mit * markierte Felder sind erforderlich';
-$lang['common_delete']			= 'Löschen';
+$lang['com_delete']			= 'Löschen';
 
 
 $lang['setting']		= 'Einstellung';
@@ -271,7 +271,7 @@ $lang['user_name']		= 'Benutzername';
 $lang['register']		= 'Anmeldedatum';
 $lang['joined']			= 'Beigetreten';
 $lang['rank']			= 'Rang im Team';
-$lang['common_confirm']	= 'Bestätigen';
+$lang['com_confirm']	= 'Bestätigen';
 
 
 $lang['mark_all']		= 'alle markieren';

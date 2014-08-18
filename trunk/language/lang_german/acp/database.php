@@ -35,6 +35,9 @@ $lang = array_merge($lang, array(
 	'opt_rows'		=> 'Einträge',
 	'opt_size'		=> 'Größe',
 	'opt_status'	=> 'Status',
+	
+	'opt_success'	=> 'Die Tabellen wurden optimiert.',
+	'opt_nocheck'	=> 'Kein Tabelle ausgewählt!',
 
 
 
@@ -108,8 +111,7 @@ $lang['Optimize_UncheckAll'] = 'Uncheck All';
 $lang['Optimize_InvertChecked'] = 'Invert Checked';
 $lang['Optimize_return'] = 'Click %sHere%s to return to the Optimize Database';
 
-$lang['Optimize_success'] = 'The Database has been successfully optimized';
-$lang['Optimize_NoTableChecked'] = '<b>No</b> Tables Checked';
+
 
 $lang['Database_Utilities'] = 'Database Utilities';
 

@@ -1,4 +1,4 @@
-<h1>{L_HEAD}</h1>
+<li class="header">{L_HEAD}</li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -136,7 +136,7 @@ function display_options(value)
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="menu_name" /></td>
+	<td><input type="text" name="cat_name" /></td>
 	<td><input type="submit" value="{L_CREATE}" /></td>
 </tr>
 </table>

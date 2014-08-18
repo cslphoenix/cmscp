@@ -22,6 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('forums');
+	acl_auth(array('a_training', 'a_training_create', 'a_training_delete', 'a_training_manage'));
 
 	$error	= '';
 	$index	= '';
@@ -38,13 +39,7 @@ else
 	$type	= request('type', TYP);
 	$accept	= request('accept', TYP);
 	
-	$acp_title	= sprintf($lang['sprintf_head'], $lang['title']);
-	
-	if ( $userdata['user_level'] != ADMIN && !$userauth['a_forum'] )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['msg_auth_fail'], $lang[$current]));
-	}
+	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -83,9 +78,9 @@ else
 				
 				if ( $mode == 'create' && !$submit )
 				{
-					$keys = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? key($_POST['submit_subforum']) : $main) : 0;
-					$name = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? request(array('forum_subforum', $keys), TXT) : request('forum_forum', TXT) ) : request('forum_name', TXT);
-					$type = ( !isset($_POST['forum_name']) ) ? (( isset($_POST['submit_subforum']) ) ? 2 : 1 ) : 0;
+					$keys = ( !isset($_POST['cat_name']) ) ? (( isset($_POST['submit_subforum']) ) ? key($_POST['submit_subforum']) : $main) : 0;
+					$name = ( !isset($_POST['cat_name']) ) ? (( isset($_POST['submit_subforum']) ) ? request(array('forum_subforum', $keys), TXT) : request('forum_forum', TXT) ) : request('cat_name', TXT);
+					$type = ( !isset($_POST['cat_name']) ) ? (( isset($_POST['submit_subforum']) ) ? 2 : 1 ) : 0;
 					
 					$data_sql = array(
 						'forum_name'	=> $name,
@@ -152,8 +147,8 @@ else
 				build_output(FORUM, $vars, $data_sql);
 								
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['sprintf_' . $mode], $lang['forum'], $data['forum_name']),
+					'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+					'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['forum'], $data['forum_name']),
 				
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -194,8 +189,8 @@ else
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 		
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['common_confirm'],
-						'M_TEXT'	=> sprintf($lang['msg_confirm_delete'], $lang['confirm'], $data['forum_name']),
+						'M_TITLE'	=> $lang['com_confirm'],
+						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['forum_name']),
 
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -223,7 +218,7 @@ else
 	
 		if ( $index != true )
 		{
-			include('./page_footer_admin.php');
+			acp_footer();
 			exit;
 		}
 	}
@@ -273,7 +268,7 @@ else
 			'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
 			'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $name, $name),
 			'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'common_delete'),
+			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
 			
 			'S_ACTION'	=> check_sid($file),
 			'S_FIELDS'	=> $fields,
@@ -292,7 +287,7 @@ else
 				$template->assign_block_vars('list.row', array(
 					'NAME'          => href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $fname, $fname),
 					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
-					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'common_delete'),
+					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'com_delete'),
 					
 					'MOVE_UP'       => ( $forder != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'order' => $forder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 					'MOVE_DOWN'     => ( $forder != $fmax )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $forder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -314,7 +309,7 @@ else
 						$template->assign_block_vars('list.row.sub', array( 
 							'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $sid), $sname, $sname),
 							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $sid), 'icon_update', 'common_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $sid), 'icon_cancel', 'common_delete'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $sid), 'icon_cancel', 'com_delete'),
 							
 							'MOVE_UP'	=> ( $sorder != '1' )			? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $fid, 'type' => 2, 'order' => $sorder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 							'MOVE_DOWN'	=> ( $sorder != $smax[$fid] )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $fid, 'type' => 2, 'order' => $sorder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
@@ -340,7 +335,7 @@ else
 	{
 		$template->assign_block_vars('display', array());
 		
-		$tmp = data(FORUM, "type = 0", 'forum_order ASC', 1, false);
+		$tmp = data(FORUM, "WHERE type = 0", 'forum_order ASC', 1, false);
 
 		if ( !$tmp )
 		{
@@ -364,7 +359,7 @@ else
 					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 					
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'common_delete'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				));
 			}
 		}
@@ -373,23 +368,23 @@ else
 	}
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 		'L_NAME'	=> $lang['type_0'],
 		
-		'L_CREATE'			=> sprintf($lang['sprintf_create'], $lang['type_0']),
-		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_create'], $lang['type_1']),
-		'L_CREATE_SUBFORUM'	=> sprintf($lang['sprintf_create'], $lang['type_2']),
+		'L_CREATE'			=> sprintf($lang['stf_create'], $lang['type_0']),
+		'L_CREATE_FORUM'	=> sprintf($lang['stf_create'], $lang['type_1']),
+		'L_CREATE_SUBFORUM'	=> sprintf($lang['stf_create'], $lang['type_2']),
 		
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
 	
 #	$template->assign_vars(array(
-#		'L_HEAD'	=> sprintf($lang['sprintf_head'], $lang['title']),
+#		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 #		'L_EXPLAIN'	=> $lang['explain'],
 #		
-#		'L_CREATE_CAT'		=> sprintf($lang['sprintf_create'], $lang['cat']),
+#		'L_CREATE_CAT'		=> sprintf($lang['stf_create'], $lang['cat']),
 #		'L_CREATE_FORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['forum']),
 #		'L_CREATE_SUBFORUM'	=> sprintf($lang['sprintf_new_creates'], $lang['subforum']),
 #		
@@ -403,6 +398,6 @@ else
 
 $template->pparse('body');
 
-include('./page_footer_admin.php');
+acp_footer();
 
 ?>

@@ -27,8 +27,8 @@
  *
  */
 
-class Template {
-	
+class Template
+{	
 	var $classname = "Template";
 
 	// variable that holds all the data we'll be substituting into

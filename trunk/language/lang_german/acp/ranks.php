@@ -18,13 +18,19 @@ $lang = array_merge($lang, array(
 	'rank_special'	=> 'Spezial Rang',	
 	'rank_standard'	=> 'Standardrang',
 
-	'type_1'	=> 'Seitenrang',
-	'type_2'	=> 'Forumrang',
-	'type_3'	=> 'Teamrang',
+#	'type_1'	=> 'Seitenrang',
+#	'type_2'	=> 'Forumrang',
+#	'type_3'	=> 'Teamrang',
 	
-	'rank_1'	=> 'Rang auf der Seite',
-	'rank_2'	=> 'Rang im Forum',
-	'rank_3'	=> 'Rang im Team',
+#	'rank_1'	=> 'Rang auf der Seite',
+#	'rank_2'	=> 'Rang im Forum',
+#	'rank_3'	=> 'Rang im Team',
+
+	'ranks'		=> 'Ränge',
+	
+	'forum'	=> 'Foren-Rang',
+	'page'	=> 'Seiten-Rang',
+	'team'	=> 'Team-Rang',
 	
 	
 
@@ -33,9 +39,14 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 
 	'radio:ranks' => array(
-		RANK_PAGE	=> $lang['type_1'],
-		RANK_FORUM	=> $lang['type_2'],
-		RANK_TEAM	=> $lang['type_3'],
+		RANK_FORUM	=> $lang['forum'],
+		RANK_PAGE	=> $lang['page'],
+		RANK_TEAM	=> $lang['team'],
+	),
+	
+	'radio:yesno2' => array(
+		4 => $lang['com_yes'],
+		5 => $lang['com_no']
 	),
 	
 ));

@@ -22,7 +22,8 @@ if ( isset($_POST['match_rival_name']) )
 		$sql = "SELECT DISTINCT match_rival_name, match_rival_tag, match_rival_url, match_rival_logo FROM " . MATCH . " WHERE LOWER(match_rival_name) LIKE '%$rival%'";
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
+			exit;
 		}
 		$tmp = $db->sql_fetchrowset($result);
 		
@@ -50,7 +51,7 @@ if ( isset($_POST['match_rival_name']) )
 				
 				if ( $i == 4 )
 				{
-					echo '&nbsp;&raquo;&nbsp;' . sprintf($lang['sprintf_ajax_more'], $num) . '';
+					echo '&nbsp;&raquo;&nbsp;' . sprintf($lang['stf_ajax_more'], $num) . '';
 					break;
 				}
 			}

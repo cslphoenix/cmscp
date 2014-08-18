@@ -10,7 +10,7 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Download',
 	'explain'	=> 'Downloads halt',
 
-	'input_data'	=> 'Downloaddaten',
+	'data_input'	=> 'Download-Daten',
 	
 	'dl_name'		=> 'Name',
 	'type'			=> 'Type',
@@ -95,7 +95,6 @@ $lang = array_merge($lang, array(
 	
 	'type_0' => 'Kategorie',
 	'type_1' => 'Datei',
-	
 ));
 
 ?>

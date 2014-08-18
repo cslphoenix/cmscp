@@ -7,10 +7,9 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Team',
-	'explain'	=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
-
-	'count'		=> 'Anzahl',
+	'title'			=> 'Team',
+	'explain'		=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
+	'explain_user'	=> 'Benutzer verwalten',
 	
 	'input_data'	=> 'Teamdaten',
 	
@@ -26,18 +25,11 @@ $lang = array_merge($lang, array(
 	'team_show'		=> 'geöffentes Menü',
 	'team_flag'		=> 'Teambanner',
 	'team_logo'		=> 'Teamlogo',
+	'rank_team'		=> 'Teamrang',
 	
 	
-	'game'		=> 'Teamspiel',
-	'navi'		=> 'in Navigation',
-	'awards'	=> 'Awards zeigen',
-	'fights'	=> 'Begegnungen zeigen',
 	
-	'list_fight'	=> 'Auflisten bei FightUs',
-	'list_join'		=> 'Auflisten bei JoinUs',
-	'list_teams'	=> 'Auflisten bei Teams',
-	
-	'expand'	=> 'Aufgeklappt',
+	'count'		=> 'Mitgliederanzahl',
 	
 	'logo_upload'	=> 'Logo hochladen',
 	'logo_current'	=> 'Aktuelles Logo',
@@ -67,6 +59,8 @@ $lang = array_merge($lang, array(
 	'update_ranks'	=> 'Ränge der Spieler erfolgreich geändert.',
 	'update_right'	=> 'Rechte des Spielers erfolgreich geändert.',
 	'update_rights'	=> 'Rechte der Spieler erfolgreich geändert.',
+	
+	'notice_select_default'		=> 'zur Hauptteam machen',
 	
 ));
 

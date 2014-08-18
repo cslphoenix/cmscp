@@ -939,7 +939,7 @@ switch( $mode )
 
 if (empty($HTTP_POST_VARS['send_file']))
 {
-	include('./page_footer_admin.php');
+	acp_footer();
 }
 
 ?>

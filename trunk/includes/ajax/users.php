@@ -82,23 +82,23 @@ if ( isset($_POST['user_name']) && isset($_POST['type']) && isset($_POST['type_i
 				default: $lvl = $tmp[$i]['user_level'];	break;
 			}				
 			
-			echo '<li onclick="fill(\'' . $name . '\');">' . sprintf($lang['sprintf_ajax_users'], $name, $lvl, $reg, $log) . '</li>';
+			echo '<li onclick="fill(\'' . $name . '\');">' . sprintf($lang['stf_ajax_users'], $name, $lvl, $reg, $log) . '</li>';
 			
 			if ( $i == 4 )
 			{
-				echo '&nbsp;&raquo;&nbsp;' . sprintf($lang['sprintf_ajax_more'], $num) . '';
+				echo '&nbsp;&raquo;&nbsp;' . sprintf($lang['stf_ajax_more'], $num) . '';
 				break;
 			}
 		}
 	}
 	else
 	{
-		echo sprintf($lang['sprintf_select_format'], $lang['no_entry']);
+		echo sprintf($lang['stf_select_format'], $lang['no_entry']);
 	}
 }
 else
 {
-	echo sprintf($lang['sprintf_select_format'], $lang['no_entry']);
+	echo sprintf($lang['stf_select_format'], $lang['no_entry']);
 }
 
 ?>

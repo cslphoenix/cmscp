@@ -15,16 +15,16 @@ $lang = array_merge($lang, array(
 	
 #	'create'	=> 'Neues Spiel hinzugefügt.',
 #	'update'	=> 'Spieldaten erfolgreich geändert.',
-	'delete'	=> 'Der/die Einträge wurde gelöscht!',
+#	'delete'	=> 'Der/die Einträge wurde gelöscht!',
 #	'confirm'	=> 'dass dieses Spiel:',
 	
-	'common_create'		=> 'Hinzugefügt',
-	'common_error'		=> 'Fehler',
-	'common_update'		=> 'Geändert',
-	'common_delete'		=> 'Gelöscht',
+	'common_create'		=> 'hinzugefügt',
+	'common_error'		=> 'fehler',
+	'common_update'		=> 'geändert',
+	'com_delete'		=> 'gelöscht',
 	'common_default'	=> 'Standard',
 	
-	'msg_confirm_delete'		=> 'Bist du sicher, dass der/die Logeinträge gelöscht werden soll?',
+	'notice_confirm_delete'		=> 'Bist du sicher, dass der/die Logeinträge gelöscht werden soll?',
 	'msg_confirm_delete_all'	=> 'Bist du sicher, dass Alle Logeinträge gelöscht werden soll?',
 	
 	'msg_must_select'			=> 'Bitte einen Log oder Logeinträge auswählen!',
@@ -62,6 +62,7 @@ $lang = array_merge($lang, array(
 		SECTION_VOTES		=> 'Umfragen',
 		SECTION_SERVER_TYPE	=> 'Servertypen',
 		SECTION_SETTINGS	=> 'Einstellungen',
+		SECTION_MENU		=> 'Menü',
 	),
 ));
 

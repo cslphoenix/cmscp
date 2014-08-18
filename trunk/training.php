@@ -230,7 +230,7 @@ else if ( $mode == 'trainingdetails' && isset($_GET['id']))
 			WHERE tr.training_id = ' . $training_id;
 	$row_details = _cached($sql, 'training_details_' . $training_id, 1);
 	
-	if ($userauth['auth_match'] || $userdata['user_level'] == ADMIN )
+	if ($userauth['auth_mmanage'] || $userdata['user_level'] == ADMIN )
 	{
 		$template->assign_block_vars('training_edit', array(
 			'EDIT_TRAINING' => '<a href="' . check_sid('admin/admin_training.php?mode=edit&id=' . $training_id . "&sid=" . $userdata['session_id']) . '" >&raquo; ' . $lang['edit_training'] . '</a>',

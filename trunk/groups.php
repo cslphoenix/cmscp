@@ -195,8 +195,6 @@ if ( $data )
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			
-			group_set_auth($user_id, $data);
-
 			$group_name = $view['group_name'];
 
 		#	include($root_path . 'includes/class_emailer.php');
@@ -308,11 +306,6 @@ if ( $data )
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
 					
-					for( $k = 0; $k < count($members); $k++)
-					{
-						group_set_auth($members[$k]['user_id'], $data);
-					}
-					
 					$sql_select = 'SELECT user_email FROM ' . USERS . ' WHERE user_id IN (' . $sql_in . ')';
 				}
 				else if ( isset($HTTP_POST_VARS['deny']) || $mode == 'remove' )
@@ -321,11 +314,6 @@ if ( $data )
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					for( $i = 0; $i < count($members); $i++ )
-					{
-						group_reset_auth($members[$i]['user_id'], $data);
 					}
 				}
 
@@ -755,8 +743,6 @@ else if ( $data && request('joingroup', 1) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 				}
-				
-				group_set_auth($userdata['user_id'], $data);
 			}
 			else if ( $row['group_type'] == GROUP_REQUEST )
 			{
@@ -827,8 +813,6 @@ else if ( $data && isset($HTTP_POST_VARS['unsubpending']) || isset($HTTP_POST_VA
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
-		
-		group_reset_auth($userdata['user_id'], $data);
 		
 //		$template->assign_vars(array('META' => '<meta http-equiv="refresh" content="3;url=' . check_sid('index.php') . '">'));
 

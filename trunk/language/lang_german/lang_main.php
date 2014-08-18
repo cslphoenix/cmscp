@@ -3,8 +3,13 @@
 include('lang_head.php');
 include('lang_control.php');
 include('lang_teamspeak.php');
+include('lang_server.php');
 
 $lang = array_merge($lang, array(
+
+
+	'notice_select_permission'	=> 'Rechte geben/nehmen',
+	
 
 	'header_empty_news'			=> 'keine News vorhanden',
 	'header_empty_match'		=> 'keine Begnungen vorhanden',
@@ -75,6 +80,8 @@ $lang = array_merge($lang, array(
 	'a_user'			=> '<a href="%s" style="color:%s">%s</a>',
 	'a_txt_ly'			=> '<a href="%s" title="%s">%s</a> :: %s',
 	'a_img'				=> '<a href="%s"><img class="icon" src="%s" title="%s" alt="" /></a>',
+	
+	'ahref_style'	=> '<a href="%s" style="color:%s">%s</a>',
 
 	'i_icon'			=> '<img class="icon" src="%s" title="%s" alt="" />',
 	'i_iconn'			=> '<img src="%s" title="%s" alt="" />',
@@ -106,6 +113,8 @@ $lang = array_merge($lang, array(
 	'cal_birth'		=> '%s wird %s Jahre alt',
 	'cal_today'		=> 'Heute',
 	
+	'stf_cal_today'	=> '<b>%s</b><br/>',
+	
 	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
 	'common_entry_new'		=> 'Neuer Eintrag',
 	'common_add'			=> 'Hinzufügen',
@@ -114,10 +123,10 @@ $lang = array_merge($lang, array(
 	'common_comments_pub'	=> 'Kommentare erlauben',
 	'common_input_data'		=> 'Daten eingeben',
 	'common_input_option'	=> 'Option',
-	'common_input_upload'	=> 'Upload',
+	'common_input_upload'	=> 'Upload von Dateien oder Bildern',
 	'common_input_standard'	=> 'Standard',
 	'common_default'		=> 'Standarteinstellungen',
-	'common_delete'			=> 'Löschen',
+	'com_delete'			=> 'Löschen',
 	'common_delete_all'		=> 'Alles löschen',
 	'common_login'			=> 'Login',
 	'common_login_acp'		=> 'Adminlogin',
@@ -131,7 +140,7 @@ $lang = array_merge($lang, array(
 	'common_moderators'		=> 'Moderatoren',		
 	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
 	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
-	'common_select_option'	=> 'Option wählen',			
+	'com_select_option'	=> 'Option wählen',			
 	'common_overview'		=> 'Übersicht',		
 	'common_reset'			=> 'Zurücksetzen',
 	'common_setting'		=> 'Einstellung',
@@ -146,8 +155,8 @@ $lang = array_merge($lang, array(
 	'common_page_of'		=> 'Seite <b>%d</b> von <b>%d</b>',
 	'common_on'				=> 'Aktiv',
 	'common_off'			=> 'Inaktiv',
-	'common_no'				=> 'Nein',
-	'common_yes'			=> 'Ja',
+	'com_no'				=> 'Nein',
+	'com_yes'			=> 'Ja',
 	
 	/* 01.08 */
 	'common_rating'		=> 'Abstimmungen',
@@ -204,6 +213,9 @@ $lang['sprintf_comment_no']	= 'keine Kommentare';
 /* event */
 $lang = array_merge($lang, array(
 
+	'stf_select_format'	=> '&raquo;&nbsp;%s&nbsp;',
+	
+
 	'event_upcoming'	=> 'Ereignis: Aktuelle',
 	'event_expired'		=> 'Ereignis: Abgelaufen',
 
@@ -253,13 +265,13 @@ $lang = array_merge($lang, array(
 	'sn_nextmatch'		=> 'next War',
 	'sn_nexttraining'	=> 'next Train',
 	
-	/* subtitle server */
-	'server_status'		=> 'Status:',
-	'server_map'		=> 'Karte:',
-	'server_online'		=> '<font color="#green">Online</font>',
-	'server_offline'	=> '<font color="#red">Offline</font>',
-	'server_player'		=> 'Spieler:',
-	'server_user'		=> 'Benutzer:',
+#	/* subtitle server */
+#	'server_status'		=> 'Status:',
+#	'server_map'		=> 'Karte:',
+#	'server_online'		=> '<font color="#green">Online</font>',
+#	'server_offline'	=> '<font color="#red">Offline</font>',
+#	'server_player'		=> 'Spieler:',
+#	'server_user'		=> 'Benutzer:',
 ));
 
 $lang = array_merge($lang, array(
@@ -318,22 +330,22 @@ $lang = array_merge($lang, array(
 
 $lang['current_time'] = 'Aktuelles Datum und Uhrzeit: %s';
 
-$lang['sprintf_select_format']	= '&raquo;&nbsp;%s&nbsp;';
+
 $lang['msg_select_order']		= 'Bitte Reihenfolge ausw&auml;hlen';
 
 $lang['sprintf_select_order']	= '&raquo;&nbsp;nach:&nbsp;%s&nbsp;';
 $lang['sprintf_select_before']	= '&raquo;&nbsp;vor:&nbsp;%s&nbsp;';
 
 $lang['common_more']	= 'Erweitern';
-$lang['cal_legend']		= '<b>Legende:</b> <span class="today">Heute</span>, <span class="news">News</span>, <span class="birthday">Geburtstage</span>, <span class="events">Ereignisse</span>, <span class="wars">Wars</span>, <span class="trains">Trainings</span>, <span class="more">mehrere Ereignisse an einem Tag</span>';
+$lang['cal_legend']		= '<b>Legende:</b> <span class="today">Heute</span>, <span class="news">News</span>, <span class="event">Ereignisse</span>, <span class="match">Wars</span>, <span class="birthday">Geburtstage</span>, <span class="training">Trainings</span>, <span class="more">mehrere Ereignisse an einem Tag</span>';
 
 $lang['user']			= 'Benutzer';
 
 $lang['Today_at'] = "Today at %s"; // %s is the time
 $lang['Yesterday_at'] = "Yesterday at %s"; // %s is the time
 
-$lang['sprintf_match_name']		= 'vs. %s';
-$lang['sprintf_match_intern']	= 'vs. <span style="font-style:italic;">%s</span>';
+#$lang['sprintf_match_name']		= 'vs. %s';
+#$lang['sprintf_match_intern']	= 'vs. <span style="font-style:italic;">%s</span>';
 
 
 
@@ -346,7 +358,7 @@ $lang['sprintf_subnavi_match_result']	= '%s:%s';
 
 
 
-$lang['msg_select_team']			= 'Team auswählen';
+
 $lang['msg_select_sort_team']		= 'Team fürs sortieren wählen';
 
 
@@ -1292,7 +1304,7 @@ $lang['Group_member_join'] = 'Gruppe beitreten';
 
 $lang['Group_Information'] = 'Information';
 $lang['Group_name'] = 'Name';
-$lang['group_desc'] = 'Beschreibung';
+#$lang['group_desc'] = 'Beschreibung';
 $lang['Group_membership'] = 'Gruppen-Mitgliedschaft';
 $lang['Group_Members'] = 'Gruppen-Mitglieder';
 $lang['Group_Moderator'] = 'Gruppen-Moderatoren';

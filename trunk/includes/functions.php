@@ -1,5 +1,38 @@
 <?php
 
+function _build_fields($key, $value)
+{
+	global $_fields;
+	
+	$_fields = '';
+
+	if (!is_array($value))
+	{
+		$_fields .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+	}
+	else
+	{
+		foreach ($value as $_key => $_value)
+		{
+			$_fields .= _build_fields($key . '[' . $_key . ']', $_value);
+		}
+	}
+
+	return $_fields;
+}
+
+function build_fields($fields)
+{
+	$s_fields = '';
+	
+	foreach ($fields as $name => $vars)
+	{
+		$s_fields .= _build_fields($name, $vars);
+	}
+	
+	return $s_fields;
+}
+
 /*
  * Prüft ob der Eintrag im Langarray vorhanden ist.
  */
@@ -67,7 +100,7 @@ function request($request_var, $request_type, $filter = '')
 				{
 					if ( $request_type == INT )
 					{
-						$v_tmp[$key][] = intval($v_value);
+						$v_tmp[$key][] = (int) $v_value;
 					}
 					else if ( $request_type == TXT )
 					{
@@ -75,7 +108,7 @@ function request($request_var, $request_type, $filter = '')
 					}
 					else
 					{
-						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT));
+						$v_tmp[$key][] = (is_numeric($v_value) ? (int) $v_value : trim(htmlspecialchars($v_value, ENT_COMPAT)));
 					}
 				}
 				
@@ -92,8 +125,8 @@ function request($request_var, $request_type, $filter = '')
 					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT));
 				}
 				else
-				{#
-					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT));
+				{
+					$_tmp[$key] = (is_numeric($value) ? (int) $value : trim(htmlspecialchars($value, ENT_COMPAT)));
 				}
 				
 				$var[$key] = $_tmp[$key];
@@ -104,8 +137,8 @@ function request($request_var, $request_type, $filter = '')
 	{
 		switch ( $request_type )
 		{
-			case INT: $var = ( isset($tmp) ) ? intval($tmp) : ''; break;
-			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? intval($tmp) : trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
+			case INT: $var = ( isset($tmp) ) ? (int) $tmp : ''; break;
+			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? (int) $tmp : trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
 			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
 			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
 			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT)) : ''; break;
@@ -124,7 +157,19 @@ function request($request_var, $request_type, $filter = '')
 					}
 				}
 				
-				break;	
+				break;
+				
+			case ARY:
+					
+				switch ( $filter )
+				{
+					case INT:	$var = ( isset($tmp) ) ? (int) $tmp : 0; break;
+					case TXT:	$var = ( isset($tmp) ) ? (string) $tmp : ''; break;
+					default:	$var = ( isset($tmp) ) ? (is_numeric($tmp) ? (int) $tmp : (string) $tmp) : ''; break;
+				}
+			
+				break;
+					
 		}
 	}
 
@@ -221,7 +266,7 @@ function request_file($request_var)
 {
 	global $_FILES;
 	
-	debug($request_var);
+#	debug($request_var);
 	
 	$var['temp'] = $_FILES[$request_var]['tmp_name'];
 	$var['name'] = $_FILES[$request_var]['name'];
@@ -303,6 +348,7 @@ function href($type, $file, $params, $text, $lng = '', $comment = false)
 	global $lang, $images;
 	
 	$return = $url = '';
+	$lng = strip_tags($lng);	/* 19.05.2013 hinzugefügt - entfernt html zeichen und stört damit nicht die ausgabe */
 	
 	if ( $params )
 	{
@@ -312,13 +358,14 @@ function href($type, $file, $params, $text, $lng = '', $comment = false)
 		}
 	}
 #	$url	= '?' . implode('&amp;', $url);
+#	$url	= '&amp;' . implode('&amp;', $url);
 	$url	= '&amp;' . implode('&amp;', $url);
 	$txt	= strstr($type, 'img') ? ( isset($images[$text]) ? $images[$text] : $text ) : $text;
 	$lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
 	
 	( $type == 'a_txt' ) ? list($txt, $lng) = array($lng, $txt) : '';
 	
-	$return = sprintf($lang[$type], check_sid($file . $url), $txt, $lng, $comment);
+	$return = sprintf($lang[$type], check_sid($file . $url, true), $txt, $lng, $comment);
 	
 	return $return;
 }
@@ -347,10 +394,7 @@ function cal_string($entry, $css, $lng, $array, $viewer)
 	$div_start	= '<div class="cal_list"><ul>';
 	$div_middle	= '</ul><ul>';
 	$div_end	= '</u></div>';
-	
-	#$event .= ( !$event ) ? "$tbl_start <em class=\"wars\">$language</em>$tbl_mid $list" : "$tbl_mid <em class=\"wars\">$language</em><br /> $list";
-
-	
+			
 	if ( $viewer )
 	{
 		$msg .= ( $entry == '' ) ? $div_start : $div_middle;
@@ -359,7 +403,7 @@ function cal_string($entry, $css, $lng, $array, $viewer)
 	}
 	else
 	{
-		$msg .= ( $entry != '' ) ? '<br />': '';
+		$msg .= ( $entry == '' ) ? '' : '<br />';
 		$msg .= ( !$css ) ? "<b>$lng</b><br />" : "<span class=\"$css\">$lng</span><br />";
 		$msg .= implode('<br />', $array);
 	}
@@ -426,102 +470,85 @@ function random_password($minlength = 7, $maxlength = 14, $uselower = true, $use
 	}
 	
 	return $str; 
-} 
-
-function group_set_auth($user_id, $group_id)
-{
-	global $db, $oCache;
-	
-	$sql = "SELECT group_access, group_color FROM " . GROUPS . " WHERE group_id = $group_id AND group_type <> " . GROUP_HIDDEN;
-	if ( !$result = $db->sql_query($sql) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$group = $db->sql_fetchrow($result);
-	
-	$sql = "SELECT user_level FROM " . USERS . " WHERE user_id = $user_id";
-	if ( !$result = $db->sql_query($sql) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$user = $db->sql_fetchrow($result);
-	
-	$group_access	= $group['group_access'];
-	$group_color	= $group['group_color'];
-	$user_level		= $user['user_level'];
-	
-	if ( $group_access == ADMIN && ( $user_level < ADMIN || $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
-	{
-		$sql = "UPDATE " . USERS . " SET user_level = " . ADMIN . ", user_color = '#$group_color' WHERE user_id = $user_id";
-		if ( !$result = $db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-	}
-	else if ( $group_access == MOD && ( $user_level < MOD || $user_level < MEMBER || $user_level < TRIAL ) )
-	{
-	#	$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MOD . ', user_color = "#' . $group_color . '" WHERE user_id = ' . $user_id;
-		$sql = "UPDATE " . USERS . " SET user_level = " . MOD . ", user_color = '#$group_color' WHERE user_id = $user_id";
-		if ( !$result = $db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-	}
-	else if ( $group_access == MEMBER && ( $user_level < MEMBER || $user_level < TRIAL ) )
-	{
-	#	$sql = 'UPDATE ' . USERS . ' SET user_level = ' . MEMBER . ', user_color = "#' . $group_color . '" WHERE user_id = ' . $user_id;
-		$sql = "UPDATE " . USERS . " SET user_level = " . MEMBER . ", user_color = '#$group_color' WHERE user_id = $user_id";
-		if ( !$result = $db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-	}
-	else if ( $group_access == TRIAL && $user_level <= TRIAL )
-	{
-	#	$sql = 'UPDATE ' . USERS . ' SET user_level = ' . TRIAL . ', user_color = "#' . $group_color . '" WHERE user_id = ' . $user_id;
-		$sql = "UPDATE " . USERS . " SET user_level = " . TRIAL . ", user_color = '#$group_color' WHERE user_id = $user_id";
-		if ( !$result = $db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-	}
-	
-	##	Lï¿½schung des Cacheintrages
-	$oCache -> deleteCache('display_subnavi_newusers'); # neuste Benutzer
 }
 
-function group_reset_auth($user_id, $group_id)
+function update_main_id($id, $user = false, $group = false, $color_update = false)
 {
-	global $db;
+	global $db, $lang;
 	
-	$sql = "SELECT g.group_access, g.group_color
-				FROM " . GROUPS . " g, " . LISTS . " ul
-				WHERE ul.user_id <> " . ANONYMOUS . "
-					AND g.group_id = ul.type_id
-					AND g.group_single_user = 0
-					AND ul.user_id = $user_id
-					AND ul.type = " . TYPE_GROUP . "
-					AND NOT g.group_id = $group_id
-				GROUP BY g.group_id ASC";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$group = $db->sql_fetchrow($result);
+	$data = ( $group ) ? data(GROUPS, $id, false, 1, true) : false;
+	$info = ( $group ) ? 'group_id' : 'team_id';
 	
-	$sql = 'SELECT user_founder FROM ' . USERS . ' WHERE user_id = ' . $user_id;
-	if ( !($result = $db->sql_query($sql)) )
+	if ( !$user )
 	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$user = $db->sql_fetchrow($result);
-	
-	if ( $user['user_founder'] == '0' )
-	{
-		$sql = "UPDATE " . USERS . " SET user_level = " . $group['group_access'] . ", user_color = '#" . $group['group_color'] . "' WHERE user_id = $user_id";
+		$sql = "SELECT l.user_id
+				FROM " . LISTS . " l
+					LEFT JOIN " . USERS . " u ON l.user_id = u.user_id
+				WHERE type = " . TYPE_GROUP . " AND type_id = $id AND user_pending = 0";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$user[] = $row['user_id'];
+		}
+	}
+	
+	$sql = "SELECT user_id, $info, user_level FROM " . USERS . " WHERE user_id IN (" . implode(', ', $user) . ")";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$users = array();
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		if ( $color_update )
+		{
+			$users[] = $row;
+		}
+		else if ( $row[$info] != $id )
+		{
+			$users[] = $row;
+		}
+	}
+	
+	if ( $users )
+	{
+		foreach ( $users as $user => $row )
+		{
+			$sql = "UPDATE " . USERS . " SET $info = $id";
+			
+			if ( $data )
+			{
+				$sql .= ", user_color = '{$data['group_color']}'";
+				
+				if ( $data['group_access'] == ADMIN && ( $row['user_level'] < ADMIN || $row['user_level'] < MOD || $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
+				{
+					$sql .= ", user_level = " . ADMIN;
+				}
+				else if ( $data['group_access'] == MOD && ( $row['user_level'] < MOD || $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
+				{
+					$sql .= ", user_level = " . MOD;
+				}
+				else if ( $data['group_access'] == MEMBER && ( $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
+				{
+					$sql .= ", user_level = " . MEMBER;
+				}
+				else if ( $data['group_access'] == TRIAL && $row['user_level'] < TRIAL )
+				{
+					$sql .= ", user_level = " . TRIAL;
+				}
+			}
+			
+			$sql .= " WHERE user_id = {$row['user_id']}";
+			if ( !$result = $db->sql_query($sql) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
 		}
 	}
 }
@@ -530,7 +557,7 @@ function gen_userinfo(&$row, &$name, &$join, &$posts, &$comments)
 {
 	global $userdata;
 	
-	$name		= href('a_style', 'profile.php', array('mode' => 'view', POST_USER => $row['user_id']), $row['user_color'], $row['user_name']);
+	$name		= href('a_style', 'profile.php', array('mode' => 'view', 'id' => $row['user_id']), $row['user_color'], $row['user_name']);
 	$join		= create_shortdate($userdata['user_dateformat'], isset($row['team_join']) ? $row['team_join'] : $row['user_regdate'], $userdata['user_timezone']);
 	$posts		= $row['user_posts'];
 	$comments	= $row['user_comments'];
@@ -1799,6 +1826,19 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 			$keys[] = $key;
 			$vars[] = $var;
 		}
+		
+		$name = 0;
+		
+		foreach ( $keys as $int => $key )
+		{
+			if ( strpos($key, '_name') !== false || strpos($key, '_title') !== false )
+			{
+				$name = $int;
+			}
+		}
+		
+		debug($name, 'name', true);
+		
 		$key = $keys;
 		$var = $vars;
 		
@@ -1811,7 +1851,10 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
 		
-		$return = array(array('field' => $key[0], 'post' => $var[0]));
+		$return = array(array('field' => $key[$name], 'post' => $var[$name]));
+		
+	#	debug($return);
+	#	debug($sql);
 	}
 	else if ( strstr($type, 'update') )
 	{
@@ -1819,48 +1862,38 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 		
 		if ( defined('IN_ADMIN') )
 		{
-			$data = $submit;
+			$data = array_merge($submit, array($id_field => $id));
 			$data_db = data($table, $id, false, 1, true);
-			
-		#	debug($data, 'data');
-		#	debug($data_db, 'data_db');
-			
-		#	debug($id_field, "$id_field");
-			
-		#	var_dump(data($table, $id, false, 1, 1));
-			
-		#	debug(data($table, $id, false, 1, 1));
 			
 			if ( $data_db )
 			{
-			#	unset($data_db[$id_field]);
-			
 				$new = array_diff_assoc($data_db, $data);
 				
-			#	debug($new, 'new diff');
-			
 				if ( $new )
 				{
 					$change = '';
 					
 					foreach ( $new as $key_new => $value_new )
 					{
-						foreach ( $submit as $key_submit => $value_submit )
+						foreach ( $data as $key_data => $value_data )
 						{
-							if ( $key_new == $key_submit )
+							if ( $key_new == $key_data )
 							{
-								$change[] = array('field' => $key_new, 'data' => $value_new, 'post' => $value_submit, 'meta' => $id);
+								$change[] = array(
+									'field'	=> $key_new,
+									'data'	=> $value_new,
+									'post'	=> $value_data,
+									'meta'	=> $id
+								);
 							}
 						}
 					}
-					
-				#	debug($change, "change");
 					
 					$change = $change;
 				}
 				else
 				{
-					$change = '!new';
+					$change = 'notice_no_changes';
 				}
 			}
 			else
@@ -1957,7 +1990,7 @@ function select_tz($default, $select_name = 'timezone')
 	while( list($offset, $zone) = @each($lang['tz']) )
 	{
 		$selected = ( $offset == $default ) ? ' selected="selected"' : '';
-		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $zone) . '</option>';
+		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $zone) . '</option>';
 	}
 	$tz_select .= '</select>';
 
@@ -1998,7 +2031,7 @@ function select_language($default, $select_name = "language", $dirname = "langua
 		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
 		
 		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
-		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $name) . '</option>';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
 	}
 	$lang_select .= '</select>';
 
@@ -2036,7 +2069,7 @@ function select_lang($default, $select_name = "language", $dirname = "language")
 		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
 		
 		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
-		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $name) . '</option>';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
 	}
 	$lang_select .= '</select>';
 
@@ -2063,7 +2096,7 @@ function select_style($default, $select_name = "style", $dirname = "templates")
 	{
 		$selected = ( $default == $row[$i]['themes_id'] ) ? ' selected="selected"' : '';
 
-		$select .= '<option value="' . $row[$i]['themes_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $row[$i]['style_name']) . '</option>';
+		$select .= '<option value="' . $row[$i]['themes_id'] . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $row[$i]['style_name']) . '</option>';
 	}
 	$select .= "</select>";
 
@@ -2193,6 +2226,7 @@ function rating_bar($id, $units = '', $static = '', $rating_unitwidth = 30)
 function main_header($page_title = '')
 {
 	global $config, $settings, $theme, $root_path, $userdata, $template, $db, $lang;
+	global $oCache;
 	
 	if ( defined('HEADER_INC') )
 	{
@@ -2202,7 +2236,6 @@ function main_header($page_title = '')
 	define('HEADER_INC', true);
 	
 	/* gzip_compression */
-
 	if ( $config['page_gzip'] )
 	{
 		$phpver = phpversion();
@@ -2309,7 +2342,7 @@ function main_header($page_title = '')
 			$groups_name	= $groups[$i]['group_name'];
 			$groups_style	= $groups[$i]['group_color'];
 			
-			$list[] = "<a href=\"" . check_sid("users.php?mode=g&id=$groups_id") . "\" style=\"color:#$groups_style\"><b>$groups_name</b></a>";
+			$list[] = "<a href=\"" . check_sid("users.php?mode=g&id=$groups_id") . "\" style=\"color:$groups_style\"><b>$groups_name</b></a>";
 		}
 		
 		$groups_list = implode(', ', $list);
@@ -2525,8 +2558,8 @@ function main_header($page_title = '')
 		}
 	}
 	
-#	$userauth = auth_acp_check($userdata['user_id']);
-
+	$userauth = auth_acp_check($userdata['user_id']);
+#	debug($userauth);
 #	$auth = array();
 	
 #	foreach ( $userauth as $key => $value )
@@ -2540,7 +2573,7 @@ function main_header($page_title = '')
 	//
 	// Show the overall footer.
 	//
-	$admin_link = (	$userdata['user_level'] == ADMIN ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+	$admin_link = (	$userdata['user_level'] == ADMIN || $userauth ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 	
 	//$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
 	//if ( !($result = $db->sql_query($sql)) )
@@ -2607,8 +2640,8 @@ function main_header($page_title = '')
 		'PAGE_TITLE' => $page_title,
 		
 		
-	'L_NO'			=> $lang['common_no'],
-	'L_YES'			=> $lang['common_yes'],
+	'L_NO'			=> $lang['com_no'],
+	'L_YES'			=> $lang['com_yes'],
 	
 	'L_SUBMIT'		=> $lang['common_submit'],
 	'L_RESET'		=> $lang['common_reset'],
@@ -2823,6 +2856,515 @@ function main_footer()
 	ob_end_flush();
 	
 	exit;
+}
+
+function find_active($db_file, $db_action, $active_file, $active_module)
+{
+	$active_module = explode('&', $active_module);
+	
+	foreach ( $active_module as $module )
+	{
+		if ( strpos($module, 'action') !== false )
+		{
+			list($active, $active_action) = explode('=', $module);
+		}
+	}
+	
+	if ( $active_file == $db_file && isset($active_action) )
+	{
+		if ( $active_action == $db_action )
+		{
+			return ' class="red"';
+		}
+	}
+	else if ( $active_file == $db_file )
+	{
+		return ' class="red"';
+	}
+	
+}
+
+
+function acp_header($file, $adds, $typ)
+{
+	global $config, $settings, $theme, $root_path, $template, $db, $lang, $oCache;
+	global $userdata, $current;
+	
+	define('HEADER_INC', true);
+	
+	/* gzip_compression */
+	$do_gzip_compress = FALSE;
+
+	if ( $config['page_gzip'] )
+	{
+		$phpver = phpversion();
+	
+		$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT');
+	
+		if ( $phpver >= '4.0.4pl1' && ( strstr($useragent,'compatible') || strstr($useragent,'Gecko') ) )
+		{
+			if ( extension_loaded('zlib') )
+			{
+				ob_start('ob_gzhandler');
+			}
+		}
+		else if ( $phpver > '4.0' )
+		{
+			if ( strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') )
+			{
+				if ( extension_loaded('zlib') )
+				{
+					$do_gzip_compress = TRUE;
+					ob_start();
+					ob_implicit_flush(0);
+	
+					header('Content-Encoding: gzip');
+				}
+			}
+		}
+	}
+	
+	$template->set_filenames(array(
+		'header'	=> 'style/page_header.tpl',
+	#	'nav'		=> $root_path . 'admin/style/page_navigate.tpl',
+		'footer'	=> 'style/page_footer.tpl'
+	));
+	
+	$l_timezone = explode('.', $config['default_timezone']);
+	$l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0) ? $lang[sprintf('%.1f', $config['default_timezone'])] : $lang[number_format($config['default_timezone'])];
+	
+	$current_page = isset($current) ? isset($lang[$current]) ? $lang[$current] : $current : 'info';
+	
+#	debug($_POST, 'hpost');
+#	debug($_GET, 'hget');
+#	debug(request('i', INT), 'i');
+	
+	$template->assign_vars(array(
+		'L_HEADER'	=> $current_page,
+		'L_TIME'	=> sprintf($lang['current_time'], create_date($userdata['user_dateformat'], time(), $userdata['user_timezone'])),
+		'L_OVERVIEW'		=> $lang['acp_overview'],
+		'L_SITE'	=> $config['page_name'],
+		'L_USER'	=> $userdata['user_name'],
+		'L_LOGOUT'	=> $lang['acp_logout'],
+		'L_SESSION'	=> $lang['acp_session'],
+	
+	#	'L_NAVIGATION'		=> $lang['navi_navigation'],
+	
+	#	'L_INPUT_DATA'		=> $lang['common_input_data'],
+	#	'L_INPUT_OPTION'	=> $lang['common_input_option'],
+	#	'L_INPUT_UPLOAD'	=> $lang['common_input_upload'],
+	#	'L_INPUT_STANDARD'	=> $lang['common_input_standard'],
+		
+		'L_UPLOAD_DATA'	=> $lang['common_input_upload'],
+	
+		'L_EMPTY'		=> $lang['com_empty'],
+		'L_ORDER'		=> $lang['common_order'],
+		'L_MORE'		=> $lang['common_more'],
+		'L_REMOVE'		=> $lang['com_remove'],
+		'L_SORT'		=> $lang['common_sort'],
+		'L_GO'			=> $lang['com_go'],
+		'L_NO'			=> $lang['com_no'],
+		'L_YES'			=> $lang['com_yes'],
+		'L_RESET'		=> $lang['common_reset'],
+		'L_SUBMIT'		=> $lang['common_submit'],
+		'L_UPDATE'		=> $lang['common_update'],
+		'L_DELETE'		=> $lang['com_delete'],
+		'L_DELETE_ALL'	=> $lang['common_delete_all'],
+		'L_SETTINGS'	=> $lang['common_settings'],
+	
+		'L_MARK_NO'		=> $lang['mark_no'],
+		'L_MARK_YES'	=> $lang['mark_yes'],
+		'L_MARK_ALL'	=> $lang['mark_all'],
+		'L_MARK_DEALL'	=> $lang['mark_deall'],
+		'L_MARK_INVERT'	=> $lang['mark_invert'],
+		'L_SHOW'		=> $lang['show'],
+		'L_NOSHOW'		=> $lang['noshow'],
+		'L_UPLOAD'		=> $lang['common_upload'],
+		'L_USERNAME'	=> $lang['user_name'],
+		'L_GOTO_PAGE'	=> $lang['Goto_page'],
+	
+		'CONTENT_FOOTER'	=> sprintf($lang['content_footer'], $config['page_version']),
+	
+		'U_OVERVIEW'	=> check_sid('admin_index.php?i=1'),
+		'U_SITE'		=> check_sid('../index.php'),
+		'U_LOGOUT'		=> check_sid('./../login.php?logout=true'),
+		'U_SESSION'		=> check_sid('./../login.php?logout=true&admin_session_logout=true'),
+	
+		'S_USER_LANG'	=> 'de',
+		'S_CONTENT_ENCODING'	=> $lang['content_encoding'],
+		'S_CONTENT_DIRECTION'	=> $lang['content_direction'],
+	
+		'S_ACTION' => check_sid($file),
+	));
+	
+	// Work around for "current" Apache 2 + PHP module which seems to not
+	// cope with private cache control setting
+	if (!empty($_SERVER['SERVER_SOFTWARE']) && strstr($_SERVER['SERVER_SOFTWARE'], 'Apache/2'))
+	{
+		header('Cache-Control: no-cache, pre-check=0, post-check=0');
+	}
+	else
+	{
+		header('Cache-Control: private, pre-check=0, post-check=0, max-age=0');
+	}
+	
+	header('Expires: 0');
+	header('Pragma: no-cache');
+	
+	$tmp = data(MENU, "WHERE action = 'acp'", 'menu_order ASC', 1, 0);
+	
+	foreach ( $tmp as $row )
+	{
+		if ( !$row['type'] )
+		{
+			$sql_cat[$row['menu_id']] = $row;
+		}
+		else if ( $row['type'] == 1 )
+		{
+			$sql_lab[$row['main']][$row['menu_id']] = $row;
+		}
+		else
+		{
+			$sql_sub[$row['main']][] = $row;
+		}
+	}
+	
+	$active_file = basename($_SERVER['PHP_SELF']);
+	$active_module = $_SERVER['QUERY_STRING'];
+	
+	foreach ( $sql_cat as $catkey => $catrow )
+	{
+		if ( isset($sql_lab[$catkey]) )
+		{
+			$fmenu = current($sql_lab[$catkey]);
+			$menu_file = isset($sql_sub[$fmenu['menu_id']][0]['menu_file']) ? $sql_sub[$fmenu['menu_id']][0]['menu_file'] : '';
+			$menu_opts = isset($sql_sub[$fmenu['menu_id']][0]['menu_opts']) ? $sql_sub[$fmenu['menu_id']][0]['menu_opts'] != 'main' ? '&amp;action=' . $sql_sub[$fmenu['menu_id']][0]['menu_opts'] : '' : '';
+		}
+		
+		$template->assign_block_vars('icat', array(
+			'NAME'		=> ($catrow['menu_lang']) ? lang($catrow['menu_name']) : $catrow['menu_name'],
+			'ACTIVE'	=> ( $typ == $catkey ) ? ' id="active"' : '',
+			'CURRENT'	=> ( $typ == $catkey ) ? ' id="current"' : '',
+			'URL'		=> check_sid($menu_file . '?i=' . $catkey . $menu_opts),
+		));
+		
+		if ( $catkey == $typ )
+		{
+		#	@reset($sql_lab);
+			
+			if ( isset($sql_lab[$catkey]) )
+			{
+				foreach ( $sql_lab[$catkey] as $labkey => $labrow )
+				{
+					$template->assign_block_vars('ilab', array(
+						'NAME' => ($labrow['menu_lang']) ? lang($labrow['menu_name']) : $labrow['menu_name'],
+					));
+					
+					if ( isset($sql_sub[$labkey]) )
+					{
+						foreach ( $sql_sub[$labkey] as $subrow )
+						{
+						#	find_active($db_file, $db_action, $active_file, $active_module)
+							$active = find_active($subrow['menu_file'], $subrow['menu_opts'], $active_file, $active_module);
+							
+						#	debug($active);
+							
+							$menu_file = $subrow['menu_file'];
+							$menu_opts = ( $subrow['menu_opts'] != 'main' ) ? '&amp;action=' . $subrow['menu_opts'] : '';
+							
+							$template->assign_block_vars('ilab.isub', array(
+								'L_MODULE'	=> sprintf($lang['stf_select_menu'], ($subrow['menu_lang'] ? lang($subrow['menu_name']) : $subrow['menu_name'])),
+								'U_MODULE'	=> check_sid($menu_file . '?i=' . $catkey . $menu_opts),
+								
+								'CLASS'		=> $active,
+							));
+						}
+					}
+				}
+			}
+			else if ( isset($sql_sub[$catkey]) )
+			{
+				foreach ( $sql_sub[$catkey] as $subrow )
+				{
+					$menu_file = $subrow['menu_file'];
+					$menu_opts = $subrow['menu_opts'];
+					
+					$template->assign_block_vars('isub', array(
+						'L_MODULE'	=> sprintf($lang['stf_select_menu'], ($subrow['menu_lang'] ? lang($subrow['menu_name']) : $subrow['menu_name'])),
+						'U_MODULE'	=> check_sid($menu_file . '?i=' . $catkey . '&amp;' . $menu_opts),
+					));
+				}
+			}
+		}
+	}
+	
+	$oCache->sCachePath = './../cache/';
+	
+	$template->pparse('header');
+}
+
+function acp_footer()
+{
+	global $gzip, $userdata, $template, $db, $lang;
+	global $do_gzip_compress;
+	
+	if ( defined('DEBUG_SQL_ADMIN') )
+	{
+		$stat_run = new stat_run_class(microtime());
+		$stat_run->display();
+	}
+	
+	$template->pparse('footer');
+	
+	$db->sql_close();
+	
+	if( $do_gzip_compress )
+	{
+		//
+		// Borrowed from php.net!
+		//
+		$gzip_contents = ob_get_contents();
+		ob_end_clean();
+	
+		$gzip_size = strlen($gzip_contents);
+		$gzip_crc = crc32($gzip_contents);
+	
+		$gzip_contents = gzcompress($gzip_contents, 9);
+		$gzip_contents = substr($gzip_contents, 0, strlen($gzip_contents) - 4);
+	
+		echo "\x1f\x8b\x08\x00\x00\x00\x00\x00";
+		echo $gzip_contents;
+		echo pack('V', $gzip_crc);
+		echo pack('V', $gzip_size);
+	}
+	
+	ob_end_flush();
+	
+	exit;
+}
+
+/*
+ *	Soll die Abfragen der Datenbank einfacher machen!
+ *
+ *	@param: string	$s_table	example: GAMES
+ *	@param: string	$s_where	example: game_id != -1
+ *	@param: string	$s_order	example: game_order ASC
+ *	@param:	int		$s_sql		example: 1
+ *	@param: both	$s_fetch	example: true or false 
+ *
+ */
+function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_time = '', $s_separate = '')
+{
+	global $db, $lang, $oCache;
+	
+	switch ( $s_table )
+	{
+		case NEWS:			$field_id = 'news_id';		$field_link = 'news_cat';	$table_link = NEWS_CAT;	$field_id2 = 'cat_id';	break;
+		case TEAMS:			$field_id = 'team_id';		$field_link = 'team_game';	$table_link = GAMES;	$field_id2 = 'game_id';	break;
+		
+		/* only match for index? */
+		case MATCH:			( $s_sql == 4 ) ? $tmp_ary = array('s_table1' => MATCH, 'field_id1' => 'match_id', 'field_link1' => 'team_id', 's_table2' => TEAMS, 'field_id2' => 'team_id', 'field_link2' => 'team_game', 's_table3' => GAMES, 'field_id3' => 'game_id') : $field_id = 'match_id'; $field_link = 'team_id'; break;
+		case MATCH_TYPE:	$ary = array('s_table1' => MATCH_TYPE, 'name' => 'type_name', 'value' => 'type_value'); break;
+		case SETTINGS:		$ary = array('s_table1' => SETTINGS, 'name' => 'settings_name', 'value' => 'settings_value'); break;
+
+	#	default: message(GENERAL_ERROR, 'Error Data Mode: ' . $s_table);	break;
+	}
+	
+	if ( !isset($field_id) && $s_table )
+	{
+		$sql = 'SHOW FIELDS FROM ' . $s_table;
+		
+		if ( defined('CACHE') )
+		{
+			$sCacheName = $s_table . '_show';
+			
+			if ( ( $field_id = $oCache->readCache($sCacheName) ) === false )
+			{
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				
+				while ( $row = $db->sql_fetchrow($result) )
+				{
+					$temp[] = $row['Field'];
+				}
+				
+				$field_id = array_shift($temp);
+				
+				$oCache->writeCache($sCacheName, $field_id);
+			}
+		}
+		else
+		{
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			while ( $row = $db->sql_fetchrow($result) )
+			{
+				$temp[] = $row['Field'];
+			}
+			
+			$field_id = array_shift($temp);
+		}
+	}
+
+#	$ary = array('type', 'cat', 'sub', '-1', 'user_name', 'user_id', 'level', 'live');
+#	if ( strstr($s_where, in_array($s_where, $ary)) )
+	/* strstr($s_where, 'WHERE') ist vielleicht nützlicher */
+	/*
+	if ( is_array($s_where) )
+	{
+		$where = "WHERE {$field_id[0]} = {$s_where[0]} AND {$field_id[1]} = {$s_where[1]}";
+	}
+	
+	else if (
+		strstr($s_where, 'menu_class') ||
+		strstr($s_where, '-1') ||
+		strstr($s_where, 'cat') ||
+		strstr($s_where, 'sub') ||
+		strstr($s_where, 'live') ||
+		strstr($s_where, 'type') ||
+		strstr($s_where, 'level') ||
+		strstr($s_where, 'in_send') ||
+		strstr($s_where, 'user_id') ||
+		strstr($s_where, 'user_name') ||
+		strstr($s_where, 'match_id')
+		)
+	{
+		$where = "WHERE $s_where";
+	}
+	*/
+	if ( strstr($s_where, 'user_id') )
+	{
+		$where = "WHERE $s_where";
+	}
+	else if ( strstr($s_where, 'WHERE') )
+	{
+		$where = $s_where;
+	}
+	else if ( $s_where )
+	{
+		$where = "WHERE $field_id = $s_where";
+	}
+	else
+	{
+		$where = '';
+	}
+	
+#	$where = ( preg_match('/rank_type/i', $s_where) ) ? "WHERE $s_where" : false;
+#	$where = ( $s_where ) ? "WHERE $field_id = $s_where" : '';
+#	$where = ( $s_where == '-1' ) ? $field_where : false;
+	$order = ( $s_order ) ? "ORDER BY $s_order" : '';
+	
+	switch ( $s_sql )
+	{
+		case 0: $sql = "SELECT * FROM $s_table $order"; break;
+		case 1: $sql = "SELECT * FROM $s_table $where $order"; break;
+		case 2: $sql = "SELECT t1.*, t2.* FROM $s_table t1, $table_link t2 WHERE t1.$field_id = $s_where AND t1.$field_link = t2.$field_id2"; break;
+		case 3: $sql = "SELECT t1.*, t2.* FROM $s_table t1 LEFT JOIN $table_link t2 ON t1.$field_link = t2.$field_id2 WHERE t1.$field_id = $s_where"; break;
+		/* match only ? */
+		case 4: $sql = "SELECT m.*, t.*, g.* FROM {$tmp_ary['s_table1']} m LEFT JOIN {$tmp_ary['s_table2']} t ON m.{$tmp_ary['field_link1']} = t.{$tmp_ary['field_id2']} LEFT JOIN {$tmp_ary['s_table3']} g ON t.{$tmp_ary['field_link2']} = g.{$tmp_ary['field_id3']} $where $order"; break;
+		case 5: $sql = "SELECT * FROM {$ary['s_table1']} $where"; break;
+		default: message(GENERAL_ERROR, 'Wrong mode for data', '', __LINE__, __FILE__); break;
+	}
+	
+	$sCacheName = strtolower($s_table);
+	
+	if ( defined('CACHE') && $s_cache )
+	{
+		if ( ( $data = $oCache->readCache($sCacheName) ) === false )
+		{
+			if ( !($result = $db->sql_query($sql)) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+			switch ( $s_fetch )
+			{
+				case 1:
+					
+					$data = $db->sql_fetchrow($result);
+					
+					break;
+					
+				case 2:
+					
+					while ( $row = $db->sql_fetchrow($result) )
+					{
+						$data[$row[$ary['name']]] = unserialize($row[$ary['value']]);
+					}
+					
+					break;
+					
+				case 0:
+				
+					$data = $db->sql_fetchrowset($result);
+					
+					break;
+					
+				case 3:
+				
+					while ( $row = $db->sql_fetchrow($result) )
+					{
+						$data[$row[$field_id]] = ($s_separate) ? $row[$s_separate] : $row;
+					}
+					
+					break;
+			}
+			
+			( $s_time ) ? $oCache->writeCache($sCacheName, $data, (int) $s_time) : $oCache->writeCache($sCacheName, $data);
+		}
+		
+		$return = $data;
+	}
+	else
+	{
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		switch ( $s_fetch )
+		{
+			case 1:
+				
+				$data = $db->sql_fetchrow($result);
+				
+				break;
+				
+			case 2:
+				
+				while ( $row = $db->sql_fetchrow($result) )
+				{
+					$data[$row[$ary['name']]] = unserialize($row[$ary['value']]);
+				}
+				
+				break;
+				
+			case 0:
+			
+				$data = $db->sql_fetchrowset($result);
+				
+				break;
+			
+			case 3:
+				
+				while ( $row = $db->sql_fetchrow($result) )
+				{
+				#	$data[$row[$field_id]] = ($s_separate) ? $row[$s_separate] : $row;
+					$data[$row[$field_id]] = ($s_separate) ? $row[$s_separate] : $row;
+				}
+				
+				break;
+		}
+		
+		$return = $data;
+	}
+		
+	return $return;
 }
 
 ?>

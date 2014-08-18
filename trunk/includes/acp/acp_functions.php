@@ -1,5 +1,311 @@
 <?php
 
+function acl_auth($acl_check, $founder = false)
+{
+	global $db, $current, $log, $userdata, $lang, $mode;
+	
+	$gauth_access = $gaccess = array();
+	$uauth_access = array();
+	$options = array();
+	$tmp_auth = array();
+	$userauth = array();
+	$auth_group = array();
+	
+	if ( $founder && !$userdata['user_founder'] )
+	{
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail1'], lang($acl_check[0])));
+	}
+	
+	$label_type = ( is_array($acl_check) ) ? substr($acl_check[0], 0, 2) : substr($acl_check, 0, 2);
+	
+	/* Gruppen des Benutzers abfragen */
+	$sql = "SELECT type_id AS group_id
+				FROM " . LISTS . "
+					WHERE type = " . TYPE_GROUP . "
+						AND user_pending = 0
+						AND user_id = {$userdata['user_id']}";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$auth_group[] = $row['group_id'];
+	}
+	$db->sql_freeresult($result);
+	
+	/* Prüfen ob Gruppen bestehen, falls ja, Prüfen auf Rechte der Gruppen */
+	if ( $auth_group )
+	{
+		$sql = "SELECT * FROM " . ACL_GROUPS . " WHERE group_id IN (" . implode(', ', $auth_group) . ")";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$gauth_access[] = $row;
+		}
+		$db->sql_freeresult($result);
+	}
+	
+	/* Prüfen ob Benutzer extra Rechte hat */
+	$sql = "SELECT * FROM  " . ACL_USERS . " WHERE user_id = {$userdata['user_id']}";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+		
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$uauth_access[] = $row;
+	}
+	$db->sql_freeresult($result);
+	
+	/* Abfragen der Label für Adminrechte, keine Auswirkung wieviele man erstellt */
+	$acl_label = data(ACL_LABEL, "WHERE label_type = '$label_type'", false, 1, 3, true);
+
+	$sql = "SELECT * FROM " . ACL_LABEL_DATA . " d
+				LEFT JOIN " . ACL_OPTION . " o ON o.auth_option_id = d.auth_option_id
+					WHERE d.label_id IN (" . implode(', ', array_keys($acl_label)) . ")";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$options[$row['label_id']][$row['auth_option_id']] = $row['auth_value'];
+	}
+	
+	$acl_fields = data(ACL_OPTION, "WHERE auth_option LIKE '$label_type%'", false, 1, 3, true, false, 'auth_option');
+
+	if ( $gauth_access )
+	{
+		foreach ( $gauth_access as $keys => $rows )
+		{
+			if ( $rows['label_id'] != 0 )
+			{
+				if ( isset($options[$rows['label_id']]) )
+				{
+					foreach ( $options[$rows['label_id']] as $key => $row )
+					{
+						$gaccess[$keys][$acl_fields[$key]] = $row;
+					}
+				}
+				
+				$tlabel = $rows['label_id'];
+			}
+			
+			if ( $rows['auth_option_id'] != 0 )
+			{
+				$gaccess[$keys][$acl_fields[$rows['auth_option_id']]] = $rows['auth_value'];
+			}
+		}
+		
+		if ( $gaccess )
+		{
+			foreach ( $gaccess as $rows )
+			{
+				foreach ( $rows as $key => $row )
+				{
+					if ( $row == '1' )
+					{
+						if ( isset($tmp_auth[$key]) )
+						{
+							if ( $tmp_auth[$key] == '-1' )
+							{
+								$tmp_auth[$key] = '';
+							}
+							else if ( $tmp_auth[$key] == '0' )
+							{
+								$tmp_auth[$key] = '1';
+							}
+						}
+						else
+						{
+							$tmp_auth[$key] = '1';
+						}
+					}
+					else if ( $row == '0' )
+					{
+						if ( isset($tmp_auth[$key]) )
+						{
+							if ( $tmp_auth[$key] == '-1' )
+							{
+								$tmp_auth[$key] = '';
+							}
+							else if ( $tmp_auth[$key] == '1' )
+							{
+								$tmp_auth[$key] = '1';
+							}
+							
+						}
+						else
+						{
+							$tmp_auth[$key] = '';
+						}
+					}
+					else
+					{
+						$tmp_auth[$key] = '';
+					}
+				}
+			}
+		}
+	}
+
+	if ( $uauth_access )
+	{
+		$uaccess = array();
+		
+		foreach ( $uauth_access as $keys => $rows )
+		{
+			if ( $rows['label_id'] != 0 )
+			{
+				if ( isset($options[$rows['label_id']]) )
+				{
+					foreach ( $options[$rows['label_id']] as $key => $row )
+					{
+						$uaccess[$keys][$acl_fields[$key]] = $row;
+					}
+				}
+				
+				$tlabel = $rows['label_id'];
+			}
+			
+			if ( $rows['auth_option_id'] != 0 )
+			{
+				$uaccess[$keys][$acl_fields[$rows['auth_option_id']]] = $rows['auth_value'];
+			}
+		}
+		
+		foreach ( $uaccess as $rows )
+		{
+			foreach ( $rows as $key => $row )
+			{
+				if ( $row == '1' )
+				{
+					if ( isset($tmp_auth[$key]) )
+					{
+						if ( $tmp_auth[$key] == '-1' )
+						{
+							$tmp_auth[$key] = '';
+						}
+						else if ( $tmp_auth[$key] == '0' )
+						{
+							$tmp_auth[$key] = '1';
+						}
+					}
+					else
+					{
+						$tmp_auth[$key] = '1';
+					}
+				}
+				else if ( $row == '0' )
+				{
+					if ( isset($tmp_auth[$key]) )
+					{
+						if ( $tmp_auth[$key] == '-1' )
+						{
+							$tmp_auth[$key] = '';
+						}
+						else if ( $tmp_auth[$key] == '1' )
+						{
+							$tmp_auth[$key] = '1';
+						}
+						
+					}
+					else
+					{
+						$tmp_auth[$key] = '';
+					}
+				}
+				else
+				{
+					$tmp_auth[$key] = '';
+				}
+			}
+		}
+	}
+	
+	if ( $tmp_auth )
+	{
+		foreach ( $tmp_auth as $key => $row )
+		{
+			if ( $row )
+			{
+				$userauth[$key] = $row;
+			}
+		}
+	}
+	
+	if ( is_array($acl_check) )
+	{
+		$check = '';
+		
+		foreach ( $acl_check as $acl )
+		{
+			if ( in_array($acl, array_keys($userauth)) )
+			{
+				$check[$acl] = true;
+			}
+		#	else
+		#	{
+		#		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+		#		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
+		#	}
+		}
+		
+		if ( $check )
+		{
+			foreach ( $check as $_check )
+			{
+				if ( $_check )
+				{
+					return true;
+				}
+				else
+				{
+					log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+					message(GENERAL_ERROR, sprintf($lang['notice_auth_fail2'], $lang[$_check]));
+				}
+			}
+		}
+		else
+		{
+			log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+			message(GENERAL_ERROR, sprintf($lang['notice_auth_fail3'], $lang[$current]));
+		}
+	}
+	else
+	{
+		if ( in_array($acl_check, array_keys($userauth)) )
+		{
+			return true;
+		}
+		else
+		{
+			log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+			message(GENERAL_ERROR, sprintf($lang['notice_auth_fail4'], lang($acl_check)));
+		}
+	}
+}
+
+function auth_check($auth)
+{
+	global $userdata, $userauth, $log, $current, $lang;
+	
+	if ( $userdata['user_level'] != ADMIN && !$auth )
+	{
+		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
+		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail5'], $lang[$current]));
+	}
+}
+
 /*
  * Error Box ausgabe.
  */
@@ -30,10 +336,19 @@ function error($tpl_box, &$error_ary)
 	}
 }
 
+function right($tpl_box, $msg)
+{
+	global $template, $log;
+	
+	$template->set_filenames(array('right' => 'style/info_right.tpl'));
+	$template->assign_vars(array('RIGHT_MESSAGE' => $msg));
+	$template->assign_var_from_handle($tpl_box, 'right');
+}
+
 /*
  * Verschiebt das Element entweder nach oben oder nach unten, anhand der Orderzahl
  */
-function move($tbl, $mode, $order, $main = false, $type = false, $usub = false, $action = false, $sort = false)
+function move($tbl, $mode, $order, $main = false, $type = false, $usub = false, $action = false, $sort = false, $act = false)
 {
 	global $db;
 	
@@ -71,14 +386,20 @@ function move($tbl, $mode, $order, $main = false, $type = false, $usub = false, 
 	{
 		switch ( $tbl )
 		{
-			case ACL_LABEL: $type = 'label_type'; break; 
+			case ACL_LABEL: $type = 'label_type'; break;
+			case RANKS: $type = 'rank_type'; break; 
 		}
 
 		$sql .= " WHERE $type = '$sort'";
+		
+		if ( $tbl == RANKS && $act == 'forum' )
+		{
+			$sql .= " AND rank_min = 0";
+		}
 	}
 	
 	$sql .= " ORDER BY $field_order ASC";
-	debug($sql);
+#	debug($sql);
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -113,6 +434,53 @@ function move($tbl, $mode, $order, $main = false, $type = false, $usub = false, 
 
 		$i += 1;
 	}
+}
+
+/*
+ *	Funktion um Benutzernamen in IDs umzu bauen
+ */
+function get_user_name_id(&$user_ids, &$user_names)
+{
+	global $db, $lang;
+	
+	if ($user_ids && $user_names)
+	{
+		return false;
+	}
+	else if (!$user_ids && !$user_names)
+	{
+		return true;
+	}
+	
+	$user_names = explode("\n", $user_names);
+	
+	foreach ( $user_names as $_names )
+	{
+		$_user_names[] = trim($_names);
+	}
+	
+	$user_ids = $user_names = array();
+	
+	$sql = "SELECT user_id, user_name FROM " . USERS . " WHERE LOWER(user_name) IN ('" . strtolower(implode("', '", $_user_names)) . "')";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	if ( $db->sql_numrows($result) )
+	{
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$user_names[$row['user_id']] = $row['user_name'];
+			$user_ids[] = $row['user_id'];
+		}
+	}
+	else
+	{
+		return true;
+	}
+
+	return false;
 }
 
 /*
@@ -161,7 +529,7 @@ function get_version($host, $directory, $filename, &$errstr, &$errno, $port = 80
 				}
 			}
 			@fclose($fsock);
-	
+
 			$info = explode("\n", $info);
 		}
 		else
@@ -459,7 +827,7 @@ function orders_new($mode, $type, $id)
 #function orders($mode, $type = false, $subs = false)
 function orders($mode, $type = '')
 {
-	debug($type);
+#	debug($type);
 	global $db;
 	
 	if ( in_array($mode, array(DOWNLOADS_CAT, NEWS_CAT)) )
@@ -492,7 +860,7 @@ function orders($mode, $type = '')
 		
 		case FIELDS;		$idfield = 'field_id';		$orderfield = 'field_order';	$typefield = 'field_sub';			break;
 		
-		case PROFILE;		$idfield = 'profile_id';	$orderfield = 'profile_order';	$typefield = 'profile_cat';			break;
+		case PROFILE;		$idfield = 'profile_id';	$orderfield = 'profile_order';	$typefield = 'main';			break;
 		case NAVI:			$idfield = 'navi_id';		$orderfield = 'navi_order';		$typefield = 'navi_type';			break;
 		case GROUPS:		$idfield = 'group_id';		$orderfield	= 'group_order';										break;
 		case NETWORK:		$idfield = 'network_id';	$orderfield = 'network_order';	$typefield = 'network_type';		break;
@@ -843,164 +1211,6 @@ function search_user($type, $select)
 	$msg = $tmp[$key[0]];
 
 	return $msg;
-}
-
-/*
- *	Soll die Abfragen der Datenbank einfacher machen!
- *
- *	@param: string	$s_table	example: GAMES
- *	@param: string	$s_where	example: game_id != -1
- *	@param: string	$s_order	example: game_order ASC
- *	@param:	int		$s_sql		example: 1
- *	@param: both	$s_fetch	example: true or false 
- *
- */
-function data($s_table, $s_where, $s_order, $s_sql, $s_fetch)
-{
-	global $db, $lang;
-	
-	switch ( $s_table )
-	{
-	#	case BANLIST:		$field_id = 'ban_id';		break;
-	#	case CASH:			$field_id = 'cash_id';		break;
-	#	case CONTACT:		$field_id = 'contact_id';	break;
-	#	case DISALLOW:		$field_id = 'disallow_id';	break;
-	#	case DOWNLOAD:		$field_id = 'dl_id';		break;
-	#	case DOWNLOADS:		$field_id = 'file_id';		break;
-	#	case DOWNLOADS_CAT:	$field_id = 'cat_id';		break;
-	#	case ERROR:			$field_id = 'error_id';		break;
-	#	case ERROR:			$field_id = 'error_id';		break;
-	#	case EVENT:			$field_id = 'event_id';		break;
-	#	case FIELDS:		$field_id = 'field_id';		break;
-	#	case FIELDS_DATA:	$field_id = 'user_id';		break;
-	#	case FORUM:			$field_id = 'forum_id';		break;
-	#	case FORUM:			$field_id = 'forum_id';		break;
-	#	case GALLERY:		$field_id = 'gallery_id';	break;
-	#	case GALLERY_PIC:	$field_id = 'gallery_id';	break;
-	#	case GAMES:			$field_id = 'game_id';		break;
-	#	case GROUPS:		$field_id = 'group_id';		break;
-	#	case ICONS:			$field_id = 'icon_id';		break;
-	#	case LISTS:			$field_id = 'list_id';		break;
-	#	case LOGS:			$field_id = 'log_id';		break;
-	#	case MAPS:			$field_id = 'map_id';		break;
-	#	case MATCH_MAPS:	$field_id = 'map_id';		break;
-	#	case MENU:			$field_id = 'menu_id';		break;
-	#	case MENU:			$field_id = 'file_id';		break;
-	#	case NAVI:			$field_id = 'navi_id';		break;
-	#	case NETWORK:		$field_id = 'network_id';	break;
-	#	case NEWS_CAT:		$field_id = 'cat_id';		break;
-	#	case NEWSLETTER:	$field_id = 'newsletter_id';break;
-	#	case RANKS:			$field_id = 'rank_id';		break;
-	#	case SERVER:		$field_id = 'server_id';	break;
-	#	case SERVER_TYPE:	$field_id = 'type_id';		break;
-	#	case THEMES:		$field_id = 'themes_id';	break;
-	#	case TRAINING:		$field_id = 'training_id';	break;
-	#	case USERS:			$field_id = 'user_id';		break;
-		
-		case CASH_USER:		$field_id = 'cash_user_id';	$field_link = 'user_id';	$table_link = USERS;	$field_id2 = 'user_id';	break;
-		case NEWS:			$field_id = 'news_id';		$field_link = 'news_cat';	$table_link = NEWS_CAT;	$field_id2 = 'cat_id';	break;
-		case TEAMS:			$field_id = 'team_id';		$field_link = 'team_game';	$table_link = GAMES;	$field_id2 = 'game_id';	break;
-		
-
-		/* only match for index? */
-		case MATCH:			( $s_sql == 4 ) ? $tmp_ary = array('s_table1' => MATCH, 'field_id1' => 'match_id', 'field_link1' => 'team_id', 's_table2' => TEAMS, 'field_id2' => 'team_id', 'field_link2' => 'team_game', 's_table3' => GAMES, 'field_id3' => 'game_id') : $field_id = 'match_id'; $field_link = 'team_id'; break;
-		case MATCH_TYPE:	$ary = array('s_table1' => MATCH_TYPE, 'name' => 'type_name', 'value' => 'type_value'); break;
-		case SETTINGS:		$ary = array('s_table1' => SETTINGS, 'name' => 'settings_name', 'value' => 'settings_value'); break;
-
-	#	default: message(GENERAL_ERROR, 'Error Data Mode: ' . $s_table);	break;
-	}
-	
-	if ( !isset($field_id) && $s_table )
-	{
-		$sql = 'SHOW FIELDS FROM ' . $s_table;
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$temp[] = $row['Field'];
-		}
-		
-		$field_id = array_shift($temp);
-	}
-
-#	$ary = array('type', 'cat', 'sub', '-1', 'user_name', 'user_id', 'level', 'live');
-#	if ( strstr($s_where, in_array($s_where, $ary)) )
-	/* strstr($s_where, 'WHERE') ist vielleicht nützlicher */
-	if ( is_array($s_where) )
-	{
-		$where = "WHERE {$field_id[0]} = {$s_where[0]} AND {$field_id[1]} = {$s_where[1]}";
-	}
-	else if (
-		strstr($s_where, 'menu_class') ||
-		strstr($s_where, '-1') ||
-		strstr($s_where, 'cat') ||
-		strstr($s_where, 'sub') ||
-		strstr($s_where, 'live') ||
-		strstr($s_where, 'type') ||
-		strstr($s_where, 'level') ||
-		strstr($s_where, 'in_send') ||
-		strstr($s_where, 'user_id') ||
-		strstr($s_where, 'user_name') ||
-		strstr($s_where, 'match_id')
-		)
-	{
-		$where = "WHERE $s_where";
-	}
-	else if ( strstr($s_where, 'WHERE') )
-	{
-		$where = $s_where;
-	}
-	else if ( $s_where )
-	{
-		$where = "WHERE $field_id = $s_where";
-	}
-	else
-	{
-		$where = '';
-	}
-	
-#	$where = ( preg_match('/rank_type/i', $s_where) ) ? "WHERE $s_where" : false;
-#	$where = ( $s_where ) ? "WHERE $field_id = $s_where" : '';
-#	$where = ( $s_where == '-1' ) ? $field_where : false;
-	$order = ( $s_order ) ? "ORDER BY $s_order" : '';
-	
-	switch ( $s_sql )
-	{
-		case 0: $sql = "SELECT * FROM $s_table $order"; break;
-		case 1: $sql = "SELECT * FROM $s_table $where $order"; break;
-		case 2: $sql = "SELECT t1.*, t2.* FROM $s_table t1, $table_link t2 WHERE t1.$field_id = $s_where AND t1.$field_link = t2.$field_id2"; break;
-		case 3: $sql = "SELECT t1.*, t2.* FROM $s_table t1 LEFT JOIN $table_link t2 ON t1.$field_link = t2.$field_id2 WHERE t1.$field_id = $s_where"; break;
-		/* match only ? */
-		case 4: $sql = "SELECT m.*, t.*, g.* FROM {$tmp_ary['s_table1']} m LEFT JOIN {$tmp_ary['s_table2']} t ON m.{$tmp_ary['field_link1']} = t.{$tmp_ary['field_id2']} LEFT JOIN {$tmp_ary['s_table3']} g ON t.{$tmp_ary['field_link2']} = g.{$tmp_ary['field_id3']} $order"; break;
-		case 5: $sql = "SELECT * FROM {$ary['s_table1']} $where"; break;
-		default: message(GENERAL_ERROR, 'Wrong mode for data', '', __LINE__, __FILE__); break;
-	}
-	
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	
-	if ( $s_fetch == '1' )
-	{
-		$return = $db->sql_fetchrow($result);
-	}
-	else if ( $s_fetch == '2' )
-	{
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$return[$row[$ary['name']]] = unserialize($row[$ary['value']]);
-		}
-	}
-	else
-	{
-		$return = $db->sql_fetchrowset($result);
-	}
-		
-	return $return;
 }
 
 ?>

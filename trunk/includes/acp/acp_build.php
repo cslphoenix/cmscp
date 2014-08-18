@@ -1,12 +1,47 @@
 <?php
 
-function build_request_list($vars, &$error)
+function build_request_list($tbl, $vars, &$error, $field_id)
 {
-#	global $db, $url, $lang, $_POST;
-
-	foreach ( $vars as $name => $opt )
+	global $db, $lang;
+	
+	list($field, $id) = explode('_', $field_id);
+	
+	$sql = "SELECT $field_id, " . implode(', ', array_keys($vars)) . " FROM $tbl
+				WHERE $field_id IN (" . implode(', ', array_keys($_POST[$field])) . ")";
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		$request[$name] = request($name, ARY, $opt['validate']);
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$update[$row[$field_id]] = false;
+		
+		foreach ( array_keys($vars) as $key )
+		{
+			$data[$row[$field_id]][$key] = $row[$key];
+			
+			if ( $row[$key] != $_POST[$field][$row[$field_id]][$key] )
+			{
+				$update[$row[$field_id]] = true;
+			}
+		}
+	}
+	
+	$request = '';
+	
+	foreach ( array_keys($_POST[$field]) as $key )
+	{
+		if ( $update[$key] )
+		{
+			foreach ( $vars as $name => $info )
+			{
+				$val = isset($vars[$name]['validate']) ? $vars[$name]['validate'] : false;				
+				$req = isset($vars[$name]['required']) ? $vars[$name]['required'] : false;
+				
+				$request[$key][$name] = request(array($field, $key, $name), $val);
+			}
+		}
 	}
 	
 	return $request;
@@ -147,12 +182,32 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 				#	debug($request[$rows], "$rows", true);
 				}
 				
-				if ( $type == "upload:$tbl_type" && $type_typ )
+				
+				@list($type_main, $type_sub) = explode(':', $type);
+				#	debug($type, 'type');
+				#	debug($type_typ, 'type_typ');
+				#	debug($tbl_type, 'tbl_type');
+					
+				#	debug("upload:$tbl_type", 'upload:$tbl_type');
+				
+				/* Upload Block */
+			#	if ( in_array($type, array("upload:$tbl_type", "upload:flag", "upload:logo")) && $type_typ )
+				if ( $type_main == 'upload' && in_array($tbl_type, array('flag', 'logo', 'image')) && $type_typ )
 				{
+				#	debug('if true');
+				#	debug($type, 'type');
+				#	debug($type_typ, 'type_typ');
+				#	debug($tbl_type, 'tbl_type');
+					
 					$type	= str_replace(':', '_', $type);
-					$upload = request_file("upload_$tbl_type");
+					$upload = request_file("upload:$rows");
 					$delete = request("{$rows}_delete", TYP);
-					$current = request("current_$tbl_type", TXT);
+					$current = request("current:$rows", TYP);
+					
+				#	debug($upload, $rows);
+					
+				#	debug($type, 'type');
+				#	debug($upload, 'upload');
 					
 					if ( $tbl_type == 'file' )
 					{
@@ -180,13 +235,13 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 							$request[$rows] = $current;
 						}
 						
-					#	debug($request[$rows], 'request');
+						debug($request[$rows], 'file');
 					}
 					else
 					{
 						if ( $delete && !$upload )
 						{
-							image_delete($current, '', $vars[$multi][$rows]['params'], $rows);
+							image_delete($current, '', (is_array($vars[$multi][$rows]['params']) ? $vars[$multi][$rows]['params'][0] : $vars[$multi][$rows]['params']), false);
 						}
 						else if ( $upload )
 						{
@@ -198,7 +253,11 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 						{
 							$request[$rows] = $current;
 						}
+						
+					#	debug($request[$rows], 'else');
 					}
+					
+					
 				}
 				
 				if ( is_array($req) )
@@ -225,7 +284,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					
 					if ( $request[$rows] == '' || $request[$rows] == '-1' )
 					{
-						$error[] = lang("msg_$required");
+						$error[] = lang("error_$required");
 						$check = false;
 					}
 					
@@ -249,7 +308,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 						
 						if ( strtolower($match[$rows]) == strtolower($request[$rows]) && $match[$field_name] != $field_id )
 						{
-							$error[] = sprintf($lang['sql_duplicate'], $rows, $match[$rows]);
+							$error[] = sprintf($lang['sql_duplicate'], $lang[$rows], $match[$rows]);
 						}					
 					}
 				}
@@ -278,7 +337,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 			#		}
 			#	}
 				
-			#	für News
+				/* News Block */
 				if ( $tbl_type == 'links' )
 				{
 					$compress	= array();
@@ -338,7 +397,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 							
 							if ( $mode == 'create' && time() >= $request[$rows] )
 							{
-								$error[] = $lang['msg_select_past'];
+								$error[] = $lang['error_select_past'];
 							}
 						}
 						else
@@ -363,7 +422,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 			#		$request[$rows] = is_array($request[$rows]) ? implode(', ', $request[$rows]) : $request[$rows];
 			#	}
 				
-				if ( in_array($rows, array('training_maps', 'dl_types')) )
+				if ( in_array($rows, array('training_maps', 'dl_types', 'cash_month')) )
 				{
 					$tmp_map = '';
 					
@@ -384,13 +443,15 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					
 					$request[$rows] = serialize($tmp_map);
 				}
-				
 			}
 			else
 			{
 				@list($tbl_name, $tbl_type) = explode('_', $rows);
 				
 				$request[$rows] = request(array($multi, $rows), TXT);
+				
+			#	debug($mode, 'mode');
+			#	debug($tbl_type, 'tbl_type');
 				
 				if ( $tbl_name == 'time' && $mode == $tbl_type )
 				{
@@ -405,6 +466,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 	return $request;
 }
 
+/*
 function build_output_list($data, $vars, $tpl, $settings_name)
 {
 #	global $db, $lang, $template, $settings, $userdata, $dir_path;
@@ -493,10 +555,132 @@ function build_output_list($data, $vars, $tpl, $settings_name)
 		
 	return;
 }
+*/
+
+function build_output_list($tbl, $vars, $data, $tpl, $string)
+{
+	global $db, $root_path, $lang, $template, $settings;
+	
+	foreach ( $vars as $name => $var )
+	{
+		if ( !is_array($var) )
+		{
+			continue;
+		}
+		
+		$template->assign_block_vars("$tpl.name_option", array(
+			'NAME' => str_replace($lang[$string], '', lang($name))
+		));
+	}
+	
+	for ( $i = 0; $i < count($data); $i++ )
+	{
+		$template->assign_block_vars("$tpl.row", array());
+		
+		foreach ( $vars as $vars_opt => $vars_type )
+		{
+			if ( !is_array($vars_type) )
+			{
+				if ( $vars_type != 'hidden' )
+				{
+					$template->assign_block_vars("$tpl.row.tab", array(
+						'L_LANG' => isset($lang[$vars_type]) ? $lang[$vars_type] : $vars_type
+					));	
+				}
+				else
+				{
+					$tdata = @$data[$i][$name];
+				#	$tdata = $multi ? @$sql_data[$vars_key][$vars_opt] : @$sql_data[$vars_opt];
+					
+					$tmp_opts = isset($vars_type['opt']) ? $vars_type['opt'] : '';
+					
+					$tmeta = $vars_key;
+					$tname = $vars_opt;
+					$hidden = '<input type="hidden" name="' . sprintf('%s[%s]', $tmeta, $tname) . '" value="' . $tdata . '" />';
+					
+					$template->assign_block_vars("$tpl.row.hidden", array('HIDDEN' => $hidden));
+				}
+			}
+			else
+			{
+				$ttype = $vars_type['type'];
+				$tdata = @$data[$i][$vars_opt];
+				
+				list($vars_key, $ttname) = explode('_', $name);
+				
+				$tmeta = $vars_key;
+				$tname = $vars_opt;
+				
+				$lngs = isset($lang[$vars_opt]) ? $lang[$vars_opt] : $vars_opt;
+				
+				
+				list($type, $option) = explode(':', $ttype);
+				
+				$f_id	= sprintf('%s_%s', $tmeta, $tname);
+				$f_name	= sprintf('%s[%s][%s]', $tmeta, $data[$i][key($data[$i])], $tname);
+				
+				$return = '';
+			#	debug($tdata);
+				
+				switch ( $type )
+				{
+					case 'checkbox':
+					
+						$checked = ($tdata) ? ' checked="checked"' : '';
+					
+						
+						$return .= '<input type="hidden" name="' . $f_name . '" id="' . $f_id . '" value="0" />';
+						$return .= '<input type="checkbox"' . $checked . ' name="' . $f_name . '" id="' . $f_id . '" value="1" />';
+						
+						break;
+					
+					case 'text':
+						
+						list($size, $max) = explode(';', $option);
+					
+						if ( is_array($tdata) )
+						{
+							( count($tdata) == 4 ) ? list($value, $order, $default, $url) = array_values($tdata) : list($value, $order, $default) = array_values($tdata);
+						}
+						else if ( isset($opt['params']) && $opt['params'] == 'format' )
+						{
+							$value = ( $tdata != '' ) ? date('d.m.Y H:i', $tdata) : (int) 0;
+						}
+						else
+						{
+							$value = $tdata;
+						}
+						
+						/* für Kommentarfunktion: placeholder="Kommentar schreiben ..." */
+						
+						$return .= '<input type="text"' . ( isset($opt['class'] ) ? ' class="' . $opt['class'] . '"' : '') . ' size="' . $size . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '" value="' . $value . '" />';
+						
+						break;
+						
+					case 'info':
+					
+						$return .= $tdata . '<input type="hidden" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" />';
+						
+						break;
+				}
+				
+				$template->assign_block_vars("$tpl.row.type_option", array(
+				#	'L_NAME'	=> $lngs,
+				#	'DIV_START'	=> (isset($vars_type['divbox'])) ? '<div id="' . $tname . '" style="display:' . $none . ';">' : '',
+				#	'DIV_END'	=> (isset($vars_type['divbox'])) ? '</div>' : '',
+				#	'CSS'		=> $css,
+				#	'LABEL'		=> "{$vars_key}_{$vars_opt}",
+					'TYPE'	=> $return,
+				#	'EXPLAIN'	=> ( isset($vars_type['explain']) && isset($lang[$explain]) ) ? ' title="' . $lang[$explain] . '"' : '',
+				));
+			}
+		}
+	}
+}
 
 function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 {
-	global $db, $root_path, $lang, $template, $settings, $userdata, $dir_path, $mode;
+	global $db, $root_path, $lang, $template, $settings, $userdata, $dir_path, $mode, $action;
 	
 	$time = time();
 	
@@ -559,6 +743,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 				$tmeta = $vars_key;
 				$tname = $vars_opt;
 				
+				$tparams = isset($vars_type['params']) ? $vars_type['params'] : false;
+				
 				$lngs = isset($lang[$vars_opt]) ? $lang[$vars_opt] : $vars_opt;
 				
 				$f_id	= sprintf('%s_%s', $tmeta, $tname);
@@ -596,7 +782,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						
 						if ( is_array($vars_type['params']) )
 						{
-							list($typ, $new, $level) = explode(':', $vars_type['params']);
+							list($typ, $new, $level) = explode(':', $vars_type['params'][0]);
 						}
 						else
 						{
@@ -605,7 +791,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						
 						$ajax_file = ( $typ != 'server' ) ? ( $typ == 'rival' ) ? 'ajax_rival.php' : 'ajax_user.php' : 'ajax_gs.php';
 						
-						$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" onkeyup="look_' . $tname . '(this.value' . (( substr_count($vars_type['params'], ':') >= 1 ) ? sprintf(', %s, %s', $new, $level) : '')  . ');" onblur="set_' . $tname . '();" autocomplete="off"><div class="suggestionsBox" id="' . $tname . '" style="display:none;"><div class="suggestionList" id="auto_' . $tname . '"></div></div>';
+						$opt .= '<input type="text" size="' . $size . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" onkeyup="look_' . $tname . '(this.value' . (( substr_count($vars_type['params'][0], ':') >= 1 ) ? sprintf(', %s, %s', $new, $level) : '')  . ');" onblur="set_' . $tname . '();" autocomplete="off"><div class="suggestionsBox" id="' . $tname . '" style="display:none;"><div class="suggestionList" id="auto_' . $tname . '"></div></div>';
 						
 						$template->assign_block_vars("$tpl.ajax", array('NAME' => $tname, 'FILE' => $ajax_file));
 				
@@ -634,7 +820,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						{
 							$check = '';
 						
-							if ( in_array($i, explode(', ', $tdata)) )
+							if ( in_array($i, unserialize($tdata)) )
 							{
 								$check = ' checked="checked"';
 							}
@@ -662,19 +848,21 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 					case 'drop':
 					
 						$pre = isset($vars_type['prefix']) ? $vars_type['prefix'] : '';
-					
+						
 						switch ( $option )
 						{
 							case 'navi_left':       
 							case 'navi_top':        
-							case 'navi_right':	$opt = select_navi($option, $tdata, $vars_key); break;
+							case 'navi_right':	$opt = select_navi($option, $tdata, $tmeta); break;
 							
 							/* acp_games, acp_server // tdata = default, tmeta/tname = name und id, params = game/voice server */
-							case 'server':	$opt .= select_server($tdata, $tmeta, $tname, $vars_type['params']); break;
-							case 'main':	$opt .= select_main($tdata, $tmeta, $tname, $data); break;
+						#	case 'server':	$opt .= s_types($tdata, $tmeta, $tname, $vars_type['params']); break;
+							case 'gameq':	$opt .= s_gameq($tdata, $tmeta, $tname, (isset($data[$tparams]) ? $data[$tparams] : $tparams)); break;
+							case 'main':	$opt .= s_main($tdata, $tmeta, $tname, $data); break;
 								
 							case 'copy':	
-							case 'forms':	$opt .= select_forms($tdata, $tmeta, $tname, $option);	break;
+						#	case 'forms':	$opt .= select_forms($tdata, $tmeta, $tname, $option);	break;
+							case 'forms':	$opt .= s_copy($tdata, $tmeta, $tname, $option);	break;
 							
 							case 'file':
 							
@@ -716,7 +904,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 												$mark = ( $tdata == $row ) ? ' selected="selected"' : '';
 												$mask = str_replace(substr($row, strrpos($row, '.')), "", $row);
 									
-												$opt .= '<option value="' . $row . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $mask) . '</option>';
+												$opt .= '<option value="' . $row . '"' . $mark . '>' . sprintf($lang['stf_select_format'], $mask) . '</option>';
 											}
 											
 											$opt .= '</select><br /><img src="' . $current_image . '" id="image" alt="" /></div><div id="ajax_content"></div>';
@@ -752,7 +940,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 										$files = scandir($folder);
 										$tdata = str_replace('./', '', $tdata);
 										
-										$nfiles = $files;
+										$nfiles['dir'] = $files;
 									
 										break;
 									
@@ -778,13 +966,18 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 											}
 										}
 										
-										unset($setmodules);
+										sort($modules);
+										
+									#	unset($setmodules);
 										
 										foreach ( $modules as $row )
 										{
-											$nfiles[] = array($row['title'] => $row['filename']);
+											$cat = isset($row['cat']) ? $row['cat'] : 'none';
+											$nfiles[$cat][] = array($row['title'] => $row['filename']);
 										}
-									
+										
+										unset($setmodules, $modules);
+										
 										break;
 								}
 								
@@ -792,36 +985,46 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								{
 									case 'mode':	$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="display_modes(this.value);">'; break;
 									case 'self':	$opt .= '<select name="' . $f_name . '" id="' . sprintf('%s', $tname) . '"  onchange="' . $f_id . '.value = this.value;">';
-													$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_file']) . '</option>';
+													$opt .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['notice_select_file']) . '</option>';
 													$ending = true;
 										break;
 										
 									default: $opt .= '<select name="' . $f_name . '" id="' . $f_id . '">'; break;
 								}
 								
-								foreach ( $nfiles as $row )
+							#	debug($nfiles, 'nfiles');
+								
+								foreach ( $nfiles as $group => $files )
 								{
-									if ( is_array($row) )
+									$opt .= '<optgroup label="' . lang($group) . '">';
+									
+									foreach ( $files as $file )
 									{
-										$temp_lng = isset($lang[key($row)]) ? $lang[key($row)] : key($row);
-										$lng = sprintf($format, $temp_lng, current($row));
-										$temp_file = current($row);
+									
+									if ( is_array($file) )
+									{
+										$temp_lng = isset($lang[key($file)]) ? $lang[key($file)] : key($file);
+										$temp_lang = sprintf($format, $temp_lng, str_replace($filter, '', current($file)));
+										$temp_file = current($file);
 									}
 									else
 									{
-										$lng = isset($lang[$row]) ? $lang[$row] : $row;
-										$temp_file = $row;
+										$temp_lang = str_replace($filter, '', $file);
+										$temp_file = $file;
 									}
 																	
 									if ( strstr($temp_file, $filter) )
 									{
 										$mark = ( $tdata == $temp_file ) ? ' selected="selected"' : '';
-										$opt .= '<option value="' . $temp_file . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $lng) . '</option>';
+										$opt .= '<option value="' . $temp_file . '"' . $mark . '>' . $temp_lang . '</option>';
 									}
+									}
+									
+									$opt .= '</optgroup>';
 								}
 								$opt .= '</select>';
 								
-								$opt .= $ending ? '&nbsp;<input type="text" size="25" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" />' : '';
+								$opt .= ($ending) ? '&nbsp;<input type="text" size="25" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" />' : '';
 								
 								break;
 							
@@ -837,7 +1040,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								$files = array_diff(scandir($folder), array('.', '..', '.htaccess', '.htm', '.svn', 'spacer.gif'));
 								
 								$opt .= '<select name="' . $f_name . '" id="' . $f_id . '" onchange="update_image(this.options[selectedIndex].value);">';
-								$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_' . $tmeta]) . '</option>';
+								$opt .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['notice_select_image']) . '</option>';
 								
 								foreach ( $files as $tfile )
 								{
@@ -850,7 +1053,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 											$cimage = $folder . $tfile;
 										}
 										
-										$opt .= '<option value="' . $tfile . '"' . (( $tdata == $tfile ) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $lng) . '</option>';
+										$opt .= '<option value="' . $tfile . '"' . (( $tdata == $tfile ) ? ' selected="selected"' : '') . '>' . sprintf($lang['stf_select_format'], $lng) . '</option>';
 									}
 								}
 								
@@ -895,7 +1098,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							#	debug($tdata, 'tdata');
 								
 								$opt .= '<select name="' . $f_name . '" id="' . $f_id . '"' . ( (isset($layout)) ? ' onchange="update_image(this.options[selectedIndex].value);"' : '') . '>';
-								$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select' . str_replace($tmeta, '', $tname) . '_image']) . '</option>';
+								$opt .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['notice_select' . str_replace($tmeta, '', $tname) . '_image']) . '</option>';
 								
 								$cimage = '';
 								
@@ -910,7 +1113,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 									
 								#	debug($row[$field_image], 'field_id');
 									
-									$opt .= '<option value="' . $row[$field_image] . '"' . (( $tdata == $row[$field_id] ) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $row[$field_name]) . '</option>';
+									$opt .= '<option value="' . $row[$field_image] . '"' . (( $tdata == $row[$field_id] ) ? ' selected="selected"' : '') . '>' . sprintf($lang['stf_select_format'], $row[$field_name]) . '</option>';
 								}
 								
 								$opt .= '</select>';
@@ -947,7 +1150,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								$db_tmp = $db->sql_fetchrowset($result);
 								
 								$opt .= '<select name="' . $f_name . '" id="' . $f_id . '">';
-								$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select' . str_replace($tmeta, '', $tname) . '_image']) . '</option>';
+								$opt .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['msg_select' . str_replace($tmeta, '', $tname) . '_image']) . '</option>';
 								
 								$cimage = '';
 								
@@ -960,7 +1163,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 									
 								#	debug($row[$field_image], 'field_id');
 									
-									$opt .= '<option value="' . substr($row[$field_image], 0, strrpos($row[$field_image], '.')) . '"' . (( $tdata == substr($row[$field_image], 0, strrpos($row[$field_image], '.')) ) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $row[$field_name]) . '</option>';
+									$opt .= '<option value="' . substr($row[$field_image], 0, strrpos($row[$field_image], '.')) . '"' . (( $tdata == substr($row[$field_image], 0, strrpos($row[$field_image], '.')) ) ? ' selected="selected"' : '') . '>' . sprintf($lang['stf_select_format'], $row[$field_name]) . '</option>';
 								}
 								
 								$opt .= '</select>';
@@ -991,7 +1194,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								
 								sort($modules);
 								
-								unset($setmodules);
+							#	unset($setmodules);
 								
 								foreach ( $modules as $module_info )
 								{
@@ -1000,11 +1203,24 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 									foreach ( $module_info['modes'] as $key => $row )
 									{
 										$template->assign_block_vars("$tpl.m_names.modes", array(
-											'A_OPTION' => $row['title'],
+											'A_OPTION' => lang($row['title']),
 											'A_VALUE' => $key
 										));
 									}
 								}
+								
+							#	foreach ( $modules as $key => $_modules )
+							#	{
+							#		$_new[$key]['file'] = $_modules['filename'];
+							#		$_new[$key]['name'] = $_modules['title'];
+							#		
+							#		foreach ( $_modules['modes'] as $_mode => $_modes )
+							#		{
+							#			$_new[$key]['mode'][$_mode] = $_modes['title'];
+							#		}
+							#	}
+							#	
+							#	debug(serialize($_new));
 								
 								$opt .= '<select name="' . $f_name . '" id="' . $f_id . '">';
 								
@@ -1019,14 +1235,16 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 										foreach ( $module_info['modes'] as $keys => $rows )
 										{
 											$mark = ( $keys == $tdata ) ? ' selected="selected"' : "";
-											$opt .= '<option value="' . $keys . '"' . $mark . '>' . sprintf($lang['sprintf_select_format'], $rows['title']) . '</option>';
+											$opt .= '<option value="' . $keys . '"' . $mark . '>' . lang($rows['title']) . '</option>';
 										}
 									}
+									
+									
 								}
 								
 								$opt .= '</select>';
 								
-								unset($modules);
+								unset($setmodules, $modules);
 								
 								break;
 							
@@ -1045,7 +1263,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 													select_date('select', 'min',	"{$pre}min",	date('i', is_numeric($vars_type['params']) ? $tdata : $time), $time));
 								break;
 							
-							case 'duration':	$opt = select_date('select', 'duration', "{$pre}duration", ( $tdata - $data[$vars_type['params']] ) / 60); break;
+							case 'duration':	$opt = select_date('select', 'duration', "{$pre}duration", ( $tdata - $data[$vars_type['params']] ) / 60, $tmeta); break;
 							case 'team':		$opt = select_team($tdata, $tmeta, $tname, $vars_type['params']); break;
 							case 'match_type':	$opt = match_types($tdata, $tmeta, $tname); break;
 							case 'match_war':	$opt = match_types($tdata, $tmeta, $tname); break;
@@ -1061,12 +1279,12 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								{
 									$lang_type = str_replace('meta', 'type', $meta_type);
 				
-									$opt .= "<optgroup label=\"" . sprintf($lang['sprintf_select_format'], $lang[$meta_type]) . "\">";
+									$opt .= "<optgroup label=\"" . sprintf($lang['stf_select_format'], $lang[$meta_type]) . "\">";
 									
 									foreach ( $lang[$lang_type] as $key => $row )
 									{
 										$marked = ( in_array($key, $tdata) ) ? ' selected="selected"' : '';
-										$opt .= '<option value="' . $key . '"' . $marked . '>' . sprintf($lang['sprintf_select_format'], $key) . '</option>';
+										$opt .= '<option value="' . $key . '"' . $marked . '>' . sprintf($lang['stf_select_format'], $key) . '</option>';
 									}
 								}
 				
@@ -1074,7 +1292,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							
 								break;
 											
-							case 'ranks':
+							case 'rank':
 							
 							#	debug($tname);
 							
@@ -1085,12 +1303,12 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								}
 							
 								$opt .= '<select name="' . sprintf('%s[%s]', $tmeta, $tname) . '" id="' . $f_id . '">';
-								$opt .= '<option value="">' . sprintf($lang['sprintf_select_format'], $lang['msg_select_rank']) . '</option>';
+								$opt .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['notice_select_rank']) . '</option>';
 								
 								while ( $row = $db->sql_fetchrow($result) )
 								{
 									$selected = ( $row['rank_id'] == $tdata ) ? ' selected="selected"' : '';
-									$opt .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . sprintf($lang['sprintf_select_format'], $row['rank_name']) . '</option>';
+									$opt .= '<option value="' . $row['rank_id'] . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $row['rank_name']) . '</option>';
 								}
 								$opt .= '</select>';
 							
@@ -1118,7 +1336,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								$opt .= '<input type="text" size="' . $option . '" name="' . $f_link . '" id="' . $f_id . '" value="' . $link . '">';
 								$opt .= '<span style="padding:4px;">&bull;</span>';
 								$opt .= '<input type="text" size="' . $option . '" name="' . $f_name . '" value="' . $name . '">&nbsp;';
-								$opt .= '<input class="more" type="button" value="' . $lang['common_remove'] . '" onClick="this.parentNode.parentNode.removeChild(this.parentNode)">';
+								$opt .= '<input class="more" type="button" value="' . $lang['com_remove'] . '" onClick="this.parentNode.parentNode.removeChild(this.parentNode)">';
 								$opt .= '</ul></div>';
 							}
 						}
@@ -1136,7 +1354,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 					
 						$tmp_lang = '';
 						$tmp_main = array('dl', 'forum', 'gallery', 'menu', 'profile');
-					
+						
 						if ( isset($lang[$ttype]) )
 						{
 							$tmp_lang = $lang[$ttype];
@@ -1155,22 +1373,25 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							
 							array_unshift($tmp_lang, 'none');
 						}
-						else if ( in_array($vars_key, $tmp_main) )
+						else if ( in_array($tmeta, $tmp_main) )
 						{
-							switch ( $vars_key )
+							$label = $menu = false;
+														
+							switch ( $tmeta )
 							{
 								case 'dl':		$tbl = DOWNLOAD;	break;
-								case 'forum':	$tbl = FORUM;		break;
 								case 'gallery':	$tbl = GALLERY_NEW;	break;
-								case 'menu':	$tbl = MENU;		break;
 								case 'profile':	$tbl = PROFILE;		break;
+								
+								case 'forum':	$tbl = FORUM;	$label = true;	break;
+								case 'menu':	$tbl = MENU;	$label = ($action == 'acp') ? true : false; $menu = true;	break;
 							}
 							
-							$f_id		= $vars_key . '_id';
-							$f_name		= $vars_key . '_name';
-							$f_order	= $vars_key . '_order';
+							$_id	= $tmeta . '_id';
+							$_name	= $tmeta . '_name';
+							$_order	= $tmeta . '_order';
 							
-							$sql = 'SELECT * FROM ' . $tbl . ' ORDER BY main ASC, ' . $f_order . ' ASC';
+							$sql = "SELECT * FROM $tbl " . ($menu ? (($action == 'acp') ? "WHERE action = 'acp'" : "WHERE action = 'pcp'") : '') . " ORDER BY main ASC, $_order ASC";
 							if ( !($result = $db->sql_query($sql)) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -1184,40 +1405,56 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								
 								foreach ( $tmp as $rows )
 								{
-									if ( !$rows['type'] )
+									if ( in_array($rows['type'], array(0, 3)) )
 									{
-										$cat[$rows[$f_id]] = $rows;
+										$main[$rows[$_id]] = $rows;
 									}
-									else if ( $rows['type'] == 1 )
+									else if ( in_array($rows['type'], array(1, 4)) )
 									{
-										$lab[$rows['main']][$rows[$f_id]] = $rows;
+										$labels[$rows['main']][$rows[$_id]] = $rows;
 									}
 									else
 									{
-										$sub[$rows['main']][$rows[$f_id]] = $rows;
+										$entry[$rows['main']][$rows[$_id]] = $rows;
 									}
 								}
-								
-								ksort($cat);
-								ksort($lab);
 							}
 							
-							foreach ( $cat as $ckey => $crow )
+							$switch = $settings['smain'][$tmeta . '_switch'];
+							$entrys = $settings['smain'][$tmeta . '_entrys'];
+						#	$subs	= (isset($settings['smain'][$tmeta . '_subs'])) ? $settings['smain'][$tmeta . '_subs'] : false;
+							
+							#			0/3	1/4		2
+							# dl		cat file
+							# gallery	cat file
+							# profile	cat field
+							# forum		cat label	forum
+							# menu		cat label	$menu
+							
+							foreach ( $main as $m_key => $m_row )
 							{
-								$tmp_lang[] = array('id' => $crow[$f_id], 'lng' => lang($crow[$f_name]), 'cat' => 1);
-						
-								if ( isset($lab[$ckey]) )
+								$tmp_lang[$m_row[$_id]] = array('id' => $m_row[$_id], 'typ' => 1, 'lng' => lang($m_row[$_name]));
+								
+								if ( isset($labels[$m_key]) && ($label ? true : $entrys) )
 								{
-									foreach ( $lab[$ckey] as $lkey => $lrow )
+									foreach ( $labels[$m_key] as $l_key => $l_row )
 									{
-										$tmp_lang[] = array('id' => $lrow[$f_id], 'lng' => lang($lrow[$f_name]), 'cat' => 0);
+										$tmp_lang[$l_row[$_id]] = array('id' => $l_row[$_id],'typ' => 2, 'lng' => lang($l_row[$_name]));
+										
+										if ( isset($entry[$l_key]) && $entrys )
+										{
+											foreach ( $entry[$l_key] as $e_key => $e_row )
+											{
+												$tmp_lang[$e_row[$_id]] = array('id' => $e_row[$_id], 'typ' => 3, 'lng' => lang($e_row[$_name]));
+											}
+										}
 									}
 								}
 							}
 						}
 						else
 						{
-							$sql = "SELECT * FROM " . $tbl . " WHERE $tname = 0 ORDER BY {$vars_key}_order ASC";
+							$sql = "SELECT * FROM " . $tbl . " WHERE $tname = 0 ORDER BY {$tmeta}_order ASC";
 							if ( !($result = $db->sql_query($sql)) )
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -1228,7 +1465,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							{
 								foreach ( $tmp_db as $tmp_key => $tmp_value )
 								{
-									$tmp_lang[$tmp_value["{$vars_key}_id"]] = $tmp_value["{$vars_key}_name"];
+									$tmp_lang[$tmp_value["{$tmeta}_id"]] = $tmp_value["{$tmeta}_name"];
 								}
 							}
 						}
@@ -1237,9 +1474,9 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						$break = '';
 						$click = '';
 						
-					#	debug($tdata, $vars_opt, true);
+					#	debug($tmp_lang, 'tmp_lang');
 						
-						$opt .= ( $option == 'main' && in_array($vars_key, $tmp_main) ) ? '<div id="close">' : '';
+						$opt .= ( $option == 'main' && in_array($tmeta, $tmp_main) ) ? '<div id="close">' : '';
 						
 						foreach ( $tmp_lang as $var => $lng )
 						{
@@ -1249,13 +1486,19 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								
 								switch ( $vars_type['params'][0] )
 								{
+									case 'gameq':	$click = ' onclick="setRequest(\'' . $var . '\', \'' . $data['server_game'] . '\');"';	break;
 									case 'type':	$click = ' onclick="display_options(this.value);"';		break;
 									case 'ajax':	$click = ' onclick="setRequest(\'' . $var . '\');"';	break;
-									case 'combi':	$click = ' onclick="display_options(this.value); setRequest(' . sprintf('this.value, \'%s\', \'%s\', %s, \'%s\', %s', $tmeta, ((isset($vars_type['params'][2])) ? $vars_type['params'][2] : $tname ), $data['type'], $mode, ((isset($data["{$vars_key}_id"])) ? $data["{$vars_key}_id"] : 0) ) . ');"';	break;
+																																																																							#type, meta, name, curt, mode, data
+							#		case 'combi':	$click = ' onclick="display_options(this.value); setRequest(' . sprintf('this.value, \'%s\', \'%s\', \'%s\', \'%s\', \'%s\'', $tmeta, ((isset($vars_type['params'][2])) ? $vars_type['params'][2] : $tname ), $data['type'], $mode, ((isset($data["{$tmeta}_id"])) ? $data["{$tmeta}_id"] : 0)) . ');"';	break;
+									case 'combi':	$click = ' onclick="display_options(this.value); setRequest(' . sprintf('this.value, \'%s\', \'%s\', \'%s\', \'%s\', \'%s\'', $tmeta, ((isset($vars_type['params'][2])) ? $vars_type['params'][2] : $tname ), $data['type'], $mode, ( $tmeta != 'menu' ? ((isset($data["{$tmeta}_id"])) ? $data["{$tmeta}_id"] : 0) : $data['main'])) . ');"';	break;
 								}
 							}
 							
-							if ( $tmeta == 'group' && ( $var == GROUP_SYSTEM || $tdata == GROUP_SYSTEM ) )
+						#	debug($tdata, 'tdata');
+						#	debug($var, 'var');
+							
+							if ( $tmeta == 'group' && ( $var == GROUP_SYSTEM || $tdata == GROUP_SYSTEM || ($tname == 'group_access' && $data['group_type'] == GROUP_SYSTEM) ) )
 							{
 								$click = ' disabled="disabled"';
 							}
@@ -1264,17 +1507,33 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							$checked = ( $tdata == $var )	? ' checked="checked"' : '';
 							$onclick = $click;
 							
-							if ( $option == 'main' && in_array($vars_key, $tmp_main) )
+							if ( $option == 'main' && in_array($tmeta, $tmp_main) )
 							{
-								$subs = $settings['smain'][$tmeta . '_subs'];
-								
 								if ( $data['type'] == 2 )
 								{
-									$opt .= ($lng['cat']) ? '<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>' : '&nbsp; &nbsp;<label><input type="radio" name="' . $f_name . '" value="' . $lng['id'] . '"' . $checked . ' />&nbsp;' . $lng['lng'] . '</label>';
+									switch ( $lng['typ'] )
+									{
+										case 1: $opt .= '<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>'; break;
+										case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" name="' . $f_name . '" value="' . $lng['id'] . '"' . $checked . ' />&nbsp;' . $lng['lng'] . '</label>'; break;
+										case 3:	$opt .= '&nbsp; &nbsp;&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>'; break;
+									}
+								}
+								else if ( $data['type'] == 4 )
+								{
+									switch ( $lng['typ'] )
+									{
+										case 1: $opt .= '<label><input type="radio" name="' . $f_name . '" value="' . $lng['id'] . '"' . $checked . ' />&nbsp;' . $lng['lng'] . '</label>'; break;
+										case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>'; break;
+									}
 								}
 								else
 								{
-									$opt .= ($lng['cat']) ? '<label><input type="radio" name="' . $f_name . '" value="' . $lng['id'] . '"' . $checked . ' />&nbsp;' . $lng['lng'] . '</label>' : (($subs) ? '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>' : '');
+									switch ( $lng['typ'] )
+									{
+										case 1: $opt .= '<label><input type="radio" name="' . $f_name . '" value="' . $lng['id'] . '"' . $checked . ' />&nbsp;' . $lng['lng'] . '</label>'; break;
+										case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>'; break;
+										case 3:	$opt .= '&nbsp; &nbsp;&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $lng['lng'] . '</label>'; break;
+									}
 								}
 							}
 							else
@@ -1288,7 +1547,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						}
 						
 						$opt .= ( $option == 'main' && in_array($vars_key, $tmp_main) ) ? '</div><div id="ajax_content"></div>' : '';
-						$opt .= ( $tdata == GROUP_SYSTEM ) ? '<input type="hidden" name="' . $f_name . '" value="' . GROUP_SYSTEM . '" />' : '';
+						$opt .= ( $tmeta == 'group' && $tname == 'group_type' && $tdata == GROUP_SYSTEM ) ? '<input type="hidden" name="' . $f_name . '" value="' . GROUP_SYSTEM . '" />' : '';
+						$opt .= ( $tmeta == 'group' && $tname == 'group_access' && $data['group_type'] == GROUP_SYSTEM ) ? '<input type="hidden" name="' . $f_name . '" value="' . $data['group_access'] . '" />' : '';
 						
 						break;
 						
@@ -1337,15 +1597,15 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						{
 							if ( $vars_type['params'] == TINY_NORMAL )
 							{
-								echo '<script type="text/javascript" src="./../includes/js/tiny_mce/jquery.tinymce.js"></script>';
-								echo '<script type="text/javascript" src="./../includes/js/tiny_mce/normal.js"></script>';
+								print '<script type="text/javascript" src="./../includes/js/tiny_mce/jquery.tinymce.js"></script>';
+								print '<script type="text/javascript" src="./../includes/js/tiny_mce/normal.js"></script>';
 							}
 							else if ( $vars_type['params'] == TINY_NEWS )
 							{
-								echo '<script type="text/javascript" src="./../includes/js/tiny_mce/jquery.tinymce.js"></script>';
-								echo '<script type="text/javascript" src="./../includes/js/tiny_mce/news.js"></script>';
-								
-								$switch = true;
+								print '<script type="text/javascript" src="./../includes/js/tiny_mce/jquery.tinymce.js"></script>';
+								print '<script type="text/javascript" src="./../includes/js/tiny_mce/news.js"></script>';
+					
+							#	$switch = true;
 							}
 						}
 						
@@ -1353,19 +1613,23 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						{
 							list($type, $cols, $max) = explode(':', $ttype);
 							
-							$opt .= '<textarea cols="' . $cols . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '">' . $tdata . '</textarea>';
+							$opt .= '<textarea ' . ( isset($vars_type['class'] ) ? 'class="' . $vars_type['class'] . '" ' : '') . 'cols="' . $cols . '" maxlength="' . $max . '" name="' . $f_name . '" id="' . $f_id . '">' . $tdata . '</textarea>';
 						}
 						else
 						{
 							list($type, $cols) = explode(':', $ttype);
 							
-							$opt .= '<textarea cols="' . $cols . '" name="' . $f_name . '" id="' . $f_id . '">' . $tdata . '</textarea>';
+							$opt .= '<textarea ' . ( isset($vars_type['class'] ) ? 'class="' . $vars_type['class'] . '" ' : '') . 'cols="' . $cols . '" name="' . $f_name . '" id="' . $f_id . '">' . $tdata . '</textarea>';
 						#	$opt .= ($switch) ? '<br /><a href="javascript:;" onmousedown="$(\'#' . $f_id . '\').tinymce().show();">[Show]</a><a href="javascript:;" onmousedown="$(\'#' . $f_id . '\').tinymce().hide();">[Hide]</a>' : '';
 						}
 						
 						break;
 						
 					case 'upload':	/* downloads, groups, network, teams */
+					
+					#	debug($type, 'type');
+					#	debug($option, 'option');
+					#	debug($tname, 'tname');
 					
 						if ( $option == 'file' )
 						{
@@ -1378,10 +1642,10 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							$filesize	= ( $settings['path_' . $vars_type['params'][1]]['filesize'] )	? $settings['path_' . $vars_type['params'][1]]['filesize'] : '';
 							$dimension	= ( $settings['path_' . $vars_type['params'][1]]['dimension'] )	? $settings['path_' . $vars_type['params'][1]]['dimension'] : '';
 							
-							$opt .= '<input type="file" name="upload_image">';
-							$opt .= ( $filesize && $dimension ) ? '<br /><span>' . sprintf($lang['sprintf_upload_info'], str_replace(':', ' x ', $dimension), round($filesize*1024)) . '</span>' : '';
-							$opt .= ( $tdata ) ? '<br /><br /><img src="' . $vars_type['params'][0] . $tdata . '" alt="" /><br /><br /><label><input type="checkbox" name="' . sprintf('%s_delete', $tname) . '">&nbsp;' . $lang['common_image_delete'] . '</label>' : '';
-							$opt .= ( $tdata ) ? '<input type="hidden" name="current_image" value="' . $vars_type['params'][0] . $tdata . '" />' : '';
+							$opt .= '<input type="file" name="upload:' . $tname . '">';
+							$opt .= ( $filesize && $dimension ) ? '<br /><span>' . sprintf($lang['stf_upload_info'], str_replace(':', ' x ', $dimension), round($filesize*1024)) . '</span>' : '';
+							$opt .= ( $tdata ) ? '<br /><br /><img src="' . $vars_type['params'][0] . $tdata . '" alt="" /><br /><br /><label><input type="checkbox" name="' . sprintf('%s_delete', $tname) . '">&nbsp;' . $lang['com_image_delete'] . '</label>' : '';
+							$opt .= ( $tdata ) ? '<input type="hidden" name="current:' . $tname . '" value="' . $tdata . '" />' : '';
 						}
 						
 						break;
@@ -1399,11 +1663,11 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								
 								foreach ( $mime_type as $mime )
 								{
-									$opt .= '<optgroup label="' . sprintf($lang['sprintf_select_format'], $lang[$mime]) . '">' . "\n";
+									$opt .= '<optgroup label="' . sprintf($lang['stf_select_format'], $lang[$mime]) . '">' . "\n";
 									
 									foreach ( $lang["{$mime}_type"] as $typ => $mime )
 									{
-										$opt .= '<option value="' . $mime . '"' . ((in_array($mime, $tdata)) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $typ) . '</option>' . "\n";
+										$opt .= '<option value="' . $mime . '"' . ((in_array($mime, $tdata)) ? ' selected="selected"' : '') . '>' . sprintf($lang['stf_select_format'], $typ) . '</option>' . "\n";
 									}
 								}
 				
@@ -1429,7 +1693,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								
 								foreach ( $tmp as $row )
 								{
-									$opt .= '<option value="' . $row['menu_id'] . '"' . ((in_array($row['menu_id'], $tdata)) ? ' selected="selected"' : '') . '>' . sprintf($lang['sprintf_select_format'], $row['menu_name']) . '</option>' . "\n";
+									$opt .= '<option value="' . $row['menu_id'] . '"' . ((in_array($row['menu_id'], $tdata)) ? ' selected="selected"' : '') . '>' . sprintf($lang['stf_select_format'], $row['menu_name']) . '</option>' . "\n";
 								}
 				
 								$opt .= '</select>';
@@ -1463,12 +1727,17 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 					$trid = is_bool($vars_type['divbox']) ? $vars_opt : $vars_type['divbox'];
 					$none = '';
 					
-				#	debug($data['type']);
-					
-					if ( isset($data['type']) )
+					if ( ($tmeta != 'gallery' || $tmeta != 'rank' || $tmeta != 'calendar') && isset($data['type']) )
 					{
-						$type_0 = array('copy', 'menu_file', 'menu_opts', 'map_info', 'map_file', 'forum_desc', 'forum_icons', 'forum_legend', 'forum_status', 'profile_field', 'profile_typ', 'profile_lang', 'profile_show_user', 'profile_show_member', 'profile_show_register', 'profile_required', 'dl_file');
+					#	debug($data['type'], 'data type');
+						$type_0 = array('copy',
+										'menu_file', 'menu_opts',
+										'map_info', 'map_file',
+										'forum_desc', 'forum_icons', 'forum_legend', 'forum_status',
+										'profile_field', 'profile_typ', 'profile_lang', 'profile_show_user', 'profile_show_member', 'profile_show_register', 'profile_required',
+										'dl_file');
 						$type_0 = ($mode == 'create') ?  array_merge($type_0, array('main')) : $type_0;
+						
 						$type_1 = array('menu_file', 'menu_opts', 'map_tag', 'dl_desc', 'dl_icon', 'dl_types', 'dl_size');
 						$type_3 = array('main', 'menu_target', 'menu_intern', 'menu_file', 'menu_opts');
 						$type_4 = array('menu_opts');
@@ -1479,12 +1748,46 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						if ( $data['type'] == 4 && in_array($trid, $type_4) ) { $none = 'none'; }
 					}
 					
-					if ( $tmeta && isset($data['type']) )
+					/* Calendar added 30.06.2013 */
+					if ( $tmeta == 'calendar' && isset($settings['calendar']['show']) )
 					{
-						if ( $data['type'] == 0 && in_array($trid, array('main', 'map_info', 'map_file')) ) { $none = 'none'; }
+						if ( $settings['calendar']['show'] == 0 && in_array($trid, array('compact')) ) { $none = 'none'; }
 					}
-				
 					
+				#	if ( $tmeta && isset($data['type']) )
+				#	{
+				#		if ( $data['type'] == 0 && in_array($trid, array('main', 'map_info', 'map_file')) ) { $none = 'none'; }
+				#	}
+					
+					if ( $tmeta == 'gallery' && isset($data['type']) )
+					{
+						$type_0 = array('gallery_picture');
+						$type_0 = ($mode == 'create') ?  array_merge($type_0, array('main')) : $type_0;
+						$type_1 = array('copy', 'gallery_acpview', 'gallery_dimension', 'gallery_format', 'gallery_filesize', 'gallery_thumbnail');
+						
+						if ( $data['type'] == 0 && in_array($trid, $type_0) ) { $none = 'none'; }
+						if ( $data['type'] == 1 && in_array($trid, $type_1) ) { $none = 'none'; }
+					}
+					
+					if ( $tmeta == 'rank' && isset($data['rank_type']) )
+					{
+						$type_1 = array('rank_special', 'rank_min');
+						$type_2 = array('rank_standard', 'rank_min');
+						$type_3 = array('rank_special', 'rank_min');
+						$type_4 = array('rank_standard');
+						
+						if ( $data['rank_type'] == 1 && in_array($trid, $type_1) ) { $none = 'none'; }
+						if ( $data['rank_type'] == 2 && $data['rank_special'] == 4 && in_array($trid, $type_2) ) { $none = 'none'; }
+						if ( $data['rank_type'] == 2 && $data['rank_special'] == 5 && in_array($trid, $type_4) ) { $none = 'none'; }
+						if ( $data['rank_type'] == 3 && in_array($trid, $type_3) ) { $none = 'none'; }
+					}
+					
+					if ( $tmeta == 'type' && isset($data['cash_type']) )
+					{
+						$type_1 = array('cash_month');
+						
+						if ( $data['cash_type'] == 0 && in_array($trid, $type_1) ) { $none = 'none'; }
+					}
 					
 					if ( isset($data['training_on']) ) { if ( $data['training_on'] == 0 && in_array($trid, array('training_date', 'training_duration', 'training_maps', 'training_text')) ) { $none = 'none'; } }
 				}
@@ -1511,20 +1814,38 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 				
 				if ( isset($data['label_id']) )
 				{
-					$sql = 'SELECT f.*, o.* FROM ' . ACL_FIELDS . ' f, ' . ACL_OPTIONS . ' o WHERE f.field_name LIKE "' . $tdata . '%" AND option_id = ' . $data['label_id'];
+					$sql = 'SELECT o.*, d.*
+								FROM ' . ACL_OPTION . ' o
+									LEFT JOIN ' . ACL_LABEL_DATA . ' d ON o.auth_option_id = d.auth_option_id
+								WHERE o.auth_option LIKE "' . $tdata . '%"
+									AND d.label_id = ' . $data['label_id'];
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 					}
+					/*
+					$fetchrowset = $db->sql_fetchrowset($result);
+					debug($fetchrowset);
 					
+					debug($sql);
+					
+					SELECT o.*, f.*
+FROM cms_acl_options o
+LEFT JOIN cms_acl_fields f ON o.field_id = f.field_id
+WHERE f.field_name LIKE  "g_%"
+AND o.option_id =7
+LIMIT 0 , 30
+					*/
 					while ( $row = $db->sql_fetchrow($result) )
 					{
-						$access[$row['field_name']] = $row['auth_value'];
+						$access[$row['auth_option']] = $row['auth_value'];
 					}
 					$db->sql_freeresult($result);
+					
+				#	debug($access, 'access');
 				}
 				
-				$sql = 'SELECT * FROM ' . ACL_FIELDS . '  WHERE field_name LIKE "' . $tdata . '%"';
+				$sql = 'SELECT * FROM ' . ACL_OPTION . '  WHERE auth_option LIKE "' . $tdata . '%"';
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -1532,8 +1853,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 				
 				while ( $row = $db->sql_fetchrow($result) )
 				{
-					$acl_option[$row['field_name']] = isset($data['label_id']) ? isset($row['auth_value']) ? $row['auth_value'] : 0 : 0;
-					$acl_groups[$row['field_type']][$row['field_name']] = $row['field_name'];
+					$acl_option[$row['auth_option']] = isset($data['label_id']) ? isset($row['auth_value']) ? $row['auth_value'] : 0 : 0;
+					$acl_groups[$row['auth_group']][$row['auth_option']] = $row['auth_option'];
 				}
 				$db->sql_freeresult($result);
 				
@@ -1561,10 +1882,10 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						$row_format = sprintf('set[%s]', $row);
 						
 						$template->assign_block_vars('input.cats.auths', array(
-							'LANG'		=> $row,
-							'OPT_YES'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s_y', $row) . '" value="1"' . (( @$access[$row] == 1 ) ? ' checked="checked"' : '') . ' />&nbsp;' . $lang['common_yes'] . '</label>',
-							'OPT_UNSET'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s_u', $row) . '" value="0"' . (( @$access[$row] == 0 ) ? ' checked="checked"' : '') . ' />&nbsp;' . $lang['common_no'] . '</label>',
-							'OPT_NEVER'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s_n', $row) . '" value="-1"' . (( @$access[$row] == -1 ) ? ' checked="checked"' : '') . ' />&nbsp;' . $lang['common_never'] . '</label>',
+							'LANG'		=> lang($row),
+							'OPT_YES'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s_y', $row) . '" value="1"' . (( @$access[$row] == 1 ) ? ' checked="checked"' : '') . ' /></label>',
+							'OPT_UNSET'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s_u', $row) . '" value="0"' . (( @$access[$row] == 0 ) ? ' checked="checked"' : '') . ' /></label>',
+							'OPT_NEVER'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s_n', $row) . '" value="-1"' . (( @$access[$row] == -1 ) ? ' checked="checked"' : '') . ' /></label>',
 						));
 					}
 				}
