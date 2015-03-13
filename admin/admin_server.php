@@ -39,8 +39,8 @@ else
 	$usub	= request('usub', TYP);
 	$mode	= request('mode', TYP);
 	$type	= request('type', TYP);
-	$accept	= request('accept', TYP);
-	$action	= request('action', TYP);
+	$accept 	= request('accept', TYP);
+	$action	 = request('action', TYP);
 	
 	$acp_title	= sprintf($lang['stf_head'], (($action == 'server') ? $lang['title'] : $lang['gameq_title']));
 	
@@ -51,7 +51,7 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-#	debug($_POST, '_POST');
+	debug($_POST, '_POST');
 	
 	$mode = (in_array($mode, array('create', 'update', 'server_list', 'gameq_create', 'gameq_update', 'gameq_list', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 	
@@ -84,11 +84,11 @@ else
 				if ( $mode == 'create' && !$submit )
 				{
 					$name = ( isset($_POST['game_name']) ) ? request('game_name', TXT) : request('voice_name', TXT);
-					$type = ( isset($_POST['game_name']) ) ? 0 : 1;
+					$typ = ( isset($_POST['game_name']) ) ? 0 : 1;
 					
 					$data_sql = array(
 						'server_name'	=> $name,
-						'server_type'	=> $type,
+						'server_type'	=> $typ,
 						'server_game'	=> '',
 						'server_ip'		=> '',
 						'server_port'	=> '',
@@ -238,8 +238,6 @@ else
 						'gameq_dport'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:10;10', 'required' => 'input_dport'),
 						'gameq_type'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type'),
 						'gameq_viewer'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-						'time_create'	=> 'hidden',
-						'time_update'	=> 'hidden',
 					)
 				);
 				
@@ -251,8 +249,6 @@ else
 						'gameq_dport'	=> '',
 						'gameq_type'	=> '',
 						'gameq_viewer'	=> '',
-						'time_create'	=> $time,
-						'time_update'	=> $time,
 					);
 				}
 				else if ( $mode == 'gameq_update' && !$submit )
@@ -293,7 +289,7 @@ else
 			#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['sprintf_' . substr($mode, strpos($mode, '_')+1)], $lang['gameq_title'], $data_sql['gameq_name']),
+					'L_HEAD'	=> sprintf($lang['stf_' . substr($mode, strpos($mode, '_')+1)], $lang['gameq_title'], $data_sql['gameq_name']),
 					'L_EXPLAIN'	=> $lang['com_required'],
 				
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),

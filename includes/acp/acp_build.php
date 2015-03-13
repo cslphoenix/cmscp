@@ -4,6 +4,11 @@ function build_request_list($tbl, $vars, &$error, $field_id)
 {
 	global $db, $lang;
 	
+	if ( $field_id == 'icon_id' )
+	{
+		unset($vars['icon_icon']);
+	}
+	
 	list($field, $id) = explode('_', $field_id);
 	
 	$sql = "SELECT $field_id, " . implode(', ', array_keys($vars)) . " FROM $tbl
@@ -57,6 +62,9 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 	
 	$request = '';
 	
+#	debug($vars, 'vars');
+#	debug($name, 'name');
+	
 	if ( $name )
 	{
 		if ( isset($vars[$name]) )
@@ -88,6 +96,8 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					{
 						$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
 					}
+					
+				#	debug($request[$key_vars], 'request key vars');
 				}
 				else
 				{
@@ -104,6 +114,8 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					else
 					{
 						$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
+						
+					#	debug($request[$key_vars], 'request key vars');
 					}				
 				}
 			}
@@ -120,13 +132,15 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 		}
 		$tmp = $db->sql_fetchrowset($result);
 		
+	#	debug($tmp, 'tmp');
+		
 		foreach ( $tmp as $row )
 		{
 			$temp[] = $row['Field'];
 		}
 		unset($temp[0]);
 		
-		if ( $sql_add && in_array($mode, array('create', 'news_create', 'cat_create')) )
+		if ( $sql_add && in_array($mode, array('create', 'news_create', 'cat_create', 'bankdata')) )
 		{
 			$sqla = is_array($sql_add) ? $sql_add : array($sql_add);
 			$temp = array_merge($temp, $sqla);
@@ -422,7 +436,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 			#		$request[$rows] = is_array($request[$rows]) ? implode(', ', $request[$rows]) : $request[$rows];
 			#	}
 				
-				if ( in_array($rows, array('training_maps', 'dl_types', 'cash_month')) )
+				if ( in_array($rows, array('training_maps', 'dl_types', 'cash_month', 'cash_paid')) )
 				{
 					$tmp_map = '';
 					
@@ -461,7 +475,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 		}
 	}
 	#serialize
-#	debug($request, 'function request return');
+	debug($request, 'function request return');
 
 	return $request;
 }
@@ -557,7 +571,7 @@ function build_output_list($data, $vars, $tpl, $settings_name)
 }
 */
 
-function build_output_list($tbl, $vars, $data, $tpl, $string)
+function build_output_list($tbl, $vars, $data, $tpl, $string = '')
 {
 	global $db, $root_path, $lang, $template, $settings;
 	
@@ -569,9 +583,12 @@ function build_output_list($tbl, $vars, $data, $tpl, $string)
 		}
 		
 		$template->assign_block_vars("$tpl.name_option", array(
-			'NAME' => str_replace($lang[$string], '', lang($name))
+		#	'NAME' => str_replace($lang[$string], '', lang($name))
+			'NAME' => lang($name),
 		));
 	}
+	
+#	debug($tpl, 'tpl');
 	
 	for ( $i = 0; $i < count($data); $i++ )
 	{
@@ -611,11 +628,13 @@ function build_output_list($tbl, $vars, $data, $tpl, $string)
 				$tmeta = $vars_key;
 				$tname = $vars_opt;
 				
+				$tparams = isset($vars_type['params']) ? $vars_type['params'] : false;
+				
 				$lngs = isset($lang[$vars_opt]) ? $lang[$vars_opt] : $vars_opt;
 				
-				
+			#	list($type, $option) = ( strpos($string,':') !== false ) ? explode(':', $ttype) : $ttype;
 				list($type, $option) = explode(':', $ttype);
-				
+								
 				$f_id	= sprintf('%s_%s', $tmeta, $tname);
 				$f_name	= sprintf('%s[%s][%s]', $tmeta, $data[$i][key($data[$i])], $tname);
 				
@@ -628,7 +647,6 @@ function build_output_list($tbl, $vars, $data, $tpl, $string)
 					
 						$checked = ($tdata) ? ' checked="checked"' : '';
 					
-						
 						$return .= '<input type="hidden" name="' . $f_name . '" id="' . $f_id . '" value="0" />';
 						$return .= '<input type="checkbox"' . $checked . ' name="' . $f_name . '" id="' . $f_id . '" value="1" />';
 						
@@ -661,6 +679,17 @@ function build_output_list($tbl, $vars, $data, $tpl, $string)
 					
 						$return .= $tdata . '<input type="hidden" name="' . $f_name . '" id="' . $f_id . '" value="' . $tdata . '" />';
 						
+						break;
+						
+					case 'icon':
+					
+					#	debug($data[$i][$tparams], 'data');
+					#	debug($tdata[$i][$tparams], 'tdata');
+					#	debug($tparams, 'tparams');
+					
+						$return .= '<img class="icon" src="' . $root_path . $data[$i][$tparams] . '" title="" alt="" />';
+					#	debug($data[$tparams], 'data');
+					#	debug($tdata[$tparams], 'data');
 						break;
 				}
 				
@@ -743,6 +772,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 				$tmeta = $vars_key;
 				$tname = $vars_opt;
 				
+			#	debug($vars_key, '$tmeta');
+				
 				$tparams = isset($vars_type['params']) ? $vars_type['params'] : false;
 				
 				$lngs = isset($lang[$vars_opt]) ? $lang[$vars_opt] : $vars_opt;
@@ -799,6 +830,9 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						
 					case 'check':	/* cash */
 					
+					#	debug($mode, 'mode');
+					#	debug($tparams, 'tparams');
+					
 						$monate = array(
 							'1'		=> $lang['datetime']['month_01'],
 							'2'		=> $lang['datetime']['month_02'],
@@ -824,7 +858,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							{
 								$check = ' checked="checked"';
 							}
-								
+							
 							$switch[] = '<label><input type="checkbox" name="' . sprintf('%s[%s][%s]', $tmeta, $tname, $i) . '"' . $check . ' value="' . $i . '">&nbsp;' . $monate[$i] . '</label>';
 						}
 						
@@ -857,7 +891,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							
 							/* acp_games, acp_server // tdata = default, tmeta/tname = name und id, params = game/voice server */
 						#	case 'server':	$opt .= s_types($tdata, $tmeta, $tname, $vars_type['params']); break;
-							case 'gameq':	$opt .= s_gameq($tdata, $tmeta, $tname, (isset($data[$tparams]) ? $data[$tparams] : $tparams)); break;
+							case 'gameq':	$opt .= s_gameq($tdata, $tmeta, $tname, (isset($data[$tparams]) ? $data[$tparams] : $tparams)); break;	/* games */
 							case 'main':	$opt .= s_main($tdata, $tmeta, $tname, $data); break;
 								
 							case 'copy':	
@@ -1029,6 +1063,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								break;
 							
 							case 'image':
+							
+								/* games */
 							
 								$folder = $vars_type['params'][0];
 								$filter = $vars_type['params'][1];
@@ -1249,6 +1285,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								break;
 							
 							case 'maps':		$opt = select_maps($tdata, $tmeta, $tname, $data);	break;
+												/* match */
 							case 'match':		$opt = select_match($tdata, $tmeta, $tname); break;
 							case 'disable':		$opt = page_mode_select(unserialize($tdata), "{$tmeta}[page_disable_mode]"); break;
 							case 'lang':		$opt = select_lang($tdata, "{$tmeta}[default_lang]", "language"); break;
@@ -1262,12 +1299,18 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 													select_date('select', 'hour',	"{$pre}hour",	date('H', is_numeric($vars_type['params']) ? $tdata : $time), $time),
 													select_date('select', 'min',	"{$pre}min",	date('i', is_numeric($vars_type['params']) ? $tdata : $time), $time));
 								break;
-							
+												/* match */
+												
 							case 'duration':	$opt = select_date('select', 'duration', "{$pre}duration", ( $tdata - $data[$vars_type['params']] ) / 60, $tmeta); break;
+												/* match */
 							case 'team':		$opt = select_team($tdata, $tmeta, $tname, $vars_type['params']); break;
+												/* training, match */
 							case 'match_type':	$opt = match_types($tdata, $tmeta, $tname); break;
+												/* match */
 							case 'match_war':	$opt = match_types($tdata, $tmeta, $tname); break;
-							case 'match_league':$opt = match_types($tdata, $tmeta, $tname); break;
+												/* match */
+							case 'match_league':$opt = match_types($tdata, $tmeta, $tname); break;	
+												/* match */
 							case 'dtype':
 							
 								$mime_type = array('meta_application', 'meta_image', 'meta_text', 'meta_video');
@@ -1376,6 +1419,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						else if ( in_array($tmeta, $tmp_main) )
 						{
 							$label = $menu = false;
+							
+							debug($action, 'action 2');
 														
 							switch ( $tmeta )
 							{
@@ -1812,6 +1857,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 				
 				$access = $acl_groups = array();
 				
+			#	debug($data['label_id'], 'label_id');
+				
 				if ( isset($data['label_id']) )
 				{
 					$sql = 'SELECT o.*, d.*
@@ -1843,6 +1890,62 @@ LIMIT 0 , 30
 					$db->sql_freeresult($result);
 					
 				#	debug($access, 'access');
+				
+					$sql = 'SELECT g.group_id, g.group_name
+								FROM ' . GROUPS . ' g, ' . ACL_GROUPS . ' ag
+							WHERE g.group_id = ag.group_id
+								AND label_id = ' . $data['label_id'];
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					$label_acl_groups = $db->sql_fetchrowset($result);
+					$db->sql_freeresult($result);
+				#	debug($label_acl_groups, 'label_acl_groups');
+					
+					$sql = 'SELECT u.user_id, u.user_name
+								FROM ' . USERS . ' u, ' . ACL_USERS . ' au
+							WHERE u.user_id = au.user_id
+								AND label_id = ' . $data['label_id'];
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					$label_acl_users = $db->sql_fetchrowset($result);
+					$db->sql_freeresult($result);
+				#	debug($label_acl_users, 'label_acl_users');
+				
+					if ( $label_acl_groups )
+					{
+						global $ityp;
+						
+						foreach ( $label_acl_groups as $row )
+						{
+							$acl_gps[] = href('a_txt', 'admin_groups.php?', array('id' => $row['group_id'], 'i' => $ityp), $row['group_name'], $row['group_name']);
+						}
+						
+						$implode_groups = implode(', ', $acl_gps);
+
+						$template->assign_block_vars('input.acl_groups', array('GROUPS' => $implode_groups));
+					}
+					
+					if ( $label_acl_users )
+					{
+						global $ityp;
+						
+						/* noch anpassen */
+						
+						foreach ( $label_acl_users as $row )
+						{
+							$acl_urs[] = href('a_txt', 'admin_user.php?', array('id' => $row['user_id'], 'i' => $ityp), $row['user_name'], $row['user_name']);
+						}
+						
+						$implode_users = implode(', ', $acl_urs);
+
+						$template->assign_block_vars('input.acl_users', array('USERS' => $implode_users));
+					}
 				}
 				
 				$sql = 'SELECT * FROM ' . ACL_OPTION . '  WHERE auth_option LIKE "' . $tdata . '%"';

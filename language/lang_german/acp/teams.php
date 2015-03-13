@@ -31,36 +31,43 @@ $lang = array_merge($lang, array(
 	
 	'count'		=> 'Mitgliederanzahl',
 	
-	'logo_upload'	=> 'Logo hochladen',
-	'logo_current'	=> 'Aktuelles Logo',
-	'flag_upload'	=> 'Banner hochladen',
-	'flag_current'	=> 'Aktuelles Banner',
+#	'logo_upload'	=> 'Logo hochladen',
+#	'logo_current'	=> 'Aktuelles Logo',
+#	'flag_upload'	=> 'Banner hochladen',
+#	'flag_current'	=> 'Aktuelles Banner',
 	
 	'no_members'	=> 'Keine Mitglieder eingetragen.',
 	'no_moderators'	=> 'Keine Moderatoren eingetragen.',
 	
-	'member'		=> 'Teammitglied',
+#	'member'		=> 'Teammitglied',
 	'members'		=> 'Teammitglieder',
 	'moderator'		=> 'Teammoderator',
-	'moderators'	=> 'Teammoderatoren',
+#	'moderators'	=> 'Teammoderatoren',
 	
-	'create_team_user'	=> 'Neuen Spieler hinzugefügt.',
-	'update_team_rank'	=> 'Spielerränge geändert',
-	'update_team_level'	=> 'Spielerrechte geändert',
+#	'create_team_user'	=> 'Neuen Spieler hinzugefügt.',
+#	'update_team_rank'	=> 'Spielerränge geändert',
+#	'update_team_level'	=> 'Spielerrechte geändert',
 	
-	'create_user'		=> 'Neuen Spieler hinzugefügt.',
-	'create_users'		=> 'Neue Spieler hinzugefügt.',
-	'delete_user'		=> 'Der Spieler wurde gelöscht!',
-	'delete_users'		=> 'Die Spieler wurden gelöscht!',
-	'confirm_user'		=> 'das der Spieler:',
-	'confirm_users'		=> 'das diese Spieler:',
+#	'create_user'		=> 'Neuen Spieler hinzugefügt.',
+#	'create_users'		=> 'Neue Spieler hinzugefügt.',
+#	'delete_user'		=> 'Der Spieler wurde gelöscht!',
+#	'delete_users'		=> 'Die Spieler wurden gelöscht!',
+#	'confirm_user'		=> 'das der Spieler:',
+#	'confirm_users'		=> 'das diese Spieler:',
 	
-	'update_rank'	=> 'Rang des Spielers erfolgreich geändert.',
-	'update_ranks'	=> 'Ränge der Spieler erfolgreich geändert.',
-	'update_right'	=> 'Rechte des Spielers erfolgreich geändert.',
-	'update_rights'	=> 'Rechte der Spieler erfolgreich geändert.',
+#	'update_rank'	=> 'Rang des Spielers erfolgreich geändert.',
+#	'update_ranks'	=> 'Ränge der Spieler erfolgreich geändert.',
+#	'update_right'	=> 'Rechte des Spielers erfolgreich geändert.',
+#	'update_rights'	=> 'Rechte der Spieler erfolgreich geändert.',
 	
-	'notice_select_default'		=> 'zur Hauptteam machen',
+	'type_main'				=> 'Hauptgruppe',
+	'notice_select_default'	=> 'zum Hauptteam machen',
+	
+	'team_member_add'			=> 'Teammitglieder hinzufügen',
+	'team_member_add_explain'	=> 'Hier kannst du, Teammitglieder hinzufügen. Entweder Benutzer per <b>Benutzernamen</b> mit Komma getrennt eintragen.',
+	
+	'team_set_rank'			=> 'Teamrang',
+	'team_set_moderator'	=> 'Moderatorenstatus',
 	
 ));
 
@@ -98,8 +105,7 @@ $lang['team_members']		= 'Teammitglieder';
 $lang['team_moderator']		= 'Teammoderator';
 $lang['team_moderators']	= 'Teammoderatoren';
 
-$lang['team_set_rank']		= 'Teamrang';
-$lang['team_set_moderator']	= 'Moderatorenstatus';
+
 
 $lang['team_membercount'] = 'Mitgliederanzahl';
 */

@@ -2,35 +2,34 @@
 
 function _build_fields($key, $value)
 {
-	global $_fields;
-	
-	$_fields = '';
+	$fields = '';
 
 	if (!is_array($value))
 	{
-		$_fields .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
+		$fields .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 	}
 	else
 	{
 		foreach ($value as $_key => $_value)
 		{
-			$_fields .= _build_fields($key . '[' . $_key . ']', $_value);
+		#	debug($_key, 'key');
+			$fields .= _build_fields($key . '[' . $_key . ']', $_value);
 		}
 	}
 
-	return $_fields;
+	return $fields;
 }
 
-function build_fields($fields)
+function build_fields($var)
 {
-	$s_fields = '';
+	$new_fields = '';
 	
-	foreach ($fields as $name => $vars)
+	foreach ($var as $name => $vars)
 	{
-		$s_fields .= _build_fields($name, $vars);
+		$new_fields .= _build_fields($name, $vars);
 	}
 	
-	return $s_fields;
+	return $new_fields;
 }
 
 /*
@@ -62,10 +61,14 @@ function request($request_var, $request_type, $filter = '')
 		}
 		else
 		{
+			
 			list($typ, $opt) = $request_var;
 		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt];
 			$tmp = ( isset($_POST[$typ][$opt]) || isset($_GET[$typ][$opt]) ) ? ( isset($_POST[$typ][$opt]) ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt] : '';
 		#	$tmp = ( $request == 'POST' ) ? $_POST[$typ][$opt] : $_GET[$typ][$opt];
+		
+		#	debug($tmp, $typ);
+		#	debug($tmp, $opt);
 		}
 	}
 	else
@@ -259,6 +262,7 @@ function request($request_var, $request_type, $filter = '')
 #		$var = ( $request_type == INT ) ? 0 : '';
 #	}
 #	debug($var, $request_var, true);
+#	debug($var, $request_var);
 	return $var;
 }
 
@@ -1837,7 +1841,7 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 			}
 		}
 		
-		debug($name, 'name', true);
+	#	debug($name, 'name', true);
 		
 		$key = $keys;
 		$var = $vars;
@@ -1930,6 +1934,69 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 		}
 		
 		$return = $change;
+	}
+	else if ( strstr($type, 'modify') )
+	{
+	#	debug($submit, 'submit');
+		
+		foreach ( $submit as $row_id => $row_vars )
+		{
+			foreach ( $row_vars as $_name => $_value )
+			{
+				$_update[$row_id][] = "$_name = '$_value'";
+			}
+			
+			$input[$row_id] = implode(', ', $_update[$row_id]);
+		#	debug($row);
+		#	debug($_id, 'id');
+		#	debug($_var, 'var');
+			
+		#	$m_id[] = "icon_id = '$_id'";
+		#	$m_var[] = $_var;
+		
+			$sql = "UPDATE $table SET $input[$row_id] WHERE $id_field = $row_id";
+		#	debug($sql);
+			if ( !$db->sql_query($sql) )
+			{
+				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+			}
+			
+		}
+		
+	#	debug($_update, '_update');
+	
+		
+	#	foreach ( $m_var as $_name => $_value )
+	#	{
+	#		$_update[] = "$_name = '$_value'";
+	#	}
+		
+	#	$input = implode(', ', $_update);
+		
+	#	debug($input, 'input');
+		
+	#	if ( is_array($id_field) && is_array($id) )
+	#	{
+	#		foreach ( $id_field as $key => $row )
+	#		{
+	#			$ary_new[] = "$row = " . $id[$key];
+	#		}
+	#		
+	#		$sql_where = implode(' AND ', $ary_new);
+	#	}
+	#	else
+	#	{
+	#		$sql_where = "$id_field = $id";
+	#	}
+		
+	#	$sql = "UPDATE $table SET $input WHERE $sql_where";
+	#	debug($sql);
+	#	if ( !$db->sql_query($sql) )
+	#	{
+	#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	#	}
+		
+	#	$return = $change;
 	}
 	else if ( strstr($type, 'alter') )
 	{
@@ -2885,7 +2952,7 @@ function find_active($db_file, $db_action, $active_file, $active_module)
 }
 
 
-function acp_header($file, $adds, $typ)
+function acp_header($file, $iadds, $typ)
 {
 	global $config, $settings, $theme, $root_path, $template, $db, $lang, $oCache;
 	global $userdata, $current;

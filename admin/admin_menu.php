@@ -54,6 +54,7 @@ else
 	));
 
 	debug($_POST, '_POST');
+	debug($action, 'action');
 	
 	$base = ($settings['smain']['menu_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
@@ -73,7 +74,7 @@ else
 						'menu_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name'),
 						'menu_lang'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
 						'menu_show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
-						'type'			=> array('validate' => INT,	'explain' => false,	'type' => ($action != 'pcp') ? 'radio:type' : 'radio:navi', 'params' => array('combi', false, 'main')),
+						'type'			=> array('validate' => INT,	'explain' => false,	'type' => (($action != 'pcp') ? 'radio:type' : 'radio:navi'), 'params' => array('combi', false, 'main')),
 						'main'			=> array('validate' => INT,	'explain' => false,	'type' => $base,		'divbox' => true, 'params' => array(false, true, false)),
 						'menu_file'		=> array('validate' => TXT,	'explain' => false, 'type' => 'drop:files', 'divbox' => true, 'params' => (($action != 'pcp') ? array($dir_path, '.php', 'mode', 'menu') : array($root_path, '.php', 'self', 'navi'))),
 						'menu_opts'		=> ($action != 'pcp') ? array('validate' => TXT, 'explain' => false, 'type' => 'drop:iopts', 'divbox' => true, 'params' => $dir_path) : 'hidden',

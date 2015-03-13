@@ -34,6 +34,7 @@ $lang = array_merge($lang, array(
 	'online'	=> 'Online',
 	'offline'	=> 'Offline',
 	
+	'title1'		=> 'Servertypen 1',
 	'gameq_name'	=> 'Name',
 	'gameq_game'	=> 'GameQ Spiel',
 	'gameq_dport'	=> 'Standardport',

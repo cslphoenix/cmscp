@@ -1,6 +1,36 @@
 <?php
 
 /*
+	acp_games,
+ */
+
+function s_gameq($default, $meta, $name, $type)
+{
+	global $lang;
+	
+#	debug($type, 'type test');
+	
+	$data_sql = data(GAMEQ, "WHERE gameq_type = $type", false, 1, false);
+#	debug($data_sql, 'data_sql');
+#	debug($default, 'default', true);
+#	debug($meta, 'meta');
+#	debug($name, 'name');
+#	debug($type, 'type');
+	$box = '<div id="close"><select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
+	$box .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['msg_select_gametype']) . '</option>';
+							
+	foreach ( $data_sql as $row )
+	{
+		$mark = ( $default == $row['gameq_game'] ) ? ' selected="selected"' : '';
+		$box .= '<option title="' . sprintf('%s :: %s', $row['gameq_game'], $row['gameq_dport']) . '" value="' . $row['gameq_game'] . '"' . $mark . '>' . sprintf($lang['stf_select_format'], $row['gameq_name']) . '</option>';
+	}
+	
+	$box .= '</select></div><div id="ajax_content"></div>';
+	
+	return $box;
+}
+
+/*
  * nicht wichtig im moment
  */
 function select_navi($type, $data, $tpl)
@@ -358,25 +388,7 @@ function select_server($default, $meta, $name, $typ)
 	return $box;
 }
 
-function s_gameq($default, $meta, $name, $type)
-{
-	global $lang;
-	
-	$data_sql = data(GAMEQ, "gameq_type = $type", false, 1, false);
-	
-	$box = '<div id="close"><select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
-	$box .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['msg_select_gametype']) . '</option>';
-							
-	foreach ( $data_sql as $row )
-	{
-		$mark = ( $default == $row['gameq_game'] ) ? ' selected="selected"' : '';
-		$box .= '<option title="' . sprintf('%s :: %s', $row['gameq_game'], $row['gameq_dport']) . '" value="' . $row['gameq_game'] . '"' . $mark . '>' . sprintf($lang['stf_select_format'], $row['gameq_name']) . '</option>';
-	}
-	
-	$box .= '</select></div><div id="ajax_content"></div>';
-	
-	return $box;
-}
+
 
 function select_path()
 {
@@ -497,11 +509,12 @@ function select_box_image($class, $table, $field, $default = '')
 	}
 	
 	$select .= "</select>";
-	
+
 	return $select;
 }
 
 #select_team($tmp_data, $tmp_meta, $tmp_name, 'request')
+/* training */
 function select_team($default, $meta, $name, $select, $css = false)
 {
 	global $db, $lang;

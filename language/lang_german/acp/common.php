@@ -145,7 +145,10 @@ $lang = array_merge($lang, array(
 	'stf_overview'		=> '%s Übersicht: %s',
 	'sprintf_list'		=> '%s komplett bearbeiten',
 	'stf_member'		=> '%s Mitglieder: %s',
+	'stf_detail'		=> '%s Deatils: %s',
 	'stf_upload_info'	=> 'Abmessung: %s / Größe: %s KB\'s',	/* upload info */
+	'stf_name'			=> '%sname',
+	'sprintf_name'		=> '%sname',
 	
 	'stf_ajax_more'		=> 'weitere %s Einträge vorhanden ...&nbsp;',
 	'stf_ajax_users'	=> '%s<br />&nbsp;&not;&nbsp;Benutzerlevel: %s<br />&nbsp;&not;&nbsp;Reg: %s<br />&nbsp;&not;&nbsp;Log: %s',
@@ -274,6 +277,8 @@ $lang = array_merge($lang, array(
 	'sprintf_match_name'		=> 'vs. %s',
 	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',
 	
+	'msg_select_gametype'		=> 'Bitte ein Spieltype auswählen!',			/* acp_game */
+	
 	/* added 18.07 */
 #	'sm_manage'			=> 'Verwalten',
 #	'sm_rights'			=> 'Rechte',
@@ -305,7 +310,7 @@ $lang = array_merge($lang, array(
 #	'sprintf_new_add'		=> 'Neue %s hinzufügen',
 #	'sprintf_new_addn'		=> 'Neuen %s hinzufügen',
 #	'sprintf_new_adds'		=> 'Neues %s erstellen',
-#	'sprintf_name'			=> '%sname',
+	
 #	'sprintf_title'			=> '%stitel',
 #	'sprintf_desc'			=> '%sbeschreibung',
 	/* sprintf: Spiele */
@@ -551,7 +556,7 @@ $lang = array_merge($lang, array(
 #	'common_auth_member'	=> 'Mitglieder',
 #	'common_auth_mod'		=> 'Moderatoren',
 #	'common_auth_admin'		=> 'Administrator',
-#	'sql_duplicate'	=> '%s: "%s" schon vorhanden!',
+	'sql_duplicate'	=> '%s: "%s" schon vorhanden!',
 #	'create'	=> 'Neuen Eintrag hinzugefügt.',
 #	'update'	=> 'Eintrag erfolgreich geändert.',
 #	'delete'	=> 'Der Eintrag wurde gelöscht!',

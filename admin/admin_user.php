@@ -330,7 +330,7 @@ else
 			$template->assign_vars(array(
 			#	'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
 			#	'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['user'], $data['user_name']),
-			#	'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['user']),
+			#	'L_NAME'	=> sprintf($lang['stf_name'], $lang['user']),
 			#	'L_EMAIL'	=> $lang['email'],
 			#	'L_CONFIRM'	=> $lang['email_confirm'],
 				

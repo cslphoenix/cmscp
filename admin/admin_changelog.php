@@ -71,7 +71,7 @@ else
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['authlist']),
 				'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['authlist_field']),
-				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['authlist_field']),
+				'L_NAME'		=> sprintf($lang['stf_name'], $lang['authlist_field']),
 				
 				'L_RESET'		=> $lang['common_reset'],
 				'L_SUBMIT'		=> $lang['common_submit'],
@@ -203,7 +203,7 @@ else
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['changelog']),
 				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['changelog']),
-				'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['changelog']),
+				'L_NAME'		=> sprintf($lang['stf_name'], $lang['changelog']),
 				'L_EXPLAIN'		=> $lang['changelog_explain'],
 				
 				'S_CREATE'		=> check_sid("$file?mode=create"),

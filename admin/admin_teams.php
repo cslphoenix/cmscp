@@ -23,7 +23,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('teams');
-	acl_auth(array('a_team', 'a_team_create', 'a_team_delete', 'a_team_manage'));
+	acl_auth(array('a_team_create', 'a_team_update', 'a_team_delete', 'a_team_manage'));
 
 	$error	= '';
 	$index	= '';
@@ -63,8 +63,8 @@ else
 	{
 		switch ( $mode )
 		{
-			case 'create':	acl_auth('a_team_create');
-			case 'update':	acl_auth('a_team');
+			case 'create':
+			case 'update':
 			
 				$template->assign_block_vars('input', array());
 				$template->assign_vars(array('IPATH' => $dir_games));
@@ -105,12 +105,16 @@ else
 						'team_show'		=> '1',
 						'team_order'	=> 0,
 					);
+					
+					auth_check('a_team_create');
 				}
 				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(TEAMS, $data, false, 3, true);
 					
 					$template->assign_vars(array('L_OPTION' => href('a_txt', $file, array('id' => $data), $lang['members'], $lang['members'])));
+					
+				#	auth_check('a_team_update');
 				}
 				else
 				{
@@ -543,13 +547,27 @@ else
 		
 		$data_sql = data(TEAMS, $data, false, 1, true);
 		
+		$sql = "SELECT team_id, team_name FROM " . TEAMS . " ORDER BY team_order";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$teams[$row['team_id']] = $row['team_name'];
+		}
+		$db->sql_freeresult($result);
+		
+	#	debug($teams, 'teams');
+		
 		$sql_id = $team_mods = $team_members = $s_options = $s_users = '';
 		
 		$sql = "SELECT u.team_id, ul.user_rank, ul.time_create, ul.user_status, u.user_id, u.user_name, u.user_regdate, r.rank_name
 					FROM " . USERS . " u, " . LISTS . " ul
 						LEFT JOIN " . RANKS . " r ON r.rank_id = ul.user_rank
 					WHERE type = " . TYPE_TEAM . " AND ul.type_id = $data AND ul.user_id = u.user_id
-				ORDER BY r.rank_order ASC, ul.time_create ASC, u.user_name ASC";
+				ORDER BY r.rank_order ASC, u.user_name ASC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -562,12 +580,6 @@ else
 		}
 		else				
 		{
-		#	debug($members);
-		#	foreach ( $members as $member )
-		#	{
-		#		$ids[] = $member['user_id'];
-		#	}
-		
 			$team_moderators = $team_members = array();
 			
 			foreach ( $members as $row )
@@ -594,7 +606,8 @@ else
 						'ID'	=> $row['user_id'],
 						'NAME'	=> $row['user_name'],
 						'RANK'	=> $row['rank_name'],
-						'MAIN'	=> ($row['team_id'] == $data) ? $lang['com_yes'] : $lang['com_no'],
+					#	'MAIN'	=> ($row['team_id'] == $data) ? $lang['com_yes'] : $lang['com_no'],
+						'MAIN'	=> $teams[$row['team_id']],
 						'JOIN'	=> create_date($userdata['user_dateformat'], $row['time_create'], $userdata['user_timezone']),
 						'REG'	=> create_date($userdata['user_dateformat'], $row['user_regdate'], $userdata['user_timezone']),						
 					));
@@ -613,9 +626,10 @@ else
 						'ID'	=> $row['user_id'],
 						'NAME'	=> $row['user_name'],
 						'RANK'	=> $row['rank_name'],
-						'MAIN'	=> ($row['team_id'] == $data) ? $lang['com_yes'] : $lang['com_no'],
-						'REG'	=> create_date($userdata['user_dateformat'], $row['user_regdate'], $userdata['user_timezone']),
+					#	'MAIN'	=> ($row['team_id'] == $data) ? $lang['com_yes'] : $lang['com_no'],
+						'MAIN'	=> $teams[$row['team_id']],
 						'JOIN'	=> create_date($userdata['user_dateformat'], $row['time_create'], $userdata['user_timezone']),
+						'REG'	=> create_date($userdata['user_dateformat'], $row['user_regdate'], $userdata['user_timezone']),
 					));
 				}
 			}
@@ -639,7 +653,15 @@ else
 			'L_EXPLAIN'	=> $lang['explain_user'],
 			
 			'L_OPTION'	=> href('a_txt', $file, array('mode' => 'update', 'id' => $data), $lang['input_data'], $lang['input_data']),
-		
+			
+			'L_MAIN'	=> $lang['type_main'],
+			
+			'L_MEMBERS_ADD'			=> $lang['team_member_add'],
+			'L_MEMBERS_ADD_EXPLAIN'	=> $lang['team_member_add_explain'],
+			
+			'L_MEMBER_ADD_MOD'	=> $lang['team_set_moderator'],
+			'L_MEMBER_ADD_RANK'	=> $lang['team_set_rank'],
+			
 	#		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['team']),
 	#		'L_INPUT'	=> sprintf($lang['stf_update'], $lang['team'], $data['team_name']),
 			'L_MEMBER'	=> $lang['members'],

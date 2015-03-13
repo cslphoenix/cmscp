@@ -897,7 +897,7 @@ else
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
-				'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
+				'L_NAME'	=> sprintf($lang['stf_name'], $lang['title']),
 				
 				'L_EXPLAIN'	=> $lang['explain'],
 				

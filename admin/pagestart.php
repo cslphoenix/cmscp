@@ -38,15 +38,20 @@ if ( !$userdata['session_admin'] )
 
 if ( empty($cancel) )
 {
-	$typ = request('i', INT) ? request('i', INT) : 1;
-	$act = request('action', TYP);
+#	debug(request('i', INT));
+#	debug($_GET, 'asdasd');
+	$ityp = request('i', INT) ? request('i', INT) : 1;
+	$iact = request('action', TYP);
 	
-	$action = $act ? "&action=$act" : '';
+#	debug($ityp, 'ityp');
+#	debug($act, '$act');
 	
-	$adds = "?i=$typ$action";
-	$file = basename($_SERVER['PHP_SELF']) . $adds;
+	$iaction = $iact ? "&action=$iact" : '';
 	
-	acp_header($file, $adds, $typ);
+	$iadds = "?i=$ityp$iaction";
+	$file = basename($_SERVER['PHP_SELF']) . $iadds;
+	
+	acp_header($file, $iadds, $ityp);
 }
 
 ?>

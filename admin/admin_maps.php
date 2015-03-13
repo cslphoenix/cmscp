@@ -22,7 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('maps');
-	acl_auth(array('a_map', 'a_map_create', 'a_map_delete'));
+	acl_auth(array('a_map_create', 'a_map_update', 'a_map_delete', 'a_map_assort', 'a_map_manage'));
 	
 	$error	= '';
 	$index	= '';
@@ -57,9 +57,9 @@ else
 	{
 		switch ( $mode )
 		{
-			case 'create':	acl_auth('a_map_create');
-			case 'update':	acl_auth('a_map');
-
+			case 'create':
+			case 'update':
+			
 				$template->assign_block_vars('input', array());
 				
 				$vars = array(
@@ -179,12 +179,12 @@ else
 			case 'move_up':
 			case 'move_down':
 			
-				debug($main, 'main');
-				debug($type, 'type');
-				debug($usub, 'usub');
-				debug($action, 'action');
+			#	debug($main, 'main');
+			#	debug($type, 'type');
+			#	debug($usub, 'usub');
+			#	debug($action, 'action');
 			
-				move(MAPS, $mode, $order, $main, $type, $usub, $action);
+				move(MAPS, $mode, $order, $main, $type, $usub);
 				log_add(LOG_ADMIN, $log, $mode);
 			
 				$index = true;
@@ -373,7 +373,7 @@ else
 		$cname	= isset($lang[$cat['map_name']]) ? $lang[$cat['map_name']] : $cat['map_name'];
 		
 		$template->assign_vars(array(
-			'OVERVIEW'	=> href('a_txt', $file, array($file), $lang['acp_overview'], ''),
+			'OPTION'	=> href('a_txt', $file, array($file), $lang['common_overview'], ''),
 			'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cname, $cname),
 			'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
 			'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
@@ -452,9 +452,11 @@ else
 		$fields .= '<input type="hidden" name="mode" value="create" />';
 	}
 	
+#	debug($lang);
+	
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
+		'L_CREATE'	=> sprintf($lang['stf_create'], ($main ? $lang['title'] : $lang['main'])),
 		'L_NAME'	=> $lang['type_0'],
 		'L_EXPLAIN'	=> $lang['explain'],
 		

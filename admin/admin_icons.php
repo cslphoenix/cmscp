@@ -56,10 +56,21 @@ else
 	{
 		$mode = ( isset($_POST['append']) ) ? 'append' : 'modify';
 	}
-
-#	debug($_POST, '_POST');	
 	
-	$mode = (in_array($mode, array('append', 'modify', 'create', 'list', 'update', 'order', 'delete'))) ? $mode : false;
+#	function check_db($vars)
+#	{
+#		foreach ( $vars as $row )
+#		{
+#			$return[$row['icon_id']] = $row['icon_path'];
+#		}
+#		
+#		return $return;
+#	}
+
+	debug($_POST, '_POST');
+#	debug($mode, 'mode');
+	
+#	$mode = (in_array($mode, array('append', 'modify', 'create', 'list', 'update', 'order', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
 	{
@@ -68,15 +79,16 @@ else
 			case 'append':
 			case 'modify':
 			
-				$template->assign_block_vars('append', array());
+				$template->assign_block_vars($mode, array());
 				
 				$vars = array(
-					'icon_path'		=> array('validate' => TXT,	'explain' => false,	'type' => 'info'),
-					'icon_width'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5'),
-					'icon_height'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5'),
-					'icon_posting'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:posting'),
+					'icon_icon'		=> array('validate' => '',	'explain' => false,	'type' => 'icon:25', 'params' => 'icon_path'),
+					'icon_path'		=> array('validate' => TXT,	'explain' => false,	'type' => 'info:25'),
+					'icon_width'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5;5'),
+					'icon_height'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5;5'),
+					'icon_topic'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:posting'),
 					'icon_download'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:download'),
-				#	'icon_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+			#		'icon_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox'),
 				);
 				
 				if ( $mode == 'append' && !$submit )
@@ -85,26 +97,32 @@ else
 					
 					sort($files);
 					
+					$_path = str_replace($root_path, '', $dir_path);
+					
 					foreach ( $files as $key => $row )
 					{
 						list($width, $height, $type, $attr) = getimagesize($dir_path . $row);
 						
-						$data[$key]['icon_path'] = str_replace($root_path, '', $dir_path) . $row;
-						$data[$key]['icon_width'] = $width;
-						$data[$key]['icon_height'] = $height;
+						$data_sql[$key]['icon_path'] = $_path . $row;
+						$data_sql[$key]['icon_width'] = $width;
+						$data_sql[$key]['icon_height'] = $height;
 					}
 				}
-				
 				else if ( $mode == 'modify' && !$submit )
 				{
-					$data_sql = data(ICONS, false, 'icon_order ASC', 1, false);
+#					$data_sql = data(ICONS, false, 'icon_order ASC', 1, false);
+					$data_sql = data(ICONS, false, false, 1, false);
+				#	$check_db = check_db($data_sql);
+					
+				#	debug($check_db, 'check_db');
 				}
 				
 				else
 				{
 				#	$data_sql = build_request_list($vars, $error);
+					$data_sql = build_request_list(ICONS, $vars, $error, 'icon_id');
 					
-				#	debug($data, 'request_list');
+					debug($data_sql, 'data_sql');
 					
 					if ( !$error )
 					{
@@ -117,11 +135,9 @@ else
 						}
 						else
 						{
-					#		$sql = sql(ICONS, $mode, $data_sql, 'server_id', $data);
+							$sql = sql(ICONS, $mode, $data_sql, 'icon_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
-						
-					#	orders(ICONS);
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
 						message(GENERAL_MESSAGE, $msg);
@@ -147,19 +163,29 @@ else
 				}
 				*/
 			#	debug($data);
+			
+			#	debug($mode, 'mode2');
 				
 			#	build_output_list($data, $vars, 'append', 'path_icons');
+			#	build_output_list(ICONS, $vars, $data_sql, 'append', $mode);
+				build_output_list(ICONS, $vars, $data_sql, $mode);
 				
 			#	build_output($data, $vars, 'append', false, ICONS);
 				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
+			
+				$fields .= build_fields(array(
+						'mode'	=> $mode,
+					#	'i'		=> $ityp,
+					#	'id'	=> $check_db,
+					));
 				
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-					'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title']),
-					
-					'S_ACTION'	=> check_sid($file),
+			#		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+			#		'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title']),
+										
+					'S_ACTION'	=> check_sid("$file"),
 					'S_FIELDS'	=> $fields,
 				));
 			
@@ -173,20 +199,13 @@ else
 				$template->assign_block_vars('input', array());
 				
 				$vars = array(
-					'server' => array(
-						'title'	=> 'data_input',
-						'server_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
-						'server_game'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:server', 'required' => 'input_game'),
-						'server_ip'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_ip'),
-						'server_port'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:10:10', 'required' => 'input_port'),
-						'server_pw'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:10:10'),
-						'server_live'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-						'server_list'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-						'server_show'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-						'server_own'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-						'server_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:order'),
-						'server_type'	=> 'hidden',
-					)
+					'icon_show'		=> array('validate' => TXT,	'explain' => false,	'type' => 'info'),
+					'icon_path'		=> array('validate' => TXT,	'explain' => false,	'type' => 'info'),
+					'icon_width'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5'),
+					'icon_height'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5:5'),
+					'icon_posting'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:posting'),
+					'icon_download'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:download'),
+				#	'icon_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 				);
 				
 				if ( $mode == 'create' && !$submit )
@@ -273,7 +292,7 @@ else
 			#		'gameq_sort'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox'),
 				);
 				
-				build_output_list(ICONS, $vars, $data_sql, $mode);
+				build_output_list(ICONS, $vars, $data_sql, $mode, 'title');
 				
 				$template->assign_vars(array(
 				#	'L_HEAD'	=> sprintf($lang['sprintf_' . substr($mode, 6)], $lang['gameq_title'], $data_sql['gameq_name']),
@@ -348,26 +367,26 @@ else
 	
 #	$fields = '<input type="hidden" name="mode" value="create" />';
 	
-	$tmp = data(ICONS, false, 'icon_order ASC', 1, false);
+	$icons = data(ICONS, false, 'icon_order ASC', 1, false);
 	
-	if ( !$tmp )
+	if ( !$icons )
 	{
 		$template->assign_block_vars('display.empty', array());
 	}
 	else
 	{
-		$cnt = count($tmp);
+		$max = count($icons);
 		
-		for ( $i = 0; $i < $cnt; $i++ )
+		foreach ( $icons as $row )
 		{
-			$id		= $tmp[$i]['icon_id'];
-			$path	= $tmp[$i]['icon_path'];
-			$order	= $tmp[$i]['icon_order'];
-			$width	= $tmp[$i]['icon_width'];
-			$height	= $tmp[$i]['icon_height'];
+			$id		= $row['icon_id'];
+			$path	= $row['icon_path'];
+			$order	= $row['icon_order'];
+			$width	= $row['icon_width'];
+			$height	= $row['icon_height'];
 			
 			$template->assign_block_vars('display.row', array(
-				'SHOW'		=> href('a_img', $file, array('mode' => 'update', 'id' => $id), $path, ''),
+				'SHOW'		=> href('a_img', $file, array('mode' => 'update', 'id' => $id), $root_path . $path, false),
 				
 				
 				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
@@ -386,7 +405,7 @@ else
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
 		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
-		'L_NAME'	=> sprintf($lang['sprintf_name'], $lang['title']),
+		'L_NAME'	=> $lang['icon_name'],
 		'L_EXPLAIN'	=> $lang['explain'],
 		
 		'LIST'		=> href('a_txt', $file, array('mode' => 'list'), 'list', 'list'),

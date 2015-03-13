@@ -8,10 +8,9 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 
 	'bank'		=> 'Bankdaten',
-	'user'		=> 'Benutzer',
+	'user'		=> 'Bank-Benutzer',
 	'type'		=> 'Clankassen-Art',
 
-	
 	'title'		=> 'Clankasse',
 	'explain'	=> 'Clankassen verwaltung!',
 	
@@ -19,20 +18,19 @@ $lang = array_merge($lang, array(
 	'cash_interval'	=> 'Zahlungsintervall',
 	'cash_postage'	=> 'Gesammtbetrag',
 	
-	
-	
-	'cash_bank'		=> 'Bank',
-	
-	'cash_user'		=> 'Benutzer',
-	
+#	'cash_bank'		=> 'Bank',
+#	'cash_user'		=> 'Benutzer',
 	'bank_data'		=> 'Kontodaten',
 	
-	'bank_holder'	=> 'Kontoinhaber',
-	'bank_name'		=> 'Bankname',
-	'bank_blz'		=> 'Bankleitzahl',
-	'bank_number'	=> 'Kontonummer',
-	'bank_reason'	=> 'Verwendungszweck',
-	'bank_delete'	=> 'Bankdaten löschen',
+	'bank_holder'		=> 'Kontoinhaber',
+	'bank_name'			=> 'Bankname',
+	'bank_blz'			=> 'Bankleitzahl',
+	'bank_number'		=> 'Kontonummer',
+	'bank_reason'		=> 'Verwendungszweck',
+	'bank_delete'		=> 'Bankdaten löschen',
+	'bank_create'		=> 'Bankdaten eintragen',
+	
+	'type_create'		=> 'Type eintragen',
 	
 	'msg_empty_holder'	=> 'Bitte Inhaber des Kontos eintragen!',
 	'msg_empty_name'	=> 'Bitte Bankname eintragen!',
@@ -40,10 +38,9 @@ $lang = array_merge($lang, array(
 	'msg_empty_number'	=> 'Bitte Kontonummer eintragen!',
 	'msg_empty_reason'	=> 'Bitte Verwendungszweck eintragen!',
 	
-	'user'		=> 'Benutzer',
-	
-	'amount'	=> 'Betrag',
-	'month'		=> 'Monat',
+#	'user'		=> 'Benutzer',
+#	'amount'	=> 'Betrag',
+#	'month'		=> 'Monat',
 	
 	'interval'			=> 'Zahlungsintervall',
 	'interval_only'		=> 'Einmalig',
@@ -55,27 +52,26 @@ $lang = array_merge($lang, array(
 	'type_voice'	=> 'Voiceserver',
 	'type_other'	=> 'sonstiges',
 	
-	
-	
-	'cash_received'		=> 'Bezahlt',
-	'cast_notreceived'	=> 'nicht Bezahlt',
+#	'cash_received'		=> 'Bezahlt',
+#	'cast_notreceived'	=> 'nicht Bezahlt',
 	
 	/* error msg */
-	'msg_select_amount'		=> 'Bitte einen Betrag eintragen!',
+#	'msg_select_amount'		=> 'Bitte einen Betrag eintragen!',
 	
 	/* added 14.07 */
-	'cash_name'		=> 'Kostenname',
+	'cash_name'		=> 'Benutzer / Zweck',
 	'cash_amount'	=> 'Betrag',
 	'cash_type'		=> 'Kosten Type',
-	'cash_interval'	=> 'Zahlungsintervall',
+	'cash_month'	=> 'Monat(e)',
+#	'cash_interval'	=> 'Zahlungsintervall',
 	
 	
-	'ccreate'	=> 'hinzugefügt',
-	'cupdate'	=> 'geändert',
-	
-	
-	
+#	'ccreate'	=> 'hinzugefügt',
+#	'cupdate'	=> 'geändert',
+
+	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
 ));
+
 
 $lang = array_merge($lang, array(	
 	'radio:interval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_only']),

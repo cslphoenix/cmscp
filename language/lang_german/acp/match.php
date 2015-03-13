@@ -10,6 +10,8 @@ $lang = array_merge($lang, array(
 	'title'		=> 'Begegnung',
 	'explain'	=> 'Begegnung Details',
 	
+	'input_data'	=> 'Begegnungsdaten',
+	
 	'upcoming'	=> 'Anstehende Begegnung',
 	'expired'	=> 'Abgelaufen Begegnung',
 
@@ -32,7 +34,8 @@ $lang = array_merge($lang, array(
 	'msg_select_mwar'		=> 'Bitte Wartype auswählen',
 	'msg_select_mleague'	=> 'Bitte Liga auswählen',
 	
-	
+	'msg_select_member'		=> 'Bitte 1 oder mehrere Mitglieder auswählen!',
+	'msg_select_option'		=> 'Bitte eine <b>Option</b> auswählen!',
 /*
 	'match_type' => array(
 		'type_unknown'	=> 'unbekannt',
@@ -127,6 +130,11 @@ $lang = array_merge($lang, array(
 #	'match_type'	=> 'match_type',
 #	'match_war'		=> 'match_war',
 #	'match_league'	=> 'match_league',
+
+#	'delete_user'	=> 'Benutzer gelöscht',
+	'user_create'	=> 'Benutzer hinzugefügt',
+	'user_update'	=> 'Benutzerstatus geändert',
+	'user_delete'	=> 'Benutzer gelöscht',
 
 	
 ));

@@ -22,7 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('games');
-	acl_auth(array('a_game', 'a_game_create', 'a_game_delete'));
+	acl_auth(array('a_game_create', 'a_game_update', 'a_game_delete'));
 	
 	$error	= '';
 	$index	= '';
@@ -30,6 +30,7 @@ else
 	
 	$time	= time();
 	$log	= SECTION_GAMES;
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -41,7 +42,7 @@ else
 	$dir_path	= $root_path . $settings['path_games'];
 	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__) . $adds, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_games.tpl',
@@ -95,7 +96,7 @@ else
 							$sql = sql(GAMES, $mode, $data_sql);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
-						else if ( acl_auth('a_game') ) 
+						else if ( acl_auth('a_game') )
 						{
 							$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
@@ -125,20 +126,22 @@ else
 				break;
 			
 			case 'move_up':
-			case 'move_down':	acl_auth('a_game');
+			case 'move_down':
 			
-				move(GAMES, $mode, $order);
-				log_add(LOG_ADMIN, $log, $mode);
-			
-				$index = true;
+				if ( acl_auth('a_game_assort') )
+				{
+					move(GAMES, $mode, $order);
+					log_add(LOG_ADMIN, $log, $mode);
+					$index = true;
+				}
 				
 				break;
 
-			case 'delete':	acl_auth('a_game_delete');
-
+			case 'delete':
+			
 				$data_sql = data(GAMES, $data, false, 1, true);
 
-				if ( $data && $accept )
+				if ( $data && $accept && acl_auth('a_game_delete') )
 				{
 					$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
 					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
@@ -148,11 +151,13 @@ else
 					log_add(LOG_ADMIN, $log, $mode, $sql);
 					message(GENERAL_MESSAGE, $msg);
 				}
-				else if ( $data && !$accept )
+				else if ( $data && !$accept && acl_auth('a_game_delete') )
 				{
-					$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-
+					$fields .= build_fields(array(
+						'mode'	=> $mode,
+						'id'	=> $data,
+					));
+					
 					$template->assign_vars(array(
 						'M_TITLE'	=> $lang['com_confirm'],
 						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['game_name']),

@@ -22,7 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('training');
-	acl_auth(array('a_training', 'a_training_create', 'a_training_delete', 'a_training_manage'));
+	acl_auth(array('a_training_create', 'a_training_update', 'a_training_manage', 'a_training_delete'));
 	
 	$error	= '';
 	$index	= '';
@@ -46,10 +46,9 @@ else
 	$t_id	= request('t_id', INT);
 	
 	$acp_main	= request('acp_main', INT);
-	
 	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	( $cancel && !$acp_main )	? redirect('admin/' . check_sid(basename(__FILE__) . $adds, true)) : false;
+	( $cancel && !$acp_main )	? redirect('admin/' . check_sid(basename(__FILE__) . $iadds, true)) : false;
 	( $cancel && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
 	
 	$template->set_filenames(array(
@@ -63,8 +62,8 @@ else
 	
 	switch ( $mode )
 	{
-		case 'create':	acl_auth('a_training_create');
-		case 'update':	acl_auth('a_training');
+		case 'create':
+		case 'update':
 		
 			$template->assign_block_vars('input', array());
 
@@ -112,12 +111,12 @@ else
 				{
 				#	$data_sql['training_maps'] = is_array($data_sql['training_maps']) ? serialize($data_sql['training_maps']) : array();
 					
-					if ( $mode == 'create' )
+					if ( $mode == 'create' && acl_auth('a_training_create') )
 					{
 						$sql = sql(TRAINING, $mode, $data_sql);
 						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
-					else
+					else if ( acl_auth('a_training_update') )
 					{
 						$sql = sql(TRAINING, $mode, $data_sql, 'training_id', $data);
 						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
@@ -147,11 +146,11 @@ else
 			
 			break;
 			
-		case 'delete':	acl_auth('a_training_delete');
+		case 'delete':
 		
 			$data_sql = data(TRAINING, $data, false, 1, true);
 		
-			if ( $data && $confirm )
+			if ( $data && $accept && acl_auth('a_training_delete') )
 			{
 				$file = ( $acp_main ) ? check_sid('index.php') : check_sid($file);
 				$name = ( $acp_main ) ? $lang['acp_overview'] : $acp_title;
@@ -168,11 +167,16 @@ else
 				log_add(LOG_ADMIN, $log, $mode, $dsql);
 				message(GENERAL_MESSAGE, $msg);
 			}
-			else if ( $data_id && !$confirm )
+			else if ( $data && !$accept && acl_auth('a_training_delete') )
 			{
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-				$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
+				$fields .= build_fields(array(
+					'mode'		=> $mode,
+					'id'		=> $data,
+					'acp_main'	=> $acp_main,
+				));
+			#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['com_confirm'],
@@ -291,9 +295,6 @@ else
 				
 				'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / 5 ) + 1 ), $current_page),
 				'PAGE_PAGING'	=> generate_pagination($file, $cnt_old, 5, $start ),
-				
-			#	'S_SORT'	=> select_team($t_id, '', 't_id', 'submit', 'selectsmall'),
-			#	'S_TEAMS'	=> select_team($t_id, false, 't_id', false),
 				
 				'S_SORT'	=> select_team($t_id, '', 't_id', 'submit', 'selectsmall'),
 				'S_TEAM'	=> select_team($t_id, '', 't_id', false, 'selectsmall'),

@@ -1,32 +1,18 @@
 <?php
 
 define('IN_CMS', true);
+
 $root_path = './';
+
 include($root_path . 'common.php');
 
 $userdata = session_pagestart($user_ip, PAGE_CASH);
 init_userprefs($userdata);
 
-$start = ( isset($HTTP_GET_VARS['start']) ) ? intval($HTTP_GET_VARS['start']) : 0;
-$start = ( $start < 0 ) ? 0 : $start;
+$start	= request('start', INT);
 
-if ( isset($HTTP_POST_VARS[POST_CASH]) || isset($HTTP_GET_VARS[POST_CASH]) )
-{
-	$cash_id = ( isset($HTTP_POST_VARS[POST_CASH]) ) ? intval($HTTP_POST_VARS[POST_CASH]) : intval($HTTP_GET_VARS[POST_CASH]);
-}
-else
-{
-	$cash_id = '';
-}
-
-if ( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
-{
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? htmlspecialchars($HTTP_POST_VARS['mode']) : htmlspecialchars($HTTP_GET_VARS['mode']);
-}
-else
-{
-	$mode = '';
-}
+$data	= request('id', INT);
+$mode	= request('mode', TXT);
 
 if ( $mode == '' )
 {
@@ -54,11 +40,11 @@ if ( $mode == '' )
 #		'L_BD_NUMBER'	=> $lang['cash_bd_number'],
 #		'L_BD_REASON'	=> $lang['cash_bd_reason'],
 		
-		'BD_NAME'		=> $settings['bank_data']['bank_holder'],
-		'BD_BANK'		=> $settings['bank_data']['bank_name'],
-		'BD_BLZ'		=> $settings['bank_data']['bank_blz'],
-		'BD_NUMBER'		=> $settings['bank_data']['bank_number'],
-		'BD_REASON'		=> $settings['bank_data']['bank_reason'],
+		'BD_NAME'		=> unserialize($settings['bank_data']['bank_holder']),
+		'BD_BANK'		=> unserialize($settings['bank_data']['bank_name']),
+		'BD_BLZ'		=> unserialize($settings['bank_data']['bank_blz']),
+		'BD_NUMBER'		=> unserialize($settings['bank_data']['bank_number']),
+		'BD_REASON'		=> unserialize($settings['bank_data']['bank_reason']),
 	));
 	
 	//

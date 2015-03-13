@@ -25,20 +25,21 @@ if ( isset($_POST['type']) )
 	
 	switch ( $meta )
 	{
-		case 'dl':		$tbl = DOWNLOAD;	break;
-		case 'gallery':	$tbl = GALLERY_NEW;	break;
-		case 'profile':	$tbl = PROFILE;		break;
-		
-		case 'forum':	$tbl = FORUM;	$label = true;	break;
-		case 'menu':	$tbl = MENU;	$label = ($type == 4) ? true : false; $menu = true;	break;
+		case 'dl':		$tbl = DOWNLOAD;				break;
+		case 'gallery':	$tbl = GALLERY_NEW;				break;
+		case 'profile':	$tbl = PROFILE;					break;
+		case 'forum':	$tbl = FORUM;	$label = true;	break;		
+		case 'menu':	$tbl = MENU;	$label = ($type != 4) ? true : false;	$menu = true;	break;
 	}
+	
+#	debug($type, 'type ajax_main');
 	
 	$f_id		= $meta . '_id';
 	$f_name		= $meta . '_name';
 	$f_lang		= $meta . '_lang';
 	$f_order	= $meta . '_order';
 	
-	$sql = "SELECT * FROM $tbl " . ($menu ? (($type == 4) ? "WHERE action = 'acp'" : "WHERE action = 'pcp'") : '') . " ORDER BY main ASC, $f_order ASC";
+	$sql = "SELECT * FROM $tbl " . ($menu ? (($type == 4) ? "WHERE action = 'pcp'" : "WHERE action = 'acp'") : '') . " ORDER BY main ASC, $f_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;

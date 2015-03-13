@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEAD}<span class="right">{OPTION}</span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -112,9 +112,14 @@ function update_ajax_{input.update_image.NAME}(newimage)
 
 <!-- BEGIN list -->
 <form action="{S_ACTION}" method="post">
+
+<ul id="navopts"><li>{OVERVIEW}</li></ul>
+
+<br />
+
 <table class="rows">
 <tr>
-	<th>{OVERVIEW} :: {NAME}</th>
+	<th>{NAME}</th>
 	<th><span class="right">{UPDATE}{DELETE}</span></th>
 </tr>
 <!-- BEGIN row -->

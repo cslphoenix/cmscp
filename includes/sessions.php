@@ -577,11 +577,20 @@ function session_reset_keys($user_id, $user_ip)
 function check_sid($url, $non_html_amp = false)
 {
 	global $SID;
+	
+	$ityp = request('i', INT) ? request('i', INT) : 1;
+	$iact = request('action', TYP) ? request('action', TYP) : '';
+	
+#	debug($ityp, 'ityp');
+	
+#	debug($url, 'test 1');
 
 	if ( !empty($SID) && !preg_match('#sid=#', $url) )
 	{
-		$url .= ( ( strpos($url, '?') !== false ) ? ( ( $non_html_amp ) ? '&' : '&amp;' ) : '?' ) . $SID;
+		$url .= ( ( strpos($url, '?') !== false ) ? ( ( $non_html_amp ) ? '&' : '&amp;' ) : '?' ) . ( !preg_match('#i=#', $url) ? "i=$ityp&amp;" : '' ) . $SID;
 	}
+	
+#	debug($url, 'test 2');
 
 	return $url;
 }

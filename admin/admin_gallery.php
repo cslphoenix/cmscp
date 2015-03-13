@@ -392,7 +392,7 @@ else
 					'L_WIDTH'		=> $lang['pic_widht'],
 					'L_HEIGHT'		=> $lang['pic_height'],
 					'L_SIZE'		=> $lang['gallery_filesize'],
-					'L_NAME'		=> sprintf($lang['sprintf_name'], $lang['pic']),
+					'L_NAME'		=> sprintf($lang['stf_name'], $lang['pic']),
 					
 					'PICS_PER_LINE'	=> $cat['per_rows'],
 					'PREVIEW_WIDHT'	=> $cat['preview_widht'],

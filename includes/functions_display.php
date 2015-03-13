@@ -457,7 +457,12 @@ function display_teams()
 {
 	global $db, $lang, $settings, $template;
 	
-	$sql = "SELECT t.team_id, t.team_name, t.team_fight, g.game_image FROM " . TEAMS . " t, " . GAMES . " g WHERE t.team_game = g.game_id AND t.team_navi = 1 ORDER BY t.team_order LIMIT 0, " . $settings['module_teams']['limit'];
+	$sql = "SELECT t.team_id, t.team_name, t.team_fight, g.game_image
+				FROM " . TEAMS . " t, " . GAMES . " g
+			WHERE t.team_game = g.game_id
+				AND t.team_navi = 1
+					ORDER BY t.team_order
+				LIMIT 0, " . $settings['module_teams']['limit'];
 	$data = _cached($sql, 'dsp_sn_teams');
 	
 	if ( $data )

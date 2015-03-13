@@ -57,6 +57,43 @@ if ( !$mode )
 	
 	main_header();
 	
+	$sql = "SELECT t . * , g . * FROM cms_teams t INNER JOIN cms_game g ON t.team_game = g.game_id GROUP BY t.team_order ORDER BY g.game_order";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$teams2 = $db->sql_fetchrowset($result);
+	
+	foreach ( $teams2 as $row )
+	{
+#		$_info2[$row['team_game']] = $row['game_id'];
+		$teams_sort[$row['team_game']]['teams'][] = $row;
+		$teams_sort[$row['team_game']]['info'] = $row['game_name'];
+	}
+	
+#	debug($test_info, 'test info');
+#	debug($_info2, '_info2');
+	debug($teams_sort, 'teams_sort');
+	
+	foreach ( $teams_sort as $row )
+	{
+		
+		$template->assign_block_vars('list.games', array(
+			'L_GAME' => $row['info']
+		));
+		
+		foreach ( $row['teams'] as $row )
+		{
+			$template->assign_block_vars('list.games.teams', array(
+				'NAME'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$team_id") . '">' . $row['team_name'] . '</a>',
+				'GAME'		=> display_gameicon($row['game_image']),
+				'JOINUS'	=> $row['team_join']	? '<a href="' . check_sid("contact.php?mode=joinus&amp;$url=$team_id") . '">' . $lang['match_joinus'] . '</a>'  : '',
+				'FIGHTUS'	=> $row['team_fight']	? '<a href="' . check_sid("contact.php?mode=fightus&amp;$url=$team_id") . '">' . $lang['match_fightus'] . '</a>'  : '',
+			));
+		}
+	}
+		
+	
 	$sql = "SELECT DISTINCT g.* FROM " . GAMES . " g, " . TEAMS . " t WHERE g.game_id = t.team_game ORDER BY game_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
@@ -80,7 +117,7 @@ if ( !$mode )
 	{
 		$game_id = $games[$i]['game_id'];
 		
-		$template->assign_block_vars('list._game_row', array('L_GAME' => $games[$i]['game_name']));
+		$template->assign_block_vars('list.game_row', array('L_GAME' => $games[$i]['game_name']));
 															 
 		for ( $j = 0; $j < $cnt_teams; $j++ )
 		{
@@ -89,7 +126,7 @@ if ( !$mode )
 			
 			if ( $team_game == $game_id )
 			{
-				$template->assign_block_vars('list._gamerow._team_row', array(
+				$template->assign_block_vars('list.game_row.team_row', array(
 					'NAME'		=> '<a href="' . check_sid("$file?mode=view&amp;$url=$team_id") . '">' . $teams[$j]['team_name'] . '</a>',
 					'GAME'		=> display_gameicon($games[$i]['game_image']),
 					

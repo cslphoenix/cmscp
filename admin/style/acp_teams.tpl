@@ -11,9 +11,9 @@ function update_image(newimage)
 
 </script>
 
-<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 {ERROR_BOX}
 
+<form action="{S_ACTION}" method="post" name="post" id="post" enctype="multipart/form-data">
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
@@ -45,105 +45,102 @@ function update_image(newimage)
 
 <!-- BEGIN member -->
 {AJAX}
-<form action="{S_ACTION}" method="post" name="post" id="list">
-<br />
 {ERROR_BOX}
-
-<table class="users">
-<tr>
-	<th>{L_MODERATORS}</th>
-	<th>{L_RANK}</th>
-	<th>{L_MAIN}</th>
-	<th>{L_JOIN}</th>
-	<th>{L_REGISTER}</th>
-	<th>&nbsp;</th>
-</tr>
-<!-- BEGIN moderators -->
-<tr onclick="checked({member.moderators.ID})" class="hover">
-	<td>{member.moderators.NAME}</td>
-	<td>{member.moderators.RANK}</td>
-	<td>{member.moderators.MAIN}</td>
-	<td>{member.moderators.JOIN}</td>
-	<td>{member.moderators.REG}</td>
-	<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
-</tr>
-<!-- END moderators -->
-<!-- BEGIN no_moderators -->
-<tr>
-	<td class="empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
-</tr>
-<!-- END no_moderators -->
-</table>
-
-<br />
-
-<table class="users">
-<tr>
-	<th>{L_MEMBERS}</th>
-	<th>{L_RANK}</th>
-	<th>{L_MAIN}</th>
-	<th>{L_JOIN}</th>
-	<th>{L_REGISTER}</th>
-	<th>&nbsp;</th>
-</tr>
-<!-- BEGIN members -->
-<tr onclick="checked({member.members.ID})" class="hover">
-	<td>{member.members.NAME}</td>
-	<td>{member.members.RANK}</td>
-	<td>{member.members.MAIN}</td>
-	<td>{member.members.JOIN}</td>
-	<td>{member.members.REG}</td>
-	<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
-</tr>
-<!-- END members -->
-<!-- BEGIN no_members -->
-<tr>
-	<td class="empty" colspan="5" align="center">{L_NO_MEMBERS}</td>
-</tr>
-<!-- END no_members -->
-</table>
-
-<br />
-
-<table class="rfooter">
-<tr>
-	<td>{S_OPTIONS}</td>
-	<td><div id="close"></div><div id="ajax_content"></div></td>
-	<td><input type="submit" value="{L_SUBMIT}" /></td>
-</tr>
-<tr>
-	<td align="right" colspan="3"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a></td>
-</tr>
-</table>
-{S_FIELDS}
+<form action="{S_ACTION}" method="post" name="post" id="list">
+<fieldset>
+	<legend>{L_MEMBER}</legend>
+	<table class="users">
+	<tr>
+		<th>{L_MODERATORS}</th>
+		<th>{L_RANK}</th>
+		<th>{L_MAIN}</th>
+		<th>{L_JOIN}</th>
+		<th>{L_REGISTER}</th>
+		<th>&nbsp;</th>
+	</tr>
+	<!-- BEGIN moderators -->
+	<tr onclick="checked({member.moderators.ID})" class="hover">
+		<td>{member.moderators.NAME}</td>
+		<td>{member.moderators.RANK}</td>
+		<td>{member.moderators.MAIN}</td>
+		<td>{member.moderators.JOIN}</td>
+		<td>{member.moderators.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
+	</tr>
+	<!-- END moderators -->
+	<!-- BEGIN no_moderators -->
+	<tr>
+		<td class="empty" colspan="5" align="center">{L_NO_MODERATORS}</td>
+	</tr>
+	<!-- END no_moderators -->
+	</table>
+	
+	<br />
+	
+	<table class="users">
+	<tr>
+		<th>{L_MEMBERS}</th>
+		<th>{L_RANK}</th>
+		<th>{L_MAIN}</th>
+		<th>{L_JOIN}</th>
+		<th>{L_REGISTER}</th>
+		<th>&nbsp;</th>
+	</tr>
+	<!-- BEGIN members -->
+	<tr onclick="checked({member.members.ID})" class="hover">
+		<td>{member.members.NAME}</td>
+		<td>{member.members.RANK}</td>
+		<td>{member.members.MAIN}</td>
+		<td>{member.members.JOIN}</td>
+		<td>{member.members.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
+	</tr>
+	<!-- END members -->
+	<!-- BEGIN no_members -->
+	<tr>
+		<td class="empty" colspan="5" align="center">{L_NO_MEMBERS}</td>
+	</tr>
+	<!-- END no_members -->
+	</table>
+	</fieldset>
+	
+	<table class="rfooter">
+	<tr>
+		<td align="right"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a>&nbsp;</td>
+		<td>{S_OPTIONS}</td>
+		<td><div id="close"></div><div id="ajax_content"></div></td>
+		<td><input type="submit" value="{L_SUBMIT}" /></td>
+	</tr>
+	</table>
+	{S_FIELDS}
 </form>
 
 <form action="{S_ACTION}" method="post" name="post" id="list">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MEMBERS_ADD}</a></li></ul>
-
-<table class="head" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td class="row2 small">{L_MEMBERS_ADD_EXPLAIN}</td>
-</tr>
-</table>
-
-<br />
-
-<table class="update" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td class="row1"><label for="status" title="{L_MEMBER_ADD_MOD}">{L_MEMBER_ADD_MOD}:</label></td>
-	<td class="row2"><label><input type="radio" name="status" id="status" value="1" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_NO}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label for="rank_id">{L_MEMBER_ADD_RANK}:</label></td>
-	<td>{S_RANK_SELECT}</td>
-</tr>
-<tr>
-	<td class="row1"><label for="textarea">{L_USERNAME}:</label></td>
-	<td class="row2"><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea></td>
-</tr>
-</table>
-
+<fieldset>
+	<legend>{L_MEMBERS_ADD}</legend>
+	<table class="head" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="row2 small">{L_MEMBERS_ADD_EXPLAIN}</td>
+	</tr>
+	</table>
+	
+	<br />
+	
+	<table class="update" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="row1"><label for="status" title="{L_MEMBER_ADD_MOD}">{L_MEMBER_ADD_MOD}:</label></td>
+		<td class="row2"><label><input type="radio" name="status" id="status" value="1" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_NO}</label></td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="rank_id">{L_MEMBER_ADD_RANK}:</label></td>
+		<td>{S_RANK_SELECT}</td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="textarea">{L_USERNAME}:</label></td>
+		<td class="row2"><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea></td>
+	</tr>
+	</table>
+</fieldset>
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 	<td align="right"><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
