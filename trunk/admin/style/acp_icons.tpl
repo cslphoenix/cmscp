@@ -1,14 +1,14 @@
-<!-- BEGIN append -->
+<li class="header">{L_HEAD}</li>
+<p>{L_EXPLAIN}</p>
 
+<!-- BEGIN append -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
 
 {ERROR_BOX}
 
 <table class="row">
 <tr>
-	<td>{L_SYMBOL}</td>
+	<th>{L_SYMBOL}L_SYMBOL</th>
 	<!-- BEGIN option -->
 	<th>{append.option.OPTION}</th>
 	<!-- END option -->
@@ -16,9 +16,9 @@
 <!-- BEGIN rows -->
 <tr>
 	<td>{append.rows.SYMBOL}</td>
-	<!-- BEGIN option -->
-	<td>{append.rows.option.OPTION}</td>
-	<!-- END option -->
+	<!-- BEGIN type_option -->
+	<td>{append.rows.type_option.OPTION}</td>
+	<!-- END type_option -->
 </tr>
 <!-- END row -->
 </table>
@@ -33,6 +33,33 @@
 {S_FIELDS}
 </form>
 <!-- END append -->
+
+<!-- BEGIN modify -->
+<form action="{S_ACTION}" method="post">
+<table class="update">
+<tr>
+	<!-- BEGIN name_option -->
+	<th>{modify.name_option.NAME}</th>
+	<!-- END name_option -->
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<!-- BEGIN type_option -->
+	<td align="center">{modify.row.type_option.TYPE}</td>
+	<!-- END type_option -->
+</tr>
+<!-- END row -->
+</table>
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}S_FIELDS
+</form>
+<!-- END modify -->
 
 <!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
@@ -72,11 +99,6 @@
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_HEAD}</a></li><li><a href="{S_CREATE}">{L_CREATE}</a></li></ul>
-<p>{L_EXPLAIN}</p>
-
-<br />
-
 <table class="rows">
 <tr>
 	<th>{L_NAME}</th>
@@ -84,17 +106,25 @@
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td><span style="float: right;">{display.row.USERS} {display.row.STATUS}</span>{display.row.TYPE} {display.row.NAME}</td>
+	<td>{display.row.SHOW}</td>
 	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE} {display.row.DELETE}</td>
 </tr>
 <!-- END row -->
 <!-- BEGIN empty -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
 <!-- END empty -->
 </table>
-{LIST}
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="game_name" /></td>
+	<td><input type="submit" value="{L_CREATE}"></td>
+</tr>
+</table>
+
+<br />
 
 <table class="lfooter">
 <tr>
@@ -102,12 +132,14 @@
 	<td><input type="submit" name="modify" value="{L_CREATE}"></td>
 </tr>
 </table>
+{LIST}
 {S_FIELDS}
 </form>
 <!-- END display -->
 
 <!-- BEGIN list -->
-<table>
+<form action="{S_ACTION}" method="post">
+<table class="update">
 <tr>
 	<!-- BEGIN name_option -->
 	<th>{list.name_option.NAME}</th>
@@ -121,4 +153,13 @@
 </tr>
 <!-- END row -->
 </table>
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
 <!-- END list -->

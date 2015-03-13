@@ -7,7 +7,6 @@ $root_path = './';
 include("{$root_path}common.php");
 
 $userdata = session_pagestart($user_ip, PAGE_NEWS);
-
 init_userprefs($userdata);
 
 $start	= request('start', INT);

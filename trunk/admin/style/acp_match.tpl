@@ -131,93 +131,74 @@ function display_options(value)
 <!-- END input -->
 
 <!-- BEGIN detail -->
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="{S_INPUT}">{L_INPUT}</a></li>
-	<li id="active"><a href="#" id="current" onclick="return false;">{L_DETAIL}</a></li>
-</ul>
-
-<table class="header">
-<tr>
-	<td class="info">{L_REQUIRED}</td>
-</tr>
-</table>
-
+{ERROR_BOX}
 <br /><div align="center">{ERROR_BOX_PLAYER}</div>
 
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<!-- BEGIN list -->
+<form action="{S_ACTION}" method="post" name="post" id="list">
+<fieldset>
+	<legend>{L_LINEUP}</legend>
+	<table class="users">
+	<tr>
+		<th>{L_USERNAME}</th>
+		<th colspan="2">{L_LINEUP_STATUS}</th>
+	</tr>
+	<!-- BEGIN lineup -->
+	<!-- class="hover" -->
+	<tr onclick="checked({detail.list.lineup.USER_ID})" class="hover">
+		<td width="90%" align="left" style="padding-left:15px;"><label for="{detail.list.lineup.USER_ID}">{detail.list.lineup.USERNAME}</label></td>
+		<td width="5%" align="right" style="padding-right:15px;"><label for="{detail.list.lineup.USER_ID}">{detail.list.lineup.STATUS}</label></td>
+		<td width="5%" align="center"><input type="checkbox" name="members[]" value="{detail.list.lineup.USER_ID}" id="check_{detail.list.lineup.USER_ID}"></td>
+	</tr>
+	<!-- END lineup -->
+	<!-- BEGIN no_lineup -->
+	<tr>
+		<td class="empty" colspan="5" align="center">{S_TEAM_USERS}</td>
+	</tr>
+	<!-- END no_lineup -->
+	</table>
+</fieldset>
+	
+<table class="rfooter">
 <tr>
-	<td width="50%" class="top">
-		<form action="{S_ACTION}" method="post" name="post">
-		<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_LINEUP}</a></li></ul>
-		<table class="update">
-		<!-- BEGIN team_users -->
-		<tr>
-			<td class="row1"><label for="player_status">{L_LINEUP_STATUS}:</label></td>
-			<td class="row2"><label><input type="radio" name="status" value="0" id="player_status" checked="checked">&nbsp;{L_LINEUP_PLAYER}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="1">&nbsp;{L_LINEUP_REPLACE}</label></td>
-		</tr>
-		<tr>
-			<td class="row1"><label for="table" title="{L_LINEUP_ADD_INFO}">{L_LINEUP_ADD}:</label></td>
-			<td class="row2">{S_USERS}<br /><a href="#" class="small" onclick="selector(true); return false;">{L_MARK_ALL}</a><br /><a href="#" class="small" onclick="selector(false); return false;">{L_MARK_DEALL}</a></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" class="button2" value="{L_ADD}"></td>
-		</tr>
-		<!-- END team_users -->
-		<!-- BEGIN entry_empty -->
-		<tr>
-			<td align="center" colspan="2">{S_USERS}</td>
-		</tr>
-		<!-- END entry_empty -->
-		</table>
-		<input type="hidden" name="smode" value="user_add" />
-		{S_FIELDS}
-		</form>
-	</td>
-	<td width="50%" class="top">
-		<form action="{S_ACTION}" method="post" id="list">
-		<div id="navcontainer">
-		<ul id="navlist">
-			<li><a href="#" id="right" onclick="return false;">{L_LINEUP_STATUS}</a></li>
-			<li><a href="#" id="current" onclick="return false;">{L_USERNAME}</a></li></ul>
-		</div>
-		<table class="update index">
-		<!-- BEGIN list_users -->
-		<!-- BEGIN member_row -->
-		<tr>
-			<td class="row4" width="90%" align="left" style="padding-left:15px;"><label for="{detail.list_users.member_row.USER_ID}">{detail.list_users.member_row.USERNAME}</label></td>
-			<td class="row4" width="5%" align="right" style="padding-right:15px;"><label for="{detail.list_users.member_row.USER_ID}">{detail.list_users.member_row.STATUS}</label></td>
-			<td class="row4" width="5%" align="center"><input type="checkbox" name="members[]" value="{detail.list_users.member_row.USER_ID}" id="check_{detail.list_users.member_row.USER_ID}"></td>
-		</tr>
-		<!-- END member_row -->
-		</table>
-		<br />
-		<table class="rfooter">
-		<tr>
-			<td>{S_OPTIONS}</td>
-			<td><input type="submit" class="button2" value="{L_SUBMIT}"></td>
-		</tr>
-		<tr>
-			<td colspan="2"><a class="small" href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a class="small" href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
-		</tr>
-		<!-- END list_users -->
-		<!-- BEGIN no_list_users -->
-		<tr>
-			<td class="row_noentry1" align="center" colspan="3">{L_NO_STORE}</td>
-		</tr>
-		<!-- END no_list_users -->
-		<!-- BEGIN entry_empty -->
-		<tr>
-			<td align="center" colspan="2">{S_TEAM_USERS}</td>
-		</tr>
-		<!-- END entry_empty -->
-		</table>
-{S_FIELDS}
-</form>
-	</td>
+	<td align="right"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a>&nbsp;</td>
+	<td>{S_OPTIONS}</td>
+	<td><div id="close"></div><div id="ajax_content"></div></td>
+	<td><input type="submit" value="{L_SUBMIT}" /></td>
 </tr>
 </table>
+{S_FIELDS}
+</form>
+<!-- END list -->
+
+<form action="{S_ACTION}" method="post" name="post">
+<fieldset>
+	<legend>{L_LINEUP_ADD}</legend>
+	<table class="update">
+	<!-- BEGIN team_users -->
+	<tr>
+		<td class="row1"><label for="player_status">{L_LINEUP_STATUS}:</label></td>
+		<td class="row2"><label><input type="radio" name="status" value="0" id="player_status" checked="checked">&nbsp;{L_LINEUP_PLAYER}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="1">&nbsp;{L_LINEUP_REPLACE}</label></td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="table" title="{L_LINEUP_ADD_INFO}">{L_LINEUP_ADD}:</label></td>
+		<td class="row2">{S_USERS}<br /><a href="#" class="small" onclick="selector(true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" class="small" onclick="selector(false); return false;">{L_MARK_DEALL}</a></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" class="button2" value="{L_ADD}"></td>
+	</tr>
+	<!-- END team_users -->
+	<!-- BEGIN entry_empty -->
+	<tr>
+		<td align="center" colspan="2">{S_USERS}</td>
+	</tr>
+	<!-- END entry_empty -->
+	</table>
+	<input type="hidden" name="smode" value="user_add" />
+	{S_FIELDS}
+</fieldset>
+</form>
 
 <br /><div align="center">{ERROR_BOX_MAPS}</div>
 <!-- BEGIN maps -->

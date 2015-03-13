@@ -200,6 +200,10 @@ else
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['label_name'])),
 					'L_EXPLAIN'	=> $lang['com_required'],
+					
+					'L_ACL_USERS'	=> $lang['acl_users'],
+					'L_ACL_GROUPS'	=> $lang['acl_groups'],
+					'L_PERMISSION'	=> $lang['common_auth'],
 
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -297,6 +301,7 @@ else
 			
 			$template->assign_block_vars('display.row', array( 
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
+				'DESC'		=> lang($row['label_desc']),
 				
 				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'type' => $tact, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 				'MOVE_DOWN'	=> ( $order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'type' => $tact, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),

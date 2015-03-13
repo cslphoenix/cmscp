@@ -48,7 +48,7 @@ if ( isset($_POST['type']) )
 	ksort($cat);
 	ksort($lab);
 	
-	debug($name);
+	debug($name, 'name test');
 	
 	$opt = '<div id="close"><select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
 	

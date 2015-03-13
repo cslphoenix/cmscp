@@ -111,34 +111,15 @@ function set_infos(id,text)
 
 {ERROR_BOX}
 
-<!-- BEGIN row -->
-<!-- BEGIN hidden -->
-{input_cat.row.hidden.HIDDEN}
-<!-- END hidden -->
-<table class="update">
-<!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{bankdata.row.tab.L_LANG}</a></li></ul></th>
-</tr>
-<!-- BEGIN option -->
-<tr>
-	<td class="{bankdata.row.tab.option.CSS}"><label for="{bankdata.row.tab.option.LABEL}" {bankdata.row.tab.option.EXPLAIN}>{bankdata.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{bankdata.row.tab.option.OPTION}</td>
-</tr>
-<!-- END option -->
-<!-- END tab -->
-</table>
-<!-- END row -->
-
 <ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <!-- BEGIN row -->
 <table class="update">
 <!-- BEGIN option -->
 <tr>
-<td class="row1r"><label for="{_bankdata.row.KEY}_{_bankdata.row._option.KEYS}">{_bankdata.row._option.LNGS}:</label></td>
+<td class="row1r"><label for="{bankdata.row.KEY}_{bankdata.row.option.KEYS}">{bankdata.row.option.LNGS}:</label></td>
 	<td>
 		<!-- BEGIN input -->
-		<input type="text" name="{_bankdata.row._option.KEYS}" id="{_bankdata.row.KEY}_{_bankdata.row._option.KEYS}" value="{_bankdata.row._option._input.VALUE}" />
+		<input type="text" name="{bankdata.row.KEY}[{bankdata.row.option.KEYS}]" id="{bankdata.row.KEY}_{bankdata.row.option.KEYS}" value="{bankdata.row.option.input.VALUE}" />
 		<!-- END input -->
 	</td>
 </tr>
@@ -159,6 +140,7 @@ function set_infos(id,text)
 <!-- END bankdata -->
 
 <!-- BEGIN display -->
+test
 <script type="text/JavaScript">
 
 function lookup(user_name, user_new, user_level)
@@ -197,74 +179,38 @@ function fill(thisValue)
 <p>{L_EXPLAIN}</p>
 
 <br />
-
-<!-- BEGIN bank -->
-<form action="{S_ACTION}" method="post">
-<table class="rows">
-<tr>
-	<th colspan="2">{L_BANK}</th>
-</tr>
-<tr>
-	<td class="row_class1">{L_HOLDER}</td>
-	<td class="row_class2">{display.bank.HOLDER}</td>
-</tr>
-<tr>
-	<td class="row_class1">{L_NAME} / {L_BLZ}</td>
-	<td class="row_class2">{display.bank.NAME} / {display.bank.BLZ}</td>
-</tr>
-<tr>
-	<td class="row_class1">{L_NUMBER}</td>
-	<td class="row_class2">{display.bank.NUMBER}</td>
-</tr>
-<tr>
-	<td class="row_class1">{L_REASON}</td>
-	<td class="row_class2">{display.bank.REASON}</td>
-</tr>
-</table>
-
-<table class="rfooter">
-<tr>
-	<td><input type="hidden" name="mode" value="bankdata_delete" /><input type="submit" class="button" value="{L_DELETE}" /></td>
-</tr>
-</table>
-</form>
-
-<br />
-<!-- END bank -->
-
-
 <!-- END display -->
 
 <!-- BEGIN bank -->
-<form action="{S_ACTION}" method="post">
+<!-- work -->
 <table class="rows">
 <tr>
 	<th colspan="2">{L_BANK}</th>
 </tr>
 <tr>
-	<td class="row_class1">{L_HOLDER}</td>
-	<td class="row_class2">{display.bank.HOLDER}</td>
+	<td class="row_class1">{L_HOLDER}:</td>
+	<td class="row_class2">{HOLDER}</td>
 </tr>
 <tr>
 	<td class="row_class1">{L_NAME} / {L_BLZ}</td>
-	<td class="row_class2">{display.bank.NAME} / {display.bank.BLZ}</td>
+	<td class="row_class2">{NAME} / {BLZ}</td>
 </tr>
 <tr>
 	<td class="row_class1">{L_NUMBER}</td>
-	<td class="row_class2">{display.bank.NUMBER}</td>
+	<td class="row_class2">{NUMBER}</td>
 </tr>
 <tr>
 	<td class="row_class1">{L_REASON}</td>
-	<td class="row_class2">{display.bank.REASON}</td>
+	<td class="row_class2">{REASON}</td>
 </tr>
 </table>
 
-<table class="rfooter">
+<table class="footer">
 <tr>
-	<td><input type="hidden" name="mode" value="bankdata_delete" /><input type="submit" class="button" value="{L_DELETE}" /></td>
+	<td><form action="{S_ACTION}" method="post"><input type="hidden" name="mode" value="bankdata" /><input type="submit" class="button" value="{L_CREATE}" /></form></td>
+	<td><form action="{S_ACTION}" method="post"><input type="hidden" name="mode" value="bankdata_delete" /><input type="submit" class="button" value="{L_DELETE}" /></form></td>
 </tr>
 </table>
-</form>
 <!-- END bank -->
 
 <!-- BEGIN user -->
@@ -297,7 +243,7 @@ function fill(thisValue)
 <table class="footer">
 <tr>
 	<td><input type="text" name="user_name" id="user_name" onkeyup="lookup(this.value, 0, 5);" onblur="fill();" autocomplete="off"></td>
-	<td><input type="submit" value="{L_CREATE_USER}"></td>
+	<td><input type="submit" value="{L_CREATE}"></td>
 	<td></td>
 	<td rowspan="2">{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>

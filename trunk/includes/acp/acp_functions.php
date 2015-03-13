@@ -278,7 +278,7 @@ function acl_auth($acl_check, $founder = false)
 		else
 		{
 			log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-			message(GENERAL_ERROR, sprintf($lang['notice_auth_fail3'], $lang[$current]));
+			message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
 		}
 	}
 	else
@@ -299,10 +299,27 @@ function auth_check($auth)
 {
 	global $userdata, $userauth, $log, $current, $lang;
 	
-	if ( $userdata['user_level'] != ADMIN && !$auth )
+#	debug($userauth, 'userauth');
+	
+	$_userauth = array();
+	
+	foreach ( $userauth as $key => $value )
+	{
+#		debug($key, 'key');
+#		debug($value, 'value');
+		
+		if ( $value == '1' )
+		{
+			$_userauth[$key] = $key;
+		}
+	}
+	
+#	debug($_userauth, '_userauth');
+	
+	if ( !in_array($auth, array_keys($_userauth)) )
 	{
 		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail5'], $lang[$current]));
+		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], lang($auth)));
 	}
 }
 
@@ -830,7 +847,9 @@ function orders($mode, $type = '')
 #	debug($type);
 	global $db;
 	
-	if ( in_array($mode, array(DOWNLOADS_CAT, NEWS_CAT)) )
+	debug($mode);
+	
+	if ( in_array($mode, array(DOWNLOAD, NEWS)) )
 	{
 		$idfield = 'cat_id';
 		$orderfield	= 'cat_order';

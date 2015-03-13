@@ -60,8 +60,8 @@ $act = request('action', TXT);
 
 $action = $act ? "&action=$act" : '';
 
-$adds = "?i=$typ$action";
-$file = basename($_SERVER['PHP_SELF']) . $adds;
+$iadds = "?i=$typ$action";
+$file = basename($_SERVER['PHP_SELF']) . $iadds;
 
 $template->assign_vars(array(
 	'L_HEADER'		=> $current_page,

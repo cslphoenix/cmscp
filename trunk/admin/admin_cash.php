@@ -7,9 +7,9 @@ if ( !empty($setmodules) )
 		'title'		=> 'acp_cash',
 		'cat'		=> 'teams',
 		'modes'		=> array(
-			'bank'	=> array('title' => 'acp_cashbank'),
-			'user'	=> array('title' => 'acp_cashuser'),
-			'type'	=> array('title' => 'acp_cashtype'),
+			'bank'	=> array('title' => 'acp_cashbank'), # bankdaten
+			'user'	=> array('title' => 'acp_cashuser'), # user pay
+			'type'	=> array('title' => 'acp_cashtype'), # pay for game, voice or other
 		)
 	);
 }
@@ -25,7 +25,8 @@ else
 	include('./pagestart.php');
 	
 	add_lang('cash');
-	acl_auth(array('a_cashtype', 'a_cashuser', 'a_cashuser_create', 'a_cashuser_delete'));
+#	acl_auth(array('a_cashtype', 'a_cashuser', 'a_cashuser_create', 'a_cashuser_delete'));
+#	fehlt was nicht alle rechte
 	
 	$error	= '';
 	$index	= '';
@@ -47,7 +48,10 @@ else
 	
 	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+#	debug(basename(__FILE__) . $iadds);
+#	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+#	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__)) . $iadds) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_cash.tpl',
@@ -55,8 +59,10 @@ else
 	));
 	
 	debug($_POST, 'post');
-	
-#	$mode = (in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata', 'bankdata_delete'))) ? $mode : false;
+	debug($type, 'type');
+	debug($action, 'action');
+#	$mode = (in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata_create', 'bankdata_delete'))) ? $mode : false;
+# 	alles da?
 #	$test = '101010101010';
 	
 #	debug(explode('', $test));
@@ -80,7 +86,7 @@ else
 					'cash_interval'	=> array('validate' => INT,	'explain' => false,	'type' => "radio:$action", 'params' => array(false, true, false)),
 					'cash_month'    => ($action == 'user' ? array('validate' => ARY, 'explain' => false, 'type' => 'check:months', 'required' => 'select_month') : 'hidden'),
 					'type'			=> 'hidden',
-					'cash_paid'		=> 'hidden',
+					'cash_paid'		=> ($action == 'user' ? array('validate' => ARY, 'explain' => false, 'type' => 'check:months', 'required' => 'select_month') : 'hidden'),
 					'time_create'	=> 'hidden',
 					'time_update'	=> 'hidden',
 				),
@@ -103,6 +109,8 @@ else
 			else if ( $mode == 'update' && !$submit )
 			{
 				$data_sql = data(CASH2, $data, false, 1, true);
+				
+				debug($data_sql, 'data_sql');
 			}
 			else
 			{
@@ -110,7 +118,7 @@ else
 				
 				if ( !$error )
 				{
-					$data_sql['cash_type']	= ($data_sql['type']) ? search_user('id', $data_sql['cash_name']) : 0;
+					$data_sql['cash_type']	= ($data_sql['type']) ? search_user('id', $data_sql['cash_name']) : $data_sql['cash_type'];
 					$data_sql['cash_month']	= ($data_sql['type']) ? $data_sql['cash_month'] : '';
 					
 					if ( $mode == 'create' )
@@ -133,7 +141,7 @@ else
 				}
 			}
 			
-			debug($data_sql);
+		#	debug($data_sql);
 			
 			build_output(CASH2, $vars, $data_sql);
 			
@@ -149,6 +157,60 @@ else
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
+			
+			break;
+			
+		case 'delete':
+		
+			debug($_POST, 'POST');
+		
+			$data_sql = data(CASH2, $data, false, 1, true);
+			
+			if ( $data && $accept )
+			{
+		#		$sql = "DELETE FROM " . CASH_USER . " WHERE cash_user_id = $data_user";
+		#		if ( !$db->sql_query($sql) )
+		#		{
+		#			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		#		}
+				
+		#		$message = $lang['delete_user'] . sprintf($lang['return'], check_sid($file), $acp_title);
+				
+		#		log_add(LOG_ADMIN, $log, $mode, $data['cash_name']);
+		#		message(GENERAL_MESSAGE, $message);
+			}
+			else if ( $data && !$accept )
+			{
+		#		$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
+				
+		#		$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+		#		$fields .= '<input type="hidden" name="' . $url_u . '" value="' . $data_user . '" />';
+		
+				$fields .= build_fields(array(
+					'mode'		=> $mode,
+				#	'i'			=> $ityp,
+				#	'action'	=> $iaction,
+					'id'		=> $data,
+				));
+				
+				$template->assign_vars(array(
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['cash_name']),
+		
+		#			'M_TITLE'	=> $lang['com_confirm'],
+		#			'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm_user'], $data['cash_name']),
+
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
+			}
+			else
+			{
+			#	message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['user']));
+				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+			}
+			
+			$template->pparse('confirm');
 			
 			break;
 		/*		
@@ -294,23 +356,29 @@ else
 			break;
 		*/
 		case 'bankdata':
+		
+			#recht fehlt
 			
 			$template->assign_block_vars('bankdata', array());
 			
-			$data_sql = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
+			$bank_data = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
 			
-			foreach ( $data['bank_data'] as $key => $array )
-			{
-				$sort[$key] = $array['order'];
-			}
-			array_multisort($sort, SORT_ASC, SORT_NUMERIC, $data['bank_data']);
+		#	debug($data, 'data');
 			
-			foreach ( $data as $key => $value )
+		#	foreach ( $data as $key => $array )
+		#	{
+		#		$sort[$key] = $array['order'];
+		#	}
+		#	array_multisort($sort, SORT_ASC, SORT_NUMERIC, $data['bank_data']);
+			
+		#	debug($data['bank_data'], 'test data');
+			
+			foreach ( $bank_data as $key => $value )
 			{
 				$lng = $key;
 				$lng = isset($lang[$lng]) ? $lang[$lng] : $lng;
 				
-				$template->assign_block_vars("$mode._row", array(
+				$template->assign_block_vars("$mode.row", array(
 					'LNG' => $lng,
 					'KEY' => $key,
 				));
@@ -318,34 +386,26 @@ else
 				foreach ( $value as $keys => $rows )
 				{
 					$keys = $keys;
-					$reqs = $rows['req'];
+					$vali = $rows['validate'];
 					$lngs = isset($lang[$keys]) ? $lang[$keys] : $keys;
 					
-					$template->assign_block_vars("$mode.row._option", array(
+					$template->assign_block_vars("$mode.row.option", array(
 						'KEYS' => $keys,
 						'LNGS' => $lngs,
 					));
 					
-					if ( !$submit )
-					{
-						$template->assign_block_vars("$mode.row._option._input", array(
-							'TYPE'	=> $rows['type'],
-							'VALUE' => $rows['value'],
-						));
-					}
-					else
-					{
-						$template->assign_block_vars("$mode.row._option._input", array(
-							'TYPE'	=> $rows['type'],
-							'VALUE' => request($keys, $reqs),
-						));
+				#	debug(request(array('bank_data', $keys), $vali), $keys);
+				
+					$bank_data['bank_data'][$keys]['value'] = $_POST['bank_data'][$keys];
 						
-						$data['bank_data'][$keys]['value'] = request($keys, $reqs);
-						
-						$msglng = str_replace('bank', 'msg_empty', $keys);
-						
-						$error[] = !$data['bank_data'][$keys]['value'] ? ( $error ? '<br />' : '' ) . $lang[$msglng] : '';
-					}
+					$template->assign_block_vars("$mode.row.option.input", array(
+						'TYPE'	=> $rows['type'],
+						'VALUE' => $submit ? $_POST['bank_data'][$keys] : $rows['value'],
+					));
+					
+					$msglng = str_replace('bank', 'msg_empty', $keys);
+					
+					$error[] .= !$bank_data['bank_data'][$keys]['value'] ? ( $error ? '<br />' : '' ) . $lang[$msglng] : '';
 				}
 			}
 			
@@ -353,7 +413,7 @@ else
 			{
 				if ( !$error )
 				{
-					$sql = "UPDATE " . SETTINGS . " SET settings_value = '" . serialize($data['bank_data']) . "' WHERE settings_name = 'bank_data'";
+					$sql = "UPDATE " . SETTINGS . " SET settings_value = '" . serialize($bank_data['bank_data']) . "' WHERE settings_name = 'bank_data'";
 					if ( !$db->sql_query($sql) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', __LINE__, __FILE__, $sql);
@@ -374,7 +434,7 @@ else
 
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
-				'L_BANKDATA'	=> $lang['cash_bank'],
+				'L_BANKDATA'	=> $lang['bank'],
 				
 				'S_ACTION'		=> check_sid($file),
 				'S_FIELDS'		=> $fields,
@@ -384,7 +444,7 @@ else
 			
 		case 'bankdata_delete':
 			
-			if ( $confirm )
+			if ( $accept )
 			{
 				$cash_empty = array(
 					'bank_holder'	=> array('type' => 'input', 'req' => 2, 'value' => '', 'order' => 10),
@@ -406,27 +466,38 @@ else
 				message(GENERAL_MESSAGE, $message);
 			
 			}
-			else if ( !$confirm )
+			else if ( !$accept )
 			{
-				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
+				$fields .= build_fields(array(
+					'mode'	=> $mode,
+			#		'id'	=> $data,
+				));
+				
+				debug($mode);
+			#	$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
 	
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+			#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 	
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['com_confirm'],
 					'M_TEXT'	=> $lang['confirm_bank'],
+						
+				#	'M_TITLE'	=> $lang['com_confirm'],
+				#	'M_TEXT'	=> $lang['confirm_bank'],
 
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
 			
+			$template->pparse('confirm');
+			
 			break;
 		
 		default:
 		
 			$template->assign_block_vars($action, array());
-		
+			
 			$fields	= '<input type="hidden" name="mode" value="create" />';
 			
 			$postage_cash = $postage_cashuser = 0;
@@ -436,13 +507,15 @@ else
 				case 'bank':
 				
 					$bank = data(SETTINGS, "WHERE settings_name = 'bank_data'", true, 5, 2);
-				
+					
+				#	debug($bank);
+					
 					$template->assign_vars(array(
-						'HOLDER'	=> $bank['bank_data']['bank_holder']['value'],
-						'NAME'		=> $bank['bank_data']['bank_name']['value'],
-						'BLZ'		=> $bank['bank_data']['bank_blz']['value'],
-						'NUMBER'	=> $bank['bank_data']['bank_number']['value'],
-						'REASON'	=> $bank['bank_data']['bank_reason']['value'],
+						'HOLDER'	=> $bank['bank_data']['bank_holder']['value'] ? $bank['bank_data']['bank_holder']['value'] : ' - ',
+						'NAME'		=> $bank['bank_data']['bank_name']['value'] ? $bank['bank_data']['bank_name']['value'] : ' - ',
+						'BLZ'		=> $bank['bank_data']['bank_blz']['value'] ? $bank['bank_data']['bank_blz']['value'] : ' - ',
+						'NUMBER'	=> $bank['bank_data']['bank_number']['value'] ? $bank['bank_data']['bank_number']['value'] : ' - ',
+						'REASON'	=> $bank['bank_data']['bank_reason']['value'] ? $bank['bank_data']['bank_reason']['value'] : ' - ',
 					));
 				
 					break;
@@ -508,31 +581,33 @@ else
 					
 				case 'type':
 				
-					$type = data(CASH2, 'type = 0', false, 1, false);
+					$ctype = data(CASH2, 'WHERE type = 0', false, 1, false);
+					
+					debug($ctype, 'ctype');
 				
-					if ( !$type )
+					if ( !$ctype )
 					{
 						$template->assign_block_vars("$action.empty", array());
 					}
 					else
 					{
-						foreach ( $type as $row )
+						foreach ( $ctype as $row )
 						{
 							$id		= $row['cash_id'];
 							$name	= $row['cash_name'];
-							$type	= $row['cash_type'];
+							$ctyp	= $row['cash_type'];
 							$amount	= $row['cash_amount'];
 							$val	= $row['cash_interval'];
 							
 							$template->assign_block_vars("$action.row", array(
 								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-								'TYPE'		=> ( $type != '0' ) ? ( ( $type == '1' ) ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_other', '') ) : img('i_icon', 'icon_match', ''),
+								'TYPE'		=> ( $ctyp != '0' ) ? ( ( $ctyp == '1' ) ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_other', '') ) : img('i_icon', 'icon_match', ''),
 								'AMOUNT'	=> $amount,
 								
 								'DATE'		=> ( $val != 2 ) ? ( $val != 1 ) ? $lang['interval_month'] : $lang['interval_weeks'] : $lang['interval_weekly'],
 								
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update_cat', 'id' => $id), 'icon_update', 'common_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete_cat', 'id' => $id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 							));
 							
 							$postage_cash += ( $val != 2 ) ? ( $val != 1 ) ? $amount : 2 * str_replace(',', '.', $amount) : 4 * str_replace(',', '.', $amount);
@@ -542,9 +617,14 @@ else
 					break;
 			}
 			
+		#	debug($lang['stf_head']);
+			
+			debug($action, 'action');
+			
 			$template->assign_vars(array(
 				'L_HEAD'		=> sprintf($lang['stf_head'], $lang[$action]),
 				'L_CREATE'		=> sprintf($lang['stf_create'], $lang[$action]),
+				'L_EXPLAIN'		=> $lang['com_required'],
 			#	'L_CREATE'		=> sprintf($lang['stf_create'], $lang['cash_reason']),
 			#	'L_CREATE_USER'	=> sprintf($lang['stf_create'], $lang['cash_user']),
 			#	'L_CREATE_BANK'	=> $lang['cash_bank'],
@@ -554,19 +634,22 @@ else
 				'L_INTERVAL'	=> $lang['cash_interval'],
 				'L_POSTAGE'		=> $lang['cash_postage'],
 				
-			#	'L_BANK'		=> $lang['bank_data'],
-			#	
+				'L_BANK'		=> $lang['bank_data'],
+				
 			#	'L_NAME'		=> $lang['cash_name'],
 			#	'L_USERNAME'	=> $lang['cash_name'],
 			#	
 			#	
 			#	'L_BD'			=> $lang['cash_bankdata'],
-			#	'L_HOLDER'		=> $lang['bank_holder'],
-			#	'L_NAME'		=> $lang['bank_name'],
-			#	'L_BLZ'			=> $lang['bank_blz'],
-			#	'L_NUMBER'		=> $lang['bank_number'],
-			#	'L_REASON'		=> $lang['bank_reason'],
-			#	'L_DELETE'		=> $lang['bank_delete'],
+			#	
+				'L_HOLDER'		=> $lang['bank_holder'],
+				'L_NAME'		=> $lang['bank_name'],
+				'L_BLZ'			=> $lang['bank_blz'],
+				'L_NUMBER'		=> $lang['bank_number'],
+				'L_REASON'		=> $lang['bank_reason'],
+				'L_DELETE'		=> $lang['bank_delete'],
+			
+				
 				
 				'POSTAGE'			=> $postage_cashuser,
 				'POSTAGE_CASH'		=> $postage_cash,

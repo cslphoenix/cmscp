@@ -18,6 +18,9 @@ $lang = array_merge($lang, array(
 	
 	'label'			=> 'Label',
 	
+	'acl_users'		=> 'zugeordnete Benutzer',
+	'acl_groups'	=> 'zugeordnete Gruppen',
+	
 ));
 
 ?>

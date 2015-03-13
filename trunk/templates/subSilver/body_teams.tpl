@@ -1,16 +1,33 @@
 <!-- BEGIN list -->
 <table class="teams">
+	
+<!-- BEGIN games -->
+<tr>
+	<td colspan="5" class="header">{list.games.L_GAME}</td>
+</tr>
+<!-- BEGIN teams -->
+<tr>
+	<td>{list.games.teams.GAME} {list.games.teams.NAME}</td>
+	<td>{list.games.teams.FIGHTUS}</td>
+	<td>{list.games.teams.JOINUS}</td>
+	<td>{list.games.teams.MATCH}</td>
+</tr>
+<!-- END teams -->
+<tr>
+	<td colspan="5">&nbsp;</td>
+</tr>
+<!-- END games -->
+	
 <!-- BEGIN game_row -->
 <tr>
-	<td colspan="5" class="header">{_list._gamerow.L_GAME}</td>
-</td>
+	<td colspan="5" class="header">{list.game_row.L_GAME}</td>
 </tr>
 <!-- BEGIN team_row -->
 <tr>
-	<td>{_list._gamerow._teamrow.GAME} {_list._gamerow._teamrow.NAME}</td>
-	<td>{_list._gamerow._teamrow.FIGHTUS}</td>
-	<td>{_list._gamerow._teamrow.JOINUS}</td>
-	<td>{_list._gamerow._teamrow.MATCH}</td>
+	<td>{list.game_row.team_row.GAME} {list.game_row.team_row.NAME}</td>
+	<td>{list.game_row.team_row.FIGHTUS}</td>
+	<td>{list.game_row.team_row.JOINUS}</td>
+	<td>{list.game_row.team_row.MATCH}</td>
 </tr>
 <!-- END team_row -->
 <tr>

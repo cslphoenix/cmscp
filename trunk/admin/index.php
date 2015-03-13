@@ -158,13 +158,13 @@ else
 					$public	= $news[$i]['news_public'] ? img('i_icon', 'icon_news_public', '') : img('i_icon', 'icon_news_privat', '');
 					
 					$template->assign_block_vars('news_row', array(
-						'TITLE'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', 'admin_news.php' . $adds, array('mode' => 'update', 'id' => $id), $title, $title) : $title : $title,
+						'TITLE'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] ) ? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_txt', 'admin_news.php' . $iadds, array('mode' => 'update', 'id' => $id), $title, $title) : $title : $title,
 						
 						'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_date'], $userdata['user_timezone']),
 						
-						'PUBLIC'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_public'] )	? href('a_txt', 'admin_index.php' . $adds, array('mode' => 'switch', 'num' => $id), $public, '') : img('i_icon', 'icon_news_denied', ''),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] )			? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $adds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_delete'] )	? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $adds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'PUBLIC'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_public'] )	? href('a_txt', 'admin_index.php' . $iadds, array('mode' => 'switch', 'num' => $id), $public, '') : img('i_icon', 'icon_news_denied', ''),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] )			? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_delete'] )	? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -194,13 +194,13 @@ else
 					}
 					
 					$template->assign_block_vars('event_row', array(
-						'TITLE'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_txt', 'admin_event.php' . $adds, array('mode' => 'update', 'id' => $id), $title, $title) : $title,
+						'TITLE'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_txt', 'admin_event.php' . $iadds, array('mode' => 'update', 'id' => $id), $title, $title) : $title,
 						
 						'LEVEL'		=> $level,
 						'DATE'		=> create_date($userdata['user_dateformat'], $event[$i]['event_date'], $config['default_timezone']),
 						
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $adds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $adds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -222,14 +222,14 @@ else
 					$rival	= sprintf($lang[$typ], $name);
 					
 					$template->assign_block_vars('match_row', array(
-						'RIVAL'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_txt', 'admin_match.php' . $adds, array('mode' => 'update', 'id' => $id), $rival, $rival) : $rival,
+						'RIVAL'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_txt', 'admin_match.php' . $iadds, array('mode' => 'update', 'id' => $id), $rival, $rival) : $rival,
 						
 						'GAME'		=> display_gameicon($match[$i]['game_image']),
 						'DATE'		=> create_date($userdata['user_dateformat'], $match[$i]['match_date'], $userdata['user_timezone']),
 						
-						'DETAIL'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_manage'] ) ? href('a_img', 'admin_match.php' . $adds, array('id' => $id), 'icon_details', 'common_details') : img('i_icon', 'icon_details2', 'common_details'),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_img', 'admin_match.php' . $adds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_delete'] ) ? href('a_img', 'admin_match.php' . $adds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'DETAIL'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_manage'] ) ? href('a_img', 'admin_match.php' . $iadds, array('id' => $id), 'icon_details', 'common_details') : img('i_icon', 'icon_details2', 'common_details'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_delete'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -249,12 +249,12 @@ else
 					$vs = $train[$i]['training_vs'];
 					
 					$template->assign_block_vars('training_row', array(
-						'VS'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_txt', 'admin_training.php' . $adds, array('mode' => 'update', 'id' => $id), $vs, $vs) : $vs,
+						'VS'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_txt', 'admin_training.php' . $iadds, array('mode' => 'update', 'id' => $id), $vs, $vs) : $vs,
 						
 						'DATE'		=> create_date($userdata['user_dateformat'], $train[$i]['training_date'], $userdata['user_timezone']),
 						
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_img', 'admin_training.php' . $adds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training_delete'] ) ? href('a_img', 'admin_training.php' . $adds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training_delete'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -280,14 +280,14 @@ else
 					}
 					
 					$template->assign_block_vars('user_row', array(
-						'NAME'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_txt', "admin_user.php{$adds}", array('mode' => 'update', 'id' => $id), $name, $name) : $name,
+						'NAME'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_txt', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), $name, $name) : $name,
 						
 						'LEVEL'		=> $level,
 						'REGDATE'	=> create_date($userdata['user_dateformat'], $users[$i]['user_regdate'], $config['default_timezone']),
 						
-						'AUTH'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_auth_user'] )	? href('a_img', "admin_user.php{$adds}", array('mode' => 'auth', 'id' => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_img', "admin_user.php{$adds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$adds}", array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'AUTH'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_auth_user'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'auth', 'id' => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
