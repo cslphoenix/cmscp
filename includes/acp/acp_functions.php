@@ -1,326 +1,28 @@
 <?php
 
-function acl_auth($acl_check, $founder = false)
+function check_ids(&$forum_ids)
 {
-	global $db, $current, $log, $userdata, $lang, $mode;
+	global $db;
 	
-	$gauth_access = $gaccess = array();
-	$uauth_access = array();
-	$options = array();
-	$tmp_auth = array();
-	$userauth = array();
-	$auth_group = array();
-	
-	if ( $founder && !$userdata['user_founder'] )
+	if ( !$forum_ids )
 	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail1'], lang($acl_check[0])));
+		return false;
 	}
 	
-	$label_type = ( is_array($acl_check) ) ? substr($acl_check[0], 0, 2) : substr($acl_check, 0, 2);
-	
-	/* Gruppen des Benutzers abfragen */
-	$sql = "SELECT type_id AS group_id
-				FROM " . LISTS . "
-					WHERE type = " . TYPE_GROUP . "
-						AND user_pending = 0
-						AND user_id = {$userdata['user_id']}";
+	$sql = 'SELECT forum_id FROM ' . FORUM . ' WHERE type != 0 AND forum_id IN (' . implode(', ', $forum_ids) . ')';
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
 	
-	while ( $row = $db->sql_fetchrow($result) )
-	{
-		$auth_group[] = $row['group_id'];
-	}
-	$db->sql_freeresult($result);
-	
-	/* Prüfen ob Gruppen bestehen, falls ja, Prüfen auf Rechte der Gruppen */
-	if ( $auth_group )
-	{
-		$sql = "SELECT * FROM " . ACL_GROUPS . " WHERE group_id IN (" . implode(', ', $auth_group) . ")";
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$gauth_access[] = $row;
-		}
-		$db->sql_freeresult($result);
-	}
-	
-	/* Prüfen ob Benutzer extra Rechte hat */
-	$sql = "SELECT * FROM  " . ACL_USERS . " WHERE user_id = {$userdata['user_id']}";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-		
-	while ( $row = $db->sql_fetchrow($result) )
-	{
-		$uauth_access[] = $row;
-	}
-	$db->sql_freeresult($result);
-	
-	/* Abfragen der Label für Adminrechte, keine Auswirkung wieviele man erstellt */
-	$acl_label = data(ACL_LABEL, "WHERE label_type = '$label_type'", false, 1, 3, true);
-
-	$sql = "SELECT * FROM " . ACL_LABEL_DATA . " d
-				LEFT JOIN " . ACL_OPTION . " o ON o.auth_option_id = d.auth_option_id
-					WHERE d.label_id IN (" . implode(', ', array_keys($acl_label)) . ")";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
+	$forum_ids_array = array();
 	
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$options[$row['label_id']][$row['auth_option_id']] = $row['auth_value'];
+		$forum_ids_array[] = $row['forum_id'];
 	}
 	
-	$acl_fields = data(ACL_OPTION, "WHERE auth_option LIKE '$label_type%'", false, 1, 3, true, false, 'auth_option');
-
-	if ( $gauth_access )
-	{
-		foreach ( $gauth_access as $keys => $rows )
-		{
-			if ( $rows['label_id'] != 0 )
-			{
-				if ( isset($options[$rows['label_id']]) )
-				{
-					foreach ( $options[$rows['label_id']] as $key => $row )
-					{
-						$gaccess[$keys][$acl_fields[$key]] = $row;
-					}
-				}
-				
-				$tlabel = $rows['label_id'];
-			}
-			
-			if ( $rows['auth_option_id'] != 0 )
-			{
-				$gaccess[$keys][$acl_fields[$rows['auth_option_id']]] = $rows['auth_value'];
-			}
-		}
-		
-		if ( $gaccess )
-		{
-			foreach ( $gaccess as $rows )
-			{
-				foreach ( $rows as $key => $row )
-				{
-					if ( $row == '1' )
-					{
-						if ( isset($tmp_auth[$key]) )
-						{
-							if ( $tmp_auth[$key] == '-1' )
-							{
-								$tmp_auth[$key] = '';
-							}
-							else if ( $tmp_auth[$key] == '0' )
-							{
-								$tmp_auth[$key] = '1';
-							}
-						}
-						else
-						{
-							$tmp_auth[$key] = '1';
-						}
-					}
-					else if ( $row == '0' )
-					{
-						if ( isset($tmp_auth[$key]) )
-						{
-							if ( $tmp_auth[$key] == '-1' )
-							{
-								$tmp_auth[$key] = '';
-							}
-							else if ( $tmp_auth[$key] == '1' )
-							{
-								$tmp_auth[$key] = '1';
-							}
-							
-						}
-						else
-						{
-							$tmp_auth[$key] = '';
-						}
-					}
-					else
-					{
-						$tmp_auth[$key] = '';
-					}
-				}
-			}
-		}
-	}
-
-	if ( $uauth_access )
-	{
-		$uaccess = array();
-		
-		foreach ( $uauth_access as $keys => $rows )
-		{
-			if ( $rows['label_id'] != 0 )
-			{
-				if ( isset($options[$rows['label_id']]) )
-				{
-					foreach ( $options[$rows['label_id']] as $key => $row )
-					{
-						$uaccess[$keys][$acl_fields[$key]] = $row;
-					}
-				}
-				
-				$tlabel = $rows['label_id'];
-			}
-			
-			if ( $rows['auth_option_id'] != 0 )
-			{
-				$uaccess[$keys][$acl_fields[$rows['auth_option_id']]] = $rows['auth_value'];
-			}
-		}
-		
-		foreach ( $uaccess as $rows )
-		{
-			foreach ( $rows as $key => $row )
-			{
-				if ( $row == '1' )
-				{
-					if ( isset($tmp_auth[$key]) )
-					{
-						if ( $tmp_auth[$key] == '-1' )
-						{
-							$tmp_auth[$key] = '';
-						}
-						else if ( $tmp_auth[$key] == '0' )
-						{
-							$tmp_auth[$key] = '1';
-						}
-					}
-					else
-					{
-						$tmp_auth[$key] = '1';
-					}
-				}
-				else if ( $row == '0' )
-				{
-					if ( isset($tmp_auth[$key]) )
-					{
-						if ( $tmp_auth[$key] == '-1' )
-						{
-							$tmp_auth[$key] = '';
-						}
-						else if ( $tmp_auth[$key] == '1' )
-						{
-							$tmp_auth[$key] = '1';
-						}
-						
-					}
-					else
-					{
-						$tmp_auth[$key] = '';
-					}
-				}
-				else
-				{
-					$tmp_auth[$key] = '';
-				}
-			}
-		}
-	}
-	
-	if ( $tmp_auth )
-	{
-		foreach ( $tmp_auth as $key => $row )
-		{
-			if ( $row )
-			{
-				$userauth[$key] = $row;
-			}
-		}
-	}
-	
-	if ( is_array($acl_check) )
-	{
-		$check = '';
-		
-		foreach ( $acl_check as $acl )
-		{
-			if ( in_array($acl, array_keys($userauth)) )
-			{
-				$check[$acl] = true;
-			}
-		#	else
-		#	{
-		#		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		#		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-		#	}
-		}
-		
-		if ( $check )
-		{
-			foreach ( $check as $_check )
-			{
-				if ( $_check )
-				{
-					return true;
-				}
-				else
-				{
-					log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-					message(GENERAL_ERROR, sprintf($lang['notice_auth_fail2'], $lang[$_check]));
-				}
-			}
-		}
-		else
-		{
-			log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-			message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-		}
-	}
-	else
-	{
-		if ( in_array($acl_check, array_keys($userauth)) )
-		{
-			return true;
-		}
-		else
-		{
-			log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-			message(GENERAL_ERROR, sprintf($lang['notice_auth_fail4'], lang($acl_check)));
-		}
-	}
-}
-
-function auth_check($auth)
-{
-	global $userdata, $userauth, $log, $current, $lang;
-	
-#	debug($userauth, 'userauth');
-	
-	$_userauth = array();
-	
-	foreach ( $userauth as $key => $value )
-	{
-#		debug($key, 'key');
-#		debug($value, 'value');
-		
-		if ( $value == '1' )
-		{
-			$_userauth[$key] = $key;
-		}
-	}
-	
-#	debug($_userauth, '_userauth');
-	
-	if ( !in_array($auth, array_keys($_userauth)) )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], lang($auth)));
-	}
+	return $forum_ids_array;
 }
 
 /*
@@ -329,6 +31,8 @@ function auth_check($auth)
 function error($tpl_box, &$error_ary)
 {
 	global $template, $log;
+	
+#	debug($error_ary, 'test');
 	
 	if ( is_array($error_ary) )
 	{
@@ -868,8 +572,6 @@ function orders($mode, $type = '')
 		case MATCH_MAPS:	$idfield = 'map_id';		$orderfield = 'map_order';		break;
 		case GALLERY:		$idfield = 'gallery_id';	$orderfield = 'gallery_order';	break;
 		
-		
-		
 		case DOWNLOADS:		$idfield = 'file_id';		$orderfield = 'file_order';		$typefield = 'cat_id';				break;
 		case MENU:			$idfield = 'file_id';		$orderfield = 'file_order';		$typefield = 'cat_id';				break;
 		case FORUM:			$idfield = 'forum_id';		$orderfield = 'forum_order';	$typefield = 'cat_id';				break;
@@ -1230,6 +932,176 @@ function search_user($type, $select)
 	$msg = $tmp[$key[0]];
 
 	return $msg;
+}
+
+function acl_label($type)
+{
+	global $db, $lang, $template, $fields, $action;
+	
+	$acl_label = '';
+	
+	$sql = 'SELECT * FROM ' . ACL_LABEL . ' WHERE label_type = "' . $type . '"';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$acl_label[$row['label_id']] = $row;
+	}
+	$db->sql_freeresult($result);
+	
+	return $acl_label;
+}
+
+function acl_field($type, $select)
+{
+	global $db;
+	
+	$acl_field = '';
+	
+	$sql = 'SELECT * FROM ' . ACL_OPTION . ' WHERE auth_option LIKE "' . $type . '%"';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$acl_field[$row[(( $select == 'name' ) ? 'auth_option_id' : 'auth_option')]] = $row[(( $select == 'name' ) ? 'auth_option' : 'auth_option_id')];
+	}
+	$db->sql_freeresult($result);
+	
+	return $acl_field;
+}
+
+function acl_label_data($label_ids)
+{
+	global $db;
+	
+	$acl_label_data = '';
+	
+	if ( is_array($label_ids) )
+	{
+		$sql = 'SELECT * FROM ' . ACL_LABEL_DATA . ' d
+					LEFT JOIN ' . ACL_OPTION . ' o ON o.auth_option_id = d.auth_option_id
+					WHERE d.label_id IN (' . implode(', ', $label_ids) . ')';
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$acl_label_data[$row['label_id']][$row['auth_option']] = $row['auth_value'];
+		}
+		$db->sql_freeresult($result);
+	}
+	
+	return $acl_label_data;
+}
+
+function access($table, $usergroup, $forums, $acl_label_data, $acl_field)
+{
+	global $db;
+	
+#	debug($table, 'table');
+#	debug($usergroup, 'usergroup');
+#	$echo = ($forums != '') ? 'test' : 'test1';
+#	debug($echo, 'echo', true);
+#	debug($forums, 'forums', true);
+#	debug($acl_label_data, 'acl_label_data');
+#	debug($acl_field, 'acl_field');
+	
+	$sql = "SELECT * FROM $table WHERE $usergroup[0] IN (" . (is_array($usergroup[1]) ? implode(', ', $usergroup[1]) : $usergroup[1]) . ") AND forum_id IN (" . (is_array($forums) ? implode(', ', $forums) : $forums) . ")";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$access = '';
+	
+	while ( $rows = $db->sql_fetchrow($result) )
+	{
+		if ( $rows['label_id'] != 0 )
+		{
+			if ( isset($acl_label_data[$rows['label_id']]) )
+			{
+				$access[$rows['forum_id']][$rows[$usergroup[0]]] = $acl_label_data[$rows['label_id']];
+			}
+		}
+		
+		if ( $rows['auth_option_id'] != 0 && isset($acl_field[$rows['auth_option_id']]) )
+		{
+			$access[$rows['forum_id']][$rows[$usergroup[0]]][$acl_field[$rows['auth_option_id']]] = $rows['auth_value'];
+		}
+	}
+	
+#	debug($access, 'access');
+
+	if ( is_array($forums) )
+	{
+		foreach ( $forums as $forum_id )
+		{
+			if ( !isset($access[$forum_id]) )
+			{
+				foreach ( $usergroup[1] as $usergroup_id )
+				{
+					foreach ( $acl_field as $f_name )
+					{
+						$access[$forum_id][$usergroup_id][$f_name] = 0;
+					}
+				}
+			}
+		}
+	}
+	
+	return $access;
+}
+
+function access_label($table, $usergroup, $forums, $acl_label_ids)
+{
+	global $db;
+	
+	$sql = "SELECT * FROM $table
+				WHERE $usergroup[0] IN (" . (is_array($usergroup[1]) ? implode(', ', $usergroup[1]) : $usergroup[1]) . ")
+					AND forum_id IN (" . (is_array($forums) ? implode(', ', $forums) : $forums) . ")
+					AND label_id IN (" . (is_array($acl_label_ids) ? implode(', ', $acl_label_ids) : $acl_label_ids) . ")";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	$access_label = '';
+	
+	while ( $rows = $db->sql_fetchrow($result) )
+	{
+		$access_label[$rows['forum_id']][$rows[$usergroup[0]]] = $rows['label_id'];
+	}
+	
+	return $access_label;
+}
+
+function acl_auth_group($type)
+{
+	global $db;
+	
+	$acl_groups = '';
+	
+	$sql = 'SELECT * FROM ' . ACL_OPTION . ' WHERE auth_option LIKE "' . $type . '%"';
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$acl_groups[$row['auth_group']][$row['auth_option']] = $row['auth_option'];
+	}
+	$db->sql_freeresult($result);
+	
+	return $acl_groups;
 }
 
 ?>

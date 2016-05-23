@@ -38,7 +38,7 @@ $lang = array_merge($lang, array(
 	
 	'cache_clear'		=> 'leeren',
 	
-	'version_check' => 'Version prüfen',
+	'version_check'			=> 'Version pr&uuml;fen',
 	'version_info_red'		=> '<span style="color:red">%s</span> [ <a href="%s" title="%s">%s</a> ]<br /><span style="color:red">neuere Version: <b>%s</b></span>',
 	'version_info_green'	=> '<span style="color:green">%s</span> [ <a href="%s" title="%s">%s</a> ]',
 	

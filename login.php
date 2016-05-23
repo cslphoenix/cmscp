@@ -219,22 +219,18 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 }
 else
 {
-	//
-	// Do a full login page dohickey if
-	// user not already logged in
-	//
-
 	$userauth = auth_acp_check($userdata['user_id']);
 	$auth = array();
+	
 	foreach ($userauth as $key => $value)
 	{
-		if ($value != '0')
+		if ( $value != '0' )
 		{
 			$auth[$key] = $value;
 		}
 	}
 	
-	if ( !$userdata['session_logged_in'] || ( isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && ( $userdata['user_level'] == ADMIN || $auth ) ) )
+	if ( !$userdata['session_logged_in'] || ( isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && ( $userdata['user_level'] == ADMIN || $auth || $userdata['user_founder']) ) )
 	{
 		$page_title = $lang['Login'];
 		main_header();

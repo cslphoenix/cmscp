@@ -45,7 +45,7 @@ $lang['bugtracker_error'] = array(
 );
 
 $lang['bugtracker_add']				= 'Eintrag Erfolgreich';
-$lang['bugtracker_edit']			= 'Änderung Erfolgreich';
+$lang['bugtracker_edit']			= 'änderung Erfolgreich';
 $lang['click_return_bugtracker']	= '%sHier klicken%s, um zur Übersicht zurückzukehren.';
 
 $lang['bugtracker_create_by']			= 'Erstellt von %s am %s.';

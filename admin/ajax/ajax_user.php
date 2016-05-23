@@ -12,7 +12,7 @@ include($root_path . 'common.php');
 
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
-debug($_POST);
+#debug($_POST);
 if ( isset($_POST['cash_name']) || isset($_POST['user_name']) || isset($_POST['user_id']) )
 {
 	$fill_type	= isset($_POST['user_name']) ? 'fill' : (isset($_POST['cash_name']) ? 'set_cash_name' : 'set_user_id');
@@ -42,13 +42,12 @@ if ( isset($_POST['cash_name']) || isset($_POST['user_name']) || isset($_POST['u
 			
 			switch ( $tmp[$i]['user_level'] )
 			{
-				case '0': $lvl = $lang['auth_guest'];	break;
-				case '1': $lvl = $lang['auth_user'];	break;
-				case '2': $lvl = $lang['auth_trial'];	break;
-				case '3': $lvl = $lang['auth_member'];	break;
-				case '4': $lvl = $lang['auth_mod'];		break;
-				case '5': $lvl = $lang['auth_admin'];	break;
-				
+				case GUEST:	$lvl = $lang['auth_guest'];	break;
+				case USER:	$lvl = $lang['auth_user'];	break;
+				case TRIAL:	$lvl = $lang['auth_trial'];	break;
+				case MEMBER:$lvl = $lang['auth_member'];break;
+				case MOD:	$lvl = $lang['auth_mod'];	break;
+				case ADMIN:	$lvl = $lang['auth_admin'];	break;
 				default: $lvl = $tmp[$i]['user_level'];	break;
 			}				
 			

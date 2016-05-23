@@ -270,7 +270,7 @@ function request_file($request_var)
 {
 	global $_FILES;
 	
-#	debug($request_var);
+	debug($request_var, 'request_var');
 	
 	$var['temp'] = $_FILES[$request_var]['tmp_name'];
 	$var['name'] = $_FILES[$request_var]['name'];
@@ -361,9 +361,10 @@ function href($type, $file, $params, $text, $lng = '', $comment = false)
 			$url[] = "$k=$v";
 		}
 	}
+	
 #	$url	= '?' . implode('&amp;', $url);
 #	$url	= '&amp;' . implode('&amp;', $url);
-	$url	= '&amp;' . implode('&amp;', $url);
+	$url	= is_array($url) ? '&amp;' . implode('&amp;', $url) : '';
 	$txt	= strstr($type, 'img') ? ( isset($images[$text]) ? $images[$text] : $text ) : $text;
 	$lng	= isset($lang[$lng]) ? $lang[$lng] : $lng;
 	
@@ -2640,7 +2641,7 @@ function main_header($page_title = '')
 	//
 	// Show the overall footer.
 	//
-	$admin_link = (	$userdata['user_level'] == ADMIN || $userauth ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+	$admin_link = (	$userdata['user_level'] == ADMIN || $userauth || $userdata['user_founder'] ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 	
 	//$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
 	//if ( !($result = $db->sql_query($sql)) )
@@ -2958,6 +2959,9 @@ function acp_header($file, $iadds, $typ)
 	global $userdata, $current;
 	
 	define('HEADER_INC', true);
+	
+	debug($_POST, '_POST');
+#	debug($mode, 'mode');
 	
 	/* gzip_compression */
 	$do_gzip_compress = FALSE;

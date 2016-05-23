@@ -20,20 +20,20 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current	= 'acp_cash';
+	$current = 'acp_cash';
 	
 	include('./pagestart.php');
 	
-	add_lang('cash');
-#	acl_auth(array('a_cashtype', 'a_cashuser', 'a_cashuser_create', 'a_cashuser_delete'));
-#	fehlt was nicht alle rechte
+#	add_lang('cash');
+	acl_auth(array('a_cashuser', 'a_cashuser_create', 'a_cashuser_delete', 'a_cashtype'));
 	
 	$error	= '';
 	$index	= '';
 	$fields	= '';
 	
-	$log	= SECTION_CASH;
 	$time	= time();
+	$log	= SECTION_CASH;
+	$file	= basename(__FILE__) . $iadds;	
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -48,9 +48,6 @@ else
 	
 	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 	
-#	debug(basename(__FILE__) . $iadds);
-#	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
-#	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__)) . $iadds) : false;
 	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
@@ -58,17 +55,7 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	debug($_POST, 'post');
-	debug($type, 'type');
-	debug($action, 'action');
-#	$mode = (in_array($mode, array('create', 'update', 'delete', 'create_cat', 'update_cat', 'delete_cat', 'bankdata_create', 'bankdata_delete'))) ? $mode : false;
-# 	alles da?
-#	$test = '101010101010';
-	
-#	debug(explode('', $test));
-#	for ($i = 0; $i < strlen($test); $i++)
-#	$tests[] = $test{$i};
-#	debug(str_split($test));
+	$mode = (in_array($mode, array('create', 'update', 'delete', 'bankdata', 'bankdata_delete'))) ? $mode : false;
 	
 	switch ( $mode )
 	{
@@ -80,13 +67,13 @@ else
 			$vars = array(
 				$action => array(
 					'title' => 'data_input',
-					'cash_name'		=> array('validate' => TXT,	'explain' => false,	'type' => ($action == 'user' ? 'ajax:25;25' : 'text:25;25'), 'required' => ($action == 'user' ? 'input_user' : 'input_name'), 'params' => ($action == 'user' ? array('user:0:5') : '')),
+					'cash_name'		=>						array('validate' => TXT, 'explain' => false, 'type' => ($action == 'user' ? 'ajax:25;25' : 'text:25;25'), 'required' => ($action == 'user' ? 'input_user' : 'input_name'), 'params' => ($action == 'user' ? array('user:0:5') : '')),
 					'cash_type'		=> ($action == 'type' ? array('validate' => INT, 'explain' => false, 'type' => 'radio:ctype', 'params' => array(false, true, false)) : 'hidden'),
-					'cash_amount'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:5;5', 'required' => 'input_amount'),
-					'cash_interval'	=> array('validate' => INT,	'explain' => false,	'type' => "radio:$action", 'params' => array(false, true, false)),
+					'cash_amount'	=>						array('validate' => INT, 'explain' => false, 'type' => 'text:5;5', 'required' => 'input_amount'),
+					'cash_interval'	=>						array('validate' => INT, 'explain' => false, 'type' => "radio:$action", 'params' => array(false, true, false)),
 					'cash_month'    => ($action == 'user' ? array('validate' => ARY, 'explain' => false, 'type' => 'check:months', 'required' => 'select_month') : 'hidden'),
-					'type'			=> 'hidden',
 					'cash_paid'		=> ($action == 'user' ? array('validate' => ARY, 'explain' => false, 'type' => 'check:months', 'required' => 'select_month') : 'hidden'),
+					'type'			=> 'hidden',
 					'time_create'	=> 'hidden',
 					'time_update'	=> 'hidden',
 				),
@@ -100,8 +87,8 @@ else
 					'cash_amount'	=> '',
 					'cash_interval'	=> 0,
 					'cash_month'	=> ($action == 'user') ? serialize(array(date("n", $time) => date("n", $time))) : '',
-					'type'			=> ($action == 'user') ? 1 : 0,
 					'cash_paid'		=> 'a:0:{}',
+					'type'			=> ($action == 'user') ? 1 : 0,
 					'time_create'	=> $time,
 					'time_update'	=> 0,
 				);
@@ -109,8 +96,6 @@ else
 			else if ( $mode == 'update' && !$submit )
 			{
 				$data_sql = data(CASH2, $data, false, 1, true);
-				
-				debug($data_sql, 'data_sql');
 			}
 			else
 			{
@@ -121,7 +106,7 @@ else
 					$data_sql['cash_type']	= ($data_sql['type']) ? search_user('id', $data_sql['cash_name']) : $data_sql['cash_type'];
 					$data_sql['cash_month']	= ($data_sql['type']) ? $data_sql['cash_month'] : '';
 					
-					if ( $mode == 'create' )
+					if ( $mode == 'create' && acl_auth('create') )
 					{
 						$sql = sql(CASH2, $mode, $data_sql);
 						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);

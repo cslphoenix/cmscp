@@ -43,7 +43,7 @@ function linkLenght($treffer)
 //
 //	Funktion zum Eintragen von Kommentaren
 //	17.03.2009 Anpassung an Trainingskommentare
-//	Änderung zu Gastkommentaren und Benutzerkommentaren
+//	änderung zu Gastkommentaren und Benutzerkommentaren
 //
 function _comment_message($mode, $table, $id, $posterid, $posterip, $message, $posternick='', $postermail='', $posterhp='')
 {

@@ -51,8 +51,6 @@ else
 	$base = ($settings['smain']['profile_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
 	
-	debug($_POST, '_POST');
-	
 	if ( $mode )
 	{
 		switch ( $mode )
@@ -185,25 +183,23 @@ else
 			case 'move_up':
 			case 'move_down':
 			
-				move(MENU, $mode, $order, $main, $type, $usub, $action);
+				move(PROFILE, $mode, $order, $main, $type, $usub);
 				log_add(LOG_ADMIN, $log, $mode);
 			
 				$index = true;
 				
 				break;
-
 			
-			
-			case 'order_field':
-				
-				update(PROFILE, 'profile', $move, $data_id);
-				orders(PROFILE, $data_type);
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				
-				$index = true;
-				
-				break;
+		#	case 'order_field':
+		#		
+		#		update(PROFILE, 'profile', $move, $data_id);
+		#		orders(PROFILE, $data_type);
+		#		
+		#		log_add(LOG_ADMIN, $log, $mode);
+		#		
+		#		$index = true;
+		#		
+		#		break;
 			
 //			case 'delete_field':
 //			
@@ -311,13 +307,12 @@ else
 				
 				$template->assign_block_vars('list.row', array(
 					'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $name, $name),
+					
+					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+					
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
 					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'com_delete'),
-					
-					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $cid, 'type' => 2, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $cid, 'type' => 2, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-					
-					
 				));
 			}
 		}
@@ -341,19 +336,19 @@ else
 		
 			foreach ( $tmp as $row )
 			{
-				$id	= $row['profile_id'];
-				$order	= $row['profile_order'];
-				
+				$id		= $row['profile_id'];
 				$name	= ( isset($lang[$row['profile_name']]) ) ? $lang[$row['profile_name']] : $row['profile_name'];
+				$order	= $row['profile_order'];
 				
 				$template->assign_block_vars('display.row', array( 
 					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
-					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 					
 					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
 					'MOVE_DOWN'	=> ( $order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				));
+				
+					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+					));
 			}
 		}
 		

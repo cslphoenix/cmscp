@@ -87,7 +87,13 @@ function s_main($default, $meta, $name, $data)
 {
 	global $db, $lang, $settings;
 	
+	$menu = '';
 	$type = $data['type'];
+	
+#	debug($default, 'default');
+#	debug($meta, 'meta');
+#	debug($type, 'type');
+	debug($data, 'data');
 	
 	switch ( $meta )
 	{
@@ -165,7 +171,8 @@ function s_main($default, $meta, $name, $data)
 	
 	if ( count($sort) > 0 )
 	{
-		if ( $switch )
+		# 1 
+		if ( $switch == 1 )
 		{
 		#	debug('switch');
 			
@@ -180,7 +187,8 @@ function s_main($default, $meta, $name, $data)
 						
 						switch ( $_sort['typ'] )
 						{
-							case 1: $return .= '<option value="' . $_sort['id'] . '">' . $_sort['lng'] . "</option>\n"; break;
+							#case 1 mit default und id versehen....
+							case 1: $return .= '<option value="' . $_sort['id'] . '"' . ($_sort['id'] == $default ? ' selected="selected"' : '') . '>' . $_sort['lng'] . "</option>\n"; break;
 							case 2: $return .= '<option value="' . $_sort['id'] . '" disabled="disabled">&nbsp; &nbsp;' . $_sort['lng'] . "</option>\n"; break;									
 							case 3: $return .= '<option value="' . $_sort['id'] . '" disabled="disabled">&nbsp; &nbsp;&nbsp; &nbsp;' . $_sort['lng'] . "</option>\n"; break;
 						}
@@ -222,17 +230,21 @@ function s_main($default, $meta, $name, $data)
 		}
 		else
 		{
-		#	foreach ( $sort as $row )
-		#	{
-		#		if ( $type == 2 )
-		#		{
-		#			$opt .= ($row['typ']) ? '<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . "</label><br />\n" : '&nbsp; &nbsp;<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $row['id'] . '" />&nbsp;' . $row['lng'] . "</label><br />\n";
-		#		}
-		#		else
-		#		{
-		#			$opt .= ($row['typ']) ? '<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $row['id'] . '" />&nbsp;' . $row['lng'] . "</label><br />\n" : (($entrys) ? '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . "</label><br />\n" : '');
-		#		}
-		#	}
+			/*
+			foreach ( $sort as $row )
+			{
+				if ( $type == 2 )
+				{
+					$return .= ($row['typ']) ? '<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . "</label><br />\n" : '&nbsp; &nbsp;<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $row['id'] . '" />&nbsp;' . $row['lng'] . "</label><br />\n";
+				}
+				else
+				{
+					$return .= ($row['typ']) ? '<label><input type="radio" name="' . sprintf('%s[%s]', $meta, $name) . '" value="' . $row['id'] . '" />&nbsp;' . $row['lng'] . "</label><br />\n" : (($entrys) ? '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . "</label><br />\n" : '');
+				}
+			}
+			*/
+			
+			$return .= 'auskommentiert';
 		}
 	}
 	else

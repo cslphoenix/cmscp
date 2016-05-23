@@ -3,8 +3,8 @@
 function _cached($sql, $sCacheName, $rows = 0, $time = '')
 {
 	/*
-		@param string $sql		enthï¿½lt die SQL Abfrage
-		@param string $name		enthï¿½lt den Namen der Cachdatei
+		@param string $sql		enthält die SQL Abfrage
+		@param string $name		enthält den Namen der Cachdatei
 		@param int $row			sql_fetchrow/sql_fetchrowset
 		@param int $time		Lebensdauer der Cachdatei
 	

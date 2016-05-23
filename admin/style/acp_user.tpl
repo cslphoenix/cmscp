@@ -167,24 +167,55 @@ function display_options(value)
 
 <!-- BEGIN settings -->
 
+<form action="{S_ACTION}" method="post">
+{ERROR_BOX}
+
 <!-- BEGIN row -->
-<table class="update">
+<!-- BEGIN hidden -->
+{settings.row.hidden.HIDDEN}
+<!-- END hidden -->
 <!-- BEGIN tab -->
+<fieldset>
+	<legend>{settings.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{settings.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{settings.row.tab.option.CSS}"><label for="{settings.row.tab.option.LABEL}"{settings.row.tab.option.EXPLAIN}>{settings.row.tab.option.L_NAME}:</label></dt>
+	<dd>{settings.row.tab.option.OPTION}</dd>
+</dl>
+{settings.row.tab.option.DIV_END}
+<!-- END option -->
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+
+<!-- BEGIN row ->
+<table class="update">
+<!-- BEGIN tab ->
 <tr>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
 </tr>
-<!-- BEGIN option -->
+<!-- BEGIN option ->
 <tr>
 	<td class="row1{settings.row.tab.option.CSS}"><label for="{settings.row.tab.option.LABEL}" {settings.row.tab.option.EXPLAIN}>{settings.row.tab.option.L_NAME}:</label></td>
 	<td class="row2">{settings.row.tab.option.OPTION}</td>
 </tr>
-<!-- END option -->
-<!-- END tab -->
+<!-- END option ->
+<!-- END tab ->
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>
 </table>
-<!-- END row -->
+<!-- END row ->
 
 <table class="submit">
 <tr>
@@ -192,38 +223,69 @@ function display_options(value)
 	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
+
 {S_FIELDS}
 </form>
+-->
 <!-- END settings -->
 
 <!-- BEGIN fields -->
+
+<form action="{S_ACTION}" method="post">
+{ERROR_BOX}
+
+<!-- BEGIN hidden -->
+{fields.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{fields.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+<dl>			
+	<dt class="{fields.tab.option.CSS}"><label for="{fields.tab.option.LABEL}"{fields.tab.option.EXPLAIN}>{fields.tab.option.L_NAME}:</label></dt>
+	<dd>{fields.tab.option.OPTION}</dd>
+</dl>
+<!-- END option -->
+</fieldset>
+<!-- END tab -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+
+<!--
 <table class="update">
 <tr>
 	<td colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_FIELDS}</a></li></ul></td>
 </tr>
-<!-- BEGIN cat_row -->
+<!-- BEGIN cat_row ->
 <tr>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{fields.catrow.CAT_NAME}</a></li></ul></th>
 </tr>
-<!-- BEGIN field_row -->
+<!-- BEGIN field_row ->
 <tr> 
 	<td class="row1">{fields.catrow.fieldrow.NAME}</td>
 	<td class="row2">{fields.catrow.fieldrow.INPUT}</td>
 </tr>
-<!-- END field_row -->
-<!-- END cat_row -->
+<!-- END field_row ->
+<!-- END cat_row ->
 
-<!-- BEGIN cat -->
+<!-- BEGIN cat ->
 <tr>
 	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{fields.cat.CAT_NAME}</a></li></ul></th>
 </tr>
-<!-- BEGIN field -->
+<!-- BEGIN field ->
 <tr> 
 	<td class="row1{fields.cat.field.REQ}">{fields.cat.field.NAME}:</td>
 	<td class="row2">{fields.cat.field.INPUT}</td>
 </tr>
-<!-- END field -->
-<!-- END cat -->
+<!-- END field ->
+<!-- END cat ->
 </table>
 
 <br/>
@@ -236,6 +298,7 @@ function display_options(value)
 </table>
 {S_FIELDS}
 </form>
+-->
 <!-- END fields -->
 
 <!-- BEGIN groups -->
@@ -356,6 +419,56 @@ function set_color(name,farbe)
 {S_FIELDS}
 </form>
 <!-- END auth -->
+
+<!-- BEGIN view -->
+{S_OPTIONS}
+
+<!-- BEGIN row -->
+<fieldset>
+	<legend id="legend">{view.row.NAME}</legend>
+<!-- BEGIN parent -->
+<fieldset class="views" id="view">
+	<legend id="legend">{view.row.parent.NAME}</legend>
+	<div class="views-switch">
+		{GROUPS}
+		<a href="#" onClick="toggle('{view.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a>
+	</div>
+	<div id="{view.row.parent.AUTHS}" align="center">
+	    <br />
+		<div class="tabs">
+			<ul>
+				<!-- BEGIN cats -->
+				<li><a {view.row.parent.cats.AUTH} href="#{view.row.parent.cats.CAT}">{view.row.parent.cats.NAME}</a></li>
+				<!-- END cats -->
+			</ul>
+			<!-- BEGIN cats -->
+			<div name="#{view.row.parent.cats.CAT}" id="{view.row.parent.cats.OPTIONS}">
+				<table class="ttabs" cellpadding="1" cellspacing="1">
+				<tr>
+					<th colspan="2">{L_VIEW_AUTH}</th>
+					<th>{L_YES}</th>
+					<th>{L_NO}</th>
+				</tr>
+				<!-- BEGIN auths -->
+				<tr>
+					<td>{view.row.parent.cats.auths.OPT_NAME}</td>
+					<td width="1%">{view.row.parent.cats.auths.OPT_INFO}</td>
+					<td class="{view.row.parent.cats.auths.CSS_YES}">&nbsp;</td>
+					<td class="{view.row.parent.cats.auths.CSS_NO}">&nbsp;</td>
+					
+				</tr>
+				<!-- END auths -->
+				</table>
+			</div>
+			<!-- END cats -->
+		</div>
+	</div>
+</fieldset>
+<!-- END parent -->
+</fieldset>
+<!-- END row -->
+{S_FIELDS}
+<!-- END view -->
 
 <!-- BEGIN display -->
 <script type="text/JavaScript">

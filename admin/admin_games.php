@@ -5,8 +5,9 @@ if ( !empty($setmodules) )
 	return array(
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_games',
+		'cat'		=> 'clan',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_games'),
+			'main'		=> array('title' => 'acp_games'),
 		)
 	);
 }
@@ -62,9 +63,9 @@ else
 				
 				$vars = array(
 					'game' => array(
-						'title'		=> 'input_data',
-						'game_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
-						'game_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq',	'required' => 'select_tag',	'check' => true, 'params' => '0'),
+						'title' => 'input_data',
+						'game_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
+						'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq',	'required' => 'select_tag',	'check' => true, 'params' => '0'),
 						'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
 						'game_order'	=> 'hidden',
 					),

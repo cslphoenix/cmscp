@@ -83,7 +83,7 @@ else
 					),
 				);
 
-				if ( $mode == 'create' && !$submit )
+				if ( $mode == 'create' && !$submit && $userauth['a_group_create'] )
 				{
 					$data_sql = array(
 						'group_name'	=> request('group_name', TXT),
@@ -109,7 +109,7 @@ else
 					
 					if ( !$error )
 					{
-						if ( $mode == 'create' )
+						if ( $mode == 'create' && $userauth['a_group_create'] )
 						{
 							$data_sql['group_order'] = maxa(GROUPS, 'group_order', '');
 							

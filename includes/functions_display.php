@@ -58,7 +58,7 @@ function display_navi($l_login_logout, $u_login_logout)
 	
 	if ( $logout )
 	{
-		if ( $userdata['user_level'] == ADMIN || $userauth )
+		if ( $userdata['user_level'] == ADMIN || $userauth || $userdata['user_founder'] )
 		{
 			$ary_entry[$logout][] = array('menu_name' => $lang['Admin_panel'], 'menu_lang' => 0, 'menu_target' => 0, 'menu_file' => 'admin/admin_index.php?sid=' . $userdata['session_id']);
 		}
@@ -529,7 +529,7 @@ function display_minical()
 	$cur_month		= date("m", time());		//	Heutiger Monat
 	$cur_year		= date("Y", time());		//	Heutiges Jahr
 	$cur_first		= date("w", mktime(0, 0, 0, $cur_month, 1, $cur_year));		//	Der erste Tag im Monat: z. B. "5 / Freitag"
-	$cur_weekdays	= $lang['cal_weekdays'];	//	Wochentage gek�rzt
+	$cur_weekdays	= $lang['cal_weekdays'];	//	Wochentage gekürzt
 	
 	$prev_month		= ( $cur_month == 1 ) ? '12' : $cur_month-1;
 	$prev_days		= date('t', mktime(0, 0, 0, $prev_month, 1, $cur_year));
@@ -1066,30 +1066,30 @@ function display_minical()
 			{
 				for ( $next_day = 1; $next_day <= 7; $next_day++ )
 				{
-					$day .= "<td><span class=\"next\">$next_day</span></td>";
+					$day .= "<td><span class=\"next\">$next_day</span>as3</td>";
 				}
 			}
 			else
 			{
 				for ( $fordays = 1; $fordays < $nday+1; $fordays++ )
 				{
-					$day .= "<td><span class=\"next\">$fordays</span></td>";
+					$day .= "<td><span class=\"next\">$fordays</span>as2</td>";
 				}
 				
 				$day .= '</tr><tr>';
 				
 				for ( $nextweek = $fordays; $nextweek < $next_days+1; $nextweek++ )
 				{
-					$day .= "<td><span class=\"next\">$nextweek</span></td>";
+					$day .= "<td><span class=\"next\">$nextweek</span>as</td>";
 				}
 				
 			}
 		}
 		else
 		{
-			for ( $next_day = 1; $next_day < 8; $next_day++ )
+			for ( $forward_day = 1; $forward_day < $next_days+1; $forward_day++ )
 			{
-				$day .= "<td><span class=\"next\">$next_day</span></td>";
+				$day .= "<td><span class=\"next\">$forward_day</span></td>";
 			}
 		}
 	}

@@ -11,10 +11,10 @@ $lang = array_merge($lang, array(
 	'title_cat'			=> 'Newskategorie',
 	'title_newsletter'	=> 'Newsletter',
 	'title_submitted'	=> 'Eingesendet',
-	
-	'input_data'	=> 'Daten',
-	
-	'explain_news'			=> 'Hier kannst du die News Verwalten дц',
+
+	'input_data'		=> 'Daten',
+
+	'explain_news'			=> 'Hier kannst du die News Verwalten.',
 	'explain_cat'			=> 'Hier kannst du die Newskategorien Verwalten.',
 	'explain_newsletter'	=> 'Newsletter krims kram',
 	'explain_submitted'		=> 'Eingesendet News',
@@ -30,11 +30,9 @@ $lang = array_merge($lang, array(
 	'news_intern'		=> 'Interne News',
 	'news_comments'		=> 'Kommentare',
 	'news_rate'		=> 'Bewertung',
-	
+
 	'cat_name'	=> 'Name',
 	'cat_image'	=> 'Bild',
-
-	
 ));
 
 ?>

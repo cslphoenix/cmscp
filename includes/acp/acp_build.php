@@ -64,7 +64,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 	
 #	debug($vars, 'vars');
 #	debug($name, 'name');
-	
+
 	if ( $name )
 	{
 		if ( isset($vars[$name]) )
@@ -146,6 +146,8 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 			$temp = array_merge($temp, $sqla);
 		}
 		
+	#	debug($temp, 'temp 123');
+		
 		foreach ( $temp as $rows )
 		{
 			/* nur vars die auch angeben sind überprüfen, sonst NOTICE Warnung */
@@ -155,9 +157,8 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 				$check	= isset($vars[$multi][$rows]['check'])	? true : false;
 				$prefix = isset($vars[$multi][$rows]['prefix']) ? $vars[$multi][$rows]['prefix'] : false;
 			#	$requir = isset($vars[$multi][$rows]['required']) ? $vars[$multi][$rows]['required'] : false;
-			
-				$val = isset($vars[$multi][$rows]['validate']) ? $vars[$multi][$rows]['validate'] : false;				
-				$req = isset($vars[$multi][$rows]['required']) ? $vars[$multi][$rows]['required'] : false;
+				$val	= isset($vars[$multi][$rows]['validate']) ? $vars[$multi][$rows]['validate'] : false;				
+				$req	= isset($vars[$multi][$rows]['required']) ? $vars[$multi][$rows]['required'] : false;
 				
 				/* upload bei Downloads, Gallery */
 				$type_typ = request(array($multi, 'type'), INT);
@@ -193,28 +194,32 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 				else
 				{
 					$request[$rows] = request(array($multi, $rows), $val);
-				#	debug($request[$rows], "$rows", true);
 				}
 				
-				
 				@list($type_main, $type_sub) = explode(':', $type);
-				#	debug($type, 'type');
-				#	debug($type_typ, 'type_typ');
-				#	debug($tbl_type, 'tbl_type');
-					
-				#	debug("upload:$tbl_type", 'upload:$tbl_type');
+				
+			#	debug($type_main, 'error type_main');
+			#	debug($type_typ, 'error type_typ');
+				
+			#	debug($type_main, 'type_main');
+			#	debug($tbl_type, 'tbl_type');
+			#	debug($type_typ, 'type_typ');
+			#	debug($type_sub, 'type_sub');
+			#	debug("upload:$tbl_type", 'upload:$tbl_type');
 				
 				/* Upload Block */
 			#	if ( in_array($type, array("upload:$tbl_type", "upload:flag", "upload:logo")) && $type_typ )
-				if ( $type_main == 'upload' && in_array($tbl_type, array('flag', 'logo', 'image')) && $type_typ )
+	#			if ( in_array($tbl_type, array('file')) && $type_typ )
+				if ( $type_main == 'upload' && in_array($tbl_type, array('file', 'flag', 'logo', 'image')) && $type_typ )
 				{
 				#	debug('if true');
-				#	debug($type, 'type');
+					debug($type, 'type1');
 				#	debug($type_typ, 'type_typ');
 				#	debug($tbl_type, 'tbl_type');
-					
-					$type	= str_replace(':', '_', $type);
-					$upload = request_file("upload:$rows");
+			#	upload_file
+					$type	= str_replace(':', '_', $rows);
+					debug($type, 'type2');
+					$upload =  ($tbl_type == 'file') ? request_file("upload_file") : request_file("upload:$type");
 					$delete = request("{$rows}_delete", TYP);
 					$current = request("current:$rows", TYP);
 					
@@ -222,23 +227,27 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					
 				#	debug($type, 'type');
 				#	debug($upload, 'upload');
-					
+				#	debug($_FILES, '_FILE__2');
 					if ( $tbl_type == 'file' )
 					{
+					#	debug($_FILES, 'DEBUG DL FILE UPLOAD');
+						
 						$main = request(array($multi, 'main'), INT);
 						
-						$sql = "SELECT dl_file, dl_types, dl_size FROM " . DOWNLOAD . " WHERE dl_id = $main";
+					#	debug($main, 'main');
+						
+						$sql = "SELECT dl_file, dl_types, dl_maxsize FROM " . DOWNLOAD . " WHERE dl_id = $main";
 						if ( !($result = $db->sql_query($sql)) )
 						{
 							message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 						}
-						$match = $db->sql_fetchrow($result);
-						
-						$path = $vars[$multi][$rows]['params'] . $match['dl_file'];
-						
+						$tmp_dl = $db->sql_fetchrow($result);
+					#	debug($tmp_dl, 'test tmp_dl');
+						$path = $vars[$multi][$rows]['params'] . $tmp_dl['dl_file'];
+					#	debug($path, 'test path');
 						if ( $upload )
 						{
-							$request[$rows] = upload_file($upload, $current, $path, unserialize($match['dl_types']), $match['dl_size'], $error);
+							$request[$rows] = upload_file($upload, $current, $path, unserialize($tmp_dl['dl_types']), $tmp_dl['dl_maxsize'], $error);
 							
 						#	$request['dl_file'] = $trequest[0];
 						#	$request['dl_type'] = $trequest[1];
@@ -249,7 +258,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 							$request[$rows] = $current;
 						}
 						
-						debug($request[$rows], 'file');
+					#	debug($request[$rows], 'file');
 					}
 					else
 					{
@@ -270,9 +279,19 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 						
 					#	debug($request[$rows], 'else');
 					}
-					
-					
 				}
+				
+			#	if ( in_array($tbl_type, array('file')) && $type_typ )
+			#	{
+			#		
+				#	debug($type_typ, 'type_typ');
+				#	debug($tbl_type, 'tbl_type');
+				#	debug($_POST, '_POST__');
+				#	debug($_GET, '_GET__');
+				#	debug($_FILES, '_FILE__3');
+				
+					
+			#	}
 				
 				if ( is_array($req) )
 				{
@@ -475,7 +494,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 		}
 	}
 	#serialize
-	debug($request, 'function request return');
+#	debug($request, 'function request return');
 
 	return $request;
 }
@@ -711,6 +730,12 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 {
 	global $db, $root_path, $lang, $template, $settings, $userdata, $dir_path, $mode, $action;
 	
+#	debug($tbl, 'tbl');
+#	debug($vars, 'vars');
+#	debug($data, 'data');
+#	debug($tpl, 'tpl');
+#	debug($multi, 'multi');
+	
 	$time = time();
 	
 	if ( !$multi )
@@ -766,13 +791,12 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 			{
 				/* Fehlerunterdrückung für Daten beim War um das Training zuerstellen (@). */
 				$tmp_opts = isset($vars_type['opt']) ? $vars_type['opt'] : '';
-				
 				$ttype = $vars_type['type'];
 				$tdata = ( $multi ) ? @$sql_data[$vars_key][$vars_opt] : @$sql_data[$vars_opt];
 				$tmeta = $vars_key;
 				$tname = $vars_opt;
 				
-			#	debug($vars_key, '$tmeta');
+			#	debug($ttype, 'ttype');
 				
 				$tparams = isset($vars_type['params']) ? $vars_type['params'] : false;
 				
@@ -780,7 +804,6 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 				
 				$f_id	= sprintf('%s_%s', $tmeta, $tname);
 				$f_name	= sprintf('%s[%s]', $tmeta, $tname);
-				
 			
 				$opt = '';
 				$css = '';
@@ -882,7 +905,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 					case 'drop':
 					
 						$pre = isset($vars_type['prefix']) ? $vars_type['prefix'] : '';
-						
+
 						switch ( $option )
 						{
 							case 'navi_left':       
@@ -1396,11 +1419,17 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 					case 'radio':
 					
 						$tmp_lang = '';
-						$tmp_main = array('dl', 'forum', 'gallery', 'menu', 'profile');
+						$tmp_main = array('forum', 'dl', 'gallery', 'menu', 'profile');
+						
+					#	debug($tmeta, '$tmeta 123');
+						
+					#	debug(in_array($tmeta, $tmp_main), "$vars_opt");
 						
 						if ( isset($lang[$ttype]) )
 						{
 							$tmp_lang = $lang[$ttype];
+							
+					#		debug($lang[$ttype], '$lang[$ttype]');
 						}
 						else if ( $option == 'icons' )
 						{
@@ -1420,7 +1449,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						{
 							$label = $menu = false;
 							
-							debug($action, 'action 2');
+						#	debug($tmeta, '$tmeta 456');
+						#	debug($action, 'action 2');
 														
 							switch ( $tmeta )
 							{
@@ -1447,6 +1477,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 							if ( $db->sql_numrows($result) )
 							{
 								$tmp = $db->sql_fetchrowset($result);
+								
+							#	debug($tmp, 'tmp');
 								
 								foreach ( $tmp as $rows )
 								{
@@ -1499,6 +1531,8 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						}
 						else
 						{
+						#	debug($tmeta, '$tmeta 789');
+							
 							$sql = "SELECT * FROM " . $tbl . " WHERE $tname = 0 ORDER BY {$tmeta}_order ASC";
 							if ( !($result = $db->sql_query($sql)) )
 							{
@@ -1758,6 +1792,17 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 								$opt .= ( $tdata ) ? '<input type="hidden" name="current_file" value="' . $tdata . '" />' : '';
 							
 								break;
+								
+							case 'ip':
+							
+								$whois = decode_ip($userdata['session_ip']);
+								
+								$opt .= href('a_new', "http://network-tools.com/default.asp?prog=whois&host=$whois", '', $whois);
+							#	$opt .= $whois . "http://network-tools.com/default.asp?prog=express&host=$whois";
+							#	debug($userdata);
+							#	$opt .= ( $tdata ) ? '<input type="hidden" name="current_file" value="' . $tdata . '" />' : '';
+							
+								break;
 						}
 					
 						break;
@@ -1775,7 +1820,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 					if ( ($tmeta != 'gallery' || $tmeta != 'rank' || $tmeta != 'calendar') && isset($data['type']) )
 					{
 					#	debug($data['type'], 'data type');
-						$type_0 = array('copy',
+						$type_0 = array('copy', 'main',
 										'menu_file', 'menu_opts',
 										'map_info', 'map_file',
 										'forum_desc', 'forum_icons', 'forum_legend', 'forum_status',
@@ -1783,7 +1828,7 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 										'dl_file');
 						$type_0 = ($mode == 'create') ?  array_merge($type_0, array('main')) : $type_0;
 						
-						$type_1 = array('menu_file', 'menu_opts', 'map_tag', 'dl_desc', 'dl_icon', 'dl_types', 'dl_size');
+						$type_1 = array('menu_file', 'menu_opts', 'map_tag', 'dl_desc', 'dl_icon', 'dl_types', 'dl_maxsize');
 						$type_3 = array('main', 'menu_target', 'menu_intern', 'menu_file', 'menu_opts');
 						$type_4 = array('menu_opts');
 						

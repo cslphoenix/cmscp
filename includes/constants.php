@@ -93,6 +93,7 @@ define('LOG_MOD',		2);
 define('LOG_ADMIN',		3);
 
 /* Log Sektion */
+define('SECTION_INDEX',			1122233);
 define('SECTION_AUTH',			1234567899);
 define('SECTION_BUGTRACKER',	999);		
 define('SECTION_CALENDAR',		100);	

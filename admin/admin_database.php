@@ -5,6 +5,7 @@ if ( !empty($setmodules) )
 	return array(
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_database',
+		'cat'		=> 'system',
 		'modes'		=> array(
 			'backup'	=> array('title' => 'acp_backup'),
 			'restore'	=> array('title' => 'acp_restore'),
@@ -16,21 +17,26 @@ else
 {
 	define('IN_CMS', true);
 	
-	$cancel		= false;
-	$current	= 'acp_database';
+	$cancel = false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
+	
+	$current = 'acp_database';
 	
 	include('./pagestart.php');
 	include($root_path . '/includes/sql_parse.php');
+	
+#	debug($userdata);
+#	debug($userauth);
 	
 	add_lang('database');
 	acl_auth(array('a_database_backup', 'a_database_optimize', 'a_database_restore'), true);
 	
 	$error	= '';
 	$index	= '';
-	$fields	= '';
+	$fields = '';
 	
-	$log	= SECTION_DATABASE;
 	$time	= time();
+	$log	= SECTION_DATABASE;
 	
 	$data	= request('id', INT);
 	$mode	= request('mode', TYP);
@@ -56,16 +62,14 @@ else
 		return $return;
 	}
 	
-	$template->set_filenames(array(
-		'body'	=> 'style/acp_database.tpl',
-#		'info'	=> 'style/info_message.tpl',
-	));
 	
-#	debug($_POST, '_POST');
+	$template->set_filenames(array(
+		'body'		=> 'style/acp_database.tpl',
+	));
 	
 	switch ( $action )
 	{
-		case 'backup':	acl_auth('a_database_backup', true);
+		case 'backup':	acl_auth('a_database_backup');
 		
 			$tables		= ( request('table', ARY) ) ? request('table', ARY) : '';
 			$type		= ( request('type', TYP) ) ? request('type', TYP) : '';

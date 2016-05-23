@@ -76,6 +76,15 @@ $lang = array_merge($lang, array(
 	#	'svg, svgz'			=> 'image/svg+xml',	
 	),
 	
+	'bmp'				=> 'image/bmp',
+	'gif'				=> 'image/gif',
+	'png'				=> 'image/png',
+	'psd'				=> 'image/vnd.adobe.photoshop',
+#	'ico'				=> 'image/vnd.microsoft.icon',
+	'jpeg, jpg'			=> 'image/jpeg', # jpe, 
+	'tiff, tif'			=> 'image/tiff',	
+#	'svg, svgz'			=> 'image/svg+xml',	
+	
 	'mime_text_type' => array(
 		'css'				=> 'text/css',
 		'htm, html, php'	=> 'text/html',			

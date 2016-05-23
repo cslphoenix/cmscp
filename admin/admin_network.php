@@ -50,8 +50,6 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 
-#	debug($_POST, '_POST');
-	
 	$mode = (in_array($mode, array('create', 'update', 'order', 'delete'))) ? $mode : false;
 
 	if ( $mode )
@@ -249,9 +247,13 @@ else
 	$max_partner	= maxi(NETWORK, 'network_order', 'network_type = ' . NETWORK_PARTNER);
 	$max_sponsor	= maxi(NETWORK, 'network_order', 'network_type = ' . NETWORK_SPONSOR);
 	
-	$tmp_link		= data(NETWORK, 'network_type = ' . NETWORK_LINK, 'network_order ASC', 1, false);
-	$tmp_partner	= data(NETWORK, 'network_type = ' . NETWORK_PARTNER, 'network_order ASC', 1, false);
-	$tmp_sponsor	= data(NETWORK, 'network_type = ' . NETWORK_SPONSOR, 'network_order ASC', 1, false);
+	$tmp_link		= data(NETWORK, 'WHERE network_type = ' . NETWORK_LINK, 'network_order ASC', 1, false);
+	$tmp_partner	= data(NETWORK, 'WHERE network_type = ' . NETWORK_PARTNER, 'network_order ASC', 1, false);
+	$tmp_sponsor	= data(NETWORK, 'WHERE network_type = ' . NETWORK_SPONSOR, 'network_order ASC', 1, false);
+	
+	debug($tmp_link, 'tmp_link');
+	debug($tmp_partner, 'tmp_partner');
+	debug($tmp_sponsor, 'tmp_sponsor');
 
 	if ( !$tmp_link )
 	{

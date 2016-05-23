@@ -125,4 +125,3 @@ function update_image(newimage)
 <!-- END send_empty -->
 </table>
 <!-- END sdisplay -->
-

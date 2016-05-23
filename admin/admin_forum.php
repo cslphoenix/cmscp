@@ -22,7 +22,7 @@ else
 	include('./pagestart.php');
 	
 	add_lang('forums');
-	acl_auth(array('a_training', 'a_training_create', 'a_training_delete', 'a_training_manage'));
+#	acl_auth(array('a_training', 'a_training_create', 'a_training_delete', 'a_training_manage'));
 
 	$error	= '';
 	$index	= '';
@@ -47,8 +47,6 @@ else
 		'body'		=> 'style/acp_forum.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
-	
-	debug($_POST, '_POST');
 	
 	$base = ($settings['smain']['forum_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
@@ -97,6 +95,8 @@ else
 				else if ( $mode == 'update' && !$submit )
 				{
 					$data_sql = data(FORUM, $data, false, 1, true);
+					
+					debug($data_sql);
 				}
 				else
 				{
@@ -106,6 +106,8 @@ else
 					{
 						$data_sql['main'] = 0;
 					}
+					
+				#	debug($data_sql);
 					
 					if ( !$error )
 					{
@@ -124,14 +126,14 @@ else
 						
 						if ( $mode == 'create' )
 						{
-							$forums['forum_order'] = maxa(FORUM, 'forum_order', "main = " . $forums['main']);
+							$data_sql['forum_order'] = maxa(FORUM, 'forum_order', "main = " . $data_sql['main']);
 							
-							$sql = sql(FORUM, $mode, $forums);
+							$sql = sql(FORUM, $mode, $data_sql);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
 						else
 						{
-							$sql = sql(FORUM, $mode, $forums, 'forum_id', $data);
+							$sql = sql(FORUM, $mode, $data_sql, 'forum_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
@@ -348,7 +350,6 @@ else
 			foreach ( $tmp as $row )
 			{
 				$id		= $row['forum_id'];
-				$sub	= $row['main'];
 				$name	= $row['forum_name'];
 				$order	= $row['forum_order'];
 				

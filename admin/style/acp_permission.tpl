@@ -39,6 +39,28 @@ function reset_simpleauth(id)
 	document.getElementById(id).options[0].selected = true;
 }
 
+function lookup(user_name, user_level)
+{
+	if ( user_name.length == 0 ) { $('#suggestions').hide(); }
+	else
+	{
+		$.post("./ajax/ajax_user.php", {user_name: ""+user_name+"", user_level: ""+user_level+""}, function(data)
+		{
+			if ( data.length > 0 )
+			{
+				$('#suggestions').show();
+				$('#autoSuggestionsList').html(data);
+			}
+		});
+	}
+}
+
+function fill(thisValue)
+{
+	$('#user_name').val(thisValue);
+	setTimeout("$('#suggestions').hide();", 200);
+}
+
 </script>
 
 <!-- BEGIN display -->
@@ -64,15 +86,11 @@ function reset_simpleauth(id)
 		<fieldset>
 			<legend>{L_USERS_MANAGE}</legend>
 			<dl>
-				<dd class="full">{S_USER_UPDATE}</dd>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />{L_USERS_ALL}</label></dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {L_USERS_ALL}</label>{S_USER_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete">&nbsp;<input type="submit" name="submit_update" value="{L_AUTH_UPDATE}"></dd>
 			</dl>
-		</fieldset>
-	
-		<fieldset class="fast">
 			{S_HIDDEN}
 			<input type="hidden" name="ug_type" value="user">
-			<input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete"> &nbsp; <input type="submit" name="submit_update" value="{L_AUTH_UPDATE}">
 		</fieldset>
 	</form>
 
@@ -81,13 +99,12 @@ function reset_simpleauth(id)
 			<legend>{L_USERS_ADDED}</legend>
 			<dl>
 				<dd class="full"><textarea id="username" name="user_names" style="width: 100%; height: 70px;"></textarea></dd>
+				<dd class="full" style="text-align: left;">
+					<input type="submit" name="submit_create" value="{L_AUTH_CREATE}">
+				</dd>
 			</dl>
-		</fieldset>
-
-		<fieldset class="fast">
 			{S_HIDDEN}
 			<input type="hidden" name="ug_type" value="user">
-			<input type="submit" name="submit_create" value="{L_AUTH_CREATE}">
 		</fieldset>
 	</form>
 </div>
@@ -100,15 +117,11 @@ function reset_simpleauth(id)
 		<fieldset>
 			<legend>{L_GROUPS_MANAGE}</legend>
 			<dl>
-				<dd class="full">{S_GROUP_UPDATE}</dd>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label></dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label>{S_GROUP_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete">&nbsp;<input type="submit" name="submit_update" value="{L_AUTH_UPDATE}"></dd>
 			</dl>
-		</fieldset>
-	
-		<fieldset class="fast">
 			{S_HIDDEN}
 			<input type="hidden" name="ug_type" value="group">
-			<input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete"> &nbsp; <input type="submit" name="submit_update" value="{L_AUTH_UPDATE}">
 		</fieldset>
 	</form>
 
@@ -117,13 +130,10 @@ function reset_simpleauth(id)
 			<legend>{L_GROUPS_ADDED}</legend>
 			<dl>
 				<dd class="full">{S_GROUP_CREATE}</dd>
+				<dd class="full" style="text-align: left;"><input type="submit" name="submit_create" value="{L_AUTH_CREATE}"></dd>
 			</dl>
-		</fieldset>
-
-		<fieldset class="fast">
 			{S_HIDDEN}
 			<input type="hidden" name="ug_type" value="group">
-			<input type="submit" name="submit_create" value="{L_AUTH_CREATE}">
 		</fieldset>
 	</form>
 </div>
@@ -141,32 +151,15 @@ function reset_simpleauth(id)
 		<fieldset>
 			<legend>{L_USERS_MANAGE}</legend>
 			<dl>
-				<dd class="full">{S_USER_UPDATE}</dd>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />{L_USERS_ALL}</label></dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />{L_USERS_ALL}</label>{S_USER_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><input type="submit" name="submit_update" value="{L_AUTH_SHOW}"></dd>
 			</dl>
 		</fieldset>
+		{S_HIDDEN}
+		<input type="hidden" name="ug_type" value="user">
+	</form>
+
 	
-		<fieldset class="fast">
-			{S_HIDDEN}
-			<input type="hidden" name="ug_type" value="user">
-			<input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete"> &nbsp; <input type="submit" name="submit_update" value="{L_AUTH_UPDATE}">
-		</fieldset>
-	</form>
-
-	<form action="{S_ACTION}" method="post" id="users_add">
-		<fieldset>
-			<legend>{L_USERS_ADDED}</legend>
-			<dl>
-				<dd class="full"><textarea id="username" name="user_names" style="width: 100%; height: 70px;"></textarea></dd>
-			</dl>
-		</fieldset>
-
-		<fieldset class="fast">
-			{S_HIDDEN}
-			<input type="hidden" name="ug_type" value="user">
-			<input type="submit" name="submit_create" value="{L_AUTH_CREATE}">
-		</fieldset>
-	</form>
 </div>
 
 <div style="float: right; width: 49%;">
@@ -177,31 +170,12 @@ function reset_simpleauth(id)
 		<fieldset>
 			<legend>{L_GROUPS_MANAGE}</legend>
 			<dl>
-				<dd class="full">{S_GROUP_UPDATE}</dd>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label></dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label>{S_GROUP_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><input type="submit" name="submit_update" value="{L_AUTH_SHOW}"></dd>
 			</dl>
 		</fieldset>
-	
-		<fieldset class="fast">
-			{S_HIDDEN}
-			<input type="hidden" name="ug_type" value="group">
-			<input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete"> &nbsp;<input type="submit" name="submit_show" value="{L_AUTH_UPDATE}">
-		</fieldset>
-	</form>
-
-	<form action="{S_ACTION}" method="post" id="groups_add">
-		<fieldset>
-			<legend>{L_GROUPS_ADDED}</legend>
-			<dl>
-				<dd class="full">{S_GROUP_CREATE}</dd>
-			</dl>
-		</fieldset>
-
-		<fieldset class="fast">
-			{S_HIDDEN}
-			<input type="hidden" name="ug_type" value="group">
-			<input type="submit" name="submit_create" value="{L_AUTH_CREATE}">
-		</fieldset>
+		{S_HIDDEN}
+		<input type="hidden" name="ug_type" value="group">
 	</form>
 </div>
 <form action="{S_ACTION}" method="post">
@@ -295,12 +269,14 @@ function set_permission(type, forum, group)
 <!-- BEGIN row -->
 <fieldset>
 	<legend id="legend">{view.row.NAME}</legend>
+		{view.row.INFO}
 <!-- BEGIN parent -->
 <fieldset class="views" id="view">
+	
 	<legend id="legend">{view.row.parent.NAME}</legend>
 	<div class="views-switch">
-		
-		<a href="#" onClick="toggle('{view.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a>
+		<div style="text-align:right"><a href="#" onClick="toggle('{view.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a></div>
+		<div style="text-align:left">{view.row.parent.INFO}</div>
 	</div>
 	<div id="{view.row.parent.AUTHS}" align="center">
 	    <br />
@@ -320,7 +296,7 @@ function set_permission(type, forum, group)
 				</tr>
 				<!-- BEGIN auths -->
 				<tr>
-					<td>{view.row.parent.cats.auths.OPT_NAME}</td>
+					<td><span class="right">{view.row.parent.cats.auths.OPT_INFO}</span>{view.row.parent.cats.auths.OPT_NAME}</td>
 					<td class="{view.row.parent.cats.auths.CSS_YES}">&nbsp;</td>
 					<td class="{view.row.parent.cats.auths.CSS_NO}">&nbsp;</td>
 				</tr>

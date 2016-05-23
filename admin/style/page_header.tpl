@@ -7,9 +7,6 @@
 
 	<title>{L_HEADER}</title>
 	<link rel="icon" href="./../favicon.ico" type="image/x-icon">
-	
-	
-	
 	<link rel="stylesheet" type="text/css" href="style/style.css" media="screen">
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.atooltip.css" media="screen">
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.minicolors.css" media="screen">

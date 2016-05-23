@@ -27,29 +27,20 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= SECTION_GALLERY;
 	$time	= time();
+	$log	= SECTION_INDEX;
 	
-	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
-	$start	= ( $start < 0 ) ? 0 : $start;
-	
+	$start	= request('start', INT);
 	$num	= request('num', INT);
-	$mode	= request('mode', TYP);
 	$sync	= request('sync', TYP);
+	$mode	= request('mode', TYP);
+	$mode = (in_array($mode, array('switch', 'sync'))) ? $mode : false;
 
 	$template->set_filenames(array(
 		'body'	=> 'style/acp_index.tpl',
 		'error'	=> 'style/info_error.tpl',
 	));
-	
-#	debug($_POST, '_POST');
-	
-#	debug($userdata, 'userdata');
-#	debug($userauth, 'userauth');
-#	debug($auth, 'auth');
 
-	$mode = (in_array($mode, array('switch', 'sync'))) ? $mode : false;
-	
 	switch ( $mode )
 	{
 		case 'switch':
@@ -277,6 +268,8 @@ else
 			{
 				$cnt = count($users);
 				$cnt = ( $cnt < $settings['per_page_entry']['index'] ) ? $cnt : $settings['per_page_entry']['index'];
+				
+				
 			
 				for ( $i = 0; $i < $cnt; $i++ )
 				{
@@ -294,14 +287,14 @@ else
 					}
 					
 					$template->assign_block_vars('user_row', array(
-						'NAME'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_txt', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), $name, $name) : $name,
+						'NAME'		=> ( $userauth['a_user'] )			? href('a_txt', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), $name, $name) : $name,
 						
 						'LEVEL'		=> $level,
 						'REGDATE'	=> create_date($userdata['user_dateformat'], $users[$i]['user_regdate'], $config['default_timezone']),
 						
-						'AUTH'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_auth_user'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'auth', 'id' => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'AUTH'		=> ( $userauth['a_auth_users'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'permission', 'id' => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
+						'UPDATE'	=> ( $userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+						'DELETE'	=> ( $userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -344,7 +337,7 @@ else
 					$row = $db->sql_fetchrow($result);
 					$version = $row['mysql_version'];
 					
-					if ( preg_match("/^(3\.23|4\.|5\.)/", $version) )
+					if ( preg_match("/^(3\.23|4\.|5\.|10\.)/", $version) )
 					{
 						$db_name = ( preg_match("/^(3\.23\.[6-9])|(3\.23\.[1-9][1-9])|(4\.)|(5\.)/", $version) ) ? "$db_name" : $db_name;
 						

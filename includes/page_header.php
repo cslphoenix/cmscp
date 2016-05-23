@@ -421,7 +421,7 @@ foreach ( $userauth as $key => $value )
 //
 // Show the overall footer.
 //
-$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+$admin_link = (	$userdata['user_level'] == ADMIN || $auth || $userdata['user_founder'] ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 
 //$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
 //if ( !($result = $db->sql_query($sql)) )

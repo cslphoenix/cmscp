@@ -13,8 +13,9 @@ function display_options(value)
 		dE('dl_desc', 1);
 		dE('dl_file', -1);
 		dE('dl_icon', 1);
+		dE('dl_maxsize', 1);
 		dE('dl_types', 1);
-		dE('dl_size', 1);
+		
 	}
 	else
 	{
@@ -22,8 +23,8 @@ function display_options(value)
 		dE('dl_desc', -1);
 		dE('dl_file', 1);
 		dE('dl_icon', -1);
+		dE('dl_maxsize', -1);
 		dE('dl_types', -1);
-		dE('dl_size', -1);
 	}
 }
 
@@ -35,7 +36,6 @@ function display_options(value)
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<div>
 <!-- BEGIN tab -->
 <fieldset>
 	<legend>{input.row.tab.L_LANG}</legend>
@@ -49,7 +49,6 @@ function display_options(value)
 	<!-- END option -->
 </fieldset>
 <!-- END tab -->
-</div>
 <!-- END row -->
 
 <div class="submit">
@@ -83,7 +82,7 @@ function display_options(value)
 </table>
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="dl_file" /></td>
+	<td><input type="text" name="dl_filename" /></td>
 	<td><input type="submit" value="{L_CREATE_FILE}" /></td>
 </tr>
 </table>

@@ -43,6 +43,8 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
+#	debug($main);
+	
 	$usub	= request('usub', TYP);
 	
 	$dir_path	= $root_path . $settings['path_downloads'];
@@ -58,8 +60,10 @@ else
 	/* $settings['download_types'] ??? */
 	$mime_types = array('meta_application', 'meta_image', 'meta_text', 'meta_video');
 	
+#	debug($_FILES, '_FILE');
 #	debug($_POST, '_POST');
-
+	
+	$base = ($settings['smain']['dl_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 
 	if ( $mode )
@@ -70,18 +74,20 @@ else
 			case 'update':
 
 				$template->assign_block_vars('input', array());
+				
+			#	debug($type, 'type');
 
 				$vars = array(
 					'dl' => array(
 						'title'	=> 'data_input',
 						'dl_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name'),
 						'type'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('combi', false, 'main')),
-						'main'			=> array('validate' => INT,	'explain' => false,	'type' => 'drop:main',		'divbox' => true),
+						'main'			=> array('validate' => INT,	'explain' => false,	'type' => $base,			'divbox' => true, 'params' => array(false, true, false)),
 						'dl_desc'		=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:25',	'divbox' => true, 'required' => array('input_desc', 'type', 0)),
 						'dl_file'		=> array('validate' => INT,	'explain' => false,	'type' => 'upload:file',	'divbox' => true, 'required' => array('select_file', 'type', 1), 'params' => $dir_path),
 						'dl_icon'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:icons',	'divbox' => true, 'params' => array(false, false, false)),
 						'dl_types'		=> array('validate' => ARY,	'explain' => false,	'type' => 'select:types',	'divbox' => true),
-						'dl_size'		=> array('validate' => INT,	'explain' => true,	'type' => 'text:10;10',		'divbox' => true, 'required' => array('input_size', 'type', 0)),
+						'dl_maxsize'	=> array('validate' => INT,	'explain' => true,	'type' => 'text:10;10',		'divbox' => true, 'required' => array('input_maxsize', 'type', 0)),
 						'dl_rate'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
 						'dl_comment'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno',	'divbox' => true),
 						'dl_type'		=> 'hidden',
@@ -95,18 +101,20 @@ else
 				
 				if ( $mode == 'create' && !$submit )
 				{
-					$name = ( isset($_POST['dl_name']) ) ? request('dl_name', TXT) : request(array('dl_filename', $keys), TXT);
+					$name = ( isset($_POST['dl_name']) ) ? request('dl_name', TXT) : request('dl_filename', TXT);
 					$type = ( isset($_POST['dl_name']) ) ? 0 : 1 ;
+					
+				#	debug($type, 'type');
 					
 					$data_sql = array(
 						'dl_name'		=> $name,
 						'type'			=> $type,
-						'main'			=> '',
+						'main'			=> ($main ? $main : 0),
 						'dl_desc'		=> '',
 						'dl_file'		=> '',
 						'dl_icon'		=> 0,
 						'dl_types'		=> 'a:0:{}',
-						'dl_size'		=> 0,
+						'dl_maxsize'	=> 0,
 						'dl_rate'		=> 1,
 						'dl_comment'	=> 1,
 						'dl_type'		=> '',
@@ -123,7 +131,11 @@ else
 				}
 				else
 				{
+				#	debug($error, 'error1');
+					
 					$data_sql = build_request(DOWNLOAD, $vars, $error, $mode);
+					
+					debug($error, 'error2');
 					
 					if ( !$error )
 					{
@@ -133,6 +145,7 @@ else
 						}
 						else
 						{
+							debug($data_sql['dl_file'], 'dl_file');
 							$t_info = @explode(';', $data_sql['dl_file']);
 							$data_sql['dl_file'] = $t_info[0];
 							$data_sql['dl_type'] = (isset($t_info[1])) ? $t_info[1] : $data_sql['dl_type'];
@@ -169,7 +182,7 @@ else
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['dl_name']),
 					'L_EXPLAIN'	=> $lang['com_required'],
-
+					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
 				));
@@ -300,9 +313,6 @@ else
 	
 					'UPDATE'        => href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
 					'DELETE'        => href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
-					
-					'S_NAME'	=> "dl_module[$id]",
-					'S_SUBMIT'	=> "submit_module[$id]",
 				));
 			}
 		}
@@ -335,7 +345,7 @@ else
 				
 				$dl_name	= ( isset($lang[$tmp[$i]['dl_name']]) ) ? $lang[$tmp[$i]['dl_name']] : $tmp[$i]['dl_name'];
 				
-				$template->assign_block_vars('display.row', array( 
+				$template->assign_block_vars('display.row', array(
 					'NAME'		=> href('a_txt', $file, array('main' => $dl_id), $dl_name, $dl_name),
 					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $dl_id), 'icon_update', 'common_update'),
 					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $dl_id), 'icon_cancel', 'com_delete'),
@@ -348,6 +358,8 @@ else
 		
 		$fields	.= '<input type="hidden" name="mode" value="create" />';
 	}
+	
+#	debug($main, 'testwewe');
 	
 	$template->assign_vars(array(
 		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),

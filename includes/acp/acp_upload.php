@@ -83,9 +83,25 @@ function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
 	
 	$maxsize = $maxsize*1048576;
 	
-#	debug($ftype);
+#	debug($types);
+	
+#	debug($fname, 'fname');
 #	debug($types);
 #	debug($maxsize);
+
+	if ( !is_array($types) )
+	{
+		$tmp_types = $types;
+	}
+	else
+	{
+		foreach ( $types as $_typ )
+		{
+			$tmp_type[] = isset($lang[$_typ]) ? $lang[$_typ] : $_typ;
+			
+		}
+		$tmp_types = implode(', ', $tmp_type);
+	}
 	
 	if ( file_exists(realpath($ftemp)) )
 	{
@@ -93,7 +109,7 @@ function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
 		{
 			if ( !in_array($ftype, $types) )
 			{
-				$error[] = sprintf($lang['up_filetype'], $types);
+				$error[] = sprintf($lang['up_filetype'], $tmp_types);
 			
 				return;
 			}
@@ -144,6 +160,9 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 	$image_filesize = $data_img['size'];
 
 #	debug($category);
+
+#	debug($image_realname, 'image_realname');
+	
 	switch ( $category )
 	{
 		

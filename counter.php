@@ -118,7 +118,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 	
 	$select_year = '<select class="postselect" name="year">';
 	$select_year .= '<option disabled value="0">' . $lang['year'] . '</option>';
-	for ( $i=2008; $i<$year+3; $i++ )
+	for ( $i=$year-3; $i<$year+3; $i++ )
 	{
 		$selected = ( $i == $year ) ? ' selected="selected" ' : '';
 		$select_year .= '<option value="' . $i . '"' . $selected . '>' . $i . '&nbsp;</option>';
@@ -243,7 +243,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
     }
 	
 	$diagramme['Jahr'] = array(); 
-    $diagramme['Jahr']['Name'] = "Übersicht"; 
+    $diagramme['Jahr']['Name'] = "Übersicht";
     $diagramme['Jahr']['Hoehe'] = 20; 
     $diagramme['Jahr']['Breite'] = 200; 
     $diagramme['Jahr']['Balken'] = 500; 
@@ -252,7 +252,7 @@ $template->set_filenames(array('body' => 'counter_body.tpl'));
 
     $diagramme['Jahr']['Name'] = ""; 
     
-	for ( $i=2009; $i<=2012; $i++ )
+	for ( $i= $year-3 ; $i<=$year; $i++ )
 	{
 		$sql = 'SELECT
 					SUM(counter_entry) AS sum

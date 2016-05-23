@@ -30,9 +30,10 @@ else
 	$error	= '';
 	$index	= '';
 	$fields	= '';
-	$time	= time();
 	
+	$time	= time();
 	$log	= SECTION_NEWS;
+	$file	= basename(__FILE__) . $iadds;
 
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -43,7 +44,7 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_newscat'];
-	$acp_title	= sprintf($lang['stf_head'], $lang["title_$act"]);
+	$acp_title	= sprintf($lang['stf_head'], $lang["title_$action"]);
 	$acp_main	= request('acp_main', TYP);
 	
 	( $cancel && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
@@ -550,7 +551,7 @@ else
 		'L_CREATE'	=> sprintf($lang['stf_create'], $lang["title_$action"]),
 		'L_NAME'	=> $lang["title_$action"],
 		
-		'L_EXPLAIN'	=> $lang["explain_$act"],
+		'L_EXPLAIN'	=> $lang["explain_$action"],
 	
 		'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
