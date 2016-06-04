@@ -86,7 +86,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_USERS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {L_USERS_ALL}</label>{S_USER_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {L_USERS_ALL}</label><br />{S_USER_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete">&nbsp;<input type="submit" name="submit_update" value="{L_AUTH_UPDATE}"></dd>
 			</dl>
 			{S_HIDDEN}
@@ -99,9 +99,7 @@ function fill(thisValue)
 			<legend>{L_USERS_ADDED}</legend>
 			<dl>
 				<dd class="full"><textarea id="username" name="user_names" style="width: 100%; height: 70px;"></textarea></dd>
-				<dd class="full" style="text-align: left;">
-					<input type="submit" name="submit_create" value="{L_AUTH_CREATE}">
-				</dd>
+				<dd class="full" style="text-align: left;"><input type="submit" name="submit_create" value="{L_AUTH_CREATE}"></dd>
 			</dl>
 			{S_HIDDEN}
 			<input type="hidden" name="ug_type" value="user">
@@ -117,7 +115,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_GROUPS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label>{S_GROUP_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label><br />{S_GROUP_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete">&nbsp;<input type="submit" name="submit_update" value="{L_AUTH_UPDATE}"></dd>
 			</dl>
 			{S_HIDDEN}
@@ -151,7 +149,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_USERS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />{L_USERS_ALL}</label>{S_USER_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />{L_USERS_ALL}</label><br />{S_USER_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_update" value="{L_AUTH_SHOW}"></dd>
 			</dl>
 		</fieldset>
@@ -170,7 +168,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_GROUPS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label>{S_GROUP_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label><br />{S_GROUP_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_update" value="{L_AUTH_SHOW}"></dd>
 			</dl>
 		</fieldset>
@@ -265,7 +263,7 @@ function set_permission(type, forum, group)
 
 <!-- BEGIN view -->
 {S_OPTIONS}
-
+<div style="text-align:right"><a href="#" onClick="toggle('{BLUBB}'); return false;">{L_PERMISSION_ALL}</a></div>
 <!-- BEGIN row -->
 <fieldset>
 	<legend id="legend">{view.row.NAME}</legend>

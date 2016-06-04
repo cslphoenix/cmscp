@@ -111,6 +111,13 @@ $lang = array_merge($lang, array(
 		),
 	),
 	
+	'a_show'	=> 'Administrator-Berechtigungen',
+	'f_show'	=> 'Forum-Berechtigungen',
+	'm_show'	=> 'Moderatoren-Berechtigungen',
+	'u_show'	=> 'Benutzer-Berechtigungen',
+	'd_show'	=> 'Download-Berechtigungen',
+	'g_show'	=> 'Galerie-Berechtigungen',
+	
 	'a_right'	=> 'Administrator-Berechtigungen',
 	'f_right'	=> 'Forum-Berechtigungen',
 	'm_right'	=> 'Moderatoren-Berechtigungen',
@@ -137,6 +144,7 @@ $lang = array_merge($lang, array(
 	'g_permission'			=> 'Galerie-Berechtigung',
 	
 	'extended_permission'	=> 'erweitere Berechtigung',
+	'extended_permission_all'	=> 'erweitere Berechtigung alle',
 	
 	'label_gallery_full'	=> 'Volle Galerie-Rechte',
 	'label_gallery_none'	=> 'Keine Galerie-Rechte',

@@ -72,175 +72,6 @@ else
 	
 	$template->set_filenames(array('body' => 'style/acp_permission.tpl'));
 	
-	/* 02.11.13 SQL-Abfrage modifiziert, das nur ForenIDs ausgelesen werden die keine Kategorien sind! */
-	/*
-	function check_ids(&$forum_ids)
-	{
-		global $db;
-		
-		if ( !$forum_ids )
-		{
-			return false;
-		}
-		
-		$sql = 'SELECT forum_id FROM ' . FORUM . ' WHERE type != 0 AND forum_id IN (' . implode(', ', $forum_ids) . ')';
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$forum_ids_array = array();
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$forum_ids_array[] = $row['forum_id'];
-		}
-		
-		return $forum_ids_array;
-	}
-	
-	function acl_label($type)
-	{
-		global $db;
-		
-		$sql = 'SELECT * FROM ' . ACL_LABEL . ' WHERE label_type = "' . $type . '"';
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$acl_label[$row['label_id']] = $row;
-		}
-		$db->sql_freeresult($result);
-		
-		return $acl_label;
-	}
-	
-	function acl_label_data($label_ids)
-	{
-		global $db;
-		
-		$sql = 'SELECT * FROM ' . ACL_LABEL_DATA . ' d
-					LEFT JOIN ' . ACL_OPTION . ' o ON o.auth_option_id = d.auth_option_id
-					WHERE d.label_id IN (' . implode(', ', $label_ids) . ')';
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$acl_label_data[$row['label_id']][$row['auth_option']] = $row['auth_value'];
-		}
-		$db->sql_freeresult($result);
-		
-		return $acl_label_data;
-	}
-	
-	function acl_auth_group($type)
-	{
-		global $db;
-		
-		$sql = 'SELECT * FROM ' . ACL_OPTION . ' WHERE auth_option LIKE "' . $type . '%"';
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$acl_groups[$row['auth_group']][$row['auth_option']] = $row['auth_option'];
-		}
-		$db->sql_freeresult($result);
-		
-		return $acl_groups;
-	}
-	
-	function acl_field($type, $select)
-	{
-		global $db;
-		
-		$sql = 'SELECT * FROM ' . ACL_OPTION . ' WHERE auth_option LIKE "' . $type . '%"';
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$acl_field[$row[(( $select == 'name' ) ? 'auth_option_id' : 'auth_option')]] = $row[(( $select == 'name' ) ? 'auth_option' : 'auth_option_id')];
-		}
-		$db->sql_freeresult($result);
-		
-		return $acl_field;
-	}
-		
-	function access($table, $usergroup, $forums, $acl_label_data, $acl_field)
-	{
-		global $db;
-		
-	#	debug($table, 'table');
-	#	debug($usergroup, 'usergroup');
-	#	debug($forums, 'forums');
-	#	debug($acl_label_data, 'acl_label_data');
-	#	debug($acl_field, 'acl_field');
-		
-		$sql = "SELECT * FROM $table
-					WHERE $usergroup[0] IN (" . (is_array($usergroup[1]) ? implode(', ', $usergroup[1]) : $usergroup[1]) . ")
-						AND forum_id IN (" . (is_array($forums) ? implode(', ', $forums) : $forums) . ")";
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$access = '';
-		
-		while ( $rows = $db->sql_fetchrow($result) )
-		{
-			if ( $rows['label_id'] != 0 )
-			{
-				if ( isset($acl_label_data[$rows['label_id']]) )
-				{
-					$access[$rows['forum_id']][$rows[$usergroup[0]]] = $acl_label_data[$rows['label_id']];
-				}
-			}
-			
-			if ( $rows['auth_option_id'] != 0 && isset($acl_field[$rows['auth_option_id']]) )
-			{
-				$access[$rows['forum_id']][$rows[$usergroup[0]]][$acl_field[$rows['auth_option_id']]] = $rows['auth_value'];
-			}
-		}
-		
-	#	debug($access, 'access');
-		
-		return $access;
-	}
-	
-	function access_label($table, $usergroup, $forums, $acl_label_ids)
-	{
-		global $db;
-		
-		$sql = "SELECT * FROM $table
-					WHERE $usergroup[0] IN (" . (is_array($usergroup[1]) ? implode(', ', $usergroup[1]) : $usergroup[1]) . ")
-						AND forum_id IN (" . (is_array($forums) ? implode(', ', $forums) : $forums) . ")
-						AND label_id IN (" . (is_array($acl_label_ids) ? implode(', ', $acl_label_ids) : $acl_label_ids) . ")";
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$access_label = '';
-		
-		while ( $rows = $db->sql_fetchrow($result) )
-		{
-			$access_label[$rows['forum_id']][$rows[$usergroup[0]]] = $rows['label_id'];
-		}
-		
-		return $access_label;
-	}
-	*/
 	function construct_show_box($ug_ids, $forum_ids, $options, $type)
 	{
 		global $db, $lang, $template, $fields, $action;
@@ -255,9 +86,6 @@ else
 		$acl_field_name = acl_field($type, 'name');
 		$acl_label_ids	= array_keys($acl_label);
 		$acl_label_data	= acl_label_data($acl_label_ids);
-		
-		debug($forum_ids, 'forum_ids');
-		debug($ug_type, '$ug_type');
 		
 		switch ( $ug_type )
 		{
@@ -362,12 +190,8 @@ else
 					}
 				}
 				
-				debug($access_group, 'access_group');
-				
 				break;
 		}
-		
-		debug($info);
 		
 		$sql = "SELECT $access_action[2] as ugid, $access_action[3] as name" . (isset($access_action[5]) ? ", $access_action[5]" : '') . " FROM $access_action[1] WHERE $access_action[2] IN (" . (is_array($ug_ids) ? implode(', ', $ug_ids) : $ug_ids) . ") ORDER BY $access_action[4] ASC";
 		if ( !($result = $db->sql_query($sql)) )
@@ -389,8 +213,6 @@ else
 		
 		$access = access($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_data, $acl_field_name);
 		
-		debug($access, 'access');
-		
 		$grp_info = $u_a = array();
 		
 		if ( $access )
@@ -403,6 +225,9 @@ else
 					
 					foreach ( $u_data as $r_field => $r_value )
 					{
+						$main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $u_id : $forum_id;
+						$parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_id : $u_id;
+							
 						if ( isset($urs_access[$forum_id][$u_id][$r_field]) )
 						{
 							if ( $urs_access[$forum_id][$u_id][$r_field] == 1 )
@@ -463,12 +288,12 @@ else
 							if ( $u_founder[$u_id] == 1 )
 							{
 								$urs_access[$forum_id][$u_id][$r_field] = '1';
-								$grp_info[$forum_id][$u_id][$r_field][lang('founder')] = $lang['perm_1'];
+								$grp_info[$main][$parent][$r_field][lang('founder')] = $lang['perm_1'];
 							}
 							
 							if ( $r_value != 0 )
 							{
-								$grp_info[$forum_id][$u_id][$r_field][lang('user')] = $lang['perm_' . $r_value];
+								$grp_info[$main][$parent][$r_field][lang('user')] = $lang['perm_' . $r_value];
 							}
 						}
 						else
@@ -483,29 +308,22 @@ else
 			}
 		}
 		
-	#	if ( $action == 'show_forum' && $forum_access )
-	#	{
-			$global_info = $info;
-			unset($info);
-			
-			foreach ( $forum_access as $forum_id => $user )
+		$global_info = $info;
+		unset($info);
+		
+		foreach ( $forum_access as $forum_id => $user )
+		{
+			foreach ( $user as $f_user_id )
 			{
-				foreach ( $user as $f_user_id )
+				foreach ( $global_info as $user_id => $group_id )
 				{
-					foreach ( $global_info as $user_id => $group_id )
+					if ( $f_user_id == $user_id )
 					{
-						if ( $f_user_id == $user_id )
-						{
-							$info[$forum_id][$user_id] = $group_id;
-						}
+						$info[$forum_id][$user_id] = $group_id;
 					}
 				}
 			}
-	#	}
-		
-	#	debug($forum_access, 'forum_accesss');
-	#	debug($urs_access, 'urs_access');
-		debug($info, 'info');
+		}
 		
 		if ( isset($info) && isset($access_group) )
 		{
@@ -517,6 +335,9 @@ else
 					{
 						if ( isset($access_group[$forum_id][$gid]) )
 						{
+							$main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $u_id : $forum_id;
+							$parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_id : $u_id;
+					
 							foreach ( $access_group[$forum_id][$gid] as $r_field => $r_value )
 							{
 								if ( isset($grp_access[$forum_id][$u_id][$r_field]) )
@@ -577,12 +398,12 @@ else
 								if ( $u_founder[$u_id] )
 								{
 									$grp_access[$forum_id][$u_id][$r_field] = '1';
-									$grp_info[$forum_id][$u_id][$r_field][lang('founder')] = $lang['perm_1'];
+									$grp_info[$main][$parent][$r_field][lang('founder')] = $lang['perm_1'];
 								}
 								
 								if ( $r_value != 0 )
 								{
-									$grp_info[$forum_id][$u_id][$r_field][$temp_info[$gid]['name']] = $lang['perm_' . $r_value];
+									$grp_info[$main][$parent][$r_field][$temp_info[$gid]['name']] = $lang['perm_' . $r_value];
 								}
 							}
 						}
@@ -591,157 +412,56 @@ else
 			}
 		}
 		
-	#	debug($grp_access, 'grp_access');
-		/*
-		foreach ( $acl_field_name as $field )
+		foreach ( $acl_field_name as $f_name )
 		{
-			if ( is_array($forum_ids) )
+			foreach ( $info as $forum_id => $user )
 			{
-				$main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $ug_ids : $forum_ids;
-				$parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_ids : $ug_ids;
-				
-				foreach ( $forum_ids as $forum )
+				foreach ( $user as $user_id => $user_groups )
 				{
-					foreach ( $ug_ids as $user )
-					{
-						if ( isset($gaccess[$forum][$field]) )
-						{
-							switch ($gaccess[$forum][$field])
-							{
-								case '1':	$u_a[$forum][$user][$field] = '1';	break;
-								case '0':	$u_a[$forum][$user][$field] = '0';	break;
-								case '-1':	$u_a[$forum][$user][$field] = '-1';	break;
-							}
-						}
-						else
-						{
-							$u_a[$forum][$user][$field] = '0';
-						}
-						
-						if ( isset($access[$forum][$user][$field]) )
-						{
-							switch ($access[$forum][$user][$field])
-							{
-								case '1':	$u_a[$forum][$user][$field] = '1';	break;
-								case '0':	$u_a[$forum][$user][$field] = '0';	break;
-								case '-1':	$u_a[$forum][$user][$field] = '-1';	break;
-							}
-						}
-						else
-						{
-							$u_a[$forum][$user][$field] = '0';
-						}
-					}
-				}
-			}
-			else
-			{
-				foreach ( $info as $uid => $gids )
-				{
-				#	debug($uid,'uid');
-				#	debug($gids, 'gids');
-					
-					foreach ( $gids as $gid )
-					{
-				#		debug($gid, 'gid');
-					}
-				}
-				/*
-				foreach ( $ug_ids as $user_id )
-				{
-					if ( isset($access_group[$forum_ids][$field]) )
-					{
-						switch ($access_group[$forum_ids][$field])
-						{
-							case '1':	$u_a[$forum_ids][$user_id][$field] = '1';	break;
-							case '0':	$u_a[$forum_ids][$user_id][$field] = '0';	break;
-							case '-1':	$u_a[$forum_ids][$user_id][$field] = '-1';	break;
-						}
-					}
-					else
-					{
-						$u_a[$forum_ids][$user_id][$field] = '0';
-					}
-					
-					if ( isset($access[$forum_ids][$user_id][$field]) )
-					{
-						switch ($access[$forum_ids][$user_id][$field])
-						{
-							case '1':	$u_a[$forum_ids][$user_id][$field] = '1';	break;
-							case '0':	$u_a[$forum_ids][$user_id][$field] = '0';	break;
-							case '-1':	$u_a[$forum_ids][$user_id][$field] = '-1';	break;
-						}
-					}
-					else
-					{
-						$u_a[$forum_ids][$user_id][$field] = '0';
-					}
-					
-					if ( $temp_user[$user_id['user_founder']] )
-					{
-						$u_a[$forum_ids][$user_id][$field] = '1';
-						$grp_info[$forum_ids][$user_id][$field][lang('founder')] = $lang['perm_1'];
-					}
-					
-					if ( $r_value != 0 )
-					{
-						$grp_info[$forum_ids][$user_id][$field][lang('user')] = $lang['perm_'];
-					}
-				}
-				/*
-			}
-		}
-		*/
-		
-		$u_a = array();
+					$ua_main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $user_id : $forum_id;
+					$ua_parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_id : $user_id;
 			
-		foreach ( $info as $forum_id => $user )
-		{
-			foreach ( $user as $user_id => $user_groups )
-			{
-				foreach ( $acl_field_name as $f_name )
-				{
 					if ( isset($urs_access[$forum_id][$user_id][$f_name])  )
 					{
 						if ( $urs_access[$forum_id][$user_id][$f_name] == '1' )
 						{
-							if ( isset($u_a[$forum_id][$user_id][$f_name]) )
+							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
 							{
-								if ( $u_a[$forum_id][$user_id][$f_name] == '-1' )
+								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '-1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
 								}
-								else if ( $u_a[$forum_id][$user_id][$f_name] == '0' )
+								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '0' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '1';
 								}
 							}
 							else
 							{
-								$u_a[$forum_id][$user_id][$f_name] = '1';
+								$u_a[$ua_main][$ua_parent][$f_name] = '1';
 							}
 						}
 						else if ( $urs_access[$forum_id][$user_id][$f_name] == '0' )
 						{
-							if ( isset($u_a[$forum_id][$user_id][$f_name]) )
+							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
 							{
-								if ( $u_a[$forum_id][$user_id][$f_name] == '-1' )
+								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '-1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
 								}
-								else if ( $u_a[$forum_id][$user_id][$f_name] == '1' )
+								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '1' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '1';
 								}
 							}
 							else
 							{
-								$u_a[$forum_id][$user_id][$f_name] = '0';
+								$u_a[$ua_main][$ua_parent][$f_name] = '0';
 							}
 						}
 						else
 						{
-							$u_a[$forum_id][$user_id][$f_name] = '-1';
+							$u_a[$ua_main][$ua_parent][$f_name] = '-1';
 						}
 					}
 					
@@ -749,51 +469,49 @@ else
 					{
 						if ( $grp_access[$forum_id][$user_id][$f_name] == '1' )
 						{
-							if ( isset($u_a[$forum_id][$user_id][$f_name]) )
+							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
 							{
-								if ( $u_a[$forum_id][$user_id][$f_name] == '-1' )
+								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '-1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
 								}
-								else if ( $u_a[$forum_id][$user_id][$f_name] == '0' )
+								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '0' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '1';
 								}
 							}
 							else
 							{
-								$u_a[$forum_id][$user_id][$f_name] = '1';
+								$u_a[$ua_main][$ua_parent][$f_name] = '1';
 							}
 						}
 						else if ( $grp_access[$forum_id][$user_id][$f_name] == '0' )
 						{
-							if ( isset($u_a[$forum_id][$user_id][$f_name]) )
+							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
 							{
-								if ( $u_a[$forum_id][$user_id][$f_name] == '-1' )
+								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '-1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
 								}
-								else if ( $u_a[$forum_id][$user_id][$f_name] == '1' )
+								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '1' )
 								{
-									$u_a[$forum_id][$user_id][$f_name] = '1';
+									$u_a[$ua_main][$ua_parent][$f_name] = '1';
 								}
 							}
 							else
 							{
-								$u_a[$forum_id][$user_id][$f_name] = '0';
+								$u_a[$ua_main][$ua_parent][$f_name] = '0';
 							}
 						}
 						else
 						{
-							$u_a[$forum_id][$user_id][$f_name] = '-1';
+							$u_a[$ua_main][$ua_parent][$f_name] = '-1';
 						}
 					}
 				}
 			}
 		}
 		
-	#	debug($u_a, 'u_a');
-	
 		switch ( $action )
 		{
 			case strpos($action, 'forum') !== false:	$_action = 'forum'; break;
@@ -812,9 +530,9 @@ else
 			
 				$forum_data = $forums = array();
 			
-				$sql = 'SELECT forum_id as ugid, forum_name as name FROM ' . FORUM . '
+				$sql = 'SELECT forum_id, forum_name, type, main FROM ' . FORUM . '
 							WHERE type != 0 AND forum_id IN (' . (is_array($forum_ids) ? implode(', ', $forum_ids) : $forum_ids) . ')
-						ORDER BY forum_order ASC';
+						ORDER BY main ASC, forum_order ASC';
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -822,18 +540,50 @@ else
 
 				while ( $row = $db->sql_fetchrow($result) )
 				{
-					$forum_data[$row['ugid']] = $row['name'];
+					$forum_data[$row['forum_id']] = $row;
 				}
 				$db->sql_freeresult($result);
 				
+				/* Foren werden sortiert so wie sie in der Struktur angezeigt werden */
 				foreach ( $forum_data as $f_key => $f_row )
 				{
-					if ( in_array($f_key, $forum_ids) )
+					if ( $f_row['type'] == 1 )
 					{
-						$forums[$f_key] = $f_row;
+						$_main[$f_row['forum_id']] = $f_row['forum_name'];
+					}
+					else
+					{
+						$_subs[$f_row['main']][$f_row['forum_id']] = $f_row['forum_name'];
 					}
 				}
 				
+				if ( isset($_main) )
+				{
+					foreach ( $_main as $forum_id => $forum_name )
+					{
+						$forums[$forum_id] = $forum_name;
+						
+						if ( isset($_subs[$forum_id]) )
+						{
+							foreach ( $_subs[$forum_id] as $sub_id => $sub_name )
+							{
+								$forums[$sub_id] = $sub_name;
+							}
+						}
+					}
+				}				
+				
+				if ( isset($_subs) )
+				{
+					foreach ( $_subs as $forum_id => $sub_forum )
+					{
+						foreach ( $sub_forum as  $sub_id => $sub_name )
+						{
+							$forums[$sub_id] = $sub_name;
+						}
+					}
+				}
+
 				break;
 		}
 		
@@ -876,12 +626,6 @@ else
 			}
 		}
 		
-		debug($l_info);
-		
-		debug($legend, 'legend');
-		debug($main, 'main');
-		debug($parent, 'parent');
-		
 		foreach ( $main as $m_id => $m_data )
 		{
 			$template->assign_block_vars('view.row', array(
@@ -892,7 +636,9 @@ else
 			foreach ( $parent as $p_id => $p_data )
 			{
 				$row_switch = sprintf('s%sg%s', $m_id, $p_id);
-
+				
+				$test_auth[] = 'auths' . $m_id . $p_id;
+				
 				$template->assign_block_vars('view.row.parent', array(
 					'NAME'		=> $p_data,
 					'TOGGLE'	=> $row_switch,
@@ -909,13 +655,11 @@ else
 						'OPTIONS' => "options{$m_id}{$p_id}{$cat}",
 					));
 					
+					$test_options[$cat][] = "options{$m_id}{$p_id}{$cat}";
+					
 					foreach ( $rows as $row )
 					{
 						$row_format = sprintf('%s%s[%s][%s]', $type, $m_id, $p_id, $row);
-						
-					#	debug($row, $row);
-						
-					#	debug($u_a[$m_id][$p_id][$row], $row);
 					
 						if ( isset($grp_info[$m_id][$p_id][$row]) && is_array($grp_info[$m_id][$p_id][$row]) )
 						{
@@ -929,7 +673,7 @@ else
 						
 						$template->assign_block_vars('view.row.parent.cats.auths', array(
 							'OPT_NAME'	=> lang($row),
-							'OPT_INFO'	=>	isset($grp_info_grp[$m_id][$p_id][$row]) ? img('i_icon', 'icon_details', $grp_info_grp[$m_id][$p_id][$row]) : '',
+							'OPT_INFO'	=> isset($grp_info_grp[$m_id][$p_id][$row]) ? img('i_icon', 'icon_details', $grp_info_grp[$m_id][$p_id][$row]) : '',
 							'CSS_YES'	=> ( @$u_a[$m_id][$p_id][$row] == '1' ) ? 'bggreen' : '',
 							'CSS_NO'	=> ( @$u_a[$m_id][$p_id][$row] != '1' ) ? 'bgred' : '',
 						));
@@ -957,19 +701,12 @@ else
 			}
 		}
 		
-	#	debug($groups_infos);
-	#	debug($groups_color);
-		
-	#	foreach ( $groups_infos as $info_id => $info_details )
-	#	{
-	#		$legend[$info_id] = href('a_style', 'admin_groups.php', array('mode' => 'view', 'id' => $info_id), $info_details['color'], $info_details['name']);
-	#	}
-	#	
-	#	$legend = implode(', ', $legend);
-		
 		$template->assign_vars(array(
 	#		'L_LABEL'	=> $lang['label'],
 	#		'GROUPS_USERS'	=> ($ug_type == 'user' ? $lang['groups'] : $lang['users']) . ': ' . $legend,
+	
+			'BLUBB'		=> implode("'); toggle('", $test_auth),
+			
 			'S_OPTIONS' => $s_options,
 			'S_HIDDEN'	=> $fields,
 		));
@@ -988,6 +725,8 @@ else
 		$acl_field_name = acl_field($type, 'name');
 		$acl_label_ids	= array_keys($acl_label);
 		$acl_label_data	= acl_label_data($acl_label_ids);
+		
+		debug($acl_label, 'acl_label');
 		
 		foreach ( $acl_label as $rows )
 		{
@@ -1039,10 +778,7 @@ else
 		
 		$access			= access($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_data, $acl_field_name);
 		$access_label	= access_label($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_ids);
-		
-	#	debug($access, 'access');
-	#	debug($access_label, 'access_label');
-		
+
 		$_action = ( strpos($action, 'permission_') !== false ) ? 'permission' : 'forums';
 		
 		switch ( $_action )
@@ -1069,10 +805,7 @@ else
 					$forum_sort[] = $row;
 				}
 				$db->sql_freeresult($result);
-				
-			#	debug($forum_data);
-			#	debug($forum_sort);
-				
+
 				foreach ( $forum_data as $f_key => $f_row )
 				{
 					if ( in_array($f_key, $forum_ids) )
@@ -1080,9 +813,7 @@ else
 						$forums[$f_key] = $f_row;
 					}
 				}
-				
-			#	debug($forum_sort, 'forum_sort');
-				
+
 				break;
 		}
 		
@@ -1164,9 +895,6 @@ else
 		$fields .= '<input type="hidden" name="type" value="' .  ($mode ? $mode : $type) . '" />';
 		$fields .= '<input type="hidden" name="ug_type" value="' . $ug_type . '" />';
 		
-#		debug($ug_ids, 'ug_ids');
-#		debug($forum_ids, 'forum_ids');
-		
 		if ( is_array($ug_ids) )
 		{
 			foreach ( $ug_ids as $ug )
@@ -1182,7 +910,7 @@ else
 				$fields .= '<input type="hidden" name="forum_id[]" value="' . $forum . '">';
 			}
 		}
-	#	debug($s_options, 's_options');
+
 		$template->assign_vars(array(
 	#		'L_LABEL'	=> $lang['label'],
 			'S_OPTIONS' => $s_options,
@@ -1251,8 +979,6 @@ else
 
 				$params = array('group_id', 'group_name', 'user_id', 'user_name');
 				
-		#		debug($forum_id, 'forum_id');
-				
 				/* group start */
 				$sql = 'SELECT group_id
 							FROM ' . ACL_GROUPS . '
@@ -1270,8 +996,6 @@ else
 				}
 				$db->sql_freeresult($result);
 				
-			#	debug($sql_data_group, 'sql data group');
-				
 				$sql = 'SELECT group_id, group_name, group_order FROM ' . GROUPS . ' ORDER BY group_order ASC';
 				if ( !($result = $db->sql_query($sql)) )
 				{
@@ -1283,8 +1007,6 @@ else
 					$sql_data_groups[$row['group_id']] = $row;
 				}
 				$db->sql_freeresult($result);
-				
-			#	debug($sql_data_groups, '$sql_data_groups');
 				/* group end */
 				
 				/* user start */
@@ -1304,7 +1026,6 @@ else
 					$sql_data_users[$row['user_id']] = $row;
 				}
 				$db->sql_freeresult($result);
-				
 				/* user end */
 				
 				$sql_data = array($sql_data_group, $sql_data_groups, $sql_data_users);
@@ -1338,15 +1059,8 @@ else
 				
 			case 'selects':
 			
-			#	debug($sql_data);
-				
 				list($data_group, $data_groups, $data_users) = $sql_data;
 				
-			#	debug(array_unique($data_group), 'data_group');
-			#	debug($data_groups, 'data_groups');
-			#	debug($data_user, 'data_user');
-			#	debug($data_users, 'data_users');
-			
 				$group_acl = $group_none = array();
 			
 				foreach ( $data_groups as $g_id => $g_row )
@@ -1487,11 +1201,10 @@ else
 				{
 					$template->assign_block_vars('display', array());
 					$template->assign_vars(array('S_SELECT' => select_type('forums', 'select')));
-					
 				}
 				else if ( $forum_id && !$ug_id )
 				{
-					$template->assign_block_vars('usergroups', array());
+					$template->assign_block_vars('show', array());
 					
 					$s_select = select_type($permission[0], $permission[1]);
 					
@@ -2027,6 +1740,7 @@ else
 		'L_AUTH_DELETE' => $lang['auth_delete'],
 		
 		'L_PERMISSION'	=> $lang['extended_permission'],
+		'L_PERMISSION_ALL'	=> $lang['extended_permission_all'],
 		'L_VIEW_AUTH'	=> $lang['common_auth'],
 		
 		'S_ACTION'	=> check_sid("$file"),

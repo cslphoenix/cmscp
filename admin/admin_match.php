@@ -5,6 +5,7 @@ if ( !empty($setmodules) )
 	return array(
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_match',
+		'cat'		=> 'clan',
 		'modes'		=> array(
 			'main'	=> array('title' => 'acp_match'),
 		)
@@ -59,8 +60,6 @@ else
 		'body'		=> 'style/acp_match.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
-	
-	debug($_POST, '_POST');
 	
 #	$mode = (in_array($mode, array('create', 'update', 'detail', 'delete', 'sync'))) ? $mode : false;
 	
@@ -457,6 +456,119 @@ else
 				
 				break;
 				
+			case 'rival':
+			
+				$template->assign_block_vars('rival', array());
+			
+				$sql = "SELECT DISTINCT match_rival_name, match_rival_tag, match_rival_url, match_rival_logo FROM " . MATCH . " ";
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$tmp_rival = $db->sql_fetchrowset($result);
+				
+				for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($tmp_rival)); $i++ )
+				{
+					$template->assign_block_vars('rival.row', array(
+						'NAME'		=> $tmp_rival[$i]['match_rival_name'],
+						'TAG'		=> $tmp_rival[$i]['match_rival_tag'],
+						'URL'		=> $tmp_rival[$i]['match_rival_url'],
+						'LOGO'		=> $tmp_rival[$i]['match_rival_logo'],
+						'UPDATE'	=> href('a_img', $file, array('mode' => 'change', 'id' => $i), 'icon_update', 'common_update'),
+					));
+				}		
+				
+				$template->pparse('body');		
+									
+				break;
+				
+			case 'change':
+			
+				$template->assign_block_vars('change', array());
+				
+				$vars = array(
+					'match' => array(
+						'title1'			=> 'input_rival',
+						'match_rival_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'ajax:25;25',	'required' => 'input_rival', 'params' => 'rival'),
+						'match_rival_tag'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;50', 'required' => 'input_clantag'),
+						'match_rival_url'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;50'),
+						'match_rival_logo'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;50'),
+					),
+				);
+				
+				if ( !$submit )
+				{
+					$sql = "SELECT DISTINCT match_rival_name, match_rival_tag, match_rival_url, match_rival_logo FROM " . MATCH . " ";
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$tmp_rival = $db->sql_fetchrowset($result);
+				
+					$sql = "SELECT match_id, match_rival_name, match_rival_tag, match_rival_url, match_rival_logo FROM " . MATCH . " WHERE match_rival_name LIKE '" . $tmp_rival[$data]['match_rival_name'] . "'";
+					$sql .= $tmp_rival[$data]['match_rival_tag'] ? " AND match_rival_tag LIKE '" . $tmp_rival[$data]['match_rival_tag'] . "'" : ' AND match_rival_tag = ""';
+					$sql .= $tmp_rival[$data]['match_rival_url'] ? " AND match_rival_url LIKE '" . $tmp_rival[$data]['match_rival_url'] . "'" : ' AND match_rival_url = ""';
+					$sql .= $tmp_rival[$data]['match_rival_logo'] ? " AND match_rival_logo LIKE '" . $tmp_rival[$data]['match_rival_logo'] . "'" : ' AND match_rival_logo = ""';
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					
+					while ( $row = $db->sql_fetchrow($result) )
+					{
+						$data_sql_ids[] = $row['match_id'];
+						$data_sql = $row;
+					}
+					$db->sql_freeresult($result);
+				#	unset($data_sql['match_id']);
+					$data_sql['match_id'] = implode(', ', $data_sql_ids);
+				
+					
+					
+					debug($data_sql, 'data_sql1');
+				}
+				else
+				{
+					$data_sql = build_request(MATCH, $vars, $error, $mode);
+					debug($data_sql, 'data_sql2');
+					if ( !$error )
+					{
+					#	if ( $mode == 'create' && acl_auth('a_game_create') )
+					#	{
+					#		$data_sql['game_order'] = maxa(GAMES, 'game_order', false);
+					#		
+					#		$sql = sql(GAMES, $mode, $data_sql);
+					#		$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+					#	}
+					#	else if ( acl_auth('a_game') )
+					#	{
+							$sql = sql(MATCH, $mode, $data_sql, 'match_id', $data_sql_ids);
+							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+					#	}
+						
+						log_add(LOG_ADMIN, $log, $mode, $sql);
+						message(GENERAL_MESSAGE, $msg);
+					}
+					else
+					{
+						error('ERROR_BOX', $error);
+					}
+				}
+				
+				build_output(MATCH, $vars, $data_sql, 'change');
+				
+				$template->assign_vars(array(
+					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title']),
+					'L_EXPLAIN'	=> $lang['com_required'],
+					
+					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+					'S_FIELDS'	=> $fields,
+				));
+				
+				$template->pparse('body');
+			
+				break;
+				
 			case 'sync':
 			
 				$template->assign_block_vars('sync', array());
@@ -741,7 +853,10 @@ else
 			'L_DETAILS'		=> $lang['common_details'],
 			
 			'L_SYNC'		=> $lang['sync'],
-			'U_SYNC'		=> check_sid("$file?mode=sync"),
+			'U_SYNC'		=> check_sid("$file&mode=sync"),
+			
+			'L_RIVAL'		=> $lang['rival'],
+			'U_RIVAL'		=> check_sid("$file&mode=rival"),
 			
 			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry']['acp'] ) + 1 ), $current_page ),
 			'PAGE_PAGING'	=> generate_pagination('admin_match.php?', count($_old), $settings['per_page_entry']['acp'], $start ),

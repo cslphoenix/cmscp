@@ -161,6 +161,57 @@
 </form>
 <!-- END member -->
 
+<!-- BEGIN permission -->
+<form action="{S_ACTION}" method="post">
+{S_OPTIONS}
+
+<!-- BEGIN row -->
+<fieldset>
+	<legend id="legend">{permission.row.NAME}</legend>
+<!-- BEGIN parent -->
+<fieldset class="views" id="view">
+	<legend id="legend">{permission.row.parent.NAME}</legend>
+	<div class="views-switch">
+		{GROUPS}
+		<a href="#" onClick="toggle('{permission.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a>
+	</div>
+	<div id="{permission.row.parent.AUTHS}" align="center">
+	    <br />
+		<div class="tabs">
+			<ul>
+				<!-- BEGIN cats -->
+				<li><a {permission.row.parent.cats.AUTH} href="#{permission.row.parent.cats.CAT}">{permission.row.parent.cats.NAME}</a></li>
+				<!-- END cats -->
+			</ul>
+			<!-- BEGIN cats -->
+			<div name="#{permission.row.parent.cats.CAT}" id="{permission.row.parent.cats.OPTIONS}">
+				<table class="ttabs" cellpadding="1" cellspacing="1">
+				<tr>
+					<th>{L_VIEW_AUTH}</th>
+					<th>{L_YES}</th>
+					<th>{L_NO}</th>
+				</tr>
+				<!-- BEGIN auths -->
+				<tr>
+					<td><span class="right">{permission.row.parent.cats.auths.OPT_INFO}</span>{permission.row.parent.cats.auths.OPT_NAME}</td>
+					<td class="{permission.row.parent.cats.auths.CSS_YES}">&nbsp;</td>
+					<td class="{permission.row.parent.cats.auths.CSS_NO}">&nbsp;</td>
+					
+				</tr>
+				<!-- END auths -->
+				</table>
+			</div>
+			<!-- END cats -->
+		</div>
+	</div>
+</fieldset>
+<!-- END parent -->
+</fieldset>
+<!-- END row -->
+{S_FIELDS}
+</form>
+<!-- END permission -->
+
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">

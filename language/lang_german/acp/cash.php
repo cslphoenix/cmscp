@@ -27,7 +27,7 @@ $lang = array_merge($lang, array(
 	'bank_blz'			=> 'Bankleitzahl',
 	'bank_number'		=> 'Kontonummer',
 	'bank_reason'		=> 'Verwendungszweck',
-	'bank_delete'		=> 'Bankdaten löschen',
+	'bank_delete'		=> 'Bankdaten lÃ¶schen',
 	'bank_create'		=> 'Bankdaten eintragen',
 	
 	'type_create'		=> 'Type eintragen',
@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	'interval_only'		=> 'Einmalig',
 	'interval_month'	=> 'Monatlich',
 	'interval_weeks'	=> 'alle 2 Wochen',
-	'interval_weekly'	=> 'Wöchentlich',
+	'interval_weekly'	=> 'WÃ¶chentlich',
 	
 	'type_game'		=> 'Gameserver',
 	'type_voice'	=> 'Voiceserver',
@@ -66,10 +66,10 @@ $lang = array_merge($lang, array(
 #	'cash_interval'	=> 'Zahlungsintervall',
 	
 	
-#	'ccreate'	=> 'hinzugefügt',
-#	'cupdate'	=> 'geändert',
+#	'ccreate'	=> 'hinzugefÃ¼gt',
+#	'cupdate'	=> 'geÃ¤ndert',
 
-	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
+	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelÃ¶scht werden soll?',
 ));
 
 
@@ -97,28 +97,28 @@ $lang['cash_interval_m']		= 'Monatlich';
 $lang['cash_interval_o']		= 'Einmalig';
 $lang['cash_interval_month']	= 'Monatlich';
 $lang['cash_interval_weeks']	= 'alle 2 Wochen';
-$lang['cash_interval_weekly']		= 'Wöchentlich';
+$lang['cash_interval_weekly']		= 'WÃ¶chentlich';
 $lang['cash_no_entry']			= 'kein Eintrag';
 $lang['interval_m']				= 'Monatlich ab: %s';
-$lang['interval_o']				= 'Einmalig für Monat: %s';
+$lang['interval_o']				= 'Einmalig fÃ¼r Monat: %s';
 
 
 
-$lang['create_cash']				= 'Neuen Betrag hinzugefügt.';
-$lang['create_cash_user']			= 'Neuen Benutzer zu Liste hinzugefügt.';
+$lang['create_cash']				= 'Neuen Betrag hinzugefÃ¼gt.';
+$lang['create_cash_user']			= 'Neuen Benutzer zu Liste hinzugefÃ¼gt.';
 
-$lang['update_cash']				= 'Daten erfolgreich geändert';
-$lang['update_cash_bankdata']		= 'Bankdaten erfolgreich geändert';		
-$lang['update_cash_user']			= 'Benutzerdaten erfolgreich geändert';
+$lang['update_cash']				= 'Daten erfolgreich geÃ¤ndert';
+$lang['update_cash_bankdata']		= 'Bankdaten erfolgreich geÃ¤ndert';		
+$lang['update_cash_user']			= 'Benutzerdaten erfolgreich geÃ¤ndert';
 
 $lang['delete_confirm_cash']		= 'das der Eintrag:';
 $lang['delete_confirm_cash_user']	= 'das der Benutzer:';
 
-$lang['delete_cash']				= 'Der Eintrag wurde gelöscht!';
-$lang['delete_cash_bankdata']		= 'Die Bankdaten wurden gelöscht!';
-$lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelöscht!';
+$lang['delete_cash']				= 'Der Eintrag wurde gelÃ¶scht!';
+$lang['delete_cash_bankdata']		= 'Die Bankdaten wurden gelÃ¶scht!';
+$lang['delete_cash_user']			= 'Der Benutzereintrag wurde gelÃ¶scht!';
 
-$lang['delete_confirm_bankdata']	= 'Bist du sicher, das die Bankdaten gelöscht werden soll?';
+$lang['delete_confirm_bankdata']	= 'Bist du sicher, das die Bankdaten gelÃ¶scht werden soll?';
 
 
 $lang['cash']			= 'Clankasse';
@@ -134,7 +134,7 @@ $lang['type_voice']		= 'Voiceserver';
 $lang['type_other']		= 'sonstiges';
 
 $lang['cash_user_add']		= 'Neuen Benutzereintrag erstellen';
-$lang['cash_user_new_add']	= 'Benutzer hinzufügen';
+$lang['cash_user_new_add']	= 'Benutzer hinzufÃ¼gen';
 $lang['cash_user_edit']		= 'Benutzer bearbeiten';
 
 $lang['cash_user_month']		= 'Monat';
@@ -145,7 +145,7 @@ $lang['postage']	= 'Gesammtbetrag';
 
 $lang['cash_interval_month']	= 'Monatlich';
 $lang['cash_interval_weeks']	= 'alle 2 Wochen';
-$lang['cash_interval_weekly']	= 'Wöchentlich';
+$lang['cash_interval_weekly']	= 'WÃ¶chentlich';
 
 
 

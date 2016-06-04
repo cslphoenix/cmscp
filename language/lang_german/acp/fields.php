@@ -15,8 +15,8 @@ $lang = array_merge($lang, array(
 	'cat'		=> 'Profilekategrie',
 	'cats'		=> 'Profilekategrien',
 	
-	'show_guest'	=> 'für Gäste',
-	'show_member'	=> 'für Mitglieder',
+	'show_guest'	=> 'fÃ¼r GÃ¤ste',
+	'show_member'	=> 'fÃ¼r Mitglieder',
 	'show_register'	=> 'beim registieren',
 	
 	'necessary'	=> 'Pflichtfeld',

@@ -30,12 +30,12 @@ $lang = array_merge($lang, array(
 	'type_five'		=> '5on5',
 	'type_six'		=> '6on6',
 	
-	'msg_select_mtype'		=> 'Bitte Typ auswählen',
-	'msg_select_mwar'		=> 'Bitte Wartype auswählen',
-	'msg_select_mleague'	=> 'Bitte Liga auswählen',
+	'msg_select_mtype'		=> 'Bitte Typ auswÃ¤hlen',
+	'msg_select_mwar'		=> 'Bitte Wartype auswÃ¤hlen',
+	'msg_select_mleague'	=> 'Bitte Liga auswÃ¤hlen',
 	
-	'msg_select_member'		=> 'Bitte 1 oder mehrere Mitglieder auswählen!',
-	'msg_select_option'		=> 'Bitte eine <b>Option</b> auswählen!',
+	'msg_select_member'		=> 'Bitte 1 oder mehrere Mitglieder auswÃ¤hlen!',
+	'msg_select_option'		=> 'Bitte eine <b>Option</b> auswÃ¤hlen!',
 /*
 	'match_type' => array(
 		'type_unknown'	=> 'unbekannt',
@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'match_league'			=> 'Liga',
 	'match_league_match'	=> 'Match-ID',
 	'match_date'			=> 'Datum',
-	'match_public'			=> 'Öffentlich',
+	'match_public'			=> 'Ã–ffentlich',
 	'match_comments'		=> 'Kommentare',
 	'match_rival_name'		=> 'Gegner Name',
 	'match_rival_tag'		=> 'Gegner Clantag',
@@ -94,11 +94,11 @@ $lang = array_merge($lang, array(
 	
 	'reset_list'	=> 'Teilnahmen reset?',
 	
-	'training_create'	=> 'hinzufügen',
+	'training_create'	=> 'hinzufÃ¼gen',
 	'training_update'	=> 'Trainingsliste',
 	
-	'match_comment_exp'			=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
-	'match_report_exp'			=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
+	'match_comment_exp'			=> 'Ã–ffentlicher Kommentar oder Zusatzinfos zum Match.',
+	'match_report_exp'			=> 'Text der nur fÃ¼r Interne Zwecke verwendet werden sollte.',
 	'match_rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
 
 	
@@ -108,8 +108,8 @@ $lang = array_merge($lang, array(
 	'lineup'			=> 'Clan Lineup',
 	'lineup_rival'		=> 'Gegner Lineup',
 	'lineup_status'		=> 'Spielerstatus',
-	'lineup_add'		=> 'Spieler hinzufügen',
-	'lineup_add_exp'	=> 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.',
+	'lineup_add'		=> 'Spieler hinzufÃ¼gen',
+	'lineup_add_exp'	=> 'Spieler einfach mit gedrÃ¼ckter STRG Taste auswÃ¤hlen und Absenden.',
 	
 	'status_set'		=> 'Status %s setzen',
 	'status_player'		=> 'Spieler',
@@ -119,9 +119,9 @@ $lang = array_merge($lang, array(
 	
 	
 	/* details maps */
-	'detail_maps'			=> 'Maps hinzufügen',
-	'detail_maps_pic'		=> 'Maps mit Bildern hinzufügen',
-	'detail_maps_overview'	=> 'Maps Übersicht',
+	'detail_maps'			=> 'Maps hinzufÃ¼gen',
+	'detail_maps_pic'		=> 'Maps mit Bildern hinzufÃ¼gen',
+	'detail_maps_overview'	=> 'Maps Ãœbersicht',
 	
 	'detail_map'			=> 'Map',
 	'detail_points'			=> 'Punkte',
@@ -131,10 +131,10 @@ $lang = array_merge($lang, array(
 #	'match_war'		=> 'match_war',
 #	'match_league'	=> 'match_league',
 
-#	'delete_user'	=> 'Benutzer gelöscht',
-	'user_create'	=> 'Benutzer hinzugefügt',
-	'user_update'	=> 'Benutzerstatus geändert',
-	'user_delete'	=> 'Benutzer gelöscht',
+#	'delete_user'	=> 'Benutzer gelÃ¶scht',
+	'user_create'	=> 'Benutzer hinzugefÃ¼gt',
+	'user_update'	=> 'Benutzerstatus geÃ¤ndert',
+	'user_delete'	=> 'Benutzer gelÃ¶scht',
 
 	
 ));
@@ -179,8 +179,8 @@ $lang['no_users_store'] = 'Keine Mitglieder gespeichert.';
 /*
 $lang['match']					= 'Begegnung';
 $lang['match_details']			= 'Begegnung Details';
-$lang['match_explain']			= 'Hier können Wars verwaltet werden.';
-$lang['match_details_explain']	= 'Hier können die Details für die Begegnung eingetragen und verändert werden.';
+$lang['match_explain']			= 'Hier kÃ¶nnen Wars verwaltet werden.';
+$lang['match_details_explain']	= 'Hier kÃ¶nnen die Details fÃ¼r die Begegnung eingetragen und verÃ¤ndert werden.';
 
 $lang['match_upcoming']			= 'Anstehende Begegnung';
 $lang['match_expired']			= 'Abgelaufen Begegnung';
@@ -200,7 +200,7 @@ $lang['info_league'] = 'Liga';
 $lang['info_league_url'] = 'Liga Website';
 $lang['info_league_match'] = 'Liga Matchlink';
 $lang['info_date'] = 'Match Datum';
-$lang['info_public'] = 'Match Öffentlich?';
+$lang['info_public'] = 'Match Ã–ffentlich?';
 $lang['info_rival'] = 'Gegner Name';
 $lang['info_rival_tag'] = 'Gegner Clantag';
 $lang['info_rival_url'] = 'Gegner Homepage';
@@ -215,7 +215,7 @@ $lang['training_maps']			= 'Trainingsmaps';
 $lang['training_text']			= 'Trainingsbericht';
 
 
-$lang['match_training_create']	= 'hinzufügen';
+$lang['match_training_create']	= 'hinzufÃ¼gen';
 $lang['match_training_update']	= 'Trainingsliste';
 
 
@@ -229,28 +229,28 @@ $lang['match_text']				= 'Match Bericht';
 
 $lang['match_details_comment']	= 'Match Kommentar';
 
-$lang['match_lineup_add_yes']	= 'Spieler hinzugefügt';
-$lang['match_lineup_del_yes']	= 'Spieler gelöscht';
+$lang['match_lineup_add_yes']	= 'Spieler hinzugefÃ¼gt';
+$lang['match_lineup_del_yes']	= 'Spieler gelÃ¶scht';
 
 
 
 
-$lang['match_lineup_no_users']	= 'Bitte Spieler auswählen die noch nicht eingetragen sind.';
-$lang['match_lineup_change']	= 'Spielerliste verändert';
+$lang['match_lineup_no_users']	= 'Bitte Spieler auswÃ¤hlen die noch nicht eingetragen sind.';
+$lang['match_lineup_change']	= 'Spielerliste verÃ¤ndert';
 
-$lang['select_team']		= 'Team auswählen';
-
-
+$lang['select_team']		= 'Team auswÃ¤hlen';
 
 
 
-$lang['select_categorie']	= 'Matchtyp auswählen';
+
+
+$lang['select_categorie']	= 'Matchtyp auswÃ¤hlen';
 $lang['select_categorie1']	= 'Fun War';
 $lang['select_categorie2']	= 'Clan War';
 $lang['select_categorie3']	= 'Liga War';
 $lang['select_categorie4']	= 'Train War';
 
-$lang['select_type']		= 'XonX auswählen';
+$lang['select_type']		= 'XonX auswÃ¤hlen';
 $lang['select_type1']		= 'Unbekannt';
 $lang['select_type2']		= '2on2';
 $lang['select_type3']		= '3on3';
@@ -260,7 +260,7 @@ $lang['select_type6']		= '6on6';
 
 
 
-$lang['select_league']		= 'Liga auswählen';
+$lang['select_league']		= 'Liga auswÃ¤hlen';
 $lang['select_league1']		= 'ESL';
 $lang['select_league2']		= 'Stammkneipe';
 $lang['select_league3']		= '0815 Liga';
@@ -278,7 +278,7 @@ $lang['select_league6i']	= 'http://www.xgc-online.de/';
 $lang['select_league7i']	= 'http://www.ncsl.de/';
 
 
-#	Matchdetails - Überschriften
+#	Matchdetails - Ãœberschriften
 
 $lang['match_details_maps']		= 'Karten Details';
 $lang['match_details_upload']	= 'Karten Upload';
@@ -287,9 +287,9 @@ $lang['match_details_upload']	= 'Karten Upload';
 
 #	Matchdetails
 
-$lang['details_maps']				= 'Maps hinzufügen';
-$lang['details_maps_pic']			= 'Maps mit Bildern hinzufügen';
-$lang['details_maps_overview']		= 'Maps Übersicht';
+$lang['details_maps']				= 'Maps hinzufÃ¼gen';
+$lang['details_maps_pic']			= 'Maps mit Bildern hinzufÃ¼gen';
+$lang['details_maps_overview']		= 'Maps Ãœbersicht';
 
 
 

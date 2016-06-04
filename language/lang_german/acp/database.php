@@ -8,14 +8,14 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Datenbank',
-	'explain'	=> 'Hier können Backups erstellt werden usw.',
+	'explain'	=> 'Hier kÃ¶nnen Backups erstellt werden usw.',
 
 	'data_backup'	=> 'Backup',
 	'data_optimize'	=> 'Optimieren',
 	'data_restore'	=> 'Wiederherstellen',
 	
 	'type'	=> 'Optionen',
-	'type_full'	=> 'Vollständig',
+	'type_full'	=> 'VollstÃ¤ndig',
 	'type_structure' => 'nur Struktur',
 	'type_data'	=> 'nur Daten',
 	'gzip'	=> 'GZip Datei',
@@ -25,26 +25,26 @@ $lang = array_merge($lang, array(
 	
 	'table'	=> 'Tabellen',
 	'table_dev'	=> 'Entwicklung',
-	'table_full'	=> 'Vollstädnig',
+	'table_full'	=> 'VollstÃ¤dnig',
 	'table_min'	=> 'minimal',
 	
-	'file_select'	=> 'Backup auswählen',
+	'file_select'	=> 'Backup auswÃ¤hlen',
 	'file_restore'	=> 'Backup einspielen',
 	
 	'opt_table'		=> 'Tabelle',
-	'opt_rows'		=> 'Einträge',
-	'opt_size'		=> 'Größe',
+	'opt_rows'		=> 'EintrÃ¤ge',
+	'opt_size'		=> 'GrÃ¶ÃŸe',
 	'opt_status'	=> 'Status',
 	
 	'opt_success'	=> 'Die Tabellen wurden optimiert.',
-	'opt_nocheck'	=> 'Kein Tabelle ausgewählt!',
+	'opt_nocheck'	=> 'Kein Tabelle ausgewÃ¤hlt!',
 
 
 
 	'save_file'	=> 'Die Backupdatei wurde erfolgreich gespeichert.',
 	
 	/* errors */
-	'msg_empty_tables'			=> 'Bitte 1 Tabelle auswählen!',
+	'msg_empty_tables'			=> 'Bitte 1 Tabelle auswÃ¤hlen!',
 
 ));
 
@@ -60,17 +60,17 @@ $lang['create'] = 'DB erstellt!';
 
 $lang['Backup_options'] = 'Backup-Optionen';
 $lang['Start_backup'] = 'Backup beginnen';
-$lang['Full_backup'] = 'Vollständiges Backup';
+$lang['Full_backup'] = 'VollstÃ¤ndiges Backup';
 $lang['Structure_backup'] = 'Nur-Struktur-Backup';
 $lang['Data_backup'] = 'Nur-Daten-Backup';
-$lang['Additional_tables'] = 'Zusätzliche Tabellen';
+$lang['Additional_tables'] = 'ZusÃ¤tzliche Tabellen';
 $lang['Gzip_compress'] = 'GZip-Komprimierungs Datei';
 
-$lang['Select_file'] = 'Wähle eine Datei';
+$lang['Select_file'] = 'WÃ¤hle eine Datei';
 $lang['Start_Restore'] = 'Wiederherstellung beginnen';
 $lang['Restore_success'] = 'Die Datenbank wurde wieder hergestellt.<br /><br />Dein Board sollte jetzt wieder den Stand des Backups haben.';
-$lang['Backup_download'] = 'Dein Download wird in Kürze beginnen - bitte etwas Geduld';
-$lang['Backups_not_supported'] = 'Fehler: Dein Datenbanksystem unterstützt Datenbank-Backups nicht!';
+$lang['Backup_download'] = 'Dein Download wird in KÃ¼rze beginnen - bitte etwas Geduld';
+$lang['Backups_not_supported'] = 'Fehler: Dein Datenbanksystem unterstÃ¼tzt Datenbank-Backups nicht!';
 
 $lang['Restore_Error_uploading'] = 'Fehler beim Hochladen der Backup-Datei';
 $lang['Restore_Error_filename'] = 'Probleme mit dem Dateinamen, probiere einen anderen';

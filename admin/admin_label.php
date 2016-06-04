@@ -54,8 +54,6 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-	debug($_POST, '_POST');
-	
 	$mode = (in_array($mode, array('create', 'update', 'list', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 
 	if ( $mode )
@@ -65,8 +63,6 @@ else
 			case 'create':
 			case 'update':
 			
-			#	auth_check($userauth['auth_lmanage']);
-
 				$template->assign_block_vars('input', array());
 				
 				$vars = array(

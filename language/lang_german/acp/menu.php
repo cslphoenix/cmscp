@@ -7,12 +7,12 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(	
 	
-	'title'			=> 'Menü',
+	'title'			=> 'MenÃ¼',
 	
-	'explain_acp'	=> 'Admin Menü verwalten',
-	'explain_mcp'	=> 'Moderatoren Menü verwalten',
-	'explain_ucp'	=> 'Benutzer Menü verwalten',
-	'explain_pcp'	=> 'Seiten Menü verwalten',
+	'explain_acp'	=> 'Admin MenÃ¼ verwalten',
+	'explain_mcp'	=> 'Moderatoren MenÃ¼ verwalten',
+	'explain_ucp'	=> 'Benutzer MenÃ¼ verwalten',
+	'explain_pcp'	=> 'Seiten MenÃ¼ verwalten',
 	
 	'input_data'	=> 'Daten',
 	
@@ -23,12 +23,12 @@ $lang = array_merge($lang, array(
 	'menu_show'		=> 'Anzeigen',
 	'menu_intern'	=> 'Intern',
 	'menu_target'	=> 'Ziel',
-	'menu_file'		=> 'Menü-Datei/Adresse',
-	'menu_opts'		=> 'Menü-Option',
+	'menu_file'		=> 'MenÃ¼-Datei/Adresse',
+	'menu_opts'		=> 'MenÃ¼-Option',
 	
 	'type_0'		=> 'Kategorie',
-	'type_1'		=> 'Menülabel',
-	'type_2'		=> 'Menüpunkt',
+	'type_1'		=> 'MenÃ¼label',
+	'type_2'		=> 'MenÃ¼punkt',
 	
 	'acp'			=> 'Administrator',
 	'mcp'			=> 'Moderator',
@@ -48,19 +48,19 @@ $lang = array_merge($lang, array(
 	'settings'		=> 'Einstellungen',
 	
 	'confirm_0'				=> 'das diese Kategorie:',
-	'confirm_1'				=> 'das diese Menü-Label:',
-	'confirm_2'				=> 'das diese Menü-Punkt:',
+	'confirm_1'				=> 'das diese MenÃ¼-Label:',
+	'confirm_2'				=> 'das diese MenÃ¼-Punkt:',
 	
-	'notice_confirm0_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> und alle Menü-Label und alle Menü-Punkte gelöscht werden soll?',
-	'notice_confirm1_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> und alle Menü-Punkte gelöscht werden soll?',
-	'notice_confirm2_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?',
+	'notice_confirm0_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> und alle MenÃ¼-Label und alle MenÃ¼-Punkte gelÃ¶scht werden soll?',
+	'notice_confirm1_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> und alle MenÃ¼-Punkte gelÃ¶scht werden soll?',
+	'notice_confirm2_delete'	=> 'Bist du sicher, %s <strong><em>%s</em></strong> gelÃ¶scht werden soll?',
 	
 ));
 
 $lang = array_merge($lang, array(	
 	
-	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Menülabel', 2 => 'Menüpunkt'),
-	'radio:navi'	=> array(3 => 'Kategorie', 4 => 'Menüpunkt'),
+	'radio:type'	=> array(0 => 'Kategorie', 1 => 'MenÃ¼label', 2 => 'MenÃ¼punkt'),
+	'radio:navi'	=> array(3 => 'Kategorie', 4 => 'MenÃ¼punkt'),
 	'radio:target'	=> array(1 => $lang['target_new'], 0 => $lang['target_self']),
 	
 ));

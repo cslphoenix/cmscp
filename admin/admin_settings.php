@@ -43,8 +43,6 @@ else
 #	$mode	= request('mode', TYP);
 	$mode	= request('action', TYP);
 	
-	debug($_POST, '_POST');
-	
 	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
 
 	$mode = (in_array($mode, array('default', 'calendar', 'module', 'subnavi', 'upload', 'other', 'match', 'gallery', 'smain', 'rating', 'ftp', 'phpinfo')) ) ? $mode : 'default';
@@ -312,34 +310,34 @@ else
 						'match_type' => array(
 							'tab1' => 'match_type',
 							'show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:match'),
-							'type_unknown'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_two'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_three'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_four'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_five'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'type_six'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'type_unknown'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'type_two'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'type_three'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'type_four'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'type_five'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'type_six'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
 							
 						),
 						'match_war' => array(
 							'tab2' => 'match_war',
 							'show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:match'),
-							'war_fun'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'war_training'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'war_clan'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
-							'war_league'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('drop', 'radio')),
+							'war_fun'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'war_training'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'war_clan'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
+							'war_league'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('drop', 'radio')),
 						),
 						
 						'match_league' => array(
 							'tab3' => 'match_league',
 							'show'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:match'),
-							'league_nope'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_esl'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_sk'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_liga'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_lgz'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_te'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_xgc'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
-							'league_ncsl'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25','opt' => array('url', 'drop', 'radio')),
+							'league_nope'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_esl'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_sk'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_liga'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_lgz'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_te'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_xgc'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
+							'league_ncsl'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'opt' => array('url', 'drop', 'radio')),
 						),
 						
 					);

@@ -56,15 +56,23 @@ function build_request_list($tbl, $vars, &$error, $field_id)
 #	$data_sql = build_request($vars, $error);
 
 #function build_request($name, $vars, $multi, &$error, $sql_add = false)
-function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = false)
+function build_request($db_tbl, $vars, &$error, $mode, $name = false, $sql_add = false)
 {
 	global $db, $lang, $settings;
 	
+	/*
+	
+		$db_tbl		= SQL Tabelle
+		$vars		= Input Details
+		&$error		= Fehlermeldungen
+		$mode		= 
+		$name		=
+		$sql_add	=
+				
+	*/
+	
 	$request = '';
 	
-#	debug($vars, 'vars');
-#	debug($name, 'name');
-
 	if ( $name )
 	{
 		if ( isset($vars[$name]) )
@@ -89,22 +97,19 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					else if ( strpos($key_vars, 'navi') !== false )
 					{
 						$request[$key_vars] = serialize(request(array($name, $key_vars), $vars[$name][$key_vars]['validate']));
-						
-					#	debug($request[$key_vars], $key_vars);
 					}
 					else
 					{
 						$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
 					}
-					
-				#	debug($request[$key_vars], 'request key vars');
 				}
 				else
 				{
 					if ( $key_vars != 'show' && ( $name == 'match_type' || $name == 'match_war' || $name == 'match_league' ))
 					{
 						$value		= request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
-						$order		= request(array("{$name}_order", $key_vars), INT);
+					#	$order		= request(array("{$name}_order", $key_vars), INT);			# angepasst an match settings ....
+						$order		= request("{$name}_order_{$key_vars}", INT);				# angepasst an match settings ....
 						$default	= ( request("{$name}_default", TXT) == $key_vars ) ? 1 : 0;
 						$url		= ( request(array("{$name}_url", $key_vars), TXT) ) ? request(array("{$name}_url", $key_vars), TXT) : false;
 						
@@ -114,8 +119,6 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 					else
 					{
 						$request[$key_vars] = request(array($name, $key_vars), $vars[$name][$key_vars]['validate']);
-						
-					#	debug($request[$key_vars], 'request key vars');
 					}				
 				}
 			}
@@ -125,30 +128,28 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 	{
 		$multi = key($vars);
 		
-		$sql = 'SHOW FIELDS FROM ' . $tbl;
+		$sql = 'SHOW FIELDS FROM ' . $db_tbl;
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
-		$tmp = $db->sql_fetchrowset($result);
+		$db_tbl_tmp = $db->sql_fetchrowset($result);
 		
-	#	debug($tmp, 'tmp');
-		
-		foreach ( $tmp as $row )
+		foreach ( $db_tbl_tmp as $row )
 		{
-			$temp[] = $row['Field'];
+			$temp_db[] = $row['Field'];
 		}
-		unset($temp[0]);
+		unset($temp_db[0]);
 		
 		if ( $sql_add && in_array($mode, array('create', 'news_create', 'cat_create', 'bankdata')) )
 		{
 			$sqla = is_array($sql_add) ? $sql_add : array($sql_add);
-			$temp = array_merge($temp, $sqla);
+			$temp_db = array_merge($temp_db, $sqla);
 		}
 		
-	#	debug($temp, 'temp 123');
+	#	debug($temp_db, 'temp 123');
 		
-		foreach ( $temp as $rows )
+		foreach ( $temp_db as $rows )
 		{
 			/* nur vars die auch angeben sind überprüfen, sonst NOTICE Warnung */
 			if ( isset($vars[$multi][$rows]) && is_array($vars[$multi][$rows]) )
@@ -326,7 +327,7 @@ function build_request($tbl, $vars, &$error, $mode, $name = false, $sql_add = fa
 				
 				if ( $check && $required_check )
 				{
-					$sql = "SELECT * FROM $tbl";
+					$sql = "SELECT * FROM $db_tbl";
 					if ( !($result = $db->sql_query($sql)) )
 					{
 						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -765,8 +766,12 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 		
 		$template->assign_block_vars("$tpl.row", array('L_NAME' => lang($vars_key)));
 		
+		$opt_order = count($vars_value) - 2;
+		
 		foreach ( $vars_value as $vars_opt => $vars_type )
 		{
+			
+			
 	#		debug($vars_opt);
 			if ( !is_array($vars_type) )
 			{
@@ -1655,15 +1660,19 @@ function build_output($tbl, $vars, $data, $tpl = 'input', $multi = false)
 						
 						if ( $tmp_opts )
 						{
+						#	debug($opt_order, '$opt_order');
+							
 							$f_url		= sprintf('%s_url%s', $tmeta, $tname);
-							$f_order	= sprintf('%s_order%s', $tmeta, $tname);
+							$f_order	= sprintf('%s_order_%s', $tmeta, $tname);
 							$f_default	= sprintf('%s_default', $tmeta, $tname);
 							
 							$checked = ( $default ) ? ' checked="checked"' : '';
 							
-							$opt .= ( in_array('url',	$tmp_opts) ) ? '<input type="text" name="' . $f_url . ' value="id" />&nbsp;' : '';
-							$opt .= ( in_array('drop',	$tmp_opts) ) ? '<input type="text" name="' . $f_order . '" value="' . $order . '" />&nbsp;' : '';
-							$opt .= ( in_array('radio',	$tmp_opts) ) ? '<input type="radio" name="' . $f_default . '" value="' . $tname . '"' . $checked . '" />' : '';
+						#	debug($order, '$order');
+							
+							$opt .= ( in_array('url',	$tmp_opts) ) ? '&nbsp;<input type="text" name="' . $f_url . ' value="id" />' : '';
+							$opt .= ( in_array('drop',	$tmp_opts) ) ? opt_order($opt_order, $f_order, $order) : '';
+							$opt .= ( in_array('radio',	$tmp_opts) ) ? '<input type="radio" name="' . $f_default . '" value="' . $tname . '"' . $checked . ' />' : '';
 						}
 						
 						break;

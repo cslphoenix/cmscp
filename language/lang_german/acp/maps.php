@@ -8,7 +8,7 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Karte',
-	'explain'	=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
+	'explain'	=> 'Hier kann man die Maps(Karten) bearbeiten, lÃ¶schen und nach eigener Vorstellungen sortieren.',
 	
 	'input_data' => 'test input',
 
@@ -23,7 +23,7 @@ $lang = array_merge($lang, array(
 	'type_0'	=> 'Kategorie',
 	'type_1'	=> 'Karte',
 	
-	'msg_select_tag_image'	=> 'Bitte Tag auswählen',
+	'msg_select_tag_image'	=> 'Bitte Tag auswÃ¤hlen',
 	
 ));
 

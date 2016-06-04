@@ -555,8 +555,8 @@ else
 			$group_access = access(ACL_GROUPS, array('group_id', $group_ids), 0, $acl_label_data, $acl_field_name);
 			$users_access = access(ACL_USERS, array('user_id', $data_sql['user_id']), 0, $acl_label_data, $acl_field_name);
 			
-			debug($users_access, '$users_access');
-			debug($group_access, '$group_access');
+		#	debug($users_access, '$users_access');
+		#	debug($group_access, '$group_access');
 			
 			$grp_info = array();
 			
@@ -570,32 +570,52 @@ else
 						{
 							if ( isset($urs_access[$forum][$r_field]) )
 							{
-								switch ( $urs_access[$forum][$r_field] )
+								if ( $urs_access[$forum][$r_field] == 1 )
 								{
-									case '1':
-									
-										switch ( $urs_access[$forum][$r_field] )
-										{
-											case '-1':	$urs_access[$forum][$r_field] = '-1';	break;
-											case '0':	$urs_access[$forum][$r_field] = '1';	break;
-										}
-										
-										break;
-										
-									case '0':
-									
-										switch ( $urs_access[$forum][$r_field] )
-										{
-											case '-1':	$urs_access[$forum][$r_field] = '-1';	break;
-											case '1':	$urs_access[$forum][$r_field] = '1';	break;
-										}
-										break;
-										
-									case '-1':
-									
+									if ( $r_value == 1 )
+									{
+										$urs_access[$forum][$r_field] = '1';
+									}
+									else if ( $r_value == -1 )
+									{
 										$urs_access[$forum][$r_field] = '-1';
-										
-										break;
+									}
+									else
+									{
+										$urs_access[$forum][$r_field] = '1';
+									}
+								}
+								
+								if ( $urs_access[$forum][$r_field] == -1 )
+								{
+									if ( $r_value == 1 )
+									{
+										$urs_access[$forum][$r_field] = '-1';
+									}
+									else if ( $r_value == -1 )
+									{
+										$urs_access[$forum][$r_field] = '-1';
+									}
+									else
+									{
+										$urs_access[$forum][$r_field] = '-1';
+									}
+								}
+								
+								if ( $urs_access[$forum][$r_field] == 0 )
+								{
+									if ( $r_value == 1 )
+									{
+										$urs_access[$forum][$r_field] = '1';
+									}
+									else if ( $r_value == -1 )
+									{
+										$urs_access[$forum][$r_field] = '-1';
+									}
+									else
+									{
+										$urs_access[$forum][$r_field] = '0';
+									}
 								}
 							}
 							else
@@ -630,32 +650,52 @@ else
 						{
 							if ( isset($grp_access[$forum][$r_field]) )
 							{
-								switch ( $grp_access[$forum][$r_field] )
+								if ( $grp_access[$forum][$r_field] == 1 )
 								{
-									case '1':
-									
-										switch ( $grp_access[$forum][$r_field] )
-										{
-											case '-1':	$grp_access[$forum][$r_field] = '-1';	break;
-											case '0':	$grp_access[$forum][$r_field] = '1';	break;
-										}
-										
-										break;
-										
-									case '0':
-									
-										switch ( $grp_access[$forum][$r_field] )
-										{
-											case '-1':	$grp_access[$forum][$r_field] = '-1';	break;
-											case '1':	$grp_access[$forum][$r_field] = '1';	break;
-										}
-										break;
-										
-									case '-1':
-									
+									if ( $r_value == 1 )
+									{
+										$grp_access[$forum][$r_field] = '1';
+									}
+									else if ( $r_value == -1 )
+									{
 										$grp_access[$forum][$r_field] = '-1';
-										
-										break;
+									}
+									else
+									{
+										$grp_access[$forum][$r_field] = '1';
+									}
+								}
+								
+								if ( $grp_access[$forum][$r_field] == -1 )
+								{
+									if ( $r_value == 1 )
+									{
+										$grp_access[$forum][$r_field] = '-1';
+									}
+									else if ( $r_value == -1 )
+									{
+										$grp_access[$forum][$r_field] = '-1';
+									}
+									else
+									{
+										$grp_access[$forum][$r_field] = '-1';
+									}
+								}
+								
+								if ( $grp_access[$forum][$r_field] == 0 )
+								{
+									if ( $r_value == 1 )
+									{
+										$grp_access[$forum][$r_field] = '1';
+									}
+									else if ( $r_value == -1 )
+									{
+										$grp_access[$forum][$r_field] = '-1';
+									}
+									else
+									{
+										$grp_access[$forum][$r_field] = '0';
+									}
 								}
 							}
 							else
@@ -968,7 +1008,8 @@ else
 							
 							$template->assign_block_vars('view.row.parent.cats.auths', array(
 								'OPT_NAME'	=> lang($row),
-								'OPT_INFO'	=> img('i_icon', 'icon_details', @$grp_info_grp[$m_id][$p_id][$row]),
+								'OPT_INFO'	=> isset($grp_info_grp[$m_id][$p_id][$row]) ? img('i_icon', 'icon_details', $grp_info_grp[$m_id][$p_id][$row]) : '',
+							#	'OPT_INFO'	=> isset($grp_info_grp[$m_id][$p_id][$row]) ? img('i_icon', 'icon_details', $grp_info_grp[$m_id][$p_id][$row]) : '',
 								'CSS_YES'	=> ( @$u_a[$m_id][$p_id][$row] == '1' ) ? 'bggreen' : '',
 								'CSS_NO'	=> ( @$u_a[$m_id][$p_id][$row] != '1' ) ? 'bgred' : '',
 							));
@@ -1002,10 +1043,10 @@ else
 			#	'S_ACTION'	=> check_sid($file),
 				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 				'S_FIELDS'	=> $fields,
-			));			
-		
-			break;
+			));
 			
+			break;
+		
 		case 'groups':
 			
 			$data_sql = data(USERS, $data, false, 1, true);

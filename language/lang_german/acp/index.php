@@ -28,12 +28,12 @@ $lang = array_merge($lang, array(
 	'path_network'		=> 'Network',
 	
 	'dir'	=> 'Verzeichnis',
-	'size'	=> 'Größe',
+	'size'	=> 'GrÃ¶ÃŸe',
 	'info'	=> 'Info',
 	'value'	=> 'Werte',
 	
-	'sprintf_dbsize'	=> 'Name: %s<br />Einträge: %s<br />Tabellen: %s',
-	'sprintf_backup'	=> 'Größe: %s',
+	'sprintf_dbsize'	=> 'Name: %s<br />EintrÃ¤ge: %s<br />Tabellen: %s',
+	'sprintf_backup'	=> 'GrÃ¶ÃŸe: %s',
 	'backup_na'			=> 'Nicht Vorhanden!',
 	
 	'cache_clear'		=> 'leeren',
@@ -42,7 +42,7 @@ $lang = array_merge($lang, array(
 	'version_info_red'		=> '<span style="color:red">%s</span> [ <a href="%s" title="%s">%s</a> ]<br /><span style="color:red">neuere Version: <b>%s</b></span>',
 	'version_info_green'	=> '<span style="color:green">%s</span> [ <a href="%s" title="%s">%s</a> ]',
 	
-	'cache_valid' => 'Gültig bis: %s',
+	'cache_valid' => 'GÃ¼ltig bis: %s',
 ));
 
 ?>

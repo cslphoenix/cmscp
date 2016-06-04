@@ -16,19 +16,19 @@ $lang = array_merge($lang, array(
 	'profile_field'			=> 'Feld',
 	'profile_typ'			=> 'Art',
 	'profile_lang'			=> 'Sprachdatei',
-	'profile_show_user'		=> 'für Benutzer sichtbar',
-	'profile_show_member'	=> 'für Member sichtbar',
-	'profile_show_register'	=> 'für Registierung sichtbar',
+	'profile_show_user'		=> 'fÃ¼r Benutzer sichtbar',
+	'profile_show_member'	=> 'fÃ¼r Member sichtbar',
+	'profile_show_register'	=> 'fÃ¼r Registierung sichtbar',
 	'profile_required'		=> 'Pflichtfeld',
 	
-	'profile_field_explain' => 'Der Präfix \'field_\' wird automatisch hinzugefügt',
-	'profile_typ_explain'	=> 'Die Art des Feldes bestimmt, wie viele Zeichen in des Feld geschrieben werden können!<br /><b>Textzeilen</b> fassen 255 Zeichen<br /><b>Textfeld</b> umfasst 65000 Zeichen<br /><b>Ja/Nein</b> Feld fast 1 Zahl!',
+	'profile_field_explain' => 'Der PrÃ¤fix \'field_\' wird automatisch hinzugefÃ¼gt',
+	'profile_typ_explain'	=> 'Die Art des Feldes bestimmt, wie viele Zeichen in des Feld geschrieben werden kÃ¶nnen!<br /><b>Textzeilen</b> fassen 255 Zeichen<br /><b>Textfeld</b> umfasst 65000 Zeichen<br /><b>Ja/Nein</b> Feld fast 1 Zahl!',
 	
 #	'necessary'	=> 'Pflichtfeld',
 
 
-	'show_guest'	=> 'für Gäste',
-	'show_member'	=> 'für Mitglieder',
+	'show_guest'	=> 'fÃ¼r GÃ¤ste',
+	'show_member'	=> 'fÃ¼r Mitglieder',
 	'show_register'	=> 'beim registieren',
 	
 	

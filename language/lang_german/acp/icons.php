@@ -8,7 +8,7 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Icons',
-	'explain'	=> 'Verwaltung der Icons für Beiträge und Downloads.',
+	'explain'	=> 'Verwaltung der Icons fÃ¼r BeitrÃ¤ge und Downloads.',
 	
 	'icon_icon'		=> 'Bild',
 	'icon_name'		=> 'Iconname',
@@ -17,8 +17,8 @@ $lang = array_merge($lang, array(
 	
 	'icon_path'		=> 'Pfad',
 	'icon_width'	=> 'Breite',
-	'icon_height'	=> 'Höhe',
-	'icon_topic'	=> 'Beiträge',
+	'icon_height'	=> 'HÃ¶he',
+	'icon_topic'	=> 'BeitrÃ¤ge',
 	'icon_download'	=> 'Downloads',
 
 ));

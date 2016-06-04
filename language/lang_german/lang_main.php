@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 include('lang_head.php');
 include('lang_control.php');
@@ -23,7 +23,7 @@ $lang = array_merge($lang, array(
 	'cur_max'	=> '%s / %s',
 	'ip_port'	=> '%s:%s',
 
-	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
+	'common_entry_empty'	=> 'Keine Eintr&auml;ge vorhanden.',
 
 	'main'	=> 'Main Navi',
 	'clan'	=> 'Clan Navi',
@@ -116,7 +116,7 @@ $lang = array_merge($lang, array(
 	
 	'stf_cal_today'	=> '<b>%s</b><br/>',
 	
-	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
+	
 	'common_entry_new'		=> 'Neuer Eintrag',
 	'common_add'			=> 'Hinzufügen',
 	'common_auth'			=> 'Berechtigung',
@@ -128,7 +128,7 @@ $lang = array_merge($lang, array(
 	'common_input_standard'	=> 'Standard',
 	'common_default'		=> 'Standarteinstellungen',
 	'com_delete'			=> 'Lüschen',
-	'common_delete_all'		=> 'Alles l�schen',
+	'common_delete_all'		=> 'Alles löschen',
 	'common_login'			=> 'Login',
 	'common_login_acp'		=> 'Adminlogin',
 	'common_desc'			=> 'Beschreibung',
@@ -141,8 +141,8 @@ $lang = array_merge($lang, array(
 	'common_moderators'		=> 'Moderatoren',		
 	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
 	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
-	'com_select_option'	=> 'Option w�hlen',			
-	'common_overview'		=> '�bersicht',
+	'com_select_option'		=> 'Option wählen',			
+	'common_overview'		=> '&Uuml;bersicht as',
 	'common_reset'			=> 'Zurücksetzen',
 	'common_setting'		=> 'Einstellung',
 	'common_settings'		=> 'Einstellungen',		
@@ -157,7 +157,7 @@ $lang = array_merge($lang, array(
 	'common_on'				=> 'Aktiv',
 	'common_off'			=> 'Inaktiv',
 	'com_no'				=> 'Nein',
-	'com_yes'			=> 'Ja',
+	'com_yes'				=> 'Ja',
 	
 	/* 01.08 */
 	'common_rating'		=> 'Abstimmungen',
@@ -231,7 +231,7 @@ $lang = array_merge($lang, array(
 	'header_sprintf'	=> '%s: %s',
 	'update_sprintf'	=> '%s bearbeiten',
 	
-	'header_overview'		=> '�bersicht',
+	'header_overview'		=> 'Übersicht',
 	'header_news'			=> 'News',
 	'header_news_archiv'	=> 'News: Archiv',
 	'header_event'			=> 'Ereignis',
@@ -252,6 +252,7 @@ $lang = array_merge($lang, array(
 
 	'sn_news'			=> 'Letzte Nachrichten',
 	'sn_match'			=> 'Letzte Begegnungen',
+
 	'sn_topics'			=> 'Letzte Forumthemen',
 	'sn_downloads'		=> 'Letzte Downloads',
 	'sn_newest_users'	=> '%s neuesten Mitglieder',
@@ -367,7 +368,7 @@ $lang['common_comment']				= 'Kommentar';
 $lang['common_comments']			= 'Kommentare';
 $lang['common_comment_add']			= 'Kommentar hinzufügen';
 $lang['common_comment_edit']		= 'Kommentar bearbeiten';
-$lang['common_comment_delete']		= 'Kommentar l�schen';
+$lang['common_comment_delete']		= 'Kommentar löschen';
 $lang['common_unread']				= 'Ungelesen';
 $lang['common_num_comment']			= '%s neuer Kommentar';
 $lang['common_num_comments']		= '%s neue Kommentare';
@@ -502,11 +503,11 @@ $lang['change_on']			= '<i>ge�ndert:</i> ';
 
 
 
-$lang['select_type']		= 'XonX ausw�hlen';
-$lang['select_league']		= 'Liga ausw�hlen';
-$lang['select_categorie']	= 'Matchtyp ausw�hlen';
+$lang['select_type']		= 'XonX auswählen';
+$lang['select_league']		= 'Liga auswählen';
+$lang['select_categorie']	= 'Matchtyp auswählen';
 
-$lang['select_type_box']['0']	= 'XonX ausw�hlen';
+$lang['select_type_box']['0']	= 'XonX auswählen';
 $lang['select_type_box']['1']	= 'Unbekannt';
 $lang['select_type_box']['2']	= '2on2';
 $lang['select_type_box']['3']	= '3on3';
@@ -514,14 +515,14 @@ $lang['select_type_box']['4']	= '4on4';
 $lang['select_type_box']['5']	= '5on5';
 $lang['select_type_box']['6']	= '6on6';
 
-$lang['select_categorie_box']['0']	= 'Matchtyp ausw�hlen';
+$lang['select_categorie_box']['0']	= 'Matchtyp auswählen';
 $lang['select_categorie_box']['1']	= 'Fun War';
 $lang['select_categorie_box']['2']	= 'Clan War';
 $lang['select_categorie_box']['3']	= 'Liga War';
 $lang['select_categorie_box']['4']	= 'Train War';
 
 $lang['select_league_box']['0']['league_id']	= '0';
-$lang['select_league_box']['0']['league_name']	= 'Liga ausw�hlen';
+$lang['select_league_box']['0']['league_name']	= 'Liga auswählen';
 $lang['select_league_box']['0']['league_link']	= '';
 $lang['select_league_box']['1']['league_id']	= '1';
 $lang['select_league_box']['1']['league_name']	= 'ESL';
@@ -619,7 +620,7 @@ $lang['Topics'] = 'Themen';
 $lang['Replies'] = 'Antworten';
 $lang['Views'] = 'Aufrufe';
 $lang['Post'] = 'Beitrag';
-$lang['Posts'] = 'Beitr�ge';
+$lang['Posts'] = 'Beiträge';
 $lang['Posted'] = 'Verfasst am';
 $lang['Username'] = 'Benutzername';
 $lang['Password'] = 'Passwort';
@@ -665,7 +666,7 @@ $lang['Goto_page'] = 'Gehe zu Seite';
 $lang['Joined'] = 'Anmeldedatum';
 $lang['IP_Address'] = 'IP-Adresse';
 
-$lang['Select_forum'] = 'Forum ausw�hlen';
+$lang['Select_forum'] = 'Forum auswählen';
 $lang['View_latest_post'] = 'Letzten Beitrag anzeigen';
 $lang['View_newest_post'] = 'Neuesten Beitrag anzeigen';
 $lang['common_page_of'] = 'Seite <b>%d</b> von <b>%d</b>';// Replaces with: Page 1 of 2 for example
@@ -744,9 +745,9 @@ $lang['Mod_online_color'] = '%sModerator%s';
 $lang['You_last_visit'] = 'Dein letzter Besuch war am: %s';// %s replaced by date/time
 $lang['Current_time'] = 'Aktuelles Datum und Uhrzeit: %s';// %s replaced by time
 
-$lang['Search_new'] = 'Beitr�ge seit dem letzten Besuch anzeigen';
-$lang['Search_your_posts'] = 'Eigene Beitr�ge anzeigen';
-$lang['Search_unanswered'] = 'Unbeantwortete Beitr�ge anzeigen';
+$lang['Search_new'] = 'Beiträge seit dem letzten Besuch anzeigen';
+$lang['Search_your_posts'] = 'Eigene Beiträge anzeigen';
+$lang['Search_unanswered'] = 'Unbeantwortete Beiträge anzeigen';
 
 $lang['Register'] = 'Registrieren';
 $lang['Profile'] = 'Profil';
@@ -764,22 +765,22 @@ $lang['Moderators'] = '<b>Moderatoren</b>';
 //
 // Stats block text
 //
-$lang['Posted_articles_zero_total'] = 'Unsere Benutzer haben <b>noch keine</b> Beitr�ge geschrieben.';// Number of posts
-$lang['Posted_articles_total'] = 'Unsere Benutzer haben insgesamt <b>%d</b> Beitr�ge geschrieben.';// Number of posts
+$lang['Posted_articles_zero_total'] = 'Unsere Benutzer haben <b>noch keine</b> Beiträge geschrieben.';// Number of posts
+$lang['Posted_articles_total'] = 'Unsere Benutzer haben insgesamt <b>%d</b> Beiträge geschrieben.';// Number of posts
 $lang['Posted_article_total'] = 'Unsere Benutzer haben <b>einen</b> Beitrag geschrieben.';// Number of posts
 $lang['Registered_users_zero_total'] = 'Wir haben <b>keine</b> registrierten Benutzer.';// # registered users
 $lang['Registered_users_total'] = 'Wir haben <b>%d</b> registrierte Benutzer.';// # registered users
 $lang['Registered_user_total'] = 'Wir haben <b>einen</b> registrierten Benutzer.';// # registered users
 $lang['Newest_user'] = 'Der neueste Benutzer ist <b>%s%s%s</b>.';// a href, user_name, /a
 
-$lang['No_new_posts_last_visit'] = 'Keine neuen Beitr�ge seit deinem letzten Besuch';
-$lang['No_new_posts'] = 'Keine neuen Beitr�ge';
-$lang['New_posts'] = 'Neue Beitr�ge';
+$lang['No_new_posts_last_visit'] = 'Keine neuen Beiträge seit deinem letzten Besuch';
+$lang['No_new_posts'] = 'Keine neuen Beiträge';
+$lang['New_posts'] = 'Neue Beiträge';
 $lang['New_post'] = 'Neuer Beitrag';
-$lang['No_new_posts_hot'] = 'Keine neuen Beitr�ge [ Top-Thema ]';
-$lang['New_posts_hot'] = 'Neue Beitr�ge [ Top-Thema ]';
-$lang['No_new_posts_locked'] = 'Keine neuen Beitr�ge [ Gesperrt ]';
-$lang['New_posts_locked'] = 'Neue Beitr�ge [ Gesperrt ]';
+$lang['No_new_posts_hot'] = 'Keine neuen Beiträge [ Top-Thema ]';
+$lang['New_posts_hot'] = 'Neue Beiträge [ Top-Thema ]';
+$lang['No_new_posts_locked'] = 'Keine neuen Beiträge [ Gesperrt ]';
+$lang['New_posts_locked'] = 'Neue Beiträge [ Gesperrt ]';
 $lang['Forum_is_locked'] = 'Forum ist gesperrt';
 
 
@@ -801,7 +802,7 @@ $lang['Error_login'] = 'Du hast einen falschen oder inaktiven Benutzernamen oder
 // Index page
 //
 $lang['Index'] = 'Index';
-$lang['No_Posts'] = 'Keine Beitr�ge';
+$lang['No_Posts'] = 'Keine Beiträge';
 $lang['No_forums'] = 'Dieses Board hat keine Foren.';
 
 $lang['Private_Message'] = 'Private Nachricht';
@@ -820,7 +821,7 @@ $lang['View_forum'] = 'Forum anzeigen';
 $lang['Forum_not_exist'] = 'Das ausgew�hlte Forum existiert nicht.';
 $lang['Reached_on_error'] = 'Fehler auf dieser Seite!';
 
-$lang['Display_topics'] = 'Siehe Beitr�ge der letzten';
+$lang['Display_topics'] = 'Siehe Beiträge der letzten';
 $lang['All_Topics'] = 'Alle Themen anzeigen';
 
 $lang['Topic_Announcement'] = '<b>Ank�ndigungen:</b>';
@@ -831,31 +832,31 @@ $lang['Topic_Poll'] = '<b>[Umfrage]</b>';
 $lang['Mark_all_topics'] = 'Alle Themen als gelesen markieren';
 $lang['Topics_marked_read'] = 'Alle Themen wurden als gelesen markiert.';
 
-$lang['Rules_post_can'] = 'Du <b>kannst</b> Beitr�ge in dieses Forum schreiben.';
-$lang['Rules_post_cannot'] = 'Du <b>kannst keine</b> Beitr�ge in dieses Forum schreiben.';
-$lang['Rules_reply_can'] = 'Du <b>kannst</b> auf Beitr�ge in diesem Forum antworten.';
-$lang['Rules_reply_cannot'] = 'Du <b>kannst</b> auf Beitr�ge in diesem Forum <b>nicht</b> antworten.';
-$lang['Rules_edit_can'] = 'Du <b>kannst</b> deine Beitr�ge in diesem Forum bearbeiten.';
-$lang['Rules_edit_cannot'] = 'Du <b>kannst</b> deine Beitr�ge in diesem Forum <b>nicht</b> bearbeiten.';
-$lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beitr�ge in diesem Forum l�schen.';
-$lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beitr�ge in diesem Forum <b>nicht</b> l�schen.';
+$lang['Rules_post_can'] = 'Du <b>kannst</b> Beiträge in dieses Forum schreiben.';
+$lang['Rules_post_cannot'] = 'Du <b>kannst keine</b> Beiträge in dieses Forum schreiben.';
+$lang['Rules_reply_can'] = 'Du <b>kannst</b> auf Beiträge in diesem Forum antworten.';
+$lang['Rules_reply_cannot'] = 'Du <b>kannst</b> auf Beiträge in diesem Forum <b>nicht</b> antworten.';
+$lang['Rules_edit_can'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum bearbeiten.';
+$lang['Rules_edit_cannot'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum <b>nicht</b> bearbeiten.';
+$lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum löschen.';
+$lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beiträge in diesem Forum <b>nicht</b> löschen.';
 $lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen in diesem Forum teilnehmen.';
 $lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen in diesem Forum <b>nicht</b> teilnehmen.';
 $lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.';// %s replaced by a href links, do not remove!
 
-$lang['Rules_post_can'] = 'Du <b>kannst</b> Beitr�ge schreiben.';
-$lang['Rules_post_cannot'] = 'Du <b>kannst keine</b> Beitr�ge schreiben.';
-$lang['Rules_reply_can'] = 'Du <b>kannst</b> auf Beitr�ge antworten.';
-$lang['Rules_reply_cannot'] = 'Du <b>kannst</b> auf Beitr�ge <b>nicht</b> antworten.';
-$lang['Rules_edit_can'] = 'Du <b>kannst</b> deine Beitr�ge bearbeiten.';
-$lang['Rules_edit_cannot'] = 'Du <b>kannst</b> deine Beitr�ge <b>nicht</b> bearbeiten.';
-$lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beitr�ge l�schen.';
-$lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beitr�ge <b>nicht</b> l�schen.';
+$lang['Rules_post_can'] = 'Du <b>kannst</b> Beiträge schreiben.';
+$lang['Rules_post_cannot'] = 'Du <b>kannst keine</b> Beiträge schreiben.';
+$lang['Rules_reply_can'] = 'Du <b>kannst</b> auf Beiträge antworten.';
+$lang['Rules_reply_cannot'] = 'Du <b>kannst</b> auf Beiträge <b>nicht</b> antworten.';
+$lang['Rules_edit_can'] = 'Du <b>kannst</b> deine Beiträge bearbeiten.';
+$lang['Rules_edit_cannot'] = 'Du <b>kannst</b> deine Beiträge <b>nicht</b> bearbeiten.';
+$lang['Rules_delete_can'] = 'Du <b>kannst</b> deine Beiträge löschen.';
+$lang['Rules_delete_cannot'] = 'Du <b>kannst</b> deine Beiträge <b>nicht</b> löschen.';
 $lang['Rules_vote_can'] = 'Du <b>kannst</b> an Umfragen teilnehmen.';
 $lang['Rules_vote_cannot'] = 'Du <b>kannst</b> an Umfragen <b>nicht</b> teilnehmen.';
 $lang['Rules_moderate'] = 'Du <b>kannst</b> %sdieses Forum moderieren%s.';// %s replaced by a href links, do not remove!
 
-$lang['No_topics_post_one'] = 'In diesem Forum sind keine Beitr�ge vorhanden.<br>Klicke auf <b>Neues Thema</b>, um den ersten Beitrag zu erstellen.';
+$lang['No_topics_post_one'] = 'In diesem Forum sind keine Beiträge vorhanden.<br>Klicke auf <b>Neues Thema</b>, um den ersten Beitrag zu erstellen.';
 
 
 //
@@ -873,10 +874,10 @@ $lang['View_results'] = 'Ergebnis anzeigen';
 $lang['No_newer_topics'] = 'Es gibt keine neueren Themen in diesem Forum.';
 $lang['No_older_topics'] = 'Es gibt keine �lteren Themen in diesem Forum.';
 $lang['Topic_post_not_exist'] = 'Das gew�hlte Thema oder der Beitrag existiert nicht.';
-$lang['No_posts_topic'] = 'Es existieren keine Beitr�ge zu diesem Thema.';
+$lang['No_posts_topic'] = 'Es existieren keine Beiträge zu diesem Thema.';
 
-$lang['Display_posts'] = 'Beitr�ge der letzten Zeit anzeigen';
-$lang['All_Posts'] = 'Alle Beitr�ge';
+$lang['Display_posts'] = 'Beiträge der letzten Zeit anzeigen';
+$lang['All_Posts'] = 'Alle Beiträge';
 $lang['Newest_First'] = 'Die neusten zuerst';
 $lang['Oldest_First'] = 'Die �ltesten zuerst';
 
@@ -885,9 +886,9 @@ $lang['Back_to_top'] = 'Nach oben';
 $lang['Read_profile'] = 'Benutzer-Profile anzeigen';
 $lang['Visit_website'] = 'Website dieses Benutzers besuchen';
 $lang['ICQ_status'] = 'ICQ-Status';
-$lang['Edit_delete_post'] = 'Beitrag bearbeiten oder l�schen';
+$lang['Edit_delete_post'] = 'Beitrag bearbeiten oder löschen';
 $lang['View_IP'] = 'IP-Adresse zeigen';
-$lang['Delete_post'] = 'Beitrag l�schen';
+$lang['Delete_post'] = 'Beitrag löschen';
 
 $lang['wrote'] = 'hat Folgendes geschrieben';// proceeds the user_name and is followed by the quoted text
 $lang['Quote'] = 'Zitat';// comes before bbcode quote output.
@@ -899,7 +900,7 @@ $lang['Edited_times_total'] = 'Zuletzt bearbeitet von %s am %s, insgesamt %d-mal
 $lang['Lock_topic'] = 'Thema sperren';
 $lang['Unlock_topic'] = 'Thema entsperren';
 $lang['Move_topic'] = 'Thema verschieben';
-$lang['Delete_topic'] = 'Thema l�schen';
+$lang['Delete_topic'] = 'Thema löschen';
 $lang['Split_topic'] = 'Thema teilen';
 
 $lang['Stop_watching_topic'] = 'Bei Antworten zu diesem Thema nicht mehr benachrichtigen';
@@ -933,16 +934,16 @@ $lang['Confirm_delete_poll'] = 'Sicher, dass diese Umfrage gel�scht werden sol
 $lang['Flood_Error'] = 'Du kannst einen Beitrag nicht so schnell nach deinem letzten absenden, bitte warte einen Augenblick.';
 $lang['Empty_subject'] = 'Bei einem neuen Thema musst du einen Titel angeben.';
 $lang['Empty_message'] = 'Du musst zu deinem Beitrag einen Text eingeben.';
-$lang['Forum_locked'] = 'Dieses Forum ist gesperrt, du kannst keine Beitr�ge editieren, schreiben oder beantworten.';
-$lang['Topic_locked'] = 'Dieses Thema ist gesperrt, du kannst keine Beitr�ge editieren oder beantworten.';
-$lang['No_post_id'] = 'Du musst einen Beitrag zum Editieren ausw�hlen.';
-$lang['No_topic_id'] = 'Du musst ein Thema f�r deine Antwort ausw�hlen.';
-$lang['No_valid_mode'] = 'Du kannst nur Beitr�ge schreiben, bearbeiten, beantworten und zitieren. Versuch es noch einmal.';
+$lang['Forum_locked'] = 'Dieses Forum ist gesperrt, du kannst keine Beiträge editieren, schreiben oder beantworten.';
+$lang['Topic_locked'] = 'Dieses Thema ist gesperrt, du kannst keine Beiträge editieren oder beantworten.';
+$lang['No_post_id'] = 'Du musst einen Beitrag zum Editieren auswählen.';
+$lang['No_topic_id'] = 'Du musst ein Thema f�r deine Antwort auswählen.';
+$lang['No_valid_mode'] = 'Du kannst nur Beiträge schreiben, bearbeiten, beantworten und zitieren. Versuch es noch einmal.';
 $lang['No_such_post'] = 'Es existiert kein solcher Beitrag. Versuch es noch einmal.';
-$lang['Edit_own_posts'] = 'Du kannst nur deine eigenen Beitr�ge bearbeiten.';
-$lang['Delete_own_posts'] = 'Du kannst nur deine eigenen Beitr�ge l�schen.';
-$lang['Cannot_delete_replied'] = 'Du kannst keine Beitr�ge l�schen, die schon beantwortet wurden.';
-$lang['Cannot_delete_poll'] = 'Du kannst keine aktiven Umfrage l�schen.';
+$lang['Edit_own_posts'] = 'Du kannst nur deine eigenen Beiträge bearbeiten.';
+$lang['Delete_own_posts'] = 'Du kannst nur deine eigenen Beiträge löschen.';
+$lang['Cannot_delete_replied'] = 'Du kannst keine Beiträge löschen, die schon beantwortet wurden.';
+$lang['Cannot_delete_poll'] = 'Du kannst keine aktiven Umfrage löschen.';
 $lang['Empty_poll_title'] = 'Du musst einen Titel f�r die Umfrage eingeben.';
 $lang['To_few_poll_options'] = 'Du musst mindestens zwei Antworten f�r die Umfrage angeben.';
 $lang['To_many_poll_options'] = 'Du hast zu viele Antworten f�r die Umfrage angegeben';
@@ -956,11 +957,11 @@ $lang['Poll_question'] = 'Frage';
 $lang['Poll_option'] = 'Antwort';
 $lang['Add_option'] = 'Antwort hinzufügen';
 $lang['Update'] = 'Aktualisieren';
-$lang['Delete'] = 'L�schen';
+$lang['Delete'] = 'Löschen';
 $lang['Poll_for'] = 'Dauer der Umfrage:';
 $lang['Days'] = 'Tage';// This is used for the Run poll for ... Days + in admin_forums for pruning
 $lang['Poll_for_explain'] = '[ Gib 0 ein oder lass dieses Feld leer, um die Umfrage auf unbeschr�nkte Zeit durchzuf�hren ]';
-$lang['Delete_poll'] = 'Umfrage l�schen';
+$lang['Delete_poll'] = 'Umfrage löschen';
 
 $lang['Disable_HTML_post'] = 'HTML in diesem Beitrag deaktivieren';
 $lang['Disable_BBCode_post'] = 'BBCode in diesem Beitrag deaktivieren';
@@ -1064,11 +1065,11 @@ $lang['Date'] = 'Datum';
 $lang['Mark'] = 'Markiert';
 $lang['Sent'] = 'Gesendet';
 $lang['Saved'] = 'Gespeichert';
-$lang['Delete_marked'] = 'Markierte l�schen';
-$lang['Delete_all'] = 'Alle l�schen';
+$lang['Delete_marked'] = 'Markierte löschen';
+$lang['Delete_all'] = 'Alle löschen';
 $lang['Save_marked'] = 'Markierte speichern';
 $lang['Save_message'] = 'Nachricht speichern';
-$lang['Delete_message'] = 'Nachricht l�schen';
+$lang['Delete_message'] = 'Nachricht löschen';
 
 $lang['Display_messages'] = 'Nachrichten anzeigen der letzten';// Followed by number of days/weeks/months
 $lang['All_Messages'] = 'Alle Nachrichten';
@@ -1106,8 +1107,8 @@ $lang['No_folder'] = 'Kein Ordner ausgew�hlt';
 $lang['Mark_all'] = 'Alle markieren';
 $lang['Unmark_all'] = 'Markierungen aufheben';
 
-$lang['Confirm_delete_pm'] = 'Diese Nachricht wirklich l�schen?';
-$lang['Confirm_delete_pms'] = 'Diese Nachrichten wirklich l�schen?';
+$lang['Confirm_delete_pm'] = 'Diese Nachricht wirklich löschen?';
+$lang['Confirm_delete_pms'] = 'Diese Nachrichten wirklich löschen?';
 
 $lang['Inbox_size'] = 'Dein Posteingang ist zu %d%% voll';// eg. Your Inbox is 50% full
 $lang['Sentbox_size'] = 'Deine gesendeten Nachrichten sind zu %d%% voll';
@@ -1140,10 +1141,10 @@ $lang['Interests'] = 'Interessen';
 $lang['Occupation'] = 'Beruf';
 $lang['Poster_rank'] = 'Rang';
 
-$lang['Total_posts'] = 'Beitr�ge insgesamt';
-$lang['User_post_pct_stats'] = '%.2f%% aller Beitr�ge';// 1.25% of total
-$lang['User_post_day_stats'] = '%.2f Beitr�ge pro Tag';// 1.5 posts per day
-$lang['Search_user_posts'] = 'Alle Beitr�ge von %s anzeigen';// Find all posts by user_name
+$lang['Total_posts'] = 'Beiträge insgesamt';
+$lang['User_post_pct_stats'] = '%.2f%% aller Beiträge';// 1.25% of total
+$lang['User_post_day_stats'] = '%.2f Beiträge pro Tag';// 1.5 posts per day
+$lang['Search_user_posts'] = 'Alle Beiträge von %s anzeigen';// Find all posts by user_name
 
 $lang['No_user_id_specified'] = 'Dieser Benutzer existiert nicht.';
 $lang['Wrong_Profile'] = 'Du kannst nur dein eigenes Profil bearbeiten.';
@@ -1160,7 +1161,7 @@ $lang['Always_html'] = 'HTML immer aktivieren';
 $lang['Always_bbcode'] = 'BBCode immer aktivieren';
 $lang['Always_add_sig'] = 'Signatur immer anh�ngen';
 $lang['Always_notify'] = 'Bei Antworten immer benachrichtigen';
-$lang['Always_notify_explain'] = 'Sendet dir eine E-Mail, wenn jemand auf einen deiner Beitr�ge antwortet. Kann f�r jeden Beitrag ge�ndert werden.';
+$lang['Always_notify_explain'] = 'Sendet dir eine E-Mail, wenn jemand auf einen deiner Beiträge antwortet. Kann f�r jeden Beitrag ge�ndert werden.';
 
 $lang['Board_style'] = 'Board-Style';
 $lang['Board_lang'] = 'Board-Sprache';
@@ -1180,22 +1181,22 @@ $lang['password_if_changed'] = 'Du musst nur dann ein neues Passwort angeben, we
 $lang['password_confirm_if_changed'] = 'Du musst dein neues Passwort best�tigen, wenn du es �ndern willst';
 
 $lang['Avatar'] = 'Avatar';
-$lang['Avatar_explain'] = 'Zeigt eine kleine Grafik neben jedem deiner Beitr�ge an. Es kann immer nur ein Avatar angezeigt werden, seine Breite darf nicht gr��er als %d Pixel sein, die H�he nicht gr��er als %d Pixel, und die Dateigr��e darf maximal %d KB betragen.';
+$lang['Avatar_explain'] = 'Zeigt eine kleine Grafik neben jedem deiner Beiträge an. Es kann immer nur ein Avatar angezeigt werden, seine Breite darf nicht gr��er als %d Pixel sein, die H�he nicht gr��er als %d Pixel, und die Dateigr��e darf maximal %d KB betragen.';
 $lang['Upload_Avatar_file'] = 'Avatar von deinem Computer hochladen';
 $lang['Upload_Avatar'] = 'Avatar von URL hochladen';
 $lang['Upload_Avatar_URL_explain'] = 'Gib die URL des gew�nschten Avatars an, dieser wird dann kopiert';
-$lang['Pick_local_Avatar'] = 'Avatar aus der Galerie ausw�hlen';
+$lang['Pick_local_Avatar'] = 'Avatar aus der Galerie auswählen';
 $lang['Link_remote_Avatar'] = 'Zu einem externen Avatar verlinken';
 $lang['Link_remote_Avatar_explain'] = 'Gib die URL des Avatars ein, der verlinkt werden soll';
 $lang['Avatar'] = 'URL des Avatars';
-$lang['Select_from_gallery'] = 'Avatar aus der Galerie ausw�hlen';
+$lang['Select_from_gallery'] = 'Avatar aus der Galerie auswählen';
 $lang['View_avatar_gallery'] = 'Galerie anzeigen';
 
-$lang['Select_avatar'] = 'Avatar ausw�hlen';
+$lang['Select_avatar'] = 'Avatar auswählen';
 $lang['Return_profile'] = 'Avatar abbrechen';
-$lang['Select_category'] = 'Kategorie ausw�hlen';
+$lang['Select_category'] = 'Kategorie auswählen';
 
-$lang['Delete_Image'] = 'Bild l�schen';
+$lang['Delete_Image'] = 'Bild löschen';
 $lang['Current_Image'] = 'Aktuelles Bild';
 
 $lang['Notify_on_privmsg'] = 'Bei neuen Privaten Nachrichten benachrichtigen';
@@ -1235,7 +1236,7 @@ $lang['Already_activated'] = 'Dein Account ist bereits aktiv';
 $lang['COPPA'] = 'Dein Account wurde erstellt, muss aber zuerst �berpr�ft werden. Mehr Details dazu wurden dir per E-Mail gesendet.';
 
 $lang['Registration'] = 'Einverst�ndniserkl�rung';
-$lang['Reg_agreement'] = 'Die Administratoren und Moderatoren dieses Forums bem�hen sich, Beitr�ge mit fragw�rdigem Inhalt so schnell wie m�glich zu bearbeiten oder ganz zu l�schen; aber es ist nicht m�glich, jede einzelne Nachricht zu �berprüfen. Du best�tigst mit Absenden dieser Einverst�ndniserkl�rung, dass du akzeptierst, dass jeder Beitrag in diesem Forum die Meinung seines Urhebers wiedergibt und dass die Administratoren, Moderatoren und Betreiber dieses Forums nur f�r ihre eigenen Beitr�ge verantwortlich sind.<br><br>Du verpflichtest dich, keine beleidigenden, obsz�nen, vulg�ren, verleumderischen, gewaltverherrlichenden oder aus anderen Gr�nden strafbare Inhalte in diesem Forum zu ver�ffentlichen. Verst��e gegen diese Regel f�hren zu sofortiger und permanenter Sperrung. Die Betreiber behalten sich vor, Verbindungsdaten u. �. an die strafverfolgenden Beh�rden weiterzugeben. Du r�umst den Betreibern, Administratoren und Moderatoren dieses Forums das Recht ein, Beitr�ge nach eigenem Ermessen zu entfernen, zu bearbeiten, zu verschieben oder zu sperren. Du stimmst zu, dass die im Rahmen der Registrierung erhobenen Daten in einer Datenbank gespeichert werden.<br><br>Dieses System verwendet Cookies, um Informationen auf deinem Computer zu speichern. Diese Cookies enthalten keine der oben angegebenen Informationen, sondern dienen ausschlie�lich dem Bedienungskomfort. Deine Mail-Adresse wird nur zur Best�tigung der Registrierung und ggf. zum Versand eines neuen Passwortes verwendet.<br><br>Durch das Abschlie�en der Registrierung stimmst du diesen Nutzungsbedingungen zu.';
+$lang['Reg_agreement'] = 'Die Administratoren und Moderatoren dieses Forums bem�hen sich, Beiträge mit fragw�rdigem Inhalt so schnell wie m�glich zu bearbeiten oder ganz zu löschen; aber es ist nicht m�glich, jede einzelne Nachricht zu �berprüfen. Du best�tigst mit Absenden dieser Einverst�ndniserkl�rung, dass du akzeptierst, dass jeder Beitrag in diesem Forum die Meinung seines Urhebers wiedergibt und dass die Administratoren, Moderatoren und Betreiber dieses Forums nur f�r ihre eigenen Beiträge verantwortlich sind.<br><br>Du verpflichtest dich, keine beleidigenden, obsz�nen, vulg�ren, verleumderischen, gewaltverherrlichenden oder aus anderen Gr�nden strafbare Inhalte in diesem Forum zu ver�ffentlichen. Verst��e gegen diese Regel f�hren zu sofortiger und permanenter Sperrung. Die Betreiber behalten sich vor, Verbindungsdaten u. �. an die strafverfolgenden Beh�rden weiterzugeben. Du r�umst den Betreibern, Administratoren und Moderatoren dieses Forums das Recht ein, Beiträge nach eigenem Ermessen zu entfernen, zu bearbeiten, zu verschieben oder zu sperren. Du stimmst zu, dass die im Rahmen der Registrierung erhobenen Daten in einer Datenbank gespeichert werden.<br><br>Dieses System verwendet Cookies, um Informationen auf deinem Computer zu speichern. Diese Cookies enthalten keine der oben angegebenen Informationen, sondern dienen ausschlie�lich dem Bedienungskomfort. Deine Mail-Adresse wird nur zur Best�tigung der Registrierung und ggf. zum Versand eines neuen Passwortes verwendet.<br><br>Durch das Abschlie�en der Registrierung stimmst du diesen Nutzungsbedingungen zu.';
 
 $lang['Agree_under_13'] = 'Ich bin mit den Konditionen dieses Forums einverstanden und <b>unter</b> 12 Jahre alt.';
 $lang['Agree_over_13'] = 'Ich bin mit den Konditionen dieses Forums einverstanden und <b>�ber</b> oder <b>exakt</b> 12 Jahre alt.';
@@ -1276,13 +1277,13 @@ $lang['Confirm_code_explain'] = 'Gebe den Code exakt so ein, wie du ihn siehst. 
 //
 // Memberslist
 //
-$lang['Select_sort_method'] = 'Sortierungs-Methode ausw�hlen';
+$lang['Select_sort_method'] = 'Sortierungs-Methode auswählen';
 $lang['Sort'] = 'Sortieren';
 $lang['Sort_Top_Ten'] = 'Top-Ten-Autoren';
 $lang['Sort_Joined'] = 'Anmeldedatum';
 $lang['Sort_Username'] = 'Benutzername';
 $lang['Sort_Location'] = 'Ort';
-$lang['Sort_Posts'] = 'Beitr�ge total';
+$lang['Sort_Posts'] = 'Beiträge total';
 $lang['Sort_Email'] = 'E-Mail';
 $lang['Sort_Website'] = 'Website';
 $lang['Sort_Ascending'] = 'Aufsteigend';
@@ -1352,7 +1353,7 @@ $lang['Confirm_unsub_pending'] = 'Deine Anmeldung bei der Gruppe wurde noch nich
 $lang['Unsub_success'] = 'Du wurdest aus dieser Gruppe abgemeldet.';
 
 $lang['Approve_selected'] = 'Ausgew�hlte akzeptieren';
-$lang['Deny_selected'] = 'Ausgew�hlte l�schen';
+$lang['Deny_selected'] = 'Ausgew�hlte löschen';
 $lang['Not_logged_in'] = 'Du musst eingeloggt sein, um einer Gruppe beizutreten.';
 $lang['Remove_selected'] = 'Ausgew�hlte entfernen';
 $lang['Add_member'] = 'Mitglied hinzufügen';
@@ -1406,7 +1407,7 @@ $lang['Display_results'] = 'Ergebnis anzeigen als';
 $lang['All_available'] = 'Alle';
 $lang['No_searchable_forums'] = 'Du hast nicht die Berechtigung, dieses Forum zu durchsuchen.';
 
-$lang['No_search_match'] = 'Keine Beitr�ge entsprechen deinen Kriterien.';
+$lang['No_search_match'] = 'Keine Beiträge entsprechen deinen Kriterien.';
 $lang['Found_search_match'] = 'Die Suche hat %d Ergebnis ergeben.';// eg. Search found 1 match
 $lang['Found_search_matches'] = 'Die Suche hat %d Ergebnisse ergeben.';// eg. Search found 24 matches
 $lang['Search_Flood_Error'] = 'Du kannst keine weitere Suche so schnell nach deiner letzten durchf�hren. Bitte versuche es in K�rze erneut.';
@@ -1420,11 +1421,11 @@ $lang['Close_window'] = 'Fenster schlie�en';
 // Note the %s will be replaced with one of the following 'user' arrays
 $lang['Sorry_auth_announce'] = 'Ank�ndigungen k�nnen in diesem Forum nur von %s erstellt werden.';
 $lang['Sorry_auth_sticky'] = 'Wichtige Nachrichten k�nnen in diesem Forum nur von %s erstellt werden.';
-$lang['Sorry_auth_read'] = 'Nur %s haben die Berechtigung, in diesem Forum Beitr�ge zu lesen.';
-$lang['Sorry_auth_post'] = 'Nur %s haben die Berechtigung, in diesem Forum Beitr�ge zu erstellen.';
-$lang['Sorry_auth_reply'] = 'Nur %s haben die Berechtigung, in diesem Forum auf Beitr�ge zu antworten.';
-$lang['Sorry_auth_edit'] = 'Nur %s haben die Berechtigung, in diesem Forum Beitr�ge zu bearbeiten.';
-$lang['Sorry_auth_delete'] = 'Nur %s haben die Berechtigung, in diesem Forum Beitr�ge zu l�schen.';
+$lang['Sorry_auth_read'] = 'Nur %s haben die Berechtigung, in diesem Forum Beiträge zu lesen.';
+$lang['Sorry_auth_post'] = 'Nur %s haben die Berechtigung, in diesem Forum Beiträge zu erstellen.';
+$lang['Sorry_auth_reply'] = 'Nur %s haben die Berechtigung, in diesem Forum auf Beiträge zu antworten.';
+$lang['Sorry_auth_edit'] = 'Nur %s haben die Berechtigung, in diesem Forum Beiträge zu bearbeiten.';
+$lang['Sorry_auth_delete'] = 'Nur %s haben die Berechtigung, in diesem Forum Beiträge zu löschen.';
 $lang['Sorry_auth_vote'] = 'In diesem Forum k�nnen sich nur %s an Abstimmungen beteiligen.';
 
 // These replace the %s in the above strings
@@ -1476,10 +1477,10 @@ $lang['Viewing_FAQ'] = 'FAQ anzeigen';
 // Moderator Control Panel
 //
 $lang['Mod_CP'] = 'Moderator Control Panel';
-$lang['Mod_CP_explain'] = 'Mit dem unteren Menü kannst du mehrere Moderatoren-Operationen gleichzeitig ausf�hren. Du kannst Beitr�ge �ffnen, schlie�en, l�schen oder verschieben.';
+$lang['Mod_CP_explain'] = 'Mit dem unteren Menü kannst du mehrere Moderatoren-Operationen gleichzeitig ausf�hren. Du kannst Beiträge �ffnen, schlie�en, löschen oder verschieben.';
 
-$lang['Select'] = 'Ausw�hlen';
-$lang['Delete'] = 'L�schen';
+$lang['Select'] = 'Auswählen';
+$lang['Delete'] = 'Löschen';
 $lang['Move'] = 'Verschieben';
 $lang['Lock'] = 'Sperren';
 $lang['Unlock'] = 'Entsperren';
@@ -1499,21 +1500,21 @@ $lang['Move_to_forum'] = 'Verschieben nach';
 $lang['Leave_shadow_topic'] = 'Shadow Topic im alten Forum lassen';
 
 $lang['Split_Topic'] = 'Split Topic Control Panel';
-$lang['Split_Topic_explain'] = 'Mit den Eingabefeldern unten kannst du ein Thema in zwei teilen, indem du entweder die Beitr�ge manuell ausw�hlst oder ab einem gew�hlten Beitrag teilst';
+$lang['Split_Topic_explain'] = 'Mit den Eingabefeldern unten kannst du ein Thema in zwei teilen, indem du entweder die Beiträge manuell ausw�hlst oder ab einem gew�hlten Beitrag teilst';
 $lang['Split_title'] = 'Titel des neuen Themas';
 $lang['Split_forum'] = 'Forum des neuen Themas';
-$lang['Split_posts'] = 'Gew�hlte Beitr�ge teilen';
+$lang['Split_posts'] = 'Gew�hlte Beiträge teilen';
 $lang['Split_after'] = 'Ab gew�hltem Beitrag teilen';
 $lang['Topic_split'] = 'Das gew�hlte Thema wurde erfolgreich geteilt';
 
-$lang['Too_many_error'] = 'Du hast zu viele Beitr�ge ausgew�hlt. Du kannst nur einen Beitrag ausw�hlen, ab dem geteilt werden soll!';
+$lang['Too_many_error'] = 'Du hast zu viele Beiträge ausgew�hlt. Du kannst nur einen Beitrag auswählen, ab dem geteilt werden soll!';
 
 $lang['None_selected'] = 'Du hast keine Themen ausgew�hlt, auf denen diese Aktion ausgef�hrt werden soll. Bitte w�hle mindestens eines aus.';
 $lang['New_forum'] = 'Neues Forum';
 
 $lang['This_posts_IP'] = 'IP-Adresse f�r diesen Beitrag';
 $lang['Other_IP_this_user'] = 'Andere IP-Adressen, von denen dieser Benutzer geschrieben hat';
-$lang['Users_this_IP'] = 'Beitr�ge von dieser IP-Adresse';
+$lang['Users_this_IP'] = 'Beiträge von dieser IP-Adresse';
 $lang['IP_info'] = 'IP-Information';
 $lang['Lookup_IP'] = 'IP nachschlagen';
 
@@ -1747,8 +1748,8 @@ $lang['sprintf_pic']		= '%s Bilder';
 
 $lang['gallery_rule_can_edit']		= 'Du <b>kannst</b> Bilder bearbeiten.';
 $lang['gallery_rule_cannot_edit']	= 'Du <b>kannst keine</b> Bilder bearbeiten.';
-$lang['gallery_rule_can_delete']	= 'Du <b>kannst</b> Bilder l�schen.';
-$lang['gallery_rule_cannot_delete']	= 'Du <b>kannst keine</b> Bilder l�schen.';
+$lang['gallery_rule_can_delete']	= 'Du <b>kannst</b> Bilder löschen.';
+$lang['gallery_rule_cannot_delete']	= 'Du <b>kannst keine</b> Bilder löschen.';
 $lang['gallery_rule_can_rate']		= 'Du <b>kannst</b> Bilder bewerten.';
 $lang['gallery_rule_cannot_rate']	= 'Du <b>kannst keine</b> Bilder bewerten.';
 $lang['gallery_rule_can_upload']	= 'Du <b>kannst</b> Bilder hochladen.';

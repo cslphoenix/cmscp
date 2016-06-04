@@ -39,14 +39,16 @@ $lang = array_merge($lang, array(
 	'moderators'	=> 'Gruppenmoderatoren',
 	'pending'		=> 'wartende Mitglieder',
 	
+	'permission'	=> 'Gruppenberechtigung',
+	
 	'type_main'		=> 'Hauptgruppe',
 	
 	'mod'			=> 'Moderatorenstatus',
 	'main'			=> 'Hauptgruppe setzen',
 	
-	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
-	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
-	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
+	'update_change'	=> 'Rechte wurden erfolgreich geÃ¤ndert.',
+	'update_delete'	=> 'Benutzer wurden erfolgreich gelÃ¶scht.',
+	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefÃ¼gt.',
 	
 	'users_count'	=> 'Mitgliederanzahl',
 	
@@ -98,11 +100,11 @@ $lang = array_merge($lang, array(
 
 /*
 $lang['group_member']			= 'Gruppenmitglieder';
-$lang['group_add_member']		= 'Mitglieder hinzufügen';
+$lang['group_add_member']		= 'Mitglieder hinzufÃ¼gen';
 $lang['group_edit_member']		= 'Mitglieder bearbeiten';
-$lang['group_view_member']		= 'Mitglieder Übersicht';
-$lang['group_view_member']		= 'Mitglieder Übersicht';
-$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufügen. Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
+$lang['group_view_member']		= 'Mitglieder Ãœbersicht';
+$lang['group_view_member']		= 'Mitglieder Ãœbersicht';
+$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufÃ¼gen. Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> Ã¼ber das Dropdown-MenÃ¼ auswahlen!';
 $lang['group_name']			= 'Gruppenname';
 $lang['group_mod']			= 'Moderator';
 $lang['group_membercount']	= 'Mitgliederanzahl';
@@ -117,7 +119,7 @@ $lang['group_image']		= 'Gruppenbild';
 $lang['group_image_upload']		= 'Hochladen';
 $lang['group_image_current']	= 'Aktuelles Gruppenbild';
 
-$lang['select_group_mod']	= '&raquo; Gruppenmoderator auswählen';
+$lang['select_group_mod']	= '&raquo; Gruppenmoderator auswÃ¤hlen';
 $lang['Group_DEFAULT']		= 'Vorgabe';
 $lang['Group_SPECIAL']		= 'Spezial';
 $lang['group_allowed']		= 'Ja';

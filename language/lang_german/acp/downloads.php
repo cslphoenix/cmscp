@@ -19,11 +19,11 @@ $lang = array_merge($lang, array(
 	'dl_icon'		=> 'Icon',
 	'dl_types'		=> 'Art',
 	'dl_file'		=> 'Datei',
-	'dl_size'		=> 'Maximale Größe',
+	'dl_size'		=> 'Maximale GrÃ¶ÃŸe',
 	'dl_rate'		=> 'Bewertung',
 	'dl_comment'	=> 'Kommentare',
 	
-	'dl_size_explain'	=> 'Maximale Größe',
+	'dl_size_explain'	=> 'Maximale GrÃ¶ÃŸe',
 	
 	
 	'name_cat'			=> 'Name',
@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'icon_cat'			=> 'Icon',
 	'path_cat'			=> 'Pfad',
 	'types_cat'			=> 'Type',
-	'auth_cat'			=> 'Freigabe für',
+	'auth_cat'			=> 'Freigabe fÃ¼r',
 	'auth_set_cat'		=> 'Freigabe einstellen',
 	'rate_cat'			=> 'Bewertung',
 	'rate_set_cat'		=> 'Bewertung einstellen',
@@ -97,7 +97,7 @@ $lang = array_merge($lang, array(
 		'qt, mov'	=> 'video/quicktime',
 	),
 
-	'up_filesize'	=> 'Die Dateigröße muss kleiner als %d KB sein.',
+	'up_filesize'	=> 'Die DateigrÃ¶ÃŸe muss kleiner als %d KB sein.',
 	'up_filetype'	=> 'Die Dateitype entspricht nicht den vorgaben: %s.',
 
 	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Datei'),

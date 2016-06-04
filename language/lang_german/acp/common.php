@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 if ( !defined('IN_CMS') )
 {
@@ -7,7 +7,8 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'content_encoding'	=> 'iso-8859-1',
+#	'content_encoding'	=> 'iso-8859-1',
+	'content_encoding'	=> 'utf-8',
 	'content_direction'	=> 'ltr',
 	'content_footer'	=> '<div class="copyright">powered by <a href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a> &copy; 2009-2012 by Phoenix &bull; Version: %s</div>',
 
@@ -49,7 +50,7 @@ $lang = array_merge($lang, array(
 	'acp_label_show'		=> 'Berechtigung anzeigen',
 	
 	/* acp menu */
-	'acp_index'			=> 'Übersicht',
+	'acp_index'			=> '&Uuml;bersicht',
 	'acp_event'			=> 'Ereignisse',
 	'acp_training'		=> 'Training',
 	'acp_match'			=> 'Begegnungen',
@@ -87,6 +88,7 @@ $lang = array_merge($lang, array(
 #	'acp_teams_settings'	=> 'Einstellung',
 
 	'acp_show_admin'		=> 'Administratoren',
+	'acp_show_forum'		=> 'Forum',
 
 	'acp_groups'		=> 'Benutzergruppen',
 
@@ -146,7 +148,8 @@ $lang = array_merge($lang, array(
 	'sprintf_list'		=> '%s komplett bearbeiten',
 	'stf_member'		=> '%s Mitglieder: %s',
 	'stf_detail'		=> '%s Deatils: %s',
-	'stf_upload_info'	=> 'Abmessung: %s / Gr��e: %s KB\'s',	/* upload info */
+	'stf_change'		=> '%s\'s Gegnerinfos ändern',
+	'stf_upload_info'	=> 'Abmessung: %s / Größe: %s KB\'s',	/* upload info */
 	'stf_name'			=> '%sname',
 	'sprintf_name'		=> '%sname',
 	
@@ -165,28 +168,28 @@ $lang = array_merge($lang, array(
 	'return_update_main'	=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;zurück</a></strong>',
 
 	'msg_sizedir_empty'		=> 'Leer',
-#	'msg_select_match'		=> 'Bitte eine Begegnung ausw�hlen!',
+#	'msg_select_match'		=> 'Bitte eine Begegnung auswählen!',
 	'notice_auth_fail'			=> 'Keine Berechtiung für dieses Modul: <b>%s</b>',
 	'notice_empty_maps'			=> 'Keine Maps vorhanden/eingetragen.',
-	'notice_select_file'		=> 'Bitte eine Datei ausw�hlen!',
-	'notice_select_cat_image'	=> 'Bitte ein Kategoriebild ausw�hlen!',
-	'notice_select_team'		=> 'Bitte ein Team ausw�hlen!',
+	'notice_select_file'		=> 'Bitte eine Datei auswählen!',
+	'notice_select_cat_image'	=> 'Bitte ein Kategoriebild auswählen!',
+	'notice_select_team'		=> 'Bitte ein Team auswählen!',
 	'notice_select_match_no'	=> 'Keine Begegnung vorhanden!',
-	'notice_select_team_first'	=> 'Bitte ein Team zuerst ausw�hlen!',
-	'notice_select_map'			=> 'Bitte eine Karte ausw�hlen!',
-	'notice_select_level'		=> 'Bitte ein Benutzerlevel ausw�hlen!',
-	'notice_select_game_image'	=> 'Bitte ein Spielbild ausw�hlen!',
-	'notice_select_rank'		=> 'Bitte einen Rang ausw�hlen!',
-	'notice_select_type'		=> 'Bitte ein Type ausw�hlen!',
-	'notice_select_war'			=> 'Bitte ein Wartype ausw�hlen!',
-	'notice_select_league'		=> 'Bitte eine Liga ausw�hlen!',
-	'notice_select_image'		=> 'Bitte ein Bild ausw�hlen!',
+	'notice_select_team_first'	=> 'Bitte ein Team zuerst auswählen!',
+	'notice_select_map'			=> 'Bitte eine Karte auswählen!',
+	'notice_select_level'		=> 'Bitte ein Benutzerlevel auswählen!',
+	'notice_select_game_image'	=> 'Bitte ein Spielbild auswählen!',
+	'notice_select_rank'		=> 'Bitte einen Rang auswählen!',
+	'notice_select_type'		=> 'Bitte ein Type auswählen!',
+	'notice_select_war'			=> 'Bitte ein Wartype auswählen!',
+	'notice_select_league'		=> 'Bitte eine Liga auswählen!',
+	'notice_select_image'		=> 'Bitte ein Bild auswählen!',
 	
 	'notice_select_permission'	=> 'Rechte geben/nehmen',
 	'notice_confirm_delete'		=> 'Bist du sicher, %s <strong><em>%s</em></strong> gel�scht werden soll?',
 	'notice_confirm_team'		=> 'dass dieser Spiele(r): %s vom dem Team:',
 	'notice_confirm_group'		=> 'dass dieser Spiele(r): %s von der Gruppe:',
-	'notice_select_cat'			=> 'Bitte eine Kategorie ausw�hlen!',
+	'notice_select_cat'			=> 'Bitte eine Kategorie auswählen!',
 	'notice_select_rank_set'	=> 'Rang \'%s\' setzen',
 	
 	'notice_select_profile'		=> 'Bitte bei <b>%s</b> einen Wert eintragen, dass ist ein Pflichtfeld!',
@@ -205,32 +208,32 @@ $lang = array_merge($lang, array(
 	'error_input_server'	=> 'Bitte ein <b>Server</b> eingeben!',
 	'error_input_user'		=> 'Bitte <b>g�ltige Benutzernamen</b> eingeben!',
 	
-	'error_select_league'	=> 'Bitte eine <b>Liga</b> ausw�hlen!',
-	'error_select_war'		=> 'Bitte ein <b>Wartype</b> ausw�hlen!',
-	'error_select_newscat'	=> 'Bitte eine <b>Newskategorie</b> ausw�hlen!',
-	'error_select_type'		=> 'Bitte ein <b>Type</b> ausw�hlen!',
-	'error_select_game'		=> 'Bitte ein <b>Spiel</b> ausw�hlen!',
-	'error_select_level'	=> 'Bitte ein <b>Benutzerlevel</b> ausw�hlen!',
-	'error_select_past'		=> 'Bitte kein <b>verganges</b> Datum ausw�hlen',
-	'error_select_team'		=> 'Bitte ein <b>Team</b> ausw�hlen!',
-	'error_select_maps'		=> 'Bitte eine <b>Karte(n)</b> Ausw�hlen!',
-	'error_select_past'		=> 'Bitte ein <b>Datum/Zeit</b> in der Zukunft ausw�hlen!',
+	'error_select_league'	=> 'Bitte eine <b>Liga</b> auswählen!',
+	'error_select_war'		=> 'Bitte ein <b>Wartype</b> auswählen!',
+	'error_select_newscat'	=> 'Bitte eine <b>Newskategorie</b> auswählen!',
+	'error_select_type'		=> 'Bitte ein <b>Type</b> auswählen!',
+	'error_select_game'		=> 'Bitte ein <b>Spiel</b> auswählen!',
+	'error_select_level'	=> 'Bitte ein <b>Benutzerlevel</b> auswählen!',
+	'error_select_past'		=> 'Bitte kein <b>verganges</b> Datum auswählen',
+	'error_select_team'		=> 'Bitte ein <b>Team</b> auswählen!',
+	'error_select_maps'		=> 'Bitte eine <b>Karte(n)</b> Auswählen!',
+	'error_select_past'		=> 'Bitte ein <b>Datum/Zeit</b> in der Zukunft auswählen!',
 	'error_select_file'		=> 'Bitte eine <b>Datei</b> auswählen!',
-	'error_select_user'		=> 'Bitte einen <b>Benutzer</b> ausw�hlen!',
+	'error_select_user'		=> 'Bitte einen <b>Benutzer</b> auswählen!',
 	
 	
 	
 #	'msg_select_set_rank'		=> 'Rang setzen &raquo;',
-#	'msg_select_item'			=> 'Bitte etwas ausw�hlen!',
+#	'msg_select_item'			=> 'Bitte etwas auswählen!',
 #	'msg_select_rights_group'	=> 'Gruppenrechte geben/nehmen',
-#	'msg_select_maps'		=> 'Bitte eine Map Ausw�hlen!',	
+#	'msg_select_maps'		=> 'Bitte eine Map Auswählen!',	
 
 #	'com_required'		=> 'Mit * markierte Felder sind erforderlich!',
 	'com_required'		=> 'Rot gekenntzeichnete Felder sind erforderlich!',
-	'com_empty'			=> 'Keine Einträge vorhanden.',
+	'com_empty'			=> 'Keine Eintr&auml;ge vorhanden.',##
 	'com_remove'		=> 'Entfernen',
 	'com_go'			=> 'Los',
-	'com_delete'		=> 'L�schen',
+	'com_delete'		=> 'Löschen',
 	'com_select_option'	=> 'Option w�hlen',
 	
 	'com_view'			=> 'Anzeigen',			/* permission, forum, groups */
@@ -241,7 +244,7 @@ $lang = array_merge($lang, array(
 	'mark_no'		=> 'Nein aktivieren',
 	'mark_yes'		=> 'Ja aktivieren',
 	'mark_all'		=> 'alle markieren',
-	'mark_deall'	=> 'alles abw�hlen',
+	'mark_deall'	=> 'alles abwählen',
 	'mark_invert'	=> 'Markierung umkehren',
 
 	'size_by'	=> ' Bytes',
@@ -250,6 +253,7 @@ $lang = array_merge($lang, array(
 	'size_gb'	=> ' GB',
 	
 	'sync'		=> 'Sync',
+	'rival'		=> 'Rival',
 
 	'auth_guest'	=> 'Gast',
 	'auth_user'		=> 'Benutzer',
@@ -280,7 +284,7 @@ $lang = array_merge($lang, array(
 	'sprintf_match_name'		=> 'vs. %s',
 	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',
 	
-	'msg_select_gametype'		=> 'Bitte ein Spieltype ausw�hlen!',			/* acp_game */
+	'msg_select_gametype'		=> 'Bitte ein Spieltype auswählen!',			/* acp_game */
 	
 	/* added 18.07 */
 #	'sm_manage'			=> 'Verwalten',
@@ -368,7 +372,6 @@ $lang = array_merge($lang, array(
 #	'common_resync'			=> 'Synchronisieren',
 #	'common_order_u'		=> 'nach Oben verschieben',
 #	'common_order_d'		=> 'nach Unten verschieben',
-#	'common_entry_empty'	=> 'Keine Einträge vorhanden.',
 #	'common_entry_new'		=> 'Neuer Eintrag',
 #	'common_add'			=> 'Hinzuf�gen',
 	'common_auth'			=> 'Berechtigung',
@@ -394,7 +397,7 @@ $lang = array_merge($lang, array(
 #	'common_moderators'		=> 'Moderatoren',		
 #	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
 #	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
-#	'common_overview'		=> '�bersicht',		
+#	'common_overview'		=> 'Übersicht',		
 #	'common_reset'			=> 'Zurücksetzen',
 #	'common_setting'		=> 'Einstellung',
 #	'common_settings'		=> 'Einstellungen',		
@@ -433,11 +436,11 @@ $lang = array_merge($lang, array(
 #	'msg_empty_port'		=> 'Bitte einen Port vom Server eintragen!',
 #	'msg_empty_qport'		=> 'Bitte den QPort vom Server eintragen!',
 #	'msg_empty_url'			=> 'Bitte eine URL (Webadresse) eintragen!',
-#	'msg_select_map_file'	=> 'Bitte ein Bild ausw�hlen!',		
+#	'msg_select_map_file'	=> 'Bitte ein Bild auswählen!',		
 #	
 #	'msg_empty_pass'			=> 'Bitte ein Passwort eintragen!',
 #	'msg_empty_pass_confirm'	=> 'Bitte ein Passwort Best�tigen!',
-#	'msg_select_pass'			=> 'Bitte ein Passworttype ausw�hlen!',
+#	'msg_select_pass'			=> 'Bitte ein Passworttype auswählen!',
 #	'msg_empty_email'			=> 'Bitte ein eMail eintragen!',
 #	'msg_empty_email_confirm'	=> 'Die eMails stimmen nicht �berein Best�tigen!',
 #	'msg_empty_email_mismatch'	=> 'Die eMails stimmen nicht �berein!',
@@ -447,37 +450,37 @@ $lang = array_merge($lang, array(
 #	'msg_must_select_authlist'	=> 'Es muss ein W�hle ein Authfeld aus',		
 #	'msg_must_select_game'		=> 'W�hle ein Spiel aus',		
 #	'msg_select_desc'			=> 'Bitte eine Beschreibung eintragen',	
-#	'msg_select_dir'			=> 'Bitte ein Verzeichnis ausw�hlen!',	
-#	'msg_select_duration'		=> 'Bitte eine Zeitdauer ausw�hlen',		
+#	'msg_select_dir'			=> 'Bitte ein Verzeichnis auswählen!',	
+#	'msg_select_duration'		=> 'Bitte eine Zeitdauer auswählen',		
 #	
 #	
-#	'msg_select_gametype'		=> 'Bitte ein Spieltype ausw�hlen!',			/* game */
-#	'msg_select_forms'			=> 'Bitte ein Forum ausw�hlen!',	
-#	'msg_select_forum'			=> 'Bitte ein Hauptforum ausw�hlen!',	
-#	'msg_select_forum'			=> 'Bitte ein Hauptforum ausw�hlen!',	
+#	'msg_select_gametype'		=> 'Bitte ein Spieltype auswählen!',			/* game */
+#	'msg_select_forms'			=> 'Bitte ein Forum auswählen!',	
+#	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
+#	'msg_select_forum'			=> 'Bitte ein Hauptforum auswählen!',	
 #	
 #	'msg_select_match_map'		=> 'Bitte Karteninfos eintragen!',		
-#	'msg_select_member'			=> 'Bitte 1 oder mehrere Mitglieder ausw�hlen!',	
+#	'msg_select_member'			=> 'Bitte 1 oder mehrere Mitglieder auswählen!',	
 #	'msg_select_no_users'		=> 'Keine Benutzer ausgew�hlt.',		
 #	'msg_select_nomembers'		=> 'Keine Teammitglieder ausgew�hlt oder eingetragen.',		
-#	'msg_select_option'			=> 'Bitte eine <b>Option</b> ausw�hlen!',	
-#	'msg_select_order'			=> 'Bitte Reihenfolge ausw�hlen!',	
+#	'msg_select_option'			=> 'Bitte eine <b>Option</b> auswählen!',	
+#	'msg_select_order'			=> 'Bitte Reihenfolge auswählen!',	
 #	'msg_select_order_end'		=> 'am Ende sortieren',		
-#	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder ausw�hlen, zum l�schen.',	
+#	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder auswählen, zum l�schen.',	
 #	'msg_select_profilefield'	=> 'Bitte Profilefeld eintragen!',		
 #	'msg_select_rival'			=> 'Bitte ein Gegnernamen eintragen',	
 #	'msg_select_rival_tag'		=> 'Bitte ein Gegnerclantag eintragen',		
 #	'msg_select_server'			=> 'Bitte ein Gameserver eintragen',	
 #	'msg_select_sort_team'		=> 'Team f�rs sortieren w�hlen!',		
-#	'msg_select_type'			=> 'Bitte ein Type ausw�hlen!',	
-#	'msg_select_type'			=> 'Bitte ein Type / Art ausw�hlen!',	
+#	'msg_select_type'			=> 'Bitte ein Type auswählen!',	
+#	'msg_select_type'			=> 'Bitte ein Type / Art auswählen!',	
 #	'msg_select_url'			=> 'Bitte ein Link eintragen!',	
-#	'msg_select_user_level'		=> 'Bitte ein Benutzerlevel ausw�hlen!',		
-#	'msg_selected_member'		=> 'Bitte Spieler ausw�hlen die noch nicht eingetragen sind.',		
+#	'msg_select_user_level'		=> 'Bitte ein Benutzerlevel auswählen!',		
+#	'msg_selected_member'		=> 'Bitte Spieler auswählen die noch nicht eingetragen sind.',		
 #	'msg_sprintf_noentry'		=> 'Es sind keine %s eingetragen',		
-#	'select_msg_cat_image'		=> 'Bitte ein Kategoriebild ausw�hlen!',		
-#	'select_msg_forum_icon'		=> 'Bitte ein Forumicon ausw�hlen!',		
-#	'select_msg_game_image'		=> 'Bitte ein Spielbild ausw�hlen!',		
+#	'select_msg_cat_image'		=> 'Bitte ein Kategoriebild auswählen!',		
+#	'select_msg_forum_icon'		=> 'Bitte ein Forumicon auswählen!',		
+#	'select_msg_game_image'		=> 'Bitte ein Spielbild auswählen!',		
 #	'msg_page_disable'			=> 'Seite ist im Wartungsmodus!',
 #	'select_rank'				=> 'Rang setzen &raquo;',
 #	'select_ranks_rights'		=> 'Gruppenrechte geben/nehmen',		
@@ -565,14 +568,14 @@ $lang = array_merge($lang, array(
 #	'delete'	=> 'Der Eintrag wurde gel�scht!',
 #	'confirm'	=> 'das dieser Eintrag:',
 #	'msg_input_size'		=> 'Bitte eine <b>Maximale Gr��e</b> eingeben!',/* download */
-#	'msg_select_userlevel'	=> 'Bitte ein Benutzerlevel ausw�hlen!',
+#	'msg_select_userlevel'	=> 'Bitte ein Benutzerlevel auswählen!',
 #	'msg_empty_ranks'			=> 'Keine R�nge vorhanden/eingetragen.',
 #	'msg_sizedir_empty'			=> 'Leer',
 #	'select_rank'	=> 'Rang setzen &raquo;',
 #	'rights_groups'	=> 'Gruppenrechte geben/nehmen',
 #	'rights_teams'	=> 'Teamrechte geben/nehmen',
 	/* error msg */
-#	'msg_select_date'		=> 'Bitte ein G�ltiges <b>Datum</b> ausw�hlen!',				# match
+#	'msg_select_date'		=> 'Bitte ein G�ltiges <b>Datum</b> auswählen!',				# match
 
 	'founder'			=> 'Gründer',
 

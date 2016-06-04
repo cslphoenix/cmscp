@@ -445,14 +445,13 @@ function set_color(name,farbe)
 			<div name="#{view.row.parent.cats.CAT}" id="{view.row.parent.cats.OPTIONS}">
 				<table class="ttabs" cellpadding="1" cellspacing="1">
 				<tr>
-					<th colspan="2">{L_VIEW_AUTH}</th>
+					<th>{L_VIEW_AUTH}</th>
 					<th>{L_YES}</th>
 					<th>{L_NO}</th>
 				</tr>
 				<!-- BEGIN auths -->
 				<tr>
-					<td>{view.row.parent.cats.auths.OPT_NAME}</td>
-					<td width="1%">{view.row.parent.cats.auths.OPT_INFO}</td>
+					<td><span class="right">{view.row.parent.cats.auths.OPT_INFO}</span>{view.row.parent.cats.auths.OPT_NAME}</td>
 					<td class="{view.row.parent.cats.auths.CSS_YES}">&nbsp;</td>
 					<td class="{view.row.parent.cats.auths.CSS_NO}">&nbsp;</td>
 					

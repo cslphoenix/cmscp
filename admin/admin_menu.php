@@ -53,9 +53,6 @@ else
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 
-	debug($_POST, '_POST');
-	debug($action, 'action');
-	
 	$base = ($settings['smain']['menu_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
 	

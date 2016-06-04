@@ -1073,14 +1073,14 @@ function display_minical()
 			{
 				for ( $fordays = 1; $fordays < $nday+1; $fordays++ )
 				{
-					$day .= "<td><span class=\"next\">$fordays</span>as2</td>";
+					$day .= "<td><span class=\"next\">$fordays</span></td>";
 				}
 				
 				$day .= '</tr><tr>';
 				
 				for ( $nextweek = $fordays; $nextweek < $next_days+1; $nextweek++ )
 				{
-					$day .= "<td><span class=\"next\">$nextweek</span>as</td>";
+					$day .= "<td><span class=\"next\">$nextweek</span></td>";
 				}
 				
 			}

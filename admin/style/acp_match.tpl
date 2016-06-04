@@ -306,7 +306,7 @@ function display_options(value)
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navinfo"><li><a href="{U_SYNC}">{L_SYNC}</a></li></ul>
+<ul id="navinfo"><li><a href="{U_SYNC}">{L_SYNC}</a></li><li><a href="{U_RIVAL}">{L_RIVAL}</a></li></ul>
 <ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
 </form>
 
@@ -365,3 +365,58 @@ function display_options(value)
 </tr>
 </table>
 <!-- END display -->
+
+<!-- BEGIN rival -->
+<table class="rows">
+<tr>
+	<th>{L_UPCOMING}</th>
+	<th>{L_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span style="float: right;">{rival.row.TAG}</span>{rival.row.NAME}<br />{rival.row.URL}</td>
+	<td>{rival.row.LOGO}</td>
+	<td>{rival.row.UPDATE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN new_empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END new_empty -->
+</table>
+<!-- END rival -->
+
+<!-- BEGIN change -->
+<form action="{S_ACTION}" method="post" name="form">
+{ERROR_BOX}
+
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{change.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{change.row.tab.L_LANG}</legend>
+<!-- BEGIN option -->
+{change.row.tab.option.DIV_START}
+<dl>			
+	<dt class="{change.row.tab.option.CSS}"><label for="{change.row.tab.option.LABEL}"{change.row.tab.option.EXPLAIN}>{change.row.tab.option.L_NAME}:</label></dt>
+	<dd>{change.row.tab.option.OPTION}</dd>
+</dl>
+{change.row.tab.option.DIV_END}
+<!-- END option -->
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+<!-- END change -->
