@@ -139,7 +139,7 @@ $lang['Look_up_Forum'] = 'Forum auswählen';
 
 $lang['Group_auth_explain'] = 'Du kannst hier die Befugnisse und den Moderator-Status für jede Gruppe einstellen. Vergiss nicht, dass einzelne Benutzerbefugnisse immer noch gültig sind, wenn du die Gruppenbefugnisse änderst (z. B. Zugang zu Foren u. ä.). Sollte dies der Fall sein, wirst du darüber informiert.';
 $lang['User_auth_explain'] = 'Du kannst hier die Befugnisse und den Moderator-Status für jeden einzelnen Benutzer einstellen. Vergiss nicht, dass Gruppenbefugnisse immer noch gültig sind, wenn du die Benutzerbefugnisse änderst (z. B. Zugang zu Foren u. ä.). Sollte dies der Fall sein, wirst du darüber informiert.';
-$lang['Forum_auth_explain'] = 'Du kannst hier die Zugangsebenen für jedes Forum bestimmen. Es gibt eine einfache und eine fortgeschrittene Methode, dies zu tun. Bei der fortgeschrittenen Methode hast du eine bessere Kontrolle über jedes Forum. Bedenke, dass das Ändern der Zugangsebene beeinflusst, welche Benutzer welche Aktionen im Forum durchführen können.';
+$lang['Forum_auth_explain'] = 'Du kannst hier die Zugangsebenen für jedes Forum bestimmen. Es gibt eine einfache und eine fortgeschrittene Methode, dies zu tun. Bei der fortgeschrittenen Methode hast du eine bessere Kontrolle über jedes Forum. Bedenke, dass das ändern der Zugangsebene beeinflusst, welche Benutzer welche Aktionen im Forum durchführen können.';
 
 $lang['Simple_mode'] = 'Einfache Methode';
 $lang['Advanced_mode'] = 'Fortgeschrittene Methode';
@@ -253,7 +253,7 @@ $lang['Server_name_explain'] = 'Der Name der Domain, auf der das Board läuft';
 $lang['Script_path'] = 'Scriptpfad';
 $lang['Script_path_explain'] = 'Der Pfad zu phpBB2, relativ zum Domainnamen';
 $lang['Server_port'] = 'Server Port';
-$lang['Server_port_explain'] = 'Der Port, unter dem dein Server läuft, normalerweise 80. Ändere dies nur, wenn es ein anderer Port ist';
+$lang['Server_port_explain'] = 'Der Port, unter dem dein Server läuft, normalerweise 80. ändere dies nur, wenn es ein anderer Port ist';
 $lang['Site_name'] = 'Name der Seite';
 $lang['Site_desc'] = 'Beschreibung der Seite';
 $lang['Board_disable'] = 'Board deaktivieren';
@@ -484,7 +484,7 @@ $lang['group_closed'] = 'Geschlossene Gruppe';
 $lang['group_hidden'] = 'Versteckte Gruppe';
 $lang['group_delete'] = 'Gelöschte Gruppe';
 $lang['group_delete_check'] = 'Diese Gruppe löschen';
-$lang['submit_group_changes'] = 'Änderungen übernehmen';
+$lang['submit_group_changes'] = 'änderungen übernehmen';
 $lang['reset_group_changes'] = 'Reset';
 $lang['No_group_name'] = 'Bitte gib einen Gruppennamen an';
 $lang['No_group_moderator'] = 'Bitte gib einen Gruppenleiter an';
@@ -720,7 +720,7 @@ $lang['Admin_Username'] = 'Administrator Benutzername';
 $lang['Admin_Password'] = 'Administrator Passwort';
 $lang['Admin_Password_confirm'] = 'Administrator Passwort [ Bestätigung ]';
 
-$lang['Inst_Step_2'] = 'Dein Administrator-Benutzername wurde erstellt. Deine Installation ist nun komplett. Du wirst jetzt auf eine Seite geführt, wo du dein neues Board deinen Bedürfnissen anpassen kannst. Überprüfe am besten gleich die allgemeine Konfiguration und nimm eventuell nötige Änderungen vor. Danke, dass du dich für phpBB 2 entschieden hast.';
+$lang['Inst_Step_2'] = 'Dein Administrator-Benutzername wurde erstellt. Deine Installation ist nun komplett. Du wirst jetzt auf eine Seite geführt, wo du dein neues Board deinen Bedürfnissen anpassen kannst. Überprüfe am besten gleich die allgemeine Konfiguration und nimm eventuell nötige änderungen vor. Danke, dass du dich für phpBB 2 entschieden hast.';
 
 $lang['Unwriteable_config'] = 'Momentan ist deine Konfigurationsdatei nicht beschreibbar. Du kannst dir eine Kopie der Datei runterladen, wenn du auf den entsprechenden Link unten klickst. Du solltest diese Datei ins selbe Verzeichnis wie phpBB2 hochladen. Wenn dies getan ist, solltest du dich mit deinem Administrator-Benutzernamen und Passwort, die du auf der letzten Seite angegeben hast, einloggen und den Administrationsbereich betreten, um die allgemeinen Einstellungen zu prüfen. Einen entsprechenden Link findest du am Ende jeder Seite deines Forums. Danke, dass du dich für phpBB 2 entschieden hast.';
 $lang['Download_config'] = 'Konfigurationsdatei herunterladen';

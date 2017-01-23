@@ -42,8 +42,6 @@ else
 		'error'	=> 'style/info_error.tpl',
 	));
 	
-#	debug($_POST, '_POST');
-
 	$mode = (in_array($mode, array('switch', 'sync'))) ? $mode : false;
 	
 	switch ( $mode )
@@ -136,8 +134,6 @@ else
 			$event	= data(EVENT, "WHERE event_date > $time", 'event_date ASC', 1, false);
 			$match	= data(MATCH, "WHERE match_date > $time", 'match_date DESC', 0, false);
 			
-			debug($match, true);
-			
 			$train	= data(TRAINING, "WHERE training_date > $time", 'training_date DESC', 0, false);
 			$users	= data(USERS, "user_id != 1", 'user_regdate DESC', 1, false);
 			
@@ -163,8 +159,8 @@ else
 						'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_date'], $userdata['user_timezone']),
 						
 						'PUBLIC'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_public'] )	? href('a_txt', 'admin_index.php' . $iadds, array('mode' => 'switch', 'num' => $id), $public, '') : img('i_icon', 'icon_news_denied', ''),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] )			? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_delete'] )	? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] )			? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_delete'] )	? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -199,8 +195,8 @@ else
 						'LEVEL'		=> $level,
 						'DATE'		=> create_date($userdata['user_dateformat'], $event[$i]['event_date'], $config['default_timezone']),
 						
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -228,8 +224,8 @@ else
 						'DATE'		=> create_date($userdata['user_dateformat'], $match[$i]['match_date'], $userdata['user_timezone']),
 						
 						'DETAIL'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_manage'] ) ? href('a_img', 'admin_match.php' . $iadds, array('id' => $id), 'icon_details', 'common_details') : img('i_icon', 'icon_details2', 'common_details'),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_delete'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_delete'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -253,8 +249,8 @@ else
 						
 						'DATE'		=> create_date($userdata['user_dateformat'], $train[$i]['training_date'], $userdata['user_timezone']),
 						
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training_delete'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training_delete'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -286,8 +282,8 @@ else
 						'REGDATE'	=> create_date($userdata['user_dateformat'], $users[$i]['user_regdate'], $config['default_timezone']),
 						
 						'AUTH'		=> ( $userdata['user_level'] == ADMIN || @$userauth['a_auth_user'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'auth', 'id' => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}

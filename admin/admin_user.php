@@ -29,12 +29,14 @@ else
 	$index	= '';
 	$fields = '';
 	
-	$log	= SECTION_USER;
 	$time	= time();
+	$log	= SECTION_USER;
+    $file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
 	$order	= request('order', INT);
+	$index	= request('index', INT);
 	$main	= request('main', TYP);
 	$usub	= request('usub', TYP);
 	$mode	= request('mode', TYP);
@@ -44,18 +46,16 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_users']['path'];
-	$acp_title	= sprintf($lang['stf_head'], $lang['user']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['user']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel && !$index )	? redirect('admin/' . check_sid(basename(__FILE__))) : false;
+	( $cancel && $index )	? redirect('admin/' . check_sid('admin_index.php', true)) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_user.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
-	
-#	$auth_levels	= array('disallowed', 'allowed', 'special', 'default');
-#	$auth_const		= array(AUTH_DISALLOWED, AUTH_ALLOWED, AUTH_SPECIAL, AUTH_DEFAULT);
-	
+
 	$password_random = array(
 		'0' => random_password(7, 10, false, false),
 		'1' => random_password(7, 10, false, true, false),
@@ -65,11 +65,11 @@ else
 		'5' => random_password(7, 14, true, true, true, true),
 	);
 	
-	if ( request('user_name', 1) )
+	if ( request('user_name', TXT) )
 	{
-		$user_name = request('user_name', 1);
+		$user_name = request('user_name', TXT);
 		
-		$check = data(USERS, "user_name = '$user_name'", false, 1, 1);
+		$check = data(USERS, "WHERE user_name = '$user_name'", false, 1, 1);
 		
 		if ( $check )
 		{
@@ -128,6 +128,7 @@ else
 	
 	$template->assign_block_vars($temp, array());
 	( $temp != 'display' ) ? $template->assign_block_vars('head', array()) : '';
+	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
 	
 	switch ( $mode )
 	{
@@ -171,15 +172,9 @@ else
 				$data_sql = data(USERS, $data, false, 1, true);
 				
 				$data_sql['password_type'] = 1;
-				
-			#	if ( $userdata['user_level'] < $data['user_level'] )
-			#	{
-			#		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-			#	}
 			}
 			else
 			{
-			#	$data_sql = build_request(USERS, $vars, $error, $mode);
 				$data_sql = build_request(USERS, $vars, $error, $mode, false, 'password_type');
 				/*
 				$data_sql = array(
@@ -320,14 +315,19 @@ else
 				$check_founder_yes	= ( $data['user_founder'] ) ? ' disabled checked="checked"' : ' disabled';
 			}
 			*/
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
+		#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
+		#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	#		$fields .= "<input type=\"hidden\" name=\"user_regdate\" value=\"" . $data['user_regdate'] . "\" />";
 	#		$fields .= "<input type=\"hidden\" name=\"user_password\" value=\"" . $data['user_password'] . "\" />";
 	#		$fields .= "<input type=\"hidden\" name=\"user_lastvisit\" value=\"" . $data['user_lastvisit'] . "\" />";
+
+            $fields .= build_fields(array(
+				'mode'	=> $mode,
+				'id'	=> $data,
+			));
 			
 			$template->assign_vars(array(
-			#	'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+			#	'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 			#	'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['user'], $data['user_name']),
 			#	'L_NAME'	=> sprintf($lang['stf_name'], $lang['user']),
 			#	'L_EMAIL'	=> $lang['email'],
@@ -392,7 +392,7 @@ else
 				'L_EXPLAIN'	=> $lang['com_required'],
 
 				'S_MODE'	=> $s_mode,
-				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
 
@@ -432,17 +432,18 @@ else
 			
 			$rank_page	= $data['user_rank_page'];
 			$rank_forum	= $data['user_rank_forum'];
-			
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-			
+
+			$fields .= build_fields(array(
+				'mode'	=> $mode,
+				'id'	=> $data,
+			));
+
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'S_MODE'	=> $s_mode,
-			#	'S_ACTION'	=> check_sid($file),
-				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields
 			));
 		
@@ -482,17 +483,19 @@ else
 			
 			$rank_page	= $data['user_rank_page'];
 			$rank_forum	= $data['user_rank_forum'];
-			
-			$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-			
+
+            $fields .= build_fields(array(
+				'mode'	=> $mode,
+				'id'	=> $data,
+			));
+
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'S_MODE'	=> $s_mode,
-			#	'S_ACTION'	=> check_sid($file),
-				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+				
+				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields
 			));
 		
@@ -500,11 +503,6 @@ else
 			
 		case 'permission':
 		
-			if ( $userdata['user_level'] < $data['user_level'] )
-			{
-				message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-			}
-			
 			$data_sql		= data(USERS, $data, false, 1, true);
 			$options		= array('a_', 'd_', 'g_');
 			$ptype			= ($ptype ? $ptype : $options[0]);
@@ -626,12 +624,12 @@ else
 							if ( $data_sql['user_founder'] )
 							{
 								$urs_access[$forum][$r_field] = '1';
-								$grp_info[$forum][$data_sql['user_id']][$r_field][lang('founder')] = $lang['perm_1'];
+								$grp_info[$forum][$data_sql['user_id']][$r_field][lang('founder_permission')] = $lang['perm_1'];
 							}
 							
 							if ( $r_value != 0 )
 							{
-								$grp_info[$forum][$data_sql['user_id']][$r_field][lang('user')] = $lang['perm_' . $r_value];
+								$grp_info[$forum][$data_sql['user_id']][$r_field][lang('user_permission')] = $lang['perm_' . $r_value];
 							}
 						}
 					}
@@ -706,7 +704,7 @@ else
 							if ( $data_sql['user_founder'] )
 							{
 								$grp_access[$forum][$r_field] = '1';
-								$grp_info[$forum][$data_sql['user_id']][$r_field][lang('founder')] = $lang['perm_1'];
+								$grp_info[$forum][$data_sql['user_id']][$r_field][lang('founder_permission')] = $lang['perm_1'];
 							}
 							
 							if ( $r_value != 0 )
@@ -814,55 +812,6 @@ else
 				}
 			}
 			
-			/*
-			if ( $group_access )
-			{
-				foreach ( $group_access as $forum => $groups )
-				{
-					foreach ( $groups as $g_id => $g_data )
-					{
-						foreach ( $g_data as $g_field => $value )
-						{
-							if ( isset($gaccess[$forum][$g_field]) )
-							{
-								switch ( $gaccess[$forum][$g_field] )
-								{
-									case '1':
-									
-										switch ( $gaccess[$forum][$g_field] )
-										{
-											case '-1':	$gaccess[$forum][$g_field] = '-1';	break;
-											case '0':	$gaccess[$forum][$g_field] = '1';	break;
-										}
-										
-										break;
-										
-									case '0':
-									
-										switch ( $gaccess[$forum][$g_field] )
-										{
-											case '-1':	$gaccess[$forum][$g_field] = '-1';	break;
-											case '1':	$gaccess[$forum][$g_field] = '1';	break;
-										}
-								
-									break;
-									
-									case '-1':
-									
-										$gaccess[$forum][$g_field] = '-1';
-									
-										break;
-								}
-							}
-							else
-							{
-								$gaccess[$forum][$g_field] = $value;
-							}
-						}
-					}
-				}
-			}
-			*/
 			$template->assign_block_vars('view', array());
 			
 			$forums[0] = lang($ptype . $_action);
@@ -886,67 +835,7 @@ else
 			/* SPRACHFILES ANPASSEN UND ERSTELLEN !!! */
 			$add_lang = array('label_id' => 0, 'label_name' => 'no_select', 'label_desc' => 'no_select_reset', 'label_type' => $type);
 			array_unshift($acl_label, $add_lang);
-			/*
-			$u_a = array();
 			
-			foreach ( $acl_field_name as $field )
-			{
-				foreach ( $ug_ids as $user_id )
-				{
-					if ( isset($gaccess[$forum_ids][$field]) )
-					{
-						if ( $gaccess[$forum_ids][$field] == '1' )
-						{
-							$i_a[$forum_ids][$user_id][$field] =  '';
-							
-							if ( isset($users_access[$forum_ids][$user_id][$field]) )
-							{
-								if ( $users_access[$forum_ids][$user_id][$field] == '-1' )
-								{
-									$u_a[$forum_ids][$user_id][$field] = '-1';
-								}
-								else if ( $users_access[$forum_ids][$user_id][$field] == '0' )
-								{
-									$u_a[$forum_ids][$user_id][$field] = '1';
-								}
-							}
-							else
-							{
-								$u_a[$forum_ids][$user_id][$field] = '1';
-							}
-						}
-						else if ( $gaccess[$forum_ids][$field] == '0' )
-						{
-							if ( isset($users_access[$forum_ids][$user_id][$field]) )
-							{
-								if ( $users_access[$forum_ids][$user_id][$field] == '-1' )
-								{
-									$u_a[$forum_ids][$user_id][$field] = '-1';
-								}
-								else if ( $users_access[$forum_ids][$user_id][$field] == '1' )
-								{
-									$u_a[$forum_ids][$user_id][$field] = '1';
-								}
-							}
-							else
-							{
-								$u_a[$forum_ids][$user_id][$field] = '0';
-							}
-						}
-						else
-						{
-							$u_a[$forum_ids][$user_id][$field] = '-1';
-						}
-					}
-					else
-					{
-						$u_a[$forum_ids][$user_id][$field] = '0';
-					}
-				}
-			}
-			*/
-		#	debug($u_a, 'u_a');
-		
 			$sql = "SELECT user_id as ugid, user_name as name FROM " . USERS . " WHERE user_id IN ($ug_ids[0]) ORDER BY user_name ASC";
 			if ( !($result = $db->sql_query($sql)) )
 			{
@@ -963,19 +852,13 @@ else
 			$main	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $ugs : $forums;
 			$parent	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $forums : $ugs;
 			
-		#	debug($lang['tabs'], 'tabs');
-			
 			foreach ( $main as $m_id => $m_data )
 			{
 				$template->assign_block_vars('view.row', array('NAME' => $m_data));
 				
-			#	debug($m_id, 'm_id');
-				
 				foreach ( $parent as $p_id => $p_data )
 				{
 					$row_switch = sprintf('s%sg%s', $m_id, $p_id);
-					
-				#	debug($p_id, 'p_id');
 					
 					$template->assign_block_vars('view.row.parent', array(
 						'NAME'		=> $p_data,
@@ -1023,13 +906,15 @@ else
 			
 			foreach ( $groups as $grp_id => $grp_name )
 			{
-				$legend[$grp_id] = href('a_style', 'admin_groups.php', array('mode' => 'view', 'id' => $grp_id), $groups_color[$grp_id], $grp_name);
+				$legend[$grp_id] = href('a_style', 'admin_groups.php' . $iadds, array('mode' => 'permission', 'id' => $grp_id), $groups_color[$grp_id], $grp_name);
 			}
 			
 			$legend = implode(', ', $legend);
 			
+		#	debug($legend, '$legend');
+			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 				'L_CREATE'	=> sprintf($lang['stf_create'], $lang['user']),
 				'L_INPUT'	=> sprintf($lang['stf_create'], $lang['user']),
 				'L_NAME'	=> $lang['user'],
@@ -1051,21 +936,12 @@ else
 			
 			$data_sql = data(USERS, $data, false, 1, true);
 			
-			if ( $userdata['user_level'] < $data['user_level'] )
-			{
-				message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-			}
-			
 			$sql = "SELECT group_id, group_type, group_name, group_access, group_color FROM " . GROUPS . " ORDER BY group_order";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$group_ids[$row['group_id']] = $row;
-			}
+			$groups = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 			
 			$sql = "SELECT t.team_id, t.team_name, g.game_image FROM " . TEAMS . " t, " . GAMES . " g WHERE t.team_game = g.game_id ORDER BY t.team_order";
@@ -1073,11 +949,7 @@ else
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$teams[$row['team_id']] = $row;
-			}
+			$teams = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 			
 			$sql = "SELECT * FROM " . LISTS . " WHERE type IN (" . TYPE_GROUP . ", " . TYPE_TEAM .") AND user_id = " . $data;
@@ -1099,22 +971,25 @@ else
 			}
 			$db->sql_freeresult($result);
 			
-			if ( @$userauth['a_group_manage'] && $group_ids )
+			if ( $groups )
 			{
 				$template->assign_block_vars('groups.group', array());
 				
-				foreach ( $group_ids as $key => $row )
+				$cnt = count($groups);
+				
+				for ( $i = $start; $i < min($settings['per_page_entry']['acp_userlist'] + $start, $cnt); $i++ )
+			#	foreach ( $group_ids as $key => $row )
 				{
-					$group_id	= $row['group_id'];
-					$group_name	= $row['group_name'];
+					$group_id	= $groups[$i]['group_id'];
+					$group_name	= $groups[$i]['group_name'];
 									
-					$member = (isset($in_groups[TYPE_GROUP][$key])) ? true : false;
+					$member = (isset($in_groups[TYPE_GROUP][$group_id])) ? true : false;
 					$neg_group_id = -1 * $group_id;
 					
-					$ustatus	= ($member) ? $in_groups[TYPE_GROUP][$key]['user_status'] : false;
-					$upending	= ($member) ? $in_groups[TYPE_GROUP][$key]['user_pending'] : false;
+					$ustatus	= ($member) ? $in_groups[TYPE_GROUP][$group_id]['user_status'] : false;
+					$upending	= ($member) ? $in_groups[TYPE_GROUP][$group_id]['user_pending'] : false;
 					
-					if ( ($row['group_type'] == GROUP_SYSTEM) || ($userdata['user_level'] >= $row['group_access']) )
+					if ( ($groups[$i]['group_type'] == GROUP_SYSTEM) || @!$userauth['a_group_manage'] )
 					{
 						$s_assigned_group	= ( $member && !$upending ) ? 'disabled checked="checked"' : 'disabled';
 						$s_unassigned_group	= ( $member ) ? 'disabled' : 'disabled checked="checked"';
@@ -1139,25 +1014,28 @@ else
 						'S_ASSIGNED_GROUP'		=> $s_assigned_group,
 						'S_UNASSIGNED_GROUP'	=> $s_unassigned_group,
 						'S_MOD_GROUP'			=> $s_mod_group,
-						'U_USER_PENDING'		=> ( $upending ) ? $lang['Membership_pending'] : '',
 						
+						'U_USER_PENDING'		=> ( $upending ) ? $lang['Membership_pending'] : '',
 					));
 				}
 			}
 			
-			if ( @$userauth['a_team_manage'] && $teams )
+			if ( $teams )
 			{
 				$template->assign_block_vars('groups.team', array());
 				
-				foreach ( $teams as $key => $row )
+				$cnt = count($teams);
+							
+				for ( $j = $start; $j < min($settings['per_page_entry']['acp_userlist'] + $start, $cnt); $j++ )	
+			#	foreach ( $teams as $key => $row )
 				{
-					$team_id	= $row['team_id'];
-					$team_name	= $row['team_name'];
+					$team_id	= $teams[$j]['team_id'];
+					$team_name	= $teams[$j]['team_name'];
 					
-					$member = (isset($in_groups[TYPE_TEAM][$key])) ? true : false;
+					$member = (isset($in_groups[TYPE_TEAM][$team_id])) ? true : false;
 					$neg_team_id = -1 * $team_id;
 					
-					$ustatus = ($member) ? $in_groups[TYPE_TEAM][$key]['user_status'] : false;
+					$ustatus = ($member) ? $in_groups[TYPE_TEAM][$team_id]['user_status'] : false;
 					
 					$s_assigned_team	= ( $member ) ? 'checked="checked"' : '';
 					$s_unassigned_team	= ( $member ) ? '' : 'checked="checked"';
@@ -1184,7 +1062,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'L_GROUPS'	=> $lang['usergroups'],
@@ -1205,8 +1083,6 @@ else
 		
 			if ( $submit )
 			{
-				debug($_POST);
-				
 				$mod_team		= request('mod_team', 4);
 				$email_team		= request('email_team', INT);
 				$marks_team		= request('marks_team', 4);
@@ -1352,7 +1228,6 @@ else
 							{
 								message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 							}
-							debug($sql);
 						}
 					}
 				}
@@ -1526,7 +1401,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 				'L_INPUT'	=> sprintf($lang['stf_update'], $lang['user'], $data['user_name']),
 				
 				'S_MODE'	=> $s_mode,
@@ -1538,46 +1413,41 @@ else
 		
 		case 'delete':
 		
-			$confirm = isset($HTTP_POST_VARS['confirm']);
+			$data_sql = data(USERS, $data, false, 1, true);
 			
-			if ( $data && $confirm )
+			if ( $data && $accept && $userauth['a_user_delete'] )
 			{
-				$user = get_data('user', $data, INT);
-			
-				if ( $userdata['user_level'] < $data['user_level'] )
-				{
-					message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-				}			
-
-				log_add(LOG_ADMIN, $log, 'ACP_USER_DELETE', $user_info['user_name']);
+				$file = ( $index ) ? check_sid('admin_index.php') : check_sid($file);
+				$name = ( $index ) ? $lang['acp_overview'] : $acp_title;
 				
-				#$oCache -> sCachePath = './../cache/';
-				#$oCache -> deleteCache('display_subnavi_user');
+				$sql = sql(USERS, $mode, $data_sql, 'user_id', $data);
+				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $name);
 				
-				$message = $lang['delete_user'] . sprintf($lang['click_return_user'], '<a href="' . check_sid($file));
-				message(GENERAL_MESSAGE, $message);
-	
+			#	$oCache -> sCachePath = './../cache/';
+			#	$oCache -> deleteCache('display_subnavi_user');
+				
+				log_add(LOG_ADMIN, $log, $mode, $sql);
+				message(GENERAL_MESSAGE, $msg);
 			}
-			else if ( $data && !$confirm )
+			else if ( $data && !$accept && $userauth['a_user_delete'] )
 			{
-				$template->set_filenames(array('body' => 'style/info_confirm.tpl'));
-	
-				$fields = '<input type="hidden" name="mode" value="delete" /><input type="hidden" name="id" value="' . $data . '" />';
-	
+				$fields .= build_fields(array(
+					'mode'		=> $mode,
+					'id'		=> $data,
+					'index'	=> $index,
+				));
+				
 				$template->assign_vars(array(
-					'MESSAGE_TITLE'		=> $lang['com_confirm'],
-					'MESSAGE_TEXT'		=> $lang['confirm_delete_user'],
-	
-					'L_YES'				=> $lang['com_yes'],
-					'L_NO'				=> $lang['com_no'],
-	
+					'M_TITLE'	=> $lang['com_confirm'],
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['user_name']),
+
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			}
 			else
 			{
-				message(GENERAL_MESSAGE, $lang['msg_must_select_user']);
+				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 			}
 			
 			break;
@@ -1611,7 +1481,7 @@ else
 					'AUTH'		=> ( @$userauth['a_user'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'permission', 'id' => $id), 'icon_auth', '') : img('i_icon', 'icon_auth2', ''),
 					'FIELD'		=> ( @$userauth['a_user_fields'] /*&&	($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'fields', 'id' => $id), 'icon_field', '') : img('i_icon', 'icon_field2', ''),
 					'GROUP'		=> ( @$userauth['a_team_manage'] || @$userauth['a_group_manage'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'groups', 'id' => $id), 'icon_group', '') : img('i_icon', 'icon_group2', ''),
-					'UPDATE'	=> ( @$userauth['a_user'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
+					'UPDATE'	=> ( @$userauth['a_user'] /*&&		($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
 					'DELETE'	=> ( @$userauth['a_user_delete'] /*&&	($userdata['user_level'] == ADMIN || $userdata['user_level'] > $tmp[$i]['user_level'])*/ ) ? href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					
 					'REGISTER'	=> create_date($userdata['user_dateformat'], $tmp[$i]['user_regdate'], $userdata['user_timezone']),
@@ -1622,7 +1492,7 @@ else
 			$current_page = ( !count($data) ) ? 1 : ceil($cnt/$settings['ppe_acp']);
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['user']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['user']),
 				'L_CREATE'	=> sprintf($lang['stf_create'], $lang['user']),
 				'L_INPUT'	=> sprintf($lang['stf_create'], $lang['user']),
 				'L_NAME'	=> $lang['user'],
@@ -1639,7 +1509,7 @@ else
 			break;
 	}
 
-	$template->pparse('body');
+	$template->pparse($_tpl);
 
 	acp_footer();
 }

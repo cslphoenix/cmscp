@@ -18,7 +18,7 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current	= 'acp_icons';
+	$current = 'acp_icons';
 	
 	include('./pagestart.php');
 	
@@ -29,28 +29,32 @@ else
 	$index	= '';
 	$fields	= '';
 	
+	$time	= time();
 	$log	= SECTION_ICONS;
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
-	$start	= request('start', INT);
-	$order	= request('order', INT);
 	$main	= request('main', TYP);
 	$usub	= request('usub', TYP);
 	$mode	= request('mode', TYP);
 	$type	= request('type', TYP);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_icons'];
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
-	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_icons.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
+	
+	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down'))) ? $mode : 'default';
+    $_tpl = ($mode == 'delete') ? 'confirm' : 'body';
 	
 	if ( isset($_POST['append']) || isset($_POST['modify']) )
 	{
@@ -67,9 +71,6 @@ else
 #		return $return;
 #	}
 
-	debug($_POST, '_POST');
-#	debug($mode, 'mode');
-	
 #	$mode = (in_array($mode, array('append', 'modify', 'create', 'list', 'update', 'order', 'delete'))) ? $mode : false;
 	
 	if ( $mode )
@@ -182,14 +183,12 @@ else
 					));
 				
 				$template->assign_vars(array(
-			#		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+			#		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 			#		'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title']),
 										
 					'S_ACTION'	=> check_sid("$file"),
 					'S_FIELDS'	=> $fields,
 				));
-			
-				$template->pparse('body');
 			
 				break;
 			
@@ -260,19 +259,19 @@ else
 				
 			#	build_output($data, $vars, 'input', false, ICONS);
 				
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-				
+                $fields .= build_fields(array(
+					'mode'	=> $mode,
+					'id'	=> $data,
+				));
+
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 					'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['server_name']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 			
-				$template->pparse('body');
-				
 				break;
 			
 			case 'list':
@@ -301,21 +300,6 @@ else
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
 				));
-				
-				$template->pparse('body');
-			
-				break;
-			
-			
-				
-			case 'order':
-				
-				update(ICONS, 'server', $move, $data_id);
-				orders(ICONS);
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				
-				$index = true;
 				
 				break;
 				
@@ -354,69 +338,74 @@ else
 				$template->pparse('confirm');
 				
 				break;
-		}
-	
-		if ( $index != true )
-		{
-			acp_footer();
-			exit;
-		}
-	}
-	
-	$template->assign_block_vars('display', array());
-	
-#	$fields = '<input type="hidden" name="mode" value="create" />';
-	
-	$icons = data(ICONS, false, 'icon_order ASC', 1, false);
-	
-	if ( !$icons )
-	{
-		$template->assign_block_vars('display.empty', array());
-	}
-	else
-	{
-		$max = count($icons);
-		
-		foreach ( $icons as $row )
-		{
-			$id		= $row['icon_id'];
-			$path	= $row['icon_path'];
-			$order	= $row['icon_order'];
-			$width	= $row['icon_width'];
-			$height	= $row['icon_height'];
 			
-			$template->assign_block_vars('display.row', array(
-				'SHOW'		=> href('a_img', $file, array('mode' => 'update', 'id' => $id), $root_path . $path, false),
+			case 'move_up':
+			case 'move_down':
 				
+			#	if ( $userauth['a_game_assort'] )
+			#	{
+					move(ICONS, $mode, $order);
+					log_add(LOG_ADMIN, $log, $mode);
+			#	}
 				
-				'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
-			));
+			case 'default':
 			
-		#	$servers['server_' . $i] = array($serv[$i]['server_game'], $serv[$i]['server_ip'], $serv[$i]['server_port']);
+				$template->assign_block_vars('display', array());
+				
+				$fields .= build_fields(array('mode' => 'create'));
+				
+				$icons = data(ICONS, false, 'icon_order ASC', 1, false);
+				
+				if ( !$icons )
+				{
+					$template->assign_block_vars('display.empty', array());
+				}
+				else
+				{
+					$max = count($icons);
+					
+					foreach ( $icons as $row )
+					{
+						$id		= $row['icon_id'];
+						$path	= $row['icon_path'];
+						$order	= $row['icon_order'];
+						$width	= $row['icon_width'];
+						$height	= $row['icon_height'];
+						
+						$template->assign_block_vars('display.row', array(
+							'SHOW'		=> href('a_img', $file, array('mode' => 'update', 'id' => $id), $root_path . $path, false),
+							
+							
+							'MOVE_UP'	=> ( $order != '10' ) ? href('a_img', $file, array('mode' => '_order', 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+							'MOVE_DOWN'	=> ( $order != $max ) ? href('a_img', $file, array('mode' => '_order', 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+							
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+						));
+						
+					#	$servers['server_' . $i] = array($serv[$i]['server_game'], $serv[$i]['server_ip'], $serv[$i]['server_port']);
+						
+					}
+					
+				}
+				
+				$template->assign_vars(array(
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
+					'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
+					'L_NAME'	=> $lang['icon_name'],
+					'L_EXPLAIN'	=> $lang['explain'],
+					
+					'LIST'		=> href('a_txt', $file, array('mode' => 'list'), 'list', 'list'),
+					
+			#		'S_CREATE'	=> check_sid("$file?mode=create"),
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
 			
+				break;
 		}
-		
+		$template->pparse('body');
 	}
-	
-	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
-		'L_NAME'	=> $lang['icon_name'],
-		'L_EXPLAIN'	=> $lang['explain'],
-		
-		'LIST'		=> href('a_txt', $file, array('mode' => 'list'), 'list', 'list'),
-		
-#		'S_CREATE'	=> check_sid("$file?mode=create"),
-		'S_ACTION'	=> check_sid($file),
-		'S_FIELDS'	=> $fields,
-	));
-		
-	$template->pparse('body');
-
 	acp_footer();
 }
 

@@ -232,8 +232,8 @@ else
 	
 	if ( !$userdata['session_logged_in'] || ( isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && ( $userdata['user_level'] == ADMIN || $auth || $userdata['user_founder']) ) )
 	{
-		$page_title = $lang['Login'];
-		main_header();
+		$page_title = $lang['common_login'];
+		main_header($page_title);
 
 		$template->set_filenames(array('body' => 'login_body.tpl'));
 

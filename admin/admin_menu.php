@@ -44,9 +44,9 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . 'admin/';
-	$acp_title	= sprintf($lang['stf_head'], $lang[$action]);
+	$acp_title	= sprintf($lang['stf_header'], $lang[$action]);
 	
-	($cancel) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_menu.tpl',
@@ -54,7 +54,8 @@ else
 	));
 
 	$base = ($settings['smain']['menu_switch']) ? 'drop:main' : 'radio:main';
-	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
+	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : 'display';
+	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
 	
 	if ( $mode )
 	{
@@ -82,7 +83,7 @@ else
 					),
 				);
 				
-				if ( $mode == 'create' && !$submit )
+				if ( $mode == 'create' && !$submit && $userauth['a_menu'] )
 				{
 					if ( $action != 'pcp' )
 					{
@@ -118,7 +119,7 @@ else
 				else
 				{
 					$data_sql = build_request(MENU, $vars, $error, $mode);
-
+					
 					if ( !$error )
 					{
 						if ( !$data_sql['type'] || $data_sql['type'] == 3 )
@@ -137,14 +138,14 @@ else
 							unset($data_sql['menu_opts']);
 						}
 						
-						if ( $mode == 'create' )
+						if ( $mode == 'create' && $userauth['a_menu'] )
 						{
 							$data_sql['menu_order'] = maxa(MENU, 'menu_order', "action = '$action' AND main = " . $data_sql['main']);
 							
 							$sql = sql(MENU, $mode, $data_sql);
 							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 						}
-						else
+						else if ( $userauth['a_menu'] )
 						{
 							$sql = sql(MENU, $mode, $data_sql, 'menu_id', $data);
 							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid("$file&main="), $acp_title, check_sid("$file&mode=$mode&id=$data"));
@@ -165,29 +166,21 @@ else
 					'mode'	=> $mode,
 					'id'	=> $data,
 				));
+				
+				$option[] = href('a_txt', $file, ($main ? array('main' => $data_sql['main']) : false), $lang['common_overview'], $lang['common_overview']);
 
 				$template->assign_vars(array(
 					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['menu_name'])),
 					'L_EXPLAIN'	=> $lang['com_required'],
-
+					
+					'L_OPTION'	=> implode($lang['com_bull'], $option),
+					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 
-				$template->pparse('body');
-
 				break;
 				
-			case 'move_up':
-			case 'move_down':
-			
-				move(MENU, $mode, $order, $main, $type, $usub, $action);
-				log_add(LOG_ADMIN, $log, $mode);
-			
-				$index = true;
-				
-				break;
-
 			case 'delete':
 
 				$data_sql = data(MENU, $data, false, 1, true);
@@ -198,7 +191,6 @@ else
 					{
 						case 0:
 						
-							sql(MENU, $mode, $data_sql, 'menu_id', $data);
 							sql(MENU, $mode, $data_sql, 'menu_id', $data);
 							
 							break;
@@ -235,228 +227,160 @@ else
 				$template->pparse('confirm');
 
 				break;
-		}
+				
+			case 'move_up':
+			case 'move_down':
+			
+				move(MENU, $mode, $order, $main, $type, $usub, $action);
+				log_add(LOG_ADMIN, $log, $mode);
+				
+            case 'display':
 
-		if ( $index != true )
-		{
-			acp_footer();
-			exit;
-		}
-	}
-	
-	if ( $main )
-	{
-		$tmp = data(MENU, false, 'main ASC, menu_order ASC', 1, 0);
-		
-		$cat = $module = $label = array();
-		
-		if ( $tmp && $action != 'pcp' )
-		{
-			$template->assign_block_vars('menu', array());
-			
-			foreach ( $tmp as $row )
-			{
-				if ( $row['menu_id'] == $main )
+				$template->assign_block_vars('display', array());
+
+				$fields .= isset($main) ? build_fields(array('mode' => 'create', 'main' => $main)) : build_fields(array('mode' => 'create'));
+				$sqlout = data(MENU, "WHERE action = '$action'", 'main ASC, menu_order ASC', 1, 4);
+
+				if ( !$main )
 				{
-					$cat = $row;
-				}
-				else if ( $row['main'] == $main )
-				{
-					$label[$row['menu_id']] = $row;
-				}
-			}
-			
-			$keys_labels = array_keys($label);
-			
-			foreach ( $tmp as $row )
-			{
-				if ( in_array($row['main'], $keys_labels) )
-				{
-					$module[$row['main']][] = $row;
-				}
-			}
-			
-			$cid	= $cat['menu_id'];
-			$name	= lang($cat['menu_name']);
-			
-			$template->assign_vars(array(
-				'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
-				
-				'S_ACTION'	=> check_sid($file),
-				'S_FIELDS'	=> $fields,
-			));
-			
-			if ( $label )
-			{
-				$lmax = count($label);
-				
-				foreach ( $label as $lkey => $lrow )
-				{
-					$lid	= $lrow['menu_id'];
-					$lorder	= $lrow['menu_order'];
-					$lname	= lang($lrow['menu_name']);
-					
-					$template->assign_block_vars('menu.row', array(
-						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $lid), $lname, $lname),
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $lid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $lid), 'icon_cancel', 'com_delete'),
-						
-						'MOVE_UP'	=> ( $lorder != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'order' => $lorder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-						'MOVE_DOWN'	=> ( $lorder != $lmax )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'order' => $lorder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-						
-						'S_NAME'	=> "menu_module[$lid]",
-						'S_SUBMIT'	=> "submit_module[$lid]",
-					));
-					
-					if ( isset($module[$lid]) )
+					if ( !$sqlout['main'] )
 					{
-						$mmax[$lid] = count($module[$lid]);
-						
-						foreach ( $module[$lid] as $mrow )
+						$template->assign_block_vars('display.empty', array());
+					}
+					else
+					{
+						$max = count($sqlout['main']);
+
+						foreach ( $sqlout['main'] as $row )
 						{
-							$mid	= $mrow['menu_id'];
-							$msub	= $mrow['main'];
-							$morder	= $mrow['menu_order'];
-							$mname	= lang($mrow['menu_name']);
-							
-							$template->assign_block_vars('menu.row.mod', array( 
-								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $mid), $mname, $mname),
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $mid), 'icon_update', 'common_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $mid), 'icon_cancel', 'com_delete'),
-								
-								'MOVE_UP'	=> ( $morder != '1' )			? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $lid, 'type' => 2, 'order' => $morder), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-								'MOVE_DOWN'	=> ( $morder != $mmax[$lid] )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $lid, 'type' => 2, 'order' => $morder), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+							$menu_id	= $row['menu_id'];
+							$menu_name	= lang($row['menu_name']);
+                            $menu_order	= $row['menu_order'];
+
+							$template->assign_block_vars('display.row', array(
+								'NAME'		=> href('a_txt', $file, array('main' => $menu_id), $menu_name, $menu_name),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $menu_id), 'icon_update', 'com_update'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $menu_id), 'icon_cancel', 'com_delete'),
+
+								'MOVE_UP'	=> ( $menu_order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $menu_order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+								'MOVE_DOWN'	=> ( $menu_order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $menu_order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
 							));
 						}
+						
+						$template->assign_block_vars('display.main', array());
 					}
 				}
-			}
-			else
-			{
-				$template->assign_block_vars('menu.empty', array());
-			}
-		}
-		else if ( $tmp && $action == 'pcp' )
-		{
-			$template->assign_block_vars('navi', array());
-			
-			$cat = $module = $label = $field = array();
-			
-			if ( $tmp )
-			{
-				foreach ( $tmp as $row )
+                else
 				{
-					if ( $row['menu_id'] == $main )
+					if ( isset($sqlout['data_id'][$main]) )
 					{
-						$cat = $row;
+						$max_cnt = 0;
+						$max_tmp = count($sqlout['data_id'][$main]);
+						
+						foreach ( $sqlout['data_id'][$main] as $row )
+						{
+							$main_id	= $row['menu_id'];
+							$main_name	= lang($row['menu_name']);
+                            $main_order	= $row['menu_order'];
+
+							$template->assign_block_vars('display.row', array(
+								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $main_id), $main_name, $main_name),
+								
+								'MOVE_UP'	=> ( $main_order != '1' )		? href('a_img', $file, array('mode' => 'move_up',	'main' => $main, 'order' => $main_order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+								'MOVE_DOWN'	=> ( $main_order != $max_tmp )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $main, 'order' => $main_order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $main_id), 'icon_update', 'com_update'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $main_id), 'icon_cancel', 'com_delete'),
+								
+								'S_NAME'	=> "menu_module[$main_id]",
+								'S_SUBMIT'	=> "submit_module[$main_id]",
+								
+							#	'S_NAME'	=> "subforum_name[$main_id]",
+							#	'S_SUBMIT'	=> "subforum_submit[$main_id]",
+							));
+							
+							$max_cnt++;
+							
+							if ( $max_tmp != $max_cnt )
+							{
+								$template->assign_block_vars('display.row.br_empty', array());
+							}
+							else
+							{
+								$template->assign_block_vars('display.row.br_empty2', array());
+							}
+
+							if ( $row['type'] == 1 )
+							{
+								if ( isset($sqlout['data_id'][$main_id]) )
+								{
+									$sub_max = count($sqlout['data_id'][$main_id]);
+									
+		                            foreach ( $sqlout['data_id'][$main_id] as $subrow )
+									{
+										$sub_id		= $subrow['menu_id'];
+										$sub_name	= lang($subrow['menu_name']);
+			                            $sub_order	= $subrow['menu_order'];
+										
+										$template->assign_block_vars('display.row.subrow', array(
+											'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $sub_id), $sub_name, $sub_name),
+											
+											'MOVE_UP'	=> ( $sub_order != '1' )		? href('a_img', $file, array('mode' => 'move_up',	'main' => $main, 'usub' => $main_id, 'type' => 2, 'order' => $sub_order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+											'MOVE_DOWN'	=> ( $sub_order != $sub_max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $main, 'usub' => $main_id, 'type' => 2, 'order' => $sub_order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+											
+											'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $sub_id), 'icon_update', 'com_update'),
+											'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $sub_id), 'icon_cancel', 'com_delete'),
+										));
+									}
+									$template->assign_block_vars('display.row.subrow.sub', array());
+								}
+							}
+						}
+						$template->assign_block_vars('display.label', array());
 					}
-					else if ( $row['main'] == $main )
+					else
 					{
-						$field[] = $row;
+						$template->assign_block_vars('display.empty', array());
 					}
 				}
 				
-				$cid = $cat['menu_id'];
-			
-				$template->assign_vars(array(
-					'CAT'		=> href('a_txt', $file, array($file), $lang['acp_overview'], $lang['acp_overview']),
-					'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $cid), $cat['menu_name'], $cat['menu_name']),
-					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $cid), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $cid), 'icon_cancel', 'com_delete'),
+				if ( $main )
+				{
+					$main_info = sqlout_id($sqlout['main'], $main, 'menu_id');
+					$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+					$option[] = href('a_txt', $file, array('mode' => 'update', 'id' => $main_info['id']), sprintf($lang['stf_update'], $lang['main'], lang($main_info['name'])), lang($main_info['name']));
+				}
+				else
+				{
+					$option[] = '';
+				}
+				
+				debug($main, 'main');
+
+                $template->assign_vars(array(
+    				'L_HEAD'	=> sprintf($lang['stf_header'], $lang[$action]),
+					'L_EXPLAIN'	=> $lang['explain_' . $action],
+					'L_NAME'	=> $lang['type_0'],
 					
-					'S_NAME'	=> "profile_fields[$cid]",
-					'S_SUBMIT'	=> "submit_field[$cid]",
+					'CREATE'			=> sprintf($lang['stf_create'], (( !$main ) ? $lang['type_0'] : $lang['type_1'])),
+
+					'L_CREATE'			=> sprintf($lang['stf_create'], $lang['type_0']),
+					'L_CREATE_LABEL'	=> sprintf($lang['stf_create'], $lang['type_1']),
+					'L_CREATE_MODULE'	=> sprintf($lang['stf_create'], $lang['type_2']),
 					
+					'L_OPTION'	=> implode($lang['com_bull'], $option),
+					
+					'S_NAME'	=> $main ? 'menu_label' : 'menu_name',
+
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
-				
-			}
-			
-			if ( $field )
-			{
-				$max = count($field);
-				
-				foreach ( $field as $row )
-				{
-					$fid	= $row['menu_id'];
-					$order	= $row['menu_order'];
-					$name	= isset($lang[$row['menu_name']]) ? $lang[$row['menu_name']] : $row['menu_name'];
-					
-					$template->assign_block_vars('navi.row', array(
-						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $fid), $name, $name),
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $fid), 'icon_update', 'common_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $fid), 'icon_cancel', 'com_delete'),
-						
-						'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => $cid, 'usub' => $cid, 'type' => 4, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-						'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $cid, 'usub' => $cid, 'type' => 4, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-					));
-				}
-			}
-			else
-			{
-				$template->assign_block_vars('navi.empty', array());
-			}
-		}
-		
-		$fields .= '<input type="hidden" name="mode" value="create" />';
-		$fields .= '<input type="hidden" name="main" value="' . $main . '" />';
-	}
-	else
-	{
-		$template->assign_block_vars('display', array());
-		
-		$typ = ( $action != 'pcp' ) ? 0 : 3;
-		
-		$tmp = data(MENU, "WHERE action = '$action' AND type = $typ", 'menu_order ASC', 1, false);
-		
-		if ( !$tmp )
-		{
-			$template->assign_block_vars('display.empty', array());
-		}
-		else
-		{
-			$max = count($tmp);
-		
-			foreach ( $tmp as $row )
-			{
-				$id		= $row['menu_id'];
-				$order	= $row['menu_order'];
-				$name	= lang($row['menu_name']);
-				
-				$template->assign_block_vars('display.row', array( 
-					'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
-					'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-					'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
-					
-					'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down', 'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				));
-			}
-		}
-				
-		$fields	.= '<input type="hidden" name="mode" value="create" />';
-	}
-	
-	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['stf_head'], $lang[$action]),
-		'L_EXPLAIN'	=> $lang['explain_' . $action],
-		'L_NAME'	=> $lang['type_0'],
-		
-		'L_CREATE'			=> sprintf($lang['stf_create'], $lang['type_0']),
-		'L_CREATE_LABEL'	=> sprintf($lang['stf_create'], $lang['type_1']),
-		'L_CREATE_MODULE'	=> sprintf($lang['stf_create'], $lang['type_2']),
-		
-		'S_ACTION'	=> check_sid($file),
-		'S_FIELDS'	=> $fields,
-	));
-	
-	$template->pparse('body');
 
-	acp_footer();
+				break;
+		}
+	}
+	$template->pparse($_tpl);
+    acp_footer();
 }
 
 ?>

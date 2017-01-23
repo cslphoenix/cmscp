@@ -237,20 +237,48 @@ $smain = array(
 */
 
 $smain = array(
-	'dl_drop' => '1',
-	'dl_subs' => '1',
-	'fields_drop' => '1',
-	'fields_subs' => '1',
-	'forum_drop' => '1',
-	'forum_subs' => '1',
-	'gallery_drop' => '1',
-	'gallery_subs' => '1',
-	'label_drop' => '1',
-	'label_subs' => '1',
-	'maps_drop' => '1',
-	'maps_subs' => '1',
-	'menu_drop' => '1',
-	'menu_subs' => '1',
+#	'dl_drop' => '1',
+#	'dl_subs' => '1',
+#	'fields_drop' => '1',
+#	'fields_subs' => '1',
+#	'forum_drop' => '1',
+#	'forum_subs' => '1',
+#	'gallery_drop' => '1',
+#	'gallery_subs' => '1',
+#	'label_drop' => '1',
+#	'label_subs' => '1',
+#	'maps_drop' => '1',
+#	'maps_subs' => '1',
+#	'menu_drop' => '1',
+#	'menu_subs' => '1',
+	
+	'dl_switch' => 0,
+	'dl_entrys' => 1,
+	'dl_overview' => 1,
+	
+	'profile_switch' => 0,
+	'profile_entrys' => 1,
+	'profile_overview' => 1,
+	
+	'gallery_switch' => 0,
+	'gallery_entrys' => 1,
+	'gallery_overview' => 1,
+	
+	'label_switch' => '1',
+	'label_entrys' => '1',
+	'label_overview' => 1,
+	
+	'maps_switch' => '1',
+	'maps_entrys' => '1',
+	'maps_overview' => '1',
+	
+	'forum_switch' => 0,
+	'forum_entrys' => 1,
+	'forum_overview' => 1,
+	
+	'menu_switch' => 0,
+	'menu_entrys' => 1,
+	'menu_overview' => 1,
 	
 #	'dl'		=> array('drop' => '1', 'subs' => '1'),
 #	'fields'	=> array('drop' => '1', 'subs' => '1'),

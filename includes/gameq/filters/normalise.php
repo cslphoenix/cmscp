@@ -42,22 +42,21 @@ class GameQ_Filters_Normalise extends GameQ_Filters
 	        'password'      => array('protected', 'siusepass', 'sineedpass', 'pswrd', 'gneedpass', 'auth'),
 	        'players'       => array('players'),
 			'teams'       	=> array('team'),
-		#	'nextmap'		=> array('sm_nextmap'),
 		),
 
 		// Indvidual
 		'player' => array(
-			'name'		=> array('nick', 'player', 'playername', 'name'),
-			'kills'		=> array('kills'),
-			'deaths'	=> array('deaths'),
-	        'score'		=> array('kills', 'frags', 'skill', 'score'),
-	        'ping'		=> array('ping'),
+			'name'          => array('nick', 'player', 'playername', 'name'),
+			'kills'         => array('kills'),
+			'deaths'        => array('deaths'),
+	        'score'         => array('kills', 'frags', 'skill', 'score'),
+	        'ping'          => array('ping'),
 		),
 
 		// Team
 		'team' => array(
-			'name'	=> array('name', 'teamname', 'team_t'),
-			'score'	=> array('score', 'score_t'),
+			'name'          => array('name', 'teamname', 'team_t'),
+			'score'         => array('score', 'score_t'),
 		),
 	);
 

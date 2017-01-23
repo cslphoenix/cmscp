@@ -1,6 +1,6 @@
 <?php
 
-if(!defined("SQL_LAYER"))
+if ( !defined("SQL_LAYER") )
 {
 	define("SQL_LAYER","mysql4");
 	
@@ -103,7 +103,8 @@ if(!defined("SQL_LAYER"))
 					$result = mysql_query("COMMIT", $this->db_connect_id);
 				}
 			}
-	
+			
+			$this->query_result = (isset($this->query_result)) ? $this->query_result : false;	
 			if( $this->query_result )
 			{
 				unset($this->row[$this->query_result]);
@@ -138,7 +139,7 @@ if(!defined("SQL_LAYER"))
 		//
 		function sql_numrows($query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
@@ -153,7 +154,7 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_numfields($query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
@@ -163,7 +164,7 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_fieldname($offset, $query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
@@ -173,7 +174,7 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_fieldtype($offset, $query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
@@ -183,15 +184,16 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_fetchrow($query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
 	
 			if( $query_id )
 			{
-				$this->row[$query_id] = mysql_fetch_array($query_id, MYSQL_ASSOC);
-				return $this->row[$query_id];
+				$this->row[(int)$query_id] = mysql_fetch_array($query_id, MYSQL_ASSOC);
+				
+				return $this->row[(int)$query_id];
 			}
 			else
 			{
@@ -201,19 +203,19 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_fetchrowset($query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
 	
 			if( $query_id )
 			{
-				unset($this->rowset[$query_id]);
-				unset($this->row[$query_id]);
-				
-				while($this->rowset[$query_id] = mysql_fetch_array($query_id, MYSQL_ASSOC))
-				{
-					$result[] = $this->rowset[$query_id];
+				unset($this->rowset[(int)$query_id]);
+				unset($this->row[(int)$query_id]);
+	
+				while($this->rowset[(int)$query_id] = mysql_fetch_array($query_id, MYSQL_ASSOC))
+				{				
+					$result[] = $this->rowset[(int)$query_id];
 				}
 				
 				if (empty($result))
@@ -233,7 +235,7 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_fetchfield($field, $rownum = -1, $query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
@@ -246,22 +248,22 @@ if(!defined("SQL_LAYER"))
 				}
 				else
 				{
-					if( empty($this->row[$query_id]) && empty($this->rowset[$query_id]) )
+					if( empty($this->row[(int)$query_id]) && empty($this->rowset[(int)$query_id]) )
 					{
 						if( $this->sql_fetchrow() )
 						{
-							$result = $this->row[$query_id][$field];
+							$result = $this->row[(int)$query_id][$field];
 						}
 					}
 					else
 					{
-						if( $this->rowset[$query_id] )
+						if( $this->rowset[(int)$query_id] )
 						{
-							$result = $this->rowset[$query_id][0][$field];
+							$result = $this->rowset[(int)$query_id][0][$field];
 						}
-						else if( $this->row[$query_id] )
+						else if( $this->row[(int)$query_id] )
 						{
-							$result = $this->row[$query_id][$field];
+							$result = $this->row[(int)$query_id][$field];
 						}
 					}
 				}
@@ -276,7 +278,7 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_rowseek($rownum, $query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
@@ -291,15 +293,15 @@ if(!defined("SQL_LAYER"))
 	
 		function sql_freeresult($query_id = 0)
 		{
-			if( !$query_id )
+			if ( $query_id === false )
 			{
 				$query_id = $this->query_result;
 			}
 	
-			if ( $query_id )
+			if ( $query_id === true )
 			{
-				unset($this->row[$query_id]);
-				unset($this->rowset[$query_id]);
+				unset($this->row[(int)$query_id]);
+				unset($this->rowset[(int)$query_id]);
 	
 				mysql_free_result($query_id);
 	
@@ -322,5 +324,7 @@ if(!defined("SQL_LAYER"))
 	} // class sql_db
 
 } // if ... define
+
+
 
 ?>

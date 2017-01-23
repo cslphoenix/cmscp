@@ -13,6 +13,7 @@ $lang = array_merge($lang, array(
 	'gameq_title'	=> 'Servertypen',
 	'gameq_explain'	=> 'Hier werden die Server verwaltet die für die GameQ Class wichtig sind.',
 	
+	'data_input'	=> 'Daten eingeben',
 	'server_name'	=> 'Server Name',
 	'server_type'	=> 'Server Typ',
 	'server_game'	=> 'Server Game',
@@ -44,7 +45,7 @@ $lang = array_merge($lang, array(
 	'typ_game'		=> 'Gameserver',
 	'typ_voice'		=> 'Voiceserver',
 	
-	'all_update'	=> 'alle bearbeiten',
+	'all_update'	=> 'Alle bearbeiten',
 
 ));
 

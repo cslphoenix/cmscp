@@ -75,9 +75,9 @@
 							<td colspan="6" width="80%" align="center">
 								<div class="copyright">
 									<br>
-									powered by<a class="copyright" href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a>&copy; 2009 Phoenix - Version: {VERSION}
+									powered by<a class="copyright" href="http://www.cms-phoenix.de/" target="_blank">CMS-Phoenix.de</a>&copy; 2009 - 2016 by Phoenix - Version: {VERSION}
 									<br>
-									{DEBUG} {CACHE}
+									{CACHE}&nbsp;{DEBUG} 
 								</div>
 							</td>
 							<td width="10%" valign="top" align="center" style="padding:5px 0px;" nowrap="nowrap">Nach Oben <img src="templates/subSilver/images/page_/democms1.3-schnitt_44.png" alt=""></td>

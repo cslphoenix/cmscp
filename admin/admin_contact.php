@@ -32,8 +32,9 @@ else
 	$index	= '';
 	$fields	= '';
 	
-	$log	= SECTION_CONTACT;
 	$time	= time();
+	$log	= SECTION_CONTACT;
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -41,9 +42,9 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_head'], $lang['contact']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['contact']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_contact.tpl',
@@ -144,7 +145,7 @@ else
 	$current_page = ( !count($data) ) ? 1 : ceil( count($data) / $settings['per_page_entry']['acp'] );
 	
 	$template->assign_vars(array(
-		'L_HEAD'		=> sprintf($lang['stf_head'], $lang['contact']),
+		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['contact']),
 		'L_CONTACT'		=> $lang['contact'],
 		'L_FIGHTUS'		=> $lang['fightus'],
 		'L_JOINUS'		=> $lang['joinus'],

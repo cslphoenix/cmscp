@@ -91,7 +91,7 @@ $template->assign_vars(array(
 	'L_YES'			=> $lang['com_yes'],
 	'L_RESET'		=> $lang['common_reset'],
 	'L_SUBMIT'		=> $lang['common_submit'],
-	'L_UPDATE'		=> $lang['common_update'],
+	'L_UPDATE'		=> $lang['com_update'],
 	'L_DELETE'		=> $lang['com_delete'],
 	'L_DELETE_ALL'	=> $lang['common_delete_all'],
 	'L_SETTINGS'	=> $lang['common_settings'],

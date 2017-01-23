@@ -15,7 +15,7 @@
 	<!-- BEGIN option -->
 	{input.row.tab.option.DIV_START}
 	<dl>			
-		<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+		<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 		<dd>{input.row.tab.option.OPTION}</dd>
 	</dl>
 	{input.row.tab.option.DIV_END}
@@ -41,17 +41,17 @@
 	<th>{L_LINK}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN link_row -->
+<!-- BEGIN row_1 -->
 <tr>
-	<td class="row_class1" align="left" width="100%"><span class="right">{display.link_row.LINK}</span>{display.link_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.link_row.SHOW}{display.link_row.MOVE_DOWN}{display.link_row.MOVE_UP}{display.link_row.UPDATE}{display.link_row.DELETE}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.row_1.LINK}</span>{display.row_1.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.row_1.SHOW}{display.row_1.MOVE_DOWN}{display.row_1.MOVE_UP}{display.row_1.UPDATE}{display.row_1.DELETE}</td>
 </tr>
-<!-- END link_row -->
-<!-- BEGIN no_entry_link -->
+<!-- END row_1 -->
+<!-- BEGIN no_entry_1 -->
 <tr>
 	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END no_entry_link -->
+<!-- END no_entry_1 -->
 </table>
 
 <table class="lfooter">
@@ -68,17 +68,17 @@
 	<th>{L_PARTNER}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN partner_row -->
+<!-- BEGIN row_2 -->
 <tr>
-	<td class="row_class1" align="left" width="100%"><span class="right">{display.partner_row.LINK}</span>{display.partner_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.partner_row.SHOW}{display.partner_row.MOVE_DOWN}{display.partner_row.MOVE_UP}{display.partner_row.UPDATE}{display.partner_row.DELETE}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.row_2.LINK}</span>{display.row_2.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.row_2.SHOW}{display.row_2.MOVE_DOWN}{display.row_2.MOVE_UP}{display.row_2.UPDATE}{display.row_2.DELETE}</td>
 </tr>
-<!-- END partner_row -->
-<!-- BEGIN no_entry_partner -->
+<!-- END row_2 -->
+<!-- BEGIN no_entry_2 -->
 <tr>
 	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END no_entry_partner -->
+<!-- END no_entry_2 -->
 </table>
 
 <table class="lfooter">
@@ -95,17 +95,17 @@
 	<th>{L_SPONSOR}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
-<!-- BEGIN sponsor_row -->
+<!-- BEGIN row_3 -->
 <tr>
-	<td class="row_class1" align="left" width="100%"><span class="right">{display.sponsor_row.LINK}</span>{display.sponsor_row.NAME}</td>
-	<td class="row_class2" align="center" nowrap="nowrap">{display.sponsor_row.SHOW}{display.sponsor_row.MOVE_DOWN}{display.sponsor_row.MOVE_UP}{display.sponsor_row.UPDATE}{display.sponsor_row.DELETE}</td>
+	<td class="row_class1" align="left" width="100%"><span class="right">{display.row_3.LINK}</span>{display.row_3.NAME}</td>
+	<td class="row_class2" align="center" nowrap="nowrap">{display.row_3.SHOW}{display.row_3.MOVE_DOWN}{display.row_3.MOVE_UP}{display.row_3.UPDATE}{display.row_3.DELETE}</td>
 </tr>
-<!-- END sponsor_row -->
-<!-- BEGIN no_entry_sponsor -->
+<!-- END row_3 -->
+<!-- BEGIN no_entry_3 -->
 <tr>
 	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
-<!-- END no_entry_sponsor -->
+<!-- END no_entry_3 -->
 </table>
 
 <table class="lfooter">

@@ -2,88 +2,45 @@
 
 if ( !empty($setmodules) )
 {
-	return;
+	return array(
+		'filename'	=> basename(__FILE__),
+		'title'		=> 'acp_bugtracker',
+		'cat'		=> 'addition',
+		'modes'		=> array(
+			'main'	=> array('title' => 'acp_bugtracker'),
+		)
+	);
 }
 else
 {
 	define('IN_CMS', true);
 	
-	$root_path	= './../';
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'acp_games';
+	$cancel = ( isset($_POST['cancel']) ) ? true : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
+	
+	$current = 'acp_bugtracker';
 	
 	include('./pagestart.php');
 	
-	add_lang('games');
+	add_lang('bugtracker');
 
 	$error	= '';
 	$index	= '';
-	$fields	= '';
+	$fields = '';
 	
-	$log	= SECTION_GAMES;
-	$url	= POST_GAMES;
-	$file	= basename(__FILE__);
+	$log	= SECTION_BUGTRACKER;
+	$file	= basename(__FILE__) . $iadds;
 	
-	$start	= ( request('start', INT) ) ? request('start', INT) : 0;
-	$start	= ( $start < 0 ) ? 0 : $start;
+	$data	= request('id', INT);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
+	$mode	= request('mode', TYP);	
+	$accept	= request('accept', TYP);
+	$action	= request('action', TYP);
 	
-	$data_id	= request($url, INT);
-	$confirm	= request('confirm', TXT);
-	$mode		= request('mode', TXT);
-	$move		= request('move', INT);
+	$acp_title	= sprintf($lang['stf_header'], $lang['game']);
 	
-	$dir_path	= $root_path . $settings['path_games'];
-	$acp_title	= sprintf($lang['stf_head'], $lang['game']);
-	
-	define('IN_CMS', true);
-	
-	$root_path	= './../';
-	$header		= ( isset($_POST['cancel']) ) ? true : false;
-	$current	= 'acp_bugtracker';
-	
-	include('./pagestart.php');
-	include($root_path . 'includes/acp/acp_selects.php');
-	include($root_path . 'includes/acp/acp_functions.php');
-	
-	add_lang('bugtracker');
-	
-	$start			= ( request('start') ) ? request('start') : 0;
-	$start			= ( $start < 0 ) ? 0 : $start;
-	
-	$sort		= ( request('sort', 1) ) ? request('sort', 1) : 'bugtracker_status_all';
-	$data_id	= request(POST_BUGTRACKER_URL, INT);	
-	$mode		= request('mode', TXT);
-	$move		= request('move', INT);
-	$confirm	= request('confirm', TXT);
-	
-	$error		= '';
-	$s_index	= '';
-	$fields	= '';
-	$file		= basename(__FILE__);
-	
-	$log	= SECTION_GAMES;
-	$url	= POST_BUGTRACKER;
-	
-	if ( $userdata['user_level'] != ADMIN )
-	{
-		log_add(LOG_ADMIN, $log, 'auth_fail', $current);
-		message(GENERAL_ERROR, sprintf($lang['notice_auth_fail'], $lang[$current]));
-	}
-	
-	( $header ) ? redirect('admin/' . check_sid($file, true)) : false;
-	
-	if ( isset($HTTP_POST_VARS['order']) )
-	{
-		$sort_order = ($HTTP_POST_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-	}
-	else if( isset($HTTP_GET_VARS['order']) )
-	{
-		$sort_order = ($HTTP_GET_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-	}
-	else
-	{
-		$sort_order = 'DESC';
-	}
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	switch ( $mode )
 	{
@@ -104,8 +61,6 @@ else
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
 			$bugtracker = $db->sql_fetchrow($result);
-			
-			debug($bugtracker);
 			
 			$s_type = '<select class="postselect" name="bugtracker_editor_type" id="bugtracker_editor_type">';
 			foreach ( $lang['bugtracker_error'] as $key => $value )
@@ -129,7 +84,7 @@ else
 			$fields = '<input type="hidden" name="mode" value="_detail_save" /><input type="hidden" name="id" value="' . $data_id . '" />';
 
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['bugtracker']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['bugtracker']),
 				'L_PROC'		=> sprintf($lang['sprintf_processing'], $lang['bugtracker_field']),
 				
 				'L_TITLE'		=> $lang['bugtracker_field'],
@@ -237,7 +192,7 @@ else
 			$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['per_page_entry']['acp'] );
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['bugtracker']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['bugtracker']),
 				'L_NAME'		=> $lang['bugtracker_fields'],
 				'L_EXPLAIN'		=> $lang['bugtracker_explain'],
 				
@@ -254,9 +209,7 @@ else
 			
 			break;
 	}
-
 	$template->pparse('body');
-
 	acp_footer();
 }
 ?>

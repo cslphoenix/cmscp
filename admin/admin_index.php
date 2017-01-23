@@ -6,7 +6,7 @@ if ( !empty($setmodules) )
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_index',
 		'modes'		=> array(
-			'main'		=> array('title' => 'acp_index'),
+			'main'	=> array('title' => 'acp_index'),
 		),
 	);
 }
@@ -34,7 +34,8 @@ else
 	$num	= request('num', INT);
 	$sync	= request('sync', TYP);
 	$mode	= request('mode', TYP);
-	$mode = (in_array($mode, array('switch', 'sync'))) ? $mode : false;
+	$mode = (in_array($mode, array('switch', 'sync', 'repair'))) ? $mode : false;
+	$repair	= request('repair', TYP);
 
 	$template->set_filenames(array(
 		'body'	=> 'style/acp_index.tpl',
@@ -65,6 +66,35 @@ else
 			if ( request('delc', TYP) )
 			{
 				$oCache->truncateCache();
+			}
+			
+			if ( $repair )
+			{
+				switch ( $repair )
+				{
+					case 'session':
+					
+						$sql = array();
+						$sql[] = 'TRUNCATE ' . SESSIONS;
+						$sql[] = 'REPAIR TABLE ' . SESSIONS;
+						$sql[] = 'OPTIMIZE TABLE ' . SESSIONS;
+						
+						for ( $i = 0; $i < count($sql); $i++ )
+						{
+							if( !$result = $db->sql_query($sql[$i]) )
+							{
+								$error = $db->sql_error();
+						
+								echo '<li>' . $sql[$i] . '<br /> +++ <font color="#FF0000"><b>Error:</b></font> ' . $error['message'] . '</li><br />';
+							}
+							else
+							{
+								echo '<li>' . $sql[$i] . '<br /> +++ <font color="#00AA00"><b>Successfull</b></font></li><br />';
+							}
+						}
+						
+						break;
+				}
 			}
 			
 			if ( $sync )
@@ -168,8 +198,8 @@ else
 						'DATE'		=> create_date($userdata['user_dateformat'], $news[$i]['news_date'], $userdata['user_timezone']),
 						
 						'PUBLIC'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_public'] )	? href('a_txt', 'admin_index.php' . $iadds, array('mode' => 'switch', 'num' => $id), $public, '') : img('i_icon', 'icon_news_denied', ''),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] )			? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_delete'] )	? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news'] )			? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_news_delete'] )	? ( $userdata['user_level'] == ADMIN || $news[$i]['user_id'] == $userdata['user_id'] ) ? href('a_img', 'admin_news.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -204,8 +234,8 @@ else
 						'LEVEL'		=> $level,
 						'DATE'		=> create_date($userdata['user_dateformat'], $event[$i]['event_date'], $config['default_timezone']),
 						
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_event'] ) ? href('a_img', 'admin_event.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -232,9 +262,9 @@ else
 						'GAME'		=> display_gameicon($match[$i]['game_image']),
 						'DATE'		=> create_date($userdata['user_dateformat'], $match[$i]['match_date'], $userdata['user_timezone']),
 						
-						'DETAIL'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_manage'] ) ? href('a_img', 'admin_match.php' . $iadds, array('id' => $id), 'icon_details', 'common_details') : img('i_icon', 'icon_details2', 'common_details'),
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_delete'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'DETAIL'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_manage'] ) ? href('a_img', 'admin_match.php' . $iadds, array('id' => $id, 'mode' => 'detail'), 'icon_details', 'common_details') : img('i_icon', 'icon_details2', 'common_details'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_match_delete'] ) ? href('a_img', 'admin_match.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -258,8 +288,8 @@ else
 						
 						'DATE'		=> create_date($userdata['user_dateformat'], $train[$i]['training_date'], $userdata['user_timezone']),
 						
-						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training_delete'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userdata['user_level'] == ADMIN || @$userauth['a_training_delete'] ) ? href('a_img', 'admin_training.php' . $iadds, array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -293,8 +323,8 @@ else
 						'REGDATE'	=> create_date($userdata['user_dateformat'], $users[$i]['user_regdate'], $config['default_timezone']),
 						
 						'AUTH'		=> ( $userauth['a_auth_users'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'permission', 'id' => $id), 'icon_user_auth', '') : img('i_icon', 'icon_user_auth2', ''),
-						'UPDATE'	=> ( $userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update') : img('i_icon', 'icon_update2', 'common_update'),
-						'DELETE'	=> ( $userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'acp_main' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
+						'UPDATE'	=> ( $userauth['a_user'] )			? href('a_img', "admin_user.php{$iadds}", array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update') : img('i_icon', 'icon_update2', 'com_update'),
+						'DELETE'	=> ( $userauth['a_user_delete'] )	? href('a_img', "admin_user.php{$iadds}", array('mode' => 'delete', 'id' => $id, 'index' => 1), 'icon_cancel', 'com_delete') : img('i_icon', 'icon_cancel2', 'com_delete'),
 					));
 				}
 			}
@@ -546,6 +576,210 @@ else
 				$size_teams = (size_dir2($settings['path_team_flag']['path']) + size_dir2($settings['path_team_logo']['path']));
 			}
 			
+			$sql = "SELECT u.user_id, u.user_name, u.user_session_time, u.user_session_page, u.user_allow_viewonline, s.session_logged_in, s.session_ip, s.session_start 
+				FROM " . USERS . " u, " . SESSIONS . " s
+				WHERE s.session_logged_in = " . TRUE . " 
+					AND u.user_id = s.session_user_id 
+					AND u.user_id <> " . ANONYMOUS . " 
+					AND s.session_time >= " . ( time() - 300 ) . " 
+				ORDER BY u.user_session_time DESC";
+			if(!$result = $db->sql_query($sql))
+			{
+				message(GENERAL_ERROR, "Couldn't obtain regd user/online information.", "", __LINE__, __FILE__, $sql);
+			}
+			$onlinerow_reg = $db->sql_fetchrowset($result);
+			
+		#	debug($onlinerow_reg, '$onlinerow_reg');
+		
+			$sql = "SELECT session_page, session_logged_in, session_time, session_ip, session_start   
+				FROM " . SESSIONS . "
+				WHERE session_logged_in = 0
+					AND session_time >= " . ( time() - 300 ) . "
+				ORDER BY session_time DESC";
+			if(!$result = $db->sql_query($sql))
+			{
+				message(GENERAL_ERROR, "Couldn't obtain guest user/online information.", "", __LINE__, __FILE__, $sql);
+			}
+			$onlinerow_guest = $db->sql_fetchrowset($result);
+			
+			$reg_userid_ary = array();
+
+			if( count($onlinerow_reg) )
+			{
+				$registered_users = 0;
+		
+				for($i = 0; $i < count($onlinerow_reg); $i++)
+				{
+					if( !in_array($onlinerow_reg[$i]['user_id'], $reg_userid_ary) )
+					{
+						$reg_userid_ary[] = $onlinerow_reg[$i]['user_id'];
+		
+						$username = $onlinerow_reg[$i]['user_name'];
+		
+						if ( $onlinerow_reg[$i]['user_allow_viewonline'] )
+						{
+							$registered_users++;
+							$hidden = FALSE;
+						}
+						else
+						{
+							$hidden_users++;
+							$hidden = TRUE;
+						}
+		
+						if( $onlinerow_reg[$i]['user_session_page'] < 1 )
+						{
+							switch($onlinerow_reg[$i]['user_session_page'])
+							{
+								case PAGE_INDEX:
+									$location = $lang['Forum_index'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+								case PAGE_POSTING:
+									$location = $lang['Posting_message'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+								case PAGE_LOGIN:
+									$location = $lang['Logging_on'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+								case PAGE_SEARCH:
+									$location = $lang['Searching_forums'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+								case PAGE_PROFILE:
+									$location = $lang['Viewing_profile'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+								case PAGE_VIEWONLINE:
+									$location = $lang['Viewing_online'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+								case PAGE_VIEWMEMBERS:
+									$location = $lang['Viewing_member_list'];
+									$location_url = "index.$phpEx?pane=right";
+									break;
+							#	case PAGE_PRIVMSGS:
+							#		$location = $lang['Viewing_priv_msgs'];
+							#		$location_url = "index.$phpEx?pane=right";
+							#		break;
+							#	case PAGE_FAQ:
+							#		$location = $lang['Viewing_FAQ'];
+							#		$location_url = "index.$phpEx?pane=right";
+							#		break;
+								default:
+									$location = $lang['Forum_index'];
+									$location_url = "index.$phpEx?pane=right";
+							}
+						}
+						else
+						{
+							$location_url = check_sid("admin_forums.$phpEx?mode=editforum&amp;=" . $onlinerow_reg[$i]['user_session_page']);
+							$location = $forum_data[$onlinerow_reg[$i]['user_session_page']];
+						}
+		
+						$row_color = ( $registered_users % 2 ) ? $theme['td_color1'] : $theme['td_color2'];
+						$row_class = ( $registered_users % 2 ) ? $theme['td_class1'] : $theme['td_class2'];
+		
+						$reg_ip = decode_ip($onlinerow_reg[$i]['session_ip']);
+		
+						$template->assign_block_vars('online_users', array(
+							"ROW_COLOR" => "#" . $row_color,
+							"ROW_CLASS" => $row_class,
+							"USERNAME" => $username, 
+							"STARTED" => create_date($config['default_dateformat'], $onlinerow_reg[$i]['session_start'], $config['default_timezone']), 
+							"LASTUPDATE" => create_date($config['default_dateformat'], $onlinerow_reg[$i]['user_session_time'], $config['default_timezone']),
+							"FORUM_LOCATION" => $location,
+							"IP_ADDRESS" => $reg_ip, 
+		
+							"U_WHOIS_IP" => "http://network-tools.com/default.asp?host=$reg_ip", 
+							"U_USER_PROFILE" => check_sid("admin_users.$phpEx?mode=edit&amp;=" . $onlinerow_reg[$i]['user_id']),
+							"U_FORUM_LOCATION" => check_sid($location_url))
+						);
+					}
+				}
+			}
+			
+			if( count($onlinerow_guest) )
+			{
+				$guest_users = 0;
+		
+				for($i = 0; $i < count($onlinerow_guest); $i++)
+				{
+					$guest_userip_ary[] = $onlinerow_guest[$i]['session_ip'];
+					$guest_users++;
+		
+					if( $onlinerow_guest[$i]['session_page'] < 1 )
+					{
+						switch( $onlinerow_guest[$i]['session_page'] )
+						{
+							case PAGE_INDEX:
+								$location = $lang['Forum_index'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_POSTING:
+								$location = $lang['Posting_message'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_LOGIN:
+								$location = $lang['Logging_on'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_SEARCH:
+								$location = $lang['Searching_forums'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_PROFILE:
+								$location = $lang['Viewing_profile'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_VIEWONLINE:
+								$location = $lang['Viewing_online'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_VIEWMEMBERS:
+								$location = $lang['Viewing_member_list'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_PRIVMSGS:
+								$location = $lang['Viewing_priv_msgs'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							case PAGE_FAQ:
+								$location = $lang['Viewing_FAQ'];
+								$location_url = "index.$phpEx?pane=right";
+								break;
+							default:
+								$location = $lang['Forum_index'];
+								$location_url = "index.$phpEx?pane=right";
+						}
+					}
+					else
+					{
+						$location_url = append_sid("admin_forums.$phpEx?mode=editforum&amp;" . POST_FORUM_URL . "=" . $onlinerow_guest[$i]['session_page']);
+						$location = $forum_data[$onlinerow_guest[$i]['session_page']];
+					}
+		
+					$row_color = ( $guest_users % 2 ) ? $theme['td_color1'] : $theme['td_color2'];
+					$row_class = ( $guest_users % 2 ) ? $theme['td_class1'] : $theme['td_class2'];
+		
+					$guest_ip = decode_ip($onlinerow_guest[$i]['session_ip']);
+		
+					$template->assign_block_vars("online_guests", array(
+						"ROW_COLOR" => "#" . $row_color,
+						"ROW_CLASS" => $row_class,
+						"USERNAME" => $lang['Guest'],
+						"STARTED" => create_date($config['default_dateformat'], $onlinerow_guest[$i]['session_start'], $config['default_timezone']), 
+						"LASTUPDATE" => create_date($config['default_dateformat'], $onlinerow_guest[$i]['session_time'], $config['default_timezone']),
+						"FORUM_LOCATION" => $location,
+						"IP_ADDRESS" => $guest_ip, 
+		
+						"U_WHOIS_IP" => "http://network-tools.com/default.asp?host=$guest_ip", 
+						"U_FORUM_LOCATION" => check_sid($location_url))
+					);
+				}
+			}
+			
 			$template->assign_vars(array(
 				'L_WELCOME'	=> $lang['title'],
 				'L_EXPLAIN'	=> $lang['explain'],
@@ -577,6 +811,8 @@ else
 				'L_MATCH'		=> $lang['acp_match'],
 				'L_TRAIN'		=> $lang['acp_training'],
 				'L_USERS'		=> $lang['acp_users'],
+				
+				'SESSION'			=> href('a_txt', $file, array('repair' => 'session'), 'session'),
 				
 				'PAGE_STARTED'		=> create_date($config['default_dateformat'], $config['page_startdate'], $config['default_timezone']),
 				'PAGE_VERSION'		=> $version_info,

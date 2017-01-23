@@ -12,11 +12,11 @@ require($root_path . 'common.php');
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
 
-if ( isset($_POST['mode']) )
+if ( isset($_POST['smode']) )
 {
 	$s_select = '';
 	
-	if ( $_POST['mode'] == 'uranks' )
+	if ( $_POST['smode'] == 'ranks' )
 	{
 		$sql = "SELECT * FROM " . RANKS . " WHERE rank_type = " . RANK_TEAM . " ORDER BY rank_special DESC, rank_order ASC";
 		if ( !($result = $db->sql_query($sql)) )

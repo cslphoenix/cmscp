@@ -1,6 +1,6 @@
 <li class="header">{L_WELCOME}</li>
 <p>{L_EXPLAIN}</p>
-
+{SESSION}
 <table>
 <tr>
 	<td width="50%" class="top">
@@ -160,3 +160,34 @@
 		<!-- END user_row -->
 	</fieldset>
 </div>
+
+<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
+<tr>
+	<th width="20%" class="thCornerL" height="25">&nbsp;{L_USERNAME}&nbsp;</th>
+	<th width="20%" height="25" class="thTop">&nbsp;{L_STARTED}&nbsp;</th>
+	<th width="20%" class="thTop">&nbsp;{L_LAST_UPDATE}&nbsp;</th>
+	<th width="20%" class="thCornerR">&nbsp;{L_FORUM_LOCATION}&nbsp;</th>
+	<th width="20%" height="25" class="thCornerR">&nbsp;{L_IP_ADDRESS}&nbsp;</th>
+</tr>
+<!-- BEGIN online_users -->
+<tr> 
+	<td width="20%" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_users.U_USER_PROFILE}" class="gen">{online_users.USERNAME}</a></span>&nbsp;</td>
+	<td width="20%" align="center" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen">{online_users.STARTED}</span>&nbsp;</td>
+	<td width="20%" align="center" nowrap="nowrap" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen">{online_users.LASTUPDATE}</span>&nbsp;</td>
+	<td width="20%" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_users.U_FORUM_LOCATION}" class="gen">{online_users.FORUM_LOCATION}</a></span>&nbsp;</td>
+	<td width="20%" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_users.U_WHOIS_IP}" class="gen" target="_phpbbwhois">{online_users.IP_ADDRESS}</a></span>&nbsp;</td>
+</tr>
+<!-- END online_users -->
+<tr> 
+	<td colspan="5" height="1" class="row3"><img src="../templates/subSilver/images/spacer.gif" width="1" height="1" alt="."></td>
+</tr>
+<!-- BEGIN online_guests -->
+<tr> 
+	<td width="20%" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen">{online_guests.USERNAME}</span>&nbsp;</td>
+	<td width="20%" align="center" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen">{online_guests.STARTED}</span>&nbsp;</td>
+	<td width="20%" align="center" nowrap="nowrap" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen">{online_guests.LASTUPDATE}</span>&nbsp;</td>
+	<td width="20%" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_guests.U_FORUM_LOCATION}" class="gen">{online_guests.FORUM_LOCATION}</a></span>&nbsp;</td>
+	<td width="20%" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_guests.U_WHOIS_IP}" target="_phpbbwhois">{online_guests.IP_ADDRESS}</a></span>&nbsp;</td>
+</tr>
+<!-- END online_guests -->
+</table>

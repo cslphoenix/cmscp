@@ -21,7 +21,7 @@
  *
  * @author Austin Bischoff <austin@codebeard.com>
  */
-class GameQ_Protocols_Ut2004 extends GameQ_Protocols_Unreal2
+class GameQ_Protocols_Ut2004 extends GameQ_Protocols_Gamespy
 {
 	protected $name = "ut2004";
 	protected $name_long = "Unreal Tournament 2004";

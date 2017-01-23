@@ -19,14 +19,12 @@ else
 	
 	$cancel = false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
+	$backup = ( isset($_POST['backup']) ) ? true : false;
 	
 	$current = 'acp_database';
 	
 	include('./pagestart.php');
 	include($root_path . '/includes/sql_parse.php');
-	
-#	debug($userdata);
-#	debug($userauth);
 	
 	add_lang('database');
 	acl_auth(array('a_database_backup', 'a_database_optimize', 'a_database_restore'), true);
@@ -37,14 +35,15 @@ else
 	
 	$time	= time();
 	$log	= SECTION_DATABASE;
+	$file	= basename(__FILE__) . $iadds;
 	
-	$data	= request('id', INT);
+	$data	= request('name', TYP);
 	$mode	= request('mode', TYP);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . 'files/';
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
 	define('VERBOSE', 1);
 	@set_time_limit(1200);
@@ -64,7 +63,7 @@ else
 	
 	
 	$template->set_filenames(array(
-		'body'		=> 'style/acp_database.tpl',
+		'body' => 'style/acp_database.tpl',
 	));
 	
 	switch ( $action )
@@ -75,9 +74,19 @@ else
 			$type		= ( request('type', TYP) ) ? request('type', TYP) : '';
 			$download	= ( request('download', TYP) ) ? request('download', TYP) : '';
 			$compress	= ( request('compress', TYP) ) ? request('compress', TYP) : '';
-			$save_name	= ( $download == 'server' ) ? $type . '_' . $time : 'backup_' . $type . '_' . $db_name . '_' . date('dmY_Hi', $time);
+			$save_name	= ( $download == 'server' ) ? $type . '_' . $time : 'backup_' . $type . '_' . $db_name . '_' . date('Ymd_Hi', $time);
+			
+			$do_compress = false;
 				
-			if ( !request('backupstart', TYP) )
+			if ( $compress )
+			{
+				if ( extension_loaded("zlib") )
+				{
+					$do_compress = true;
+				}
+			}
+			
+			if ( !$backup )
 			{
 				$template->assign_block_vars('backup', array());
 				
@@ -97,11 +106,9 @@ else
 				}
 				
 				$select .= '</select>';
-				
-				$fields .= '<input type="hidden" name="action" value="' . $action . '" />';
 
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
 
 					'L_TYPE'		=> $lang['type'],
@@ -122,7 +129,7 @@ else
 					
 					'S_TABLE'	=> $select,
 					
-					'S_ACTION'	=> check_sid($file),
+					'S_ACTION'	=> check_sid("$file&mode=$action&id=$action"),
 					'S_FIELDS'	=> $fields,
 				));
 				
@@ -136,20 +143,10 @@ else
 				message(GENERAL_ERROR, $lang['msg_empty_tables']);
 			}
 			
-			$do_compress = false;
-				
-			if ( $compress )
-			{
-				if ( extension_loaded("zlib") )
-				{
-					$do_compress = true;
-				}
-			}
-			
 			if ( $download == 'server' )
 			{
 				$return = "# Host: " . $config['server_name'] . "\n";
-				$return .= "# Create: " . gmdate("d-m-Y H:i:s", $time) . "\n";
+				$return .= "# Create: " . gmdate("Y-m-d H:i:s", $time) . "\n";
 				$return .= "# Server Version: " . mysql_get_server_info() . "\n";
 				$return .= "# PHP-Version: " . phpversion() . "\n";
 				$return .= "#\n";
@@ -242,7 +239,9 @@ else
 			}
 			else
 			{
+				exit;
 				header("Pragma: no-cache");
+				header("Cache-Control: no-cache, must-revalidate");
 				
 				if ( $do_compress )
 				{
@@ -255,10 +254,11 @@ else
 				{
 					header("Content-Type: text/x-delimtext; name=\"$save_name.sql\"");
 					header("Content-disposition: attachment; filename=$save_name.sql");
+					
 				}
 				
 				echo "# Host: " . $config['server_name'] . "\n";
-				echo "# Create: " . gmdate("d-m-Y H:i:s", $time) . "\n";
+				echo "# Create: " . gmdate("Y-m-d H:i:s", $time) . "\n";
 				echo "# Server Version: " . mysql_get_server_info() . "\n";
 				echo "# PHP-Version: " . phpversion() . "\n";
 				echo "#\n";
@@ -268,7 +268,6 @@ else
 								
 				foreach ( $tables as $table )
 				{
-				#	$content = $tbl = $field_name = $values = '';
 					$content = $tbl = $field_name = $tmp = $value = $entry = $values = '';
 
 					$sql = "OPTIMIZE TABLE $db_prefix$table";
@@ -341,53 +340,23 @@ else
 					echo "\x1f\x8b\x08\x00\x00\x00\x00\x00".substr($contents, 0, strlen($contents) - 4).gzip_PrintFourChars($Crc).gzip_PrintFourChars($Size);
 				}
 				
-				log_add(LOG_ADMIN, $log, $mode);
+				$msg = 'test';
 				
-				exit;
+				log_add(LOG_ADMIN, $log, $mode);
+				message(GENERAL_MESSAGE, $msg);		
 			}
 			
 			break;
 
-		case 'optimize':	acl_auth('a_database_optimize', true);
+		case 'optimize':
+		
+			acl_auth('a_database_optimize', true);
 			
-			$template->assign_block_vars($action, array());
-			
-			//
-			// If has been clicked the button configure
-			//
-			if ( isset($HTTP_POST_VARS['configure']) || isset($HTTP_POST_VARS['show_begin_for']) )
-		#	if ( request('configure', 1) || request('db_show_begin_for', 1) )
+			if ( !request('optimize', TYP) && !$data )
 			{
-				$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', TXT) . "' WHERE config_name = 'db_show_begin_for'";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-			
-				if ( isset( $HTTP_POST_VARS['configure'] ) )
-			#	if ( request('configure', 1) )
-				{
-					//
-					// Update optimize database cronfiguration
-					//
-					$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_begin_for', TXT) . "' WHERE config_name = 'db_show_begin_for'";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-					
-					$sql = "UPDATE " . CONFIG . " SET config_value = '" . request('db_show_not_optimized', TXT) . "' WHERE config_name = 'db_show_not_optimized'";
-					if ( !($result = $db->sql_query($sql)) )
-					{
-						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-					}
-				}
-			}
-
-			if ( !request('optimize', TYP) )
-		#	if ( !request('optimize', 1) )
-			{
-				$sql = "SHOW TABLE STATUS LIKE '%" . $config['db_show_begin_for'] . "%'";
+				$template->assign_block_vars($action, array());
+				
+				$sql = "SHOW TABLE STATUS";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -418,10 +387,6 @@ else
 						
 						$tbl_fields = implode(',<br />', $tbl_fields);
 						
-					#	debug($fields);
-					#	debug($tbl_field);
-						
-					#	debug($tables[$i]);
 						$name		= $tables[$i]['Name'];
 						$size_tbl	= $tables[$i]['Index_length'] + $tables[$i]['Data_length'];
 						$size_data	= $tables[$i]['Data_free'];
@@ -506,13 +471,11 @@ else
 				}
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
 					
 					'L_OPTIMIZE'	=> $lang['data_optimize'],
 				
-					
-					
 					'L_TABLE'	=> $lang['opt_table'],
 					'L_ROWS'	=> $lang['opt_rows'],
 					'L_SIZE'	=> $lang['opt_size'],
@@ -522,27 +485,14 @@ else
 					'TOTAL_ROWS'	=> number_format($total_rows),
 					'TOTAL_SIZE'	=> _size($total_size, 1),
 					'TOTAL_FREE'	=> _size($total_free, 1),
-					
-				#	"L_SHOW_NOT_OPTIMIZED" => $lang['Optimize_Show_not_optimized'],
-				#	"L_SHOW_BEGIN_FOR" => $lang['Optimize_Show_begin_for'],	
-				
-				#	"L_STATUS" => $lang['Optimize_Status'],
-				#	"L_CHECKALL" => $lang['Optimize_CheckAll'],
-				#	"L_UNCHECKALL" => $lang['Optimize_UncheckAll'],
-				#	"L_INVERTCHECKED" => $lang['Optimize_InvertChecked'],
-				#	"L_START_OPTIMIZE" => $lang['Optimize'],
-				
+
 					'S_OPTIMIZED_NO'	=> ( $config['db_show_not_optimized'] == 0 ) ? ' checked="checked"' : '',
 					'S_OPTIMIZED_YES'	=> ( $config['db_show_not_optimized'] != 0 ) ? ' checked="checked"' : '',
-					
-					
-					"S_SHOW_BEGIN_FOR" => $config['db_show_begin_for'],
-					
+
 					'S_SCRIPT'	=> $select_scritp,
 					
 					'S_ACTION' => check_sid($file),
 					'S_FIELDS' => $fields,
-					
 				));
 
 				$template->pparse('body');
@@ -625,7 +575,7 @@ else
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				
 				$template->assign_vars(array(
-					'L_HEAD'		=> sprintf($lang['stf_head'], $lang['title']),
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 					'L_EXPLAIN'		=> $lang['explain'],
 					'L_BACKUP'		=> $lang['data_backup'],
 					'L_OPTIMIZE'	=> $lang['data_optimize'],

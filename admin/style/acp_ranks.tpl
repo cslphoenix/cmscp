@@ -62,7 +62,7 @@ function display_options(value)
 <!-- BEGIN option -->
 {input.row.tab.option.DIV_START}
 <dl>			
-	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
 {input.row.tab.option.DIV_END}
@@ -84,23 +84,35 @@ function display_options(value)
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 
+<!-- BEGIN typ -->
 <table class="rows">
 <tr>
-	<th>{L_RANKS}</th>
+	<th>{display.typ.RANKS}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.row.SPECIAL}</span>{display.row.NAME}</td>
-	<td>{display.row.IMAGE}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td><span class="right">{display.typ.row.SPECIAL}</span>{display.typ.row.NAME}</td>
+	<td>{display.typ.row.IMAGE}{display.typ.row.MOVE_DOWN}{display.typ.row.MOVE_UP}{display.typ.row.UPDATE}{display.typ.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="4">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
 </table>
+<!-- BEGIN br_empty -->
+<br />
+<!-- END br_empty -->
+<!-- END typ -->
+
+<!-- BEGIN no_entry -->
+<table class="rows">
+<tr>
+	<th>{display.no_entry.RANKS}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+</table>
+<!-- END no_entry -->
 
 <table class="lfooter">
 <tr>

@@ -45,7 +45,7 @@ $lang = array_merge($lang, array(
 	
 	/* errors */
 	'msg_empty_tables'			=> 'Bitte 1 Tabelle auswählen!',
-
+	
 ));
 
 

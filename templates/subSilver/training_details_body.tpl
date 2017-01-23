@@ -130,7 +130,7 @@
 	
 	</td>
 </tr>
-<!-- BEGIN training_users -->
+<!-- BEGIN users -->
 <tr>
 	<td colspan="2" align="center">
 		<table class="info" width="55%" cellspacing="2">
@@ -148,13 +148,13 @@
 					<td class="rowHead" width="30%">{L_USERNAME}</td>
 					<td class="rowHead" width="70%" colspan="2">{L_STATUS}</td>
 				</tr>
-				<!-- BEGIN training_users_status -->
+				<!-- BEGIN row_status -->
 				<tr>
-					<td width="30%" align="left" nowrap="nowrap">{training_users.training_users_status.USERNAME}</td>
-					<td width="20%" align="left" nowrap="nowrap"><span class="{training_users.training_users_status.CLASS}">{training_users.training_users_status.STATUS}</span></td>
-					<td width="50%" align="left" nowrap="nowrap">{training_users.training_users_status.DATE}</td>
+					<td width="30%" align="left" nowrap="nowrap">{users.row_status.USERNAME}</td>
+					<td width="20%" align="left" nowrap="nowrap"><span class="{users.row_status.CLASS}">{users.row_status.STATUS}</span></td>
+					<td width="50%" align="left" nowrap="nowrap">{users.row_status.DATE}</td>
 				</tr>
-				<!-- END training_users_status -->
+				<!-- END row_status -->
 				<!-- BEGIN no_entry_status -->
 				<tr>
  					<td align="center" colspan="3">{L_EMPTY}</td>
@@ -164,7 +164,7 @@
 				</form>
 			</td>
 		</tr>
-		<!-- BEGIN users_status -->
+		<!-- BEGIN user_status -->
 		<tr>
 			<td valign="top" align="center">
 				<form action="{S_TRAINING_ACTION}" method="post" name="post">
@@ -173,9 +173,9 @@
 					<td colspan="3">&nbsp;</td>
 				</tr>
 				<tr align="center">
-					<td width="33%" nowrap="nowrap"><input type="radio" value="1" name="training_users_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
-					<td width="34%" nowrap="nowrap"><input type="radio" value="2" name="training_users_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
-					<td width="33%" nowrap="nowrap"><input type="radio" value="3" name="training_users_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
+					<td width="33%" nowrap="nowrap"><input type="radio" value="1" name="user_status" {S_CHECKED_1}> {L_STATUS_YES}</td>
+					<td width="34%" nowrap="nowrap"><input type="radio" value="2" name="user_status" {S_CHECKED_2}> {L_STATUS_NO}</td>
+					<td width="33%" nowrap="nowrap"><input type="radio" value="3" name="user_status" {S_CHECKED_3}> {L_STATUS_REPLACE}</td>
 				</tr>
 				<tr>
 					<td class="row4" colspan="3" align="center"><input class="button" type="submit" value="{L_SET_STATUS}"></td>
@@ -185,7 +185,7 @@
 				</form>
 			</td>
 		</tr>
-		<!-- END users_status -->
+		<!-- END user_status -->
 		<!-- BEGIN no_entry -->
 		<tr>
 			<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
@@ -194,7 +194,7 @@
 		</table>
 	</td>
 </tr>
-<!-- END training_users -->
+<!-- END users -->
 <!-- BEGIN training_comments -->
 <tr>
 	<td colspan="2" align="center">

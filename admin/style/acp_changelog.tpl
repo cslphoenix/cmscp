@@ -1,117 +1,94 @@
-  <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
-	<tr>
-	  <td align="left"><span class="nav"><a href="{U_INDEX}" class="nav">{L_INDEX}</a></span></td>
-	</tr>
-  </table>
+<li class="header">{L_HEAD}</li>
+<p>{L_EXPLAIN}</p>
 
-<table width="100%">
-     <tr>
-          <td valign="top" width="68%">
-               <table class="forumline" cellpadding="2" width="100%" cellspacing="1">
-                    <tr>
-                         <th>
-                              {L_CHANGE_LOGS_ID}
-                         </th>
-                         <th>
-                              {L_CHANGE_LOGS_REFERENCE}
-                         </th>
-                         <th>
-                              {L_CHANGE_LOGS_TITLE}
-                         </th>
-                         <th>
-                              {L_CHANGE_LOGS_AUTHOR}
-                         </th>
-                         <th>
-                              {L_CHANGE_LOGS_TIME}
-                         </th>
-                         <th>
-                              {L_CHANGE_LOGS_FILES}
-                         </th>
-                    </tr>
-                    <!-- BEGIN change_log -->
-                    <tr>
-                         <td class="row1" align="center">
-                              <span class="gensmall">{change_log.CHANGE_LOGS_ID}</span>
-                         </td>
-                         <td class="row1" align="center">
-                              <span class="gensmall">{change_log.CHANGE_LOGS_REFERENCE}</span>
-                         </td>
-                         <td class="row1" align="left">
-                              <span class="gensmall"><b>{change_log.CHANGE_LOGS_TITLE}</b></span>
-                              <span class="gensmall"><br>{change_log.CHANGE_LOGS_DESCRIPTION}</span>
-                         </td>
-                         <td class="row1" align="center">
-                              <a href="{change_log.U_CHANGE_LOGS_AUTHOR}" class="gensmall">{change_log.CHANGE_LOGS_AUTHOR}</a>
-                         </td>
-                         <td class="row1" align="center">
-                              <span class="gensmall">{change_log.CHANGE_LOGS_TIME}</span>
-                         </td>
-                         <td class="row1" align="center">
-                              <a href="{change_log.U_CHANGE_LOGS_FILES}">{change_log.CHANGE_LOGS_FILES}</a>
-                         </td>
-                    </tr>
-                    
-                    <!-- END change_log -->
-               </table>
-          </td>
-          <td width="4%">
+<!-- BEGIN input -->
+<script type="text/javascript" src="style/ajax_main.js"></script>
+<script type="text/javascript">
 
-          </td>
-          <td valign="top" width="28%">
-               <table class="forumline" cellpadding="2" cellspacing="1" width="100%">
-                    <form enctype="multipart/form-data" method="post" action="{S_CHANGE_LOGS_ADD}">
-                    <tr>
-                         <th colspan="2">
-                              {L_CHANGE_LOGS_ADD}
-                         </th>
-                    </tr>
-                    <tr>
-                         <td>
-                              <span class="forumlink">{L_CHANGE_LOGS_TITLE}&nbsp;</span>
-                         </td>
-                         <td>
-                              <input class="post" type="text" name="change_log_title" maxlength="100" size="35"/>
-                         </td>
-                    </tr>
-                    <tr>
-                          <td class="row1" colspan="2">
-                              <span class="forumlink">{L_CHANGE_LOGS_DESCRIPTION}<br></span>
-                               <textarea rows="10" cols="55" class="post" type="number" name="change_log_description" maxlength="255" size="255" /></textarea>
-                          </td>
-                    </tr>
-                    <tr>
-                         <td>
-                              <span class="forumlink">{L_CHANGE_LOGS_REFERENCE}&nbsp;</span>
-                         </td>
-                         <td>
-                              <select name="change_log_reference">{DD_CHANGE_LOGS_REFERENCE}</select>
-                         </td>
-                    </tr>
-                    <tr>
-                         <td>
-                              <span class="forumlink">{L_CHANGE_LOGS_FILES}&nbsp;</span>
-                         </td>
-                         <td>
-                              <input class="post" type="text" name="change_log_files" maxlength="100" size="35"/>
-                         </td>
-                    </tr>
-                     <tr>
-                         <td align="center" colspan="2">
-                             <input type="submit" class="mainoption" name="login" value="{L_CHANGE_LOGS_ADD}" />
-                         </td>
+function display_options(value)
+{
+	if ( value == '0' )
+	{
+		dE('main', -1);
+		dE('change_num', 1);
+		dE('change_date', 1);
+		dE('change_typ', -1);
+		dE('change_file', -1);
+		dE('change_text', -1);
+		dE('change_bug', -1);
+	}
+	else
+	{
+		dE('main', 1);
+		dE('change_num', -1);
+		dE('change_date', -1);
+		dE('change_typ', 1);
+		dE('change_file', 1);
+		dE('change_text', 1);
+		dE('change_bug', 1);
+	}
+}
 
-                     </tr>
+</script>
+<form action="{S_ACTION}" method="post">
+{ERROR_BOX}
 
-               </table>
-               </form>
-               <br>
-               <table align="right">
-                    <tr>
-                         <td>
-                               <span class="gensmall"><a href="http://www.tememento.de" target="_new">FR</a> <a href="http://www.php-styles.com" target="_new">php-styles.com</a></span>
-                         </td>
-                    </tr>
-               </table>
-          </td>
-     </tr>
+<!-- BEGIN row -->
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<!-- BEGIN tab -->
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
+	<!-- BEGIN option -->
+	{input.row.tab.option.DIV_START}
+	<dl>			
+		<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+		<dd>{input.row.tab.option.OPTION}</dd>
+	</dl>
+	{input.row.tab.option.DIV_END}
+	<!-- END option -->
+</fieldset>
+<!-- END tab -->
+<!-- END row -->
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+</form>
+<!-- END input -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
+<table class="rows">
+<tr>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td><span class="right">{display.row.INFO} :: {display.row.DATE}</span>{display.row.NAME}</td>
+	<td>{display.row.UPDATE}{display.row.DELETE}</td>
+</tr>
+</div>
+<!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
 </table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="log_num" /></td>
+	<td><input type="submit" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

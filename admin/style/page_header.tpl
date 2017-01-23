@@ -26,6 +26,7 @@
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.atooltip.js"></script>
 <!--<script type="text/javascript" src="./../includes/js/jquery/jquery.exptextarea.js"></script>-->
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.autosize.js"></script>
+	
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.lightbox.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.maxlength.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.litetabs.js"></script>
@@ -40,7 +41,7 @@
 	<script type="text/javascript" src="style/jquery.vars.js"></script>
 	
 	<script type="text/javascript">
-	<!-- notwendig fÃ¼r $lang['common_remove'] / {L_REMOVE} -->
+	<!-- notwendig für $lang['common_remove'] / {L_REMOVE} -->
 	function clone(objButton)
 	{
 		if ( objButton.parentNode )

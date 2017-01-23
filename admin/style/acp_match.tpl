@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -111,7 +111,7 @@ function display_options(value)
 <!-- BEGIN option -->
 {input.row.tab.option.DIV_START}
 <dl>			
-	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
 {input.row.tab.option.DIV_END}
@@ -134,48 +134,51 @@ function display_options(value)
 {ERROR_BOX}
 <br /><div align="center">{ERROR_BOX_PLAYER}</div>
 
-<!-- BEGIN list -->
-<form action="{S_ACTION}" method="post" name="post" id="list">
+<!-- BEGIN member -->
+<form action="{S_ACTION}" method="post" name="post" id="member">
 <fieldset>
 	<legend>{L_LINEUP}</legend>
 	<table class="users">
 	<tr>
 		<th>{L_USERNAME}</th>
+		<th>{L_CREATE}</th>
 		<th colspan="2">{L_LINEUP_STATUS}</th>
 	</tr>
-	<!-- BEGIN lineup -->
-	<!-- class="hover" -->
-	<tr onclick="checked({detail.list.lineup.USER_ID})" class="hover">
-		<td width="90%" align="left" style="padding-left:15px;"><label for="{detail.list.lineup.USER_ID}">{detail.list.lineup.USERNAME}</label></td>
-		<td width="5%" align="right" style="padding-right:15px;"><label for="{detail.list.lineup.USER_ID}">{detail.list.lineup.STATUS}</label></td>
-		<td width="5%" align="center"><input type="checkbox" name="members[]" value="{detail.list.lineup.USER_ID}" id="check_{detail.list.lineup.USER_ID}"></td>
+	<!-- BEGIN row -->
+	<tr onclick="checked({detail.member.row.USER_ID})" class="hover">
+		<td width="90%" align="left" style="padding-left:15px;"><label for="{detail.member.row.USER_ID}">{detail.member.row.USERNAME}</label></td>
+        <td>{detail.member.row.CREATE}</td>
+		<td width="5%" align="right" style="padding-right:15px;"><label for="{detail.member.row.USER_ID}">{detail.member.row.STATUS}</label></td>
+		<td width="5%" align="center"><input type="checkbox" name="members[]" value="{detail.member.row.USER_ID}" id="check_{detail.member.row.USER_ID}"></td>
 	</tr>
-	<!-- END lineup -->
-	<!-- BEGIN no_lineup -->
+	<!-- END row -->
+	<!-- BEGIN no_row -->
 	<tr>
 		<td class="empty" colspan="5" align="center">{S_TEAM_USERS}</td>
 	</tr>
-	<!-- END no_lineup -->
+	<!-- END no_row -->
 	</table>
 </fieldset>
 	
-<table class="rfooter">
-<tr>
-	<td align="right"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a>&nbsp;</td>
-	<td>{S_OPTIONS}</td>
-	<td><div id="close"></div><div id="ajax_content"></div></td>
-	<td><input type="submit" value="{L_SUBMIT}" /></td>
-</tr>
-</table>
+	<table class="footer2">
+    <tr>
+        <td rowspan="2" width="150%">{MEMBER_PN}<br />{MEMBER_PP}</td>
+        <td>{S_OPTIONS}</td>
+        <td><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
+    </tr>
+    <tr>
+        <td colspan="2"><a href="#" onclick="marklist('member', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('member', 'members', false); return false;">{L_MARK_DEALL}</a></td>
+    </tr>
+    </table>
 {S_FIELDS}
 </form>
-<!-- END list -->
+<!-- END member -->
 
-<form action="{S_ACTION}" method="post" name="post">
+<!-- BEGIN member_create -->
+<form action="{S_ACTION}" method="post">
 <fieldset>
 	<legend>{L_LINEUP_ADD}</legend>
 	<table class="update">
-	<!-- BEGIN team_users -->
 	<tr>
 		<td class="row1"><label for="player_status">{L_LINEUP_STATUS}:</label></td>
 		<td class="row2"><label><input type="radio" name="status" value="0" id="player_status" checked="checked">&nbsp;{L_LINEUP_PLAYER}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="1">&nbsp;{L_LINEUP_REPLACE}</label></td>
@@ -188,70 +191,72 @@ function display_options(value)
 		<td></td>
 		<td><input type="submit" class="button2" value="{L_ADD}"></td>
 	</tr>
-	<!-- END team_users -->
-	<!-- BEGIN entry_empty -->
-	<tr>
-		<td align="center" colspan="2">{S_USERS}</td>
-	</tr>
-	<!-- END entry_empty -->
 	</table>
-	<input type="hidden" name="smode" value="user_add" />
+	<input type="hidden" name="smode" value="create" />
 	{S_FIELDS}
 </fieldset>
 </form>
+<!-- END member_create -->
 
+<!-- BEGIN map -->
 <br /><div align="center">{ERROR_BOX_MAPS}</div>
-<!-- BEGIN maps -->
-<form action="{S_ACTION}" method="post" id="map_delete" enctype="multipart/form-data">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MAPS_OVERVIEW}</a></li>
-	<li></li>
-	<li></li></ul>
-<table>
-<!-- BEGIN map_row -->
-<tr>
-	<td>
-		<input type="hidden" name="map_id[]" value="{detail.maps.map_row.MAP_ID}">
-		<table class="update list">
-		<tr>
-			<td class="row1">{L_DETAIL_MAP}:</td>
-			<td>{detail.maps.map_row.S_MAP}</td>
-			<td rowspan="3" width="1%" nowrap="nowrap">{detail.maps.map_row.PIC_URL}
-				<!-- BEGIN delete -->
-				<br /><input type="checkbox" name="map_pic[{detail.maps.map_row.MAP_ID}]" id="del_{detail.maps.map_row.MAP_ID}" value="on">&nbsp;<label for="del_{detail.maps.map_row.MAP_ID}">{L_DELETE}</label>
-				<!-- END delete -->
-			</td>
-			<td rowspan="3" width="1%" nowrap="nowrap">{detail.maps.map_row.MOVE_UP}{detail.maps.map_row.MOVE_DOWN}</td>
-			<td rowspan="3" width="1%" nowrap="nowrap"><input type="checkbox" name="map_delete[{detail.maps.map_row.MAP_ID}]" title="{L_DELETE}" value="on"></td>
-		</tr>
-		<tr>
-			<td class="row1">{L_DETAIL_POINTS}:</td>
-			<td class="row2"><input type="text" name="map_points_home[{detail.maps.map_row.MAP_ID}]" value="{detail.maps.map_row.MAP_HOME}" size="2">&nbsp;:&nbsp;<input type="text" name="map_points_rival[{detail.maps.map_row.MAP_ID}]" value="{detail.maps.map_row.MAP_RIVAL}" size="2">&nbsp;{detail.maps.map_row.S_ROUND}</td>
-		</tr>
-		<tr>
-			<td class="row1">{L_DETAIL_MAPPIC}:</td>
-			<td class="row2 top"><input type="file" name="ufile[{detail.maps.map_row.MAP_ID}]" id="ufile[]" size="12" /></td>
-		</tr>
-		</table>
-		<hr />
-	</td>
-</tr>
-<!-- END map_row -->
-<tr>
-	<td colspan="4" align="right" style=""><a href="#" class="small" onclick="marklist('map_delete', 'map_delete', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" class="small" onclick="marklist('map_delete', 'map_delete', false); return false;">{L_MARK_DEALL}</a></td>
-</tr>
-<tr>
-	<td colspan="4" align="center"><input type="submit" class="button2" value="{L_SUBMIT}"><span style="padding:4px;"></span><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
-{S_UPDATE}
-{S_FIELDS}
+<form action="{S_ACTION}" method="post" name="map" id="map" enctype="multipart/form-data">
+<fieldset>
+	<legend>{L_MAPS_OVERVIEW}</legend>
+	
+	<table class="update">
+	<!-- BEGIN row -->
+	<tr>
+		<td>
+			<input type="hidden" name="map_id[]" value="{detail.map.row.MAP_ID}">
+			<table class="update list">
+			<tr>
+				<td class="row1">{L_DETAIL_MAP}:</td>
+				<td>{detail.map.row.S_MAP}</td>
+				<td rowspan="3" width="1%" nowrap="nowrap">{detail.map.row.PIC_URL}
+					<!-- BEGIN delete -->
+					<br /><input type="checkbox" name="map_pic[{detail.map.row.MAP_ID}]" id="del_{detail.map.row.MAP_ID}" value="on">&nbsp;<label for="del_{detail.map.row.MAP_ID}">{L_DELETE}</label>
+					<!-- END delete -->
+				</td>
+				<td rowspan="3" width="1%" nowrap="nowrap">{detail.map.row.MOVE_UP}{detail.map.row.MOVE_DOWN}</td>
+				<td rowspan="3" width="1%" nowrap="nowrap"><input type="checkbox" name="map_delete[{detail.map.row.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+			</tr>
+			<tr>
+				<td class="row1">{L_DETAIL_POINTS}:</td>
+				<td class="row2"><input type="text" name="map_points_home[{detail.map.row.MAP_ID}]" value="{detail.map.row.MAP_HOME}" size="2">&nbsp;:&nbsp;<input type="text" name="map_points_rival[{detail.map.row.MAP_ID}]" value="{detail.map.row.MAP_RIVAL}" size="2">&nbsp;{detail.map.row.S_ROUND}</td>
+			</tr>
+			<tr>
+				<td class="row1">{L_DETAIL_MAPPIC}:</td>
+				<td class="row2 top"><input type="file" name="ufile[{detail.map.row.MAP_ID}]" id="ufile[]" size="12" /></td>
+			</tr>
+			</table>
+			<hr />
+		</td>
+	</tr>
+	<!-- END row -->
+	</table>
+    
+    <table class="footer2">
+    <tr>
+        <td rowspan="2" width="150%">{MAP_PN}<br />{MAP_PP}</td>
+        <td></td>
+        <td><input type="submit" class="button2" value="{L_SUBMIT} / {L_DELETE}" /></td>
+    </tr>
+    <tr>
+        <td colspan="2"><a href="#" onclick="marklist('map', 'map', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('map', 'map', false); return false;">{L_MARK_DEALL}</a></td>
+    </tr>
+    </table>
+	{S_UPDATE}
+	{S_FIELDS}
+	</fieldset>
 </form>
-<!-- END maps -->
+<!-- END map -->
 
 <br /><div align="center">{ERROR_BOX_UPLOAD}</div>
 <form action="{S_ACTION}" method="post" enctype="multipart/form-data">
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_MAPS_PIC}</a></li></ul>
-<table class="update">
+<fieldset>
+	<legend>{L_MAPS_PIC}</legend>
+	<table class="update">
 <tr>
 	<td class="row1">{L_DETAIL_MAP}&nbsp;/&nbsp;{L_DETAIL_POINTS}&nbsp;:&nbsp;{L_DETAIL_POINTS}&nbsp;/&nbsp;{L_DETAIL_MAPPIC}:</td>
 	<td class="row2"><div><div>{S_MAP}&nbsp;&nbsp;<input type="text" name="map_points_home[]" id="map_points_home[]" size="2"><span style=" padding:4px;">:</span><input type="text" name="map_points_rival[]" id="map_points_rival[]" size="2">&nbsp;<input type="button" class="more" value="{L_MORE}" onclick="clone(this)"><br /><input type="file" name="ufile[]" id="ufile[]"></div></div></td>
@@ -260,8 +265,9 @@ function display_options(value)
 	<td colspan="2" align="center"><input type="submit" class="button2" value="{L_UPLOAD}"></td>
 </tr>
 </table>
-{S_CREATE}
+{S_UPLOAD}
 {S_FIELDS}
+</fieldset>
 </form>
 <!-- END detail -->
 
@@ -274,31 +280,31 @@ function display_options(value)
 	<th nowrap="nowrap">{_sync.row.CHECK} {_sync.row.WRITE}</th>
 	<th><input type="checkbox" name="map_delete[{_sync.row.MAP_ID}]" title="{L_DELETE}" value="on"></th>
 </tr>
-<!-- BEGIN maps -->
+<!-- BEGIN map -->
 <tr>
-	<td>{_sync.row.maps.NAME}</td>
-	<td align="center">{_sync.row.maps.HOME}</td>
-	<td align="center">{_sync.row.maps.RIVAL}</td>
-	<td align="center">{_sync.row.maps.PICTURE}</td>
-	<td align="center">{_sync.row.maps.PREVIEW}</td>
-	<td><input type="checkbox" name="map_delete[{_sync.row.maps.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+	<td>{_sync.row.map.NAME}</td>
+	<td align="center">{_sync.row.map.HOME}</td>
+	<td align="center">{_sync.row.map.RIVAL}</td>
+	<td align="center">{_sync.row.map.PICTURE}</td>
+	<td align="center">{_sync.row.map.PREVIEW}</td>
+	<td><input type="checkbox" name="map_delete[{_sync.row.map.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 </tr>
 <!-- BEGIN result -->
 <tr>
-	<td>{_sync.row.maps.result.COUNT}</td>
-	<td>{_sync.row.maps.result.HOME}</td>
-	<td>{_sync.row.maps.result.RIVAL}</td>
+	<td>{_sync.row.map.result.COUNT}</td>
+	<td>{_sync.row.map.result.HOME}</td>
+	<td>{_sync.row.map.result.RIVAL}</td>
 	<td colspan="2"></td>
 	<td></td>
 </tr>
 <!-- END result -->
 <!-- BEGIN result_row -->
 <tr>
-	<td colspan="5">{_sync.row.maps.resultrow.NAME}</td>
-	<td><input type="checkbox" name="map_delete[{_sync.row.maps.resultrow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+	<td colspan="5">{_sync.row.map.resultrow.NAME}</td>
+	<td><input type="checkbox" name="map_delete[{_sync.row.map.resultrow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 </tr>
 <!-- END result_row -->
-<!-- END maps -->
+<!-- END map -->
 <!-- END row -->
 </table>
 
@@ -360,7 +366,6 @@ function display_options(value)
 
 <table class="rfooter">
 <tr>
-	<td></td>
 	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>

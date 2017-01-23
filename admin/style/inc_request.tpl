@@ -33,6 +33,35 @@ function setRequest(value)
 	}
 }
 
+function setRequest(value)
+{
+	if ( window.XMLHttpRequest ) { request = new XMLHttpRequest(); } else { request = new ActiveXObject("Microsoft.XMLHTTP"); }
+	
+	// überprüfen, ob Request erzeugt wurde
+	if ( !request )
+	{
+		alert("Kann keine XMLHTTP-Instanz erzeugen");
+		return false;
+	}
+	else
+	{
+		var url = "ajax/{FILE}.php";
+		
+		// Request öffnen
+		request.open('post', url, true);
+		
+		// Requestheader senden
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		
+		// Request senden
+		request.send('smode='+value);
+		//request.send("mode="+value+"&option="+option);
+		
+		// Request auswerten
+		request.onreadystatechange = interpretRequest;
+	}
+}
+
 // Request auswerten
 function interpretRequest()
 {

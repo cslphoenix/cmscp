@@ -25,7 +25,7 @@ else
 
 	$file	= basename(__FILE__);
 	
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
 	$template->set_filenames(array(
 		'body' => 'style/acp_phpinfo.tpl'
@@ -126,7 +126,7 @@ else
 	 }
 	 */
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 		
 		'INFO'	=> $output,

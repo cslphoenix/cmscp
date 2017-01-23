@@ -182,7 +182,7 @@ $lang['log_ip']				= 'IP-Adresse';
 $lang['log_time']			= 'Dateum/Zeit';
 $lang['log_section']		= 'Logbereich';
 $lang['log_message']		= 'Lognachricht';
-$lang['log_change']			= 'Änderungen';
+$lang['log_change']			= 'änderungen';
 
 
 //

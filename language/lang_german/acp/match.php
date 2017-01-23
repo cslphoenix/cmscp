@@ -12,6 +12,7 @@ $lang = array_merge($lang, array(
 	
 	'input_data'	=> 'Begegnungsdaten',
 	
+		
 	'upcoming'	=> 'Anstehende Begegnung',
 	'expired'	=> 'Abgelaufen Begegnung',
 
@@ -20,9 +21,8 @@ $lang = array_merge($lang, array(
 	'input_server'		=> 'Server',
 	'input_message'		=> 'Kommentar & Report',
 	'input_training'	=> 'Training',
-	
-	'head_details'		=> 'Matchdeatials',
-	
+	'input_details'		=> 'Details',
+
 	'type_unknown'	=> 'unbekannt',
 	'type_two'		=> '2on2',
 	'type_three'	=> '3on3',
@@ -135,6 +135,12 @@ $lang = array_merge($lang, array(
 	'user_create'	=> 'Benutzer hinzugefügt',
 	'user_update'	=> 'Benutzerstatus geändert',
 	'user_delete'	=> 'Benutzer gelöscht',
+	
+	'rival_overview'	=> 'Gegner Übersicht',
+	
+	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
+	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
+	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
 
 	
 ));

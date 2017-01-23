@@ -8,7 +8,8 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'			=> 'Team',
-	'explain'		=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
+	'titles'		=> 'Teams',
+	'explain'		=> 'Hier kannst du die Teams der Seite Ã¼berwachen. Du kannst bestehende Gruppen lÃ¶schen, editieren oder neue anlegen.',
 	'explain_user'	=> 'Benutzer verwalten',
 	
 	'input_data'	=> 'Teamdaten',
@@ -21,13 +22,15 @@ $lang = array_merge($lang, array(
 	'team_wars'		=> 'Begegnungen',
 	'team_join'		=> 'JoinUs',
 	'team_fight'	=> 'FightUs',
-	'team_view'		=> 'in Übersicht',
-	'team_show'		=> 'geöffentes Menü',
+	'team_view'		=> 'in Ãœbersicht',
+	'team_show'		=> 'geÃ¶ffentes MenÃ¼',
 	'team_flag'		=> 'Teambanner',
 	'team_logo'		=> 'Teamlogo',
 	'rank_team'		=> 'Teamrang',
 	
-	
+	'update_change'	=> 'Rechte wurden erfolgreich geÃ¤ndert.',
+	'update_delete'	=> 'Benutzer wurden erfolgreich gelÃ¶scht.',
+	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefÃ¼gt.',
 	
 	'count'		=> 'Mitgliederanzahl',
 	
@@ -36,38 +39,45 @@ $lang = array_merge($lang, array(
 #	'flag_upload'	=> 'Banner hochladen',
 #	'flag_current'	=> 'Aktuelles Banner',
 	
-	'no_members'	=> 'Keine Mitglieder eingetragen.',
-	'no_moderators'	=> 'Keine Moderatoren eingetragen.',
+#	'no_members'	=> 'Keine Mitglieder eingetragen.',
+#	'no_moderators'	=> 'Keine Moderatoren eingetragen.',
+	
+	'member'		=> 'Teammitglieder',
+	'no_member'		=> 'Keine Mitglieder eingetragen.',
 	
 #	'member'		=> 'Teammitglied',
-	'members'		=> 'Teammitglieder',
-	'moderator'		=> 'Teammoderator',
+	
+#	'moderator'		=> 'Teammoderator',
 #	'moderators'	=> 'Teammoderatoren',
+
+#	'member'		=> 'Mitglied',
+#	'members'		=> 'Mitglieder',
+#	'moderator'		=> 'Moderator',
+#	'moderators'	=> 'Moderatoren',
 	
-#	'create_team_user'	=> 'Neuen Spieler hinzugefügt.',
-#	'update_team_rank'	=> 'Spielerränge geändert',
-#	'update_team_level'	=> 'Spielerrechte geändert',
+#	'create_team_user'	=> 'Neuen Spieler hinzugefÃ¼gt.',
+#	'update_team_rank'	=> 'SpielerrÃ¤nge geÃ¤ndert',
+#	'update_team_level'	=> 'Spielerrechte geÃ¤ndert',
 	
-#	'create_user'		=> 'Neuen Spieler hinzugefügt.',
-#	'create_users'		=> 'Neue Spieler hinzugefügt.',
-#	'delete_user'		=> 'Der Spieler wurde gelöscht!',
-#	'delete_users'		=> 'Die Spieler wurden gelöscht!',
+#	'create_user'		=> 'Neuen Spieler hinzugefÃ¼gt.',
+#	'create_users'		=> 'Neue Spieler hinzugefÃ¼gt.',
+#	'delete_user'		=> 'Der Spieler wurde gelÃ¶scht!',
+#	'delete_users'		=> 'Die Spieler wurden gelÃ¶scht!',
 #	'confirm_user'		=> 'das der Spieler:',
 #	'confirm_users'		=> 'das diese Spieler:',
 	
-#	'update_rank'	=> 'Rang des Spielers erfolgreich geändert.',
-#	'update_ranks'	=> 'Ränge der Spieler erfolgreich geändert.',
-#	'update_right'	=> 'Rechte des Spielers erfolgreich geändert.',
-#	'update_rights'	=> 'Rechte der Spieler erfolgreich geändert.',
+#	'update_rank'	=> 'Rang des Spielers erfolgreich geÃ¤ndert.',
+#	'update_ranks'	=> 'RÃ¤nge der Spieler erfolgreich geÃ¤ndert.',
+#	'update_right'	=> 'Rechte des Spielers erfolgreich geÃ¤ndert.',
+#	'update_rights'	=> 'Rechte der Spieler erfolgreich geÃ¤ndert.',
 	
-	'type_main'				=> 'Hauptgruppe',
+	'type_main'				=> 'Hauptteam',
 	'notice_select_default'	=> 'zum Hauptteam machen',
 	
-	'team_member_add'			=> 'Teammitglieder hinzufügen',
-	'team_member_add_explain'	=> 'Hier kannst du, Teammitglieder hinzufügen. Entweder Benutzer per <b>Benutzernamen</b> mit Komma getrennt eintragen.',
-	
-	'team_set_rank'			=> 'Teamrang',
-	'team_set_moderator'	=> 'Moderatorenstatus',
+	'team_member_add'			=> 'Teammitglieder hinzufÃ¼gen',
+	'team_member_add_explain'	=> 'Hier kannst Du, Teammitglieder hinzufÃ¼gen. Trage die <b>Benutzernamen</b> pro Zeile ein.',
+	'team_set_moderator'		=> 'Moderatorenstatus',
+	'team_set_rank'				=> 'Teamrang',
 	
 ));
 
@@ -75,10 +85,10 @@ $lang = array_merge($lang, array(
 $lang['team']				= 'Team';
 $lang['members']			= 'Teammitglieder';
 
-$lang['team_explain']				= 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.';
-$lang['team_member_explain']		= 'Hier kannst du, Teammitglieder bearbeiten, das heißt, hinzufügen, löschen und die Berechtigungen ändern.';
-$lang['team_member_add']			= 'Teammitglieder hinzufügen';
-$lang['team_member_add_explain'	]	= 'Hier kannst du, Teammitglieder hinzufügen. Entweder Benutzer per <b>Benutzernamen</b> mit Komma getrennt eintragen, <b>oder</b> über das <b>Dropdown-Menü</b>! Über das Dropdown-Menü, kan mit Hilfe der <b>STRG</b>-Taste, mehrere Benutzernamen ausgewählt werden.';
+$lang['team_explain']				= 'Hier kannst du die Teams der Seite Ã¼berwachen. Du kannst bestehende Gruppen lÃ¶schen, editieren oder neue anlegen.';
+$lang['team_member_explain']		= 'Hier kannst du, Teammitglieder bearbeiten, das heiÃŸt, hinzufÃ¼gen, lÃ¶schen und die Berechtigungen Ã¤ndern.';
+$lang['team_member_add']			= 'Teammitglieder hinzufÃ¼gen';
+$lang['team_member_add_explain'	]	= 'Hier kannst du, Teammitglieder hinzufÃ¼gen. Entweder Benutzer per <b>Benutzernamen</b> mit Komma getrennt eintragen, <b>oder</b> Ã¼ber das <b>Dropdown-MenÃ¼</b>! Ãœber das Dropdown-MenÃ¼, kan mit Hilfe der <b>STRG</b>-Taste, mehrere Benutzernamen ausgewÃ¤hlt werden.';
 
 $lang['team_name']			= 'Teamname';
 $lang['team_game']			= 'Team Game';
@@ -93,7 +103,7 @@ $lang['team_show']			= 'Aufgeklappt?';
 
 $lang['team_infos']			= 'Team Details';
 $lang['team_logo_setting']	= 'Logo/Banner Upload';
-$lang['team_menu_setting']	= 'Menü Einstellungen';
+$lang['team_menu_setting']	= 'MenÃ¼ Einstellungen';
 
 $lang['team_logo_upload']	= 'Logo hochladen';
 $lang['team_logo_current']	= 'Aktuelles Logo';

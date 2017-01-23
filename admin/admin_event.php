@@ -5,8 +5,9 @@ if ( !empty($setmodules) )
 	return array(
 		'filename'	=> basename(__FILE__),
 		'title'		=> 'acp_event',
+		'cat'		=> 'system',
 		'modes'		=> array(
-			'main'	=> array('title' => 'acp_event'),
+			'main'		=> array('title' => 'acp_event'),
 		)
 	);
 }
@@ -28,29 +29,29 @@ else
 	$index	= '';
 	$fields = '';
 
-	$log	= SECTION_EVENT;
 	$time	= time();
+	$log	= SECTION_EVENT;	
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
+	$index	= request('index', INT);
 	$mode	= request('mode', TYP);
 	$accept	= request('accept', TYP);
 	
-	$acp_main	= request('acp_main', INT);
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 
-	( $cancel && !$acp_main )	? redirect('admin/' . check_sid($file, true)) : false;
-	( $cancel && $acp_main )	? redirect('admin/' . check_sid('index.php', true)) : false;
+	( $cancel && !$index )	? redirect('admin/' . check_sid(basename(__FILE__) . $iadds, true)) : false;
+	( $cancel && $index )	? redirect('admin/' . check_sid('admin_index.php', true)) : false;
 
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_event.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 	
-#	debug($_POST, '_POST');
-
-	$base	= $settings['switch']['event'];
+	$base = $settings['switch']['event'];
 	$mode = (in_array($mode, array('create', 'update', 'delete'))) ? $mode : false;
+	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
 
 	switch ( $mode )
 	{
@@ -72,8 +73,10 @@ else
 					'time_update'		=> 'hidden',
 				),
 			);
-				
-			if ( $mode == 'create' && !$submit )
+			
+			$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+
+			if ( $mode == 'create' && !$submit && $userauth['a_event'] )
 			{
 				$data_sql = array(
 					'event_title'		=> request('event_title', TXT),
@@ -96,12 +99,12 @@ else
 				
 				if ( !$error )
 				{
-					if ( $mode == 'create' )
+					if ( $mode == 'create' && $userauth['a_event'] )
 					{
 						$sql = sql(EVENT, $mode, $data_sql);
 						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
 					}
-					else
+					else if ( $userauth['a_event'] )
 					{
 						$sql = sql(EVENT, $mode, $data_sql, 'event_id', $data);
 						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
@@ -124,11 +127,18 @@ else
 			
 			build_output(EVENT, $vars, $data_sql);
 			
+			$fields .= build_fields(array(
+				'mode'	=> $mode,
+				'id'	=> $data,
+			));
+			
 			$template->assign_vars(array(
 				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['event_title'])),
 				'L_EXPLAIN'	=> $lang['com_required'],
+				
+				'L_OPTION'	=> implode($lang['com_bull'], $option),
 
-				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
 			
@@ -138,33 +148,34 @@ else
 			
 			$data_sql = data(EVENT, $data, false, 1, true);
 			
-			if ( $data && $confirm )
+			if ( $data && $accept && $userauth['a_event'] )
 			{
-				$file = ( $acp_main ) ? check_sid('index.php') : check_sid($file);
-				$name = ( $acp_main ) ? $lang['acp_overview'] : $acp_title;
+				$file = ( $index ) ? check_sid('admin_index.php') : check_sid($file);
+				$name = ( $index ) ? $lang['acp_overview'] : $acp_title;
 				
 				$sql = sql(EVENT, $mode, $data_sql, 'event_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], $file, $name);
+				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $name);
 				
-				$month = date('m', $data['event_date']);
-					
-				$oCache->deleteCache('data_event');
-				$oCache->deleteCache('data_calendar_' . $month);
-				$oCache->deleteCache('dsp_sn_minical');
-				$oCache->deleteCache('ly_event');
+			#	$month = date('m', $data['event_date']);
+			#	$oCache->deleteCache('data_event');
+			#	$oCache->deleteCache('data_calendar_' . $month);
+			#	$oCache->deleteCache('dsp_sn_minical');
+			#	$oCache->deleteCache('ly_event');
 				
 				log_add(LOG_ADMIN, $log, $mode, $sql);
 				message(GENERAL_MESSAGE, $msg);
 			}
-			else if ( $data_id && !$confirm )
+			else if ( $data && !$accept && $userauth['a_event'] )
 			{
-				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
-				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
-				$fields .= "<input type=\"hidden\" name=\"acp_main\" value=\"$acp_main\" />";
+				$fields .= build_fields(array(
+					'mode'	=> $mode,
+					'id'	=> $data,
+					'index'	=> $index,
+				));
 				
 				$template->assign_vars(array(
 					'M_TITLE'	=> $lang['com_confirm'],
-					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['event_title']),
+					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['event_title']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -175,36 +186,34 @@ else
 				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 			}
 			
-			$template->pparse('confirm');
-			
 			break;
 		
 		default:
 		
 			$template->assign_block_vars('display', array());
 			
-			$fields	= '<input type="hidden" name="mode" value="create" />';
+			$fields = build_fields(array('mode' => 'create'));
 			
 			$lvl	= isset($_POST['level']) ? $_POST['level'] : -1;
 			$level	= ( $lvl >= 0 ) ? "event_level = $lvl" : '';
-			$data	= data(EVENT, $level, 'event_date', 1, false);
+			$sqlout	= data(EVENT, $level, 'event_date', 1, false);
 
 			$new = $old = $cnt_new = $cnt_old = '';
 
-			if ( !$data )
+			if ( !$sqlout )
 			{
 				$template->assign_block_vars('display.new_empty', array());
 				$template->assign_block_vars('display.old_empty', array());
 			}
 			else
 			{
-				foreach ( $data as $row )
+				foreach ( $sqlout as $row )
 				{
-					if ( $row['event_date'] > time() )
+					if ( $row['event_date'] > $time )
 					{
 						$new[] = $row;
 					}
-					else if ( $row['event_date'] < time() )
+					else if ( $row['event_date'] < $time )
 					{
 						$old[] = $row;
 					}
@@ -218,17 +227,17 @@ else
 				{
 					$cnt_new = count($new);
 
-					for ( $i = 0; $i < $cnt_new; $i++ )
+					foreach ( $new as $row )
 					{
-						$id		= $new[$i]['event_id'];
-						$title	= $new[$i]['event_title'];
-						$date	= create_date('d.m.Y', $new[$i]['event_date'], $userdata['user_timezone']);
-						$time	= create_date('H:i', $new[$i]['event_date'], $userdata['user_timezone']);
-						$dura	= create_date('H:i', $new[$i]['event_duration'], $userdata['user_timezone']);
+						$id		= $row['event_id'];
+						$title	= $row['event_title'];
+						$date	= create_date('d.m.Y', $row['event_date'], $userdata['user_timezone']);
+						$time	= create_date('H:i', $row['event_date'], $userdata['user_timezone']);
+						$dura	= create_date('H:i', $row['event_duration'], $userdata['user_timezone']);
 
 						$template->assign_block_vars('display.new', array(
 							'TITLE'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, $title),
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 							
 							'DATE'		=> sprintf($lang['sprintf_event'], $date, $time, $dura),
@@ -254,7 +263,7 @@ else
 
 						$template->assign_block_vars('display.old', array(
 							'TITLE'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $title, $title),
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 							
 							'DATE'		=> sprintf($lang['sprintf_event'], $date, $time, $dura),
@@ -266,7 +275,7 @@ else
 			$current_page = (!$cnt_old) ? 1 : ceil($cnt_old/$settings['ppe_acp']);
 
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 				'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
 				'L_EXPLAIN'	=> $lang['explain'],
 
@@ -278,16 +287,13 @@ else
 				'PAGE_PAGING'	=> generate_pagination("$file&", $cnt_old, $settings['ppe_acp'], $start),
 
 				'S_LEVEL'	=> select_level($lvl, 'level', 'user_level'),
-				'S_CREATE'	=> check_sid("$file?mode=create"),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
 
 			break;
 	}
-
-	$template->pparse('body');
-
+	$template->pparse($_tpl);
 	acp_footer();
 }
 

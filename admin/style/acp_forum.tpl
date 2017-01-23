@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -41,7 +41,7 @@ function display_options(value)
 <!-- BEGIN option -->
 {input.row.tab.option.DIV_START}
 <dl>			
-	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
 {input.row.tab.option.DIV_END}
@@ -121,25 +121,58 @@ function display_options(value)
 	<th>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="{INPUT_NAME}" /></td>
+	<td><input type="submit" name="{INPUT_SUBMIT}" value="{CREATE}" /></td>
+</tr>
+</table>
+
+<br />
+
+<table class="rows">
 <!-- BEGIN row -->
 <tr>
 	<td>{display.row.NAME}</td>
 	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
+<!-- BEGIN subrow -->
+<tr>
+	<td><span style="padding:0px 8px;"></span>{display.row.subrow.NAME}</td>
+	<td><span style="padding:0px 8px;"></span>{display.row.subrow.MOVE_DOWN}{display.row.subrow.MOVE_UP}{display.row.subrow.UPDATE}{display.row.subrow.DELETE}</td>
+</tr>
+<!-- END subrow -->
+<!-- BEGIN br_empty -->
+</table>
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="{display.row.S_NAME}" /></td>
+	<td><input type="submit" name="{display.row.S_SUBMIT}" value="{L_CREATE_SUBFORUM}" /></td>
+</tr>
+</table>
+<br />
+<table class="rows">
+<!-- END br_empty -->
+<!-- BEGIN br_empty2 -->
+</table>
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="{display.row.S_NAME}" /></td>
+	<td><input type="submit" name="{display.row.S_SUBMIT}" value="{L_CREATE_SUBFORUM}" /></td>
+</tr>
+<!-- END br_empty2 -->
 <!-- END row -->
+</table>
+
 <!-- BEGIN empty -->
+<table class="rows">
 <tr>
 	<td class="empty" colspan="2">{L_EMPTY}</td>
 </tr>
+</table>
 <!-- END empty -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="cat_name" /></td>
-	<td><input type="submit" value="{L_CREATE}" /></td>
-</tr>
-</table>
 {S_FIELDS}
 </form>
 <!-- END display -->

@@ -21,11 +21,14 @@ $lang = array_merge($lang, array(
 	'empty_forum'		=> 'Keine Foren eingetragen',
 	'empty_subforum'	=> 'Keine Subforen eingetragen',
 	
-	
-	'icon'		=> 'Forumicon',
-	'sub'		=> 'Subforum',
-	'main'		=> 'Hauptforum',
-	'copy'		=> 'Rechtekopieren',
+	'forum_name'	=> 'Name',
+	'type'			=> 'Type',
+	'main'			=> 'Hauptforum',
+	'copy'			=> 'Rechtekopieren',
+	'forum_desc'	=> 'Beschreibung',
+	'forum_icons'	=> 'Icon',
+	'forum_legend'	=> 'Legende',
+	'forum_status'	=> 'Status',	
 	
 	'locked'	=> 'Gesperrt',
 	'unlocked'	=> 'Offen',

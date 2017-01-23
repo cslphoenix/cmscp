@@ -8,6 +8,7 @@ define('IN_ADMIN', true);
 $root_path = './../../';
 
 require($root_path . 'common.php');
+include($root_path . 'includes/acp/acp_functions.php');
 
 $userdata = session_pagestart($user_ip, -1);
 init_userprefs($userdata);
@@ -21,22 +22,23 @@ if ( isset($_POST['type']) )
 	$mode = $_POST['mode'];
 	$data = $_POST['data'];
 	
-	$label = $menu = false;
+	$menu = $label = $_name = false;
+	$sort = array();
 	
 	switch ( $meta )
 	{
-		case 'dl':		$tbl = DOWNLOAD;				break;
-		case 'gallery':	$tbl = GALLERY_NEW;				break;
-		case 'profile':	$tbl = PROFILE;					break;
-		case 'forum':	$tbl = FORUM;	$label = true;	break;		
-		case 'menu':	$tbl = MENU;	$label = ($type != 4) ? true : false;	$menu = true;	break;
+		case 'dl':		$tbl = DOWNLOAD;	break;
+		case 'gallery':	$tbl = GALLERY_NEW;	break;
+		case 'profile':	$tbl = PROFILE;		break;
+		case 'change':	$tbl = CHANGELOG;	$_name = true; break;
+		case 'forum':	$tbl = FORUM;		$label = true;	break;		
+		case 'menu':	$tbl = MENU;		$label = ($type != 4) ? true : false;	$menu = true;	break;
 	}
 	
-#	debug($type, 'type ajax_main');
-	
 	$f_id		= $meta . '_id';
-	$f_name		= $meta . '_name';
+	$f_name		= $meta . ($_name ? '_num' : '_name');
 	$f_lang		= $meta . '_lang';
+	$f_types	= $meta . '_types';
 	$f_order	= $meta . '_order';
 	
 	$sql = "SELECT * FROM $tbl " . ($menu ? (($type == 4) ? "WHERE action = 'pcp'" : "WHERE action = 'acp'") : '') . " ORDER BY main ASC, $f_order ASC";
@@ -67,23 +69,23 @@ if ( isset($_POST['type']) )
 		}
 	}
 	
-	$switch = $settings['smain'][$meta . '_switch'];
-	$entrys = $settings['smain'][$meta . '_entrys'];
-	
-#	debug($entrys, 'entrys', true);
-#	$subs	= (isset($settings['smain'][$meta . '_subs'])) ? $settings['smain'][$meta . '_subs'] : false;
-	
-	$sort = array();
-	
+	$switch = isset($settings['smain'][$meta . '_switch']) ? $settings['smain'][$meta . '_switch'] : 0;
+	$entrys = isset($settings['smain'][$meta . '_entrys']) ? $settings['smain'][$meta . '_entrys'] : 0;
+
 	foreach ( $cat as $c_key => $c_row )
 	{
-		$sort[] = array('id' => $c_row[$f_id], 'typ' => 1, 'lng' => lang($c_row[$f_name]));
+		$sort[] = array(
+			'id'	=> $c_row[$f_id],
+			'typ'	=> 1,
+			'lng'	=> lang($c_row[$f_name]),
+			'info'	=> isset($c_row[$f_types]) ? ($c_row[$f_types] != 'a:1:{i:0;s:0:"";}' ? uns_ary($c_row[$f_types]) : lang($c_row[$f_types])) : '',
+		);
 
 		if ( isset($lab[$c_key]) && ($label ? true : $entrys) )
 		{
 			foreach ( $lab[$c_key] as $l_key => $h_row )
 			{
-				$sort[] = array('id' => $h_row[$f_id],'typ' => 2, 'lng' => lang($h_row[$f_name]));
+				$sort[] = array('id' => $h_row[$f_id],'typ' => 2, 'lng' => @lang($h_row[$f_name]));
 				
 				if ( isset($sub[$l_key]) && $entrys )
 				{
@@ -95,8 +97,6 @@ if ( isset($_POST['type']) )
 			}
 		}
 	}
-	
-#	debug($sort);
 	
 	$opt = '<div id="close">';
 	
@@ -310,7 +310,7 @@ if ( isset($_POST['type']) )
 				{
 					switch ( $row['typ'] )
 					{
-						case 1: $opt .= '<label><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 1: $opt .= '<label title="' . $row['info'] . '"><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label><br />'; break;
 						case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
 						case 3:	$opt .= '&nbsp; &nbsp;&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
 					}

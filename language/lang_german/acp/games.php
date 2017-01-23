@@ -15,6 +15,7 @@ $lang = array_merge($lang, array(
 	'game_name'		=> 'Spielname',
 	'game_tag'		=> 'Spiel Tag',
 	'game_image'	=> 'Spiel Bild',
+	'game_order'	=> 'Postion',
 
 ));
 

@@ -1,71 +1,7 @@
 <?php
 
-/*
- *	@param string $type			enthält den Titel
- *
- *	$type = art
- *	$class = cssstyle
- *	$field_id = user_id/group_id
- *	$field_name = user_name/group_name
- *	$default = startauswahl
- *	$switch = team_join/team_fight
- *
- */
 
-/*
-function select_box($type, $class, $field_id, $field_name, $default = '', $switch = '')
-{
-	global $db, $lang, $config, $settings;
-	
-	switch ( $type )
-	{
-		case 'match';
-			break;
-
-		case 'newscategory';
-			break;
-
-		case 'team';
-			$table = TEAMS;
-			$where = ( $switch != '0' ) ? ( $switch == '2' ) ? ' WHERE team_join = 1' : ' WHERE team_fight = 1' : '';
-			$order = ' ORDER BY team_order';
-			break;
-
-		case 'user';
-			$table = USERS;
-			$where = ' WHERE user_id <> ' . ANONYMOUS;
-			$order = ' ORDER BY user_id DESC';
-			break;
-			
-		default:
-			
-			message(GENERAL_ERROR, 'Error', '');
-			
-			break;
-	}
-	
-	$sql = 'SELECT ' . $field_id . ', ' . $field_name . ' FROM ' . $table . $where . $order;
-	if (!($result = $db->sql_query($sql)))
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$data = $db->sql_fetchrowset($result);
-	
-	$select = '<select class="' . $class . '" name="' . $field_id . '">';
-	$select .= '<option value="0">&raquo; ' . $lang['msg_select_' . $type ] . '</option>';
-	
-	foreach ( $data as $info => $value )
-	{
-		$selected = ( $value[$field_id] == $default ) ? 'selected="selected"' : '';
-		$select .= '<option value="' . $value[$field_id] . '" ' . $selected . '>&raquo; ' . $value[$field_name] . '&nbsp;</option>';
-	}
-	$select .= '</select>';
-
-	return $select;
-}
-*/
-
-function select_lang_box($var, $name, $default, $class)
+function select_lang_box2($var, $name, $default, $class)
 {
 	global $lang;
 		
@@ -119,7 +55,7 @@ function _select_newscat($default)
 //	default:	id
 //	class:		css class
 //
-function _select_match($default, $type, $class)
+function _select_match2($default, $type, $class)
 {
 	global $db, $lang;
 	
@@ -150,7 +86,7 @@ function _select_match($default, $type, $class)
 //	default:	day/month/year/hour/min
 //	value:		select Wert
 //
-function select_date($default, $var, $value)
+function select_date2($default, $var, $value)
 {
 	$lang;
 	
@@ -301,6 +237,135 @@ function select_date($default, $var, $value)
 			
 	}
 	
+	return $select;
+}
+
+/*
+ *	orignal from phpBB2
+ */
+function select_tz($default, $select_name = 'timezone')
+{
+	global $sys_timezone, $lang;
+
+	if ( !isset($default) )
+	{
+		$default == $sys_timezone;
+	}
+	$tz_select = '<select class="select" name="' . $select_name . '">';
+
+	while( list($offset, $zone) = @each($lang['tz']) )
+	{
+		$selected = ( $offset == $default ) ? ' selected="selected"' : '';
+		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $zone) . '</option>';
+	}
+	$tz_select .= '</select>';
+
+	return $tz_select;
+}
+
+//
+// Pick a language, any language ...
+//
+function select_language($default, $select_name = "language", $dirname = "language")
+{
+	global $root_path, $lang;
+
+	$dir = opendir($root_path . $dirname);
+
+	$language = array();
+	
+	while ( $file = readdir($dir) )
+	{
+		if (preg_match('#^lang_#i', $file) && !is_file(@cms_realpath($root_path . $dirname . '/' . $file)) && !is_link(@cms_realpath($root_path . $dirname . '/' . $file)))
+		{
+			$filename = trim(str_replace("lang_", "", $file));
+			$displayname = preg_replace("/^(.*?)_(.*)$/", "\\1 [ \\2 ]", $filename);
+			$displayname = preg_replace("/\[(.*?)_(.*)\]/", "[ \\1 - \\2 ]", $displayname);
+			$language[$displayname] = $filename;
+		}
+	}
+
+	closedir($dir);
+
+	@asort($language);
+	@reset($language);
+
+	$lang_select = '<select class="select" name="' . $select_name . '">';
+	
+	while ( list($displayname, $filename) = @each($language) )
+	{
+		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
+		
+		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
+	}
+	$lang_select .= '</select>';
+
+	return $lang_select;
+}
+
+function select_lang($default, $select_name = "language", $dirname = "language")
+{
+	global $root_path, $lang;
+
+	$dir = opendir($root_path . $dirname);
+
+	$language = array();
+	
+	while ( $file = readdir($dir) )
+	{
+		if (preg_match('#^lang_#i', $file) && !is_file(@cms_realpath($root_path . $dirname . '/' . $file)) && !is_link(@cms_realpath($root_path . $dirname . '/' . $file)))
+		{
+			$filename = trim(str_replace("lang_", "", $file));
+			$displayname = preg_replace("/^(.*?)_(.*)$/", "\\1 [ \\2 ]", $filename);
+			$displayname = preg_replace("/\[(.*?)_(.*)\]/", "[ \\1 - \\2 ]", $displayname);
+			$language[$displayname] = $filename;
+		}
+	}
+
+	closedir($dir);
+
+	@asort($language);
+	@reset($language);
+
+	$lang_select = '<select class="select" name="' . $select_name . '">';
+	
+	while ( list($displayname, $filename) = @each($language) )
+	{
+		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
+		
+		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
+	}
+	$lang_select .= '</select>';
+
+	return $lang_select;
+}
+
+//
+// Pick a template/theme combo, 
+//
+function select_style($default, $select_name = "style", $dirname = "templates")
+{
+	global $db, $lang;
+
+	$sql = "SELECT themes_id, style_name FROM " . THEMES . " ORDER BY template_name, themes_id";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $db->sql_fetchrowset($result);
+
+	$select = "<select class=\"select\" name=\"$select_name\">";
+	
+	for ( $i = 0; $i < count($row); $i++ )
+	{
+		$selected = ( $default == $row[$i]['themes_id'] ) ? ' selected="selected"' : '';
+
+		$select .= '<option value="' . $row[$i]['themes_id'] . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $row[$i]['style_name']) . '</option>';
+	}
+	$select .= "</select>";
+
 	return $select;
 }
 

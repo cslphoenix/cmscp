@@ -10,7 +10,7 @@
 </tr>
 <tr>
 	<td class="row1"><label for="download">{L_DOWNLOAD}:</label></td>
-	<td class="row2"><label><input type="radio" name="download" value="server" checked="checked" id="download" />&nbsp;{L_DOWNLOAD_SERVER}</label><span style="padding:4px;"></span><label><input type="radio" name="download" value="file" />&nbsp;{L_DOWNLOAD_FILE}</label></td>
+	<td class="row2"><label><input type="radio" name="download" value="server" checked="checked" id="download" />&nbsp;{L_DOWNLOAD_SERVER}</label><span style="padding:4px;"></span><label><input type="radio" name="download" value="file" disabled />&nbsp;{L_DOWNLOAD_FILE}</label></td>
 </tr>
 <tr>
 	<td class="row1"><label for="compress">{L_COMPRESS}:</label></td>
@@ -26,7 +26,7 @@
 
 <table class="submit">
 <tr>
-	<td><input type="submit" name="backupstart" value="{L_SUBMIT}"></td>
+	<td><input type="submit" name="backup" value="{L_SUBMIT}"></td>
 	<td><input type="reset" value="{L_RESET}"></td>
 </tr>
 </table>
@@ -35,32 +35,7 @@
 <!-- END backup -->
 
 <!-- BEGIN optimize -->
-<form action="{S_ACTION}" method="post">
 {S_SCRIPT}
-<table class="update">
-<tr>
-	<td class="row1">{L_SHOW_NOT_OPTIMIZED}:</td>
-	<td class="row2"><label><input type="radio" name="db_showoptimized" value="1" {S_OPTIMIZED_YES}/>&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="db_showoptimized" value="0" {S_OPTIMIZED_NO} />&nbsp;{L_NO}</label></td>
-</tr>
-<tr>
-	<td class="row1">{L_SHOW_BEGIN_FOR}:</td>
-	<td class="row2"><input class="post" type="text" name="db_show_begin_for" value="{S_SHOW_BEGIN_FOR}" /></td>
-</tr>
-</table>
-
-<br/>
-
-<table class="submit">
-<tr>
-	<td><input type="submit" name="configure" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}" onClick="document.tablesForm.show_begin_for.value=''"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-
-<br />
-
 <form action="{S_ACTION}" method="post" name="tablesForm">
 <table class="rows db">
 <tr>

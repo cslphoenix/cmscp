@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -61,7 +61,7 @@ function interpretRequest()
 <!-- BEGIN option -->
 {input.row.tab.option.DIV_START}
 <dl>			
-	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
 {input.row.tab.option.DIV_END}
@@ -143,20 +143,23 @@ function interpretRequest()
 <!-- BEGIN server_list -->
 <form action="{S_ACTION}" method="post">
 {ERROR_BOX}
-<table>
+<fieldset>
+	<legend>{L_LANG}</legend>
+<table class="rows2">
 <tr>
 	<!-- BEGIN name_option -->
-	<th>{server_list.name_option.NAME}</th>
+	<th{server_list.name_option.CSS}>{server_list.name_option.NAME}</th>
 	<!-- END name_option -->
 </tr>
 <!-- BEGIN row -->
 <tr>
 	<!-- BEGIN type_option -->
-	<td align="center">{server_list.row.type_option.TYPE}</td>
+	<td>{server_list.row.type_option.TYPE}</td>
 	<!-- END type_option -->
 </tr>
 <!-- END row -->
 </table>
+</fieldset>
 <div class="submit">
 <dl>
 	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
@@ -220,7 +223,9 @@ function interpretRequest()
 <!-- BEGIN gameq_list -->
 <form action="{S_ACTION}" method="post">
 {ERROR_BOX}
-<table>
+<fieldset>
+	<legend>{L_LANG}</legend>
+<table class="rows2">
 <tr>
 	<!-- BEGIN name_option -->
 	<th>{gameq_list.name_option.NAME}</th>
@@ -234,6 +239,7 @@ function interpretRequest()
 </tr>
 <!-- END row -->
 </table>
+</fieldset>
 <div class="submit">
 <dl>
 	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>

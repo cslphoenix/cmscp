@@ -1,5 +1,49 @@
 <?php
 
+function build_options($var)
+{
+	global $lang;
+	
+	$new_fields = '';
+	
+	foreach ( $var as $name => $vars )
+	{
+		if ( is_array($vars) )
+		{
+			foreach ( $vars as $_var => $_value )
+			{
+				if ( is_array($_value) )
+				{
+					foreach ( $_value as $_v1 => $_v2 )
+					{
+						$new_fields .= '<option value="' . $_v1 . '">' . sprintf($lang['stf_select_format'], sprintf($lang[$_var], $lang[$_v2])) . "</option>\n";
+					}
+				}
+				else
+				{
+					$new_fields .= '<option value="' . $_var . '">' . sprintf($lang['stf_select_format'], $lang[$_value]) . "</option>\n";
+				}
+			}
+		}
+		else
+		{
+			$new_fields .= '<select name="' . $name . '"' . ($vars === false ? '' : ' onchange="' . $vars . '"') . '>';
+		}
+	}
+	
+	$new_fields .= '</select>';
+	
+	return $new_fields;
+	
+	#	$s_options .= '<select name="mode" onchange="setRequest(this.options[selectedIndex].value);">';
+	#	$s_options .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['com_select_option']) . "</option>\n";
+	#	$s_options .= '<option value="uchange">' . sprintf($lang['stf_select_format'], $lang['notice_select_permission']) . "</option>\n";
+	#	$s_options .= '<option value="uranks">' . sprintf($lang['stf_select_format'], $lang['notice_select_rank']) . "</option>\n";
+	#	$s_options .= '<option value="udefault">' . sprintf($lang['stf_select_format'], $lang['notice_select_default']) . "</option>\n";
+	#	$s_options .= '<option value="udelete">' . sprintf($lang['stf_select_format'], $lang['com_delete']) . "</option>\n";
+	#	$s_options .= '</select>';
+}
+
 function _build_fields($key, $value)
 {
 	$fields = '';
@@ -107,11 +151,11 @@ function request($request_var, $request_type, $filter = '')
 					}
 					else if ( $request_type == TXT )
 					{
-						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT));
+						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT, 'ISO-8859-1'));
 					}
 					else
 					{
-						$v_tmp[$key][] = (is_numeric($v_value) ? (int) $v_value : trim(htmlspecialchars($v_value, ENT_COMPAT)));
+						$v_tmp[$key][] = (is_numeric($v_value) ? (int) $v_value : trim(htmlspecialchars($v_value, ENT_COMPAT, 'ISO-8859-1')));
 					}
 				}
 				
@@ -125,11 +169,11 @@ function request($request_var, $request_type, $filter = '')
 				}
 				else if ( $request_type == TXT )
 				{
-					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT));
+					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT, 'ISO-8859-1'));
 				}
 				else
 				{
-					$_tmp[$key] = (is_numeric($value) ? (int) $value : trim(htmlspecialchars($value, ENT_COMPAT)));
+					$_tmp[$key] = (is_numeric($value) ? (int) $value : trim(htmlspecialchars($value, ENT_COMPAT, 'ISO-8859-1')));
 				}
 				
 				$var[$key] = $_tmp[$key];
@@ -141,10 +185,10 @@ function request($request_var, $request_type, $filter = '')
 		switch ( $request_type )
 		{
 			case INT: $var = ( isset($tmp) ) ? (int) $tmp : ''; break;
-			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? (int) $tmp : trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
-			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
-			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT)) : ''; break;
-			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT)) : ''; break;
+			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? (int) $tmp : trim(htmlspecialchars($tmp, ENT_COMPAT, 'ISO-8859-1')) : ''; break;
+			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT, 'ISO-8859-1')) : ''; break;
+			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT, 'ISO-8859-1')) : ''; break;
+			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT, 'ISO-8859-1')) : ''; break;
 			case URL:
 				
 				if ( $tmp != '' )
@@ -475,87 +519,6 @@ function random_password($minlength = 7, $maxlength = 14, $uselower = true, $use
 	}
 	
 	return $str; 
-}
-
-function update_main_id($id, $user = false, $group = false, $color_update = false)
-{
-	global $db, $lang;
-	
-	$data = ( $group ) ? data(GROUPS, $id, false, 1, true) : false;
-	$info = ( $group ) ? 'group_id' : 'team_id';
-	
-	if ( !$user )
-	{
-		$sql = "SELECT l.user_id
-				FROM " . LISTS . " l
-					LEFT JOIN " . USERS . " u ON l.user_id = u.user_id
-				WHERE type = " . TYPE_GROUP . " AND type_id = $id AND user_pending = 0";
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$user[] = $row['user_id'];
-		}
-	}
-	
-	$sql = "SELECT user_id, $info, user_level FROM " . USERS . " WHERE user_id IN (" . implode(', ', $user) . ")";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	
-	$users = array();
-	
-	while ( $row = $db->sql_fetchrow($result) )
-	{
-		if ( $color_update )
-		{
-			$users[] = $row;
-		}
-		else if ( $row[$info] != $id )
-		{
-			$users[] = $row;
-		}
-	}
-	
-	if ( $users )
-	{
-		foreach ( $users as $user => $row )
-		{
-			$sql = "UPDATE " . USERS . " SET $info = $id";
-			
-			if ( $data )
-			{
-				$sql .= ", user_color = '{$data['group_color']}'";
-				
-				if ( $data['group_access'] == ADMIN && ( $row['user_level'] < ADMIN || $row['user_level'] < MOD || $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
-				{
-					$sql .= ", user_level = " . ADMIN;
-				}
-				else if ( $data['group_access'] == MOD && ( $row['user_level'] < MOD || $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
-				{
-					$sql .= ", user_level = " . MOD;
-				}
-				else if ( $data['group_access'] == MEMBER && ( $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
-				{
-					$sql .= ", user_level = " . MEMBER;
-				}
-				else if ( $data['group_access'] == TRIAL && $row['user_level'] < TRIAL )
-				{
-					$sql .= ", user_level = " . TRIAL;
-				}
-			}
-			
-			$sql .= " WHERE user_id = {$row['user_id']}";
-			if ( !$result = $db->sql_query($sql) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-		}
-	}
 }
 
 function gen_userinfo(&$row, &$name, &$join, &$posts, &$comments)
@@ -1153,14 +1116,121 @@ function setup_style($style)
 
 function encode_ip($dotquad_ip)
 {
-	$ip_sep = explode('.', $dotquad_ip);
-	return sprintf('%02x%02x%02x%02x', $ip_sep[0], $ip_sep[1], $ip_sep[2], $ip_sep[3]);
+	if (function_exists('filter_var'))
+	{
+		if (filter_var($dotquad_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false)
+		{
+			// ipv6 - "::1" => "0000000000000000000000000001"
+			$new_ip = '';
+			if(strstr($dotquad_ip,"::" ))
+			{
+				$ip_sep = array();
+				$e = explode(":", $dotquad_ip);
+				$s = 8-count($e);
+				
+				foreach($e as $value)
+				{
+					if ($value == '')
+					{
+						for($i = 0; $i <= $s; $i++) $ip_sep[] = 0;
+					}
+					else
+					{
+						$ip_sep[] = $value;
+					}
+				}
+			}
+			else
+			{
+				$ip_sep = explode(':', $dotquad_ip);
+			}
+			for ($i = 0; $i <= 7; $i++) $new_ip .= str_pad($ip_sep[$i], 4, '0', STR_PAD_LEFT);
+			return $new_ip;
+		}
+		else if (filter_var($dotquad_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false)
+		{
+			// ipv4 - "127.0.0.1" => "7F000001"
+			$ip_sep = explode('.', $dotquad_ip);
+			return sprintf('%02x%02x%02x%02x', $ip_sep[0], $ip_sep[1], $ip_sep[2], $ip_sep[3]);
+	   }
+	}
+	else
+	{
+		if (preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((b((25[0-5])|(1d{2})|(2[0-4]d)|(d{1,2}))b).){3}(b((25[0-5])|(1d{2})|(2[0-4]d)|(d{1,2}))b))|(([0-9A-Fa-f]{1,4}:){0,5}:((b((25[0-5])|(1d{2})|(2[0-4]d)|(d{1,2}))b).){3}(b((25[0-5])|(1d{2})|(2[0-4]d)|(d{1,2}))b))|(::([0-9A-Fa-f]{1,4}:){0,5}((b((25[0-5])|(1d{2})|(2[0-4]d)|(d{1,2}))b).){3}(b((25[0-5])|(1d{2})|(2[0-4]d)|(d{1,2}))b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $dotquad_ip))
+		{
+			// ipv6 - "::1" => "0000000000000000000000000001"
+			$new_ip = '';
+			if(strstr($dotquad_ip,"::" ))
+			{
+				$ip_sep = array();
+				$e = explode(":", $dotquad_ip);
+				$s = 8-count($e);
+				
+				foreach($e as $value)
+				{
+					if ($value == '')
+					{
+						for($i = 0; $i <= $s; $i++) $ip_sep[] = 0;
+					}
+					else
+					{
+						$ip_sep[] = $value;
+					}
+				}
+			}
+			else
+			{
+				$ip_sep = explode(':', $dotquad_ip);
+			}
+			for ($i = 0; $i <= 7; $i++) $new_ip .= str_pad($ip_sep[$i], 4, '0', STR_PAD_LEFT);
+			return $new_ip;
+		}
+		else if (preg_match('/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/', $dotquad_ip))
+		{
+			// ipv4 - "127.0.0.1" => "7F000001"
+			$ip_sep = explode('.', $dotquad_ip);
+			return sprintf('%02x%02x%02x%02x', $ip_sep[0], $ip_sep[1], $ip_sep[2], $ip_sep[3]);
+	   }
+	
+	}
 }
 
 function decode_ip($int_ip)
 {
-	$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
-	return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
+   if (strlen($int_ip) == 32)
+   {
+		// ipv6 - "0000000000000000000000000001" => "::1"
+		$hexipbang = array();
+		
+		if (function_exists('str_split'))
+		{
+			$e = str_split($int_ip, 4);
+		}
+		else
+		{
+			$e = explode(':', chunk_split($int_ip, 4, ':'));
+		}
+		
+		foreach($e as $key => $value)
+		{
+			$value = ltrim($value, '0');
+			$hexipbang[] = $value ? $value : '0';
+		}
+		
+		$new_ip = implode(':', $hexipbang);
+		if (preg_match_all('/:(0:)+/s', $new_ip, $zeros, PREG_PATTERN_ORDER))
+		{
+			rsort($zeros[0], SORT_STRING);
+			$new_ip = str_replace($zeros[0][0], '::', $new_ip);
+		}
+		return $new_ip;
+	}
+	else if (strlen($int_ip) == 8)
+	{
+		// ipv4 - "7F000001" => "127.0.0.1"
+		$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
+		return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
+	}
 }
 
 function iptoint($userip)
@@ -1722,7 +1792,7 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 		}
 		else
 		{
-			include($root_path . 'admin/page_footer_admin.php');
+			acp_footer();
 		}
 	}
 	else
@@ -1811,374 +1881,6 @@ function board_disable()
 }
 
 
-
-function sql($table, $type, $submit, $id_field = '', $id = '')
-{
-	global $db, $lang;
-	
-	/*
-		@params:	$table		=> SQL Table
-		@params:	$type		=> insert, update, delete
-		@params:	$submit		=> Data
-		@params:	$id_field	=> ID Field
-		@params:	$id			=> ID
-	*/
-	
-	switch ( $type )
-	{
-		case strstr($type, 'change'):
-		
-			
-		
-			break;
-	}
-	
-	if ( strstr($type, 'create') )
-	{
-		foreach ( $submit as $key => $var )
-		{
-			$keys[] = $key;
-			$vars[] = $var;
-		}
-		
-		$name = 0;
-		
-		foreach ( $keys as $int => $key )
-		{
-			if ( strpos($key, '_name') !== false || strpos($key, '_title') !== false )
-			{
-				$name = $int;
-			}
-		}
-		
-	#	debug($name, 'name', true);
-		
-		$key = $keys;
-		$var = $vars;
-		
-		$keys = implode(', ', $keys);
-		$vars = implode('\', \'', $vars);
-		
-		$sql = "INSERT INTO $table ($keys) VALUES ('$vars')";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = array(array('field' => $key[$name], 'post' => $var[$name]));
-		
-	#	debug($return);
-	#	debug($sql);
-	}
-	else if ( strstr($type, 'update') )
-	{
-		$change = '';
-		
-		if ( defined('IN_ADMIN') )
-		{
-			$data = array_merge($submit, array($id_field => $id));
-			$data_db = data($table, $id, false, 1, true);
-			
-			if ( $data_db )
-			{
-				$new = array_diff_assoc($data_db, $data);
-				
-				if ( $new )
-				{
-					$change = '';
-					
-					foreach ( $new as $key_new => $value_new )
-					{
-						foreach ( $data as $key_data => $value_data )
-						{
-							if ( $key_new == $key_data )
-							{
-								$change[] = array(
-									'field'	=> $key_new,
-									'data'	=> $value_new,
-									'post'	=> $value_data,
-									'meta'	=> $id
-								);
-							}
-						}
-					}
-					
-					$change = $change;
-				}
-				else
-				{
-					$change = 'notice_no_changes';
-				}
-			}
-			else
-			{
-				$change = '!data_db';
-			}
-		}
-		
-		foreach ( $submit as $key => $var )
-		{
-			$input[] = "$key = '$var'";
-		}
-		
-		$input = implode(', ', $input);
-		
-		if ( is_array($id_field) && is_array($id) )
-		{
-			foreach ( $id_field as $key => $row )
-			{
-				$ary_new[] = "$row = " . $id[$key];
-			}
-			
-			$sql_where = implode(' AND ', $ary_new);
-		}
-		else
-		{
-			$sql_where = "$id_field = $id";
-		}
-		
-		$sql = "UPDATE $table SET $input WHERE $sql_where";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = $change;
-	}
-	else if ( strstr($type, 'modify') )
-	{
-	#	debug($submit, 'submit');
-		
-		foreach ( $submit as $row_id => $row_vars )
-		{
-			foreach ( $row_vars as $_name => $_value )
-			{
-				$_update[$row_id][] = "$_name = '$_value'";
-			}
-			
-			$input[$row_id] = implode(', ', $_update[$row_id]);
-		#	debug($row);
-		#	debug($_id, 'id');
-		#	debug($_var, 'var');
-			
-		#	$m_id[] = "icon_id = '$_id'";
-		#	$m_var[] = $_var;
-		
-			$sql = "UPDATE $table SET $input[$row_id] WHERE $id_field = $row_id";
-		#	debug($sql);
-			if ( !$db->sql_query($sql) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-		}
-		
-	#	debug($_update, '_update');
-	
-		
-	#	foreach ( $m_var as $_name => $_value )
-	#	{
-	#		$_update[] = "$_name = '$_value'";
-	#	}
-		
-	#	$input = implode(', ', $_update);
-		
-	#	debug($input, 'input');
-		
-	#	if ( is_array($id_field) && is_array($id) )
-	#	{
-	#		foreach ( $id_field as $key => $row )
-	#		{
-	#			$ary_new[] = "$row = " . $id[$key];
-	#		}
-	#		
-	#		$sql_where = implode(' AND ', $ary_new);
-	#	}
-	#	else
-	#	{
-	#		$sql_where = "$id_field = $id";
-	#	}
-		
-	#	$sql = "UPDATE $table SET $input WHERE $sql_where";
-	#	debug($sql);
-	#	if ( !$db->sql_query($sql) )
-	#	{
-	#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	#	}
-		
-	#	$return = $change;
-	}
-	else if ( strstr($type, 'alter') )
-	{
-		$part = $submit['part'];
-		$type = $submit['type'];
-		
-		$sql = "ALTER TABLE $table $part $type";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = '';
-	}
-	else if ( strstr($type, 'delete') )
-	{
-		unset($submit[$id_field]);
-		
-		if ( !empty($submit) )
-		{
-			foreach ( $submit as $key => $var )
-			{
-				$vars[] = $var;
-			}
-		}
-		else
-		{
-			$var[] = '';
-		}
-		
-		$sql_where = ( is_array($id) ) ? "$id_field IN (" . implode(', ', $id) . ")" : "$id_field = $id";
-		
-		$sql = "DELETE FROM $table WHERE $sql_where";
-		if ( !$db->sql_query($sql) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$return = $var[0];
-	}
-	
-	return $return;
-}
-
-/*
- *	orignal from phpBB2
- */
-function select_tz($default, $select_name = 'timezone')
-{
-	global $sys_timezone, $lang;
-
-	if ( !isset($default) )
-	{
-		$default == $sys_timezone;
-	}
-	$tz_select = '<select class="select" name="' . $select_name . '">';
-
-	while( list($offset, $zone) = @each($lang['tz']) )
-	{
-		$selected = ( $offset == $default ) ? ' selected="selected"' : '';
-		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $zone) . '</option>';
-	}
-	$tz_select .= '</select>';
-
-	return $tz_select;
-}
-
-//
-// Pick a language, any language ...
-//
-function select_language($default, $select_name = "language", $dirname = "language")
-{
-	global $root_path, $lang;
-
-	$dir = opendir($root_path . $dirname);
-
-	$language = array();
-	
-	while ( $file = readdir($dir) )
-	{
-		if (preg_match('#^lang_#i', $file) && !is_file(@cms_realpath($root_path . $dirname . '/' . $file)) && !is_link(@cms_realpath($root_path . $dirname . '/' . $file)))
-		{
-			$filename = trim(str_replace("lang_", "", $file));
-			$displayname = preg_replace("/^(.*?)_(.*)$/", "\\1 [ \\2 ]", $filename);
-			$displayname = preg_replace("/\[(.*?)_(.*)\]/", "[ \\1 - \\2 ]", $displayname);
-			$language[$displayname] = $filename;
-		}
-	}
-
-	closedir($dir);
-
-	@asort($language);
-	@reset($language);
-
-	$lang_select = '<select class="select" name="' . $select_name . '">';
-	
-	while ( list($displayname, $filename) = @each($language) )
-	{
-		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
-		
-		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
-		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
-	}
-	$lang_select .= '</select>';
-
-	return $lang_select;
-}
-
-function select_lang($default, $select_name = "language", $dirname = "language")
-{
-	global $root_path, $lang;
-
-	$dir = opendir($root_path . $dirname);
-
-	$language = array();
-	
-	while ( $file = readdir($dir) )
-	{
-		if (preg_match('#^lang_#i', $file) && !is_file(@cms_realpath($root_path . $dirname . '/' . $file)) && !is_link(@cms_realpath($root_path . $dirname . '/' . $file)))
-		{
-			$filename = trim(str_replace("lang_", "", $file));
-			$displayname = preg_replace("/^(.*?)_(.*)$/", "\\1 [ \\2 ]", $filename);
-			$displayname = preg_replace("/\[(.*?)_(.*)\]/", "[ \\1 - \\2 ]", $displayname);
-			$language[$displayname] = $filename;
-		}
-	}
-
-	closedir($dir);
-
-	@asort($language);
-	@reset($language);
-
-	$lang_select = '<select class="select" name="' . $select_name . '">';
-	
-	while ( list($displayname, $filename) = @each($language) )
-	{
-		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
-		
-		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
-		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
-	}
-	$lang_select .= '</select>';
-
-	return $lang_select;
-}
-
-//
-// Pick a template/theme combo, 
-//
-function select_style($default, $select_name = "style", $dirname = "templates")
-{
-	global $db, $lang;
-
-	$sql = "SELECT themes_id, style_name FROM " . THEMES . " ORDER BY template_name, themes_id";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$row = $db->sql_fetchrowset($result);
-
-	$select = "<select class=\"select\" name=\"$select_name\">";
-	
-	for ( $i = 0; $i < count($row); $i++ )
-	{
-		$selected = ( $default == $row[$i]['themes_id'] ) ? ' selected="selected"' : '';
-
-		$select .= '<option value="' . $row[$i]['themes_id'] . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $row[$i]['style_name']) . '</option>';
-	}
-	$select .= "</select>";
-
-	return $select;
-}
 
 function rating_bar($id, $units = '', $static = '', $rating_unitwidth = 30)
 {
@@ -2886,6 +2588,10 @@ function main_header($page_title = '')
 	
 	$template->pparse('overall_header');
 	
+	
+	
+	debug($_POST);
+	
 	return;
 }
 
@@ -2895,15 +2601,15 @@ function main_footer()
 	
 	$template->set_filenames(array('overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl'));
 	
-	$debug = (defined('DEBUG')) ? '[ Debug: on ]' : '[ Debug: off ]';
-	$cache = (defined('CACHE')) ? '[ Cache: on ]' : '[ Cache: off ]';
+	$cache = (CACHE === true) ? '[ Cache: on ]' : '[ Cache: off ]';
+	$debug = (DEBUG === true) ? '[ Debug: on ]' : '[ Debug: off ]';
 	
 	$template->assign_vars(array(
-		'DEBUG' => $debug,
 		'CACHE' => $cache,
+		'DEBUG' => $debug,		
 	));
 	
-	if ( empty($gen_simple_header) && defined('DEBUG_SQL') )
+	if ( empty($gen_simple_header) && DEBUG_SQL === true )
 	{
 		$stat_run = new stat_run_class(microtime());
 		$stat_run->display();
@@ -2933,230 +2639,6 @@ function main_footer()
 	ob_end_flush();
 	
 	exit;
-}
-
-/*
- *	Soll die Abfragen der Datenbank einfacher machen!
- *
- *	@param: string	$s_table	example: GAMES
- *	@param: string	$s_where	example: game_id != -1
- *	@param: string	$s_order	example: game_order ASC
- *	@param:	int		$s_sql		example: 1
- *	@param: both	$s_fetch	example: true or false 
- *
- */
-function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_time = '', $s_separate = '')
-{
-	global $db, $lang, $oCache;
-	
-	switch ( $s_table )
-	{
-		case NEWS:			$field_id = 'news_id';		$field_link = 'news_cat';	$table_link = NEWS_CAT;	$field_id2 = 'cat_id';	break;
-		case TEAMS:			$field_id = 'team_id';		$field_link = 'team_game';	$table_link = GAMES;	$field_id2 = 'game_id';	break;
-		
-		/* only match for index? */
-		case MATCH:			( $s_sql == 4 ) ? $tmp_ary = array('s_table1' => MATCH, 'field_id1' => 'match_id', 'field_link1' => 'team_id', 's_table2' => TEAMS, 'field_id2' => 'team_id', 'field_link2' => 'team_game', 's_table3' => GAMES, 'field_id3' => 'game_id') : $field_id = 'match_id'; $field_link = 'team_id'; break;
-		case MATCH_TYPE:	$ary = array('s_table1' => MATCH_TYPE, 'name' => 'type_name', 'value' => 'type_value'); break;
-		case SETTINGS:		$ary = array('s_table1' => SETTINGS, 'name' => 'settings_name', 'value' => 'settings_value'); break;
-
-	#	default: message(GENERAL_ERROR, 'Error Data Mode: ' . $s_table);	break;
-	}
-	
-	if ( !isset($field_id) && $s_table )
-	{
-		$sql = 'SHOW FIELDS FROM ' . $s_table;
-		
-		if ( defined('CACHE') )
-		{
-			$sCacheName = $s_table . '_show';
-			
-			if ( ( $field_id = $oCache->readCache($sCacheName) ) === false )
-			{
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-				}
-				
-				while ( $row = $db->sql_fetchrow($result) )
-				{
-					$temp[] = $row['Field'];
-				}
-				
-				$field_id = array_shift($temp);
-				
-				$oCache->writeCache($sCacheName, $field_id);
-			}
-		}
-		else
-		{
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$temp[] = $row['Field'];
-			}
-			
-			$field_id = array_shift($temp);
-		}
-	}
-
-#	$ary = array('type', 'cat', 'sub', '-1', 'user_name', 'user_id', 'level', 'live');
-#	if ( strstr($s_where, in_array($s_where, $ary)) )
-	/* strstr($s_where, 'WHERE') ist vielleicht nützlicher */
-	/*
-	if ( is_array($s_where) )
-	{
-		$where = "WHERE {$field_id[0]} = {$s_where[0]} AND {$field_id[1]} = {$s_where[1]}";
-	}
-	
-	else if (
-		strstr($s_where, 'menu_class') ||
-		strstr($s_where, '-1') ||
-		strstr($s_where, 'cat') ||
-		strstr($s_where, 'sub') ||
-		strstr($s_where, 'live') ||
-		strstr($s_where, 'type') ||
-		strstr($s_where, 'level') ||
-		strstr($s_where, 'in_send') ||
-		strstr($s_where, 'user_id') ||
-		strstr($s_where, 'user_name') ||
-		strstr($s_where, 'match_id')
-		)
-	{
-		$where = "WHERE $s_where";
-	}
-	*/
-	if ( strstr($s_where, 'user_id') )
-	{
-		$where = "WHERE $s_where";
-	}
-	else if ( strstr($s_where, 'WHERE') )
-	{
-		$where = $s_where;
-	}
-	else if ( $s_where )
-	{
-		$where = "WHERE $field_id = $s_where";
-	}
-	else
-	{
-		$where = '';
-	}
-	
-#	$where = ( preg_match('/rank_type/i', $s_where) ) ? "WHERE $s_where" : false;
-#	$where = ( $s_where ) ? "WHERE $field_id = $s_where" : '';
-#	$where = ( $s_where == '-1' ) ? $field_where : false;
-	$order = ( $s_order ) ? "ORDER BY $s_order" : '';
-	
-	switch ( $s_sql )
-	{
-		case 0: $sql = "SELECT * FROM $s_table $order"; break;
-		case 1: $sql = "SELECT * FROM $s_table $where $order"; break;
-		case 2: $sql = "SELECT t1.*, t2.* FROM $s_table t1, $table_link t2 WHERE t1.$field_id = $s_where AND t1.$field_link = t2.$field_id2"; break;
-		case 3: $sql = "SELECT t1.*, t2.* FROM $s_table t1 LEFT JOIN $table_link t2 ON t1.$field_link = t2.$field_id2 WHERE t1.$field_id = $s_where"; break;
-		/* match only ? */
-		case 4: $sql = "SELECT m.*, t.*, g.* FROM {$tmp_ary['s_table1']} m LEFT JOIN {$tmp_ary['s_table2']} t ON m.{$tmp_ary['field_link1']} = t.{$tmp_ary['field_id2']} LEFT JOIN {$tmp_ary['s_table3']} g ON t.{$tmp_ary['field_link2']} = g.{$tmp_ary['field_id3']} $where $order"; break;
-		case 5: $sql = "SELECT * FROM {$ary['s_table1']} $where"; break;
-		default: message(GENERAL_ERROR, 'Wrong mode for data', '', __LINE__, __FILE__); break;
-	}
-	
-	$sCacheName = strtolower($s_table);
-	
-	if ( defined('CACHE') && $s_cache )
-	{
-		if ( ( $data = $oCache->readCache($sCacheName) ) === false )
-		{
-			if ( !($result = $db->sql_query($sql)) )
-			{
-				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-			}
-			
-			switch ( $s_fetch )
-			{
-				case 1:
-					
-					$data = $db->sql_fetchrow($result);
-					
-					break;
-					
-				case 2:
-					
-					while ( $row = $db->sql_fetchrow($result) )
-					{
-						$data[$row[$ary['name']]] = unserialize($row[$ary['value']]);
-					}
-					
-					break;
-					
-				case 0:
-				
-					$data = $db->sql_fetchrowset($result);
-					
-					break;
-					
-				case 3:
-				
-					while ( $row = $db->sql_fetchrow($result) )
-					{
-						$data[$row[$field_id]] = ($s_separate) ? $row[$s_separate] : $row;
-					}
-					
-					break;
-			}
-			
-			( $s_time ) ? $oCache->writeCache($sCacheName, $data, (int) $s_time) : $oCache->writeCache($sCacheName, $data);
-		}
-		
-		$return = $data;
-	}
-	else
-	{
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		
-		switch ( $s_fetch )
-		{
-			case 1:
-				
-				$data = $db->sql_fetchrow($result);
-				
-				break;
-				
-			case 2:
-				
-				while ( $row = $db->sql_fetchrow($result) )
-				{
-					$data[$row[$ary['name']]] = unserialize($row[$ary['value']]);
-				}
-				
-				break;
-				
-			case 0:
-			
-				$data = $db->sql_fetchrowset($result);
-				
-				break;
-			
-			case 3:
-				
-				while ( $row = $db->sql_fetchrow($result) )
-				{
-				#	$data[$row[$field_id]] = ($s_separate) ? $row[$s_separate] : $row;
-					$data[$row[$field_id]] = ($s_separate) ? $row[$s_separate] : $row;
-				}
-				
-				break;
-		}
-		
-		$return = $data;
-	}
-		
-	return $return;
 }
 
 ?>

@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}<span class="right">{OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -91,7 +91,7 @@ function update_ajax_{input.update_image.NAME}(newimage)
 <!-- BEGIN option -->
 {input.row.tab.option.DIV_START}
 <dl>			
-	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
 {input.row.tab.option.DIV_END}
@@ -110,22 +110,17 @@ function update_ajax_{input.update_image.NAME}(newimage)
 </form>
 <!-- END input -->
 
-<!-- BEGIN list -->
+<!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-
-<ul id="navopts"><li>{OVERVIEW}</li></ul>
-
-<br />
-
 <table class="rows">
 <tr>
-	<th>{NAME}</th>
-	<th><span class="right">{UPDATE}{DELETE}</span></th>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td><span class="right">{list.row.FILE} :: {list.row.INFO}</span>{list.row.NAME}</td>
-	<td>{list.row.MOVE_DOWN}{list.row.MOVE_UP}{list.row.UPDATE}{list.row.DELETE}</td>
+	<td><span class="right">{display.row.INFO}</span>{display.row.NAME}</td>
+	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
 <!-- BEGIN empty -->
@@ -137,37 +132,7 @@ function update_ajax_{input.update_image.NAME}(newimage)
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="map_map" /></td>
-	<td><input type="submit" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END list -->
-
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<table class="rows">
-<tr>
-	<th>{L_NAME}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN cat -->
-<tr>
-	<td><span class="right">{display.cat.TAG}</span>{display.cat.NAME}</td>
-	<td>{display.cat.MOVE_DOWN}{display.cat.MOVE_UP}{display.cat.UPDATE}{display.cat.DELETE}</td>
-</tr>
-<!-- END cat -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
-</table>
-
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="map_name" /></td>
+	<td><input type="text" name="{S_CREATE}" /></td>
 	<td><input type="submit" value="{L_CREATE}"></td>
 </tr>
 </table>

@@ -12,6 +12,7 @@ $lang = array_merge($lang, array(
 	
 	'explain'		=> 'Hier kannst du die Gruppen Verwalten.',
 	'explain_user'	=> 'Benutzer verwalten',
+	'explain_perm'	=> 'Gruppenberechtigung',
 
 	'data_input'	=> 'Gruppendaten',	
 	

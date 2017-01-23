@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -15,7 +15,7 @@
 <!-- BEGIN option -->
 {input.row.tab.option.DIV_START}
 <dl>			
-	<dt class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
 	<dd>{input.row.tab.option.OPTION}</dd>
 </dl>
 {input.row.tab.option.DIV_END}
@@ -42,68 +42,40 @@
 	<legend>{L_USERS}</legend>
 	<table class="users">
 	<tr>
-		<th>{L_MODERATOR}</th>
-		<th>{L_MAIN}</th>
-		<th>{L_JOIN}</th>
-		<th>{L_REGISTER}</th>
-		<th>&nbsp;</th>
-	</tr>
-	<!-- BEGIN moderators -->
-	<tr onclick="checked({member.moderators.ID})" class="hover">
-		<td>{member.moderators.NAME}</td>
-		<td>{member.moderators.MAIN}</td>
-		<td>{member.moderators.JOIN}</td>
-		<td>{member.moderators.REG}</td>
-		<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
-	</tr>
-	<!-- END moderators -->
-	<!-- BEGIN no_moderators -->
-	<tr>
-		<td class="empty" colspan="3">{L_MODERATOR_NO}</td>
-	</tr>
-	<!-- END no_moderators -->
-	</table>
-
-	<br />
-
-	<table class="users">
-	<tr>
 		<th>{L_MEMBER}</th>
 		<th>{L_MAIN}</th>
 		<th>{L_JOIN}</th>
 		<th>{L_REGISTER}</th>
 		<th>&nbsp;</th>
 	</tr>
-	<!-- BEGIN members -->
-	<tr onclick="checked({member.members.ID})" class="hover">
-		<td>{member.members.NAME}</td>
-		<td>{member.members.MAIN}</td>
-		<td>{member.members.JOIN}</td>
-		<td>{member.members.REG}</td>
-		<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
+	<!-- BEGIN row -->
+	<tr onclick="checked({member.row.ID})" class="hover">
+		<td>{member.row.NAME}{member.row.MOD}</td>
+		<td>{member.row.MAIN}</td>
+		<td>{member.row.JOIN}</td>
+		<td>{member.row.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.row.ID}" id="check_{member.row.ID}"></td>
 	</tr>
-	<!-- END members -->
-	<!-- BEGIN no_members -->
+	<!-- END row -->
+	<!-- BEGIN no_row -->
 	<tr>
-		<td class="empty" colspan="3">{L_MEMBER_NO}</td>
+		<td class="empty" colspan="3">{L_NO_MEMBER}</td>
 	</tr>
-	<!-- END no_members -->
+	<!-- END no_row -->
 	</table>
-	
-	<br />
-
 </fieldset>
 
-	<!-- BEGIN options -->
-	<table class="rfooter">
-	<tr>
-		<td colspan="2" align="right">{S_OPTIONS}&nbsp;<input type="submit" class="button2" value="{L_SUBMIT}" /></td>
-	</tr>
-	<tr>
-		<td colspan="2" align="right" class="row5"><a href="#" onclick="marklist('list', 'member', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'member', false); return false;">{L_MARK_DEALL}</a></td>
-	</tr>
-	</table>
-	<!-- END options -->
+	<table class="footer2">
+    <tr>
+        <td rowspan="2" width="150%">{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+        <td>{S_OPTIONS}</td>
+        <td><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
+    </tr>
+    <tr>
+        <td colspan="2"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a></td>
+    </tr>
+    </table>
+	
 <!-- BEGIN pending -->
 <br />
 
@@ -114,14 +86,14 @@
 	<th>{L_REGISTER}</th>
 	<th>&nbsp;</th>
 </tr>
-<!-- BEGIN row_pending -->
-<tr onclick="checked({member.pending.row_pending.ID})" class="hover">
-	<td>{member.pending.row_pending.NAME}</td>
-    <td>{member.pending.row_pending.JOIN}</td>
-	<td>{member.pending.row_pending.REG}</td>
-	<td><input type="checkbox" name="pending[]" value="{member.pending.row_pending.ID}" id="check_{member.pending.row_pending.ID}" checked="checked"></td>
+<!-- BEGIN row -->
+<tr onclick="checked({member.pending.row.ID})" class="hover">
+	<td>{member.pending.row.NAME}</td>
+    <td>{member.pending.row.JOIN}</td>
+	<td>{member.pending.row.REG}</td>
+	<td><input type="checkbox" name="pending[]" value="{member.pending.row.ID}" id="check_{member.pending.row.ID}" checked="checked"></td>
 </tr>
-<!-- END row_pending -->
+<!-- END row -->
 </table>
 
 <table class="rfooter">
@@ -156,7 +128,7 @@
 </dl>
 </div>
 
-<input type="hidden" name="mode" value="ucreate" />
+<input type="hidden" name="smode" value="create" />
 {S_FIELDS}
 </form>
 <!-- END member -->
@@ -225,6 +197,11 @@
 	<td>{display.row.MEMBER}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
+<!-- BEGIN empty -->
+<tr>
+	<td class="empty" colspan="2">{L_EMPTY}</td>
+</tr>
+<!-- END empty -->
 </table>
 
 <table class="lfooter">

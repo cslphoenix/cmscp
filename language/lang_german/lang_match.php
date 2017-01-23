@@ -34,6 +34,8 @@ $lang = array_merge($lang, array(
 		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
 	),
 	
+	
+	
 ));
 
 $lang['hlsw']		= 'HLSW';

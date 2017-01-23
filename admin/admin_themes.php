@@ -42,7 +42,7 @@ else
 	$move		= request('move', INT);
 	
 	$dir_path	= $root_path . $settings['path_themes'];
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_themes'] )
 	{
@@ -895,7 +895,7 @@ else
 			$fields .= '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 				'L_CREATE'	=> sprintf($lang['sprintf_new_creates'], $lang['title']),
 				'L_NAME'	=> sprintf($lang['stf_name'], $lang['title']),
 				
@@ -914,7 +914,7 @@ else
 					'NAME_STYLE'	=> $themes[$i]['style_name'],
 					'NAME_TEMPLATE'	=> $themes[$i]['template_name'],
 					
-					'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+					'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['com_update'] . '" alt="" /></a>',
 					'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$themes_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['com_delete'] . '" alt="" /></a>',
 				));
 			}

@@ -1,5 +1,55 @@
 <?php
 
+function sqlout_id($out, $id, $string)
+{
+	switch ( $string )
+	{
+		case 'map_id': $str = array('map_id', 'map_name'); break;
+		case 'forum_id': $str = array('forum_id', 'forum_name'); break;
+		case 'menu_id': $str = array('menu_id', 'menu_name'); break;
+		case 'profile_id': $str = array('profile_id', 'profile_name'); break;
+	}
+	
+	foreach ( $out as $_out )
+	{
+		foreach ( $_out as $var => $value )
+		{
+			if ( $var === $string )
+			{
+				if ( $value == $id )
+				{
+					$return['id'] = $_out[$str[0]];
+					$return['name'] = $_out[$str[1]];
+				}
+			}
+		}
+	}
+	
+	return $return;
+}
+
+function uns_ary($array)
+{
+	$tmp = unserialize($array);
+	$tmp = is_array($tmp) ? lang_ary($tmp) : $tmp;
+	
+	return $tmp;
+}
+
+function lang_ary($array)
+{
+	global $lang;
+	
+	foreach ( $array as $tmp_lang )
+	{
+		$return[] = isset($lang[$tmp_lang]) ? $lang[$tmp_lang] : $tmp_lang;
+	}
+	
+	$return = is_array($return) ? implode('; ', $return) : $return;
+	
+	return $return;
+}
+
 function opt_order($max, $name, $order)
 {
 	$return = '&nbsp;<select name="' . $name . '">';
@@ -21,9 +71,6 @@ function acp_header($file, $iadds, $typ)
 	global $userdata, $current;
 	
 	define('HEADER_INC', true);
-	
-	debug($_POST, '_POST');
-	debug($_GET, '_GET');
 	
 	/* gzip_compression */
 	$do_gzip_compress = FALSE;
@@ -100,7 +147,7 @@ function acp_header($file, $iadds, $typ)
 		'L_YES'			=> $lang['com_yes'],
 		'L_RESET'		=> $lang['common_reset'],
 		'L_SUBMIT'		=> $lang['common_submit'],
-		'L_UPDATE'		=> $lang['common_update'],
+		'L_UPDATE'		=> $lang['com_update'],
 		'L_DELETE'		=> $lang['com_delete'],
 		'L_DELETE_ALL'	=> $lang['common_delete_all'],
 		'L_SETTINGS'	=> $lang['common_settings'],
@@ -174,19 +221,17 @@ function acp_header($file, $iadds, $typ)
 			$fmenu = current($sql_lab[$catkey]);
 			$menu_file = isset($sql_sub[$fmenu['menu_id']][0]['menu_file']) ? $sql_sub[$fmenu['menu_id']][0]['menu_file'] : '';
 			$menu_opts = isset($sql_sub[$fmenu['menu_id']][0]['menu_opts']) ? $sql_sub[$fmenu['menu_id']][0]['menu_opts'] != 'main' ? '&amp;action=' . $sql_sub[$fmenu['menu_id']][0]['menu_opts'] : '' : '';
-		}
 		
-		$template->assign_block_vars('icat', array(
-			'NAME'		=> ($catrow['menu_lang']) ? lang($catrow['menu_name']) : $catrow['menu_name'],
-			'ACTIVE'	=> ( $typ == $catkey ) ? ' id="active"' : '',
-			'CURRENT'	=> ( $typ == $catkey ) ? ' id="current"' : '',
-			'URL'		=> check_sid($menu_file . '?i=' . $catkey . $menu_opts),
-		));
+			$template->assign_block_vars('icat', array(
+				'NAME'		=> ($catrow['menu_lang']) ? lang($catrow['menu_name']) : $catrow['menu_name'],
+				'ACTIVE'	=> ( $typ == $catkey ) ? ' id="active"' : '',
+				'CURRENT'	=> ( $typ == $catkey ) ? ' id="current"' : '',
+				'URL'		=> check_sid($menu_file . '?i=' . $catkey . $menu_opts),
+			));
+		}
 		
 		if ( $catkey == $typ )
 		{
-		#	@reset($sql_lab);
-			
 			if ( isset($sql_lab[$catkey]) )
 			{
 				foreach ( $sql_lab[$catkey] as $labkey => $labrow )
@@ -201,8 +246,6 @@ function acp_header($file, $iadds, $typ)
 						{
 						#	find_active($db_file, $db_action, $active_file, $active_module)
 							$active = find_active($subrow['menu_file'], $subrow['menu_opts'], $active_file, $active_module);
-							
-						#	debug($active);
 							
 							$menu_file = $subrow['menu_file'];
 							$menu_opts = ( $subrow['menu_opts'] != 'main' ) ? '&amp;action=' . $subrow['menu_opts'] : '';
@@ -236,6 +279,12 @@ function acp_header($file, $iadds, $typ)
 	$oCache->sCachePath = './../cache/';
 	
 	$template->pparse('header');
+	
+	if ( !strstr($file, 'admin_database') )
+	{
+		debug($_POST, '_POST');
+		debug($_GET, '_GET');
+	}
 }
 
 function find_active($db_file, $db_action, $active_file, $active_module)
@@ -269,7 +318,7 @@ function acp_footer()
 	global $gzip, $userdata, $template, $db, $lang;
 	global $do_gzip_compress;
 	
-	if ( defined('DEBUG_SQL_ADMIN') )
+	if ( DEBUG_SQL_ADMIN === true )
 	{
 		$stat_run = new stat_run_class(microtime());
 		$stat_run->display();
@@ -279,11 +328,8 @@ function acp_footer()
 	
 	$db->sql_close();
 	
-	if( $do_gzip_compress )
+	if ( $do_gzip_compress )
 	{
-		//
-		// Borrowed from php.net!
-		//
 		$gzip_contents = ob_get_contents();
 		ob_end_clean();
 	
@@ -361,9 +407,9 @@ function error($tpl_box, &$error_ary)
 	}
 }
 
-function right($tpl_box, $msg)
+function right($tpl_box, &$msg)
 {
-	global $template, $log;
+	global $template;
 	
 	$template->set_filenames(array('right' => 'style/info_right.tpl'));
 	$template->assign_vars(array('RIGHT_MESSAGE' => $msg));
@@ -392,8 +438,13 @@ function move($tbl, $mode, $order, $main = false, $type = false, $usub = false, 
 	$field_order = array_pop($temp);
 	
 	$sql = "SELECT $field_id, $field_order FROM $tbl";
-
-	if ( $type )
+	
+	if ( $main === false && $type )
+	{
+		$sql .= " WHERE $type = $usub";
+	}
+	/*	add: acp_network */
+	else if ( $type )
 	{
 		$sql .= " WHERE type = $type AND main = $usub";
 	}

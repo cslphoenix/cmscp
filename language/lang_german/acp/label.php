@@ -21,6 +21,8 @@ $lang = array_merge($lang, array(
 	'acl_users'		=> 'zugeordnete Benutzer',
 	'acl_groups'	=> 'zugeordnete Gruppen',
 	
+	'select_copy'	=> 'Kopieren von ...',
+	
 ));
 
 ?>

@@ -67,7 +67,7 @@ $lang['sm_settings']		= 'Einstellungen';
  *	Allgemeine "sprintf"
  */
  /*
-$lang['stf_head']			= '%s Administration';
+$lang['stf_header']			= '%s Administration';
 $lang['sprintf_add']			= '%s hinzufügen';
 $lang['sprintf_edit']			= '%s bearbeiten: %s';
 $lang['stf_create']			= 'Neue %s erstellen';
@@ -123,7 +123,7 @@ $lang['common_reset']			= 'Zurücksetzen';
 $lang['common_setting']			= 'Einstellung';
 $lang['common_settings']		= 'Einstellungen';		
 $lang['common_submit']			= 'Absenden';
-$lang['common_update']			= 'Bearbeiten';
+$lang['com_update']			= 'Bearbeiten';
 $lang['common_upload']			= 'Upload';
 $lang['common_userlevel']		= 'Benutzerlevel';		
 $lang['common_view']			= 'Anzeigen';

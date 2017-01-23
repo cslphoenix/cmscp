@@ -8,7 +8,7 @@
 		{M_TEXT}
 		<br />
 		<br />
-		<input type="submit" class="button2" name="accept" value="{L_YES}"><span style="padding:4px;"></span><input type="submit" class="button" name="cancel" value="{L_NO}" />
+		<input type="submit" class="button2" name="accept" value="{L_YES}"><span style="padding:4px;"></span><input type="submit" class="cancel" name="cancel" value="{L_NO}" />
 	</td>
 </tr>
 </table>

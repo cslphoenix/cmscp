@@ -32,7 +32,7 @@ else
 	$mode		= request('mode', TXT);
 	$move		= request('move', INT);
 	
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 		
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_votes'] )
 	{
@@ -93,7 +93,7 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['training']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['training']),
 				'L_INPUT'		=> sprintf($lang['stf_' . $mode], $lang['training'], $data_sql['training_vs']),
 				'L_VS'			=> $lang['vs'],
 				'L_TEAM'		=> $lang['team'],
@@ -218,7 +218,7 @@ else
 			$fields .= '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
-				'L_HEAD'		=> sprintf($lang['stf_head'], $lang['training']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['training']),
 				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['training']),
 				'L_EXPLAIN'		=> $lang['explain'],
 				'L_UPCOMING'	=> $lang['upcoming'],
@@ -280,7 +280,7 @@ else
 							'GAME'	=> display_gameicon($training_new[$i]['game_size'], $training_new[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_new[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['com_update'] . '" alt="" /></a>',
 							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['com_delete'] . '" alt="" /></a>',
 						));
 					}
@@ -301,7 +301,7 @@ else
 							'GAME'	=> display_gameicon($training_old[$i]['game_size'], $training_old[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_old[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['common_update'] . '" alt="" /></a>',
+							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['com_update'] . '" alt="" /></a>',
 							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['com_delete'] . '" alt="" /></a>',
 						));
 					}

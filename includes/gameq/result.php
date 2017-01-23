@@ -63,16 +63,6 @@ class GameQ_Result
     {
         $this->addSub('teams', $name, $value);
     }
-	
-	public function addServergroup($name, $value)
-    {
-        $this->addSub('servergroups', $name, $value);
-    }
-	
-	public function addChannelgroup($name, $value)
-    {
-        $this->addSub('channelgroups', $name, $value);
-    }
 
     /**
      * Add a variable to a category

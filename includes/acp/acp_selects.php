@@ -70,8 +70,13 @@ function select_navi($type, $data, $tpl)
 }
 
 function select_menu($default, $meta, $name)
-{					#$tdata, $tmeta, $tname, $data
+{
 	global $db, $lang;
+	
+	#$tdata
+	#$tmeta
+	#$tname
+	#$data
 	
 	$sql = 'SELECT * FROM ' . MENU . ' WHERE action = "pcp" AND type = 3 ORDER BY main ASC, menu_order ASC';
 	if ( !($result = $db->sql_query($sql)) )
@@ -91,16 +96,17 @@ function s_main($default, $meta, $name, $data)
 	$type = $data['type'];
 	
 #	debug($default, 'default');
-#	debug($meta, 'meta');
+	debug($meta, 'meta');
 #	debug($type, 'type');
-	debug($data, 'data');
+#	debug($meta, 'meta');
+#	debug($default, 'default');
 	
 	switch ( $meta )
 	{
-		case 'dl':		$tbl = DOWNLOAD;	break;
-		case 'gallery':	$tbl = GALLERY_NEW;	break;
-		case 'profile':	$tbl = PROFILE;		break;
-		
+		case 'dl':		$tbl = DOWNLOAD;	$label = false;	break;
+		case 'gallery':	$tbl = GALLERY_NEW;	$label = false;	break;
+		case 'profile':	$tbl = PROFILE;		$label = false;	break;
+		case 'change':	$tbl = CHANGELOG;	$label = false;	break;
 		case 'forum':	$tbl = FORUM;	$label = true;	break;
 		case 'menu':	$tbl = MENU;	$label = true;	$menu = true;	break;
 	}
@@ -140,6 +146,8 @@ function s_main($default, $meta, $name, $data)
 		}
 	}
 	
+	debug($cat, 'cat');
+	
 	$switch = $settings['smain'][$meta . '_switch'];
 	$entrys = $settings['smain'][$meta . '_entrys'];
 	
@@ -147,13 +155,13 @@ function s_main($default, $meta, $name, $data)
 	{
 		$sort[] = array('id' => $c_row[$f_id], 'typ' => 1, 'lng' => lang($c_row[$f_name]));
 		
-		if ( isset($lab[$c_key]) )
+		if ( isset($lab[$c_key]) && ($label ? true : $entrys) )
 		{
 			foreach ( $lab[$c_key] as $l_key => $l_row )
 			{
 				$sort[] = array('id' => $l_row[$f_id],'typ' => 2, 'lng' => lang($l_row[$f_name]));
 				
-				if ( isset($sub[$l_key]) )
+				if ( isset($sub[$l_key]) && $entrys )
 				{
 					foreach ( $sub[$l_key] as $s_key => $s_row )
 					{
@@ -164,18 +172,12 @@ function s_main($default, $meta, $name, $data)
 		}
 	}
 	
-#	debug($sort, 'sort');
-#	debug($type, 'type');
-	
 	$return = '<div id="close">';
 	
 	if ( count($sort) > 0 )
 	{
-		# 1 
 		if ( $switch == 1 )
 		{
-		#	debug('switch');
-			
 			$return .= '<select name="' . sprintf('%s[%s]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
 			
 			foreach ( $sort as $_sort )
@@ -601,6 +603,65 @@ function select_team($default, $meta, $name, $select, $css = false)
 	else
 	{
 		$return .= sprintf($lang['stf_select_format'], $lang['commen_noteams']);
+	}
+	
+	return $return;
+}
+
+#select_team($tmp_data, $tmp_meta, $tmp_name, 'request')
+/* training */
+function select_team_member($team_id, $user_ids, $member, $css = false)
+{
+	global $db, $lang;
+	
+	$sql = "SELECT u.user_id, u.user_name
+				FROM " . USERS . " u, " . LISTS . " ul
+			WHERE type = " . TYPE_TEAM . " AND ul.type_id = $team_id AND ul.user_id = u.user_id
+				ORDER BY u.user_name ASC";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$tmp = $db->sql_fetchrowset($result);
+	
+	$return = '';
+	$user_id_add = array();
+	
+	if ( $tmp )
+	{
+		foreach ( $tmp as $mem )
+		{
+			if ( $user_ids )
+			{
+				if ( !in_array($mem['user_id'], $user_ids) )
+				{
+					$user_id_add[] = array('user_id' => $mem['user_id'], 'user_name' => $mem['user_name']);
+				}
+			}
+			else
+			{
+				$user_id_add[] = array('user_id' => $mem['user_id'], 'user_name' => $mem['user_name']);
+			}
+		}
+	}
+	
+	if ( $user_id_add )	
+	{
+		$return .= "<select class=\"$css\" name=\"members[]\" multiple=\"multiple\" size=\"10\">";
+		
+		foreach ( $user_id_add as $k => $v )
+		{
+			$user_id	= $v['user_id'];
+			$user_name	= $v['user_name'];
+			
+			$return .= "<option value=\"$user_id\">" . sprintf($lang['stf_select_format'], $user_name) . "</option>";
+		}
+		$return .= "</select>";
+	
+	}
+	else
+	{
+		$return .= sprintf($lang['stf_select_format'], $lang['no_player']);
 	}
 	
 	return $return;
@@ -1323,6 +1384,69 @@ function select_maps($tag = '')
 }
 */
 
+function select_map($team, $num, $default = '')
+{
+	global $db, $lang;
+	
+	$sql = "SELECT m.*
+				FROM " . MAPS . " m
+					LEFT JOIN " . TEAMS . " t ON t.team_id = $team
+					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
+			WHERE m.map_tag = g.game_tag";
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$cats = $db->sql_fetchrow($result);
+	
+	$s_select = '';
+		
+	if ( $cats )
+	{
+		$cat_id		= $cats['map_id'];
+		$cat_name	= $cats['map_name'];
+		
+		$sql = "SELECT * FROM " . MAPS . " WHERE main = " . $cat_id . " ORDER BY map_order ASC";
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+		}
+		$maps = $db->sql_fetchrowset($result);
+		
+		if ( $maps )
+		{
+			$s_select .= "<select class=\"select\" name=\"map_name[$num]\" id=\"map_name\">";
+			$s_select .= "<optgroup label=\"" . sprintf($lang['stf_select_format'], $lang['notice_select_map']) . "\" >";
+			
+			$s_maps = '';
+				
+			foreach ( $maps as $row )
+			{
+				$map_id		= $row['map_id'];
+				$map_cat	= $row['main'];
+				$map_name	= $row['map_name'];
+				
+				$selected	= ( $map_id == $default ) ? 'selected="selected"' : "";
+	
+				$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\"$selected>" . sprintf($lang['stf_select_format'], $map_name) . "</option>" : '';
+			}
+			
+			$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$map_name\">$s_maps</optgroup>" : '';
+			$s_select .= "</optgroup></select>";
+		}
+		else
+		{
+			$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+		}
+	}
+	else
+	{
+		$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+	}
+	
+	return $s_select;
+}
+
 function select_maps($tdata, $tmeta, $tname, $data)
 {
 	global $db, $lang;
@@ -1718,69 +1842,6 @@ function simple_order($table, $where, $current_order, $main_array, $field)
 	else
 	{
 		$s_select = '<div id="close">' . $lang['no_entry'] . '</div><div id="ajax_content"></div>';
-	}
-	
-	return $s_select;
-}
-
-function select_map($team, $num, $default = '')
-{
-	global $db, $lang;
-	
-	$sql = "SELECT mc.*
-				FROM " . MAPS_CAT . " mc
-					LEFT JOIN " . TEAMS . " t ON t.team_id = $team
-					LEFT JOIN " . GAMES . " g ON t.team_game = g.game_id
-			WHERE mc.cat_tag = g.game_tag";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	$cats = $db->sql_fetchrow($result);
-	
-	$s_select = '';
-		
-	if ( $cats )
-	{
-		$cat_id		= $cats['cat_id'];
-		$cat_name	= $cats['cat_name'];
-		
-		$sql = "SELECT * FROM " . MAPS . " WHERE cat_id = " . $cats['cat_id'] . " ORDER BY map_order ASC";
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-		}
-		$maps = $db->sql_fetchrowset($result);
-		
-		if ( $maps )
-		{
-			$s_select .= "<select class=\"select\" name=\"map_name[$num]\" id=\"map_name\">";
-			$s_select .= "<optgroup label=\"" . sprintf($lang['stf_select_format'], $lang['notice_select_map']) . "\" >";
-			
-			$s_maps = '';
-				
-			for ( $j = 0; $j < count($maps); $j++ )
-			{
-				$map_id		= $maps[$j]['map_id'];
-				$map_cat	= $maps[$j]['cat_id'];
-				$map_name	= $maps[$j]['map_name'];
-				
-				$selected	= ( $map_id == $default ) ? 'selected="selected"' : "";
-	
-				$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\"$selected>" . sprintf($lang['stf_select_format'], $map_name) . "</option>" : '';
-			}
-			
-			$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
-			$s_select .= "</optgroup></select>";
-		}
-		else
-		{
-			$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
-		}
-	}
-	else
-	{
-		$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
 	}
 	
 	return $s_select;

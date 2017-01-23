@@ -343,6 +343,8 @@ $lang = array_merge($lang, array(
 	'no_legend_user'	=> 'Keine Gruppen vorhanden.',
 	'no_legend_group'	=> 'Keine Benutzer vorhanden.',
 	
+	'select_copy'	=> 'Kopieren von ...',
+	
 ));
 
 $lang = array_merge($lang, array(

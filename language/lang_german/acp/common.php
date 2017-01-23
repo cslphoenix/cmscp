@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 	'acp_cat_forums'		=> 'Forum',
 	'acp_cat_permission'	=> 'Berechtigungen',
 	'acp_cat_system'		=> 'System',
+	'acp_cat_addition'		=> 'Zusatz',
 
 	/* acp menu label */
 	'acp_label_launch'		=> 'Direktzugriff',
@@ -60,10 +61,10 @@ $lang = array_merge($lang, array(
 	'acp_downloads'		=> 'Downloads',
 	'acp_network'		=> 'Netzwerk',
 	'acp_rate'			=> 'Bewertung',
-	'acp_ranks'			=> 'R�nge',
-	'acp_ranks_forum'	=> 'Foren-R�nge',
-	'acp_ranks_page'	=> 'Seiten-R�nge',
-	'acp_ranks_team'	=> 'Team-R�nge',
+	'acp_ranks'			=> 'Ränge',
+	'acp_ranks_forum'	=> 'Foren-Ränge',
+	'acp_ranks_page'	=> 'Seiten-Ränge',
+	'acp_ranks_team'	=> 'Team-Ränge',
 	'acp_icons'			=> 'Symbole',
 	'acp_navi'			=> 'Navigation',
 	'acp_maps'			=> 'Karten',
@@ -136,18 +137,25 @@ $lang = array_merge($lang, array(
 	'acp_user_label'		=> 'Benutzer-Label',
 	'acp_download_label'	=> 'Download-Label',
 	
+	'acp_label'			=> 'Labeltypen',
+	
+	'acp_changelog'		=> 'Änderungsprotokoll',
+	'acp_bugtracker'	=> 'Bugtracker',
+	
 	/* sprintf: Allgemein */
 #	'stf_select_menu'	=> '&raquo;&nbsp;%s',
 	'stf_select_menu'	=> '&not;&nbsp;%s',
 	'stf_normal'		=> '%s',
 	'stf_intern'		=> '<em><b>%s</b></em>',
-	'stf_head'			=> '%s Administration',
+	'stf_header'		=> '%s Administration',
 	'stf_create'		=> '%s hinzufügen',
+#	'stf_create3'		=> '%s, %s oder %s hinzufügen',
 	'stf_update'		=> '%s bearbeiten: %s',
-	'stf_overview'		=> '%s �bersicht: %s',
+	'stf_overview'		=> '%s Übersicht: %s',
 	'sprintf_list'		=> '%s komplett bearbeiten',
 	'stf_member'		=> '%s Mitglieder: %s',
 	'stf_detail'		=> '%s Deatils: %s',
+	'stf_rival'			=> '%s ',
 	'stf_change'		=> '%s\'s Gegnerinfos ändern',
 	'stf_upload_info'	=> 'Abmessung: %s / Größe: %s KB\'s',	/* upload info */
 	'stf_name'			=> '%sname',
@@ -157,18 +165,19 @@ $lang = array_merge($lang, array(
 	'stf_ajax_users'	=> '%s<br />&nbsp;&not;&nbsp;Benutzerlevel: %s<br />&nbsp;&not;&nbsp;Reg: %s<br />&nbsp;&not;&nbsp;Log: %s',
 #	'stf_overview'			=> '%s �bersicht',
 
-	'create'	=> 'Neuen Eintrag hinzugef�gt.',
-	'update'	=> 'Eintrag erfolgreich ge�ndert.',
+	'create'	=> 'Neuen Eintrag hinzugefügt.',
+	'update'	=> 'Eintrag erfolgreich geändert.',
 	'upload'	=> 'Datei/Bild erfolgreich hochgeladen.',
-	'delete'	=> 'Der Eintrag wurde gel�scht!',
+	'delete'	=> 'Der Eintrag wurde gelöscht!',
 	'confirm'	=> 'das dieser Eintrag:',
 	'empty'		=> 'Keine �nderungen vorgenommen.',
 
+	'return_overview'		=> '<a href="%s">Zur Übersicht zurückzukehren</a>',
 	'return_update'			=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;zurück</a></strong>',
 	'return_update_main'	=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;%s</a><br /><br /><a href="%s">&laquo;&nbsp;zurück</a></strong>',
 
 	'msg_sizedir_empty'		=> 'Leer',
-#	'msg_select_match'		=> 'Bitte eine Begegnung auswählen!',
+	'msg_select_match'			=> 'Bitte eine Begegnung auswählen!',
 	'notice_auth_fail'			=> 'Keine Berechtiung für dieses Modul: <b>%s</b>',
 	'notice_empty_maps'			=> 'Keine Maps vorhanden/eingetragen.',
 	'notice_select_file'		=> 'Bitte eine Datei auswählen!',
@@ -185,12 +194,20 @@ $lang = array_merge($lang, array(
 	'notice_select_league'		=> 'Bitte eine Liga auswählen!',
 	'notice_select_image'		=> 'Bitte ein Bild auswählen!',
 	
+	'notice_select_order'		=> 'Bitte eine Postion auswählen!',
+	
 	'notice_select_permission'	=> 'Rechte geben/nehmen',
-	'notice_confirm_delete'		=> 'Bist du sicher, %s <strong><em>%s</em></strong> gel�scht werden soll?',
-	'notice_confirm_team'		=> 'dass dieser Spiele(r): %s vom dem Team:',
+	'notice_confirm_delete'		=> 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?',
+	'notice_confirm_team'		=> 'dass dieser Spiele(r): %s von dem Team:',
 	'notice_confirm_group'		=> 'dass dieser Spiele(r): %s von der Gruppe:',
+	'notice_confirm_match'		=> 'dass dieser Spiele(r): %s von dem Match:',
+	'notice_confirm_training'	=> 'dass dieser Spiele(r): %s von dem Training:',
 	'notice_select_cat'			=> 'Bitte eine Kategorie auswählen!',
 	'notice_select_rank_set'	=> 'Rang \'%s\' setzen',
+	
+	'notice_select_sy'		=> 'Status: \'Spielen\'',
+	'notice_select_sn'		=> 'Status: \'Verhindert\'',
+	'notice_select_sr'		=> 'Status: \'Ersatz\'',
 	
 	'notice_select_profile'		=> 'Bitte bei <b>%s</b> einen Wert eintragen, dass ist ein Pflichtfeld!',
 	
@@ -230,16 +247,20 @@ $lang = array_merge($lang, array(
 
 #	'com_required'		=> 'Mit * markierte Felder sind erforderlich!',
 	'com_required'		=> 'Rot gekenntzeichnete Felder sind erforderlich!',
-	'com_empty'			=> 'Keine Eintr&auml;ge vorhanden.',##
+	'com_empty'			=> 'Keine Einträge vorhanden.',
 	'com_remove'		=> 'Entfernen',
 	'com_go'			=> 'Los',
+	'com_create'		=> 'Hinzufügen',
 	'com_delete'		=> 'Löschen',
-	'com_select_option'	=> 'Option w�hlen',
+	'com_update'		=> 'Bearbeiten',
+	'com_select_option'	=> 'Option wählen',
+	
+	'com_postion'		=> ' - nichts ändern - ',
 	
 	'com_view'			=> 'Anzeigen',			/* permission, forum, groups */
 	'com_noview'		=> 'nicht Anzeigen',	/* permission, forum, groups */
 	'com_add'			=> 'Benutzer hinzufügen',
-	'com_add_explain'	=> 'Benutzer �ber das Textfeld hinzufügen, jeder Benutzer eine extra Zeile.',
+	'com_add_explain'	=> 'Benutzer über das Textfeld hinzufügen, jeder Benutzer eine extra Zeile.',
 	
 	'mark_no'		=> 'Nein aktivieren',
 	'mark_yes'		=> 'Ja aktivieren',
@@ -272,14 +293,14 @@ $lang = array_merge($lang, array(
 	'perm_1' => 'erlaubt',
 	'perm_-1' => 'nicht erlaubt',
 	
-	'stf_log_create'		=> ' %s hinzugef�gt: <b>%s</b>',
-	'stf_log_change'		=> ' %s ge�ndert von: <b>%s</b> auf: <b>%s</b>.',
-	'stf_log_delete'		=> ' %s gel�scht: %s',
+	'stf_log_create'		=> ' %s hinzugefügt: <b>%s</b>',
+	'stf_log_change'		=> ' %s geändert von: <b>%s</b> auf: <b>%s</b>.',
+	'stf_log_delete'		=> ' %s gelöscht: %s',
 
-	'com_confirm'			=> 'Best�tigen',
-	'com_image_delete'	=> 'Bild l�schen',
+	'com_confirm'		=> 'Bestätigen',
+	'com_image_delete'	=> 'Bild löschen',
 	'com_never'			=> 'Nie',
-	'empty_site' => "<html><head><title></title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"></head><body bgcolor=\"#FFFFFF\" text=\"#000000\"></body></html>",
+	'empty_site'		=> "<html><head><title></title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"></head><body bgcolor=\"#FFFFFF\" text=\"#000000\"></body></html>",
 	
 	'sprintf_match_name'		=> 'vs. %s',
 	'sprintf_match_intern'		=> '<span style="font-style:italic;">vs. %s</span>',
@@ -298,9 +319,9 @@ $lang = array_merge($lang, array(
 #	'sprintf_ajax_fail'			=> 'Kein Suchergebnis!',
 #	
 #	
-#	'sprintf_db_create'			=> '|%s| ge�ndert in: %s',
-#	'sprintf_db_delete'			=> '|%s| gel�scht: %s',
-#	'sprintf_db_change'			=> '|%s| von: %s auf: %s ge�ndert.',
+#	'sprintf_db_create'			=> '|%s| geändert in: %s',
+#	'sprintf_db_delete'			=> '|%s| gelöscht: %s',
+#	'sprintf_db_change'			=> '|%s| von: %s auf: %s geändert.',
 #	'sprintf_count_maps'		=> '%s %s',			# news
 #	'sprintf_empty_space'		=> '%s %s',			# index
 #	'sprintf_empty_line'		=> '%s - %s',	# Menü
@@ -323,7 +344,7 @@ $lang = array_merge($lang, array(
 	/* sprintf: Spiele */
 #	'sprintf_tag'				=> '%s Tag',				# game
 #	'sprintf_image'				=> '%s Bild',				# game, maps, network, newscat
-#	'sprintf_size'				=> '%sgr��e',				# gane
+#	'sprintf_size'				=> '%sgröße',				# gane
 #	'sprintf_event'				=> 'am: %s von %s - %s',	# event
 #	'sprintf_type'				=> '%s Type',				# maps, network, navi, profile
 #	'sprintf_cat'				=> '%skategorie',			# maps, news
@@ -373,7 +394,7 @@ $lang = array_merge($lang, array(
 #	'common_order_u'		=> 'nach Oben verschieben',
 #	'common_order_d'		=> 'nach Unten verschieben',
 #	'common_entry_new'		=> 'Neuer Eintrag',
-#	'common_add'			=> 'Hinzuf�gen',
+#	'common_add'			=> 'Hinzufügen',
 	'common_auth'			=> 'Berechtigung',
 #	'common_comment'		=> 'Kommentar',
 #	'common_comments_pub'	=> 'Kommentare erlauben',
@@ -384,7 +405,7 @@ $lang = array_merge($lang, array(
 #	'common_default'		=> 'Standarteinstellungen',
 #	'common_move'			=> 'Verschieben',
 #	
-#	'common_delete_all'		=> 'Alles l�schen',
+#	'common_delete_all'		=> 'Alles löschen',
 #	'common_login'			=> 'Login',
 #	'common_login_acp'		=> 'Adminlogin',
 #	'common_desc'			=> 'Beschreibung',
@@ -397,14 +418,14 @@ $lang = array_merge($lang, array(
 #	'common_moderators'		=> 'Moderatoren',		
 #	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
 #	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
-#	'common_overview'		=> 'Übersicht',		
+	'common_overview'		=> 'Übersicht',		
 #	'common_reset'			=> 'Zurücksetzen',
 #	'common_setting'		=> 'Einstellung',
 #	'common_settings'		=> 'Einstellungen',		
 #	'common_submit'			=> 'Absenden',
 #	'common_upload'			=> 'Upload',
-#	'common_update'			=> 'Bearbeiten',
-#	'common_create'			=> 'Hinzuf�gen',
+#	'com_update'			=> 'Bearbeiten',
+#	'common_create'			=> 'Hinzufügen',
 #	'common_order'			=> 'Ordnen',
 #	'common_sort'			=> 'Sortieren',
 #	'common_public'			=> '�ffentlich',
@@ -417,12 +438,12 @@ $lang = array_merge($lang, array(
 #	
 #	'acp_permission'	=> 'Rechteverwaltung',
 #	
-#	'msg_select_must'		=> 'Es muss ein %s ausgew�hlt werden!',
+	'msg_select_must'		=> 'Es muss ein %s ausgewählt werden!',
 #	'navi_navigation'	=> 'Navigation',
 #	'return'			=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a></strong>',
-#	'msg_select_module'		=> 'Es wurde keine G�ltige Funktion ausgew�hlt!',
-#	'msg_unavailable_size_dir'	=> 'Ordnergr��e nicht verf�gbar!',
-#	'msg_unavailable_size_file'	=> 'Dateigr��e nicht verf�gbar!',
+#	'msg_select_module'		=> 'Es wurde keine G�ltige Funktion ausgewählt!',
+#	'msg_unavailable_size_dir'	=> 'Ordnergröße nicht verfügbar!',
+#	'msg_unavailable_size_file'	=> 'Dateigröße nicht verfügbar!',
 #	'msg_available_name'	=> 'Name ist schon vergeben, bitte einen anderen eintragen!',
 #	'msg_available_title'	=> 'Titel ist schon vergeben, bitte einen anderen eintragen!',
 #	'msg_available_tag'		=> 'Tag ist schon vergeben, bitte einen anderen eintragen!',
@@ -461,12 +482,12 @@ $lang = array_merge($lang, array(
 #	
 #	'msg_select_match_map'		=> 'Bitte Karteninfos eintragen!',		
 #	'msg_select_member'			=> 'Bitte 1 oder mehrere Mitglieder auswählen!',	
-#	'msg_select_no_users'		=> 'Keine Benutzer ausgew�hlt.',		
-#	'msg_select_nomembers'		=> 'Keine Teammitglieder ausgew�hlt oder eingetragen.',		
+#	'msg_select_no_users'		=> 'Keine Benutzer ausgewählt.',		
+#	'msg_select_nomembers'		=> 'Keine Teammitglieder ausgewählt oder eingetragen.',		
 #	'msg_select_option'			=> 'Bitte eine <b>Option</b> auswählen!',	
 #	'msg_select_order'			=> 'Bitte Reihenfolge auswählen!',	
 #	'msg_select_order_end'		=> 'am Ende sortieren',		
-#	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder auswählen, zum l�schen.',	
+#	'msg_select_pics'			=> 'Bitte ein oder mehrere Bilder auswählen, zum löschen.',	
 #	'msg_select_profilefield'	=> 'Bitte Profilefeld eintragen!',		
 #	'msg_select_rival'			=> 'Bitte ein Gegnernamen eintragen',	
 #	'msg_select_rival_tag'		=> 'Bitte ein Gegnerclantag eintragen',		
@@ -476,7 +497,7 @@ $lang = array_merge($lang, array(
 #	'msg_select_type'			=> 'Bitte ein Type / Art auswählen!',	
 #	'msg_select_url'			=> 'Bitte ein Link eintragen!',	
 #	'msg_select_user_level'		=> 'Bitte ein Benutzerlevel auswählen!',		
-#	'msg_selected_member'		=> 'Bitte Spieler auswählen die noch nicht eingetragen sind.',		
+	'msg_selected_member'		=> 'Bitte Spieler auswählen die noch nicht eingetragen sind.',		
 #	'msg_sprintf_noentry'		=> 'Es sind keine %s eingetragen',		
 #	'select_msg_cat_image'		=> 'Bitte ein Kategoriebild auswählen!',		
 #	'select_msg_forum_icon'		=> 'Bitte ein Forumicon auswählen!',		
@@ -485,25 +506,28 @@ $lang = array_merge($lang, array(
 #	'select_rank'				=> 'Rang setzen &raquo;',
 #	'select_ranks_rights'		=> 'Gruppenrechte geben/nehmen',		
 #	'sprintf_msg_select'		=> 'Bitte ein(e) <b>%s</b> eintragen!',		
-#	'create_forum'			=> 'Neues Forum hinzugef�gt.',
-#	'create_newsletter'		=> 'Neue eMailadresse hinzugef�gt.',
-#	'create_teamspeak'		=> 'Neuen Teamspeak Server hinzugef�gt.',
-#	'create_user'			=> 'Neuen Benutzer hinzugef�gt.',
-#	'create_map'			=> 'Karte hinzugef�gt',
-#	'create_map_cat'		=> 'Kartenkategorie hinzugef�gt',
-#	'update_forum'			=> 'Forumdaten erfolgreich ge�ndert',
-#	'update_newsletter'		=> 'eMailadresse erfolgreich ge�ndert',
-#	'update_teamspeak'		=> 'Teamspeakdaten erfolgreich ge�ndert',
-#	'update_user'			=> 'Benutzerdaten erfolgreich ge�ndert',
-#	'update_map'			=> 'Karteninformation erfolgreich ge�ndert',
-#	'update_map_cat'		=> 'Kartenkategorie erfolgreich ge�ndert',
+#	'create_forum'			=> 'Neues Forum hinzugefügt.',
+#	'create_newsletter'		=> 'Neue eMailadresse hinzugefügt.',
+#	'create_teamspeak'		=> 'Neuen Teamspeak Server hinzugefügt.',
+#	'create_user'			=> 'Neuen Benutzer hinzugefügt.',
+	
+#	'create_map_cat'		=> 'Kartenkategorie hinzugefügt',
+#	'update_forum'			=> 'Forumdaten erfolgreich geändert',
+#	'update_newsletter'		=> 'eMailadresse erfolgreich geändert',
+#	'update_teamspeak'		=> 'Teamspeakdaten erfolgreich geändert',
+#	'update_user'			=> 'Benutzerdaten erfolgreich geändert',
+	
+	'create_map'			=> 'Karte hinzugefügt',
+	'update_map'			=> 'Karteninformation erfolgreich geändert',
+	
+#	'update_map_cat'		=> 'Kartenkategorie erfolgreich geändert',
 #	'delete_confirm_map'		=> 'dass diese Karte:',
 #	'delete_confirm_map_cat'	=> 'dass diese Kartenkategorie:',
-#	'delete_newsletter'			=> 'Die eMailadresse wurde gel�scht!',
-#	'delete_teamspeak'			=> 'Der Teamspeak wurde gel�scht!',
-#	'delete_user'				=> 'Der Benutzer wurde gel�scht!',
-#	'delete_map'				=> 'Die Karte wurde gel�scht!',
-#	'delete_map_cat'			=> 'Die Kartenkategorie, samt Inahlt wurde gel�scht!',
+#	'delete_newsletter'			=> 'Die eMailadresse wurde gelöscht!',
+#	'delete_teamspeak'			=> 'Der Teamspeak wurde gelöscht!',
+#	'delete_user'				=> 'Der Benutzer wurde gelöscht!',
+#	'delete_map'				=> 'Die Karte wurde gelöscht!',
+#	'delete_map_cat'			=> 'Die Kartenkategorie, samt Inahlt wurde gelöscht!',
 #	'ON'	=> 'Aktiv',// This is for GZip compression
 #	'OFF'	=> 'Inaktiv',
 #	'auth_cash'				=> 'Clankasse',
@@ -524,7 +548,7 @@ $lang = array_merge($lang, array(
 #	'auth_news_public'		=> 'News ver�ffentlichen',		
 #	'auth_newscat'			=> 'Newskategorien',
 #	'auth_newsletter'		=> 'Newsletter',		
-#	'auth_ranks'			=> 'R�nge',
+#	'auth_ranks'			=> 'Ränge',
 #	'auth_server'			=> 'Server',
 #	'auth_teams'			=> 'Teams',
 #	'auth_teamspeak'		=> 'Teamspeak',
@@ -537,8 +561,10 @@ $lang = array_merge($lang, array(
 #	'auth_themes'			=> 'Templates/Stlye',
 #	'auth_votes'			=> 'Umfragen',
 #	'auth_server_type'		=> 'Server Typen',
-#	'image_filesize'	=> 'Die Dateigr��e muss kleiner als %d KB sein.',
-#	'image_imagesize'	=> 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.',
+
+	/* Upload */
+	'image_filesize'	=> 'Die Dateigröße muss kleiner als %d KB sein.',
+	'image_imagesize'	=> 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.',
 	
 #	'common_image_upload'	=> 'Hochladen',
 #	'common_image_current'	=> 'Aktuelles Gruppenbild',
@@ -551,11 +577,11 @@ $lang = array_merge($lang, array(
 	/* image */
 #	'image'			=> 'Bild vorhanden',
 #	'image_add'		=> 'Bild hinzufügen',
-#	'image_delete'	=> 'Bild l�schen/gel�scht',
+#	'image_delete'	=> 'Bild löschen/gelöscht',
 #	'image_edit'	=> 'Bild bearbeiten',
 #	'image_link'	=> 'Bild verlinkt',
-#	'create'	=> 'hinzugef�gt',
-#	'update'	=> 'bearbeitet',
+#	'create'	=> 'hinzugefügt',
+#	
 #	'common_auth_public'	=> '�ffentlich',
 #	'common_auth_register'	=> 'Registriert',
 #	'common_auth_trial'		=> 'Trial',
@@ -563,13 +589,13 @@ $lang = array_merge($lang, array(
 #	'common_auth_mod'		=> 'Moderatoren',
 #	'common_auth_admin'		=> 'Administrator',
 	'sql_duplicate'	=> '%s: "%s" schon vorhanden!',
-#	'create'	=> 'Neuen Eintrag hinzugef�gt.',
-#	'update'	=> 'Eintrag erfolgreich ge�ndert.',
-#	'delete'	=> 'Der Eintrag wurde gel�scht!',
+#	'create'	=> 'Neuen Eintrag hinzugefügt.',
+#	'update'	=> 'Eintrag erfolgreich geändert.',
+#	'delete'	=> 'Der Eintrag wurde gelöscht!',
 #	'confirm'	=> 'das dieser Eintrag:',
 #	'msg_input_size'		=> 'Bitte eine <b>Maximale Gr��e</b> eingeben!',/* download */
 #	'msg_select_userlevel'	=> 'Bitte ein Benutzerlevel auswählen!',
-#	'msg_empty_ranks'			=> 'Keine R�nge vorhanden/eingetragen.',
+#	'msg_empty_ranks'			=> 'Keine Ränge vorhanden/eingetragen.',
 #	'msg_sizedir_empty'			=> 'Leer',
 #	'select_rank'	=> 'Rang setzen &raquo;',
 #	'rights_groups'	=> 'Gruppenrechte geben/nehmen',
@@ -577,7 +603,43 @@ $lang = array_merge($lang, array(
 	/* error msg */
 #	'msg_select_date'		=> 'Bitte ein G�ltiges <b>Datum</b> auswählen!',				# match
 
-	'founder'			=> 'Gründer',
+	'founder'				=> 'Gründer',
+	'founder_permission'	=> 'Gründerrechte',
+	'user_permission'		=> 'Benutzerrechte',
+	
+	'application/postscript' => 'ai, eps, ps',
+	'application/vnd.ms-cab-compressed' => 'cab',
+	'application/msword' => 'doc',
+	'application/x-msdownload' => 'exe, msi',
+	'application/javascript' => 'js',
+	'application/pdf' => 'pdf',
+	'application/vnd.ms-powerpoint' => 'ppt',
+	'application/x-rar-compressed' => 'rar',
+	'application/rtf' => 'rtf',
+	'application/x-shockwave-flash' => 'swf',
+	'application/vnd.ms-excel' => 'xls',
+	'application/xml' => 'xml',
+	'application/zip' => 'zip',
+	'application/x-bittorrent' => 'torrent',
+	
+	'image/bmp' => 'bmp',
+	'image/gif' => 'gif',
+	'image/png' => 'png',
+	'image/vnd.adobe.photoshop' => 'psd',
+	'image/jpeg' => 'jpeg, jpg',
+	'image/tiff' => 'tiff, tif',
+	
+	'text/css' => 'css',
+	'text/html' => 'htm, html, php',
+	'text/plain' => 'txt',
+	
+	'audio/mpeg' => 'mp3',
+	'video/x-flv' => 'flv',
+	'video/quicktime' => 'qt, mov',
+	
+	'a:1:{i:0;s:0:"";}' => 'Alle Daten',
+	
+	'com_bull' => ' &bull; ',
 
 ));
 

@@ -7,6 +7,9 @@ include('lang_server.php');
 
 $lang = array_merge($lang, array(
 
+	'update_training_status_add'	=> 'Training-Status hinzugefügt',
+	'update_training_status_edit'	=> 'Training-Status geändert',
+
 
 	'notice_select_permission'	=> 'Rechte geben/nehmen',
 	
@@ -148,8 +151,8 @@ $lang = array_merge($lang, array(
 	'common_settings'		=> 'Einstellungen',		
 	'common_submit'			=> 'Absenden',
 	'common_upload'			=> 'Upload',
-	'common_update'			=> 'Bearbeiten',
-	'common_create'			=> 'Hinzuf�gen',
+	'com_update'			=> 'Bearbeiten',
+	'common_create'			=> 'Hinzufügen',
 	'common_order'			=> 'Ordnen',
 	'common_sort'			=> 'Sortieren',
 	'common_public'			=> '�ffentlich',
@@ -163,7 +166,7 @@ $lang = array_merge($lang, array(
 	'common_rating'		=> 'Abstimmungen',
 
 	
-	'add_comment'			=> 'Kommentar hinzugef�gt.',
+	'add_comment'			=> 'Kommentar hinzugefügt.',
 	'click_return_match'	=> '%sHier klicken%s, um zum Match zurückzukehren.',
 	'click_return_training'	=> '%sHier klicken%s, um zum Training zurückzukehren.',
 	'click_return_news'		=> '%sHier klicken%s, um zu den News zurückzukehren.',
@@ -384,7 +387,7 @@ $lang['news_info_url']		= 'Link: ';
 $lang['news_info_urls']		= 'Links: ';
 
 
-$lang['group_set_mod']		= 'Gruppenrechte ge�ndert.';
+$lang['group_set_mod']		= 'Gruppenrechte geändert.';
 $lang['group_is_moderator'] = 'Du bist der Moderator dieser Gruppe.';
 
 
@@ -499,7 +502,7 @@ $lang['status_none']		= 'Unbekannt';
 $lang['status_yes']			= 'kann spielen';
 $lang['status_no']			= 'kann nicht';
 $lang['status_replace']		= 'Ersatzspieler';
-$lang['change_on']			= '<i>ge�ndert:</i> ';
+$lang['change_on']			= '<i>geändert:</i> ';
 
 
 
@@ -645,8 +648,8 @@ $lang['Submit'] = 'Absenden';
 $lang['Reset'] = 'Zurücksetzen';
 $lang['Cancel'] = 'Abbrechen';
 $lang['Preview'] = 'Vorschau';
-$lang['Confirm'] = 'Best�tigen';
-$lang['Spellcheck'] = 'Rechtschreibpr�fung';
+$lang['Confirm'] = 'Bestätigen';
+$lang['Spellcheck'] = 'Rechtschreibprüfung';
 $lang['Yes'] = 'Ja';
 $lang['No'] = 'Nein';
 $lang['Enabled'] = 'Aktiviert';
@@ -691,7 +694,7 @@ $lang['Click_return_group'] = '%sHier klicken%s, um zur Gruppeninfo zurückzukeh
 
 $lang['Admin_panel'] = 'Administrations';
 
-$lang['Board_disable'] = 'Sorry, aber dieses Board ist im Moment nicht verf�gbar. Probier es bitte sp�ter wieder.';
+$lang['Board_disable'] = 'Sorry, aber dieses Board ist im Moment nicht verfügbar. Probier es bitte sp�ter wieder.';
 
 
 //
@@ -818,7 +821,7 @@ $lang['Forums_marked_read'] = 'Alle Foren wurden als gelesen markiert.';
 //
 $lang['View_forum'] = 'Forum anzeigen';
 
-$lang['Forum_not_exist'] = 'Das ausgew�hlte Forum existiert nicht.';
+$lang['Forum_not_exist'] = 'Das ausgewählte Forum existiert nicht.';
 $lang['Reached_on_error'] = 'Fehler auf dieser Seite!';
 
 $lang['Display_topics'] = 'Siehe Beiträge der letzten';
@@ -916,7 +919,7 @@ $lang['Total_votes'] = 'Stimmen insgesamt';
 $lang['Message_body'] = 'Nachrichtentext';
 $lang['Topic_review'] = 'Thema-�berblick';
 
-$lang['No_post_mode'] = 'Kein Eintrags-Modus ausgew�hlt';// If posting.php is called without a mode (newtopic/reply/delete/etc, shouldn't be shown normaly)
+$lang['No_post_mode'] = 'Kein Eintrags-Modus ausgewählt';// If posting.php is called without a mode (newtopic/reply/delete/etc, shouldn't be shown normaly)
 
 $lang['Post_a_new_topic'] = 'Neues Thema schreiben';
 $lang['Post_a_reply'] = 'Antwort schreiben';
@@ -928,8 +931,8 @@ $lang['Post_Announcement'] = 'Ank�ndigung';
 $lang['Post_Sticky'] = 'Wichtig';
 $lang['Post_Normal'] = 'Normal';
 
-$lang['Confirm_delete'] = 'Sicher, dass dieser Beitrag gel�scht werden soll?';
-$lang['Confirm_delete_poll'] = 'Sicher, dass diese Umfrage gel�scht werden soll?';
+$lang['Confirm_delete'] = 'Sicher, dass dieser Beitrag gelöscht werden soll?';
+$lang['Confirm_delete_poll'] = 'Sicher, dass diese Umfrage gelöscht werden soll?';
 
 $lang['Flood_Error'] = 'Du kannst einen Beitrag nicht so schnell nach deinem letzten absenden, bitte warte einen Augenblick.';
 $lang['Empty_subject'] = 'Bei einem neuen Thema musst du einen Titel angeben.';
@@ -974,12 +977,12 @@ $lang['BBCode_is_OFF'] = '%sBBCode%s ist <u>aus</u>';
 $lang['Smilies_are_ON'] = 'Smilies sind <u>an</u>';
 $lang['Smilies_are_OFF'] = 'Smilies sind <u>aus</u>';
 
-$lang['Attach_signature'] = 'Signatur anh�ngen (Signatur kann im Profil ge�ndert werden)';
+$lang['Attach_signature'] = 'Signatur anh�ngen (Signatur kann im Profil geändert werden)';
 $lang['Notify'] = 'Benachrichtigt mich, wenn eine Antwort geschrieben wurde';
 
 $lang['Stored'] = 'Deine Nachricht wurde erfolgreich eingetragen.';
-$lang['Deleted'] = 'Deine Nachricht wurde erfolgreich gel�scht.';
-$lang['Poll_delete'] = 'Deine Umfrage wurde erfolgreich gel�scht.';
+$lang['Deleted'] = 'Deine Nachricht wurde erfolgreich gelöscht.';
+$lang['Poll_delete'] = 'Deine Umfrage wurde erfolgreich gelöscht.';
 $lang['Vote_cast'] = 'Deine Stimme wurde gez�hlt.';
 
 $lang['Topic_reply_notification'] = 'Benachrichtigen bei Antworten';
@@ -995,7 +998,7 @@ $lang['bbcode_p_help'] = 'Bild einf�gen: [img]http://URL_des_Bildes[/img] (alt
 $lang['bbcode_w_help'] = 'URL einf�gen: [url]http://URL[/url] oder [url=http://url]URL Text[/url] (alt+w)';
 $lang['bbcode_a_help'] = 'Alle offenen BBCodes schlie�en';
 $lang['bbcode_s_help'] = 'Schriftfarbe: [color=red]Text[/color] Tipp: Du kannst ebenfalls color=#FF0000 benutzen';
-$lang['bbcode_f_help'] = 'Schriftgr��e: [size=x-small]Kleiner Text[/size]';
+$lang['bbcode_f_help'] = 'Schriftgröße: [size=x-small]Kleiner Text[/size]';
 
 $lang['Emoticons'] = 'Smilies';
 $lang['More_emoticons'] = 'Weitere Smilies ansehen';
@@ -1017,7 +1020,7 @@ $lang['color_violet'] = 'Violett';
 $lang['color_white'] = 'Wei�';
 $lang['color_black'] = 'Schwarz';
 
-$lang['Font_size'] = 'Schriftgr��e';
+$lang['Font_size'] = 'Schriftgröße';
 $lang['font_tiny'] = 'Winzig';
 $lang['font_small'] = 'Klein';
 $lang['font_normal'] = 'Normal';
@@ -1025,7 +1028,7 @@ $lang['font_large'] = 'Gro�';
 $lang['font_huge'] = 'Riesig';
 
 $lang['Close_Tags'] = 'Tags schlie�en';
-$lang['Styles_tip'] = 'Tipp: Styles k�nnen schnell zum markierten Text hinzugef�gt werden.';
+$lang['Styles_tip'] = 'Tipp: Styles k�nnen schnell zum markierten Text hinzugefügt werden.';
 
 
 //
@@ -1102,7 +1105,7 @@ $lang['No_match'] = 'Keine Ergebnisse gefunden.';
 
 $lang['No_post_id'] = 'Es wurde keine Beitrags-ID angegeben.';
 $lang['No_such_folder'] = 'Es existiert kein solcher Ordner.';
-$lang['No_folder'] = 'Kein Ordner ausgew�hlt';
+$lang['No_folder'] = 'Kein Ordner ausgewählt';
 
 $lang['Mark_all'] = 'Alle markieren';
 $lang['Unmark_all'] = 'Markierungen aufheben';
@@ -1149,7 +1152,7 @@ $lang['Search_user_posts'] = 'Alle Beiträge von %s anzeigen';// Find all posts 
 $lang['No_user_id_specified'] = 'Dieser Benutzer existiert nicht.';
 $lang['Wrong_Profile'] = 'Du kannst nur dein eigenes Profil bearbeiten.';
 
-$lang['Only_one_avatar'] = 'Es kann nur ein Avatar ausgew�hlt werden';
+$lang['Only_one_avatar'] = 'Es kann nur ein Avatar ausgewählt werden';
 $lang['File_no_data'] = 'Die angegebene Datei enth�lt keine Daten';
 $lang['No_connection'] = 'Es konnte keine Verbindung zur angegebenen Datei hergestellt werden';
 $lang['Incomplete'] = 'Die angegebene URL ist unvollst�ndig';
@@ -1161,7 +1164,7 @@ $lang['Always_html'] = 'HTML immer aktivieren';
 $lang['Always_bbcode'] = 'BBCode immer aktivieren';
 $lang['Always_add_sig'] = 'Signatur immer anh�ngen';
 $lang['Always_notify'] = 'Bei Antworten immer benachrichtigen';
-$lang['Always_notify_explain'] = 'Sendet dir eine E-Mail, wenn jemand auf einen deiner Beiträge antwortet. Kann f�r jeden Beitrag ge�ndert werden.';
+$lang['Always_notify_explain'] = 'Sendet dir eine E-Mail, wenn jemand auf einen deiner Beiträge antwortet. Kann f�r jeden Beitrag geändert werden.';
 
 $lang['Board_style'] = 'Board-Style';
 $lang['Board_lang'] = 'Board-Sprache';
@@ -1175,13 +1178,13 @@ $lang['Public_view_email'] = 'Zeige meine E-Mail-Adresse immer an';
 
 $lang['Current_password'] = 'Altes Passwort';
 $lang['New_password'] = 'Neues Passwort';
-$lang['Confirm_password'] = 'Passwort best�tigen';
+$lang['Confirm_password'] = 'Passwort bestätigen';
 $lang['Confirm_password_explain'] = 'Du musst dein Passwort angeben, wenn du dein Passwort oder deine Mailadresse �ndern m�chtest.';
 $lang['password_if_changed'] = 'Du musst nur dann ein neues Passwort angeben, wenn du es �ndern willst';
-$lang['password_confirm_if_changed'] = 'Du musst dein neues Passwort best�tigen, wenn du es �ndern willst';
+$lang['password_confirm_if_changed'] = 'Du musst dein neues Passwort bestätigen, wenn du es �ndern willst';
 
 $lang['Avatar'] = 'Avatar';
-$lang['Avatar_explain'] = 'Zeigt eine kleine Grafik neben jedem deiner Beiträge an. Es kann immer nur ein Avatar angezeigt werden, seine Breite darf nicht gr��er als %d Pixel sein, die H�he nicht gr��er als %d Pixel, und die Dateigr��e darf maximal %d KB betragen.';
+$lang['Avatar_explain'] = 'Zeigt eine kleine Grafik neben jedem deiner Beiträge an. Es kann immer nur ein Avatar angezeigt werden, seine Breite darf nicht größer als %d Pixel sein, die H�he nicht größer als %d Pixel, und die Dateigröße darf maximal %d KB betragen.';
 $lang['Upload_Avatar_file'] = 'Avatar von deinem Computer hochladen';
 $lang['Upload_Avatar'] = 'Avatar von URL hochladen';
 $lang['Upload_Avatar_URL_explain'] = 'Gib die URL des gew�nschten Avatars an, dieser wird dann kopiert';
@@ -1205,7 +1208,7 @@ $lang['Popup_on_privmsg_explain'] = 'Einige Templates �ffnen neue Fenster, um 
 $lang['Hide_user'] = 'Online-Status verstecken';
 
 $lang['Profile_updated'] = 'Dein Profil wurde aktualisiert.';
-$lang['Profile_updated_inactive'] = 'Dein Profil wurde aktualisiert. Du hast jedoch wesentliche Details ge�ndert, weswegen dein Account jetzt inaktiv ist. Du wurdest per Mail dar�ber informiert, wie du deinen Account reaktivieren kannst. Falls eine Aktivierung durch den Administrator erforderlich ist, warte bitte, bis die Reaktivierung erfolgt ist.';
+$lang['Profile_updated_inactive'] = 'Dein Profil wurde aktualisiert. Du hast jedoch wesentliche Details geändert, weswegen dein Account jetzt inaktiv ist. Du wurdest per Mail dar�ber informiert, wie du deinen Account reaktivieren kannst. Falls eine Aktivierung durch den Administrator erforderlich ist, warte bitte, bis die Reaktivierung erfolgt ist.';
 
 $lang['Password_mismatch'] = 'Du musst zweimal das gleiche Passwort eingeben.';
 $lang['Current_password_mismatch'] = 'Das aktuelle Passwort stimmt nicht mit dem in der Datenbank �berein.';
@@ -1219,7 +1222,7 @@ $lang['Email_invalid'] = 'Die angegebene Mailadresse ist ung�ltig.';
 $lang['Signature_too_long'] = 'Deine Signatur ist zu lang.';
 $lang['Fields_empty'] = 'Du musst alle ben�tigten Felder ausf�llen.';
 $lang['Avatar_filetype'] = 'Der Avatar muss im GIF-, JPG- oder PNG-Format sein.';
-$lang['Avatar_filesize'] = 'Die Dateigr��e muss kleiner als %d KB sein.';// followed by xx kB, xx being the size
+$lang['Avatar_filesize'] = 'Die Dateigröße muss kleiner als %d KB sein.';// followed by xx kB, xx being the size
 $lang['Avatar_imagesize'] = 'Der Avatar muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
 $lang['Welcome_subject'] = 'Willkommen auf %s';
@@ -1250,7 +1253,7 @@ $lang['New_password_activation'] = 'Aktivierung des neuen Passwortes';
 $lang['Password_activated'] = 'Dein Account wurde wieder aktiviert. Um dich einzuloggen, benutze das Passwort, welches du per E-Mail erhalten hast.';
 
 $lang['Send_email_msg'] = 'E-Mail senden';
-$lang['No_user_specified'] = 'Es wurde kein Benutzer ausgew�hlt';
+$lang['No_user_specified'] = 'Es wurde kein Benutzer ausgewählt';
 $lang['User_prevent_email'] = 'Dieser Benutzer hat den E-Mail-Empfang deaktiviert. Bitte versuche es mit einer privaten Nachricht.';
 $lang['User_not_exist'] = 'Dieser Benutzer existiert nicht.';
 $lang['CC_email'] = 'Eine Kopie dieser E-Mail an dich senden';
@@ -1344,7 +1347,7 @@ $lang['Already_member_group'] = 'Du bist bereits Mitglied dieser Gruppe.';
 $lang['User_is_member_group'] = 'Dieser Benutzer ist bereits ein Mitglied dieser Gruppe.';
 $lang['Group_type_updated'] = 'Gruppentyp wurde erfolgreich aktualisiert.';
 
-$lang['Could_not_add_user'] = 'Der ausgew�hlte Benutzer existiert nicht.';
+$lang['Could_not_add_user'] = 'Der ausgewählte Benutzer existiert nicht.';
 $lang['Could_not_anon_user'] = 'Ein anonymer Benutzer kann kein Gruppenmitglied werden.';
 
 $lang['Confirm_unsub'] = 'Bist du sicher, dass du die Mitgliedschaft in dieser Gruppe beenden m�chtest?';
@@ -1485,7 +1488,7 @@ $lang['Move'] = 'Verschieben';
 $lang['Lock'] = 'Sperren';
 $lang['Unlock'] = 'Entsperren';
 
-$lang['Topics_Removed'] = 'Die gew�hlten Themen wurden erfolgreich gel�scht.';
+$lang['Topics_Removed'] = 'Die gew�hlten Themen wurden erfolgreich gelöscht.';
 $lang['Topics_Locked'] = 'Die gew�hlten Themen wurden erfolgreich gesperrt.';
 $lang['Topics_Moved'] = 'Die gew�hlten Themen wurden verschoben.';
 $lang['Topics_Unlocked'] = 'Die gew�hlten Themen wurden entsperrt.';
@@ -1507,9 +1510,9 @@ $lang['Split_posts'] = 'Gew�hlte Beiträge teilen';
 $lang['Split_after'] = 'Ab gew�hltem Beitrag teilen';
 $lang['Topic_split'] = 'Das gew�hlte Thema wurde erfolgreich geteilt';
 
-$lang['Too_many_error'] = 'Du hast zu viele Beiträge ausgew�hlt. Du kannst nur einen Beitrag auswählen, ab dem geteilt werden soll!';
+$lang['Too_many_error'] = 'Du hast zu viele Beiträge ausgewählt. Du kannst nur einen Beitrag auswählen, ab dem geteilt werden soll!';
 
-$lang['None_selected'] = 'Du hast keine Themen ausgew�hlt, auf denen diese Aktion ausgef�hrt werden soll. Bitte w�hle mindestens eines aus.';
+$lang['None_selected'] = 'Du hast keine Themen ausgewählt, auf denen diese Aktion ausgef�hrt werden soll. Bitte w�hle mindestens eines aus.';
 $lang['New_forum'] = 'Neues Forum';
 
 $lang['This_posts_IP'] = 'IP-Adresse f�r diesen Beitrag';
@@ -1626,7 +1629,7 @@ $lang['datetime']['November'] = 'November';
 $lang['datetime']['December'] = 'Dezember';
 $lang['datetime']['month_01'] = 'Januar';
 $lang['datetime']['month_02'] = 'Februar';
-$lang['datetime']['month_03'] = 'M�rz';
+$lang['datetime']['month_03'] = 'März';
 $lang['datetime']['month_04'] = 'April';
 $lang['datetime']['month_05'] = 'Mai';
 $lang['datetime']['month_06'] = 'Juni';
@@ -1664,7 +1667,7 @@ $lang['A_critical_error'] = 'Ein kritischer Fehler ist aufgetreten.';
 //$lang['Admin_reauthenticate'] = 'F�r den Zugriff auf den Administrations-Bereich musst du deinen Benutzernamen und dein Passwort erneut eingeben.';
 $lang['Admin_reauthenticate'] = 'Benutzernamen und dein Passwort erneut eingeben!';
 $lang['Login_attempts_exceeded'] = 'Die maximale Anzahl von %s zul�ssigen Login-Versuchen wurde �berschritten. Du kannst dich in den n�chsten %s Minuten nicht einloggen.';
-$lang['Please_remove_install_contrib'] = 'Bitte stelle sicher, dass du die Verzeichnisse install/ gel�scht hast.';
+$lang['Please_remove_install_contrib'] = 'Bitte stelle sicher, dass du die Verzeichnisse install/ gelöscht hast.';
 
 $lang['Session_invalid'] = 'Ung�ltige Sitzung. Bitte sende das Formular erneut ab.';
 
@@ -1729,9 +1732,9 @@ $lang['ary_month'] = array(
 
 
 
-$lang['main_changelog'] = array(
-	'cl_added'		=> 'Hinzugef�gt',
-	'cl_change'		=> 'Ge�ndert',
+$lang['main_change'] = array(
+	'cl_added'		=> 'Hinzugefügt',
+	'cl_change'		=> 'Geändert',
 	'cl_fixed'		=> 'Beseitigt',
 	'cl_improved'	=> 'Verbessert',
 	'cl_removed'	=> 'Entfernt',	
@@ -1759,8 +1762,8 @@ $lang['gallery_rule_cannot_upload']	= 'Du <b>kannst keine</b> Bilder hochladen.'
 // Version Check
 //
 $lang['Version_up_to_date'] = 'Die Seite ist auf dem neuesten Stand.';
-$lang['Version_not_up_to_date'] = 'Seite <b>nicht</b> auf dem neuesten Stand. Es sind Updates verf�gbar.';
-$lang['Latest_version_info'] = 'Die neueste verf�gbare Version ist <b>%s</b>.';
+$lang['Version_not_up_to_date'] = 'Seite <b>nicht</b> auf dem neuesten Stand. Es sind Updates verfügbar.';
+$lang['Latest_version_info'] = 'Die neueste verfügbare Version ist <b>%s</b>.';
 $lang['Current_version_info'] = 'Du verwendest <b>%s</b>.';
 $lang['Connect_socket_error'] = 'Die Verbindung zum phpBB-Server konnte nicht aufgebaut werden. Es trat folgender Fehler auf:<br>%s';
 $lang['Socket_functions_disabled'] = 'Die Socket-Funktionen konnten nicht benutzt werden.';

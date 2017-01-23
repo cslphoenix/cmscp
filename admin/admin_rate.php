@@ -38,7 +38,7 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
 	
@@ -114,7 +114,7 @@ else
 				build_output(GAMES, $vars, $data_sql);
 
 				$template->assign_vars(array(
-				#	'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+				#	'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['game_name']),
 					'L_EXPLAIN'	=> $lang['com_required'],
 					
@@ -241,7 +241,7 @@ else
 			
 			$template->assign_block_vars('display.news', array(
 				'NAME'		=> $row['news_title'],
-			#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+			#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 			#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				
 				'RATE'		=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, $settings['rating_news']['maximal']),
@@ -254,7 +254,7 @@ else
 					$template->assign_block_vars('display.news.rate', array(
 						'NAME'		=> $drow['userid'],
 					#	'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-					#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+					#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 					#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 						
 					#	'TAG'		=> $row['game_tag'],
@@ -275,7 +275,7 @@ else
 		/*
 			$template->assign_block_vars('display.news', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				
 				'TAG'		=> $row['game_tag'],
@@ -287,7 +287,7 @@ else
 			
 			$template->assign_block_vars('display.gallery', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				
 				'TAG'		=> $row['game_tag'],
@@ -299,7 +299,7 @@ else
 			
 			$template->assign_block_vars('display.download', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
 				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
 				
 				'TAG'		=> $row['game_tag'],
@@ -317,7 +317,7 @@ else
 	}
 
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
+		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
 		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
 		'L_EXPLAIN'	=> $lang['explain'],
 

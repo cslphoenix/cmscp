@@ -18,8 +18,6 @@
 
 /**
  * Battlefield 3 Protocol Class
- * 
- * Good place for doc status and info is http://www.fpsadmin.com/forum/showthread.php?t=24134
  *
  * @author Austin Bischoff <austin@codebeard.com>
  */
@@ -132,7 +130,7 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
 
     	// Make buffer for data
     	$buf = new GameQ_Buffer($this->preProcess_status($this->packets_response[self::PACKET_STATUS]));
-		
+
     	$buf->skip(8); /* skip header */
 
     	// Decode the words into an array so we can use this data
@@ -181,23 +179,20 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
 
     	// Get and set the rest of the data points.
     	$result->add('targetscore', $words[$index_current]);
-    	$result->add('online', TRUE); // Forced TRUE, it seems $words[$index_current + 1] is always empty
-    	$result->add('ranked', $words[$index_current + 2] === 'true');
-    	$result->add('punkbuster', $words[$index_current + 3] === 'true');
-    	$result->add('password', $words[$index_current + 4] === 'true');
+    	$result->add('online', (bool) $words[$index_current + 1]);
+    	$result->add('ranked', (bool) $words[$index_current + 2]);
+    	$result->add('punkbuster', (bool) $words[$index_current + 3]);
+    	$result->add('password', (bool) $words[$index_current + 4]);
     	$result->add('uptime', $words[$index_current + 5]);
     	$result->add('roundtime', $words[$index_current + 6]);
 
     	// Added in R9
 	    $result->add('ip_port', $words[$index_current + 7]);
 	    $result->add('punkbuster_version', $words[$index_current + 8]);
-    	$result->add('join_queue', $words[$index_current + 9] === 'true');
+    	$result->add('join_queue', (bool) $words[$index_current + 9]);
     	$result->add('region', $words[$index_current + 10]);
     	$result->add('pingsite', $words[$index_current + 11]);
     	$result->add('country', $words[$index_current + 12]);
-    	
-    	// Added in R29, No docs as of yet
-    	$result->add('quickmatch', $words[$index_current + 13] === 'true'); // Guessed from research
 
     	unset($buf, $words);
 
@@ -257,11 +252,11 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
 
     	// Set the result to a new result instance
     	$result = new GameQ_Result();
-		
+
     	// Make buffer for data
     	$buf = new GameQ_Buffer($this->preProcess_players($this->packets_response[self::PACKET_PLAYERS]));
-		
-		$buf->skip(8); /* skip header */
+
+    	$buf->skip(8); /* skip header */
 
     	$words = $this->decodeWords($buf);
 
@@ -296,7 +291,7 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
 			}
 
 			// No pings in this game
-			$result->addPlayer('ping', FALSE);
+			$result->addPlayer('ping', 'false');
 		}
 
 		// @todo: Add some team definition stuff

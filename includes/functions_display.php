@@ -472,11 +472,11 @@ function display_teams()
 		for ( $i = 0; $i < $cnt; $i++ )
 		{
 			$id		= $data[$i]['team_id'];
-			$url	= check_sid("users.php?mode=t&amp;id=$id");
+			$url	= check_sid("teams.php?mode=t&amp;id=$id");
 			$name	= cut_string($data[$i]['team_name'], $settings['module_teams']['length']);
 			
 			$template->assign_block_vars('sn_teams', array(
-				'URL'	=> "<a href=\"id\">$name</a>",
+				'URL'	=> "<a href=\"$url\">$name</a>",
 				'GAME'	=> display_gameicon($data[$i]['game_image']),
 			));
 		}

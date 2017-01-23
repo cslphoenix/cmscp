@@ -19,7 +19,8 @@ $lang = array_merge($lang, array(
 	'dl_icon'		=> 'Icon',
 	'dl_types'		=> 'Art',
 	'dl_file'		=> 'Datei',
-	'dl_size'		=> 'Maximale Größe',
+	'dl_size'		=> 'Größe',
+	'dl_maxsize'	=> 'Maximale Größe',
 	'dl_rate'		=> 'Bewertung',
 	'dl_comment'	=> 'Kommentare',
 	
@@ -65,38 +66,61 @@ $lang = array_merge($lang, array(
 		'torrent'		=> 'application/x-bittorrent',
 	),
 	
+	'application/postscript' => 'ai, eps, ps',
+	'application/vnd.ms-cab-compressed' => 'cab',
+	'application/msword' => 'doc',
+	'application/x-msdownload' => 'exe, msi',
+	'application/javascript' => 'js',
+	'application/pdf' => 'pdf',
+	'application/vnd.ms-powerpoint' => 'ppt',
+	'application/x-rar-compressed' => 'rar',
+	'application/rtf' => 'rtf',
+	'application/x-shockwave-flash' => 'swf',
+	'application/vnd.ms-excel' => 'xls',
+	'application/xml' => 'xml',
+	'application/zip' => 'zip',
+	'application/x-bittorrent' => 'torrent',
+  
 	'mime_image_type' => array(
 		'bmp'				=> 'image/bmp',
 		'gif'				=> 'image/gif',
 		'png'				=> 'image/png',
 		'psd'				=> 'image/vnd.adobe.photoshop',
 	#	'ico'				=> 'image/vnd.microsoft.icon',
-		'jpeg, jpg'			=> 'image/jpeg', # jpe, 
-		'tiff, tif'			=> 'image/tiff',	
-	#	'svg, svgz'			=> 'image/svg+xml',	
+		'jpeg, jpg'			=> 'image/jpeg', # jpg,
+		'tiff, tif'			=> 'image/tiff',
+	#	'svg, svgz'			=> 'image/svg+xml',
 	),
 	
-	'bmp'				=> 'image/bmp',
-	'gif'				=> 'image/gif',
-	'png'				=> 'image/png',
-	'psd'				=> 'image/vnd.adobe.photoshop',
-#	'ico'				=> 'image/vnd.microsoft.icon',
-	'jpeg, jpg'			=> 'image/jpeg', # jpe, 
-	'tiff, tif'			=> 'image/tiff',	
-#	'svg, svgz'			=> 'image/svg+xml',	
+	'image/bmp' => 'bmp',
+	'image/gif' => 'gif',
+	'image/png' => 'png',
+	'image/vnd.adobe.photoshop' => 'psd',
+	'image/jpeg' => 'jpeg, jpg',
+	'image/tiff' => 'tiff, tif',
 	
 	'mime_text_type' => array(
 		'css'				=> 'text/css',
-		'htm, html, php'	=> 'text/html',			
+		'htm, html, php'	=> 'text/html',
 		'txt'				=> 'text/plain',
 	),
+	
+	'text/css' => 'css',
+	'text/html' => 'htm, html, php',
+	'text/plain' => 'txt',
 	
 	'mime_video_type' => array(
 		'mp3'		=> 'audio/mpeg',
 		'flv'		=> 'video/x-flv',
 		'qt, mov'	=> 'video/quicktime',
 	),
-
+	
+	'audio/mpeg' => 'mp3',
+	'video/x-flv' => 'flv',
+	'video/quicktime' => 'qt, mov',
+	
+	'a:1:{i:0;s:0:"";}' => 'Alle Daten',
+	
 	'up_filesize'	=> 'Die Dateigröße muss kleiner als %d KB sein.',
 	'up_filetype'	=> 'Die Dateitype entspricht nicht den vorgaben: %s.',
 

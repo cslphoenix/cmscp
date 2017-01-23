@@ -24,7 +24,7 @@
  *
  * @author Austin Bischoff <austin@codebeard.com>
  */
-class GameQ_Protocols_Source extends GameQ_Protocols
+abstract class GameQ_Protocols_Source extends GameQ_Protocols
 {
 	/*
 	 * Source engine type constants
@@ -172,7 +172,7 @@ class GameQ_Protocols_Source extends GameQ_Protocols
         {
         	$result->add('protocol', $buf->readInt8());
         }
-		
+
         $result->add('hostname', $buf->readString());
         $result->add('map', $buf->readString());
         $result->add('game_dir', $buf->readString());
@@ -190,7 +190,7 @@ class GameQ_Protocols_Source extends GameQ_Protocols
         // Check engine type
         if ($this->source_engine == self::GOLDSOURCE_ENGINE)
         {
-        	$result->add('version', $buf->readInt8());
+        	$result->add('protocol', $buf->readInt8());
         }
         else
         {
@@ -200,26 +200,10 @@ class GameQ_Protocols_Source extends GameQ_Protocols
         $result->add('dedicated', $buf->read());
         $result->add('os', $buf->read());
         $result->add('password', $buf->readInt8());
-        
-        // Check engine type
-        if ($this->source_engine == self::GOLDSOURCE_ENGINE)
-        {
-        	$result->add('ismod', $buf->readInt8());
-        }
-        
         $result->add('secure', $buf->readInt8());
-        
-        // Check engine type
-        if ($this->source_engine == self::GOLDSOURCE_ENGINE)
-        {
-        	$result->add('num_bots', $buf->readInt8());
-        }
-        else
-        {
-        	$result->add('version', $buf->readInt8());
-        }
+        $result->add('version', $buf->readInt8());
 
-        // Add extra data flag check here, only for source games (not goldsource)
+        // Add extra data flag check here
         // https://developer.valvesoftware.com/wiki/Server_Queries#Source_servers_2
 
         unset($buf);
@@ -259,8 +243,8 @@ class GameQ_Protocols_Source extends GameQ_Protocols
 
     	// Create a new buffer
     	$buf = new GameQ_Buffer($data);
-		
-		// Make sure the data is formatted properly
+
+    	// Make sure the data is formatted properly
     	if(($header = $buf->read(5)) != "\xFF\xFF\xFF\xFF\x44")
     	{
     		throw new GameQ_ProtocolsException("Data for ".__METHOD__." does not have the proper header (should be 0xFF0xFF0xFF0xFF0x44). Header: ".bin2hex($header));
@@ -269,8 +253,8 @@ class GameQ_Protocols_Source extends GameQ_Protocols
 
     	// Pull out the number of players
     	$num_players = $buf->readInt8();
-		
-		// Player count
+
+    	 // Player count
         $result->add('num_players', $num_players);
 
         // No players so no need to look any further
@@ -287,8 +271,8 @@ class GameQ_Protocols_Source extends GameQ_Protocols
             $result->addPlayer('score', $buf->readInt32Signed());
             $result->addPlayer('time', $buf->readFloat32());
         }
-		
-		unset($buf);
+
+        unset($buf);
 
         return $result->fetch();
     }
@@ -396,13 +380,6 @@ class GameQ_Protocols_Source extends GameQ_Protocols
     		// Check to see if this is compressed
     		if($request_id & 0x80000000)
     		{
-    		    // Check to see if we have Bzip2 installed
-    		    if(!function_exists('bzdecompress'))
-    		    {
-    		        throw new GameQ_ProtocolsException('Bzip2 is not installed.  See http://www.php.net/manual/en/book.bzip2.php for more info.', 0);
-    		        return FALSE;
-    		    }
-
     			// Get some info
     			$num_packets = $buffer->readInt8();
     			$cur_packet  = $buffer->readInt8();

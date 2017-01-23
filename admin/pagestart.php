@@ -38,13 +38,8 @@ if ( !$userdata['session_admin'] )
 
 if ( empty($cancel) )
 {
-#	debug(request('i', INT));
-#	debug($_GET, 'asdasd');
 	$ityp = request('i', INT) ? request('i', INT) : 1;
 	$iact = request('action', TYP);
-	
-#	debug($ityp, 'ityp');
-#	debug($act, '$act');
 	
 	$iaction = $iact ? "&action=$iact" : '';
 	
@@ -53,5 +48,9 @@ if ( empty($cancel) )
 	
 	acp_header($file, $iadds, $ityp);
 }
+
+$template->set_filenames(array(
+	'confirm'	=> 'style/info_confirm.tpl',
+));
 
 ?>

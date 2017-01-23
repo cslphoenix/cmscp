@@ -23,34 +23,37 @@ else
 	
 	add_lang('network');
 	acl_auth('a_network');
-
+	
 	$error	= '';
 	$index	= '';
-	$fields	= '';
+	$fields = '';
 	
+	$time	= time();
 	$log	= SECTION_NETWORK;
-	
+	$file	= basename(__FILE__) . $iadds;
+
 	$data	= request('id', INT);
-	$start	= request('start', INT);
-	$order	= request('order', INT);
 	$main	= request('main', TYP);
 	$usub	= request('usub', TYP);
 	$mode	= request('mode', TYP);
 	$type	= request('type', TYP);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . $settings['path_network']['path'];
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_network.tpl',
 		'confirm'	=> 'style/info_confirm.tpl',
 	));
 
-	$mode = (in_array($mode, array('create', 'update', 'order', 'delete'))) ? $mode : false;
+	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down'))) ? $mode : 'default';
+    $_tpl = ($mode == 'delete') ? 'confirm' : 'body';
 
 	if ( $mode )
 	{
@@ -66,7 +69,6 @@ else
 						'title' => 'data_input',
 						'network_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
 						'network_url'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_url'),
-					#	'network_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'upload:network', 'params' => $dir_path),
 						'network_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'upload:image',	'params' => array($dir_path, 'network')),
 						'network_type'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:network',	'params' => array(false, true, false)),
 						'network_view'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
@@ -148,6 +150,12 @@ else
 				( $data_sql['network_image'] ) ? $template->assign_block_vars('input.image', array()) : false;
 				
 				build_output(NETWORK, $vars, $data_sql);
+
+                $fields .= build_fields(array(
+					'mode'	=> $mode,
+					'id'	=> $data,
+				));
+
 				
 			#	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 			#	$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
@@ -157,27 +165,12 @@ else
 					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['network_name'])),
 					'L_EXPLAIN'	=> $lang['com_required'],
 				
-					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
+					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 				
-				$template->pparse('body');
-				
 				break;
-
-			case 'order':
 				
-				update(NETWORK, 'network', $move, $data_id);
-				orders(NETWORK, $data_type);
-				
-				$oCache->deleteCache('dsp_sn_network');
-				
-				log_add(LOG_ADMIN, $log, $mode);
-				
-				$index = true;
-				
-				break;
-			
 			case 'delete':
 			
 				$data_sql = data(NETWORK, $data_id, false, 1, 1);
@@ -211,136 +204,75 @@ else
 					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
 				}
 
-				$template->pparse('confirm');
+				break;
+
+			case 'move_up':
+			case 'move_down':
+				
+				move(NETWORK, $mode, $order, false, 'network_type', $type);
+				log_add(LOG_ADMIN, $log, $mode);
+				
+			case 'default':
+			
+				$template->assign_block_vars('display', array());
+	
+				$fields .= build_fields(array('mode' => 'create'));
+				
+				$network = data(NETWORK, '', 'network_order ASC', 1, 5, false, false, 'network_type');
+				
+				foreach ( $network as $type => $row )
+				{
+					if ( !$row )
+					{
+						$template->assign_block_vars('display.no_entry_' . $type, array());
+					}
+					else
+					{
+						$max = count($row);
+
+						foreach ( $row as $tmp_row )
+						{
+							$id		= $tmp_row['network_id'];
+							$link	= $tmp_row['network_url'];
+							$name	= $tmp_row['network_name'];
+							$view	= $tmp_row['network_view'];
+							$order	= $tmp_row['network_order'];
+								
+							$template->assign_block_vars('display.row_' . $type, array(
+								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
+								'SHOW'		=> $view ? img('i_icon', 'icon_show', 'common_info_show') : img('i_icon', 'icon_show2', 'common_info_show2'),
+								'LINK'		=> $link,
+								
+								'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'type' => $type, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
+								'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'type' => $type, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+						
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+							));
+						}
+					}
+				}
+				
+				$template->assign_vars(array(
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
+					'L_EXPLAIN'	=> $lang['explain'],
+					
+					'L_LINK'	=> $lang['network_link'],
+					'L_PARTNER'	=> $lang['network_partner'],
+					'L_SPONSOR'	=> $lang['network_sponsor'],
+					
+					'L_CREATE_LINK'		=> sprintf($lang['stf_create'], $lang['network_link']),
+					'L_CREATE_PARTNER'	=> sprintf($lang['stf_create'], $lang['network_partner']),
+					'L_CREATE_SPONSOR'	=> sprintf($lang['stf_create'], $lang['network_sponsor']),
+							
+					'S_ACTION'	=> check_sid($file),
+					'S_FIELDS'	=> $fields,
+				));
 				
 				break;
 		}
-	
-		if ( $index != true )
-		{
-			acp_footer();
-			exit;
-		}
+		$template->pparse($_tpl);
 	}
-	
-	$template->assign_block_vars('display', array());
-	
-	$fields .= '<input type="hidden" name="mode" value="create" />';
-	
-	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-		'L_EXPLAIN'	=> $lang['explain'],
-		
-		'L_LINK'	=> $lang['network_link'],
-		'L_PARTNER'	=> $lang['network_partner'],
-		'L_SPONSOR'	=> $lang['network_sponsor'],
-		
-		'L_CREATE_LINK'		=> sprintf($lang['stf_create'], $lang['network_link']),
-		'L_CREATE_PARTNER'	=> sprintf($lang['stf_create'], $lang['network_partner']),
-		'L_CREATE_SPONSOR'	=> sprintf($lang['stf_create'], $lang['network_sponsor']),
-				
-		'S_ACTION'	=> check_sid($file),
-		'S_FIELDS'	=> $fields,
-	));
-	
-	$max_link		= maxi(NETWORK, 'network_order', 'network_type = ' . NETWORK_LINK);
-	$max_partner	= maxi(NETWORK, 'network_order', 'network_type = ' . NETWORK_PARTNER);
-	$max_sponsor	= maxi(NETWORK, 'network_order', 'network_type = ' . NETWORK_SPONSOR);
-	
-	$tmp_link		= data(NETWORK, 'WHERE network_type = ' . NETWORK_LINK, 'network_order ASC', 1, false);
-	$tmp_partner	= data(NETWORK, 'WHERE network_type = ' . NETWORK_PARTNER, 'network_order ASC', 1, false);
-	$tmp_sponsor	= data(NETWORK, 'WHERE network_type = ' . NETWORK_SPONSOR, 'network_order ASC', 1, false);
-	
-	debug($tmp_link, 'tmp_link');
-	debug($tmp_partner, 'tmp_partner');
-	debug($tmp_sponsor, 'tmp_sponsor');
-
-	if ( !$tmp_link )
-	{
-		$template->assign_block_vars('display.no_entry_link', array());
-	}
-	else
-	{
-		for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($tmp_link)); $i++ )
-		{
-			$id		= $tmp_link[$i]['network_id'];
-			$link	= $tmp_link[$i]['network_url'];
-			$name	= $tmp_link[$i]['network_name'];
-			$view	= $tmp_link[$i]['network_view'];
-			$order	= $tmp_link[$i]['network_order'];
-				
-			$template->assign_block_vars('display.link_row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'SHOW'		=> $view ? img('i_icon', 'icon_show', 'common_info_show') : img('i_icon', 'icon_show2', 'common_info_show2'),
-				'LINK'		=> $link,
-				
-				'MOVE_UP'	=> ( $order != '10' )		? href('a_img', $file, array('mode' => '_order', 'type' => NAVI_MAIN, 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max_link )	? href('a_img', $file, array('mode' => '_order', 'type' => NAVI_MAIN, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
-			));
-		}
-	}
-	
-	if ( !$tmp_partner )
-	{
-		$template->assign_block_vars('display.no_entry_partner', array());
-	}
-	else
-	{
-		for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($tmp_partner)); $i++ )
-		{
-			$id		= $tmp_partner[$i]['network_id'];
-			$link	= $tmp_partner[$i]['network_url'];
-			$name	= $tmp_partner[$i]['network_name'];
-			$view	= $tmp_partner[$i]['network_view'];
-			$order	= $tmp_partner[$i]['network_order'];
-				
-			$template->assign_block_vars('display.partner_row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'SHOW'		=> $view ? img('i_icon', 'icon_show', 'common_info_show') : img('i_icon', 'icon_show2', 'common_info_show2'),
-				'LINK'		=> $link,
-				
-				'MOVE_UP'	=> ( $order != '10' )			? href('a_img', $file, array('mode' => 'order', 'type' => NAVI_MAIN, 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max_partner )	? href('a_img', $file, array('mode' => 'order', 'type' => NAVI_MAIN, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
-			));
-		}
-	}
-	
-	if ( !$tmp_sponsor )
-	{
-		$template->assign_block_vars('display.no_entry_sponsor', array());
-	}
-	else
-	{
-		for ( $i = $start; $i < min($settings['per_page_entry']['acp'] + $start, count($tmp_sponsor)); $i++ )
-		{
-			$id		= $tmp_sponsor[$i]['network_id'];
-			$link	= $tmp_sponsor[$i]['network_url'];
-			$name	= $tmp_sponsor[$i]['network_name'];
-			$view	= $tmp_sponsor[$i]['network_view'];
-			$order	= $tmp_sponsor[$i]['network_order'];
-				
-			$template->assign_block_vars('display.sponsor_row', array(
-				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'SHOW'		=> $view ? img('i_icon', 'icon_show', 'common_info_show') : img('i_icon', 'icon_show2', 'common_info_show2'),
-				'LINK'		=> $link,
-				
-				'MOVE_UP'	=> ( $order != '10' )			? href('a_img', $file, array('mode' => '_order', 'type' => NAVI_MAIN, 'move' => '-15', 'id' => $id), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max_sponsor )	? href('a_img', $file, array('mode' => '_order', 'type' => NAVI_MAIN, 'move' => '+15', 'id' => $id), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-				
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'common_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
-			));
-		}
-	}
-		
-	$template->pparse('body');
-			
 	acp_footer();
 }
 

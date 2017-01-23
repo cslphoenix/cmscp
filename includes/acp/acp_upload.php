@@ -154,10 +154,12 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 #	global $db, $lang, $settings, $error;
 	global $db, $lang, $settings;
 	
-	$image_filename = $data_img['temp'];
-	$image_realname = $data_img['name'];
-	$image_filetype = $data_img['type'];
-	$image_filesize = $data_img['size'];
+	debug($data_img, '$data_img');
+	
+	$image_filename = $data_img[0];
+	$image_realname = $data_img[1];
+	$image_filesize = $data_img[2];
+	$image_filetype = $data_img[3];
 
 #	debug($category);
 
@@ -184,7 +186,7 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 			
 			break;
 		case 'image_match':
-			$sfz	= '10240000';
+			$sfz	= 2*1048576;
 			$smw	= '1024';
 			$smh	= '768';
 			$system_pre_width	= '100';
@@ -242,6 +244,8 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 	
 	if ( ( file_exists(@cms_realpath($image_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $image_realname) )
 	{
+		debug($image_filesize, '$image_filesize');
+		
 		if ( $image_filesize <= $sfz && $image_filesize > 0 )
 		{
 			preg_match('#image\/[x\-]*([a-z]+)#', $image_filetype, $image_filetype);
@@ -422,7 +426,7 @@ function gallery_upload($path_img, $image_filename, $image_realname, $image_file
 		else
 		{
 			$error_msg = sprintf($lang['image_filesize'], round($max_filesize / 1024));
-			message(GENERAL_ERROR, $error_msg, '', __LINE__, __FILE__);
+			message(GENERAL_ERROR, $error_msg);
 		}
 
 		list($width, $height, $type) = @getimagesize($image_filename);

@@ -66,8 +66,12 @@ $lang = array_merge($lang, array(
 #	'cash_interval'	=> 'Zahlungsintervall',
 	
 	
-#	'ccreate'	=> 'hinzugefügt',
-#	'cupdate'	=> 'geändert',
+	'create'	=> 'hinzugefügt',
+	'update'	=> 'geändert',
+	
+	'select_month'	=> 'Bitte ein Monat auswählen',
+	
+	'current_month'	=> ' (<span style="color:#F00;"><b>Aktueller Monat</b></span>)',
 
 	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
 ));

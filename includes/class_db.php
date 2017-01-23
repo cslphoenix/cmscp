@@ -105,15 +105,16 @@ class db_class extends sql_db
 		{
 			$break_on_error = false;
 		}
-		if ( defined('DEBUG_RUN_STATS') )
+		if ( DEBUG_RUN_STATS === true )
 		{
 			$query_start = microtime();
 		}
 		$query_res = parent::sql_query($query, $transaction);
-		if ( defined('DEBUG_RUN_STATS') )
+		
+		if ( DEBUG_RUN_STATS === true )
 		{
 			$query_end = microtime();
-			if ( defined('DEBUG_SQL') )
+			if ( DEBUG_SQL === true )
 			{
 				if ( empty($file) && function_exists('debug_backtrace') )
 				{
@@ -152,7 +153,7 @@ class stat_run_class
 		global $db, $template, $lang, $userdata, $config;
 		global $starttime, $trc_loc_start, $trc_loc_end;
 
-		if ( !defined('DEBUG_RUN_STATS') )
+		if ( DEBUG_RUN_STATS === false )
 		{
 			return;
 		}
@@ -221,7 +222,7 @@ class stat_run_class
 				// for mysql & postgresql, explain request
 				$request_explain = '';
 				
-				if ( !preg_match('/^(UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER|OPTIMIZE|DROP|CREATE|REPLACE)/i', $trc_sql[$i]['sql']) )
+				if ( !preg_match('/^(REPAIR|UPDATE|INSERT|DELETE|SHOW|TRUNCATE|ALTER|OPTIMIZE|DROP|CREATE|REPLACE)/i', $trc_sql[$i]['sql']) )
 				{
 					// get explainations
 					$sql = 'EXPLAIN ' . $trc_sql[$i]['sql'];

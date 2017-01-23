@@ -75,7 +75,7 @@ if ( $mode == 'contact' || $mode == 'joinus' || $mode == 'fightus' )
 	$page_title = ($mode != 'contact') ? ($mode == 'joinus') ? $lang['contact_joinus'] : $lang['contact_fightus'] : $lang['contact'];
 	
 	main_header();
-	include($root_path . 'includes/functions_selects.php');
+	
 	
 	$template->set_filenames(array('body' => 'contact_body.tpl'));
 	

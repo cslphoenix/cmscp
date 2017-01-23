@@ -94,7 +94,7 @@ define('LOG_ADMIN',		3);
 
 /* Log Sektion */
 define('SECTION_INDEX',			1122233);
-define('SECTION_AUTH',			1234567899);
+define('SECTION_PERMISSION',	1234567899);
 define('SECTION_BUGTRACKER',	999);		
 define('SECTION_CALENDAR',		100);	
 define('SECTION_CASH',			21);
@@ -154,10 +154,13 @@ define('PAGE_EVENT',		-21);
 define('PAGE_CASH',			-22);
 define('PAGE_GALLERY',		-23);
 define('PAGE_IMPRINT',		-24);
-define('PAGE_NEWS',			1);
-define('PAGE_CALENDAR',		100);
-define('PAGE_USERS',		200);
-define('PAGE_SERVER',		300);
+define('PAGE_NEWS',			-25);
+define('PAGE_CALENDAR',		-26);
+define('PAGE_USERS',		-27);
+define('PAGE_SERVER',		-28);
+define('PAGE_SEARCH',		-29);
+define('PAGE_VIEWONLINE',	-30);
+define('PAGE_VIEWMEMBERS',	-31);
 
 define('PAGE_BUGTRACKER',	-98);
 define('PAGE_CHANGELOG',	-99);
@@ -307,6 +310,7 @@ define('STATUS_REPLACE',	3);
 #define('ACL_LABEL',			$db_prefix . 'acl_label');
 #define('ACL_OPTIONS',		$db_prefix . 'acl_options');	
 #define('ACL_USERS',			$db_prefix . 'acl_users');
+
 define('ACL_GROUPS',		$db_prefix . 'acl_groups');	
 define('ACL_LABEL',			$db_prefix . 'acl_label');
 define('ACL_LABEL_DATA',	$db_prefix . 'acl_label_data');	
@@ -378,6 +382,8 @@ define('VOTES',				$db_prefix . 'vote');
 define('VOTES_OPTION',		$db_prefix . 'vote_option');
 
 define('BUGTRACKER',		$db_prefix . 'bugtracker');
-define('CHANGELOG',			$db_prefix . 'changelog');
+define('CHANGELOG',			$db_prefix . 'change');
+define('CHANGELOG2',		$db_prefix . 'changelog');
+define('CHANGELOG_DATA',	$db_prefix . 'changelog_data');
 
 ?>

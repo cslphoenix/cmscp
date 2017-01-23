@@ -60,6 +60,11 @@ $lang = array_merge($lang, array(
 			0 => 'Galerie',
 			1 => 'Bild',
 	),
+	
+	'tabs:dl' => array(
+			0 => 'Ordner',
+			1 => 'Datei',
+	),
 
 #	'a_team'				=> 'Kann Teams verwalten',
 #	'a_team_create'			=> 'Kann weitere Teams erstellen',

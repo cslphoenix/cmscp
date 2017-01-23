@@ -8,13 +8,13 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'title'		=> 'Rang',
-	'explain'	=> 'Verwalten von R�ngen.',
+	'explain'	=> 'Verwalten von Rängen.',
 
 	'rank_name'		=> 'Rangname',
 	'rank_image'	=> 'Rangbild',
 	'rank_type'		=> 'Rangtype',
 	
-	'rank_min'		=> 'Beitr�ge',
+	'rank_min'		=> 'Beiträge',
 	'rank_special'	=> 'Spezial Rang',	
 	'rank_standard'	=> 'Standardrang',
 
@@ -26,11 +26,12 @@ $lang = array_merge($lang, array(
 #	'rank_2'	=> 'Rang im Forum',
 #	'rank_3'	=> 'Rang im Team',
 
-	'ranks'		=> 'R�nge',
+	'ranks'		=> 'Ränge',
 	
-	'forum'	=> 'Foren-Rang',
-	'page'	=> 'Seiten-Rang',
-	'team'	=> 'Team-Rang',
+	'overview'	=> 'Übersicht Ränge',	
+	'forum'		=> 'Foren-Ränge',
+	'page'		=> 'Seiten-Ränge',
+	'team'		=> 'Team-Ränge',
 	
 	
 

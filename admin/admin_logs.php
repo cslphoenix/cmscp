@@ -33,6 +33,7 @@ else
 	$fields	= '';
 	
 	$log	= SECTION_LOG;
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -40,9 +41,9 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_head'], $lang['title']);
+	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
 	$template->set_filenames(array(
 		'body'		=> 'style/acp_logs.tpl',
@@ -115,8 +116,8 @@ else
 				$current_page = ( !$error ) ? 1 : ceil( $error / $settings['per_page_entry']['acp'] );
 			
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-					'L_ERROR'	=> sprintf($lang['stf_head'], $lang['title_error']),
+					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
+					'L_ERROR'	=> sprintf($lang['stf_header'], $lang['title_error']),
 					'L_EXPLAIN'	=> $lang['explain_error'],
 					
 					'L_DELETE'		=> $lang['Delete'],
@@ -287,7 +288,7 @@ else
 			{
 				message(GENERAL_ERROR, 'Could not obtain group list', '', __LINE__, __FILE__, $sql);
 			}
-			$tmp = $db->sql_fetchrowset($result); 
+			$tmp = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 			
 			if ( !$tmp )
@@ -314,7 +315,7 @@ else
 					
 					/*
 					if		( strstr($message, 'create') )		{ $message = $lang['common_create']; }
-					else if ( strstr($message, 'update') )		{ $message = $lang['common_update']; }
+					else if ( strstr($message, 'update') )		{ $message = $lang['com_update']; }
 					else if ( strstr($message, 'delete') )		{ $message = $lang['com_delete']; }
 					else if ( strstr($message, 'delete') )		{ $message = $lang['com_delete']; }
 					else if ( strstr($message, 'login_acp') )	{ $message = $lang['common_login_acp']; }
@@ -495,8 +496,8 @@ else
 			$current_page = ( !$error ) ? 1 : ceil( $error / $settings['per_page_entry']['acp'] );
 		
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-				'L_ERROR'	=> sprintf($lang['stf_head'], $lang['title_error']),
+				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
+				'L_ERROR'	=> sprintf($lang['stf_header'], $lang['title_error']),
 				'L_EXPLAIN'	=> $lang['explain_error'],
 				
 				'L_DELETE'		=> $lang['Delete'],
@@ -515,8 +516,8 @@ else
 	}
 					
 	$template->assign_vars(array(
-		'L_HEAD'	=> sprintf($lang['stf_head'], $lang['title']),
-		'L_ERROR'	=> sprintf($lang['stf_head'], $lang['title_error']),
+		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
+		'L_ERROR'	=> sprintf($lang['stf_header'], $lang['title_error']),
 		'L_EXPLAIN'	=> $lang['explain'],
 
 #		'L_LOGS_TITLE'		=> $lang['log_head'],

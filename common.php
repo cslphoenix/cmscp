@@ -177,9 +177,11 @@ include($root_path . 'includes/sessions.php');
 include($root_path . 'includes/auth.php');
 include($root_path . 'includes/class_cache.php');
 include($root_path . 'includes/functions.php');
+include($root_path . 'includes/functions_sql.php');
 include($root_path . 'includes/functions_display.php');
 include($root_path . 'includes/functions_cache.php');
 include($root_path . 'includes/functions_post.php');
+include($root_path . 'includes/functions_selects.php');
 include($root_path . 'includes/db.php');
 
 unset($db_pwd);

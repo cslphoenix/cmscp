@@ -128,7 +128,7 @@ function fill(thisValue)
 			<legend>{L_GROUPS_ADDED}</legend>
 			<dl>
 				<dd class="full">{S_GROUP_CREATE}</dd>
-				<dd class="full" style="text-align: left;"><input type="submit" name="submit_create" value="{L_AUTH_CREATE}"></dd>
+				<dd class="full" style="text-align: left;">{S_GROUP_COPY}<input type="submit" name="submit_create" value="{L_AUTH_CREATE}"></dd>
 			</dl>
 			{S_HIDDEN}
 			<input type="hidden" name="ug_type" value="group">
@@ -217,12 +217,12 @@ function set_permission(type, forum, group)
 		<dd style="margin-left: 20%;">{permission.row.parent.SIMPLE}</dd>
 	</dl>
 
-	<div style="display:none;" id="{permission.row.parent.AUTHS}" align="center">
+	<div style="display:;" id="{permission.row.parent.AUTHS}" align="center">
 	    <br />
 		<div class="tabs">
 			<ul>
 				<!-- BEGIN cats -->
-				<li><a {permission.row.parent.cats.AUTH} href="#{permission.row.parent.cats.CAT}">{permission.row.parent.cats.NAME}</a></li>
+				<li><a href="#{permission.row.parent.cats.CAT}">{permission.row.parent.cats.NAME}</a></li>
 				<!-- END cats -->
 			</ul>
 			<!-- BEGIN cats -->

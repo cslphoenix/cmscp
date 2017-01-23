@@ -20,7 +20,7 @@ $lang = array_merge($lang, array(
 	
 	'common_create'		=> 'hinzugefügt',
 	'common_error'		=> 'fehler',
-	'common_update'		=> 'geändert',
+	'com_update'		=> 'geändert',
 	'com_delete'		=> 'gelöscht',
 	'common_default'	=> 'Standard',
 	
