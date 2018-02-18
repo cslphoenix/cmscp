@@ -93,12 +93,12 @@ if ( isset($_POST['user_name']) && isset($_POST['type']) && isset($_POST['type_i
 	}
 	else
 	{
-		echo sprintf($lang['stf_select_format'], $lang['no_entry']);
+		echo sprintf($lang['STF_SELECT_FORMAT'], $lang['no_entry']);
 	}
 }
 else
 {
-	echo sprintf($lang['stf_select_format'], $lang['no_entry']);
+	echo sprintf($lang['STF_SELECT_FORMAT'], $lang['no_entry']);
 }
 
 ?>

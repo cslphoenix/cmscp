@@ -12,7 +12,7 @@
 <!-- END training_row_new -->
 <!-- BEGIN no_entry_new -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
+	<td class="noentry" align="center" colspan="4">{L_NONE}</td>
 </tr>
 <!-- END no_entry_new -->
 </table>
@@ -33,7 +33,7 @@
 <!-- END training_row_old -->
 <!-- BEGIN no_entry_old -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
+	<td class="noentry" align="center" colspan="4">{L_NONE}</td>
 </tr>
 <!-- END no_entry_old -->
 </table>
@@ -62,7 +62,7 @@
 	<!-- END teams_row -->
 	<!-- BEGIN no_entry_team -->
 	<tr>
-		<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
+		<td class="row1" align="center" colspan="4">{L_NONE}</td>
 	</tr>
 	<!-- END no_entry_team -->
 	</table>

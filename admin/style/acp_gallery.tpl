@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -10,9 +10,10 @@ function display_options(value)
 	if ( value == '0' )
 	{
 		dE('main', -1);
-		dE('copy', 1);
+<!--		dE('copy', 1); -->
 		dE('gallery_acpview', 1);
 		dE('gallery_picture', -1);
+		dE('gallery_desc', 1);
 		dE('gallery_filesize', 1);
 		dE('gallery_dimension', 1);
 		dE('gallery_format', 1);
@@ -21,9 +22,10 @@ function display_options(value)
 	else
 	{
 		dE('main', 1);
-		dE('copy', -1);
+<!--		dE('copy', -1);  -->
 		dE('gallery_acpview', -1);
 		dE('gallery_picture', 1);
+		dE('gallery_desc', -1);
 		dE('gallery_filesize', -1);
 		dE('gallery_dimension', -1);
 		dE('gallery_format', -1);
@@ -255,11 +257,11 @@ $(document).ready(function()
 </tr>
 <!-- END gallery_row -->
 <!-- END preview -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="update" border="0" cellspacing="0" cellpadding="0">
@@ -306,19 +308,19 @@ $(document).ready(function()
 <!-- BEGIN row -->
 <tr>
 	<td><span class="right">{display.row.INFO}&nbsp;</span><b>{display.row.NAME}</b><br />{display.row.DESC}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.RESYNC}{display.row.OVERVIEW}{display.row.UPLOAD}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.UPDATE}&nbsp;{display.row.RESYNC}&nbsp;{display.row.OVERVIEW}&nbsp;{display.row.UPLOAD}&nbsp;{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="footer">
 <tr>
-	<td><input type="text" name="gallery_name"></td>
+	<td><input type="text" name="{S_CREATE}"></td>
 	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
 	<td></td>
 	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>

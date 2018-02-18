@@ -80,6 +80,16 @@ if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals
 	unset($input);
 }
 
+// PHP5 with register_long_arrays off?
+if ( !isset($HTTP_POST_VARS) && isset($_POST) )
+{
+	$HTTP_POST_VARS = $_POST;
+	$HTTP_GET_VARS = $_GET;
+	$HTTP_SERVER_VARS = $_SERVER;
+	$HTTP_COOKIE_VARS = $_COOKIE;
+	$HTTP_ENV_VARS = $_ENV;
+	$HTTP_POST_FILES = $_FILES;
+}
 //
 // addslashes to vars if magic_quotes_gpc is off
 // this is a security precaution to prevent someone

@@ -23,8 +23,7 @@ $(function()
 
 	$('#config_page_desc').maxlength({max: 255});
 	$('#config_page_disable_msg').maxlength({max: 255});
-	
-	$('.tabs').liteTabs({ borders: true, height: 'auto', selectedTab: 1, width: '715' });
+	$('.tabs').liteTabs({ borders: true, height: 'auto', selectedTab: 1, width : '100%' });
 	
 	$('input.minicolors').minicolors({
 			animationSpeed: 100,

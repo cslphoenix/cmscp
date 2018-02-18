@@ -1,5 +1,6 @@
-<li class="header">{L_HEAD}</li>
-<p>{L_EXPLAIN}</p>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
+<p>{L_EXPLAIN}<br /><br />{L_SWITCH}</p>
 
 <form action="{S_ACTION}" method="post">
 <script type="text/javascript">
@@ -64,14 +65,20 @@ function fill(thisValue)
 </script>
 
 <!-- BEGIN display -->
-{S_SELECT}
+<fieldset>
+	<legend>{NAME}</legend>
+	<dl>
+		<dt style="padding-top:3px;">{L_SELECT}:</dt>
+		<dd>{S_SELECT}</dd>
+	</dl>
+</fieldset>
 {S_HIDDEN}
-<table class="lfooter">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}" /></td>
-	<td></td>
-</table>
-
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd></dd>
+</dl>
+</div>
 {S_FIELDS}
 <!-- END display -->
 
@@ -86,7 +93,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_USERS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {L_USERS_ALL}</label><br />{S_USER_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />&nbsp;{L_USERS_ALL}</label><br />{S_USER_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete">&nbsp;<input type="submit" name="submit_update" value="{L_AUTH_UPDATE}"></dd>
 			</dl>
 			{S_HIDDEN}
@@ -115,7 +122,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_GROUPS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label><br />{S_GROUP_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />&nbsp;{L_GROUPS_ALL}</label><br />{S_GROUP_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_delete" value="{L_AUTH_DELETE}" class="delete">&nbsp;<input type="submit" name="submit_update" value="{L_AUTH_UPDATE}"></dd>
 			</dl>
 			{S_HIDDEN}
@@ -147,9 +154,9 @@ function fill(thisValue)
 	
 	<form action="{S_ACTION}" method="post" id="groups">
 		<fieldset>
-			<legend>{L_USERS_MANAGE}</legend>
+			<legend>{L_USERS_MANAGE} </legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />{L_USERS_ALL}</label><br />{S_USER_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_users" value="1" />&nbsp;{L_USERS_ALL}</label><br />{S_USER_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_update" value="{L_AUTH_SHOW}"></dd>
 			</dl>
 		</fieldset>
@@ -168,7 +175,7 @@ function fill(thisValue)
 		<fieldset>
 			<legend>{L_GROUPS_MANAGE}</legend>
 			<dl>
-				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />{L_GROUPS_ALL}</label><br />{S_GROUP_UPDATE}</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" name="all_groups" value="1" />&nbsp;{L_GROUPS_ALL}</label><br />{S_GROUP_UPDATE}</dd>
 				<dd class="full" style="text-align: left;"><input type="submit" name="submit_update" value="{L_AUTH_SHOW}"></dd>
 			</dl>
 		</fieldset>
@@ -208,17 +215,17 @@ function set_permission(type, forum, group)
 	<legend id="legend">{permission.row.parent.NAME}</legend>
 	<div class="permissions-switch">
 		<div class="permissions-reset">
-			<a href="#" onclick="mark_options('{permission.row.parent.AUTHS}', 'y'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">Alle Ja</a> <a href="#" onclick="mark_options('{permission.row.parent.AUTHS}', 'u'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">Alle Nein</a> <a href="#" onclick="mark_options('{permission.row.parent.AUTHS}', 'n'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">Alle Nie</a>
+			<a href="#" onclick="mark_options('{permission.row.parent.AUTHS}', 'y'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{L_ALL_YES}</a>
+			<a href="#" onclick="mark_options('{permission.row.parent.AUTHS}', 'u'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{L_ALL_NO}</a>
+			<a href="#" onclick="mark_options('{permission.row.parent.AUTHS}', 'n'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{L_ALL_NEVER}</a>
 		</div>
 		<a href="#" onClick="toggle('{permission.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a>
 	</div>
-	<dl class="permissions-simple">
+	<dl class="permissions-simple" style="padding-bottom:15px;">
 		<dt style="width: 20%; padding-top:3px;">{permission.row.parent.LABEL}:</dt>
 		<dd style="margin-left: 20%;">{permission.row.parent.SIMPLE}</dd>
 	</dl>
-
-	<div style="display:;" id="{permission.row.parent.AUTHS}" align="center">
-	    <br />
+	<div style="display:;" id="{permission.row.parent.AUTHS}">
 		<div class="tabs">
 			<ul>
 				<!-- BEGIN cats -->
@@ -228,20 +235,24 @@ function set_permission(type, forum, group)
 			<!-- BEGIN cats -->
 			<div name="#{permission.row.parent.cats.CAT}" id="{permission.row.parent.cats.OPTIONS}">
 				<table class="ttabs" cellpadding="1" cellspacing="1">
+				<thead>
 				<tr>
-					<th>{L_SETTINGS}</th>
-					<th><a href="#" onclick="mark_options('{permission.row.parent.cats.OPTIONS}', 'y'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{OPT_YES}Ja</a></th>
-					<th><a href="#" onclick="mark_options('{permission.row.parent.cats.OPTIONS}', 'u'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{OPT_UNSET}Nein</a></th>
-					<th><a href="#" onclick="mark_options('{permission.row.parent.cats.OPTIONS}', 'n'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{OPT_NEVER}Nie</a></th>
+					<th>{L_VIEW_AUTH}</th>
+					<th><a href="#" onclick="mark_options('{permission.row.parent.cats.OPTIONS}', 'y'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{L_YES}</a></th>
+					<th><a href="#" onclick="mark_options('{permission.row.parent.cats.OPTIONS}', 'u'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{L_NO}</a></th>
+					<th><a href="#" onclick="mark_options('{permission.row.parent.cats.OPTIONS}', 'n'); reset_simpleauth('{permission.row.parent.TOGGLE}'); return false;">{L_NEVER}</a></th>
 				</tr>
+				</thead>
+				<tbody>
 				<!-- BEGIN auths -->
 				<tr>
 					<td>{permission.row.parent.cats.auths.OPT_NAME}</td>
 					<td>{permission.row.parent.cats.auths.OPT_YES}</td>
 					<td>{permission.row.parent.cats.auths.OPT_UNSET}</td>
 					<td>{permission.row.parent.cats.auths.OPT_NEVER}</td>
-				</tr>
+				</tr>				
 				<!-- END auths -->
+				</tbody>
 				</table>
 			</div>
 			<!-- END cats -->
@@ -265,19 +276,19 @@ function set_permission(type, forum, group)
 {S_OPTIONS}
 <div style="text-align:right"><a href="#" onClick="toggle('{BLUBB}'); return false;">{L_PERMISSION_ALL}</a></div>
 <!-- BEGIN row -->
-<fieldset>
+<fieldset class="permissions" id="permission">
 	<legend id="legend">{view.row.NAME}</legend>
-		{view.row.INFO}
 <!-- BEGIN parent -->
-<fieldset class="views" id="view">
-	
+<fieldset class="permissions" id="permission">
 	<legend id="legend">{view.row.parent.NAME}</legend>
-	<div class="views-switch">
-		<div style="text-align:right"><a href="#" onClick="toggle('{view.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a></div>
-		<div style="text-align:left">{view.row.parent.INFO}</div>
+	<div class="permissions-switch">
+		<div class="permissions-reset"><a href="#" onClick="toggle('{view.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a></div>
+		
 	</div>
-	<div id="{view.row.parent.AUTHS}" align="center">
-	    <br />
+	<div class="permissions-simple" style="padding: 3px 3px 15px 3px; text-align:left;">
+		{view.row.parent.INFO}
+	</div>
+	<div style="display:;" id="{view.row.parent.AUTHS}">
 		<div class="tabs">
 			<ul>
 				<!-- BEGIN cats -->
@@ -287,17 +298,21 @@ function set_permission(type, forum, group)
 			<!-- BEGIN cats -->
 			<div name="#{view.row.parent.cats.CAT}" id="{view.row.parent.cats.OPTIONS}">
 				<table class="ttabs" cellpadding="1" cellspacing="1">
+				<thead>
 				<tr>
 					<th>{L_VIEW_AUTH}</th>
 					<th>{L_YES}</th>
 					<th>{L_NO}</th>
 				</tr>
+				</thead>
 				<!-- BEGIN auths -->
+				<tbody>
 				<tr>
 					<td><span class="right">{view.row.parent.cats.auths.OPT_INFO}</span>{view.row.parent.cats.auths.OPT_NAME}</td>
 					<td class="{view.row.parent.cats.auths.CSS_YES}">&nbsp;</td>
 					<td class="{view.row.parent.cats.auths.CSS_NO}">&nbsp;</td>
 				</tr>
+				</tbody>
 				<!-- END auths -->
 				</table>
 			</div>

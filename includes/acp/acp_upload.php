@@ -149,41 +149,54 @@ function upload_file($data_dl, $cur_dl, $path_dl, $types, $maxsize, &$error)
 	return $info;
 }
 
+function test_size($multi)
+{
+	switch ( $multi )
+	{
+		case 0: $size = 1; break;
+		case 1: $size = 1024; break;
+		case 2: $size = 1048576; break;
+	}
+	
+#	debug($size, 'size 1234');
+
+#	if ( $file >= 1048576 )
+#	{
+#		$size = round($file / 1048576 * 100) / 100 . " MB";
+#	}
+#	else if( $file >= 1024 )
+#	{
+#		$size = round($file / 1024 * 100) / 100 . " KB";
+#	}
+#	else
+#	{
+#		$size = $size . " Bytes";
+#	}
+	
+	return $size;
+}
+
 function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre_img, $path_img, $data_img, &$error, $main = false, $maxsize = false, $types = false)
 {
-#	global $db, $lang, $settings, $error;
 	global $db, $lang, $settings;
 	
-	debug($data_img, '$data_img');
-	
-	$image_filename = $data_img[0];
-	$image_realname = $data_img[1];
-	$image_filesize = $data_img[2];
-	$image_filetype = $data_img[3];
-
-#	debug($category);
-
-#	debug($image_realname, 'image_realname');
+	$image_filename = $data_img['name'];
+	$image_realname = $data_img['temp'];
+	$image_filesize = $data_img['size'];
+	$image_filetype = $data_img['type'];
 	
 	switch ( $category )
 	{
-		
 		/* system_filesize = sfz */
 		/* system_max_width = smw */
 		/* system_max_height = smh */
 		case 'group_image':
-			
 			$sfz = ($settings['path_group']['filesize']*1048576);
 			list($smw, $smh) = explode(':', $settings['path_group']['dimension']);
-
 			break;
-		
 		case 'network_image':
-		
 			$sfz = ($settings['path_network']['filesize']*1048576);
-			
 			list($smw, $smh) = explode(':', $settings['path_network']['dimension']);
-			
 			break;
 		case 'image_match':
 			$sfz	= 2*1048576;
@@ -192,23 +205,17 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 			$system_pre_width	= '100';
 			$system_pre_height	= '75';
 			break;
-			
 		case 'team_flag':
-			$sfz	= ($settings['path_team_flag']['filesize']*1048576);
+			list($sfz, $ssz) = explode(';', $settings['path_team_flag']['filesize']);
 			list($smw, $smh) = explode(':', $settings['path_team_flag']['dimension']);
-		#	$smw	= $settings['team_flag_max_width'];
-		#	$smh	= $settings['team_flag_max_height'];
 			break;
-			
 		case 'team_logo':
-			$sfz	= ($settings['path_team_logo']['filesize']*1048576);
+			list($sfz, $ssz) = explode(';', $settings['path_team_logo']['filesize']);
 			list($smw, $smh) = explode(':', $settings['path_team_logo']['dimension']);
-			
 		#	$sfz	= $settings['team_logo_filesize'];
 		#	$smw	= $settings['team_logo_max_width'];
 		#	$smh	= $settings['team_logo_max_height'];
 			break;
-		
 		case 'image_network_links':
 			$sfz	= $settings['gallery_filesize'];
 			$smw	= $settings['team_logo_max_width'];
@@ -235,44 +242,52 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 			$system_pre_width	= $settings['team_logo_max_width'];
 			$system_pre_height	= $settings['team_logo_max_height'];
 			break;
+		case 'map_pic':
+			$sfz	= 2*1048576;
+			$ssz	= 2;
+			$smw	= '2000';
+			$smh	= '1500';
+			break;
 	}
 	
+	$sfz = ($sfz * test_size(@$ssz));
+
 	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
 	
 	$width = $height = 0;
 	$type = '';
 	
-	if ( ( file_exists(@cms_realpath($image_filename)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $image_realname) )
+	if ( ( file_exists(@cms_realpath($image_realname)) ) && preg_match('/\.(jpg|jpeg|gif|png)$/i', $image_filename) )
 	{
-		debug($image_filesize, '$image_filesize');
-		
 		if ( $image_filesize <= $sfz && $image_filesize > 0 )
 		{
 			preg_match('#image\/[x\-]*([a-z]+)#', $image_filetype, $image_filetype);
 			$image_filetype = $image_filetype[1];
+			
+			debug($image_filetype, '$image_filetype');
 		}
 		else
 		{
-			$error[] = sprintf($lang['image_filesize'], round($sfz / 1024));
+			$error[] = sprintf($lang['IMAGE_FILESIZE'], round($sfz * test_size($ssz)));
 			
 			return;
 		}
 
-		list($width, $height, $type) = @getimagesize($image_filename);
+		list($width, $height, $type) = @getimagesize($image_realname);
 	}
-
+	
 	if ( !($imgtype = img_check_type($image_filetype, $error)) )
 	{
 		return;
 	}
-
+	
 	switch ( $type )
 	{
 		// GIF
 		case 1:
 			if ( $imgtype != '.gif' )
 			{
-				@unlink($tmp_filename);
+				@unlink($image_realname);
 				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
@@ -285,7 +300,7 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 		case 12:
 			if ( $imgtype != '.jpg' && $imgtype != '.jpeg' )
 			{
-				@unlink($tmp_filename);
+				@unlink($image_realname);
 				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
@@ -294,14 +309,14 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 		case 3:
 			if ( $imgtype != '.png' )
 			{
-				@unlink($tmp_filename);
+				@unlink($image_realname);
 				message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			}
 		break;
 
 		default:
 			
-			@unlink($tmp_filename);
+			@unlink($image_realname);
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 			
 			break;
@@ -309,12 +324,12 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 	
 	if ( $width > 0 && $height > 0 && $width <= $smw && $height <= $smh )
 	{
-		if ( !$mode_preview )
+		if ( $mode_preview == 'unirand' )
 		{
 			$new_filename = uniqid(rand());
 			$new_filename = $new_filename . $imgtype;
 		}
-		else
+		else if ( $mode_preview == 'preview' )
 		{
 			$new_filename = uniqid(rand());
 			$new_filename_preview = $new_filename . '_preview' . $imgtype;
@@ -330,13 +345,13 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 				case '.jpeg':
 				case '.pjpeg':
 				case '.jpg':
-					$image = imagecreatefromjpeg($image_filename);
+					$image = imagecreatefromjpeg($image_realname);
 				break;
 				case '.gif':
-					$image = imagecreatefromgif($image_filename);
+					$image = imagecreatefromgif($image_realname);
 				break;
 				case '.png':
-					$image = imagecreatefrompng($image_filename);
+					$image = imagecreatefrompng($image_realname);
 				break;
 			}
 		
@@ -357,6 +372,10 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 				break;
 			}
 		}
+		else
+		{
+			$new_filename = $image_filename;
+		}
 		
 		if ( $cur_img )
 		{
@@ -365,18 +384,18 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 		
 		$move_file = ( @$ini_val('open_basedir') != '' ) ? 'move_uploaded_file' : 'copy';
 		
-		if (!is_uploaded_file($image_filename))
+		if (!is_uploaded_file($image_realname))
 		{
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 		}
 		
 		if ( $error )
 		{
-			@unlink($tmp_filename);
+			@unlink($image_realname);
 			return false;
 		}
 		
-		$move_file($image_filename, $path_img . "/$new_filename");
+		$move_file($image_realname, $path_img . "/$new_filename");
 		@chmod($path_img . "/$new_filename", 0644);
 		
 		if ( $mode )
@@ -401,7 +420,7 @@ function upload_image($mode, $category, $sql_type, $mode_preview, $cur_img, $pre
 		
 		return;
 	}
-	
+	debug($sql_pic, '_sql_pic_');
 	return $sql_pic;
 }
 
@@ -425,7 +444,7 @@ function gallery_upload($path_img, $image_filename, $image_realname, $image_file
 		}
 		else
 		{
-			$error_msg = sprintf($lang['image_filesize'], round($max_filesize / 1024));
+			$error_msg = sprintf($lang['IMAGE_FILESIZE'], round($max_filesize / 1024));
 			message(GENERAL_ERROR, $error_msg);
 		}
 
@@ -502,13 +521,13 @@ function gallery_upload($path_img, $image_filename, $image_realname, $image_file
 			case '.jpeg':
 			case '.pjpeg':
 			case '.jpg':
-				imagejpeg($image_p, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename_preview", 100);
+				imagejpeg($image_p, './../' . $settings['path']['gallery'] . '/' . $path_img . "/$new_filename_preview", 100);
 				break;
 			case '.gif':
-				imagegif($image_p, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename_preview");
+				imagegif($image_p, './../' . $settings['path']['gallery'] . '/' . $path_img . "/$new_filename_preview");
 				break;
 			case '.png':
-				imagepng($image_p, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename_preview");
+				imagepng($image_p, './../' . $settings['path']['gallery'] . '/' . $path_img . "/$new_filename_preview");
 			break;
 		}
 		
@@ -526,12 +545,13 @@ function gallery_upload($path_img, $image_filename, $image_realname, $image_file
 			message(GENERAL_ERROR, 'Unable to upload file', '', __LINE__, __FILE__);
 		}
 		
-		$move_file($image_filename, './../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename");
-		@chmod('./../' . $settings['path_gallery'] . '/' . $path_img . "/$new_filename", 0644);
+		$move_file($image_filename, './../' . $settings['path']['gallery'] . '/' . $path_img . "/$new_filename");
+		@chmod('./../' . $settings['path']['gallery'] . '/' . $path_img . "/$new_filename", 0644);
 		
-		$pic['gallery_picture'] = $new_filename;
-		$pic['gallery_preview'] = $new_filename_preview;
-		$pic['gallery_filesize'] = $image_filesize;
+		$pic['picture'] = $new_filename;
+		$pic['preview'] = $new_filename_preview;
+		$pic['filesize'] = $image_filesize;
+		$pic['type'] = $image_filetype;
 		
 		return $pic;
 	}

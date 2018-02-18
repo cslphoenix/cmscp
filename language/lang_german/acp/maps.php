@@ -6,27 +6,31 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
+	'TITLE'			=> 'Karte',
+	'EXPLAIN'		=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
 	
-	'title'		=> 'Karte',
-	'explain'	=> 'Hier kann man die Maps(Karten) bearbeiten, löschen und nach eigener Vorstellungen sortieren.',
-	
-	'input_data' => 'test input',
+	'INPUT_DATA'	=> 'Kartendaten',
 
-	'map_name'	=> 'Name',
-	'type'		=> 'Type',
-	'main'		=> 'Kategorie',
-	'map_tag'	=> 'Tag',
-	'map_file'	=> 'Bilddatei',
-	'map_info'	=> 'Karteninfo',
-	'map_order'	=> 'Reihenfolge',
+	'MAP_NAME'		=> 'Name',
+	'TYPE'			=> 'Type',
+	'MAIN'			=> 'Kategorie',
+	'MAP_TAG'		=> 'Tag',
+	'MAP_FILE'		=> 'Bilddatei',
+	'MAP_INFO'		=> 'Karteninfo',
+	'MAP_ORDER'		=> 'Reihenfolge',
 	
-	'type_0'	=> 'Kategorie',
-	'type_1'	=> 'Karte',
+	'TYPE_0'		=> 'Kategorie',
+	'TYPE_1'		=> 'Karte',
 	
-	'msg_select_tag_image'	=> 'Bitte Tag auswählen',
-	
+	'MSG_SELECT_TAG_IMAGE'	=> 'Bitte Tag auswählen',
+		
+	'ERROR_SELECT_TAG'		=> 'Bitte ein <b>Tag</b> auswählen',
 ));
 
-$lang = array_merge($lang, array('radio:type' => array(0 => $lang['type_0'], 1 => $lang['type_1'])));
+$lang = array_merge($lang, array(
+	'radio:type' => array(
+		0 => $lang['TYPE_0'],
+		1 => $lang['TYPE_1'])
+));
 
 ?>

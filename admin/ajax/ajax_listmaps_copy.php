@@ -53,7 +53,7 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 			if ( $maps )
 			{
 				$s_select .= "<div><div><select class=\"selectsmall\" name=\"training_maps[]\" id=\"training_maps\">";
-				$s_select .= "<option selected=\"selected\" >" . sprintf($lang['stf_select_format'], $lang['notice_select_map']) . "</option>";
+				$s_select .= "<option selected=\"selected\" >" . sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_MAP']) . "</option>";
 				
 				$s_maps = '';
 					
@@ -63,7 +63,7 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 					$map_cat	= $maps[$j]['cat_id'];
 					$map_name	= $maps[$j]['map_name'];
 		
-					$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['stf_select_format'], $map_name) . "</option>" : '';
+					$s_maps .= ( $cat_id == $map_cat ) ? "<option value=\"$map_id\">" . sprintf($lang['STF_SELECT_FORMAT'], $map_name) . "</option>" : '';
 				}
 				
 				$s_select .= ( $s_maps != '' ) ? "<optgroup label=\"$cat_name\">$s_maps</optgroup>" : '';
@@ -71,24 +71,24 @@ if ( isset($_POST['name']) || isset($_POST['mode']) )
 			}
 			else
 			{
-				$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+				$s_select = sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_MAPS_NONE']);
 			}
 		}
 		else
 		{
-			$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+			$s_select = sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_MAPS_NONE']);
 		}
 	}
 	else
 	{
-		$s_select = sprintf($lang['stf_select_format'], $lang['notice_select_team_first']);
+		$s_select = sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_TEAM_FIRST']);
 	}
 	
 	echo $s_select;
 }
 else
 {
-	echo sprintf($lang['stf_select_format'], $lang['notice_select_team_first']);
+	echo sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_TEAM_FIRST']);
 }
 
 ?>

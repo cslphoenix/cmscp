@@ -1,6 +1,6 @@
 <?php
 
-header('content-type: text/html; charset=ISO-8859-1');
+header('content-type: text/html; charset=UTF-8');
 
 define('IN_CMS', true);
 define('IN_ADMIN', true);
@@ -22,13 +22,20 @@ if ( isset($_POST['type']) )
 	$mode = $_POST['mode'];
 	$data = $_POST['data'];
 	
+#	debug($type, 'type');
+#	debug($meta, 'meta');
+#	debug($name, 'name');
+#	debug($curt, 'curt');
+#	debug($mode, 'mode');
+#	debug($data, 'data');
+	
 	$menu = $label = $_name = false;
 	$sort = array();
 	
 	switch ( $meta )
 	{
-		case 'dl':		$tbl = DOWNLOAD;	break;
-		case 'gallery':	$tbl = GALLERY_NEW;	break;
+		case 'dl':		$tbl = DOWNLOAD;	$fields = array('info' => 'dl', 'size' => 'dl_maxsize', 'type' => 'dl_types');	break;
+		case 'gallery':	$tbl = GALLERY_NEW; $fields = array('info' => 'gl', 'size' => 'gallery_filesize', 'type' => 'gallery_dimension');	break;
 		case 'profile':	$tbl = PROFILE;		break;
 		case 'change':	$tbl = CHANGELOG;	$_name = true; break;
 		case 'forum':	$tbl = FORUM;		$label = true;	break;		
@@ -37,11 +44,10 @@ if ( isset($_POST['type']) )
 	
 	$f_id		= $meta . '_id';
 	$f_name		= $meta . ($_name ? '_num' : '_name');
-	$f_lang		= $meta . '_lang';
-	$f_types	= $meta . '_types';
+#	$f_types	= $meta . '_types';
 	$f_order	= $meta . '_order';
 	
-	$sql = "SELECT * FROM $tbl " . ($menu ? (($type == 4) ? "WHERE action = 'pcp'" : "WHERE action = 'acp'") : '') . " ORDER BY main ASC, $f_order ASC";
+	$sql = "SELECT * FROM $tbl " . ($menu ? (($type == 4) ? "WHERE action = 'PCP'" : "WHERE action = 'ACP'") : '') . " ORDER BY main ASC, $f_order ASC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		echo 'SQL Error in Line: ' . __LINE__ . ' on File: ' . __FILE__;
@@ -71,27 +77,54 @@ if ( isset($_POST['type']) )
 	
 	$switch = isset($settings['smain'][$meta . '_switch']) ? $settings['smain'][$meta . '_switch'] : 0;
 	$entrys = isset($settings['smain'][$meta . '_entrys']) ? $settings['smain'][$meta . '_entrys'] : 0;
-
+	
 	foreach ( $cat as $c_key => $c_row )
 	{
+	#	if ( isset($fields) )
+	#	{
+	#		switch ( $fields['info'] )
+	#		{
+	#			case 'dl':
+	#			
+	#				$c_row[$info] = sprintf('%s|%s', $c_row[$fields['size']], ($c_row[$fields['type']] != 'a:0:{}' ? uns_ary($c_row[$fields['type']]) : $c_row[$fields['type']]));
+	#			
+	#				break;
+	#				
+	#			case 'gl':
+	#			
+	#				$c_row[$info] = sprintf('%s|%s', $c_row[$fields['size']], $c_row[$fields['type']]);
+	#			
+	#				break;
+	#		}
+	#	}
+		
 		$sort[] = array(
 			'id'	=> $c_row[$f_id],
 			'typ'	=> 1,
-			'lng'	=> lang($c_row[$f_name]),
-			'info'	=> isset($c_row[$f_types]) ? ($c_row[$f_types] != 'a:1:{i:0;s:0:"";}' ? uns_ary($c_row[$f_types]) : lang($c_row[$f_types])) : '',
+			'lng'	=> langs($c_row[$f_name]),
+			'info'	=> sprintf('%s|%s', $c_row[$fields['size']], ($fields['info'] == 'dl' ? ($c_row[$fields['type']] != 'a:0:{}' ? uns_ary($c_row[$fields['type']]) : $c_row[$fields['type']]) : sprintf('%s|%s', $c_row[$fields['size']], $c_row[$fields['type']]))),
+			#((isset($fields)) ? isset($c_row[$f_types]) ? ($c_row[$f_types] != 'a:0:{}' ? uns_ary($c_row[$f_types]) : $c_row[$f_types]) : '',
+		#	'uplg'	=> ((isset($fields)  ? isset($c_row[$fields['size']]) ? sprintf('%s|%s', $c_row[$fields['size']], $c_row[$fields['type']]) : '' : ''),
 		);
 
 		if ( isset($lab[$c_key]) && ($label ? true : $entrys) )
 		{
 			foreach ( $lab[$c_key] as $l_key => $h_row )
 			{
-				$sort[] = array('id' => $h_row[$f_id],'typ' => 2, 'lng' => @lang($h_row[$f_name]));
+				$sort[] = array(
+					'id'	=> $h_row[$f_id],
+					'typ'	=> 2,
+					'lng'	=> langs($h_row[$f_name])
+				);
 				
 				if ( isset($sub[$l_key]) && $entrys )
 				{
 					foreach ( $sub[$l_key] as $s_key => $s_row )
 					{
-						$sort[] = array('id' => $s_row[$f_id], 'typ' => 3, 'lng' => lang($s_row[$f_name]));
+						$sort[] = array(
+							'id'	=> $s_row[$f_id],
+							'typ'	=> 3,
+							'lng'	=> langs($s_row[$f_name]));
 					}
 				}
 			}
@@ -225,7 +258,7 @@ if ( isset($_POST['type']) )
 					else if ( $type > $curt )
 					{
 						echo ':convert:';
-						$opt .= '<label><input type="radio" value="0" name="main" checked="checked">&nbsp;' . $lang['com_delete'] . "</label><br />\n";
+						$opt .= '<label><input type="radio" value="0" name="main" checked="checked">&nbsp;' . $lang['COMMON_DELETE'] . "</label><br />\n";
 						$opt .= '<label><input type="radio" name="main">&nbsp;' . $lang['common_move'] . "</label>:\n";
 						$opt .= '<select name="' . sprintf('%s[main]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
 						
@@ -278,13 +311,15 @@ if ( isset($_POST['type']) )
 				{
 					$opt .= ($row['typ'] == 1) ? '<option value="' . $row['id'] . '">' . $row['lng'] . "</option>\n" : (($entrys) ? '<option value="' . $row['id'] . '" disabled="disabled">&nbsp; &nbsp;' . $row['lng'] . "</option>\n" : '');
 				}
-			#	$opt .= '<option value="' . $row['id'] . '"' . (($row['cat']) ? (($type == 2) ? ' disabled="disabled"': '') : (($type == 1) ? ' disabled="disabled"': '')) . '>' . (($row['cat']) ? '' : '&nbsp; &nbsp;') . lang($row['lng']) . "</option>\n";
+			#	$opt .= '<option value="' . $row['id'] . '"' . (($row['cat']) ? (($type == 2) ? ' disabled="disabled"': '') : (($type == 1) ? ' disabled="disabled"': '')) . '>' . (($row['cat']) ? '' : '&nbsp; &nbsp;') . langs($row['lng']) . "</option>\n";
 			}
 		*/	
 			$opt .= '</select>';
 		}
 		else
 		{
+			$upload_info = $download_info = false;
+			
 			foreach ( $sort as $row )
 			{
 				$checked = ( $row['id'] == $data )	? ' checked="checked"' : '';
@@ -308,9 +343,25 @@ if ( isset($_POST['type']) )
 				}
 				else
 				{
+					if ( isset($fields) && isset($row['info']) && $fields['info'] == 'gl' )
+					{
+						list($filzsize, $dimension) = explode('|', $row['info']);
+						list($filesizes, $typesize)	= explode(';', $filzsize);
+						$upload_info = true;
+					}
+					else if ( isset($fields) && isset($row['info']) && $fields['info'] == 'dl' )
+					{
+						list($filzsize, $dimension) = explode('|', $row['info']);
+						list($filesizes, $typesize)	= explode(';', $filzsize);
+						$download_info = true;
+					}
+					
 					switch ( $row['typ'] )
 					{
-						case 1: $opt .= '<label title="' . $row['info'] . '"><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label><br />'; break;
+						case 1:	$opt .= '<label><input type="radio" name="' . $name . '" value="' . $row['id'] . '"' . $checked . ' />&nbsp;' . $row['lng'] . '</label>';
+								$opt .= $upload_info ?		'<span class="normal" style="color:#f00;">(' . sprintf($lang['STF_UPLOAD_INFO'], str_replace(':', ' x ', $dimension), $filesizes, $lang['drop_size'][$typesize]) . ')</span>' : '';
+								$opt .= $download_info ?	'<span class="normal" style="color:#f00;">(' . sprintf($lang['STF_DOWNLOAD_INFO'], ($dimension != '' ? $dimension : langs($lang['DL_ALL_FILES'])), $filesizes, $lang['drop_size'][$typesize]) . ')</span>' : '';
+								$opt .= '<br />'; break;
 						case 2:	$opt .= '&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
 						case 3:	$opt .= '&nbsp; &nbsp;&nbsp; &nbsp;<label><input type="radio" disabled="disabled" />&nbsp;' . $row['lng'] . '</label><br />'; break;
 					}

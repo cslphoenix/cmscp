@@ -6,23 +6,19 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
-	
-	'title'		=> 'Labeltypen',
-	'explain'	=> 'explain',
+	'TITLE'		=> 'Labeltypen',
+	'EXPLAIN'	=> 'explain',
 
-	'input_data'	=> 'Labeldaten',
+	'INPUT_DATA'	=> 'Labeldaten',
 	
-	'label_name'	=> 'Name',
-	'label_desc'	=> 'Beschreibung',
-	'label_type'	=> 'Type',
+	'LABEL_NAME'	=> 'Name',
+	'LABEL_DESC'	=> 'Beschreibung',
+	'LABEL'			=> 'Label',
+
+	'ACL_USERS'		=> 'zugeordnete Benutzer',
+	'ACL_GROUPS'	=> 'zugeordnete Gruppen',
 	
-	'label'			=> 'Label',
-	
-	'acl_users'		=> 'zugeordnete Benutzer',
-	'acl_groups'	=> 'zugeordnete Gruppen',
-	
-	'select_copy'	=> 'Kopieren von ...',
-	
+	'SELECT_COPY'	=> 'Kopieren von ...',
 ));
 
 ?>

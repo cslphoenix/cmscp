@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -93,11 +93,11 @@ function interpretRequest()
 	<td>{display.voice_row.MOVE_DOWN}{display.voice_row.MOVE_UP}{display.voice_row.UPDATE} {display.voice_row.DELETE}</td>
 </tr>
 <!-- END voice_row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">
@@ -123,11 +123,11 @@ function interpretRequest()
 	<td>{display.game_row.MOVE_DOWN}{display.game_row.MOVE_UP}{display.game_row.UPDATE} {display.game_row.DELETE}</td>
 </tr>
 <!-- END game_row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">
@@ -185,7 +185,7 @@ function interpretRequest()
 <!-- END voice_row -->
 <!-- BEGIN voice_empty -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END game_empty -->
 </table>
@@ -205,7 +205,7 @@ function interpretRequest()
 <!-- END game_row -->
 <!-- BEGIN game_empty -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END game_empty -->
 </table>
@@ -228,7 +228,7 @@ function interpretRequest()
 <table class="rows2">
 <tr>
 	<!-- BEGIN name_option -->
-	<th>{gameq_list.name_option.NAME}</th>
+	<th{gameq_list.name_option.CSS}>{gameq_list.name_option.NAME}</th>
 	<!-- END name_option -->
 </tr>
 <!-- BEGIN row -->

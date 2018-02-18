@@ -54,18 +54,18 @@ function update_image(newimage)
 	<td><span class="right">{display.news.RATE}</span>{display.news.NAME}</td>
 	<td>{display.news.MOVE_DOWN}{display.news.MOVE_UP}{display.news.UPDATE}{display.news.DELETE}</td>
 </tr>
-<!-- BEGIN rate -->
+<!-- BEGIN row -->
 <tr>
-	<td>{display.news.rate.NAME}</td>
-	<td>{display.news.rate.MOVE_DOWN}{display.news.rate.MOVE_UP}{display.news.rate.UPDATE}{display.news.rate.DELETE}</td>
+	<td>{display.news.row.NAME}</td>
+	<td>{display.news.row.MOVE_DOWN}{display.news.row.MOVE_UP}{display.news.row.UPDATE}{display.news.row.DELETE}</td>
 </tr>
-<!-- END rate -->
+<!-- END row -->
 <!-- END news -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <br />
@@ -87,11 +87,11 @@ function update_image(newimage)
 </tr>
 <!-- END rate -->
 <!-- END download -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <br />
@@ -113,11 +113,11 @@ function update_image(newimage)
 </tr>
 <!-- END rate -->
 <!-- END gallery -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">

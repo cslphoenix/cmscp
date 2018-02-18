@@ -7,50 +7,53 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'bank'		=> 'Bankdaten',
-	'user'		=> 'Bank-Benutzer',
-	'type'		=> 'Clankassen-Art',
+	'BANK'		=> 'Bankdaten',
+	'USER'		=> 'Bank-Benutzer',
+	'TYPE'		=> 'Clankassen-Art',
 
-	'title'		=> 'Clankasse',
-	'explain'	=> 'Clankassen verwaltung!',
+	'TITLE'		=> 'Clankasse',
+	'EXPLAIN'	=> 'Clankassen verwaltung!',
 	
-	'cash_reason'	=> 'Kosten',
-	'cash_interval'	=> 'Zahlungsintervall',
-	'cash_postage'	=> 'Gesammtbetrag',
+	'INPUT_DATA'	=> 'Kostendaten',
+	
+	'CASH_REASON'	=> 'Kosten',
+	'CASH_PAID'		=> 'Bezahlt',
+#	'cash_interval'	=> 'Zahlungsintervall',
+#	'cash_postage'	=> 'Gesammtbetrag',
 	
 #	'cash_bank'		=> 'Bank',
 #	'cash_user'		=> 'Benutzer',
-	'bank_data'		=> 'Kontodaten',
 	
-	'bank_holder'		=> 'Kontoinhaber',
-	'bank_name'			=> 'Bankname',
-	'bank_blz'			=> 'Bankleitzahl',
-	'bank_number'		=> 'Kontonummer',
-	'bank_reason'		=> 'Verwendungszweck',
-	'bank_delete'		=> 'Bankdaten löschen',
-	'bank_create'		=> 'Bankdaten eintragen',
+	'BANK_DATA'		=> 'Kontodaten',
+	'BANK_HOLDER'	=> 'Kontoinhaber',
+	'BANK_NAME'		=> 'Bankname',
+	'BANK_BLZ'		=> 'Bankleitzahl',
+	'BANK_NUMBER'	=> 'Kontonummer',
+	'BANK_REASON'	=> 'Verwendungszweck',
+	'BANK_DELETE'	=> 'Bankdaten löschen',
+#	'bank_create'	=> 'Bankdaten eintragen',
 	
-	'type_create'		=> 'Type eintragen',
+#	'type_create'		=> 'Type eintragen',
 	
-	'msg_empty_holder'	=> 'Bitte Inhaber des Kontos eintragen!',
-	'msg_empty_name'	=> 'Bitte Bankname eintragen!',
-	'msg_empty_blz'		=> 'Bitte Bankleitzahl eintragen!',
-	'msg_empty_number'	=> 'Bitte Kontonummer eintragen!',
-	'msg_empty_reason'	=> 'Bitte Verwendungszweck eintragen!',
+#	'msg_empty_holder'	=> 'Bitte Inhaber des Kontos eintragen!',
+#	'msg_empty_name'	=> 'Bitte Bankname eintragen!',
+#	'msg_empty_blz'		=> 'Bitte Bankleitzahl eintragen!',
+#	'msg_empty_number'	=> 'Bitte Kontonummer eintragen!',
+#	'msg_empty_reason'	=> 'Bitte Verwendungszweck eintragen!',
 	
 #	'user'		=> 'Benutzer',
 #	'amount'	=> 'Betrag',
 #	'month'		=> 'Monat',
 	
-	'interval'			=> 'Zahlungsintervall',
-	'interval_only'		=> 'Einmalig',
-	'interval_month'	=> 'Monatlich',
-	'interval_weeks'	=> 'alle 2 Wochen',
-	'interval_weekly'	=> 'Wöchentlich',
+#	'interval'			=> 'Zahlungsintervall',
+	'INTERVAL_ONLY'		=> 'Einmalig',
+	'INTERVAL_MONTH'	=> 'Monatlich',
+	'INTERVAL_WEEKS'	=> 'alle 2 Wochen',
+	'INTERVAL_WEEKLY'	=> 'Wöchentlich',
 	
-	'type_game'		=> 'Gameserver',
-	'type_voice'	=> 'Voiceserver',
-	'type_other'	=> 'sonstiges',
+	'TYPE_GAME'		=> 'Gameserver',
+	'TYPE_VOICE'	=> 'Voiceserver',
+	'TYPE_OTHER'	=> 'sonstiges',
 	
 #	'cash_received'		=> 'Bezahlt',
 #	'cast_notreceived'	=> 'nicht Bezahlt',
@@ -59,34 +62,36 @@ $lang = array_merge($lang, array(
 #	'msg_select_amount'		=> 'Bitte einen Betrag eintragen!',
 	
 	/* added 14.07 */
-	'cash_name'		=> 'Benutzer / Zweck',
-	'cash_amount'	=> 'Betrag',
-	'cash_type'		=> 'Kosten Type',
-	'cash_month'	=> 'Monat(e)',
-#	'cash_interval'	=> 'Zahlungsintervall',
+	'CASH_NAME'		=> 'Benutzer / Zweck',
+	'CASH_AMOUNT'	=> 'Betrag',
+	'CASH_MONTH'	=> 'Monat(e)',
+	'CASH_TYPE'		=> 'Kosten Type',
+	'CASH_INTERVAL'	=> 'Zahlungsintervall',
+	'CASH_PAID'		=> 'Gezahlt',
+	
+	'CURRENT_MONTH'	=> ' (<span style="color:#F00; font-weight:bold;">Aktueller Monat</span>)',
 	
 	
-	'create'	=> 'hinzugefügt',
-	'update'	=> 'geändert',
+#	'create'	=> 'hinzugefügt',
+#	'update'	=> 'geändert',
 	
-	'select_month'	=> 'Bitte ein Monat auswählen',
+#	'select_month'	=> 'Bitte ein Monat auswählen',
 	
-	'current_month'	=> ' (<span style="color:#F00;"><b>Aktueller Monat</b></span>)',
+	
 
-	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
+#	'confirm_bank'	=> 'Bist du sicher, das die Bankdaten gelöscht werden soll?',
+
+	'STF_PAID'	=> 'Übersicht über gezahlte Beiträge',
+
 ));
 
-
 $lang = array_merge($lang, array(	
-	'radio:interval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_only']),
-	'radio:cinterval'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_weeks'], 2 => $lang['interval_weekly']),
-	'radio:type'		=> array(0 => $lang['type_game'], 1 => $lang['type_voice'], 2 => $lang['type_other']),
-));
-
-$lang = array_merge($lang, array(	
-	'radio:user'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_only']),
-	'radio:type'	=> array(0 => $lang['interval_month'], 1 => $lang['interval_weeks'], 2 => $lang['interval_weekly']),
-	'radio:ctype'	=> array(0 => $lang['type_game'], 1 => $lang['type_voice'], 2 => $lang['type_other']),
+	'radio:interval'	=> array(0 => $lang['INTERVAL_MONTH'], 1 => $lang['INTERVAL_ONLY']),
+	'radio:cinterval'	=> array(0 => $lang['INTERVAL_MONTH'], 1 => $lang['INTERVAL_WEEKS'], 2 => $lang['INTERVAL_WEEKLY']),
+	'radio:type'		=> array(0 => $lang['TYPE_GAME'], 1 => $lang['TYPE_VOICE'], 2 => $lang['TYPE_OTHER']),
+	'radio:user'		=> array(0 => $lang['INTERVAL_MONTH'], 1 => $lang['INTERVAL_ONLY']),
+	'radio:type'		=> array(0 => $lang['INTERVAL_MONTH'], 1 => $lang['INTERVAL_WEEKS'], 2 => $lang['INTERVAL_WEEKLY']),
+	'radio:ctype'		=> array(0 => $lang['TYPE_GAME'], 1 => $lang['TYPE_VOICE'], 2 => $lang['TYPE_OTHER']),
 ));
 
 /*

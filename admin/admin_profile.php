@@ -3,11 +3,11 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_profile',
-		'cat'		=> 'usergroups',
-		'modes'		=> array(
-			'main'		=> array('title' => 'acp_profile'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_PROFILE',
+		'CAT'		=> 'USERGROUPS',
+		'MODES'		=> array(
+			'MAIN'	=> array('TITLE' => 'ACP_PROFILE'),
 		)
 	);
 }
@@ -18,12 +18,12 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current = 'acp_profile';
+	$current = 'ACP_PROFILE';
 	
 	include('./pagestart.php');
 
 	add_lang('profile');
-	acl_auth('a_user_fields');
+	acl_auth('A_USER_FIELDS');
 	
 	$error	= '';
 	$index	= '';
@@ -33,27 +33,22 @@ else
 	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
+	$start	= request('start', INT);
+	$order	= request('order', INT);
 	$main	= request('main', TYP);
 	$usub	= request('usub', TYP);
 	$mode	= request('mode', TYP);
 	$type	= request('type', TYP);
-	$start	= request('start', INT);
-	$order	= request('order', INT);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$cancel ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
-	
-	$template->set_filenames(array(
-		'body'		=> 'style/acp_profile.tpl',
-		'confirm'	=> 'style/info_confirm.tpl',
-	));
-	
+	$template->set_filenames(array('body' => "style/$current.tpl"));
 	$base = ($settings['smain']['profile_switch']) ? 'drop:main' : 'radio:main';
 	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down'))) ? $mode : false;
-	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
+	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
 	
 	switch ( $mode )
 	{
@@ -64,13 +59,12 @@ else
 			
 			$vars = array(
 				'profile' => array(
-					'title' => 'input_data',
+					'title'		=> 'INPUT_DATA',
 					'profile_name'			=> array('validate' => TYP,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name', 'check' => true),
 					'type'					=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('combi', false, 'main')),
 					'main'					=> array('validate' => INT,	'explain' => false,	'type' => $base,		'divbox' => true, 'params' => array(false, true, false)),
 					'profile_field'			=> array('validate' => TXT,	'explain' => true,	'type' => 'text:25;25',	'divbox' => true, 'required' => array('input_fields', 'type', '1'), 'check' => true, 'prefix' => 'field_'),
 					'profile_typ'			=> array('validate' => INT,	'explain' => true,	'type' => 'radio:typ',	'divbox' => true, 'params' => array(false, true, false)),
-					'profile_lang'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
 					'profile_show_user'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
 					'profile_show_member'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
 					'profile_show_register'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
@@ -79,7 +73,9 @@ else
 				)
 			);
 			
-			if ( $mode == 'create' && !$submit && $userauth['a_user_fields'] )
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
+			
+			if ( $mode == 'create' && !$submit )
 			{
 				$name = ( isset($_POST['profile_name']) ) ? request('profile_name', TXT) : request('profile_field', TXT);
 				$type = ( isset($_POST['profile_name']) ) ? 0 : 1;
@@ -100,8 +96,7 @@ else
 			}
 			else if ( $mode == 'update' && !$submit )
 			{
-				$data_sql = data(PROFILE, $data, false, 1, true);
-				$option[] = href('a_txt', $file, array('main' => $data_sql['main']), $lang['common_overview'], $lang['common_overview']);
+				$data_sql = data(PROFILE, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -127,7 +122,7 @@ else
 					
 					if ( $mode == 'create' )
 					{
-						$data_sql['profile_order'] = maxa(PROFILE, 'profile_order', 'main = ' . $data_sql['main']);
+						$data_sql['profile_order'] = _max(PROFILE, 'profile_order', 'main = ' . $data_sql['main']);
 						
 						if ( $data_sql['type'] )
 						{
@@ -135,7 +130,7 @@ else
 						}
 						
 						$sql = sql(PROFILE, $mode, $data_sql);
-						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 					}
 					else
 					{
@@ -145,7 +140,7 @@ else
 						}
 						
 						$sql = sql(PROFILE, $mode, $data_sql, 'profile_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 						
 						orders(PROFILE, $data_sql['type']);
 					}
@@ -169,11 +164,13 @@ else
 				'current_field' => $data_sql['profile_field'],
 			));
 			
+		#	$option[] = href('a_txt', $file, ($main ? array('main' => $data_sql['main']) : false), $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
+
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-				'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['profile_name']),
+				'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['profile_name']),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
 
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
@@ -184,11 +181,8 @@ else
 		case 'move_up':
 		case 'move_down':
 		
-			if ( $userauth['a_user_fields'] )
-			{
-				move(PROFILE, $mode, $order, $main, $type, $usub);
-				log_add(LOG_ADMIN, $log, $mode);
-			}
+			move(PROFILE, $mode, $order, $main, $type, $usub);
+			log_add(LOG_ADMIN, $log, $mode);
 			
 		default:
 		
@@ -201,7 +195,7 @@ else
 			{
 				if ( !$sqlout['main'] )
 				{
-					$template->assign_block_vars('display.empty', array());
+					$template->assign_block_vars('display.none', array());
 				}
 				else
 				{
@@ -210,16 +204,16 @@ else
 					foreach ( $sqlout['main'] as $row )
 					{
 						$id     = $row['profile_id'];
-						$name	= lang($row['profile_name']);
+						$name	= langs($row['profile_name']);
 						$order	= $row['profile_order'];
 
 						$template->assign_block_vars('display.row', array(
 							'NAME'		=> href('a_txt', $file, array('main' => $id), $name, $name),
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 
-							'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-							'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+							'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'main' => 0, 'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+							'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => 0, 'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 						));
 					}
 
@@ -235,17 +229,17 @@ else
 					foreach ( $sqlout['data_id'][$main] as $row )
 					{
 						$main_id	= $row['profile_id'];
-						$main_name	= lang($row['profile_name']);
+						$main_name	= langs($row['profile_name']);
 						$main_order	= $row['profile_order'];
 
 						$template->assign_block_vars('display.row', array(
 							'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $main_id), $main_name, $main_name),
 							
-							'MOVE_UP'	=> ( $main_order != '1' )		? href('a_img', $file, array('mode' => 'move_up',	'main' => $main, 'order' => $main_order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-							'MOVE_DOWN'	=> ( $main_order != $main_max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $main, 'order' => $main_order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+							'MOVE_UP'	=> ( $main_order != '1' )		? href('a_img', $file, array('mode' => 'move_up',	'main' => $main, 'order' => $main_order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+							'MOVE_DOWN'	=> ( $main_order != $main_max )	? href('a_img', $file, array('mode' => 'move_down',	'main' => $main, 'order' => $main_order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 							
-							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $main_id), 'icon_update', 'com_update'),
-							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $main_id), 'icon_cancel', 'com_delete'),
+							'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $main_id), 'icon_update', 'COMMON_UPDATE'),
+							'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $main_id), 'icon_cancel', 'COMMON_DELETE'),
 							
 							'S_NAME'	=> "menu_module[$main_id]",
 							'S_SUBMIT'	=> "submit_module[$main_id]",
@@ -254,15 +248,15 @@ else
 				}
 				else
 				{
-					$template->assign_block_vars('display.empty', array());
+					$template->assign_block_vars('display.none', array());
 				}
 			}
 			
 			if ( $main )
 			{
 				$main_info = sqlout_id($sqlout['main'], $main, 'profile_id');
-				$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
-				$option[] = href('a_txt', $file, array('mode' => 'update', 'id' => $main_info['id']), sprintf($lang['stf_update'], $lang['main'], $main_info['name']), $main_info['name']);
+				$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
+				$option[] = href('a_txt', $file, array('mode' => 'update', 'id' => $main_info['id']), sprintf($lang['STF_UPDATE'], $lang['TYPE_0'], $main_info['name']), $main_info['name']);
 			}
 			else
 			{
@@ -270,15 +264,14 @@ else
 			}
 
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-				'L_EXPLAIN'	=> $lang['explain'],
-				'L_NAME'	=> $lang['type_0'],
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+				'L_EXPLAIN'	=> $lang['EXPLAIN'],
 				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
+				'L_NAME'	=> (!$main ? $lang['TYPE_0'] : $lang['TYPE_1']),
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
+				'L_CREATE'	=> sprintf($lang['STF_CREATE'], ( !$main ? $lang['TYPE_0'] : $lang['TYPE_1'])),
 				
-				'L_CREATE_CAT'		=> sprintf($lang['stf_create'], $lang['type_0']),
-				'L_CREATE_FIELD'	=> sprintf($lang['stf_create'], $lang['type_1']),
-				
+				'S_CREATE'	=> (!$main ? 'dl_name' : 'dl_filename'),					
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));

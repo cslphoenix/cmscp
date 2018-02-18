@@ -1,5 +1,6 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
-<p>{L_EXPLAIN}</p>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
+<p>{L_EXPLAIN}<span class="right">{L_SORT}</span></p>
 
 <!-- BEGIN input -->
 <script type="text/JavaScript">
@@ -154,7 +155,7 @@ function display_options(value)
 	<!-- END row -->
 	<!-- BEGIN no_row -->
 	<tr>
-		<td class="empty" colspan="5" align="center">{S_TEAM_USERS}</td>
+		<td class="none" colspan="5" align="center">{S_TEAM_USERS}</td>
 	</tr>
 	<!-- END no_row -->
 	</table>
@@ -276,32 +277,32 @@ function display_options(value)
 <table class="rows">
 <!-- BEGIN row -->
 <tr>
-	<th colspan="4">{_sync.row.GAME} {_sync.row.TEAM} vs. {_sync.row.RIVAL}</th>
-	<th nowrap="nowrap">{_sync.row.CHECK} {_sync.row.WRITE}</th>
-	<th><input type="checkbox" name="map_delete[{_sync.row.MAP_ID}]" title="{L_DELETE}" value="on"></th>
+	<th colspan="4">{sync.row.GAME} {sync.row.TEAM} vs. {sync.row.RIVAL}</th>
+	<th nowrap="nowrap">{sync.row.CHECK} {sync.row.WRITE}</th>
+	<th><input type="checkbox" name="map_delete[{sync.row.MAP_ID}]" title="{L_DELETE}" value="on"></th>
 </tr>
 <!-- BEGIN map -->
 <tr>
-	<td>{_sync.row.map.NAME}</td>
-	<td align="center">{_sync.row.map.HOME}</td>
-	<td align="center">{_sync.row.map.RIVAL}</td>
-	<td align="center">{_sync.row.map.PICTURE}</td>
-	<td align="center">{_sync.row.map.PREVIEW}</td>
-	<td><input type="checkbox" name="map_delete[{_sync.row.map.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+	<td>{sync.row.map.NAME}</td>
+	<td align="center">{sync.row.map.HOME}</td>
+	<td align="center">{sync.row.map.RIVAL}</td>
+	<td align="center">{sync.row.map.PICTURE}</td>
+	<td align="center">{sync.row.map.PREVIEW}</td>
+	<td><input type="checkbox" name="map_delete[{sync.row.map.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 </tr>
 <!-- BEGIN result -->
 <tr>
-	<td>{_sync.row.map.result.COUNT}</td>
-	<td>{_sync.row.map.result.HOME}</td>
-	<td>{_sync.row.map.result.RIVAL}</td>
+	<td>{sync.row.map.result.COUNT}</td>
+	<td>{sync.row.map.result.HOME}</td>
+	<td>{sync.row.map.result.RIVAL}</td>
 	<td colspan="2"></td>
 	<td></td>
 </tr>
 <!-- END result -->
 <!-- BEGIN result_row -->
 <tr>
-	<td colspan="5">{_sync.row.map.resultrow.NAME}</td>
-	<td><input type="checkbox" name="map_delete[{_sync.row.map.resultrow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
+	<td colspan="5">{sync.row.map.resultrow.NAME}</td>
+	<td><input type="checkbox" name="map_delete[{sync.row.map.resultrow.MAP_ID}]" title="{L_DELETE}" value="on"></td>
 </tr>
 <!-- END result_row -->
 <!-- END map -->
@@ -309,67 +310,6 @@ function display_options(value)
 </table>
 
 <!-- END sync -->
-
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<ul id="navinfo"><li><a href="{U_SYNC}">{L_SYNC}</a></li><li><a href="{U_RIVAL}">{L_RIVAL}</a></li></ul>
-<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
-</form>
-
-<table class="rows">
-<tr>
-	<th>{L_UPCOMING}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN new_row -->
-<tr>
-	<td><span class="right">{display.new_row.DATE}</span>{display.new_row.GAME} {display.new_row.NAME}</td>
-	<td>{display.new_row.TRAIN}{display.new_row.DETAIL}{display.new_row.UPDATE}{display.new_row.DELETE}</td>
-</tr>
-<!-- END new_row -->
-<!-- BEGIN new_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END new_empty -->
-</table>
-
-<form action="{S_ACTION}" method="post">
-<table class="lfooter">
-<tr>
-	<td>{S_TEAM}</td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_EXPIRED}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN old_row -->
-<tr>
-	<td><span style="float: right;">{display.old_row.DATE}</span>{display.old_row.GAME} {display.old_row.NAME}</td>
-	<td>{display.old_row.DETAIL} {display.old_row.UPDATE} {display.old_row.DELETE}</td>
-</tr>
-<!-- END old_row -->
-<!-- BEGIN old_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END old_empty -->
-</table>
-
-<table class="rfooter">
-<tr>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-</tr>
-</table>
-<!-- END display -->
 
 <!-- BEGIN rival -->
 <table class="rows">
@@ -387,7 +327,7 @@ function display_options(value)
 <!-- END row -->
 <!-- BEGIN new_empty -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END new_empty -->
 </table>
@@ -425,3 +365,65 @@ function display_options(value)
 {S_FIELDS}
 </form>
 <!-- END change -->
+
+<!-- BEGIN display -->
+<!--
+<form action="{S_ACTION}" method="post">
+<ul id="navinfo"><li><a href="{U_SYNC}">{L_SYNC}</a></li><li><a href="{U_RIVAL}">{L_RIVAL}</a></li></ul>
+<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
+</form>
+-->
+<table class="rows">
+<tr>
+	<th>{L_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN upcoming -->
+<tr>
+	<td><span class="right">{display.upcoming.DATE}</span>{display.upcoming.GAME}&nbsp;{display.upcoming.NAME}</td>
+	<td>{display.upcoming.TRAINING}&nbsp;{display.upcoming.DETAIL}&nbsp;{display.upcoming.UPDATE}&nbsp;{display.upcoming.DELETE}</td>
+</tr>
+<!-- END upcoming -->
+<!-- BEGIN upcoming_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END upcoming_none -->
+</table>
+
+<form action="{S_ACTION}" method="post">
+<table class="lfooter">
+<tr>
+	<td>{S_TEAM}</td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_EXPIRED}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN expired -->
+<tr>
+	<td><span style="float: right;">{display.expired.DATE}</span>{display.expired.GAME}&nbsp;{display.expired.NAME}</td>
+	<td>{display.expired.DETAIL}&nbsp;{display.expired.UPDATE}&nbsp;{display.expired.DELETE}</td>
+</tr>
+<!-- END expired -->
+<!-- BEGIN expired_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END expired_none -->
+</table>
+
+<table class="rfooter">
+<tr>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+</tr>
+</table>
+<!-- END display -->

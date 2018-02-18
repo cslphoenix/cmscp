@@ -3,14 +3,14 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_contact',
-		'cat'		=> 'system',
-		'modes'		=> array(
-			'overview'	=> array('title' => 'acp_overview'),
-			'contact'	=> array('title' => 'acp_contact_contact'),
-			'joinus'	=> array('title' => 'acp_contact_joinus'),
-			'fightus'	=> array('title' => 'acp_contact_fightus'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'acp_contact',
+		'CAT'		=> 'system',
+		'MODES'		=> array(
+			'overview'	=> array('TITLE'		=> 'acp_overview'),
+			'contact'	=> array('TITLE'		=> 'acp_contact_contact'),
+			'joinus'	=> array('TITLE'		=> 'acp_contact_joinus'),
+			'fightus'	=> array('TITLE'		=> 'acp_contact_fightus'),
 		)
 	);
 }
@@ -42,7 +42,7 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['contact']);
+	$_top	= sprintf($lang['STF_HEADER'], $lang['contact']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
@@ -103,7 +103,7 @@ else
 			#	'CLASS' 			=> $class,
 				'CONTACT_ID' 		=> $row['contact_id'],
 			#	'CONTACT_GAME'		=> $game_image,
-				'CONTACT_TYPE'		=> ($row['contact_type'] != '0') ? $row['contact_type'] == '2' ? lang('contact_joinus') : lang('contact_fightus') : lang('contact_contact'),
+				'CONTACT_TYPE'		=> ($row['contact_type'] != '0') ? $row['contact_type'] == '2' ? langs('contact_joinus') : langs('contact_fightus') : langs('contact_contact'),
 			#	'CONTACT_STATUS'	=> ($row['contact_status'] != '0') ? ($row['contact_status'] == '2') ? $lang['contact_type_edit'] : $lang['contact_type_close'] : $lang['contact_type_open'],
 				'CONTACT_FROM'		=> $row['contact_from'],
 				'CONTACT_MAIL'		=> $row['contact_mail'],
@@ -116,7 +116,7 @@ else
 	/*
 	if ( !$data )
 	{
-		$template->assign_block_vars('display.empty', array());
+		$template->assign_block_vars('display.none', array());
 	}
 	else
 	{
@@ -145,11 +145,11 @@ else
 	$current_page = ( !count($data) ) ? 1 : ceil( count($data) / $settings['per_page_entry']['acp'] );
 	
 	$template->assign_vars(array(
-		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['contact']),
+		'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['contact']),
 		'L_CONTACT'		=> $lang['contact'],
 		'L_FIGHTUS'		=> $lang['fightus'],
 		'L_JOINUS'		=> $lang['joinus'],
-		'L_EXPLAIN'		=> $lang['explain'],
+		'L_EXPLAIN'	=> $lang['EXPLAIN'],
 		
 	#	'TAB_AKTIV0'	=> $tab_aktiv0,
 	#	'TAB_AKTIV1'	=> $tab_aktiv1,

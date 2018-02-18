@@ -9,7 +9,7 @@
 <!-- END sn_downloads_row -->
 <!-- BEGIN sn_downloads_empty -->
 <tr>
-	<td class="empty">{sn_downloads_empty.L_EMPTY}</td>
+	<td class="none">{sn_downloads_empty.L_NONE}</td>
 </tr>
 <!-- END sn_downloads_empty -->
 </table>

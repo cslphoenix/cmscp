@@ -240,28 +240,6 @@ function select_date2($default, $var, $value)
 	return $select;
 }
 
-/*
- *	orignal from phpBB2
- */
-function select_tz($default, $select_name = 'timezone')
-{
-	global $sys_timezone, $lang;
-
-	if ( !isset($default) )
-	{
-		$default == $sys_timezone;
-	}
-	$tz_select = '<select class="select" name="' . $select_name . '">';
-
-	while( list($offset, $zone) = @each($lang['tz']) )
-	{
-		$selected = ( $offset == $default ) ? ' selected="selected"' : '';
-		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $zone) . '</option>';
-	}
-	$tz_select .= '</select>';
-
-	return $tz_select;
-}
 
 //
 // Pick a language, any language ...
@@ -297,14 +275,14 @@ function select_language($default, $select_name = "language", $dirname = "langua
 		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
 		
 		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
-		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['STF_SELECT_FORMAT'], $name) . '</option>';
 	}
 	$lang_select .= '</select>';
 
 	return $lang_select;
 }
 
-function select_lang($default, $select_name = "language", $dirname = "language")
+function s_lang($default, $select_name = "language", $dirname = "language")
 {
 	global $root_path, $lang;
 
@@ -335,17 +313,14 @@ function select_lang($default, $select_name = "language", $dirname = "language")
 		$name = isset($lang['language'][$displayname]) ? $lang['language'][$displayname] : $displayname;
 		
 		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
-		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $name) . '</option>';
+		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . sprintf($lang['STF_SELECT_FORMAT'], $name) . '</option>';
 	}
 	$lang_select .= '</select>';
 
 	return $lang_select;
 }
 
-//
-// Pick a template/theme combo, 
-//
-function select_style($default, $select_name = "style", $dirname = "templates")
+function s_style($default, $select_name = "style", $dirname = "templates")
 {
 	global $db, $lang;
 
@@ -362,11 +337,50 @@ function select_style($default, $select_name = "style", $dirname = "templates")
 	{
 		$selected = ( $default == $row[$i]['themes_id'] ) ? ' selected="selected"' : '';
 
-		$select .= '<option value="' . $row[$i]['themes_id'] . '"' . $selected . '>' . sprintf($lang['stf_select_format'], $row[$i]['style_name']) . '</option>';
+		$select .= '<option value="' . $row[$i]['themes_id'] . '"' . $selected . '>' . sprintf($lang['STF_SELECT_FORMAT'], $row[$i]['style_name']) . '</option>';
 	}
 	$select .= "</select>";
 
 	return $select;
+}
+
+function s_state($default, $select_name)
+{
+	global $lang;
+		
+	$select = '<select class="select" name="' . $select_name . '">';
+
+	foreach ( $lang['state'] as $key => $value )
+	{
+		$selected = ( $key == $default ) ? ' selected="selected"' : '';
+		$select .= '<option value="' . $key . '"' . $selected . '>' . sprintf($lang['STF_SELECT_FORMAT'], $value) . '</option>';
+	}
+	$select .= '</select>';
+	
+	return $select;
+}
+
+/*
+ *	orignal from phpBB2
+ */
+function s_tz($default, $select_name = 'timezone')
+{
+	global $sys_timezone, $lang;
+
+	if ( !isset($default) )
+	{
+		$default == $sys_timezone;
+	}
+	$tz_select = '<select class="select" name="' . $select_name . '">';
+
+	while( list($offset, $zone) = @each($lang['tz']) )
+	{
+		$selected = ( $offset == $default ) ? ' selected="selected"' : '';
+		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . sprintf($lang['STF_SELECT_FORMAT'], $zone) . '</option>';
+	}
+	$tz_select .= '</select>';
+
+	return $tz_select;
 }
 
 ?>

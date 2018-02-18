@@ -3,15 +3,15 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_permission',
-		'modes'		=> array(
-			'group_forums'	=> array('title' => 'acp_group_forums'),	// group -> f_ m_
-			'user_forums'	=> array('title' => 'acp_user_forums'),		// user -> f_ m_
-			'mod_all'		=> array('title' => 'acp_mod_all'),			// foren -> users/groups m_
-			'forum_all'		=> array('title' => 'acp_forum_all'),		// foren -> users/groups f_
-			'group_perm'	=> array('title' => 'acp_group_perm'),		// group -> a_ m_ u_ d_ g_
-			'user_perm'		=> array('title' => 'acp_user_perm'),		// user -> a_ m_ u_ d_ g_
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'acp_permission',
+		'MODES'		=> array(
+			'group_forums'	=> array('TITLE'		=> 'acp_group_forums'),	// group -> f_ m_
+			'user_forums'	=> array('TITLE'		=> 'acp_user_forums'),		// user -> f_ m_
+			'mod_all'		=> array('TITLE'		=> 'acp_mod_all'),			// foren -> users/groups m_
+			'forum_all'		=> array('TITLE'		=> 'acp_forum_all'),		// foren -> users/groups f_
+			'group_perm'	=> array('TITLE'		=> 'acp_group_perm'),		// group -> a_ m_ u_ d_ g_
+			'user_perm'		=> array('TITLE'		=> 'acp_user_perm'),		// user -> a_ m_ u_ d_ g_
 		)
 	);
 }
@@ -53,7 +53,7 @@ else
 
 #	debug($type, 'type');
 	
-	$acp_title = sprintf($lang['sprintf_head'], $lang['title']);
+	$_top = sprintf($lang['sprintf_head'], $lang['TITLE']);
 	
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_forum'] )
 	{
@@ -230,7 +230,7 @@ else
 	#		foreach ( $options as $opts )
 	#		{
 			#	$selected = ( @$access_label[$ids] == $options['label_id'] ) ? ' selected="selected"' : '';
-	#			$s_action .= '<option value="' . $opts . '">' . lang("{$opts}right") . '</option>';
+	#			$s_action .= '<option value="' . $opts . '">' . langs("{$opts}right") . '</option>';
 	#		}
 	#		
 	#		$s_action .= '</select>';
@@ -444,19 +444,19 @@ else
 			
 				foreach ( $_cat as $ckey => $crow )
 				{
-					$new[] = array($params[1] => $crow[$params[1]], $params[2] => lang($crow[$params[2]]), 'type' => $crow['type']);
+					$new[] = array($params[1] => $crow[$params[1]], $params[2] => langs($crow[$params[2]]), 'type' => $crow['type']);
 			
 					if ( isset($_main[$ckey]) )
 					{
 						foreach ( $_main[$ckey] as $mkey => $mrow )
 						{
-							$new[] = array($params[1] => $mrow[$params[1]], $params[2] => lang($mrow[$params[2]]), 'type' => $mrow['type']);
+							$new[] = array($params[1] => $mrow[$params[1]], $params[2] => langs($mrow[$params[2]]), 'type' => $mrow['type']);
 							
 							if ( isset($_sub[$mkey]) )
 							{
 								foreach ( $_sub[$mkey] as $skey => $srow )
 								{
-									$new[] = array($params[1] => $srow[$params[1]], $params[2] => lang($srow[$params[2]]), 'type' => $srow['type']);
+									$new[] = array($params[1] => $srow[$params[1]], $params[2] => langs($srow[$params[2]]), 'type' => $srow['type']);
 								}
 							}
 						}

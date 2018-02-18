@@ -7,53 +7,50 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Server',
-	'explain'	=> 'Verwaltung der Gameserver.',
+	'SERVER_TITLE'		=> 'Server',
+	'SERVER_EXPLAIN'	=> 'Verwaltung der Gameserver.',
+	'GAMEQ_TITLE'		=> 'Servertypen',
+	'GAMEQ_EXPLAIN'		=> 'Hier werden die Server verwaltet die fÃ¼r die GameQ Class wichtig sind.',
 	
-	'gameq_title'	=> 'Servertypen',
-	'gameq_explain'	=> 'Hier werden die Server verwaltet die für die GameQ Class wichtig sind.',
+	'INPUT_DATA_SERVER'	=> 'Daten eingeben',
+	'INPUT_DATA_GAMEQ'	=> 'Servertyp Daten',
 	
-	'data_input'	=> 'Daten eingeben',
-	'server_name'	=> 'Server Name',
-	'server_type'	=> 'Server Typ',
-	'server_game'	=> 'Server Game',
-	'server_ip'		=> 'IP',
-	'server_port'	=> 'Port',
-	'server_pw'		=> 'Passwort',
+	'SERVER_NAME'	=> 'Server Name',
+	'SERVER_TYPE'	=> 'Server Typ',
+	'SERVER_GAME'	=> 'Server Game',
+	'SERVER_IP'		=> 'IP',
+	'SERVER_PORT'	=> 'Port',
+	'SERVER_PW'		=> 'Passwort',
 #	'server_qport'	=> 'QPort',
-	'server_live'	=> 'Live',
-	'server_list'	=> 'Auflisten',
-	'server_show'	=> 'Anzeigen',
-	'server_own'	=> 'eigener Server',
-	'server_order'	=> 'Reihenfolge',
+	'SERVER_LIVE'	=> 'Live',
+	'SERVER_LIST'	=> 'Auflisten',
+	'SERVER_SHOW'	=> 'Anzeigen',
+	'SERVER_OWN'	=> 'eigener Server',
+	'SERVER_ORDER'	=> 'Reihenfolge',
 	
-	'cur_max'	=> '%s / %s',
+	'CURRENT_MAX'	=> '%s / %s',
 	
 #	'gameserver'	=> 'Gameserver',
 #	'voiceserver'	=> 'Voiceserver',
 	
-	'online'	=> 'Online',
-	'offline'	=> 'Offline',
+	'ONLINE'	=> 'Online',
+	'OFFLINE'	=> 'Offline',
 	
-	'title1'		=> 'Servertypen 1',
-	'gameq_name'	=> 'Name',
-	'gameq_game'	=> 'GameQ Spiel',
-	'gameq_dport'	=> 'Standardport',
-	'gameq_type'	=> 'Type',
-	'gameq_viewer'	=> 'Viewer',
+	'GAMEQ_NAME'	=> 'Name',
+	'GAMEQ_GAME'	=> 'GameQ Spiel',
+	'GAMEQ_DPORT'	=> 'Standardport',
+	'GAMEQ_TYPE'	=> 'Type',
+	'GAMEQ_VIEWER'	=> 'Viewer',
 	
-	'typ_game'		=> 'Gameserver',
-	'typ_voice'		=> 'Voiceserver',
-	
-	'all_update'	=> 'Alle bearbeiten',
-
+	'TYP_GAME'		=> 'Gameserver',
+	'TYP_VOICE'		=> 'Voiceserver',
 ));
 
 $lang = array_merge($lang, array(
 
 	'radio:type' => array(
-		0 => $lang['typ_game'],
-		1 => $lang['typ_voice'],
+		0 => $lang['TYP_GAME'],
+		1 => $lang['TYP_VOICE'],
 	),
 	
 ));

@@ -28,7 +28,7 @@
 <!-- END game_row -->
 <!-- BEGIN no_entry_team -->
 <tr>
-	<td class="row1" align="center" colspan="5">{L_EMPTY}</td>
+	<td class="row1" align="center" colspan="5">{L_NONE}</td>
 </tr>
 <!-- END no_entry_team -->
 </table>

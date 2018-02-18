@@ -3,12 +3,12 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_server',
-		'cat'       => 'clan',
-		'modes'		=> array(
-			'server'	=> array('title' => 'acp_server'),
-			'gameq'		=> array('title' => 'acp_gameq'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_SERVER',
+		'CAT'		=> 'CLAN',
+		'MODES'		=> array(
+			'SERVER'	=> array('TITLE' => 'ACP_SERVER'),
+			'GAMEQ'		=> array('TITLE' => 'ACP_GAMEQ'),
 		)
 	);
 }
@@ -16,23 +16,20 @@ else
 {
 	define('IN_CMS', true);
 	
-	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$submit = ( isset($_POST['submit']) ) ? true : false;
-	
-	$current = 'acp_server';
+	$current = $log = 'ACP_SERVER';
 	
 	include('./pagestart.php');
-	include($root_path . 'includes/class_gameq.php');
 	
 	add_lang('server');
-	acl_auth(array('a_server', 'a_server_create', 'a_server_delete', 'a_servertype'));
-
+	add_tpls('acp_server');
+	acl_auth(array('A_SERVER', 'A_SERVER_ASSORT', 'A_SERVER_CREATE', 'A_SERVER_DELETE', 'A_SERVER_TYPE'));
+	
 	$error	= '';
 	$index	= '';
-	$fields	= '';
+	$fields = '';
 	
-	$log	= SECTION_SERVER;
 	$file	= basename(__FILE__) . $iadds;
+	$path	= $root_path . $settings['path']['games'];
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -44,15 +41,20 @@ else
 	$accept = request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_header'], (($action == 'server') ? $lang['title'] : $lang['gameq_title']));
+	switch ( $action )
+	{
+		case 'server':	$table = SERVER;	$langs = 'SERVER';	$fields = 'server';	$orders = true;
+		case 'gameq':	$table = GAMEQ;		$langs = 'GAMEQ';	$fields = 'gameq';	$orders = false;
+	}
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	$submit = ( isset($_POST['submit']) ) ? true : false;
+	$cancel = ( isset($_POST['cancel']) ) ? redirect('admin/' . check_sid($file)) : false;
 	
-	$template->set_filenames(array('body' => "style/$current.tpl"));
+	$mode	= ( in_array($mode, array('create', 'update', 'server_list', 'gameq_create', 'gameq_update', 'gameq_list', 'move_down', 'move_up', 'delete')) ) ? $mode : false;
 	
-	$mode = (in_array($mode, array('create', 'update', 'server_list', 'gameq_create', 'gameq_update', 'gameq_list', 'move_down', 'move_up', 'delete'))) ? $mode : false;
-	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
-
+	$_top	= sprintf($lang['STF_HEADER'], $lang["{$langs}_TITLE"]);
+	$_tpl	= ($mode === 'delete') ? 'confirm' : 'body';
+	
 	switch ( $mode )
 	{
 		case 'create':
@@ -62,10 +64,10 @@ else
 			
 			$vars = array(
 				'server' => array(
-					'title'	=> 'data_input',
+					'title'	=> 'INPUT_DATA',
 					'server_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
 					'server_type'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('gameq', false, 'server_game')),
-					'server_game'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq', 'params' => 'server_type', 'required' => 'input_game'),
+					'server_game'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq', 'params' => 'server_type', 'required' => 'select_game'),
 					'server_ip'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_ip'),
 					'server_port'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:10;10', 'required' => 'input_port'),
 					'server_pw'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:10;10'),
@@ -77,9 +79,9 @@ else
 				)
 			);
 			
-			$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 						
-			if ( $mode == 'create' && !$submit && $userauth['a_server_create'] )
+			if ( $mode == 'create' && !$submit && $userauth['A_SERVER_CREATE'] )
 			{
 				$name	= ( isset($_POST['game_name']) ) ? request('game_name', TXT) : request('voice_name', TXT);
 				$typ	= ( isset($_POST['game_name']) ) ? 0 : 1;
@@ -100,7 +102,7 @@ else
 			}
 			else if ( $mode == 'update' && !$submit )
 			{
-				$data_sql = data(SERVER, $data, false, 1, true);
+				$data_sql = data(SERVER, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -108,17 +110,17 @@ else
 				
 				if ( !$error )
 				{
-					if ( $mode == 'create' && $userauth['a_server_create'] )
+					if ( $mode == 'create' && $userauth['A_SERVER_CREATE'] )
 					{
-						$data_sql['server_order'] = maxa(SERVER, 'server_order', false);
+						$data_sql['server_order'] = _max(SERVER, 'server_order', false);
 						
 						$sql = sql(SERVER, $mode, $data_sql);
-						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 					}
-					else if ( $userauth['a_server'] )
+					else if ( $userauth['A_SERVER'] )
 					{
 						$sql = sql(SERVER, $mode, $data_sql, 'server_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -138,10 +140,10 @@ else
 			));
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['server_name']),
-				'L_EXPLAIN'	=> $lang['com_required'],
+				'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['server_name']),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
 				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
@@ -155,7 +157,7 @@ else
 			
 			$vars = array(
 				'server_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:20;25', 'required' => 'input_name'),
-				'server_ip'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:15;25', 'required' => 'input_ip'),
+				'server_ip'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:15;25', 'required' => 'input_ip'),
 				'server_port'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:6;10',	'required' => 'input_port'),
 				'server_pw'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:6;10'),
 				'server_live'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:server_live'),
@@ -164,11 +166,11 @@ else
 				'server_own'	=> array('validate' => INT,	'explain' => false,	'type' => 'checkbox:server_own'),
 			);
 			
-			$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 			
-			if ( !$submit )
+			if ( !$submit && $userauth['A_SERVER'] )
 			{
-				$data_sql = data(SERVER, "WHERE server_type = $type", 'server_order ASC', 1, false);				
+				$data_sql = data(SERVER, "WHERE server_type = $type", 'server_order ASC', 1, 'set');				
 			}
 			else
 			{
@@ -193,11 +195,11 @@ else
 							}
 						}
 						
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&type=$type"));
+						$msg = $lang['UPDATE'] . sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&type=$type"));
 					}
 					else
 					{
-						$msg = $lang['empty'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&type=$type"));
+						$msg = $lang['empty'] . sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&type=$type"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode);
@@ -217,54 +219,17 @@ else
 			));
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_' . substr($mode, strpos($mode, '_')+1)], $lang['title']),
-				'L_EXPLAIN'	=> $lang['com_required'],
+				'L_HEADER'	=> msg_head(exp_mode($mode), $lang['SERVER_TITLE'], ''),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
-				'L_LANG'	=> $lang['data_input'],
-			
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
+				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
 			
 			break;
-			
-		case 'delete':
 		
-			$data_sql = data(SERVER, $data, false, 1, true);
-		
-			if ( $data && $confirm )
-			{
-				$sql = sql(SERVER, $mode, $data_sql, 'server_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
-				
-				orders(SERVER);
-				
-				log_add(LOG_ADMIN, $log, $mode, $sql);
-				message(GENERAL_MESSAGE, $msg);
-			}
-			else if ( $data_id && !$confirm )
-			{
-				$fields .= build_fields(array(
-					'mode'	=> $mode,
-					'id'	=> $data,
-				));
-	
-				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['com_confirm'],
-					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['server_name']),
-
-					'S_ACTION'	=> check_sid($file),
-					'S_FIELDS'	=> $fields,
-				));
-			}
-			else
-			{
-				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
-			}
-			
-			break;
-			
 		case 'gameq_create':
 		case 'gameq_update':
 		
@@ -272,7 +237,7 @@ else
 			
 			$vars = array(
 				'gameq' => array(
-					'title1' => 'input_data',
+					'title' => 'INPUT_DATA2',
 					'gameq_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
 					'gameq_game'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_game'),
 					'gameq_dport'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:10;10', 'required' => 'input_dport'),
@@ -281,8 +246,7 @@ else
 				)
 			);
 			
-			if ( $mode == 'gameq_create' && !$submit )
-		#	if ( $mode == 'gameq_create' && !$submit && $userauth['a_servertype'] )
+			if ( $mode == 'gameq_create' && !$submit && $userauth['A_SERVER_TYPE'] )
 			{
 				$data_sql = array(
 					'gameq_name'	=> request('gameq_name', TXT),
@@ -294,7 +258,7 @@ else
 			}
 			else if ( $mode == 'gameq_update' && !$submit )
 			{
-				$data_sql = data(GAMEQ, $data, false, 1, true);
+				$data_sql = data(GAMEQ, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -302,16 +266,15 @@ else
 				
 				if ( !$error )
 				{
-					if ( $mode == 'gameq_create' )
-				#	if ( $mode == 'gameq_create' && $userauth['a_servertype'] )
+					if ( $mode == 'gameq_create' && $userauth['A_SERVER_TYPE'] )
 					{
 						$sql = sql(GAMEQ, $mode, $data_sql);
-						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = sprintf($lang['RETURN'], langs(exp_mode($mode)), check_sid($file), $_top);
 					}
-					else
+					else if ( $userauth['A_SERVER_TYPE'] )
 					{
 						$sql = sql(GAMEQ, $mode, $data_sql, 'gameq_id', $data);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = sprintf($lang['RETURN_UPDATE'], langs(exp_mode($mode)), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, substr($mode, strpos($mode, '_')+1), $sql);
@@ -330,14 +293,14 @@ else
 				'id'	=> $data,
 			));
 			
-			$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_' . substr($mode, strpos($mode, '_')+1)], $lang['gameq_title'], $data_sql['gameq_name']),
-				'L_EXPLAIN'	=> $lang['com_required'],
+				'L_HEADER'	=> msg_head(exp_mode($mode), $lang['GAMEQ_TITLE'], $data_sql['gameq_name']),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
-			
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
+				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
@@ -357,7 +320,7 @@ else
 			
 			if ( !$submit )
 			{
-				$data_sql = data(GAMEQ, "WHERE gameq_type = $type", 'gameq_id ASC', 1, false);
+				$data_sql = data(GAMEQ, "WHERE gameq_type = $type", 'gameq_id ASC', 1, 'set');
 			}
 			else
 			{
@@ -383,11 +346,11 @@ else
 							}
 						}
 						
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&type=$type"));
+						$msg = $lang['UPDATE'] . sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&type=$type"));
 					}
 					else
 					{
-						$msg = $lang['empty'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&type=$type"));
+						$msg = $lang['empty'] . sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&type=$type"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode);
@@ -405,41 +368,54 @@ else
 				'mode'	=> $mode,
 				'type'	=> $type,
 			));
+			
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 		
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['sprintf_' . substr($mode, strpos($mode, '_')+1)], $lang['gameq_title']),
-				'L_EXPLAIN'	=> $lang['com_required'],
-			
+				'L_HEADER'	=> msg_head(exp_mode($mode), $lang['GAMEQ_TITLE'], ''),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
+				
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
+				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
 			
 			break;
 		
-		case 'gameq_delete':
+		case 'delete':
 		
-			$data_sql = data(SERVER_TYPE, $data, false, 1, true);
-		
-			if ( $data && $confirm )
+			switch ( $action )
 			{
-				$sql = sql(SERVER_TYPE, $mode, $data_sql, 'gameq_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
-				
-				orders(SERVER_TYPE, '-1');
-				
+				case 'server': $_del = array('server_id', SERVER, 'server_name'); $orders = true;	break;
+				case 'gameq': $_del = array('gameq_id', GAMEQ, 'gameq_name'); $orders = false;	break;
+			}
+		
+			$sqlout = data($_del[1], $data, false, 1, 'row');
+
+			if ( $data && $accept )
+			{
+				$sql = sql($_del[1], $mode, $sqlout, $_del[0], $data);
+				$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
+
+				if ( $orders )
+				{
+					orders($_del[1]);
+				}
+
 				log_add(LOG_ADMIN, $log, $mode, $sql);
 				message(GENERAL_MESSAGE, $msg);
 			}
-			else if ( $data_id && !$confirm )
+			else if ( $data && !$accept )
 			{
 				$fields .= build_fields(array(
 					'mode'	=> $mode,
 					'id'	=> $data,
 				));
-	
+				
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['com_confirm'],
-					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['gameq_name']),
+					'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+					'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $sqlout[$_del[2]]),
 
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -447,15 +423,15 @@ else
 			}
 			else
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+				message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 			}
-			
+
 			break;
 			
 		case 'move_up':
 		case 'move_down':
 		
-			move(SERVER, $mode, $order);
+			move(SERVER, $mode, $order, false, 'server_type', $type);
 			log_add(LOG_ADMIN, $log, $mode);
 		
 		default:
@@ -468,34 +444,34 @@ else
 					
 					$fields = build_fields(array('mode' => 'create'));
 					
-					$game	= data(SERVER, 'WHERE server_type = 0', 'server_order ASC', 1, false);
-					$voice	= data(SERVER, 'WHERE server_type = 1', 'server_order ASC', 1, false);
-					$live	= data(SERVER, 'WHERE server_live = 1', 'server_order ASC', 1, false);
+					$sqlout_g	= data(SERVER, 'WHERE server_type = 0', 'server_order ASC', 1, 'set');
+					$sqlout_v	= data(SERVER, 'WHERE server_type = 1', 'server_order ASC', 1, 'set');
+					$sqlout_l	= data(SERVER, 'WHERE server_live = 1', 'server_order ASC', 1, 'set');
 					
-					if ( $live )
-					{
-						$online = array();
-						
-						foreach ( $live as $row )
-						{
-							$online[] = array('type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port'], 'id' => $row['server_id']);
-						}
-						
-						if ( $online )
-						{
-							$gq_server = cached_gameq($online, 'data_servers', 240);
-						}
-					}
+				#	if ( $sqlout_l )
+				#	{
+				#		$online = array();
+				#		
+				#		foreach ( $sqlout_l as $row )
+				#		{
+				#			$online[] = array('type' => $row['server_game'], 'host' => $row['server_ip'] . ':' . $row['server_port'], 'id' => $row['server_id']);
+				#		}
+				#		
+				#		if ( $online )
+				#		{
+				#			$gq_server = cached_gameq($online, 'data_servers', 240);
+				#		}
+				#	}
 					
-					if ( !$game )
+					if ( !$sqlout_g )
 					{
 						$template->assign_block_vars('display.game_empty', array());
 					}
 					else
 					{
-						$max = count($game);
+						$max = count($sqlout_g);
 						
-						foreach ( $game as $row )
+						foreach ( $sqlout_g as $row )
 						{
 							$id		= $row['server_id'];
 							$name	= $row['server_name'];
@@ -510,27 +486,27 @@ else
 							$template->assign_block_vars('display.game_row', array(
 								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, ''),
 								'TYPE'		=> $type ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_match', ''),
-								'USERS'		=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? sprintf($lang['cur_max'], $u_cur, $u_max) : '',
-								'STATUS'	=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? $lang['online'] : $lang['offline'],
+								'USERS'		=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? sprintf($lang['CURRENT_MAX'], $u_cur, $u_max) : '',
+								'STATUS'	=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? $lang['ONLINE'] : $lang['OFFLINE'],
 								
-								'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-								'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down', 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+								'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order, 'type' => 0), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+								'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down', 'order' => $order, 'type' => 0), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 								
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
 					
-					if ( !$voice )
+					if ( !$sqlout_v )
 					{
 						$template->assign_block_vars('display.voice_empty', array());
 					}
 					else
 					{
-						$max = count($voice);
+						$max = count($sqlout_v);
 						
-						foreach ( $voice as $row )
+						foreach ( $sqlout_v as $row )
 						{
 							$id		= $row['server_id'];
 							$name	= $row['server_name'];
@@ -545,14 +521,14 @@ else
 							$template->assign_block_vars('display.voice_row', array(
 								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, ''),
 								'TYPE'		=> $type ? img('i_icon', 'icon_sound', '') : img('i_icon', 'icon_match', ''),
-								'USERS'		=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? sprintf($lang['cur_max'], $u_cur, $u_max) : '',
-								'STATUS'	=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? $lang['online'] : $lang['offline'],
+								'USERS'		=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? sprintf($lang['CURRENT_MAX'], $u_cur, $u_max) : '',
+								'STATUS'	=> ( isset($gq_server[$id]['gq_online']) && $gq_server[$id]['gq_online'] ) ? $lang['ONLINE'] : $lang['OFFLINE'],
 								
-								'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-								'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down', 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+								'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order, 'type' => 1), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+								'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down', 'order' => $order, 'type' => 1), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 								
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
@@ -562,11 +538,11 @@ else
 				case 'gameq':
 				
 					$template->assign_block_vars('gameq', array());
-			
-					$fields			= '<input type="hidden" name="mode" value="gameq_create" />';
 					
-					$gameq_game		= data(GAMEQ, 'WHERE gameq_type = 0', 'gameq_id ASC', 1, false);
-					$gameq_voice	= data(GAMEQ, 'WHERE gameq_type = 1', 'gameq_id ASC', 1, false);
+					$fields			= build_fields(array('mode' => 'gameq_create'));
+			
+					$gameq_game		= data(GAMEQ, 'WHERE gameq_type = 0', 'gameq_id ASC', 1, 'set');
+					$gameq_voice	= data(GAMEQ, 'WHERE gameq_type = 1', 'gameq_id ASC', 1, 'set');
 							
 					if ( !$gameq_game )
 					{
@@ -585,8 +561,8 @@ else
 								'GAME'		=> $row['gameq_game'],
 								'DPORT'		=> $row['gameq_dport'],
 								
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'gameq_update', 'id' => $id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'gameq_delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'gameq_update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
@@ -608,29 +584,25 @@ else
 								'GAME'		=> $row['gameq_game'],
 								'DPORT'		=> $row['gameq_dport'],
 								
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'gameq_update', 'id' => $id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'gameq_delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'gameq_update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
 					
-					$template->assign_vars(array(
-						
-					));
-				
 					break;
 			}
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_header'], (($action == 'server') ? $lang['title'] : $lang['gameq_title'])),
-				'L_CREATE'	=> sprintf($lang['stf_create'], (($action == 'server') ? $lang['title'] : $lang['gameq_title'])),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang["{$langs}_TITLE"]),
+				'L_CREATE'	=> sprintf($lang['STF_CREATE'], $lang["{$langs}_TITLE"]),
 				
-				'L_EXPLAIN'	=> (($action == 'server') ? $lang['explain'] : $lang['gameq_explain']),
-				'L_GAME'	=> $lang['typ_game'],
-				'L_VOICE'	=> $lang['typ_voice'],
+				'L_EXPLAIN'	=> $lang["{$langs}_TITLE"],
+				'L_GAME'	=> $lang['TYP_GAME'],
+				'L_VOICE'	=> $lang['TYP_VOICE'],
 				
-				'LIST_GAME'		=> href('a_txt', $file, array('mode' => (($action == 'server') ? 'server_list' : 'gameq_list'), 'type' => 0), $lang['all_update'], $lang['all_update']),
-				'LIST_VOICE'	=> href('a_txt', $file, array('mode' => (($action == 'server') ? 'server_list' : 'gameq_list'), 'type' => 1), $lang['all_update'], $lang['all_update']),
+				'LIST_GAME'		=> href('a_txt', $file, array('mode' => (($action == 'server') ? 'server_list' : 'gameq_list'), 'type' => 0), $lang['COMMON_ALL_UPDATE'], $lang['COMMON_ALL_UPDATE']),
+				'LIST_VOICE'	=> href('a_txt', $file, array('mode' => (($action == 'server') ? 'server_list' : 'gameq_list'), 'type' => 1), $lang['COMMON_ALL_UPDATE'], $lang['COMMON_ALL_UPDATE']),
 		
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,

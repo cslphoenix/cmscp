@@ -3,14 +3,14 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_ranks',
-		'cat'		=> 'settings',
-		'modes'		=> array(
-			'overview'	=> array('title' => 'acp_overview'),
-			'forum'		=> array('title' => 'acp_ranks_forum'),
-			'page'		=> array('title' => 'acp_ranks_page'),
-			'team'		=> array('title' => 'acp_ranks_team'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_RANKS',
+		'CAT'		=> 'SETTINGS',
+		'MODES'		=> array(
+			'OVERVIEW'	=> array('TITLE' => 'ACP_OVERVIEW'),
+			'FORUM'		=> array('TITLE' => 'ACP_RANKS_FORUM'),
+			'PAGE'		=> array('TITLE' => 'ACP_RANKS_PAGE'),
+			'TEAM'		=> array('TITLE' => 'ACP_RANKS_TEAM'),
 		)
 	);
 }
@@ -21,12 +21,12 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current = 'acp_ranks';
+	$current = 'ACP_RANKS';
 	
 	include('./pagestart.php');
 
 	add_lang('ranks');
-	acl_auth(array('a_team_ranks', 'a_forum_ranks', 'a_user_ranks'));
+	acl_auth(array('A_TEAM_RANKS', 'A_FORUM_RANKS', 'A_USER_RANKS'));
 
 	$error	= '';
 	$index	= '';
@@ -44,19 +44,16 @@ else
 	$order	= request('order', INT);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
-	
-	$dir_path	= $root_path . $settings['path_ranks'];
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
-	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
-	
-	$template->set_filenames(array(
-		'body'		=> 'style/acp_ranks.tpl',
-		'confirm'	=> 'style/info_confirm.tpl',
-	));
 
+	$cancel ? redirect('admin/' . check_sid($file, true)) : false;
+	
+	$template->set_filenames(array('body' => "style/$current.tpl"));
 	$mode = (in_array($mode, array('create', 'update', 'delete', 'move_up', 'move_down'))) ? $mode : false;
-	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
+	$path = $root_path . $settings['path']['ranks'];
+	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
+	
+	debug($path, '$path');
 
 	switch ( $mode )
 	{
@@ -64,20 +61,22 @@ else
 		case 'update':
 		
 			$template->assign_block_vars('input', array());
-			$template->assign_vars(array('IPATH' => $dir_path));
+			$template->assign_vars(array('IPATH' => $path));
 			
 			$vars = array(
 				'rank' => array(
-					'title1' => 'input_data',
+					'title' => 'INPUT_DATA',
 					'rank_name'			=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
-					'rank_image'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image', 'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
+					'rank_image'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image', 'params' => array($path, array('.png', '.jpg', '.jpeg', '.gif'), false)),
 					'rank_type'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:ranks', 'params' => array('type', true, false)),
-					'rank_special'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno2', 'params' => array('type', false, false), 'divbox' => true),
+					'rank_special'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:special', 'params' => array('type', false, false), 'divbox' => true),
 					'rank_standard'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'params' => array(false, false, false), 'divbox' => true),
 					'rank_min'			=> array('validate' => INT,	'explain' => false,	'type' => 'text:5;5', 'divbox' => true),
 					'rank_order'		=> 'hidden',
 				)
 			);
+			
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 			
 			if ( $mode == 'create' && !$submit )
 			{
@@ -93,7 +92,7 @@ else
 			}
 			else if ( $mode == 'update' && !$submit )
 			{
-				$data_sql = data(RANKS, $data, false, 1, true);
+				$data_sql = data(RANKS, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -111,15 +110,15 @@ else
 					
 					if ( $mode == 'create' )
 					{
-						$data_sql['rank_order'] = maxa(RANKS, 'rank_order', "rank_type = {$data_sql['rank_type']}");
+						$data_sql['rank_order'] = _max(RANKS, 'rank_order', "rank_type = {$data_sql['rank_type']}");
 						
 						$sql = sql(RANKS, $mode, $data_sql);
-						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = $lang['CREATE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 					}
 					else
 					{
 						$sql = sql(RANKS, $mode, $data_sql, 'rank_id', $data);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = $lang['UPDATE'] . sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -134,8 +133,10 @@ else
 			build_output(RANKS, $vars, $data_sql);
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['rank_name'])),
-				'L_EXPLAIN'	=> $lang['com_required'],
+				'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['rank_name']),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
+				
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
 				
 				'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 				'S_FIELDS'	=> $fields,
@@ -147,12 +148,12 @@ else
 		
 			/*	im moment wird der rang einfach gelöscht, sollte aber meldung geben falls rang verwendet wird und löschung sperren!	*/
 		
-			$data_sql = data(RANKS, $data, false, 1, true);
+			$data_sql = data(RANKS, $data, false, 1, 'row');
 		
 			if ( $data && $confirm )
 			{
 				$sql = sql(RANKS, $mode, $data_sql, 'rank_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+				$msg = $lang['DELETE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 				
 				orders(RANKS, $data['rank_type']);
 				
@@ -171,8 +172,8 @@ else
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";			
 		
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['com_confirm'],
-						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['rank_name']),
+						'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+						'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $data['rank_name']),
 						
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -181,7 +182,7 @@ else
 			}
 			else
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+				message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 			}
 
 			break;
@@ -200,16 +201,16 @@ else
 			
 			switch ( $action )
 			{
-				case 'overview':$sqlout = data(RANKS, false, 'rank_type ASC ,rank_order ASC', 1, 5, false, false, 'rank_type');	break;
-				case 'page':	$sqlout = data(RANKS, 'WHERE rank_type = ' . RANK_PAGE, 'rank_order ASC', 1, 5, false, false, 'rank_type');	break;
-				case 'forum':	$sqlout = data(RANKS, 'WHERE rank_type = ' . RANK_FORUM, 'rank_order ASC', 1, 5, false, false, 'rank_type');	break;
-				case 'team':	$sqlout = data(RANKS, 'WHERE rank_type = ' . RANK_TEAM, 'rank_order ASC', 1, 5, false, false, 'rank_type');	break;
+				case 'overview':$sqlout = data(RANKS, false, 'rank_type ASC ,rank_order ASC', 1, 'group', false, false, 'rank_type');	break;
+				case 'page':	$sqlout = data(RANKS, 'WHERE rank_type = ' . RANK_PAGE, 'rank_order ASC', 1, 'group', false, false, 'rank_type');	break;
+				case 'forum':	$sqlout = data(RANKS, 'WHERE rank_type = ' . RANK_FORUM, 'rank_order ASC', 1, 'group', false, false, 'rank_type');	break;
+				case 'team':	$sqlout = data(RANKS, 'WHERE rank_type = ' . RANK_TEAM, 'rank_order ASC', 1, 'group', false, false, 'rank_type');	break;
 			}
 			
 			if ( !$sqlout )
 			{
 				$template->assign_block_vars('display.no_entry', array(
-					'RANKS'	=> ( $action != 'page' ) ? (( $action == 'forum' ) ? $lang['forum'] : (( $action == 'team' ) ? $lang['team'] : $lang['overview'])) : $lang['page'],
+					'RANKS'	=> ( $action != 'page' ) ? (( $action == 'forum' ) ? $lang['FORUM'] : (( $action == 'team' ) ? $lang['TEAM'] : $lang['OVERVIEW'])) : $lang['PAGE'],
 				));
 			}
 			else
@@ -236,14 +237,14 @@ else
 							
 							$template->assign_block_vars('display.typ.row', array(
 								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-								'SPECIAL'	=> ($tmp_row['rank_standard']) ? $lang['rank_standard'] : ($tmp_row['rank_min'] ? $tmp_row['rank_min'] : ' - '),
+								'SPECIAL'	=> ($tmp_row['rank_standard']) ? $lang['RANK_STANDARD'] : ($tmp_row['rank_min'] ? $tmp_row['rank_min'] : ' - '),
 								'IMAGE'		=> ($image) ? img('i_icon', 'icon_image', 'icon_image') : img('i_icon', 'icon_image2', 'icon_image2'),
 								
-								'MOVE_UP'	=> ($order != '1'	&& (($action == 'forum') ? !$tmp_row['rank_min'] : true))	? href('a_img', $file, array('mode' => 'move_up',	'type' => $typ, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-								'MOVE_DOWN'	=> ($order != $max	&& (($action == 'forum') ? !$tmp_row['rank_min'] : true))	? href('a_img', $file, array('mode' => 'move_down', 'type' => $typ, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+								'MOVE_UP'	=> ($order != '1'	&& (($action == 'forum') ? !$tmp_row['rank_min'] : true))	? href('a_img', $file, array('mode' => 'move_up',	'type' => $typ, 'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+								'MOVE_DOWN'	=> ($order != $max	&& (($action == 'forum') ? !$tmp_row['rank_min'] : true))	? href('a_img', $file, array('mode' => 'move_down', 'type' => $typ, 'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 								
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
@@ -258,10 +259,10 @@ else
 			}
 		
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_header'], $lang[$action]),
-				'L_CREATE'	=> sprintf($lang['stf_create'], $lang[( $action != 'page' ) ? (( $action == 'forum' ) ? 'forum' : (( $action == 'team' ) ? 'team' : 'title')) : 'page']),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang[strtoupper($action)]),
+				'L_CREATE'	=> sprintf($lang['STF_CREATE'], $lang[( $action != 'page' ) ? (( $action == 'forum' ) ? 'FORUM': (( $action == 'team' ) ? 'TEAM' : 'TITLE')) : 'PAGE']),
 				
-				'L_EXPLAIN'	=> $lang['explain'],
+				'L_EXPLAIN'	=> $lang['EXPLAIN'],
 				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,

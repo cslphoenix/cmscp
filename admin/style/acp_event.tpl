@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -36,11 +36,6 @@
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
-<ul id="navopts"><li>{L_SORT}: {S_LEVEL}</li></ul>
-</form>
-
-<br />
-
 <table class="rows">
 <tr>
 	<th>{L_UPCOMING}</th>
@@ -49,18 +44,17 @@
 
 <!-- BEGIN new -->
 <tr>
-	<td><span class="right">{display.new.DATE}</span>{display.new.TITLE}</td>
+	<td><span class="right">{display.new.DATE}</span>{display.new.TITLE}<br /><span class="small">&nbsp;<b>&raquo;</b>&nbsp;{display.new.GROUPS}</span></td>
 	<td>{display.new.UPDATE}{display.new.DELETE}</td>		
 </tr>
 <!-- END new -->
 <!-- BEGIN new_empty -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END new_empty -->
 </table>
 
-<form action="{S_ACTION}" method="post">
 <table class="lfooter">
 <tr>
 	<td><input type="text" name="event_title" /></td>
@@ -76,13 +70,13 @@
 </tr>
 <!-- BEGIN old -->
 <tr>
-	<td><span class="right">{display.old.DATE}</span>{display.old.TITLE}</td>
+	<td><span class="right">{display.old.DATE}</span>{display.old.TITLE}<br /><span class="small">&nbsp;<b>&raquo;</b>&nbsp;{display.old.GROUPS}</span></td>
 	<td>{display.old.UPDATE}{display.old.DELETE}</td>		
 </tr>
 <!-- END old -->
 <!-- BEGIN old_empty -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END old_empty -->
 </table>

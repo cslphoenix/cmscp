@@ -4,6 +4,9 @@
 .birthday, a.birthday		{ color:#0F0; font-weight:normal; }
 .event, a.event				{ color:#FF0; font-weight:normal; }
 .war, a.war					{ color:#0FF; font-weight:normal; }
+
+.holidays, a.holidays	{ color:#C00; font-weight:normal; }
+
 .match, a.match				{ color:#0FF; font-weight:normal; }
 .training, a.training 		{ color:#09F; font-weight:normal; }
 em.news, span.news, a.news 	{ color:#F90; font-weight:normal; }

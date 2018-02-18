@@ -24,7 +24,7 @@ function update_main_id($id, $user = false, $group = false, $color_update = fals
 		}
 	}
 	
-	$sql = "SELECT user_id, $info, user_level FROM " . USERS . " WHERE user_id IN (" . implode(', ', $user) . ")";
+	$sql = "SELECT user_id, $info FROM " . USERS . " WHERE user_id IN (" . implode(', ', $user) . ")";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -53,23 +53,6 @@ function update_main_id($id, $user = false, $group = false, $color_update = fals
 			if ( $data )
 			{
 				$sql .= ", user_color = '{$data['group_color']}'";
-				
-				if ( $data['group_access'] == ADMIN && ( $row['user_level'] < ADMIN || $row['user_level'] < MOD || $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
-				{
-					$sql .= ", user_level = " . ADMIN;
-				}
-				else if ( $data['group_access'] == MOD && ( $row['user_level'] < MOD || $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
-				{
-					$sql .= ", user_level = " . MOD;
-				}
-				else if ( $data['group_access'] == MEMBER && ( $row['user_level'] < MEMBER || $row['user_level'] < TRIAL ) )
-				{
-					$sql .= ", user_level = " . MEMBER;
-				}
-				else if ( $data['group_access'] == TRIAL && $row['user_level'] < TRIAL )
-				{
-					$sql .= ", user_level = " . TRIAL;
-				}
 			}
 			
 			$sql .= " WHERE user_id = {$row['user_id']}";
@@ -139,11 +122,16 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
 		if ( defined('IN_ADMIN') )
 		{
 			$data = array_merge($submit, array($id_field => $id));
-			$data_db = data($table, $id, false, 1, true);
+			$data_db = data($table, $id, false, 1, 'row');
+			
+		#	debug($data, 'data');
+		#	debug($data_db, 'data_db');
 			
 			if ( $data_db )
 			{
 				$new = array_diff_assoc($data_db, $data);
+				
+			#	debug($new, 'new');
 				
 				if ( $new )
 				{
@@ -278,10 +266,19 @@ function sql($table, $type, $submit, $id_field = '', $id = '')
  *	@param: both	$s_fetch	example: true or false 
  *
  */
-function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_time = '', $s_separate = '')
+function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_time = '', $s_separate = '', $s_limit = false)
 {
 	global $db, $lang, $oCache;
 	
+#	debug($s_table, '$s_table');
+#	debug($s_where, '$s_where');
+#	debug($s_order, '$s_order');
+#	debug($s_sql, '$s_sql');
+#	debug($s_fetch, '$s_fetch 1234');
+#	debug($s_cache, '$s_cache');
+#	debug($s_time, '$s_time');
+#	debug($s_separate, '$s_separate');
+
 	switch ( $s_table )
 	{
 		case NEWS:			$field_id = 'news_id';	$field_link = 'news_cat';	$table_link = NEWS_CAT;	$field_id2 = 'cat_id';	break;
@@ -359,22 +356,24 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_
 
 	$order = ( $s_order ) ? "ORDER BY $s_order" : '';
 	
+	$limit = ( $s_limit ) ? "LIMIT 0, $s_limit" : '';
+	
 	switch ( $s_sql )
 	{
-		case 0: $sql = "SELECT * FROM $s_table $order"; break;
-		case 1: $sql = "SELECT * FROM $s_table $where $order"; break;
+		case 0: $sql = "SELECT * FROM $s_table $order $limit"; break;
+		case 1: $sql = "SELECT * FROM $s_table $where $order $limit"; break;
 		case 2: $sql = "SELECT t1.*, t2.* FROM $s_table t1, $table_link t2 WHERE t1.$field_id = $s_where AND t1.$field_link = t2.$field_id2"; break;
-		case 3: $sql = "SELECT t1.*, t2.* FROM $s_table t1 LEFT JOIN $table_link t2 ON t1.$field_link = t2.$field_id2 $order";
+		case 3: $sql = "SELECT t1.*, t2.* FROM $s_table t1 LEFT JOIN $table_link t2 ON t1.$field_link = t2.$field_id2 $order $limit";
 				$sql .= ($s_where) ? " WHERE t1.$field_id = $s_where" : ""; break;
 		/* match only ? */
-		case 4: $sql = "SELECT m.*, t.*, g.* FROM {$tmp_ary['s_table1']} m LEFT JOIN {$tmp_ary['s_table2']} t ON m.{$tmp_ary['field_link1']} = t.{$tmp_ary['field_id2']} LEFT JOIN {$tmp_ary['s_table3']} g ON t.{$tmp_ary['field_link2']} = g.{$tmp_ary['field_id3']} $where $order"; break;
+		case 4: $sql = "SELECT m.*, t.*, g.* FROM {$tmp_ary['s_table1']} m LEFT JOIN {$tmp_ary['s_table2']} t ON m.{$tmp_ary['field_link1']} = t.{$tmp_ary['field_id2']} LEFT JOIN {$tmp_ary['s_table3']} g ON t.{$tmp_ary['field_link2']} = g.{$tmp_ary['field_id3']} $where $order $limit"; break;
 		case 5: $sql = "SELECT * FROM {$ary['s_table1']} $where"; break;
 		default: message(GENERAL_ERROR, 'Wrong mode for data', '', __LINE__, __FILE__); break;
 	}
 	
 	$sCacheName = strtolower($s_table);
 	
-	if ( defined('CACHE') && $s_cache )
+	if ( defined('CACHE') && $s_cache === true )
 	{
 		if ( ( $data = $oCache->readCache($sCacheName) ) === false )
 		{
@@ -382,11 +381,11 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_
 			{
 				message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 			}
-			
+
 			switch ( $s_fetch )
 			{
-				case 0:	$data = $db->sql_fetchrowset($result);	break;
-				case 1:	$data = $db->sql_fetchrow($result);		break;
+				case 'set':	$data = $db->sql_fetchrowset($result);	break;
+				case 'row':	$data = $db->sql_fetchrow($result);		break;
 				case 2:
 					
 					while ( $row = $db->sql_fetchrow($result) )
@@ -420,9 +419,11 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_
 					}
 					
 					break;
-
-                case 5: /*  acp_network */
-
+				
+				case 'group':
+					
+					/*  acp_network, acp_attachment */
+					
 					while ( $row = $db->sql_fetchrow($result) )
 					{
 						$data[$row[$s_separate]][] = $row;
@@ -444,11 +445,11 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_
 		{
 			message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 		}
-		
+
 		switch ( $s_fetch )
 		{
-			case 0:	$data = $db->sql_fetchrowset($result);	break;				
-			case 1:	$data = $db->sql_fetchrow($result);		break;
+			case 'set':	$data = $db->sql_fetchrowset($result);	break;
+			case 'row':	$data = $db->sql_fetchrow($result);		break;
 			case 2:
 				
 				while ( $row = $db->sql_fetchrow($result) )
@@ -471,9 +472,12 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_
 				
 				while ( $row = $db->sql_fetchrow($result) )
 				{
+					/*	2017.12.19 - geändert, für Galerie und Forum, Array Index gleich Haupt ID */
+				#	debug($row[$field_id]);
+					
 					if ( !$row['main'] )
 					{
-						$data['main'][] = $row;
+						$data['main'][$row[$field_id]] = $row;
 					}
 					else
 					{
@@ -483,8 +487,9 @@ function data($s_table, $s_where, $s_order, $s_sql, $s_fetch, $s_cache = '', $s_
 				
 				break;
 				
-			case 5: /*  acp_network */
-				
+			case 'group':
+			
+				/*  acp_network, acp_attachment */
 				while ( $row = $db->sql_fetchrow($result) )
 				{
 					$data[$row[$s_separate]][] = $row;

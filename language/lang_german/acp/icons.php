@@ -7,19 +7,25 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Icons',
-	'explain'	=> 'Verwaltung der Icons für Beiträge und Downloads.',
+	'TITLE'		=> 'Icons',
+	'EXPLAIN'	=> 'Verwaltung der Icons für Beiträge und Downloads.',
 	
-	'icon_icon'		=> 'Bild',
-	'icon_name'		=> 'Iconname',
-	'icon_tag'		=> 'Spiel Tag',
-	'icon_image'	=> 'Spiel Bild',
+	'ICON_ICON'		=> 'Bild',
+	'ICON_NAME'		=> 'Iconname',
+	'ICON_TAG'		=> 'Spiel Tag',
+	'ICON_IMAGE'	=> 'Spiel Bild',
 	
-	'icon_path'		=> 'Pfad',
-	'icon_width'	=> 'Breite',
-	'icon_height'	=> 'Höhe',
-	'icon_topic'	=> 'Beiträge',
-	'icon_download'	=> 'Downloads',
+	'ICON_PATH'		=> 'Pfad',
+	'ICON_WIDTH'	=> 'Breite',
+	'ICON_HEIGHT'	=> 'Höhe',
+	'ICON_TOPIC'	=> 'Beiträge',
+	'ICON_DOWNLOAD'	=> 'Downloads',
+	
+	'CODE'		=> 'Code',
+	'EMOTION'	=> 'Gefühl',
+	
+	'ICONS'		=> 'Icons',
+	'SMILEY'	=> 'Smilies',
 
 ));
 

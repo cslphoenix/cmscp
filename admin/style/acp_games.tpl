@@ -1,4 +1,5 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -42,24 +43,55 @@ function update_image(newimage)
 </form>
 <!-- END input -->
 
+<!-- BEGIN list -->
+<form action="{S_ACTION}" method="post">
+
+{ERROR_BOX}
+
+<table class="rows2">
+<tr>
+	<!-- BEGIN name_option -->
+	<th{list.name_option.CSS}>{list.name_option.NAME}</th>
+	<!-- END name_option -->
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<!-- BEGIN type_option -->
+	<td>{list.row.type_option.TYPE}</td>
+	<!-- END type_option -->
+</tr>
+<!-- END row -->
+</table>
+
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END list -->
+
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th>{L_NAME}</th>
+	<th><span class="right">{H_ALL}</span>{L_NAME}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.row.TAG}</span>{display.row.GAME} {display.row.NAME}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td><span class="right">{display.row.GAME}</span>{display.row.NAME}</td>
+	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.UPDATE}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">

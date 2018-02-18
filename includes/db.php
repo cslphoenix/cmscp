@@ -5,7 +5,18 @@ if ( !defined('IN_CMS') )
 	die('Hacking attempt');
 }
 
-include($root_path . 'includes/mysql4.php');
+#include($root_path . 'includes/mysql4.php');
+
+switch ( $dbms )
+{
+	case 'mysqli':
+		include($root_path . 'includes/mysqli.php');
+		break;
+
+	case 'mysql4':
+		include($root_path . 'includes/mysql4.php');
+		break;
+}
 
 // Make the database connection.
 //$db = new sql_db($db_host, $db_user, $db_pwd, $db_name, false);

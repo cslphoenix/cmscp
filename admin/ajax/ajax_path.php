@@ -24,7 +24,7 @@ if ( isset($_POST['cat']) )
 	}
 	$tmp_db = $db->sql_fetchrow($result);
 	
-	$files	= scandir($root_path . $settings['path_maps'] . $tmp_db['map_tag']);
+	$files	= scandir($root_path . $settings['path']['maps'] . $tmp_db['map_tag']);
 	$format	= array('png', 'jpg', 'jpeg', 'gif');
 	
 	$tmeta	= 'map';
@@ -47,7 +47,7 @@ if ( isset($_POST['cat']) )
 		
 		if ( $tmp_files )
 		{
-			$img_path = './../' . $settings['path_maps'] . $tmp_db['map_tag'] . '/';
+			$img_path = './../' . $settings['path']['maps'] . $tmp_db['map_tag'] . '/';
 										
 			$current_image = '';
 			
@@ -59,19 +59,19 @@ if ( isset($_POST['cat']) )
 				
 				$mask = str_replace(substr($row, strrpos($row, '.')), "", $row);
 	
-				$opt .= '<option value="' . $row . '">' . sprintf($lang['stf_select_format'], $mask) . '</option>';
+				$opt .= '<option value="' . $row . '">' . sprintf($lang['STF_SELECT_FORMAT'], $mask) . '</option>';
 			}
 			
 			$opt .= '</select><br /><img src="' . $current_image . '" id="image2" alt="" /></div><div id="ajax_content"></div>';
 		}
 		else
 		{
-			$opt  = '<div id="close">select cat oder keine bilder vorhanden</div><div id="ajax_content"></div>';
+			$opt  = '<div id="close">' . $lang['NOTICE_SELECT_CAT-IMAGE'] . '</div><div id="ajax_content"></div>';
 		}
 	}
 	else
 	{
-		$opt = '<div id="close">select cat oder keine bilder vorhanden</div><div id="ajax_content"></div>';
+		$opt = '<div id="close">' . $lang['NOTICE_SELECT_CAT-IMAGE'] . '</div><div id="ajax_content"></div>';
 	}
 	
 	echo $opt;

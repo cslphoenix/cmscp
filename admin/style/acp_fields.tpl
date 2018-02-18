@@ -12,7 +12,6 @@ function display_options(value)
 		dE('main', -1);
 		dE('field_fields', -1);
 		dE('field_typ', -1);
-		dE('field_lang', -1);
 		dE('field_show_user', -1);
 		dE('field_show_member', -1);
 		dE('field_show_register', -1);
@@ -23,7 +22,6 @@ function display_options(value)
 		dE('main', 1);
 		dE('field_fields', 1);
 		dE('field_typ', 1);
-		dE('field_lang', 1);
 		dE('field_show_user', 1);
 		dE('field_show_member', 1);
 		dE('field_show_register', 1);

@@ -1,4 +1,5 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -110,6 +111,61 @@ function update_ajax_{input.update_image.NAME}(newimage)
 </form>
 <!-- END input -->
 
+<!-- BEGIN upload -->
+{ERROR_BOX}
+<br /><div align="center">{ERROR_BOX_PLAYER}</div>
+<form action="{S_ACTION}" method="post" enctype="multipart/form-data">
+<fieldset>
+	<legend>{L_MAPS_PIC}</legend>
+
+    <dl>
+        <dt>{L_MAP}:</dt>
+        <dd><div><div><input class="post" name="map_name[]" type="text" id="map_name[]">&nbsp;<input type="file" name="ufile[]" id="ufile[]">&nbsp;<input type="button" class="more" value="{L_MORE}" onclick="clone(this)"></div></div></dd>
+    </dl>
+
+</fieldset>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_UPLOAD}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
+{S_FIELDS}
+
+</form>
+<!-- END upload -->
+
+<!-- BEGIN list -->
+<form action="{S_ACTION}" method="post">
+
+{ERROR_BOX}
+
+<table class="rows2">
+<tr>
+	<!-- BEGIN name_option -->
+	<th>{list.name_option.NAME}</th>
+	<!-- END name_option -->
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<!-- BEGIN type_option -->
+	<td>{list.row.type_option.TYPE}</td>
+	<!-- END type_option -->
+</tr>
+<!-- END row -->
+</table>
+
+
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END list -->
+
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
@@ -120,14 +176,14 @@ function update_ajax_{input.update_image.NAME}(newimage)
 <!-- BEGIN row -->
 <tr>
 	<td><span class="right">{display.row.INFO}</span>{display.row.NAME}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.UPDATE}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">

@@ -7,44 +7,42 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Training',
-	'explain'	=> 'Hier kannst du Trainings der Teams Verwalten.',
-	'explain_u'	=> 'Hier kannst du Trainings der Teams Verwalten.',
-	
-	'input_data'	=> 'Trainingsdaten',
+	'TITLE'				=> 'Training',
+	'EXPLAIN'			=> 'Hier kannst du Trainings der Teams Verwalten.',
+		
+	'INPUT_DATA'		=> 'Trainingsdaten',
 
-	'upcoming'	=> 'Anstehende Trainings',
-	'expired'	=> 'Abgelaufen Trainings',
+	'TRAINING_VS'		=> 'Gegen',
+	'TRAINING_DATE'		=> 'Datum',
+	'TRAINING_MAPS'		=> 'Karte(n)',
+	'TRAINING_TEXT'		=> 'Bericht',
+	'TRAINING_DURATION'	=> 'Dauer',
+	'TRAINING_COMMENTS'	=> 'Kommentare erlauben?',
+	'TEAM_ID'			=> 'Team',
+	'MATCH_ID'			=> 'Begegnung',
 	
-	'training_vs'		=> 'Gegen',
-	'training_date'		=> 'Datum',
-	'training_maps'		=> 'Karte(n)',
-	'training_text'		=> 'Bericht',
-	'training_duration'	=> 'Dauer',
-	'training_comments'	=> 'Kommentare',
-	'team_id'			=> 'Team',
-	'match_id'			=> 'Begegnung',
+	'UPCOMING'			=> 'Anstehende Trainings',
+	'EXPIRED'			=> 'Abgelaufen Trainings',
 	
-	'create'	=> 'hinzugefügt',
-	'update'	=> 'geändert',
+	'USER_CREATE'		=> 'hinzugefügt',
+	'USER_UPDATE'		=> 'geändert',
 	
-	'status_yes'		=> 'will/kann spielen',
-	'status_no'			=> 'will/kann nicht spielen',
-	'status_replace'	=> 'Ersatzspieler',
+	'STATUS_YES'		=> 'will/kann spielen',
+	'STATUS_NO'			=> 'will/kann nicht spielen',
+	'STATUS_REPLACE'	=> 'Ersatzspieler',
 	
-	'no_time'	=> 'Keine Zeit vorhanden',
+	'NO_TIME'			=> 'Keine Zeit vorhanden',	
+	'NO_PLAYER'			=> 'Keine Spieler eingetragen!',
 	
-	'no_player'			=> 'Keine Spieler eingetragen!',
-	'subscriber'	=> 'Teilnehmer',
+	'SUB'				=> 'Teilnehmer',
+	'SUB_ADD'			=> 'Teilnehmer hinzufügen',
+	'SUB_ADD_EXPLAIN'	=> 'Hier kannst Du, Teilnehmer hinzufügen. Trage die <b>Benutzernamen</b> pro Zeile ein.',
+	'SUB_SET_STATUS'	=> 'Spielerstatus',
 	
-	'subscriber_add'			=> 'Teilnehmer hinzufügen',
-	'subscriber_add_explain'	=> 'Hier kannst Du, Teilnehmer hinzufügen. Trage die <b>Benutzernamen</b> pro Zeile ein.',
-	'subscriber_set_status'		=> 'Spielerstatus',
+	'UPDATE_CHANGE'		=> 'Rechte wurden erfolgreich geändert.',
+	'UPDATE_DELETE'		=> 'Benutzer wurden erfolgreich gelöscht.',
+	'UPDATE_CREATE'		=> 'Benutzer wurden erfolgreich hinzugefügt.',
 	
-	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
-	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
-	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
-
 ));
 
 ?>

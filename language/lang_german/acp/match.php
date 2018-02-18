@@ -7,178 +7,157 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Begegnung',
-	'explain'	=> 'Begegnung Details',
+	'TITLE'			=> 'Begegnung',
+	'EXPLAIN'		=> 'Begegnung Details',
 	
-	'input_data'	=> 'Begegnungsdaten',
+	'INPUT_DATA'	=> 'Begegnungsdaten',
 	
-		
-	'upcoming'	=> 'Anstehende Begegnung',
-	'expired'	=> 'Abgelaufen Begegnung',
+	'UPCOMING'	=> 'Anstehende Begegnung',
+	'EXPIRED'	=> 'Abgelaufen Begegnung',
 
-	'input_standard'	=> 'Standard',
-	'input_rival'		=> 'Gegner',
-	'input_server'		=> 'Server',
-	'input_message'		=> 'Kommentar & Report',
-	'input_training'	=> 'Training',
-	'input_details'		=> 'Details',
+	'INPUT_STANDARD'	=> 'Standard',
+	'INPUT_RIVAL'		=> 'Gegner',
+	'INPUT_SERVER'		=> 'Server',
+	'INPUT_MESSAGE'		=> 'Kommentar & Report',
+	'INPUT_TRAINING'	=> 'Training',
+	'INPUT_DETAILS'		=> 'Details',
 
-	'type_unknown'	=> 'unbekannt',
-	'type_two'		=> '2on2',
-	'type_three'	=> '3on3',
-	'type_four'		=> '4on4',
-	'type_five'		=> '5on5',
-	'type_six'		=> '6on6',
+#	'type_unknown'	=> 'unbekannt',
+#	'type_two'		=> '2on2',
+#	'type_three'	=> '3on3',
+#	'type_four'		=> '4on4',
+#	'type_five'		=> '5on5',
+#	'type_six'		=> '6on6',
 	
-	'msg_select_mtype'		=> 'Bitte Typ auswählen',
-	'msg_select_mwar'		=> 'Bitte Wartype auswählen',
-	'msg_select_mleague'	=> 'Bitte Liga auswählen',
+#	'msg_select_mtype'		=> 'Bitte Typ auswählen',
+#	'msg_select_mwar'		=> 'Bitte Wartype auswählen',
+#	'msg_select_mleague'	=> 'Bitte Liga auswählen',
 	
-	'msg_select_member'		=> 'Bitte 1 oder mehrere Mitglieder auswählen!',
-	'msg_select_option'		=> 'Bitte eine <b>Option</b> auswählen!',
-/*
-	'match_type' => array(
-		'type_unknown'	=> 'unbekannt',
-		'type_two'		=> '2on2',
-		'type_three'	=> '3on3',
-		'type_four'		=> '4on4',
-		'type_five'		=> '5on5',
-		'type_six'		=> '6on6',
-	),
+#	'msg_select_member'		=> 'Bitte 1 oder mehrere Mitglieder auswählen!',
+#	'msg_select_option'		=> 'Bitte eine <b>Option</b> auswählen!',
 
-	'match_war' => array(
-		'war_fun'		=> 'Fun War',
-		'war_training'	=> 'Training War',
-		'war_clan'		=> 'Clan War',
-		'war_league'	=> 'Liga War',
-	),
+	'TEAM_ID'				=> 'Team',
+	'MATCH_TYPE'			=> 'Typ',
+	'MATCH_WAR'				=> 'Begegnungstyp',
+	'MATCH_LEAGUE'			=> 'Liga',
+	'MATCH_LEAGUE_MATCH'	=> 'Match-ID',
+	'MATCH_DATE'			=> 'Datum',
+	'MATCH_PUBLIC'			=> 'Öffentlich',
+	'MATCH_COMMENTS'		=> 'Kommentare',
+	'MATCH_RIVAL_NAME'		=> 'Gegner Name',
+	'MATCH_RIVAL_TAG'		=> 'Gegner Clantag',
+	'MATCH_RIVAL_URL'		=> 'Gegner Homepage',
+	'MATCH_RIVAL_LOGO'		=> 'Gegner Logo',
+	'MATCH_RIVAL_LINEUP'	=> 'Gegner Lineup',
+	'MATCH_SERVER_IP'		=> 'Server IP',
+	'MATCH_SERVER_PW'		=> 'Server Passwort',
+	'MATCH_HLTV_IP'			=> 'HLTV-Server IP',
+	'MATCH_HLTV_PW'			=> 'HLTV-Server Passwort',
+	
+	'MATCH_COMMENT'		=> 'Kommentar',
+	'MATCH_REPORT'		=> 'Report',
+	
+	'TRAINING'			=> 'Training',
+	'TRAINING_ON'		=> 'Training planen',
+	
+	'notice_select_type'		=> 'Bitte ein Type auswählen!',
+	'notice_select_war'			=> 'Bitte ein Wartype auswählen!',
+	'notice_select_league'		=> 'Bitte eine Liga auswählen!',
 
-	'match_league' => array(
-		'league_nope'	=> array('name' => 'keine Liga', 'url' => 'leer'),
-		'league_esl'	=> array('name' => 'ESL', 'url' => 'http://www.esl.eu/'),
-		'league_sk'		=> array('name' => 'Stammkneipe', 'url' => 'http://www.stammkneipe.eu/'),
-		'league_liga'	=> array('name' => '0815 Liga', 'url' => 'http://www.0815liga.eu/'),
-		'league_lgz'	=> array('name' => 'Leaguez', 'url' => 'http://www.lgz.eu/'),
-		'league_te'		=> array('name' => 'TE', 'url' => 'http://www.tactical-esports.de/'),
-		'league_xgc'	=> array('name' => 'XGC', 'url' => 'http://www.xgc-online.de/'),
-		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
-	),
-*/
-	'team_id'				=> 'Team',
-	'match_type'			=> 'Typ',
-	'match_war'				=> 'Begegnungstyp',
-	'match_league'			=> 'Liga',
-	'match_league_match'	=> 'Match-ID',
-	'match_date'			=> 'Datum',
-	'match_public'			=> 'Öffentlich',
-	'match_comments'		=> 'Kommentare',
-	'match_rival_name'		=> 'Gegner Name',
-	'match_rival_tag'		=> 'Gegner Clantag',
-	'match_rival_url'		=> 'Gegner Homepage',
-	'match_rival_logo'		=> 'Gegner Logo',
-	'match_rival_lineup'	=> 'Gegner Lineup',
-	'match_server_ip'		=> 'Server IP',
-	'match_server_pw'		=> 'Server Passwort',
-	'match_hltv_ip'			=> 'HLTV-Server IP',
-	'match_hltv_pw'			=> 'HLTV-Server Passwort',
+#	'training_date'		=> 'Datum',
+#	'training_duration'	=> 'Dauer',
+#	'training_maps'		=> 'Karte(n)',
+#	'training_text'		=> 'Zusatz',
 	
-	'match_comment'		=> 'Kommentar',
-	'match_report'		=> 'Report',
+#	'reset_list'	=> 'Teilnahmen reset?',
 	
-	'training'			=> 'Training',
-	'training_on'		=> 'Training planen',
-	'training_date'		=> 'Datum',
-	'training_duration'	=> 'Dauer',
-	'training_maps'		=> 'Karte(n)',
-	'training_text'		=> 'Zusatz',
+#	'training_create'	=> 'hinzufügen',
+#	'training_update'	=> 'Trainingsliste',
 	
-	'reset_list'	=> 'Teilnahmen reset?',
-	
-	'training_create'	=> 'hinzufügen',
-	'training_update'	=> 'Trainingsliste',
-	
-	'match_comment_exp'			=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
-	'match_report_exp'			=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
-	'match_rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
+#	'match_comment_exp'			=> 'Öffentlicher Kommentar oder Zusatzinfos zum Match.',
+#	'match_report_exp'			=> 'Text der nur für Interne Zwecke verwendet werden sollte.',
+#	'match_rival_lineup_exp'	=> 'Gegner ohne Clantag mit Komma getrennt aufschreiben.',
 
-	
-	
 	/* Detail */
 	/* Lineup */
-	'lineup'			=> 'Clan Lineup',
-	'lineup_rival'		=> 'Gegner Lineup',
-	'lineup_status'		=> 'Spielerstatus',
-	'lineup_add'		=> 'Spieler hinzufügen',
-	'lineup_add_exp'	=> 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.',
+#	'lineup'			=> 'Clan Lineup',
+#	'lineup_rival'		=> 'Gegner Lineup',
+#	'lineup_status'		=> 'Spielerstatus',
+#	'lineup_add'		=> 'Spieler hinzufügen',
+#	'lineup_add_exp'	=> 'Spieler einfach mit gedrückter STRG Taste auswählen und Absenden.',
 	
-	'status_set'		=> 'Status %s setzen',
-	'status_player'		=> 'Spieler',
-	'status_replace'	=> 'Ersatz',
+#	'status_set'		=> 'Status %s setzen',
+#	'status_player'		=> 'Spieler',
+#	'status_replace'	=> 'Ersatz',
 	
-	'sprintf_round'		=> 'Runde: %s',
+#	'sprintf_round'		=> 'Runde: %s',
 	
 	
 	/* details maps */
-	'detail_maps'			=> 'Maps hinzufügen',
-	'detail_maps_pic'		=> 'Maps mit Bildern hinzufügen',
-	'detail_maps_overview'	=> 'Maps Übersicht',
+#	'detail_maps'			=> 'Maps hinzufügen',
+#	'detail_maps_pic'		=> 'Maps mit Bildern hinzufügen',
+#	'detail_maps_overview'	=> 'Maps Übersicht',
 	
-	'detail_map'			=> 'Map',
-	'detail_points'			=> 'Punkte',
-	'detail_mappic'			=> 'Bild',
+#	'detail_map'			=> 'Map',
+#	'detail_points'			=> 'Punkte',
+#	'detail_mappic'			=> 'Bild',
 	
 #	'match_type'	=> 'match_type',
 #	'match_war'		=> 'match_war',
 #	'match_league'	=> 'match_league',
 
 #	'delete_user'	=> 'Benutzer gelöscht',
-	'user_create'	=> 'Benutzer hinzugefügt',
-	'user_update'	=> 'Benutzerstatus geändert',
-	'user_delete'	=> 'Benutzer gelöscht',
+#	'user_create'	=> 'Benutzer hinzugefügt',
+#	'user_update'	=> 'Benutzerstatus geändert',
+#	'user_delete'	=> 'Benutzer gelöscht',
 	
-	'rival_overview'	=> 'Gegner Übersicht',
+#	'rival_overview'	=> 'Gegner Übersicht',
 	
-	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
-	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
-	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
+#	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
+#	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
+#	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
 
+	'UPCOMING'	=> 'Anstehende Begegnung',
+	'EXPIRED'	=> 'Abgelaufen Begegnung',
+	
+	'RIVAL'		=> 'Gegner',
 	
 ));
 
 $lang = array_merge($lang, array(
 	
-	'ary_match_type' => array(
-		'type_unknown'	=> $lang['type_unknown'],
-		'type_two'		=> $lang['type_two'],
-		'type_three'	=> $lang['type_three'],
-		'type_four'		=> $lang['type_four'],
-		'type_five'		=> $lang['type_five'],
-		'type_six'		=> $lang['type_six'],
-	),
+#	'ary_match_type' => array(
+#		'type_unknown'	=> $lang['type_unknown'],
+#		'type_two'		=> $lang['type_two'],
+#		'type_three'	=> $lang['type_three'],
+#		'type_four'		=> $lang['type_four'],
+#		'type_five'		=> $lang['type_five'],
+#		'type_six'		=> $lang['type_six'],
+#	),
 	
-	'ary_match_war' => array(
-		'war_fun'		=> 'Fun War',
-		'war_training'	=> 'Training War',
-		'war_clan'		=> 'Clan War',
-		'war_league'	=> 'Liga War',
-	),
+#	'ary_match_war' => array(
+#		'war_fun'		=> 'Fun War',
+#		'war_training'	=> 'Training War',
+#		'war_clan'		=> 'Clan War',
+#		'war_league'	=> 'Liga War',
+#	),
 	
-	'ary_match_league' => array(
-		'league_nope'	=> array('name' => 'keine Liga', 'url' => 'leer'),
-		'league_esl'	=> array('name' => 'ESL', 'url' => 'http://www.esl.eu/'),
-		'league_sk'		=> array('name' => 'Stammkneipe', 'url' => 'http://www.stammkneipe.eu/'),
-		'league_liga'	=> array('name' => '0815 Liga', 'url' => 'http://www.0815liga.eu/'),
-		'league_lgz'	=> array('name' => 'Leaguez', 'url' => 'http://www.lgz.eu/'),
-		'league_te'		=> array('name' => 'TE', 'url' => 'http://www.tactical-esports.de/'),
-		'league_xgc'	=> array('name' => 'XGC', 'url' => 'http://www.xgc-online.de/'),
-		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
-	),
+#	'ary_match_league' => array(
+#		'league_nope'	=> array('name' => 'keine Liga', 'url' => 'leer'),
+#		'league_esl'	=> array('name' => 'ESL', 'url' => 'http://www.esl.eu/'),
+#		'league_sk'		=> array('name' => 'Stammkneipe', 'url' => 'http://www.stammkneipe.eu/'),
+#		'league_liga'	=> array('name' => '0815 Liga', 'url' => 'http://www.0815liga.eu/'),
+#		'league_lgz'	=> array('name' => 'Leaguez', 'url' => 'http://www.lgz.eu/'),
+#		'league_te'		=> array('name' => 'TE', 'url' => 'http://www.tactical-esports.de/'),
+#		'league_xgc'	=> array('name' => 'XGC', 'url' => 'http://www.xgc-online.de/'),
+#		'league_ncsl'	=> array('name' => 'NCSL', 'url' => 'http://www.ncsl.de/'),
+#	),
 ));
 
 
 
-$lang['no_users'] = 'Keine Mitglieder im Team!';
-$lang['no_users_store'] = 'Keine Mitglieder gespeichert.';
+#$lang['no_users'] = 'Keine Mitglieder im Team!';
+#$lang['no_users_store'] = 'Keine Mitglieder gespeichert.';
 
 
 

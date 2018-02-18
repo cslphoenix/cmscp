@@ -7,12 +7,12 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'title'		=> 'Forum',
-	'cat'		=> 'Kategorie',
+	'TITLE'		=> 'Forum',
+		'CAT'		=> 'Kategorie',
 	
 	'forum'		=> 'Forum',
 	'forum_c'	=> 'Kategorie',
-	'explain'	=> 'Hier kann man die Kategorien, Foren und Subforen alle samt Verwalten.',
+	'EXPLAIN'	=> 'Hier kann man die Kategorien, Foren und Subforen alle samt Verwalten.',
 
 	'icon'		=> 'Forumicon',
 	'sub'		=> 'Subforum',
@@ -122,7 +122,7 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'radio:status'	=> array(0 => $lang['opened'], 1 => $lang['closed']),
-	'radio:legend'	=> array(1 => $lang['com_view'], 0 => $lang['com_noview']),
+	'radio:legend'	=> array(1 => $lang['COMMON_VIEW'], 0 => $lang['COMMON_NONE_VIEW']),
 	
 ));
 

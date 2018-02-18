@@ -6,28 +6,28 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
+	'TITLE'				=> 'Network',
+	'EXPLAIN'			=> 'Hier kannst Du Links, Partner und Sponsoren verwalten.',
 	
-	'title'		=> 'Network',
-	'explain'	=> 'Hier kannst Du Links, Partner und Sponsoren verwalten.',
+	'INPUT_DATA'		=> 'Daten',
 	
-	'data_input'	=> 'Daten',
-	
-	'network_name'	=> 'Name',
-	'network_url'	=> 'Link',
-	'network_image'	=> 'Bild',
-	'network_type'	=> 'Typ',
-	'network_view'	=> 'Anzeigen',
+	'NETWORK_NAME'		=> 'Name',
+	'NETWORK_URL'		=> 'Link',
+	'NETWORK_IMAGE'		=> 'Bild',
+	'NETWORK_TYPE'		=> 'Typ',
+	'NETWORK_VIEW'		=> 'Anzeigen',
 
-	'network_link'		=> 'Link',
-	'network_partner'	=> 'Partner',
-	'network_sponsor'	=> 'Sponsor',
-
+	'NETWORK_LINK'		=> 'Link',
+	'NETWORK_PARTNER'	=> 'Partner',
+	'NETWORK_SPONSOR'	=> 'Sponsor',
 ));
 
 $lang = array_merge($lang, array(
-	
-	'radio:network'	=> array(NETWORK_LINK => $lang['network_link'], NETWORK_PARTNER => $lang['network_partner'], NETWORK_SPONSOR => $lang['network_sponsor']),
-	
+	'radio:network'	=> array(
+		NETWORK_LINK	=> $lang['NETWORK_LINK'],
+		NETWORK_PARTNER	=> $lang['NETWORK_PARTNER'],
+		NETWORK_SPONSOR	=> $lang['NETWORK_SPONSOR']
+	),
 ));
 
 ?>

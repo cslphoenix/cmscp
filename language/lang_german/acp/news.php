@@ -7,32 +7,36 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title_news'		=> 'News',
-	'title_cat'			=> 'Newskategorie',
+	'TITLE_NEWS'		=> 'News',
+	'TITLE_CAT'			=> 'Newskategorie',
 	'title_newsletter'	=> 'Newsletter',
 	'title_submitted'	=> 'Eingesendet',
 
-	'input_data'		=> 'Daten',
+	'INPUT_DATA'		=> 'Daten',
+	'INPUT_DATA_CAT'	=> 'Newskategorie Daten',
 
-	'explain_news'			=> 'Hier kannst du die News Verwalten.',
-	'explain_cat'			=> 'Hier kannst du die Newskategorien Verwalten.',
+	'EXPLAIN_NEWS'			=> 'Hier kannst du die News Verwalten.',
+	'EXPLAIN_CAT'			=> 'Hier kannst du die Newskategorien Verwalten.',
 	'explain_newsletter'	=> 'Newsletter krims kram',
 	'explain_submitted'		=> 'Eingesendet News',
 
-	'news_title'		=> 'Titel',
-	'news_cat'		=> 'Kategorie',
-	'news_match'		=> 'Begegnung',
-	'news_vote'		=> 'Umfrage',
-	'news_text'		=> 'Text',
-	'news_links'		=> 'Links',
-	'news_date'		=> 'Datum',
-	'news_public'		=> 'Öffentlich',
-	'news_intern'		=> 'Interne News',
-	'news_comments'		=> 'Kommentare',
-	'news_rate'		=> 'Bewertung',
+	'NEWS_TITLE'	=> 'Titel',
+	'NEWS_CAT'		=> 'Kategorie',
+	'NEWS_MATCH'	=> 'Begegnung',
+	'NEWS_VOTE'		=> 'Umfrage',
+	'NEWS_TEXT'		=> 'Text',
+	'NEWS_LINKS'	=> 'Links',
+	'NEWS_DATE'		=> 'Datum',
+	'NEWS_PUBLIC'	=> 'Öffentlich',
+	'NEWS_INTERN'	=> 'Interne News',
+	'NEWS_COMMENTS'	=> 'Kommentare',
+	'NEWS_RATE'		=> 'Bewertung',
 
-	'cat_name'	=> 'Name',
-	'cat_image'	=> 'Bild',
+	'CAT_NAME'	=> 'Name',
+	'CAT_IMAGE'	=> 'Bild',
+	
+	
+	
 ));
 
 ?>

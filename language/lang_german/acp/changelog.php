@@ -11,8 +11,8 @@ $lang = array_merge($lang, array(
 	
 	'acp_change'		=> 'Änderungsprotokoll',
 
-	'title'				=> 'Änderungsprotokoll',
-	'explain'			=> 'Hier kannst du Änderungsprotokoll anlegen.',
+	'TITLE'		=> 'Änderungsprotokoll',
+	'EXPLAIN'	=> 'Hier kannst du Änderungsprotokoll anlegen.',
 	
 	'change_num'	=> 'Name',
 	'change_date'	=> 'Datum',

@@ -141,7 +141,35 @@ if ( $userdata['session_logged_in'] )
 			
 			foreach ( $tmp as $row )
 			{
-				if ( $userdata['user_level'] >= $row['event_level'] )
+				$user_in_groups = $in_group = '';
+					
+				if ( is_array(unserialize($row['event_group'])) )
+				{
+					$sql = "SELECT type_id FROM " . LISTS . " WHERE type = " . TYPE_GROUP . " AND user_pending != 1 AND user_id = " . $userdata['user_id'];
+					if ( !($result = $db->sql_query($sql)) )
+					{
+						message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+					}
+					$user_in_groups = $db->sql_fetchrowset($result);
+				}
+				
+				if ( $user_in_groups )
+				{
+					$event_group = unserialize($row['event_group']);
+					
+					foreach ( $user_in_groups as $groups )
+					{
+						foreach ( $groups as $group_id )
+						{
+							if ( in_array($group_id, $event_group) )
+							{
+								$in_group = true;
+							}
+						}
+					}
+				}
+				
+				if ( $in_group )
 				{
 					if ( $row['event_date'] > $time )
 					{
@@ -479,9 +507,9 @@ if ( $userdata['session_logged_in'] )
 			'L_HEAD'		=> $lang['main_ucp'],
 			
 			'L_NEWS'		=> $lang['lobby_news'],
-			'L_EVENT'		=> $lang['cal_events'],
-			'L_MATCH'		=> $lang['cal_matchs'],
-			'L_TRAIN'		=> $lang['cal_trainings'],
+			'L_EVENT'		=> $lang['CAL_EVENTS'],
+			'L_MATCH'		=> $lang['CAL_MATCHS'],
+			'L_TRAIN'		=> $lang['CAL_TRAININGS'],
 			
 			'L_UPCOMING'	=> $lang['upcoming'],
 			'L_EXPIRED'		=> $lang['expired'],
@@ -617,7 +645,7 @@ if ( $userdata['session_logged_in'] )
 					}
 			}
 
-			$msg = $lang[$smode] . sprintf($lang['return'], check_sid("$file?mode=lobby"), $lang['main_ucp']);
+			$msg = $lang[$smode] . sprintf($lang['RETURN'], check_sid("$file?mode=lobby"), $lang['main_ucp']);
 			
 			message(GENERAL_MESSAGE, $msg);
 		}
@@ -723,7 +751,7 @@ if ( $userdata['session_logged_in'] )
 						{
 							$checked_yes	= ( $value == 1 ) ? 'checked="checked"' : '';
 							$checked_no		= ( $value == 0 ) ? 'checked="checked"' : '';
-							$input = "<label><input type=\"radio\" name=\"$field\" value=\"1\" $checked_yes/>&nbsp;{$lang['com_yes']}</label><span style=\"padding:4px;\"></span><label><input type=\"radio\" name=\"$field\" value=\"0\" $checked_no/>&nbsp;{$lang['com_no']}</label>";
+							$input = "<label><input type=\"radio\" name=\"$field\" value=\"1\" $checked_yes/>&nbsp;{$lang['COMMON_YES']}</label><span style=\"padding:4px;\"></span><label><input type=\"radio\" name=\"$field\" value=\"0\" $checked_no/>&nbsp;{$lang['COMMON_NO']}</label>";
 						}
 						
 						$template->assign_block_vars("update.cat.field", array(

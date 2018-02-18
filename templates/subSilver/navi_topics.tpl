@@ -9,7 +9,7 @@
 <!-- END sn_topics_row -->
 <!-- BEGIN sn_topics_empty -->
 <tr>
-	<td class="empty">{sn_topics_empty.L_EMPTY}</td>
+	<td class="none">{sn_topics_empty.L_NONE}</td>
 </tr>
 <!-- END sn_topics_empty -->
 </table>

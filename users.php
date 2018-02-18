@@ -431,10 +431,10 @@ else if ( in_array($mode, array('g', 't')) )
 		}
 		
 		$s_opt .= "<select class=\"postselect\" name=\"smode\" id=\"smode\" onchange=\"setRequest(this.options[selectedIndex].value);\">";
-		$s_opt .= "<option value=\"\">" . sprintf($lang['stf_select_format'], $lang['com_select_option']) . "</option>";
-		$s_opt .= "<option value=\"_user_level\">" . sprintf($lang['stf_select_format'], $lang['notice_select_permission']) . "</option>";
-		$s_opt .= ( $mode == 'g' ) ? "" : "<option value=\"_user_setrank\">" . sprintf($lang['stf_select_format'], $lang['select_rank']) . "</option>";
-		$s_opt .= "<option value=\"_user_delete\">" . sprintf($lang['stf_select_format'], $lang['com_delete']) . "</option>";
+		$s_opt .= "<option value=\"\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['COMMON_SELECT_OPTION']) . "</option>";
+		$s_opt .= "<option value=\"_user_level\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_PERMISSION']) . "</option>";
+		$s_opt .= ( $mode == 'g' ) ? "" : "<option value=\"_user_setrank\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['select_rank']) . "</option>";
+		$s_opt .= "<option value=\"_user_delete\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['COMMON_DELETE']) . "</option>";
 		$s_opt .= "</select>";
 		
 	#	$s_opt = "<select class=\"postselect\" name=\"smode\">";
@@ -601,7 +601,7 @@ else if ( in_array($mode, array('g', 't')) )
 		
 		$template->assign_vars(array(
 			'TYPE'		=> sprintf('%s: %s', $page_title, ( $mode == 'g' ) ? $info['group_name'] : $info['team_name']),
-			'OVERVIEW'	=> href('a_txt', $file, array('mode' => $type), $lang['common_overview']), 
+			'OVERVIEW'	=> href('a_txt', $file, array('mode' => $type), $lang['COMMON_OVERVIEW']), 
 					
 			'DETAILS' => $detail,
 			

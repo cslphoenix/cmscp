@@ -9,7 +9,7 @@
 <!-- END sn_news_row -->
 <!-- BEGIN sn_news_empty -->
 <tr>
-	<td class="empty">{sn_news_empty.L_EMPTY}</td>
+	<td class="none">{sn_news_empty.L_NONE}</td>
 </tr>
 <!-- END sn_news_empty -->
 </table>

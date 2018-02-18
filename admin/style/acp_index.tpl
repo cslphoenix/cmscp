@@ -1,93 +1,135 @@
 <li class="header">{L_WELCOME}</li>
 <p>{L_EXPLAIN}</p>
-{SESSION}
-<table>
-<tr>
-	<td width="50%" class="top">
-		<table class="info">
-		<tr>
-			<th>{L_INFO}</th>
-			<th>{L_VALUE}</th>
-		</tr>
-		<tr>
-			<td>{L_PAGE_STARTED}:</td>
-			<td>{PAGE_STARTED}</td>
-		</tr>
-		<tr>
-			<td>{L_PAGE_VERSION}:</td>
-			<td>{PAGE_VERSION}</td>
-		</tr>
-		<tr>
-			<td>{L_PAGE_BACKUP}:</td>
-			<td><span title="{PAGE_BACKUP_INFO}">{PAGE_BACKUP}</span></td>
-		</tr>
-		<tr>
-			<td>{L_PAGE_GZIP}:</td>
-			<td>{PAGE_GZIP}</td>
-		</tr>
-		<tr>
-			<td>{L_SERVER}:</td>
-			<td>{SERVER}</td>
-		</tr>
-		<tr>
-			<td>{L_DB_INFO}:</td>
-			<td><span title="{DB_INFO_INFO}">{DB_INFO}</span></td>
-		</tr>
-		</table>
-	</td>
-	<td width="50%" class="top">
-		<table class="info">
-		<tr>
-			<th>{L_DIR}</th>
-			<th>{L_SIZE}</th>
-		</tr>
-		<!--
-		<th><ul id="navlist"><li><a href="#" id="right" onclick="return false;">{L_DIR}</a></li></ul></th>
-		<th><ul id="navlist"><li><a href="#" id="current" onclick="return false;">{L_SIZE}</a></li></ul></th>
-		-->
-		<tr>
-			<td>{L_SIZE_CACHE}:</td>
-			<td>{SIZE_CACHE}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_FILES}:</td>
-			<td>{SIZE_FILES}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_DOWNLOADS}:</td>
-			<td>{SIZE_DOWNLOADS}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_GALLERY}:</td>
-			<td>{SIZE_GALLERY}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_MATCHS}:</td>
-			<td>{SIZE_MATCHS}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_USERS}:</td>
-			<td>{SIZE_USERS}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_GROUPS}:</td>
-			<td>{SIZE_GROUPS}</td>
-		</tr>
-        <tr>
-			<td>{L_SIZE_TEAMS}:</td>
-			<td>{SIZE_TEAMS}</td>
-		</tr>
-		<tr>
-			<td>{L_SIZE_NETWORK}:</td>
-			<td>{SIZE_NETWORK}</td>
-		</tr>
-		</table>
-	</td>
-</tr>
-</table>
 
-<br />
 {ERROR_BOX}
+
+<fieldset class="full">
+	<legend>{L_STATS}</legend>
+	<table class="info">
+	<thead>
+	<tr>
+		<th>{L_INFO}</th>
+		<th>{L_VALUE}</th>
+		<th>{L_DIR}</th>
+		<th>{L_SIZE}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>{L_PAGE_STARTED}:</td>
+		<td>{PAGE_STARTED}</td>
+		<td>{L_SIZE_CACHE}:</td>
+		<td>{SIZE_CACHE}</td>
+	</tr>
+	<tr>
+		<td>{L_PAGE_VERSION}:</td>
+		<td>{PAGE_VERSION}</td>
+		<td>{L_SIZE_FILES}:</td>
+		<td>{SIZE_FILES}</td>
+	</tr>
+	<tr>
+		<td>{L_PAGE_BACKUP}:</td>
+		<td><span title="{PAGE_BACKUP_INFO}">{PAGE_BACKUP}</span></td>
+		<td>{L_SIZE_DOWNLOADS}:</td>
+		<td>{SIZE_DOWNLOADS}</td>
+	</tr>
+	<tr>
+		<td>{L_PAGE_GZIP}:</td>
+		<td>{PAGE_GZIP}</td>
+		<td>{L_SIZE_GALLERY}:</td>
+		<td>{SIZE_GALLERY}</td>
+	</tr>
+	<tr>
+		<td>{L_SERVER}:</td>
+		<td>{SERVER}</td>
+		<td>{L_SIZE_MATCHS}:</td>
+		<td>{SIZE_MATCHS}</td>
+	</tr>
+	<tr>
+		<td>{L_DB_INFO}:</td>
+		<td><span title="{DB_INFO_INFO}">{DB_INFO}</span></td>
+		<td>{L_SIZE_USERS}:</td>
+		<td>{SIZE_USERS}</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>{FILE_UPLOAD}</td>
+		<td>{L_SIZE_GROUPS}:</td>
+		<td>{SIZE_GROUPS}</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>{FILE_UPLOAD_MAX}</td>
+		<td>{L_SIZE_TEAMS}:</td>
+		<td>{SIZE_TEAMS}</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>{HTTP_ACCEPT_ENC}</td>
+		<td>{L_SIZE_NETWORK}:</td>
+		<td>{SIZE_NETWORK}</td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+<fieldset class="full">
+	<legend>{L_VIEWONLINE}</legend>
+	{L_EXPLAIN2}
+	<table class="online">
+	<thead>
+	<tr>
+		<th>{L_USERNAME}</th>
+		<th>{L_STARTED}</th>
+		<th>{L_LAST_UPDATE}</th>
+		<th>{L_FORUM_LOCATION}</th>
+		<th>{L_IP_ADDRESS}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN online_users -->
+	<tr> 
+		<td>{online_users.USERNAME}</td>
+		<td>{online_users.STARTED}</td>
+		<td>{online_users.LASTUPDATE}</td>
+		<td>{online_users.FORUM_LOCATION}</td>
+		<td><a href="{online_users.U_WHOIS_IP}" target="_phpbbwhois">{online_users.IP_ADDRESS}</a></td>
+	</tr>
+	<!-- END online_users -->
+	<!-- BEGIN online_guests -->
+	<tr> 
+		<td>{online_guests.USERNAME}</td>
+		<td>{online_guests.STARTED}</td>
+		<td>{online_guests.LASTUPDATE}</td>
+		<td>{online_guests.FORUM_LOCATION}</td>
+		<td><a href="{online_guests.U_WHOIS_IP}" target="_phpbbwhois">{online_guests.IP_ADDRESS}</a></td>
+	</tr>
+	<!-- END online_guests -->
+	</tbody>
+	</table>
+</fieldset>
+
+<br>
+{USERAUTH}
+<br>
+
+
+<fieldset>
+	<legend>{L_ACP_LOG}</legend>
+	<p>{L_EXPLAIN3}</p>
+	<div>
+		<!-- BEGIN logrow -->
+		<dl>
+			<dt>{logrow.USERNAME} :: {logrow.DATE}</dt>
+			<dd><strong>{logrow.SEKTION}&nbsp;&raquo;&nbsp;{logrow.MESSAGE}</strong><br>{logrow.DATA}</dd>
+		</dl>
+		<!-- END logrow -->
+	</div>
+</fieldset>
+
+<fieldset class="full">
+	<legend>{L_FASTVIEW}</legend>
+	{L_EXPLAIN4}<br>
 
 <div class="index">
 	<fieldset class="info">
@@ -99,7 +141,7 @@
 		</dl>
 		<!-- END news_row -->
 		<!-- BEGIN news_empty -->
-		<ul align="center">{L_EMPTY}</ul>
+		<ul align="center">{L_NONE}</ul>
 		<!-- END news_empty -->
 	</fieldset>
 </div>
@@ -114,7 +156,7 @@
 		</dl>
 		<!-- END event_row -->
 		<!-- BEGIN event_empty -->
-		<ul align="center">{L_EMPTY}</ul>
+		<ul align="center">{L_NONE}</ul>
 		<!-- END event_empty -->
 	</fieldset>
 </div>
@@ -129,7 +171,7 @@
 		</dl>
 		<!-- END match_row -->
 		<!-- BEGIN match_empty -->
-		<ul align="center">{L_EMPTY}</ul>
+		<ul align="center">{L_NONE}</ul>
 		<!-- END match_empty -->
 	</fieldset>
 </div>
@@ -144,7 +186,7 @@
 		</dl>
 		<!-- END training_row -->
 		<!-- BEGIN training_empty -->
-		<ul align="center">{L_EMPTY}</ul>
+		<ul align="center">{L_NONE}</ul>
 		<!-- END training_empty -->
 	</fieldset>
 </div>
@@ -160,34 +202,4 @@
 		<!-- END user_row -->
 	</fieldset>
 </div>
-
-<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
-<tr>
-	<th width="20%" class="thCornerL" height="25">&nbsp;{L_USERNAME}&nbsp;</th>
-	<th width="20%" height="25" class="thTop">&nbsp;{L_STARTED}&nbsp;</th>
-	<th width="20%" class="thTop">&nbsp;{L_LAST_UPDATE}&nbsp;</th>
-	<th width="20%" class="thCornerR">&nbsp;{L_FORUM_LOCATION}&nbsp;</th>
-	<th width="20%" height="25" class="thCornerR">&nbsp;{L_IP_ADDRESS}&nbsp;</th>
-</tr>
-<!-- BEGIN online_users -->
-<tr> 
-	<td width="20%" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_users.U_USER_PROFILE}" class="gen">{online_users.USERNAME}</a></span>&nbsp;</td>
-	<td width="20%" align="center" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen">{online_users.STARTED}</span>&nbsp;</td>
-	<td width="20%" align="center" nowrap="nowrap" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen">{online_users.LASTUPDATE}</span>&nbsp;</td>
-	<td width="20%" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_users.U_FORUM_LOCATION}" class="gen">{online_users.FORUM_LOCATION}</a></span>&nbsp;</td>
-	<td width="20%" class="{online_users.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_users.U_WHOIS_IP}" class="gen" target="_phpbbwhois">{online_users.IP_ADDRESS}</a></span>&nbsp;</td>
-</tr>
-<!-- END online_users -->
-<tr> 
-	<td colspan="5" height="1" class="row3"><img src="../templates/subSilver/images/spacer.gif" width="1" height="1" alt="."></td>
-</tr>
-<!-- BEGIN online_guests -->
-<tr> 
-	<td width="20%" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen">{online_guests.USERNAME}</span>&nbsp;</td>
-	<td width="20%" align="center" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen">{online_guests.STARTED}</span>&nbsp;</td>
-	<td width="20%" align="center" nowrap="nowrap" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen">{online_guests.LASTUPDATE}</span>&nbsp;</td>
-	<td width="20%" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_guests.U_FORUM_LOCATION}" class="gen">{online_guests.FORUM_LOCATION}</a></span>&nbsp;</td>
-	<td width="20%" class="{online_guests.ROW_CLASS}">&nbsp;<span class="gen"><a href="{online_guests.U_WHOIS_IP}" target="_phpbbwhois">{online_guests.IP_ADDRESS}</a></span>&nbsp;</td>
-</tr>
-<!-- END online_guests -->
-</table>
+</fieldset>

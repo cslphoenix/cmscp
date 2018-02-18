@@ -25,7 +25,7 @@ function display_navi($l_login_logout, $u_login_logout)
 	
 	$userauth = auth_acp_check($userdata['user_id']);
 	unset($tmp);
-	$sql = "SELECT * FROM " . MENU . " WHERE action = 'pcp' AND menu_show = 1 ORDER BY menu_order ASC";
+	$sql = "SELECT * FROM " . MENU . " WHERE action = 'PCP' AND menu_show = 1 ORDER BY menu_order ASC";
 	$tmp = _cached($sql, 'dsp_menu');
 
 	$logout = @unserialize($settings['navi_settings']['navi_logout']);
@@ -34,7 +34,7 @@ function display_navi($l_login_logout, $u_login_logout)
 	$separate = @unserialize($settings['navi_settings']['navi_modus']);
 	$separate = isset($separate) ? $separate : false;
 	
-#	$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+#	$admin_link = (	$userdata['user_level'] == ADMIN || $auth ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 #	'U_LOGIN_LOGOUT' => check_sid($u_login_logout),	
 #	'L_LOGIN_LOGOUT' => $l_login_logout,
 	
@@ -91,7 +91,7 @@ function display_navi($l_login_logout, $u_login_logout)
 		foreach ( $_cat as $row )
 		{
 			$template->assign_block_vars('navi.row_navi', array(
-				'NAME'	=> ($row['menu_lang']) ? lang($row['menu_name']) : $row['menu_name'],
+				'NAME'	=> langs($row['menu_name']),
 			));
 			
 			if ( isset($ary_entry[$row['menu_id']]) )
@@ -99,13 +99,12 @@ function display_navi($l_login_logout, $u_login_logout)
 				foreach ( $ary_entry[$row['menu_id']] as $erow )
 				{
 					$template->assign_block_vars('navi.row_navi.row_entry', array(
-						'NAME'		=> ($erow['menu_lang']) ? lang($erow['menu_name']) : $erow['menu_name'],
+						'NAME'		=> langs($erow['menu_name']),
 						'TARGET'	=> ($erow['menu_target']) ? '_blank' : '_self',
 						'URL'		=> $erow['menu_file'],
 					));
 				}
 			}
-			
 		}
 	}
 	
@@ -116,7 +115,7 @@ function display_navi($l_login_logout, $u_login_logout)
 		foreach ( $_cat_s as $row )
 		{
 			$template->assign_block_vars('separate.row_separate', array(
-				'NAME'	=> ($row['menu_lang']) ? lang($row['menu_name']) : $row['menu_name'],
+				'NAME'	=> langs($row['menu_name']),
 			));
 			
 			if ( isset($ary_entry[$row['menu_id']]) )
@@ -124,7 +123,7 @@ function display_navi($l_login_logout, $u_login_logout)
 				foreach ( $ary_entry[$row['menu_id']] as $erow )
 				{
 					$template->assign_block_vars('separate.row_separate.row_entry', array(
-						'NAME'		=> ($erow['menu_lang']) ? lang($erow['menu_name']) : $erow['menu_name'],
+						'NAME'		=> langs($erow['menu_name']),
 						'TARGET'	=> ($erow['menu_target']) ? '_blank' : '_self',
 						'URL'		=> $erow['menu_file'],
 					));
@@ -217,7 +216,7 @@ function display_news()
 	
 	if ( !$tmp )
 	{
-		$template->assign_block_vars('sn_news_empty', array('L_EMPTY' => $lang['header_empty_topics']));
+		$template->assign_block_vars('sn_news_empty', array('L_NONE' => $lang['header_empty_topics']));
 	}
 	else
 	{
@@ -243,9 +242,9 @@ function display_news()
 			$title	= $ary[$i]['news_title'];
 
 			$template->assign_block_vars('sn_news_row', array(
-				'CLASS' 	=> ( $i % 2 ) ? 'row1' : 'row2',
-				'GAME'		=> $game,
-				'URL'		=> href('a_txt', 'news.php', array('id' => $ary[$i]['news_id']), $title, $name),
+				'CLASS' => ( $i % 2 ) ? 'row1' : 'row2',
+				'GAME'	=> $game,
+				'URL'	=> href('a_txt', 'news.php?', array('id' => $ary[$i]['news_id']), $name, $title),
 			));
 		}
 	}
@@ -269,7 +268,7 @@ function display_match()
 	
 	if ( !$tmp )
 	{
-		$template->assign_block_vars('sn_match_empty', array('L_EMPTY' => $lang['header_empty_match']));
+		$template->assign_block_vars('sn_match_empty', array('L_NONE' => $lang['header_empty_match']));
 	}
 	else
 	{
@@ -369,7 +368,7 @@ function display_topics()
 	
 	if ( !$data )
 	{
-		$template->assign_block_vars('sn_topics_empty', array('L_EMPTY' => $lang['header_empty_news']));
+		$template->assign_block_vars('sn_topics_empty', array('L_NONE' => $lang['header_empty_news']));
 	}
 	else
 	{
@@ -404,7 +403,7 @@ function display_downloads()
 	
 	if ( !$data )
 	{
-		$template->assign_block_vars('sn_downloads_empty', array('L_EMPTY' => $lang['header_empty_downloads']));
+		$template->assign_block_vars('sn_downloads_empty', array('L_NONE' => $lang['header_empty_downloads']));
 	}
 	else
 	{
@@ -519,6 +518,93 @@ function display_network($type)
 	$template->assign_var_from_handle('NETWORK', 'network');
 }
 
+function holidays($year, $month, $day)
+{
+	global $lang, $settings;
+	
+#	debug($settings['calendar']['holidays']);
+	
+	$return = '';
+	
+	$easter_day = date("d", @easter_date($year));
+	$easter_month = date("m", @easter_date($year));
+	
+	$easter	= date('dm', easter_date($year));
+	$friday	= date("dm",mktime(0,0,0,$easter_month,$easter_day-2,$year));
+	$sunday	= date("dm",mktime(0,0,0,$easter_month,$easter_day,$year));
+	$monday	= date("dm",mktime(0,0,0,$easter_month,$easter_day+1,$year));
+	
+	$ascension	= date("dm",mktime(0,0,0,$easter_month,$easter_day+39,$year));
+	$whits		= date("dm",mktime(0,0,0,$easter_month,$easter_day+49,$year));
+	$whitm		= date("dm",mktime(0,0,0,$easter_month,$easter_day+50,$year));
+	$corpus		= date("dm",mktime(0,0,0,$easter_month,$easter_day+60,$year));
+	$dayopar	= date("dm",strtotime("-11 days", strtotime("1 sunday", mktime(0,0,0,11,26,$year))));
+	
+	switch ( $day . $month )
+	{
+		case '0101':	$return = array(CAL_HOLIDAYS, $lang['CAL_NYEAR']);	break;
+		
+		case '0601':
+			if ( in_array($settings['calendar']['state'], array('bw', 'by', 'st', 'all')) )
+			{
+				$return = array(CAL_HOLIDAYS, $lang['CAL_KINGS']);
+			}
+			
+			break;
+			
+		case $friday:	$return = array(CAL_HOLIDAYS, $lang['CAL_FRIDAY']);		break;
+		case $sunday:	$return = array(CAL_HOLIDAYS, $lang['CAL_EASTERO']);		break;
+		case $monday:	$return = array(CAL_HOLIDAYS, $lang['CAL_EASTERM']);		break;
+		case '0105':	$return = array(CAL_HOLIDAYS, $lang['CAL_MAY']);		break;
+		case $ascension: $return = array(CAL_HOLIDAYS, $lang['CAL_ASCENSION']); break;
+		case $whits:	$return = array(CAL_HOLIDAYS, $lang['CAL_WHITS']);			break;
+		case $whitm:	$return = array(CAL_HOLIDAYS, $lang['CAL_WHITM']);			break;
+		case $corpus:
+			if ( in_array($settings['calendar']['state'], array('bw', 'by', 'he', 'nw', 'rp', 'sl', 'sn', 'th', 'all')) )
+			{
+				$return = array(CAL_HOLIDAYS, $lang['CAL_CORPUS']);
+			}
+			
+			break;
+		case '1508':
+			if ( in_array($settings['calendar']['state'], array('sl', 'by', 'all')) )
+			{
+				$return = array(CAL_HOLIDAYS, $lang['CAL_ASS_UMPTION']);
+			}
+			
+			break;
+		case '0310':	$return = array(CAL_HOLIDAYS, $lang['CAL_DOGU']);		break;
+		case '3110':
+			if ( in_array($settings['calendar']['state'], array('bb', 'mv', 'sn', 'st', 'th', 'all')) )
+			{
+				$return = array(CAL_HOLIDAYS, $lang['CAL_RDAY']);
+			}
+			
+			break;
+		case '1101':
+		
+			if ( in_array($settings['calendar']['state'], array('bw', 'by', 'nw', 'rp', 'sl', 'all')) )
+			{
+				$return = array(CAL_HOLIDAYS, $lang['CAL_ASDAY']);
+			}
+			
+			break;
+		case $dayopar:
+			if ( in_array($settings['calendar']['state'], array('sn', 'all')) )
+			{
+				$return = array(CAL_HOLIDAYS, $lang['CAL_DAYOPAR']);
+			}
+			
+			break;
+		case '2412':	$return = array(CAL_HOLIDAYS, $lang['CAL_XMAS']);		break;
+		case '2512':	$return = array(CAL_HOLIDAYS, $lang['CAL_XMAS1']);		break;
+		case '2612':	$return = array(CAL_HOLIDAYS, $lang['CAL_XMAS2']);		break;
+		case '3112':	$return = array(CAL_HOLIDAYS, $lang['CAL_NYEAR']);		break;
+	}
+	
+	return $return;
+}
+
 #function display_calendar()
 function display_minical()
 {
@@ -589,7 +675,7 @@ function display_minical()
 			/*event */
 			if ( $sevent )
 			{
-				$sql = "SELECT event_id, event_date, event_duration, event_title, event_level FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$cur_month.$cur_year'";
+				$sql = "SELECT event_id, event_date, event_duration, event_title, event_group FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$cur_month.$cur_year'";
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -699,7 +785,7 @@ function display_minical()
 		/*event */
 		if ( $sevent )
 		{
-			$sql = "SELECT event_id, event_date, event_duration, event_title, event_level FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$cur_month.$cur_year'";
+			$sql = "SELECT event_id, event_date, event_duration, event_title, event_group FROM " . EVENT . " WHERE DATE_FORMAT(FROM_UNIXTIME(event_date), '%m.%Y') = '$cur_month.$cur_year'";
 			if ( !($result = $db->sql_query($sql)) )
 			{
 				message(CRITICAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -866,6 +952,7 @@ function display_minical()
 	
 	$edmk = $cur_weekdays[$cur_first];
 	$wbmk = $cur_weekdays;
+	
 	for ( $i = 0; $i < $week_start; $i++ )
 	{
 		$wechsel = array_shift($wbmk);
@@ -885,6 +972,8 @@ function display_minical()
 	{
 		$prev_day = ($prev_days - $wbmk_wechsel[$edmk]);
 		
+	#	debug($prev_day, '$prev_day');
+		
 		for ( $i = $prev_day + 1; $i < $prev_days + 1; $i++ )
 		{
 			$day .= "<td><span>$i</span></td>";
@@ -899,6 +988,7 @@ function display_minical()
 	}
 
 	$wcs = $wbmk_wechsel[$edmk];
+	$clength = $settings['module_calendar']['length'];
 	
 	for ( $i = 1; $i < $cur_days + 1; $i++ )
 	{
@@ -910,8 +1000,8 @@ function display_minical()
 		$cur_birthday	= isset($month_data['birthday'][$i])	? $month_data['birthday'][$i] : false;
 		$cur_training	= isset($month_data['training'][$i])	? $month_data['training'][$i] : false;
 		
-		if ( $i == $cur_day || is_array($cur_news) || is_array($cur_event) || is_array($cur_match) || is_array($cur_birthday) || is_array($cur_training) )
-		{
+	#	if ( $i == $cur_day || is_array($cur_news) || is_array($cur_event) || is_array($cur_match) || is_array($cur_birthday) || is_array($cur_training) )
+	#	{
 			$count = 0;
 			$style = '';
 			$event = '';
@@ -919,70 +1009,62 @@ function display_minical()
 			if ( $i == $cur_day )
 			{
 				$style = CAL_TODAY;
-				$event .= sprintf($lang['stf_cal_today'], $lang['cal_today']);
+				$event .= sprintf($lang['stf_cal_today'], $lang['CAL_TODAY']);
 				$count = $count + 1;
 			}
 			
-			if ( is_array($cur_news) )
+			if ( $settings['module_calendar']['holidays'] )
 			{
-				$action = array();
+				$temp_hd = holidays($cur_year, $cur_month, $i);
 				
-				foreach ( $cur_news as $row )
+				if ( $temp_hd )
 				{
-					$action[] = $row['news_title'];
-				}
-				
-				$style = CAL_NEWS;
-				$event .= cal_string($event, false, $lang['cal_news'], $action, false);
-				$count = $count + 1;
-			}
-			
-			if ( is_array($cur_event) )
-			{
-				$action = array();
-				
-				foreach ( $cur_event as $row )
-				{
-					if ( $userdata['user_level'] >= $row['event_level'] )
-					{
-						$date	= $row['event_date'];
-						$title	= $row['event_title'];
-						$dura	= $row['event_duration'];
-						
-						$time_a	= create_date('H:i', $date, $userdata['user_timezone']);
-						$time_b	= create_date('H:i', $dura, $userdata['user_timezone']);
-						
-						$diff	= ( $date == $dura ) ? "am gesamten Tag" : "von $time_a bis $time_b";
-						
-						$action[] = "$title: $diff";
-					}
-				}
-				
-				if ( !empty($action) )
-				{
-					$style = CAL_EVENT;
-					$event .= cal_string($action, false, ( count($action) == '1' ) ? $lang['cal_event'] : $lang['cal_events'], $action, false);
+					$style = CAL_HOLIDAYS;
+					$event .= sprintf($lang['stf_cal_today'], $temp_hd[1]);
 					$count = $count + 1;
 				}
 			}
-			
-			if ( is_array($cur_match) )
+		/*	
+			switch ( $cur_month )
 			{
-				$action = array();
-				
-				foreach ( $cur_match as $row )
-				{
-					$name = $row['match_rival_name'];
-					$time = create_date('H:i', $row['match_date'], $config['default_timezone']);
-					
-					$action[] = sprintf($lang['sprintf_empty_line'], $name, $time);
-				}
-				
-				$style = CAL_MATCH;
-				$event .= cal_string($event, false, ( count($action) == '1' ) ? $lang['cal_match'] : $lang['cal_matchs'], $action, false);
-				$count = $count + 1;
+				case '12':
+					switch ( $i )
+					{
+					#	case '6':
+					#		$style = CAL_SANTA;
+					#		$event .= sprintf($lang['stf_cal_today'], $lang['CAL_SANTA']);
+					#		$count = $count + 1;
+					#		
+					#		break;
+							
+						case '24':
+							$style = CAL_XMAS;
+							$event .= sprintf($lang['stf_cal_today'], $lang['CAL_XMAS']);
+							$count = $count + 1;
+							break;
+							
+						case '25':
+							$style = CAL_XMASS;
+							$event .= sprintf($lang['stf_cal_today'], $lang['CAL_XMASS']);
+							$count = $count + 1;
+							break;
+							
+						case '26':
+							$style = CAL_XMASS;
+							$event .= sprintf($lang['stf_cal_today'], $lang['CAL_XMASS']);
+							$count = $count + 1;
+							break;
+						
+						case '31':
+							$style = CAL_NYEAR;
+							$event .= sprintf($lang['stf_cal_today'], $lang['CAL_NYEAR']);
+							$count = $count + 1;
+							
+							break;
+					}
+					break;
 			}
-			
+		*/	
 			if ( is_array($cur_birthday) )
 			{
 				$action = array();
@@ -1001,29 +1083,127 @@ function display_minical()
 						$gebdt = $gebdt + 10000;
 					}
 	
-					$action[] = sprintf($lang['cal_birth'], $row['user_name'], $alter);
+					$action[] = sprintf($lang['CAL_AGE'], $row['user_name'], $alter);
 				}
 				
 				$style  = CAL_BIRTHDAY;
-				$event .= cal_string($event, false, ( count($action) == '1' ) ? $lang['cal_birthday'] : $lang['cal_birthdays'], $action, false);
+				$event .= cal_string($event, false, ( count($action) == '1' ) ? $lang['CAL_BIRTHDAY'] : $lang['CAL_BIRTHDAYS'], $action, false);
 				$count = $count + 1;
 			}
 			
-			if ( is_array($cur_training) && $userdata['user_level'] >= TRIAL )
+			if ( is_array($cur_news) )
 			{
-					$action = array();
+				$action = array();
+				
+				foreach ( $cur_news as $row )
+				{
+					$action[] = cut_string($row['news_title'], $clength);
+				}
+				
+				$style = CAL_NEWS;
+				$event .= cal_string($event, false, $lang['CAL_NEWS'], $action, false);
+				$count = $count + 1;
+			}
+			
+			if ( is_array($cur_event) )
+			{
+				$action = array();
+				
+				$user_in_groups = $in_group = '';
 					
-					foreach ( $cur_training as $row )
+				$sql = "SELECT type_id FROM " . LISTS . " WHERE type = " . TYPE_GROUP . " AND user_pending != 1 AND user_id = " . $userdata['user_id'];
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$user_in_groups = $db->sql_fetchrowset($result);
+				
+				foreach ( $cur_event as $row )
+				{
+					if ( $user_in_groups )
 					{
-						$name = $row['training_vs'];
-						$time = create_date('H:i', $row['training_date'], $config['default_timezone']);
+						$event_group = unserialize($row['event_group']);
 						
-						$ary[] = sprintf($lang['sprintf_empty_line'], $name, $time);
+						foreach ( $user_in_groups as $groups )
+						{
+							foreach ( $groups as $group_id )
+							{
+								if ( in_array($group_id, $event_group) )
+								{
+									$in_group = true;
+								}
+							}
+						}
 					}
 					
-					$style = CAL_TRAINING;
-					$event .= cal_string($event, false, ( count($event) == '1' ) ? $lang['cal_training'] : $lang['cal_trainings'], $action, false);
+					if ( $in_group )
+					{
+						$date	= $row['event_date'];
+						$title	= cut_string($row['event_title'], $clength);
+						$dura	= $row['event_duration'];
+						
+						$time_a	= create_date('H:i', $date, $userdata['user_timezone']);
+						$time_b	= create_date('H:i', $dura, $userdata['user_timezone']);
+						
+						$diff	= ( $date == $dura ) ? "am gesamten Tag" : "von $time_a bis $time_b";
+						
+						$action[] = "$title<br> $diff";
+					}
+				}
+				
+				if ( !empty($action) )
+				{
+					$style = CAL_EVENT;
+					$event .= cal_string($action, false, ( count($action) == '1' ) ? $lang['CAL_EVENT'] : $lang['CAL_EVENTS'], $action, false);
 					$count = $count + 1;
+				}
+			}
+			
+			if ( is_array($cur_training) )
+			{
+				$mc_uit = '';
+			
+				$sql = "SELECT type_id FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND user_id = " . $userdata['user_id'];
+				if ( !($result = $db->sql_query($sql)) )
+				{
+					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+				}
+				$mc_uit = $db->sql_fetchrowset($result);
+				
+				foreach ( $cur_training as $row )
+				{
+					if ( $mc_uit )
+					{
+						$name = cut_string($row['training_vs'], $clength);
+						$time = create_date('H:i', $row['training_date'], $config['default_timezone']);
+						
+						$action[] = sprintf($lang['sprintf_empty_line'], $name, $time);
+					}
+				}
+				
+				if ( $mc_uit )
+				{
+					$style = CAL_TRAINING;
+					$event .= cal_string($event, false, ( count($event) == '1' ) ? $lang['CAL_TRAINING'] : $lang['CAL_TRAININGS'], $action, false);
+					$count = $count + 1;
+				}
+			}
+			
+			if ( is_array($cur_match) )
+			{
+				$action = array();
+				
+				foreach ( $cur_match as $row )
+				{
+					$name = cut_string($row['match_rival_name'], $clength);
+					$time = create_date('H:i', $row['match_date'], $config['default_timezone']);
+					
+					$action[] = sprintf($lang['sprintf_empty_line'], $name, $time);
+				}
+				
+				$style = CAL_MATCH;
+				$event .= cal_string($event, false, ( count($action) == '1' ) ? $lang['CAL_MATCH'] : $lang['CAL_MATCHS'], $action, false);
+				$count = $count + 1;
 			}
 			
 			if ( $count )
@@ -1036,11 +1216,11 @@ function display_minical()
 			{
 				$day .= "<td class=\"day\">$i</td>";
 			}
-		}
-		else
-		{
-			$day .= "<td class=\"day\">$i</td>";
-		}
+	#	}
+	#	else
+	#	{
+	#		$day .= "<td class=\"day\">$i</td>";
+	#	}
 		
 		if ( $wcs < 7 )
 		{
@@ -1078,10 +1258,10 @@ function display_minical()
 				
 				$day .= '</tr><tr>';
 				
-				for ( $nextweek = $fordays; $nextweek < $next_days+1; $nextweek++ )
-				{
-					$day .= "<td><span class=\"next\">$nextweek</span></td>";
-				}
+			#	for ( $nextweek = $fordays; $nextweek < $next_days+1; $nextweek++ )
+			#	{
+			#		$day .= "<td><span class=\"next\">$nextweek</span></td>";
+			#	}
 				
 			}
 		}
@@ -1250,7 +1430,14 @@ function display_next_training()
 {
 	global $db, $oCache, $root_path, $settings, $template, $userdata, $lang;
 	
-	if ( $settings['module_next_training'] && $userdata['user_level'] >= TRIAL )
+	$sql = "SELECT type_id FROM " . LISTS . " WHERE type = " . TYPE_TEAM . " AND user_id = " . $userdata['user_id'];
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+	$nt_uit = $db->sql_fetchrowset($result);
+	
+	if ( $settings['module_next_training'] && $nt_uit )
 	{
 		$time	= time() - 86400;
 		$month	= date("m", time());
@@ -1327,7 +1514,7 @@ function display_gameicon($image)
 {
 	global $root_path, $settings;
 	
-	$return	= '<img class="icon" src="' . $root_path . $settings['path_games'] . '/' . $image . '" alt="' . $image . '" title="' . $image . '" width="16" height="16">';
+	$return	= '<img class="icon" src="' . $root_path . $settings['path']['games'] . '/' . $image . '" alt="' . $image . '" title="' . $image . '" width="16" height="16">';
 
 	return $return;
 }

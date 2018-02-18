@@ -3,11 +3,14 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_games',
-		'cat'		=> 'clan',
-		'modes'		=> array(
-			'main'	=> array('title' => 'acp_games'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_GAMES',
+		'CAT'		=> 'CLAN',
+		'MODES'		=> array(
+			'MAIN'	=> array(
+				'TITLE'	=> 'ACP_GAMES',
+				'AUTH'	=> 'A_GAME'
+			),
 		)
 	);
 }
@@ -15,40 +18,36 @@ else
 {
 	define('IN_CMS', true);
 	
-	$cancel = ( isset($_POST['cancel']) ) ? true : false;
-	$submit = ( isset($_POST['submit']) ) ? true : false;
-	
-	$current = 'acp_games';
+	$current = $log = 'ACP_GAMES';
 	
 	include('./pagestart.php');
 	
 	add_lang('games');
-	acl_auth(array('a_game', 'a_game_assort', 'a_game_create', 'a_game_delete'));
+	add_tpls('acp_games');
+	acl_auth('A_GAME');
 	
 	$error	= '';
 	$index	= '';
 	$fields = '';
 	
-	$log	= SECTION_GAMES;
 	$file	= basename(__FILE__) . $iadds;
+	$path	= $root_path . $settings['path']['games'];
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
 	$order	= request('order', INT);
-	$mode	= request('mode', TYP);	
+	$mode	= request('mode', TYP);
 	$accept	= request('accept', TYP);
-	$action	= request('action', TYP);
 	
-	$dir_path	= $root_path . $settings['path_games'];
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$submit = ( isset($_POST['submit']) ) ? true : false;
+	$cancel = ( isset($_POST['cancel']) ) ? redirect('admin/' . check_sid($file)) : false;
+#	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	
-	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
+	$mode	= ( in_array($mode, array('create', 'delete', 'move_down', 'move_up', 'list', 'update')) ) ? $mode : false;
 	
-	$template->set_filenames(array('body' => "style/$current.tpl"));
-	
-	$mode = (in_array($mode, array('create', 'delete', 'move_up', 'move_down', 'update'))) ? $mode : false;
-	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
-	
+	$_top	= sprintf($lang['STF_HEADER'], $lang['TITLE']);
+	$_tpl	= ($mode === 'delete') ? 'confirm' : 'body';
+
 	switch ( $mode )
 	{
 		case 'create':
@@ -58,28 +57,28 @@ else
 			
 			$vars = array(
 				'game' => array(
-					'title' => 'input_data',
-					'game_name'		=> array('validate' => TXT,	'explain' => true,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
+					'title'			=> 'INPUT_DATA',
+					'game_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
 					'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq',	'required' => 'select_tag',	'check' => true, 'params' => '0'),
-					'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
-					'game_order'	=> array('validate' => INT,	'explain' => false,	'type' => 'drop:order', 'params' => 'game_name'),
+					'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($path, array('.png', '.jpg', '.jpeg', '.gif'), true)),
+					'game_order'	=> 'hidden',
 				),
 			);
 			
-			$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 			
-			if ( $mode == 'create' && !$submit && $userauth['a_game_create'] )
+			if ( $mode == 'create' && !$submit )
 			{
 				$data_sql = array(
 					'game_name'		=> request('game_name', TXT),
-					'game_tag'		=> '',
+					'game_image'	=> '',
 					'game_image'	=> '',
 					'game_order'	=> 0,
 				);
 			}
 			else if ( $mode === 'update' && !$submit )
 			{
-				$data_sql = data(GAMES, $data, false, 1, true);
+				$data_sql = data(GAMES, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -87,17 +86,17 @@ else
 				
 				if ( !$error )
 				{
-					if ( $mode == 'create' && $userauth['a_game_create'] )
+					if ( $mode == 'create' )
 					{
-						$data_sql['game_order'] = maxa(GAMES, 'game_order', false);
+						$data_sql['game_order'] = _max(GAMES, 'game_order', false);
 						
 						$sql = sql(GAMES, $mode, $data_sql);
-						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 					}
-					else if ( $userauth['a_game'] )
+					else
 					{
 						$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 					log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -117,10 +116,9 @@ else
 			));
 			
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['game_name']),
-				'L_EXPLAIN'	=> $lang['com_required'],
-				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
+				'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['game_name']),
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 				
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
@@ -128,21 +126,100 @@ else
 
 			break;
 			
+		case 'list':
+		
+			$template->assign_block_vars($mode, array());
+			
+			$vars = array(
+				'game_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
+				'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:gameq',	'required' => 'select_tag',	'check' => true, 'params' => '0'),
+				'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($path, array('.png', '.jpg', '.jpeg', '.gif'), true)),
+			
+			);
+			
+			if ( $mode == 'list' && !$submit )
+			{
+				$data_sql = data(GAMES, false, 'game_order', 1, 'set');
+			}
+			else
+			{
+				$data_sql = build_request_list(GAMES, $vars, $error, 'game_id');
+				
+				if ( !$error )
+				{
+					if ( $data_sql )
+					{
+						foreach ( $data_sql as $key => $row )
+						{
+							foreach ( $row as $name => $info )
+							{
+								$ary[$key][] = "$name = '$info'";
+							}
+							$implode = implode(', ', $ary[$key]);
+							
+							debug($implode, '$implode');
+						
+						#	$sql = "UPDATE " . MAPS . " SET $implode WHERE map_id = $key";
+						#	if ( !$db->sql_query($sql) )
+						#	{
+						#		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+						#	}
+						}
+						
+						$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
+					}
+					else
+					{
+						$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
+					}
+					
+					log_add(LOG_ADMIN, $log, $mode);
+					message(GENERAL_MESSAGE, $msg);
+				}
+				else
+				{
+					error('ERROR_BOX', $error);
+				}
+			}
+			
+			build_output_list(GAMES, $vars, $data_sql, $mode);
+						
+			$fields .= build_fields(array(
+				'mode'	=> $mode,
+				'id'	=> $data,
+			));
+			
+			$template->assign_vars(array(
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+			#	'L_INPUT'	=> sprintf($lang['STF_' . strtoupper($mode)], $lang['TITLE']),
+									
+				'S_ACTION'	=> check_sid("$file"),
+				'S_FIELDS'	=> $fields,
+			));
+		
+			break;
+			
 		case 'delete':
 		
-			$data_sql = data(GAMES, $data, false, 1, true);
+			$del = array(
+				'field' => 'game_id',
+				'table'	=> GAMES,
+				'name'	=> 'game_name'
+			);
+			
+			$sqlout = data($del['table'], $data, false, 1, 'row');
 
-			if ( $data && $accept && $userauth['a_game_delete'] )
+			if ( $data && $accept && $sqlout )
 			{
-				$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+				$sql = sql($del['table'], $mode, $sqlout, $del['field'], $data);
+				$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 
-				orders(GAMES);
+				orders($del['table']);
 
 				log_add(LOG_ADMIN, $log, $mode, $sql);
 				message(GENERAL_MESSAGE, $msg);
 			}
-			else if ( $data && !$accept && $userauth['a_game_delete'] )
+			else if ( $data && !$accept )
 			{
 				$fields .= build_fields(array(
 					'mode'	=> $mode,
@@ -150,8 +227,8 @@ else
 				));
 				
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['com_confirm'],
-					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['game_name']),
+					'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+					'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $sqlout[$del['name']]),
 
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -159,7 +236,7 @@ else
 			}
 			else
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+				message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 			}
 
 			break;
@@ -167,22 +244,19 @@ else
 		case 'move_up':
 		case 'move_down':
 		
-			if ( $userauth['a_game_assort'] )
-			{
-				move(GAMES, $mode, $order);
-				log_add(LOG_ADMIN, $log, $mode);
-			}
+			move(GAMES, $mode, $order);
+			log_add(LOG_ADMIN, $log, $mode);
 			
 		default:
 		
 			$template->assign_block_vars('display', array());
 
 			$fields = build_fields(array('mode' => 'create'));
-			$sqlout = data(GAMES, false, 'game_order ASC', 1, false);
-		
+			$sqlout = data(GAMES, false, 'game_order ASC', 1, 'set');
+			
 			if ( !$sqlout )
 			{
-				$template->assign_block_vars('display.empty', array());
+				$template->assign_block_vars('display.none', array());
 			}
 			else
 			{
@@ -196,24 +270,26 @@ else
 		
 					$template->assign_block_vars('display.row', array(
 						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 						
 						'TAG'		=> $row['game_tag'],
 						'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
 						
-						'MOVE_UP'	=> $userauth['a_game_assort'] ? ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-						'MOVE_DOWN'	=> $userauth['a_game_assort'] ? ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+						'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+						'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 					));
 				}
 			}
 		
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-				'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+				'L_CREATE'	=> sprintf($lang['STF_CREATE'], $lang['TITLE']),
 				
-				'L_EXPLAIN'	=> $lang['explain'],
-				'L_NAME'	=> $lang['game_name'],
+				'L_EXPLAIN'	=> $lang['EXPLAIN'],
+				'L_NAME'	=> $lang['GAME_NAME'],
+				
+				'H_ALL'		=> href('a_txt', $file, array('mode' => 'list'), $lang['COMMON_ALL_UPDATE'], $lang['COMMON_ALL_UPDATE']),
 		
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,

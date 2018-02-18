@@ -7,8 +7,8 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Datenbank',
-	'explain'	=> 'Hier können Backups erstellt werden usw.',
+	'TITLE'		=> 'Datenbank',
+	'EXPLAIN'	=> 'Hier können Backups erstellt werden usw.',
 
 	'data_backup'	=> 'Backup',
 	'data_optimize'	=> 'Optimieren',
@@ -51,7 +51,7 @@ $lang = array_merge($lang, array(
 
 /*
 
-$lang['create'] = 'DB erstellt!';
+$lang['CREATE'] = 'DB erstellt!';
 
 
 

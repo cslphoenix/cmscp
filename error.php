@@ -18,7 +18,7 @@ if ( empty($lang) )
 	}
 }
 
-$code = request('code', 2);
+$code = request('code', INT);
 
 switch ( $code )
 {

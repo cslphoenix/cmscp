@@ -11,7 +11,7 @@
 <!-- END game_row -->
 <!-- BEGIN entry_empty_game -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END entry_empty_game -->
 <tr>
@@ -28,7 +28,7 @@
 <!-- END voice_row -->
 <!-- BEGIN entry_empty_voice -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END entry_empty_voice -->
 </table>

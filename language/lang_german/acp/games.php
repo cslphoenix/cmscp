@@ -7,15 +7,17 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Spiel',
-	'explain'	=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
+	'TITLE'			=> 'Spiel',
+	'EXPLAIN'		=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
 
-	'input_data'	=> 'Spieldaten',
+	'INPUT_DATA'	=> 'Spieldaten',
+
+	'GAME_NAME'		=> 'Spielname',
+	'GAME_TAG'		=> 'Spiel Tag',
+	'GAME_IMAGE'	=> 'Spiel Bild',
+	'GAME_ORDER'	=> 'Reihenfolge',
 	
-	'game_name'		=> 'Spielname',
-	'game_tag'		=> 'Spiel Tag',
-	'game_image'	=> 'Spiel Bild',
-	'game_order'	=> 'Postion',
+	'ERROR_SELECT_TAG'		=> 'Bitte ein <b>Spiel Tag</b> auswählen',
 
 ));
 

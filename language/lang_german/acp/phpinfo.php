@@ -6,10 +6,8 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
-	
-	'title'		=> 'PHP-Infomationen',
-	'explain'	=> 'Hier sind alle wichtigen Informationen aus der Funktion phpinfo von php!',
-	
+	'TITLE'		=> 'PHP-Infomationen',
+	'EXPLAIN'	=> 'Hier sind alle wichtigen Informationen aus der Funktion phpinfo von php!',
 ));
 
 ?>

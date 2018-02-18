@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -103,38 +103,33 @@ function set_infos(id,text)
 
 <!-- BEGIN bankdata -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist">
-	<li><a href="{S_ACTION}">{L_HEAD}</a></li>
-	<li><a href="#" id="right" onclick="return false;">{L_BANKDATA}</a></li>
-</ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
 {ERROR_BOX}
 
-<ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT_DATA}</a></li></ul>
 <!-- BEGIN row -->
-<table class="update">
+<!-- BEGIN hidden -->
+{input.row.hidden.HIDDEN}
+<!-- END hidden -->
+<fieldset>
+	<legend>{bankdata.row.L_LANG}</legend>
 <!-- BEGIN option -->
-<tr>
-<td class="row1r"><label for="{bankdata.row.KEY}_{bankdata.row.option.KEYS}">{bankdata.row.option.LNGS}:</label></td>
-	<td>
-		<!-- BEGIN input -->
-		<input type="text" name="{bankdata.row.KEY}[{bankdata.row.option.KEYS}]" id="{bankdata.row.KEY}_{bankdata.row.option.KEYS}" value="{bankdata.row.option.input.VALUE}" />
-		<!-- END input -->
-	</td>
-</tr>
+{bankdata.row.option.DIV_START}
+<dl>			
+	<dt class="red"><label for="{bankdata.row.KEY}_{bankdata.row.option.KEYS}">{bankdata.row.option.LNGS}:</label></dt>
+	<!-- BEGIN input -->
+	<dd><input type="text" name="{bankdata.row.KEY}[{bankdata.row.option.KEYS}]" id="{bankdata.row.KEY}_{bankdata.row.option.KEYS}" value="{bankdata.row.option.input.VALUE}" /></dd>
+	<!-- END input -->
+</dl>
+{bankdata.row.option.DIV_END}
 <!-- END option -->
-</table>
+</fieldset>
 <!-- END row -->
 
-<br/>
-
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END bankdata -->
@@ -188,7 +183,7 @@ function fill(thisValue)
 	<th colspan="2">{L_BANK}</th>
 </tr>
 <tr>
-	<td class="row_class1">{L_HOLDER}:</td>
+	<td class="row_class1">{L_HOLDER}</td>
 	<td class="row_class2">{HOLDER}</td>
 </tr>
 <tr>
@@ -229,11 +224,11 @@ function fill(thisValue)
 	<td>{user.row.UPDATE}{user.row.DELETE}</td>		
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="4">{L_EMPTY}</td>
+	<td class="none" colspan="4">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 <tr>
 	<th colspan="2"><span class="{POSTAGE_CLASS} right">{POSTAGE}</span>&nbsp;</th>
 	<th colspan="2">{L_POSTAGE}</th>
@@ -275,11 +270,11 @@ function fill(thisValue)
 	<td>{type.row.UPDATE}{type.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 <tr>
 	<th><span class="right">{POSTAGE_CASH}&nbsp;</span></th>
 	<th colspan="2">{L_POSTAGE}</th>

@@ -7,187 +7,57 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'title'		=> 'Berechtigungen',
-	'explain'	=> 'Verwalten der verschiedenen Berechtigungen für das Forum, Downloads, Galerien, Gruppen und Benutzern.',
+	'TITLE'		=> 'Berechtigungen',
+	'EXPLAIN'	=> 'Verwalten der verschiedenen Berechtigungen für das Forum, Downloads, Galerien, Gruppen und Benutzern.',
 
-	'create'	=> 'Neues Forum hinzugefügt.',
-	'update'	=> 'Berechtigungen wurden erfolgreich geändert.',
-	'delete'	=> 'Das Forum wurde gelöscht!',
-	'confirm'	=> 'dass dieses Forum:',
-
-	'create_c'	=> 'Neue Kategorie hinzugefügt.',
-	'update_c'	=> 'Kategoriedaten erfolgreich geändert.',
-	'delete_c'	=> 'Die Kategorie wurde gelöscht!',
-	'confirm_c'	=> 'dass diese Kategorie:',
+#	'auth_simple'	=> 'Normal',
+#	'auth_extended'	=> 'Individuell',
 	
-	'icon'		=> 'Forumicon',
-	'sub'		=> 'Subforum',
-	'main'		=> 'Hauptforum',
-	'copy'		=> 'Rechtekopieren',
+	'LABEL' => 'Label',
 	
-	'locked'	=> 'Gesperrt',
-	'unlocked'	=> 'Offen',
+	'EXTENDED_PERMISSION'		=> 'Erweitere Berechtigung',
+	'EXTENDED_PERMISSION_ALL'	=> 'Erweitere Berechtigung alle',
 	
-	'legend'	=> 'Auflisten',
-	'legend_ex'	=> 'Wurde \'Ja\' aktiviert, werden die Unterforen in der Legende angezeigt.',
+	'F_READ'			=> 'Kann das Forum lesen',
+	'F_NOTICE'			=> 'Kann Ankündigungen schreiben',
+	'F_STICKY'			=> 'Kann Wichtige Themen schreiben',
+	'F_ICONS'			=> 'Kann Themenicons verwenden',
+	'F_REPLY'			=> 'Kann antworten auf Themen',
+	'F_POST'			=> 'Kann Themen eröffnen',
+	'F_OWNEDIT'			=> 'Kann eigene Beiträge bearbeiten',
+	'F_OWNDELETE'		=> 'Kann eigene Beiträge löschen',
+	'F_REPORT'			=> 'Kann Thema melden',
+	'F_WATCH'			=> 'Kann Thema beobachten',
+	'F_SIGNATUR_ALLOW'	=> 'Kann Signatur verwenden',
+	'F_SMILIES_ALLOW'	=> 'Kann Smilies verwenden',
+	'F_LOCK'			=> 'Kann Thema sperren/schließen',
+	'F_CREATE'			=> 'Kann Umfrage erstellen',
+	'F_JOIN'			=> 'Kann Umfrage teilnehmen',
+	'F_CHANGE'			=> 'Kann seine Auswahl ändern',
+	'F_CLOSE'			=> 'Kann Umfrage schließen',
 	
-	'auth_all'			=> 'Öffentlich',
-	'auth_register'		=> 'Registriert',
-	'auth_trial'		=> 'Trial',
-	'auth_member'		=> 'Mitglieder',
-	'auth_moderator'	=> 'Moderatoren',
-	'auth_private'		=> 'Privat',
-	'auth_admin'		=> 'Administrator',
+	'D_VIEW'			=> 'Kann Downloads sehen.',
+	'D_MANAGE'			=> 'Kann Downloads verwalten.',
+	'D_DELETE'			=> 'Kann Downloads löschen.',
+	'D_APPROVE'			=> 'Kann Downloads genehmigen.',
+	'D_COMMENT'			=> 'Kann Kommentare verfassen.',
+	'D_RATE'			=> 'Kann Downloads bewerten.',
+	'D_REPORT'			=> 'Kann Downloads melden.',
+	'D_UPLOAD'			=> 'Kann Downloads hochladen.',
+	'D_OWNUPDATE'		=> 'Kann eigene Downloads bearbeiten.',
+	'D_OWNDELETE'		=> 'Kann eigene Downloads löschen.',
 	
-	'forms_public'		=> 'Öffentlich',
-	'forms_register'	=> 'Registriert',
-	'forms_trial'		=> 'Trial',
-	'forms_member'		=> 'Mitglieder',
-	'forms_moderator'	=> 'Moderatoren',
-	'forms_privat'		=> 'Privat',
-	'forms_admin'		=> 'Administrator',
-	'forms_special'		=> 'Individuell',
-	'forms_hidden'		=> '%s <span style="font-size:9px">[ Versteckt ]</span>',
-	
-	'forms_view'			=> 'Ansicht',
-	'forms_read'			=> 'Lesen',
-	'forms_post'			=> 'Posten',
-	'forms_reply'			=> 'Antworten',
-	'forms_edit'			=> 'Editieren',
-	'forms_delete'			=> 'Löschen',
-	'forms_sticky'			=> 'Wichtig',
-	'forms_announce'		=> 'Ankündigung',
-	'forms_globalannounce'	=> 'Globaleankündigung',
-	'forms_poll'			=> 'Umfrage',
-	'forms_pollcreate'		=> 'Umfrage erstellen',
-	
-	'auth_forum' => array(
-		'auth_view'				=> 'Ansicht',
-		'auth_read'				=> 'Lesen',
-		'auth_post'				=> 'Posten',
-		'auth_reply'			=> 'Antworten',
-		'auth_edit'				=> 'Editieren',
-		'auth_delete'			=> 'Löschen',
-		'auth_sticky'			=> 'Wichtig',
-		'auth_announce'			=> 'Ankündigung',
-		'auth_globalannounce'	=> 'Globaleankündigung',
-		'auth_poll'				=> 'Umfrage',
-		'auth_pollcreate'		=> 'Umfrage erstellen',
-	),
-	
-#	'tabs'	=> array(0 => 'Forum', 1 => 'Beitrag', 2 => 'Umfrage'),
-	
-	'tabs'	=> array(
-		'a_' => array(
-			0 => 'Clan',
-			1 => 'Benutzer & Gruppen',
-			2 => 'Download & Galerie',
-			3 => 'Forum & News',
-			4 => 'Rechte',
-			5 => 'Seite',
-			6 => 'System'
-		),
-		'f_' => array(
-			0 => 'Forum',
-			1 => 'Beitrag',
-			2 => 'Umfrage',
-		),
-		'u_' => array(
-			0 => 'Profile',
-			1 => 'Diverses',
-			2 => 'Private Nachrichten',
-		),
-		'm_' => array(
-			0 => 'Beiträge',
-			1 => 'Themen',
-		),
-		'g_' => array(
-			0 => 'Galerie',
-			1 => 'Bild',
-		),
-		'd_' => array(
-			0 => 'Ordner',
-			1 => 'Datei',
-		),
-	),
-	
-	'a_show'	=> 'Administrator-Berechtigungen',
-	'f_show'	=> 'Forum-Berechtigungen',
-	'm_show'	=> 'Moderatoren-Berechtigungen',
-	'u_show'	=> 'Benutzer-Berechtigungen',
-	'd_show'	=> 'Download-Berechtigungen',
-	'g_show'	=> 'Galerie-Berechtigungen',
-	
-	'a_right'	=> 'Administrator-Berechtigungen',
-	'f_right'	=> 'Forum-Berechtigungen',
-	'm_right'	=> 'Moderatoren-Berechtigungen',
-	'u_right'	=> 'Benutzer-Berechtigungen',
-	'd_right'	=> 'Download-Berechtigungen',
-	'g_right'	=> 'Galerie-Berechtigungen',
-	
-	'auth_simple'	=> 'Normal',
-	'auth_extended'	=> 'Individuell',
-	
-#	$lang['Forum_ALL'] = 'Alle';
-#	$lang['Forum_REG'] = 'Reg';
-#	$lang['Forum_PRIVATE'] = 'Privat';
-#	$lang['Forum_MOD'] = 'Mods';
-#	$lang['Forum_ADMIN'] = 'Admin';
-
-	'closed' => 'Gesperrt',
-	'opened' => 'Geöffnet',
-	
-	'label'		=> 'Label',
-	
-	'a_permission'			=> 'Administrator-Berechtigung',
-	'd_permission'			=> 'Download-Berechtigung',
-	'g_permission'			=> 'Galerie-Berechtigung',
-	
-	'extended_permission'	=> 'erweitere Berechtigung',
-	'extended_permission_all'	=> 'erweitere Berechtigung alle',
-	
-	'label_gallery_full'	=> 'Volle Galerie-Rechte',
-	'label_gallery_none'	=> 'Keine Galerie-Rechte',
-	
-	/* added 19.07 */
-	/*	
-	'f_view'	=> 'Kann das Forum sehen',
-	'f_read'	=> 'Kann das Forum lesen',
-	'f_notice'	=> 'Kann Ankündigungen schreiben',
-	'f_sticky'	=> 'Kann Wichtige Themen schreiben',
-	'f_icons'	=> 'Kann Themenicons verwenden',
-	'f_reply'	=> 'Kann antworten auf Themen',
-	'f_post'	=> 'Kann Themen eröffnen',
-	'm_ownedit'	=> 'Kann eigene Beiträge bearbeiten',
-	'm_owndelete'	=> 'Kann eigene Beiträge löschen',
-	'm_ownclose'	=> 'Kann eigene Themen schließen',
-	'm_report'	=> 'Kann Thema melden',
-	'p_view'	=> 'Kann Umfrage sehen',
-	'p_create'	=> 'Kann Umfrage erstellen',
-	'p_vote'	=> 'Kann an Umfrage teilnehmen',
-	'p_change'	=> 'Kann seine Auswahl ändern',
-	'p_close'	=> 'Kann Umfrage schließen',
-	*/
-	
-	/* hinzugefügt 02.11.13 */
-#	'f_view'			=> 'Kann das Forum sehen',
-#	'f_read'			=> 'Kann das Forum lesen',
-#	'f_notice'			=> 'Kann Ankündigungen schreiben',
-#	'f_sticky'			=> 'Kann Wichtige Themen schreiben',
-#	'f_icons'			=> 'Kann Themenicons verwenden',
-#	'f_reply'			=> 'Kann antworten auf Themen',
-#	'f_post'			=> 'Kann Themen eröffnen',
-#	'f_ownedit'			=> 'Kann eigene Beiträge bearbeiten',
-#	'f_owndelete'		=> 'Kann eigene Beiträge löschen',
-#	'f_report'			=> 'Kann Thema melden',
-#	'f_watch'			=> 'Kann Thema beobachten',
-#	'f_signatur_allow'	=> 'Kann Signatur verwenden',
-#	'f_smilies_allow'	=> 'Kann Smilies verwenden',
-#	'f_lock'			=> 'Kann Thema sperren/schließen',
-#	'f_create'			=> 'Kann Umfrage erstellen',
-#	'f_join'			=> 'Kann Umfrage teilnehmen',
-#	'f_change'			=> 'Kann seine Auswahl ändern',
-#	'f_close'			=> 'Kann Umfrage schließen',
+	'G_VIEW'			=> 'Kann Galerie sehen.',
+	'G_MANAGE'			=> 'Kann Galerie verwalten.',		
+	'G_DELETE'			=> 'Kann Galerie löschen.',
+	'G_APPROVE'			=> 'Kann Galerie genehmigen.',
+	'G_WATERMARK'		=> 'Kann Galerie Wasserzeichen ändern.',
+	'G_COMMENT'			=> 'Kann Kommentare verfassen.',
+	'G_RATE'			=> 'Kann Galerie bewerten.',
+	'G_REPORT'			=> 'Kann Galerien melden.',
+	'G_UPLOAD'			=> 'Kann Bilder hochladen.',
+	'G_OWNUPDATE'		=> 'Kann eigene Bilder bearbeiten.',
+	'G_OWNDELETE'		=> 'Kann eigene Bilder löschen.',
 	
 	/* CLAN */
 #	'a_cashuser'		=> 'Kann Clankassen verwalten',
@@ -258,14 +128,7 @@ $lang = array_merge($lang, array(
 #	'a_newscat_upload'	=> 'Kann Newskategorie Bilder hochladen',
 #	'a_newsletter'		=> 'Kann Newsletter verwalten',
 	
-	/* RECHTE */
-
-#	'a_aauth'			=> 'Kann Administrator-Berechtigungen verwalten',
-#	'a_dauth'			=> 'Kann Download-Berechtigungen verwalten',
-#	'a_fauth'			=> 'Kann Foren-Berechtigungen verwalten',
-#	'a_gauth'			=> 'Kann Galerie-Berechtigungen verwalten',
-#	'a_mauth'			=> 'Kann Moderatoren-Berechtigungen verwalten',
-#	'a_uauth'			=> 'Kann Benutzer-Berechtigungen verwalten',
+	
 
 #	'a_auth_users'			=> 'Kann Umfrage schließen',
 #	'a_auth_groups'			=> 'Kann Umfrage schließen',
@@ -313,46 +176,48 @@ $lang = array_merge($lang, array(
 #	'a_style_upload'		=> 'Kann Templates hochladen',
 
 	
-	'forms_noneset' => 'keine Standartwerte zugewiesen',
+#	'forms_noneset' => 'keine Standartwerte zugewiesen',
 	
-	'forum_access_no'				=> 'Kein Zugang',
-	'forum_access_only_read'		=> 'Nur lesender Zugriff',
-	'forum_access_default'			=> 'Standard-Zugang',
-	'forum_access_default_polls'	=> 'Standard-Zugang + Umfragen',
-	'forum_access_full'				=> 'Voller Zugang',
+#	'forum_access_no'				=> 'Kein Zugang',
+#	'forum_access_only_read'		=> 'Nur lesender Zugriff',
+#	'forum_access_default'			=> 'Standard-Zugang',
+#	'forum_access_default_polls'	=> 'Standard-Zugang + Umfragen',
+#	'forum_access_full'				=> 'Voller Zugang',
 	
-	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Forum', 2 => 'Subforum'),
+#	'radio:type'	=> array(0 => 'Kategorie', 1 => 'Forum', 2 => 'Subforum'),
 	
-	'group'			=> 'Gruppe',
-	'groups'		=> 'Gruppen',
-	'groups_manage'	=> 'Gruppen bearbeiten',
-	'groups_added'	=> 'Gruppen hinzufügen',
+#	'group'			=> 'Gruppe',
+
+	'FORUMS_ALL'	=> 'Alle Foren auswählen',
 	
-	'users'			=> 'Benutzer',
-	'users_manage'	=> 'Benutzer bearbeiten',
-	'users_added'	=> 'Benutzer hinzufügen',
+	'GROUPS'		=> 'Gruppen',
+	'GROUPS_ALL'	=> 'Alle Gruppen auswählen',
+	'GROUPS_MANAGE'	=> 'Gruppen bearbeiten',
+	'GROUPS_ADDED'	=> 'Gruppen hinzufügen',
 	
-	'auth_create'	=> 'Berechtigung hinzufügen',
-	'auth_update'	=> 'Berechtigung ändern',
-	'auth_show'		=> 'Berechtigung anzeigen',
-	'auth_delete'	=> 'Berechtigung löschen',
+	'USERS'			=> 'Benutzer',
+	'USERS_ALL'		=> 'Alle Benutzer auswählen',
+	'USERS_MANAGE'	=> 'Benutzer bearbeiten',
+	'USERS_ADDED'	=> 'Benutzer hinzufügen',
 	
-	'users_all'		=> 'Alle Benutzer auswählen',
-	'groups_all'	=> 'Alle Gruppen auswählen',
+	'AUTH_CREATE'	=> 'Berechtigung hinzufügen',
+	'AUTH_UPDATE'	=> 'Berechtigung ändern',
+	'AUTH_SHOW'		=> 'Berechtigung anzeigen',
+	'AUTH_DELETE'	=> 'Berechtigung löschen',
 	
-	'no_legend_user'	=> 'Keine Gruppen vorhanden.',
-	'no_legend_group'	=> 'Keine Benutzer vorhanden.',
+	'LEGEND_NONE_USER'	=> 'Keine Gruppen vorhanden.',
+	'LEGEND_NONE_GROUP'	=> 'Keine Benutzer vorhanden.',
 	
-	'select_copy'	=> 'Kopieren von ...',
+	'SELECT_COPY'	=> 'Kopieren von ...',
 	
 ));
 
 $lang = array_merge($lang, array(
-	'radio:status'	=> array(0 => $lang['opened'], 1 => $lang['closed']),
-	'radio:legend'	=> array(1 => $lang['com_view'], 0 => $lang['com_noview']),
+#	'radio:status'	=> array(0 => $lang['opened'], 1 => $lang['closed']),
+	'radio:legend'	=> array(1 => $lang['COMMON_VIEW'], 0 => $lang['COMMON_NONE_VIEW']),
 	
 ));
-
+/*
 $field_names = array(
 	'auth_view'				=> $lang['forms_view'],
 	'auth_read'				=> $lang['forms_read'],
@@ -366,5 +231,5 @@ $field_names = array(
 	'auth_poll'				=> $lang['forms_poll'],
 	'auth_pollcreate'		=> $lang['forms_pollcreate'],
 );
-
+*/
 ?>

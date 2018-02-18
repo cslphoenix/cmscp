@@ -1,35 +1,34 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN backup -->
 <form action="{S_ACTION}" method="post">
-<table class="update">
-<tr>
-	<td class="row1"><label for="full">{L_TYPE}:</label></td>
-	<td class="row2"><label><input type="radio" name="type" value="full" id="full" checked="checked" />&nbsp;{L_TYPE_FULL}</label><span style="padding:4px;"></span><label><input type="radio" name="type" value="data" />&nbsp;{L_TYPE_DATA}</label><span style="padding:4px;"></span><label><input type="radio" name="type" value="structure" />&nbsp;{L_TYPE_STRU}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label for="download">{L_DOWNLOAD}:</label></td>
-	<td class="row2"><label><input type="radio" name="download" value="server" checked="checked" id="download" />&nbsp;{L_DOWNLOAD_SERVER}</label><span style="padding:4px;"></span><label><input type="radio" name="download" value="file" disabled />&nbsp;{L_DOWNLOAD_FILE}</label></td>
-</tr>
-<tr>
-	<td class="row1"><label for="compress">{L_COMPRESS}:</label></td>
-	<td class="row2"><label><input type="radio" name="compress" value="1" id="compress" checked="checked" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="compress" value="0" />&nbsp;{L_NO}</label>
-</tr>
-<tr>
-	<td class="row1"><label for="table">{L_TABLE}:</label></td>
-	<td>{S_TABLE}<br /><a href="#" class="small" onclick="selector(true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" class="small" onclick="selector(false); return false;">{L_MARK_DEALL}</a></td>
-</tr>
-</table>
+<fieldset>
+	<legend>{L_LANG}</legend>
+    <dl>			
+        <dt><label for="full">{L_TYPE}:</label></dt>
+        <dd><label><input type="radio" name="type" value="full" id="full" checked="checked" />&nbsp;{L_TYPE_FULL}</label><span style="padding:4px;"></span><label><input type="radio" name="type" value="data" />&nbsp;{L_TYPE_DATA}</label><span style="padding:4px;"></span><label><input type="radio" name="type" value="structure" />&nbsp;{L_TYPE_STRU}</label></dd>
+    </dl>
+    <dl>			
+        <dt><label for="download">{L_DOWNLOAD}:</label></dt>
+        <dd><label><input type="radio" name="download" value="server" checked="checked" id="download" />&nbsp;{L_DOWNLOAD_SERVER}</label><span style="padding:4px;"></span><label><input type="radio" name="download" value="file" />&nbsp;{L_DOWNLOAD_FILE}</label></dd>
+    </dl>
+    <dl>			
+        <dt><label for="compress">{L_COMPRESS}:</label></dt>
+        <dd><label><input type="radio" name="compress" value="1" id="compress" checked="checked" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="compress" value="0" />&nbsp;{L_NO}</label></dd>
+    </dl>
+    <dl>			
+        <dt><label for="table">{L_TABLE}:</label></dt>
+        <dd><label>{S_TABLE}<br /><a href="#" class="small" onclick="selector(true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" class="small" onclick="selector(false); return false;">{L_MARK_DEALL}</a></dd>
+    </dl>
+</fieldset>
 
-<br/>
-
-<table class="submit">
-<tr>
-	<td><input type="submit" name="backup" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="backup" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END backup -->

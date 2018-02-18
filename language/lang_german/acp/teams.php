@@ -7,77 +7,64 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'			=> 'Team',
-	'titles'		=> 'Teams',
-	'explain'		=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
-	'explain_user'	=> 'Benutzer verwalten',
+	'TITLE'			=> 'Team',
+	'TITLES'		=> 'Teams',
 	
-	'input_data'	=> 'Teamdaten',
+	'EXPLAIN'		=> 'Hier kannst du die Teams der Seite überwachen. Du kannst bestehende Gruppen löschen, editieren oder neue anlegen.',
+	'EXPLAIN_USER'	=> 'Benutzer verwalten',
 	
-	'team_name'		=> 'Name',
-	'team_game'		=> 'Game',
-	'team_desc'		=> 'Beschreibung',
-	'team_navi'		=> 'Navigation',
-	'team_awards'	=> 'Awards',
-	'team_wars'		=> 'Begegnungen',
-	'team_join'		=> 'JoinUs',
-	'team_fight'	=> 'FightUs',
-	'team_view'		=> 'in Übersicht',
-	'team_show'		=> 'geöffentes Menü',
-	'team_flag'		=> 'Teambanner',
-	'team_logo'		=> 'Teamlogo',
-	'rank_team'		=> 'Teamrang',
+	'COUNT_MEMBER'	=> 'Mitgliederanzahl',
 	
-	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
-	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
-	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
+	'INPUT_DATA'	=> 'Teamdaten',
 	
-	'count'		=> 'Mitgliederanzahl',
+	'TEAM_NAME'		=> 'Name',
+	'TEAM_GAME'		=> 'Game',
+	'TEAM_DESC'		=> 'Beschreibung',
+	'TEAM_NAVI'		=> 'Navigation',
+	'TEAM_AWARDS'	=> 'Awards',
+	'TEAM_WARS'		=> 'Begegnungen',
+	'TEAM_JOIN'		=> 'JoinUs',
+	'TEAM_FIGHT'	=> 'FightUs',
+	'TEAM_VIEW'		=> 'in Übersicht',
+	'TEAM_SHOW'		=> 'geöffentes Menü',
+	'TEAM_FLAG'		=> 'Teambanner',
+	'TEAM_LOGO'		=> 'Teamlogo',
+	'RANK_TEAM'		=> 'Teamrang',
 	
-#	'logo_upload'	=> 'Logo hochladen',
-#	'logo_current'	=> 'Aktuelles Logo',
-#	'flag_upload'	=> 'Banner hochladen',
-#	'flag_current'	=> 'Aktuelles Banner',
+	'MEMBER'			=> 'Teammitglieder',
+	'MEMBERS'			=> 'Mitglieder',
+	'MEMBERS_NONE'		=> 'Keine Mitglieder eingetragen',
+	'MODERATORS'		=> 'Moderatoren',
+	'MODERATORS_NONE'	=> 'Keine Moderatoren eingetragen',
 	
-#	'no_members'	=> 'Keine Mitglieder eingetragen.',
-#	'no_moderators'	=> 'Keine Moderatoren eingetragen.',
+	'WARS'			=> 'Begegnungen und Training',
 	
-	'member'		=> 'Teammitglieder',
-	'no_member'		=> 'Keine Mitglieder eingetragen.',
+	'MOD'			=> 'Moderatorenstatus',	
+	'MAIN'			=> 'Hauptteam setzen',
+	'MAIN_GROUP'	=> 'Hauptteam',
+	'PERMISSION'	=> 'Gruppenberechtigung',
 	
-#	'member'		=> 'Teammitglied',
+	'UPDATE_CHANGE'		=> 'Rechte wurden erfolgreich geändert.',
+	'UPDATE_RANKS'		=> 'Ränge der Spieler erfolgreich geändert.',
+	'UPDATE_DEFAULT'	=> 'Hauptgruppe erfolgreich geändert.',
+	'UPDATE_CREATE'		=> 'Benutzer wurden erfolgreich hinzugefügt.',
+	'UPDATE_DELETE'		=> 'Benutzer wurden erfolgreich gelöscht.',
 	
-#	'moderator'		=> 'Teammoderator',
-#	'moderators'	=> 'Teammoderatoren',
-
-#	'member'		=> 'Mitglied',
-#	'members'		=> 'Mitglieder',
-#	'moderator'		=> 'Moderator',
-#	'moderators'	=> 'Moderatoren',
-	
-#	'create_team_user'	=> 'Neuen Spieler hinzugefügt.',
-#	'update_team_rank'	=> 'Spielerränge geändert',
-#	'update_team_level'	=> 'Spielerrechte geändert',
-	
-#	'create_user'		=> 'Neuen Spieler hinzugefügt.',
-#	'create_users'		=> 'Neue Spieler hinzugefügt.',
-#	'delete_user'		=> 'Der Spieler wurde gelöscht!',
-#	'delete_users'		=> 'Die Spieler wurden gelöscht!',
-#	'confirm_user'		=> 'das der Spieler:',
-#	'confirm_users'		=> 'das diese Spieler:',
-	
-#	'update_rank'	=> 'Rang des Spielers erfolgreich geändert.',
-#	'update_ranks'	=> 'Ränge der Spieler erfolgreich geändert.',
-#	'update_right'	=> 'Rechte des Spielers erfolgreich geändert.',
-#	'update_rights'	=> 'Rechte der Spieler erfolgreich geändert.',
-	
-	'type_main'				=> 'Hauptteam',
 	'notice_select_default'	=> 'zum Hauptteam machen',
 	
 	'team_member_add'			=> 'Teammitglieder hinzufügen',
 	'team_member_add_explain'	=> 'Hier kannst Du, Teammitglieder hinzufügen. Trage die <b>Benutzernamen</b> pro Zeile ein.',
 	'team_set_moderator'		=> 'Moderatorenstatus',
 	'team_set_rank'				=> 'Teamrang',
+	
+	'MATCH_UPCOMING'	=> 'Anstehende Begegnung',
+	'MATCH_EXPIRED'		=> 'Abgelaufen Begegnung',
+	
+	'TRAINING_UPCOMING'	=> 'Anstehende Trainings',
+	'TRAINING_EXPIRED'	=> 'Abgelaufen Trainings',
+
+	
+	'NOTICE_CONFIRM_TEAM'		=> 'dass dieser Spiele(r): %s von dem Team:',
 	
 ));
 

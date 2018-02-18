@@ -7,29 +7,35 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Galerie',
-	'explain'	=> 'Hier werden alle Galerien verwaltet. Die Ordnergröße und Anzahl wird immer nur auf die Eigentlichen Bilder bezogen nicht auf die Vorschaubilder, diese werden nicht mit einberechnet!',
+	'TITLE'		=> 'Galerie',
+	'EXPLAIN'	=> 'Hier werden alle Galerien verwaltet. Die Ordnergröße und Anzahl wird immer nur auf die Eigentlichen Bilder bezogen nicht auf die Vorschaubilder, diese werden nicht mit einberechnet!',
 	
-	'data_input'	=> 'Galerie-Daten',
+	'INPUT_DATA'	=> 'Galerie-Daten',
 	
-	'gallery_name'		=> 'Name',
-	'type'				=> 'Typ',
-	'main'				=> 'Kategorie',
-	'copy'				=> 'Rechte kopieren',
-	'gallery_desc'		=> 'Beschreibung',
-	'gallery_comments'	=> 'Kommentare',
-	'gallery_rate'		=> 'Bewertung',
-	'gallery_filesize'	=> 'Größe',
-	'gallery_dimension'	=> 'Abmessung',
-	'gallery_format'	=> 'Darstellung',
-	'gallery_thumbnail'	=> 'Vorschau',
+	'GALLERY_NAME'		=> 'Name',
+	'TYPE'				=> 'Typ',
+	'MAIN'				=> 'Kategorie',
+	'COPY'				=> 'Rechte kopieren',
+	'GALLERY_ACPVIEW'	=> 'Adminansicht',
+	'GALLERY_DESC'		=> 'Beschreibung',
+	'GALLERY_COMMENT'	=> 'Kommentare',
+	'GALLERY_RATE'		=> 'Bewertung',
+	'GALLERY_FILESIZE'	=> 'Größe',
+	'GALLERY_PICTURE'	=> 'Bild hochladen',
+	'GALLERY_DIMENSION'	=> 'Abmessung',
+	'GALLERY_FORMAT'	=> 'Darstellung',
+	'GALLERY_THUMBNAIL'	=> 'Vorschau',
 	
-	'sprintf_size-pic'	=> '%s / %s Bilder',
 	
-	'input_data'	=> 'Galeriedaten',
+	
+	'INPUT_DATA'	=> 'Galeriedaten',
 	
 	'rating'	=> 'Bewertung',
 	'comment'	=> 'Kommentare',
+	
+	'SPRINTF_SIZE_PIC'	=> '%s / %s Bilder',
+	
+	
 	
 #	'update_d'	=> 'Standarteinstellungen erfolgreich geändert.',
 #	
@@ -85,9 +91,12 @@ $lang = array_merge($lang, array(
 #	'pic_size'		=> 'Größe',
 	
 	
-	'radio:type'	=> array(0 => 'Ordner', 1 => 'Bild'),
+	'TYPE_0' => 'Kategorie',
+	'TYPE_1' => 'Bild',
+));
 
-
+$lang = array_merge($lang, array(
+	'radio:type'	=> array(0 => $lang['TYPE_0'], 1 => $lang['TYPE_1']),
 ));
 
 /*

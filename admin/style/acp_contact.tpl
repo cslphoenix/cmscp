@@ -57,11 +57,11 @@
 	</td>
 </tr>
 <!-- END contact_row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="row_class1" align="center" colspan="8">{L_EMPTY}</td>
+	<td class="row_class1" align="center" colspan="8">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="footer" cellspacing="4">
@@ -141,7 +141,7 @@
 <!-- END contact_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_class1" align="center" colspan="8">{L_EMPTY}</td>
+	<td class="row_class1" align="center" colspan="8">{L_NONE}</td>
 </tr>
 <!-- END no_entry -->
 </table>

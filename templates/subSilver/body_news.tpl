@@ -56,11 +56,11 @@ $(document).ready(function()
 	<td><div class="rate_{list.row.ID}" data-average="{list.row.R_SUM}" data-id="{list.row.ID}" data-type="1"></div><div id="close_{list.row.ID}">{list.row.RATING}</div><div id="ajax_{list.row.ID}"></div></td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td align="center">{L_EMPTY}</td>
+	<td align="center">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 <tr>
 	<td class="footer"><span class="right">{PAGE_NUMBER}</span>{PAGE_PAGING}</td>
 </tr>
@@ -105,10 +105,10 @@ $(document).ready(function()
     <td class="{archiv.row.CLASS}">{archiv.row.DATE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td align="center">{L_EMPTY}</td>
+	<td align="center">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 <!-- END archiv -->

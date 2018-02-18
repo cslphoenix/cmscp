@@ -55,11 +55,11 @@
 	</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td align="center">{L_EMPTY}</td>
+	<td align="center">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 <tr>
 	<td class="footer"><span class="right">{PAGE_NUMBER}</span>{PAGE_PAGING}</td>
 </tr>

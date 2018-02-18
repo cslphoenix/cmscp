@@ -24,7 +24,7 @@
 <!-- END list.bt_row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
+	<td class="noentry" align="center" colspan="4">{L_NONE}</td>
 </tr>
 <!-- END no_entry -->
 </table>
@@ -216,7 +216,7 @@ tinyMCE.init({
 		<!-- END row -->
 		<!-- BEGIN no_entry -->
 		<tr>
-			<td class="row1" align="center" colspan="4">{L_EMPTY}</td>
+			<td class="row1" align="center" colspan="4">{L_NONE}</td>
 		</tr>
 		<!-- END no_entry -->
 		</table>

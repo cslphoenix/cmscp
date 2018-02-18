@@ -3,13 +3,13 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_database',
-		'cat'		=> 'system',
-		'modes'		=> array(
-			'backup'	=> array('title' => 'acp_backup'),
-			'restore'	=> array('title' => 'acp_restore'),
-			'optimize'	=> array('title' => 'acp_optimize'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_DATABASE',
+		'CAT'		=> 'SYSTEM',
+		'MODES'		=> array(
+			'BACKUP'	=> array('TITLE' => 'ACP_BACKUP'),
+			'RESTORE'	=> array('TITLE' => 'ACP_RESTORE'),
+			'OPTIMIZE'	=> array('TITLE' => 'ACP_OPTIMIZE'),
 		)
 	);
 }
@@ -21,13 +21,13 @@ else
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	$backup = ( isset($_POST['backup']) ) ? true : false;
 	
-	$current = 'acp_database';
+	$current = 'ACP_DATABASE';
 	
 	include('./pagestart.php');
 	include($root_path . '/includes/sql_parse.php');
 	
 	add_lang('database');
-	acl_auth(array('a_database_backup', 'a_database_optimize', 'a_database_restore'), true);
+	acl_auth(array('A_DATABASE_BACKUP', 'A_DATABASE_OPTIMIZE', 'A_DATABASE_RESTORE'));
 	
 	$error	= '';
 	$index	= '';
@@ -43,32 +43,26 @@ else
 	$action	= request('action', TYP);
 	
 	$dir_path	= $root_path . 'files/';
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
 	
-	define('VERBOSE', 1);
+	define("VERBOSE", 0);
 	@set_time_limit(1200);
 	
 	function gzip_PrintFourChars($Val)
 	{
-		$return = '';
-		
 		for ($i = 0; $i < 4; $i ++)
 		{
 			$return .= chr($Val % 256);
 			$Val = floor($Val / 256);
 		}
-		
 		return $return;
 	}
 	
-	
-	$template->set_filenames(array(
-		'body' => 'style/acp_database.tpl',
-	));
+	$template->set_filenames(array('body' => "style/$current.tpl"));
 	
 	switch ( $action )
 	{
-		case 'backup':	acl_auth('a_database_backup');
+		case 'backup':	acl_auth('A_DATABASE_BACKUP');
 		
 			$tables		= ( request('table', ARY) ) ? request('table', ARY) : '';
 			$type		= ( request('type', TYP) ) ? request('type', TYP) : '';
@@ -102,14 +96,14 @@ else
 				foreach ( $table as $key => $value )
 				{
 					$name = str_replace($db_prefix, '', $value['Name']);
-					$select .= '<option value="' . $name . '" >' . sprintf($lang['stf_select_format'], $value['Name']) . '</option>';
+					$select .= '<option value="' . $name . '" >' . sprintf($lang['STF_SELECT_FORMAT'], $value['Name']) . '</option>';
 				}
 				
 				$select .= '</select>';
 
 				$template->assign_vars(array(
-					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-					'L_EXPLAIN'		=> $lang['explain'],
+					'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+					'L_EXPLAIN'	=> $lang['EXPLAIN'],
 
 					'L_TYPE'		=> $lang['type'],
 					'L_TYPE_FULL'	=> $lang['type_full'],
@@ -232,14 +226,15 @@ else
 					fclose($handle);
 				}
 				
-				$msg = $lang['save_file'] . sprintf($lang['return'], check_sid($file), $acp_title);
+				$msg = $lang['save_file'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 				
 				log_add(LOG_ADMIN, $log, $mode);
 				message(GENERAL_MESSAGE, $msg);
 			}
 			else
 			{
-				exit;
+				#	exit;
+				
 				header("Pragma: no-cache");
 				header("Cache-Control: no-cache, must-revalidate");
 				
@@ -303,7 +298,7 @@ else
 					}
 					
 					if ( $type == 'full' || $type == 'data' )
-					{                                       
+					{
 						if ( $content )
 						{
 							echo "#\n";
@@ -338,12 +333,13 @@ else
 					$contents = gzcompress(ob_get_contents());
 					ob_end_clean();
 					echo "\x1f\x8b\x08\x00\x00\x00\x00\x00".substr($contents, 0, strlen($contents) - 4).gzip_PrintFourChars($Crc).gzip_PrintFourChars($Size);
+				#	echo "\x1f\x8b\x08\x00\x00\x00\x00\x00".substr($contents, 0, strlen($contents) - 4).gzip_PrintFourChars($Crc).gzip_PrintFourChars($Size);
 				}
-				
-				$msg = 'test';
+				exit;
+			#	$msg = 'test';
 				
 				log_add(LOG_ADMIN, $log, $mode);
-				message(GENERAL_MESSAGE, $msg);		
+				message(GENERAL_MESSAGE, $msg);
 			}
 			
 			break;
@@ -471,8 +467,8 @@ else
 				}
 				
 				$template->assign_vars(array(
-					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-					'L_EXPLAIN'		=> $lang['explain'],
+					'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+					'L_EXPLAIN'	=> $lang['EXPLAIN'],
 					
 					'L_OPTIMIZE'	=> $lang['data_optimize'],
 				
@@ -524,14 +520,14 @@ else
 			
 			#	if ( !$result = $db->sql_query($sql) )
 			#	{
-			#		$msg = $lang['Optimize_NoTableChecked'] . sprintf($lang['return'], check_sid($file), $acp_title);
+			#		$msg = $lang['Optimize_NoTableChecked'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 			#	}
 			#	else
 			#	{
-			#		$msg = $lang['Optimize_success'] . sprintf($lang['return'], check_sid($file), $acp_title);
+			#		$msg = $lang['Optimize_success'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 			#	}
 			
-				$msg = (( !$result = $db->sql_query($sql) ) ? $lang['opt_nocheck'] : $lang['opt_success']) . sprintf($lang['return'], check_sid($file), $acp_title);
+				$msg = (( !$result = $db->sql_query($sql) ) ? $lang['opt_nocheck'] : $lang['opt_success']) . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 				
 				message(GENERAL_MESSAGE, $msg);
 				
@@ -562,7 +558,7 @@ else
 								$_times = create_date($userdata['user_dateformat'], $_files, $userdata['user_timezone']);
 								$_sizes = size_round(@filesize("{$root_path}files/$_file"), 2);
 							
-								$select .= '<option value="' . $_file . '">' . sprintf($lang['stf_select_format'], sprintf($lang['sprintf_empty_line'], $_times, $_sizes)) . '</option>';
+								$select .= '<option value="' . $_file . '">' . sprintf($lang['STF_SELECT_FORMAT'], sprintf($lang['sprintf_empty_line'], $_times, $_sizes)) . '</option>';
 								
 							#	break;
 							}
@@ -575,8 +571,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 				
 				$template->assign_vars(array(
-					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-					'L_EXPLAIN'		=> $lang['explain'],
+					'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+					'L_EXPLAIN'	=> $lang['EXPLAIN'],
 					'L_BACKUP'		=> $lang['data_backup'],
 					'L_OPTIMIZE'	=> $lang['data_optimize'],
 					'L_RESTORE'		=> $lang['data_restore'],

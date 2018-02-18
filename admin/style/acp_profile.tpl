@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -104,17 +104,17 @@ function display_options(value)
 	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="profile_name" /></td>
-	<td><input type="submit" value="{L_CREATE_CAT}" /></td>
+	<td><input type="text" name="{S_CREATE}" /></td>
+	<td><input type="submit" value="{L_CREATE}" /></td>
 </tr>
 </table>
 {S_FIELDS}

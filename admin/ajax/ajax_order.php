@@ -47,7 +47,7 @@ if ( isset($_POST['new_mode']) )
 	else
 	{
 		$s_select .= "<select class=\"select\" name=\"{$new_mode}_order_new\" id=\"{$new_mode}_order\">";
-		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $j = 0; $j < count($entries); $j++ )
 		{
@@ -161,7 +161,7 @@ if ( isset($_POST['new_mode']) )
 	else
 	{
 		$s_select .= "<select class=\"select\" name=\"$new_mode order_new\" id=\"$new_mode order\">";
-		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\" value=\"\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($cats); $i++ )
 		{

@@ -7,12 +7,12 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'	=> 'Profilefelder',
+	'TITLE'		=> 'Profilefelder',
 	'profile_c'	=> 'Profilekategorie',
-	'explain'	=> 'Hier kann man ja halt irgendwas machen xD',
+	'EXPLAIN'	=> 'Hier kann man ja halt irgendwas machen xD',
 
 	'field'		=> 'Profilefeld',
-	'cat'		=> 'Profilekategrie',
+		'CAT'		=> 'Profilekategrie',
 	'cats'		=> 'Profilekategrien',
 	
 	'show_guest'	=> 'für Gäste',

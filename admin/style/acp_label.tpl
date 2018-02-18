@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -62,38 +62,38 @@ function mark_options(id, s)
 </fieldset>
 <!-- END acl_groups -->
 
-<br />
-
-<fieldset>
-	<legend>{L_PERMISSION}</legend>
-	<div align="center">
-		<div class="tabs">
-			<ul>
-				<!-- BEGIN cats -->
-				<li><a {input.cats.AUTH} href="#{input.cats.CAT}">{input.cats.NAME}</a></li>
-				<!-- END cats -->
-			</ul>
-			<!-- BEGIN cats -->
-			<div name="#{input.cats.CAT}" id="{input.cats.OPTIONS}">
-				<table class="ttabs" cellpadding="1" cellspacing="1">
-				<tr>
-					<th>{L_SETTINGS}</th>
-					<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'y'); return false;">{OPT_YES}Ja</a></th>
-					<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'u'); return false;">{OPT_UNSET}Nein</a></th>
-					<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'n'); return false;">{OPT_NEVER}Nie</a></th>
-				</tr>
-				<!-- BEGIN auths -->
-				<tr>
-					<td>{input.cats.auths.LANG}</td>
-					<td>{input.cats.auths.OPT_YES}</td>
-					<td>{input.cats.auths.OPT_UNSET}</td>
-					<td>{input.cats.auths.OPT_NEVER}</td>
-				</tr>
-				<!-- END auths -->
-				</table>
-			</div>
-			<!-- END cats -->
-		</div>
+<fieldset class="permissions" id="permission">
+	<legend id="legend">{L_PERMISSION}</legend>
+	<div class="tabs">
+	<ul>
+		<!-- BEGIN cats -->
+		<li><a {input.cats.AUTH} href="#{input.cats.CAT}">{input.cats.NAME}</a></li>
+		<!-- END cats -->
+	</ul>
+	<!-- BEGIN cats -->
+	<div name="#{input.cats.CAT}" id="{input.cats.OPTIONS}">
+		<table class="ttabs" cellpadding="1" cellspacing="1">
+		<thead>
+		<tr>
+			<th>{L_SETTINGS}</th>
+			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'y'); return false;">{L_YES}</a></th>
+			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'u'); return false;">{L_NO}</a></th>
+			<th><a href="#" onclick="mark_options('{input.cats.OPTIONS}', 'n'); return false;">{L_NEVER}</a></th>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN auths -->
+		<tr>
+			<td>{input.cats.auths.LANG}</td>
+			<td>{input.cats.auths.OPT_YES}</td>
+			<td>{input.cats.auths.OPT_UNSET}</td>
+			<td>{input.cats.auths.OPT_NEVER}</td>
+		</tr>
+		<!-- END auths -->
+		</tbody>
+		</table>
+	</div>
+	<!-- END cats -->
 	</div>
 </fieldset>
 
@@ -121,11 +121,11 @@ function mark_options(id, s)
 	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">

@@ -8,7 +8,7 @@ if ( !defined('IN_CMS') )
 $lang = array_merge($lang, array(
 	
 	'game'		=> 'Spiel',
-	'explain'	=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
+	'EXPLAIN'	=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
 
 	'create'	=> 'Neues Spiel hinzugefügt.',
 	'update'	=> 'Spieldaten erfolgreich geändert.',

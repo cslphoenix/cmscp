@@ -3,11 +3,11 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_bugtracker',
-		'cat'		=> 'addition',
-		'modes'		=> array(
-			'main'	=> array('title' => 'acp_bugtracker'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_BUGTRACKER',
+		'CAT'		=> 'ADDITION',
+		'MODES'		=> array(
+			'MAIN'	=> array('TITLE' => 'ACP_BUGTRACKER'),
 		)
 	);
 }
@@ -18,7 +18,7 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current = 'acp_bugtracker';
+	$current = 'ACP_BUGTRACKER';
 	
 	include('./pagestart.php');
 	
@@ -38,7 +38,7 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['game']);
+	$_top	= sprintf($lang['STF_HEADER'], $lang['game']);
 	
 	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
@@ -84,7 +84,7 @@ else
 			$fields = '<input type="hidden" name="mode" value="_detail_save" /><input type="hidden" name="id" value="' . $data_id . '" />';
 
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['bugtracker']),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['bugtracker']),
 				'L_PROC'		=> sprintf($lang['sprintf_processing'], $lang['bugtracker_field']),
 				
 				'L_TITLE'		=> $lang['bugtracker_field'],
@@ -192,11 +192,11 @@ else
 			$current_page = ( !count($bugtracker_data) ) ? 1 : ceil( count($bugtracker_data) / $settings['per_page_entry']['acp'] );
 			
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['bugtracker']),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['bugtracker']),
 				'L_NAME'		=> $lang['bugtracker_fields'],
 				'L_EXPLAIN'		=> $lang['bugtracker_explain'],
 				
-				'L_DELETE'		=> $lang['com_delete'],
+				'L_DELETE'		=> $lang['COMMON_DELETE'],
 				'L_DETAIL'		=> $lang['common_details'],
 				'L_SETTINGS'	=> $lang['common_settings'],
 				

@@ -32,7 +32,7 @@ else
 	$mode		= request('mode', TXT);
 	$move		= request('move', INT);
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
 		
 	if ( $userdata['user_level'] != ADMIN && !$userauth['auth_votes'] )
 	{
@@ -73,7 +73,7 @@ else
 			}
 			else if ( $mode == 'update' && !$submit )
 			{
-				$data_sql = data(VOTES, $data, false, 1, true);
+				$data_sql = data(VOTES, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -93,8 +93,8 @@ else
 			$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 			
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['training']),
-				'L_INPUT'		=> sprintf($lang['stf_' . $mode], $lang['training'], $data_sql['training_vs']),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['training']),
+				'L_INPUT'		=> sprintf($lang['STF_' . strtoupper($mode)], $lang['training'], $data_sql['training_vs']),
 				'L_VS'			=> $lang['vs'],
 				'L_TEAM'		=> $lang['team'],
 				'L_MATCH'		=> $lang['match'],
@@ -111,12 +111,12 @@ else
 				'S_MAPS'		=> $s_select,
 				'S_MATCH'		=> select_box('match',	'select', $data['match_id']),
 				
-				'S_DAY'			=> select_date('selectsmall', 'day',		'day',		date('d', $data['training_date']), $data['training_create']),
-				'S_MONTH'		=> select_date('selectsmall', 'month',		'month',	date('m', $data['training_date']), $data['training_create']),
-				'S_YEAR'		=> select_date('selectsmall', 'year',		'year',		date('Y', $data['training_date']), $data['training_create']),
-				'S_HOUR'		=> select_date('selectsmall', 'hour',		'hour',		date('H', $data['training_date']), $data['training_create']),
-				'S_MIN'			=> select_date('selectsmall', 'min',		'min',		date('i', $data['training_date']), $data['training_create']),
-				'S_DURATION'	=> select_date('selectsmall', 'duration',	'dmin',		( $data['training_duration'] - $data['training_date'] ) / 60),
+				'S_DAY'			=> s_date('selectsmall', 'day',		'day',		date('d', $data['training_date']), $data['training_create']),
+				'S_MONTH'		=> s_date('selectsmall', 'month',		'month',	date('m', $data['training_date']), $data['training_create']),
+				'S_YEAR'		=> s_date('selectsmall', 'year',		'year',		date('Y', $data['training_date']), $data['training_create']),
+				'S_HOUR'		=> s_date('selectsmall', 'hour',		'hour',		date('H', $data['training_date']), $data['training_create']),
+				'S_MIN'			=> s_date('selectsmall', 'min',		'min',		date('i', $data['training_date']), $data['training_create']),
+				'S_DURATION'	=> s_date('selectsmall', 'duration',	'dmin',		( $data['training_duration'] - $data['training_date'] ) / 60),
 				
 				'S_ACTION'		=> check_sid($file),
 				'S_FIELDS'		=> $fields,
@@ -126,7 +126,7 @@ else
 			{
 				$error[] = ( !$data_sql['training_vs'] )				? ( $error ? '<br />' : '' ) . $lang['msg_select_rival'] : '';
 				$error[] = ( $data['team_id'] == '-1' )			? ( $error ? '<br />' : '' ) . $lang['msg_select_team'] : '';
-				$error[] = ( !$data['training_maps'] )			? ( $error ? '<br />' : '' ) . $lang['notice_select_map'] : '';
+				$error[] = ( !$data['training_maps'] )			? ( $error ? '<br />' : '' ) . $lang['NOTICE_SELECT_MAP'] : '';
 				$error[] = ( time() >= $data['training_date'] )	? ( $error ? '<br />' : '' ) . $lang['msg_select_past'] : '';
 				$error[] = ( !checkdate(request('month', 0), request('day', 0), request('year', 0)) ) ? ( $error ? '<br />' : '' ) . $lang['msg_select_date'] : '';
 				
@@ -137,12 +137,12 @@ else
 					if ( $mode == 'create' )
 					{
 						$sql = sql(VOTES, $mode, $data_sql);
-						$msg = $lang['create'] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = $lang['CREATE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 					}
 					else
 					{
 						$sql = sql(VOTES, $mode, $data_sql, 'training_id', $data);
-						$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = $lang['UPDATE'] . sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 					}
 					
 				#	$oCache -> deleteCache('cal_sn_' . request('month', 0) . '_member');
@@ -161,12 +161,12 @@ else
 			
 		case 'delete':
 		
-			$data_sql = data(VOTES, $data, false, 1, true);
+			$data_sql = data(VOTES, $data, false, 1, 'row');
 		
 			if ( $data && $confirm )
 			{
 				$sql = sql(VOTES, $mode, $data_sql, 'training_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+				$msg = $lang['DELETE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 				
 			#	sql(COMMENTS, $mode, $data_sql, 'training_id', $data);
 			#	sql(COMMENTS_READ, $mode, $data_sql, 'training_id', $data);
@@ -183,8 +183,8 @@ else
 				$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 	
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['com_confirm'],
-					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['training_vs']),
+					'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+					'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $data_sql['training_vs']),
 					
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -192,7 +192,7 @@ else
 			}
 			else
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+				message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 			}
 			
 			$template->pparse('confirm');
@@ -206,21 +206,21 @@ else
 			$teams = data(TEAMS, false, 'team_order', 0, false);
 			
 			$s_sort = "<select class=\"selectsmall\" name=\"$team\" onchange=\"if (this.options[this.selectedIndex].value != '') this.form.submit();\">";
-			$s_sort .= "<option value=\"0\">" .  sprintf($lang['stf_select_format'], $lang['msg_select_team']) . "</option>";
+			$s_sort .= "<option value=\"0\">" .  sprintf($lang['STF_SELECT_FORMAT'], $lang['msg_select_team']) . "</option>";
 			
 			foreach ( $teams as $info => $value )
 			{
 				$selected = ( $value['team_id'] == $team_id ) ? ' selected="selected"' : '';
-				$s_sort .= "<option value=\"" . $value['team_id'] . "\" $selected>" . sprintf($lang['stf_select_format'], $value['team_name']) . "</option>";
+				$s_sort .= "<option value=\"" . $value['team_id'] . "\" $selected>" . sprintf($lang['STF_SELECT_FORMAT'], $value['team_name']) . "</option>";
 			}
 			$s_sort .= "</select>";
 			
 			$fields .= '<input type="hidden" name="mode" value="create" />';
 			
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['training']),
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['training']),
 				'L_CREATE'		=> sprintf($lang['sprintf_new_creates'], $lang['training']),
-				'L_EXPLAIN'		=> $lang['explain'],
+				'L_EXPLAIN'	=> $lang['EXPLAIN'],
 				'L_UPCOMING'	=> $lang['upcoming'],
 				'L_EXPIRED'		=> $lang['expired'],
 				
@@ -280,8 +280,8 @@ else
 							'GAME'	=> display_gameicon($training_new[$i]['game_size'], $training_new[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_new[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['com_update'] . '" alt="" /></a>',
-							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['com_delete'] . '" alt="" /></a>',
+							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['COMMON_UPDATE'] . '" alt="" /></a>',
+							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['COMMON_DELETE'] . '" alt="" /></a>',
 						));
 					}
 				}
@@ -301,8 +301,8 @@ else
 							'GAME'	=> display_gameicon($training_old[$i]['game_size'], $training_old[$i]['game_image']),
 							'DATE'	=> create_date($userdata['user_dateformat'], $training_old[$i]['training_date'], $userdata['user_timezone']),
 							
-							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['com_update'] . '" alt="" /></a>',
-							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['com_delete'] . '" alt="" /></a>',
+							'UPDATE'	=> '<a href="' . check_sid("$file?mode=_update&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_update'] . '" title="' . $lang['COMMON_UPDATE'] . '" alt="" /></a>',
+							'DELETE'	=> '<a href="' . check_sid("$file?mode=_delete&amp;$url=$training_id") . '" alt="" /><img src="' . $images['icon_cancel'] . '" title="' . $lang['COMMON_DELETE'] . '" alt="" /></a>',
 						));
 					}
 				}

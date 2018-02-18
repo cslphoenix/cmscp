@@ -15,18 +15,13 @@
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.custom.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.ui.datepicker.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jRating.jquery.css" media="screen" />
-    
 	<link rel="stylesheet" type="text/css" href="./../includes/css/jquery.minicolors.css" media="screen" />
 	
-	
-	
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.js"></script>
-	
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.sparkline.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.atooltip.js"></script>
 <!--<script type="text/javascript" src="./../includes/js/jquery/jquery.exptextarea.js"></script>-->
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.autosize.js"></script>
-	
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.lightbox.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.maxlength.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.litetabs.js"></script>
@@ -34,9 +29,7 @@
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.timepicker-addon.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.sliderAccess.js"></script>
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.ui.datetimepicker-de.js"></script>
-	
 	<script type="text/javascript" src="./../includes/js/jquery/jquery.minicolors.js"></script>
-	
 	<script type="text/javascript" src="style/vars.js"></script>
 	<script type="text/javascript" src="style/jquery.vars.js"></script>
 	
@@ -72,6 +65,7 @@
 </head>
 <body>
 <a name="#top"></a>
+<!--
 <div id="head">
 	<table style="padding:5px;" id="hover">
 	<tr>
@@ -81,6 +75,7 @@
 	</tr>
 	</table>
 </div>
+-->
 <div id="cont">
 <div id="wrap">
 	<div class="border-left">
@@ -89,9 +84,16 @@
 	<div class="border-top-left">
 	<div class="border-top-right">
 	<div class="inside">
-		<div id="page-header"></div>
+		<div id="page-header">
+			<table id="hover">
+			<tr>
+				<td width="35%" align="left">{L_CURRENT}</td>
+				<td width="30%" align="center"><a href="{U_OVERVIEW}">{L_OVERVIEW}</a>&nbsp;&bull;&nbsp;<a href="{U_SITE}">{L_SITE}</a></td>
+				<td width="35%" align="right"><b>{L_USER}</b> [ <a href="{U_LOGOUT}" target="_parent">{L_LOGOUT}</a> ]<br>[ <a href="{U_SESSION}" target="_parent">{L_SESSION}</a> ]</td>
+			</tr>
+			</table>	
+		</div>
 		<div id="page-body">
-			
 			<ul id="navlist">
 				<!-- BEGIN icat -->
 				<li{icat.ACTIVE}><a href="{icat.URL}"{icat.CURRENT}>{icat.NAME}</a></li>
@@ -108,8 +110,4 @@
 			</ul>
 			<!-- END ilab -->
 			</div>
-			
 			<div id="cmain">
-					
-					
-					

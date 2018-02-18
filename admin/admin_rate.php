@@ -3,10 +3,11 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_rate',
-		'modes'		=> array(
-			'main'	=> array('title' => 'acp_rate'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_RATE',
+		'CAT'		=> 'SYSTEM',
+		'MODES'		=> array(
+			'MAIN'	=> array('TITLE' => 'ACP_RATE'),
 		)
 	);
 }
@@ -17,19 +18,19 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current = 'acp_rate';
+	$current = 'ACP_RATE';
 	
 	include('./pagestart.php');
 	
 	add_lang('rate');
-	acl_auth('a_rating');
+	acl_auth('A_RATING');
 	
 	$error	= '';
 	$index	= '';
 	$fields = '';
 	
-	$time	= time();
 	$log	= SECTION_RATE;
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
@@ -38,18 +39,14 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
-	$template->set_filenames(array(
-		'body'		=> 'style/acp_rate.tpl',
-		'confirm'	=> 'style/info_confirm.tpl',
-	));
+	$template->set_filenames(array('body' => "style/$current.tpl"));
 	
-#	debug($_POST, '_POST');
-	
-	$mode = (in_array($mode, array('create', 'update', 'move_up', 'move_down', 'delete'))) ? $mode : false;
+	$mode = (in_array($mode, array('create', 'delete', 'move_up', 'move_down', 'update'))) ? $mode : false;
+	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
 	
 	if ( $mode )
 	{
@@ -62,7 +59,7 @@ else
 				
 				$vars = array(
 					'game' => array(
-						'title' => 'input_data',
+						'title'	=> 'INPUT_DATA',
 						'game_name'		=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25',	'required' => 'input_name',	'check' => true),
 						'game_tag'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:server','required' => 'select_tag',	'check' => true, 'params' => true),
 						'game_image'	=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:image',	'params' => array($dir_path, array('.png', '.jpg', '.jpeg', '.gif'), true, true)),
@@ -81,7 +78,7 @@ else
 				}
 				else if ( $mode == 'update' && !$submit )
 				{
-					$data_sql = data(GAMES, $data, false, 1, true);
+					$data_sql = data(GAMES, $data, false, 1, 'row');
 				}
 				else
 				{
@@ -91,15 +88,15 @@ else
 					{
 						if ( $mode == 'create' )
 						{
-							$data_sql['game_order'] = maxa(GAMES, 'game_order', false);
+							$data_sql['game_order'] = _max(GAMES, 'game_order', false);
 							
 							$sql = sql(GAMES, $mode, $data_sql);
-							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 						}
 						else
 						{
 							$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+							$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -114,9 +111,9 @@ else
 				build_output(GAMES, $vars, $data_sql);
 
 				$template->assign_vars(array(
-				#	'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['game_name']),
-					'L_EXPLAIN'	=> $lang['com_required'],
+				#	'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+					'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['game_name']),
+					'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 					
 					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
@@ -139,12 +136,12 @@ else
 
 			case 'delete':
 
-				$data_sql = data(GAMES, $data, false, 1, true);
+				$data_sql = data(GAMES, $data, false, 1, 'row');
 
 				if ( $data && $confirm )
 				{
 					$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
-					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+					$msg = $lang['DELETE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 
 					orders(GAMES);
 
@@ -157,8 +154,8 @@ else
 					$fields .= "<input type=\"hidden\" name=\"id\" value=\"$data\" />";
 
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['com_confirm'],
-						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data['game_name']),
+						'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+						'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $data['game_name']),
 
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -166,7 +163,7 @@ else
 				}
 				else
 				{
-					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+					message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 				}
 
 				$template->pparse('confirm');
@@ -182,89 +179,120 @@ else
 	}
 
 	$template->assign_block_vars('display', array());
-
-	$fields	= '<input type="hidden" name="mode" value="create" />';
 	
+	$fields = build_fields(array('mode' => 'create'));
+#	$sqlout = data(NEWS, false, 'game_order ASC', 1, false);
+
+	$news_rating = $rating = array();
+
 	$sql = "SELECT n.news_id, n.news_title, n.news_date, nc.cat_name
 				FROM " . NEWS . " n
 			LEFT JOIN " . NEWS_CAT . " nc ON n.news_cat = nc.cat_id
-				ORDER BY n.news_date DESC LIMIT 0, 5";
+				WHERE n.news_public != 0
+				ORDER BY n.news_date DESC, n.news_id DESC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
 	}
-	
-	$n_rate = array();
-	
+
 	while ( $row = $db->sql_fetchrow($result) )
 	{
-		$n_rate[$row['news_id']]['news_title']	= $row['news_title'];
-		$n_rate[$row['news_id']]['cat_name']	= $row['cat_name'];
-		$n_rate[$row['news_id']]['news_date']	= $row['news_date'];
-	}
-	
-	$sql = "SELECT * FROM " . RATE . " WHERE rate_type = " . RATE_NEWS . " AND rate_type_id IN (" . implode(', ', array_keys($n_rate)) . ") ORDER BY rate_id DESC";
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
-	}
-	
-	$n_data = array();
-	
-	while ( $row = $db->sql_fetchrow($result) )
-	{
-		$n_data[$row['rate_type_id']]['rate'] = $row['rate_id'];
-		$n_data[$row['rate_type_id']]['user'][] = array('userid' => $row['rate_userid'], 'userip' => $row['rate_userip'], 'time' => $row['rate_time'], 'value' => $row['rate_value']);
+		$news_rating[$row['news_id']] = $row;
 	}
 	$db->sql_freeresult($result);
 	
-	if ( !$n_rate )
+	$sql = "SELECT * FROM " . RATE . " WHERE rate_type_id IN (" . implode(', ', array_keys($news_rating)) . ") ORDER BY rate_id DESC";
+	if ( !($result = $db->sql_query($sql)) )
 	{
-		$template->assign_block_vars('display.empty', array());
+		message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
+	}
+
+	while ( $row = $db->sql_fetchrow($result) )
+	{
+		$rating[$row['rate_type']][$row['rate_type_id']][] = $row;
+	}
+	$db->sql_freeresult($result);
+	
+	debug($news_rating, 'news_rating');
+	debug($rating, 'rating');
+
+	if ( !$news_rating )
+	{
+		$template->assign_block_vars('display.none', array());
 	}
 	else
 	{
-		foreach ( $n_rate as $key => $row )
+		if ( $rating )
+		{	
+			foreach ( $rating as $_type => $_row_type )
+			{
+			#	if ( $_type == RATE_NEWS && is_array($_row_type) )
+			#	{
+					foreach ( $_row_type as $_type_id => $_row_users )
+					{
+						foreach ( $_row_users as $row )
+						{
+							@$cnt_value[$_type][$_type_id] += $row['rate_value'];
+						}
+					}
+			#	}
+			}
+		}
+		else
 		{
-			$count_value = 0;
+			$cnt_value = '';
+		}
+		
+	#	debug($cnt_value, 'test');
+		
+		foreach ( $news_rating as $row )
+		{
+			$template->assign_block_vars('display.news.row', array(
+				'NAME'		=> $row['news_title'],
+			#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+			#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
+				
+				'RATE'		=> sprintf('%s %s &oslash; %s/%s', $cnt_value[RATE_NEWS], $lang['common_rating'], $rate_ave, $settings['rating_news']['maximal']),
+			));
+		#	$count_value = 0;
 			
 		#	debug($n_data[$key]['user'], 'key');
 			
-			foreach ( $n_data[$key]['user'] as $rate )
-			{
-				$count_value += $rate['value'];
-			}
+		#	foreach ( $n_data[$key]['user'] as $rate )
+		#	{
+		#		$count_value += $rate['value'];
+		#	}
 			
-			$rate_cnt	= count($n_data[$key]['user']);
-			$rate_sum	= $count_value;
-			$rate_ave	= round(($rate_sum/$rate_cnt), 1);
+		#	$rate_cnt	= count($n_data[$key]['user']);
+		#	$rate_sum	= $count_value;
+		#	$rate_ave	= round(($rate_sum/$rate_cnt), 1);
 			
-			$template->assign_block_vars('display.news', array(
-				'NAME'		=> $row['news_title'],
-			#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-			#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+		#	$template->assign_block_vars('display.news', array(
+		#		'NAME'		=> $row['news_title'],
+			#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+			#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 				
-				'RATE'		=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, $settings['rating_news']['maximal']),
-			));
+		#		'RATE'		=> sprintf('%s %s &oslash; %s/%s', $rate_cnt, $lang['common_rating'], $rate_ave, $settings['rating_news']['maximal']),
+		#	));
 			
-			if ( isset($n_data[$key]['user']) )
-			{
-				foreach ( $n_data[$key]['user'] as $drow )
-				{
-					$template->assign_block_vars('display.news.rate', array(
-						'NAME'		=> $drow['userid'],
+		#	if ( isset($n_data[$key]['user']) )
+		#	{
+		#		foreach ( $n_data[$key]['user'] as $drow )
+		#		{
+		#			$template->assign_block_vars('display.news.rate', array(
+		#				'NAME'		=> $drow['userid'],
 					#	'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-					#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-					#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+					#	'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+					#	'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 						
 					#	'TAG'		=> $row['game_tag'],
 					#	'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
 						
-					#	'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-					#	'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
-					));
-				}
-			}
+					#	'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+					#	'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
+		#			));
+		#		}
+		#	}
 		
 		}	
 			
@@ -275,38 +303,38 @@ else
 		/*
 			$template->assign_block_vars('display.news', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 				
 				'TAG'		=> $row['game_tag'],
 				'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
 				
-				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 			));
 			
 			$template->assign_block_vars('display.gallery', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 				
 				'TAG'		=> $row['game_tag'],
 				'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
 				
-				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 			));
 			
 			$template->assign_block_vars('display.download', array(
 				'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+				'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+				'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 				
 				'TAG'		=> $row['game_tag'],
 				'GAME'		=> $row['game_image'] ? display_gameicon($row['game_image']) : img('i_icon', 'icon_spacer', ''),
 				
-				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+				'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+				'MOVE_DOWN'	=> ( $order != $max )	? href('a_img', $file, array('mode' => 'move_down',	'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 			));
 		*/
 		
@@ -317,9 +345,9 @@ else
 	}
 
 	$template->assign_vars(array(
-		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-		'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
-		'L_EXPLAIN'	=> $lang['explain'],
+		'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+		'L_CREATE'	=> sprintf($lang['STF_CREATE'], $lang['TITLE']),
+		'L_EXPLAIN'	=> $lang['EXPLAIN'],
 
 		'L_NAME'	=> $lang['game_name'],
 
@@ -327,8 +355,7 @@ else
 		'S_FIELDS'	=> $fields,
 	));
 
-	$template->pparse('body');
-
+	$template->pparse($_tpl);
 	acp_footer();
 }
 

@@ -7,151 +7,67 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'title'			=> 'Benutzergruppe',
-	'titles'		=> 'Benutzergruppen',
+	'TITLE'		=> 'Benutzergruppe',
+	'TITLES'	=> 'Benutzergruppen',
 	
-	'explain'		=> 'Hier kannst du die Gruppen Verwalten.',
-	'explain_user'	=> 'Benutzer verwalten',
-	'explain_perm'	=> 'Gruppenberechtigung',
+	'EXPLAIN'		=> 'Hier kannst du die Gruppen Verwalten.',
+	'EXPLAIN_USER'	=> 'Benutzer verwalten',
+	'EXPLAIN_PERM'	=> 'Hier können die Recht für die einzelnen Gruppen verwalten und bearbeiten.',
+	
+	'COUNT_MEMBER'	=> 'Mitgliederanzahl',
 
-	'data_input'	=> 'Gruppendaten',	
+	'INPUT_DATA'	=> 'Gruppendaten',	
 	
-	'group_name'	=> 'Name',
-	'group_desc'	=> 'Beschreibung',
-	'group_access'	=> 'Benutzerlevel',
-	'group_type'	=> 'Anfragentyp',
-	'group_legend'	=> 'Legende',
-	'group_color'	=> 'Farbe',
-	'group_rank'	=> 'Rang',
-	'group_image'	=> 'Bild',
+	'GROUP_NAME'	=> 'Name',
+	'GROUP_DESC'	=> 'Beschreibung',
+	'GROUP_TYPE'	=> 'Anfragentyp',
+	'GROUP_LEGEND'	=> 'Legende',
+	'GROUP_COLOR'	=> 'Farbe',
+	'GROUP_RANK'	=> 'Rang',
+	'GROUP_IMAGE'	=> 'Bild',
 	
-	'group_open'	=> 'Offen',
-	'group_request'	=> 'Anfragen',
-	'group_closed'	=> 'Geschlossen',
-	'group_hidden'	=> 'Versteckt',
-	'group_system'	=> 'System',
+	'GROUP_OPEN'	=> 'Offen',
+	'GROUP_REQUEST'	=> 'Anfragen',
+	'GROUP_CLOSED'	=> 'Geschlossen',
+	'GROUP_HIDDEN'	=> 'Versteckt',
+	'GROUP_SYSTEM'	=> 'System',
 
-	'request_agree'	=> 'Antrag zustimmen',
-	'request_deny'	=> 'Antrag verweigern',
+	'REQUEST_AGREE'	=> 'Antrag zustimmen',
+	'REQUEST_DENY'	=> 'Antrag verweigern',
 
-	'member'		=> 'Gruppenmitglied',
-	'members'		=> 'Gruppenmitglieder',
-	'moderator'		=> 'Gruppenmoderator',
-	'moderators'	=> 'Gruppenmoderatoren',
-	'pending'		=> 'wartende Mitglieder',
+	'MEMBER'			=> 'Gruppenmitglieder',
+	'MEMBERS'			=> 'Mitglieder',
+	'MEMBERS_NONE'		=> 'Keine Mitglieder eingetragen',
+	'MODERATORS'		=> 'Moderatoren',
+	'MODERATORS_NONE'	=> 'Keine Moderatoren eingetragen',
+	'PENDING'			=> 'wartende Mitglieder',
 	
-	'permission'	=> 'Gruppenberechtigung',
+	'MOD'			=> 'Moderatorenstatus',	
+	'MAIN'			=> 'Hauptgruppe setzen',
+	'MAIN_GROUP'	=> 'Hauptgruppe',
+	'PERMISSION'	=> 'Gruppenberechtigung',
 	
-	'type_main'		=> 'Hauptgruppe',
+	'UPDATE_CHANGE'		=> 'Rechte wurden erfolgreich geändert.',
+	'UPDATE_DEFAULT'	=> 'Hauptgruppe erfolgreich geändert.',
+	'UPDATE_CREATE'		=> 'Benutzer wurden erfolgreich hinzugefügt.',
+	'UPDATE_DELETE'		=> 'Benutzer wurden erfolgreich gelöscht.',
 	
-	'mod'			=> 'Moderatorenstatus',
-	'main'			=> 'Hauptgruppe setzen',
-	
-	'update_change'	=> 'Rechte wurden erfolgreich geändert.',
-	'update_delete'	=> 'Benutzer wurden erfolgreich gelöscht.',
-	'update_create'	=> 'Benutzer wurden erfolgreich hinzugefügt.',
-	
-	'users_count'	=> 'Mitgliederanzahl',
-	
-	'notice_select_default'		=> 'zur Hauptgruppe machen',
-
+	'NOTICE_SELECT_DEFAULT'		=> 'zur Hauptgruppe machen',
+	'NOTICE_CONFIRM_GROUP'		=> 'dass dieser Benutzer: %s von der Gruppe:',
 ));
 
 $lang = array_merge($lang, array(
-/*	
-	'group_access_ary'	=> array(
-		USER	=> 'Benutzer',
-		TRIAL	=> 'Trial',
-		MEMBER	=> 'Member',
-		MOD		=> 'Moderator',
-		ADMIN	=> 'Administrator',
-	),
-	
-	'group_type_ary'	=> array(
-		GROUP_OPEN		=> $lang['group_open'],
-		GROUP_REQUEST	=> $lang['group_request'],
-		GROUP_CLOSED	=> $lang['group_closed'],
-		GROUP_HIDDEN	=> $lang['group_hidden'],
-		GROUP_SYSTEM	=> $lang['group_system'],
-	),
-*/	
 	'radio:type'	=> array(
-		GROUP_OPEN		=> $lang['group_open'],
-		GROUP_REQUEST	=> $lang['group_request'],
-		GROUP_CLOSED	=> $lang['group_closed'],
-		GROUP_HIDDEN	=> $lang['group_hidden'],
-		GROUP_SYSTEM	=> $lang['group_system'],
+		GROUP_OPEN		=> $lang['GROUP_OPEN'],
+		GROUP_REQUEST	=> $lang['GROUP_REQUEST'],
+		GROUP_CLOSED	=> $lang['GROUP_CLOSED'],
+		GROUP_HIDDEN	=> $lang['GROUP_HIDDEN'],
+		GROUP_SYSTEM	=> $lang['GROUP_SYSTEM'],
 	),
-	
-	'radio:access'	=> array(
-		USER	=> $lang['auth_user'],
-		TRIAL	=> $lang['auth_trial'],
-		MEMBER	=> $lang['auth_member'],
-		MOD		=> $lang['auth_mod'],
-		ADMIN	=> $lang['auth_admin'],
+	'radio:legend'	=> array(
+		1 => $lang['COMMON_VIEW'],
+		0 => $lang['COMMON_NONE_VIEW']
 	),
-	
 ));
-
-$lang = array_merge($lang, array(
-	
-	'radio:legend'	=> array(1 => $lang['com_view'], 0 => $lang['com_noview']),
-	
-));
-
-/*
-$lang['group_member']			= 'Gruppenmitglieder';
-$lang['group_add_member']		= 'Mitglieder hinzufügen';
-$lang['group_edit_member']		= 'Mitglieder bearbeiten';
-$lang['group_view_member']		= 'Mitglieder Übersicht';
-$lang['group_view_member']		= 'Mitglieder Übersicht';
-$lang['group_add_member_ex']	= 'Hier kannst du, Mitglieder hinzufügen. Entweder Benutzer per Login mit Komma getrennt eintragen, <b>oder</b> über das Dropdown-Menü auswahlen!';
-$lang['group_name']			= 'Gruppenname';
-$lang['group_mod']			= 'Moderator';
-$lang['group_membercount']	= 'Mitgliederanzahl';
-$lang['group_access']		= 'Gruppenrechte';
-$lang['group_type']			= 'Gruppentyp';
-$lang['group_desc']	= 'Beschreibung';
-$lang['group_color']		= 'Gruppenfarbe';
-$lang['group_legend']		= 'Legende';
-$lang['group_rank']			= 'Gruppenrang';
-$lang['group_data']			= 'Gruppendaten';
-$lang['group_image']		= 'Gruppenbild';
-$lang['group_image_upload']		= 'Hochladen';
-$lang['group_image_current']	= 'Aktuelles Gruppenbild';
-
-$lang['select_group_mod']	= '&raquo; Gruppenmoderator auswählen';
-$lang['Group_DEFAULT']		= 'Vorgabe';
-$lang['Group_SPECIAL']		= 'Spezial';
-$lang['group_allowed']		= 'Ja';
-$lang['group_disallowed']	= 'Nein';
-
-$lang['group_open']		= 'Gruppe: ohne Anfrage';
-$lang['group_request']	= 'Gruppe: mit Anfrage';
-$lang['group_closed']	= 'Gruppe: geschlossen';
-$lang['group_hidden']	= 'Gruppe: versteckt';
-$lang['group_system']	= 'Gruppe: System';
-
-$lang['group_option_type'] = array(
-	GROUP_SYSTEM	=> $lang['group_system'],
-	GROUP_HIDDEN	=> $lang['group_hidden'],
-	GROUP_CLOSED	=> $lang['group_closed'],
-	GROUP_REQUEST	=> $lang['group_request'],
-	GROUP_OPEN		=> $lang['group_open'],
-);
-
-$lang['group_option_access'] = array(
-	ADMIN	=> $lang['auth_admin'],
-	MOD		=> $lang['auth_mod'],
-	MEMBER	=> $lang['auth_member'],
-	TRIAL	=> $lang['auth_trial'],
-	USER	=> $lang['auth_user'],
-);
-
-$lang['no_members']		= 'Diese Gruppe hat keine Mitglieder.';
-$lang['no_moderators']	= 'Diese Gruppe hat keine Moderatoren.';
-*/
-
-
 
 ?>

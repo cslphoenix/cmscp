@@ -21,7 +21,7 @@
 <!-- END style_row -->
 <!-- BEGIN entry_empty -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
 <!-- END entry_empty -->
 </table>

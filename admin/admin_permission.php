@@ -3,26 +3,27 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_permission',
-		'cat'		=> 'permission',
-		'modes'		=> array(
-			'forums_all'			=> array('title' => 'acp_forums_all'),			// foren	-> users/groups	-> f_ m_
-			'forums_mod'			=> array('title' => 'acp_forums_mod'),			// foren	-> users/groups	-> m_ f_
-			'forums_group'			=> array('title' => 'acp_forums_group'),		// group	-> f_ m_
-			'forums_user'			=> array('title' => 'acp_forums_user'),			// user		-> f_ m_
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_PERMISSION',
+		'CAT'		=> 'PERMISSION',
+		'MODES'		=> array(
+			'FORUMS_ALL'			=> array('TITLE' => 'ACP_FORUMS_ALL'),			// foren	-> users/groups	-> f_ m_
+			'FORUMS_MOD'			=> array('TITLE' => 'ACP_FORUMS_MOD'),			// foren	-> users/groups	-> m_ f_
+			'FORUMS_GROUP'			=> array('TITLE' => 'ACP_FORUMS_GROUP'),		// group	-> f_ m_
+			'FORUMS_USER'			=> array('TITLE' => 'ACP_FORUMS_USER'),			// user		-> f_ m_
 
-			'permission_admin'		=> array('title' => 'acp_permission_admin'),	// users/groups -> a_
-			'permission_download'	=> array('title' => 'acp_permission_download'),	// users/groups -> d_
-			'permission_gallery'	=> array('title' => 'acp_permission_gallery'),	// users/groups -> g_
-			'permission_mod'		=> array('title' => 'acp_permission_mod'),		// users/groups -> m_
-			'permission_users'		=> array('title' => 'acp_permission_users'),	// users/groups	-> u_
+			'PERMISSION_ADMIN'		=> array('TITLE' => 'ACP_PERMISSION_ADMIN'),	// users/groups -> a_
+			'PERMISSION_DOWNLOAD'	=> array('TITLE' => 'ACP_PERMISSION_DOWNLOAD'),	// users/groups -> d_
+			'PERMISSION_GALLERY'	=> array('TITLE' => 'ACP_PERMISSION_GALLERY'),	// users/groups -> g_
+			'PERMISSION_MOD'		=> array('TITLE' => 'ACP_PERMISSION_MOD'),		// users/groups -> m_
+			'PERMISSION_USERS'		=> array('TITLE' => 'ACP_PERMISSION_USERS'),	// users/groups	-> u_
 
-			'permission_group'		=> array('title' => 'acp_permission_group'),	// group	-> a_ m_ u_ d_ g_
-			'permission_user'		=> array('title' => 'acp_permission_user'),		// user		-> a_ m_ u_ d_ g_
+			'PERMISSION_GROUP'		=> array('TITLE' => 'ACP_PERMISSION_GROUP'),	// group	-> a_ m_ u_ d_ g_
+			'PERMISSION_USER'		=> array('TITLE' => 'ACP_PERMISSION_USER'),		// user		-> a_ m_ u_ d_ g_
 
-			'show_admin'			=> array('title' => 'acp_show_admin'),			// users/groups -> a_
-			'show_forum'			=> array('title' => 'acp_show_forum'),			// users/groups -> f_
+			'SHOW_ADMIN'			=> array('TITLE' => 'ACP_SHOW_ADMIN'),			// users/groups -> a_
+			'SHOW_FORUM'			=> array('TITLE' => 'ACP_SHOW_FORUM'),			// users/groups -> f_
+		#	'SHOW_GROUP'			=> array('TITLE' => 'ACP_SHOW_GROUP'),			// users/groups	-> a_ m_ u_ d_ g_
 		)
 	);
 }
@@ -35,12 +36,12 @@ else
 	$update = ( isset($_POST['update']) ) ? true : false;
 	$delete = ( isset($_POST['submit_delete']) ) ? true : false;
 
-	$current = 'acp_permission';
+	$current = 'ACP_PERMISSION';
 
 	include('./pagestart.php');
 
 	add_lang(array('permission', 'labels'));
-	acl_auth(array('a_auth_groups', 'a_auth_users', 'a_aauth', 'a_dauth', 'a_fauth', 'a_gauth', 'a_mauth', 'a_uauth'));
+	acl_auth(array('A_AUTH_ADMIN', 'A_AUTH_DOWNLOAD', 'A_AUTH_FORMS', 'A_AUTH_GALLERY', 'A_AUTH_MODERATOR', 'A_AUTH_USER'));
 
 	$error	= '';
 	$index	= '';
@@ -49,6 +50,7 @@ else
 	$log	= SECTION_PERMISSION;
     $file	= basename(__FILE__) . $iadds;
 
+	$data	= request('id', INT);
 	$start	= request('start', INT);
 	$action	= request('action', TYP);
 	$type	= request('type', TYP);
@@ -66,19 +68,19 @@ else
 	$user_id	= request('user_id', INT);
 	$user_name	= request('user_name', TXT);
 	$user_names	= request('user_names', ARY, TXT);
+	
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
+	
+	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 
-	$acp_title = sprintf($lang['stf_header'], $lang['title']);
-
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
-
-	$template->set_filenames(array('body' => 'style/acp_permission.tpl'));
+	$template->set_filenames(array('body' => "style/$current.tpl"));
 
 	function construct_show_box($ug_ids, $forum_ids, $options, $type)
 	{
 		global $db, $lang, $template, $fields, $action;
-		global $ug_type, $mode;
+		global $ug_type, $mode, $file;
 		global $userauth;
-
+		
 		$type = ($mode ? $mode : $options[0]);
 
 		$acl_label		= acl_label($type);
@@ -190,7 +192,6 @@ else
 						}
 					}
 				}
-
 				break;
 		}
 
@@ -211,11 +212,11 @@ else
 				$u_founder[$row['ugid']] = $row[$access_action[5]];
 			}
 		}
-
+		
 		$access = access($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_data, $acl_field_name);
-
+		
 		$grp_info = $u_a = array();
-
+		
 		if ( $access )
 		{
 			foreach ( $access as $forum_id => $users )
@@ -283,235 +284,276 @@ else
 						{
 							$urs_access[$forum_id][$u_id][$r_field] = $r_value;
 						}
-
+						
 						if ( $ug_type == 'user' )
 						{
-							if ( $u_founder[$u_id] == 1 )
+							if ( isset($u_founder[$u_id]) && $u_founder[$u_id] == 1 )
 							{
 								$urs_access[$forum_id][$u_id][$r_field] = '1';
-								$grp_info[$main][$parent][$r_field][lang('founder')] = $lang['perm_1'];
+								$grp_info[$main][$parent][$r_field][$lang['PERMISSION_FOUNDER']] = $lang['PERM_1'];
 							}
 
 							if ( $r_value != 0 )
 							{
-								$grp_info[$main][$parent][$r_field][lang('user')] = $lang['perm_' . $r_value];
+								$grp_info[$main][$parent][$r_field][$lang['PERMISSION_USER']] = $lang['PERM_' . $r_value];
 							}
 						}
 						else
 						{
 							if ( $r_value != 0 )
 							{
-								$grp_info[$forum_id][$u_id][$r_field][lang('group')] = $lang['perm_' . $r_value];
+								$grp_info[$forum_id][$u_id][$r_field][$lang['PERMISSION_GROUP']] = $lang['PERM_' . $r_value];
 							}
 						}
 					}
 				}
 			}
 		}
-
-		$global_info = $info;
-		unset($info);
-
-		foreach ( $forum_access as $forum_id => $user )
+		
+		$overview = $cnt_f = $cnt_g = '';
+				
+		foreach ( $forum_access as $a_id => $a_row )
 		{
-			foreach ( $user as $f_user_id )
+			foreach ( $a_row as $row_id )
 			{
-				foreach ( $global_info as $user_id => $group_id )
+				$cnt_f += 1;
+				
+				foreach ( $info as $key => $value )
 				{
-					if ( $f_user_id == $user_id )
+					$cnt_g +=1;
+
+					if ( $row_id == $key )
 					{
-						$info[$forum_id][$user_id] = $group_id;
+						$overview[$a_id][$row_id] = $value;
+					}
+					
+					if ( $ug_type == 'group' && $action == 'show_forum' )
+					{
+						$overview[$a_id][$row_id] = array();
 					}
 				}
 			}
 		}
-
-		if ( isset($info) && isset($access_group) )
+		
+		if ( !$overview )
 		{
-			foreach ( $info as $forum_id => $users )
+			foreach ( $forum_access as $a_id => $a_row )
 			{
-				foreach ( $users as $u_id => $gids )
+				$cnt_f += 1;
+				
+				foreach ( $a_row as $row_id )
 				{
-					foreach ( $gids as $gid )
+					$cnt_g +=1;
+					
+					foreach ( $info as $key => $value )
 					{
-						if ( isset($access_group[$forum_id][$gid]) )
+						$overview[$a_id][$row_id] = $value;
+					}
+				}
+			}
+		}
+		
+	#	debug($info, '$info');
+	#	debug($forum_access, '$forum_access');
+	#	debug($overview, '$overview');
+		
+		if ( $overview && isset($access_group) )
+		{
+			foreach ( $overview as $forum_id => $users )
+			{
+				foreach ( $users as $user_id => $groups )
+				{
+					if ( $groups )
+					{
+						foreach ( $groups as $group_id )
 						{
-							$main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $u_id : $forum_id;
-							$parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_id : $u_id;
-
-							foreach ( $access_group[$forum_id][$gid] as $r_field => $r_value )
+							if ( isset($access_group[$forum_id][$group_id]) )
 							{
-								if ( isset($grp_access[$forum_id][$u_id][$r_field]) )
+								$main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $user_id : $forum_id;
+								$parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_id : $user_id;
+								
+								foreach ( $access_group[$forum_id][$group_id] as $r_field => $r_value )
 								{
-									if ( $grp_access[$forum_id][$u_id][$r_field] == 1 )
+									if ( isset($grp_access[$forum_id][$user_id][$r_field]) )
 									{
-										if ( $r_value == 1 )
+										if ( $grp_access[$forum_id][$user_id][$r_field] == 1 )
 										{
-											$grp_access[$forum_id][$u_id][$r_field] = '1';
+											if ( $r_value == 1 )
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '1';
+											}
+											else if ( $r_value == -1 )
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '-1';
+											}
+											else
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '1';
+											}
 										}
-										else if ( $r_value == -1 )
+	
+										if ( $grp_access[$forum_id][$user_id][$r_field] == -1 )
 										{
-											$grp_access[$forum_id][$u_id][$r_field] = '-1';
+											if ( $r_value == 1 )
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '-1';
+											}
+											else if ( $r_value == -1 )
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '-1';
+											}
+											else
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '-1';
+											}
 										}
-										else
+	
+										if ( $grp_access[$forum_id][$user_id][$r_field] == 0 )
 										{
-											$grp_access[$forum_id][$u_id][$r_field] = '1';
+											if ( $r_value == 1 )
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '1';
+											}
+											else if ( $r_value == -1 )
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '-1';
+											}
+											else
+											{
+												$grp_access[$forum_id][$user_id][$r_field] = '0';
+											}
 										}
 									}
-
-									if ( $grp_access[$forum_id][$u_id][$r_field] == -1 )
+									else
 									{
-										if ( $r_value == 1 )
-										{
-											$grp_access[$forum_id][$u_id][$r_field] = '-1';
-										}
-										else if ( $r_value == -1 )
-										{
-											$grp_access[$forum_id][$u_id][$r_field] = '-1';
-										}
-										else
-										{
-											$grp_access[$forum_id][$u_id][$r_field] = '-1';
-										}
+										$grp_access[$forum_id][$user_id][$r_field] = $r_value;
 									}
-
-									if ( $grp_access[$forum_id][$u_id][$r_field] == 0 )
+	
+									if ( $u_founder[$user_id] )
 									{
-										if ( $r_value == 1 )
-										{
-											$grp_access[$forum_id][$u_id][$r_field] = '1';
-										}
-										else if ( $r_value == -1 )
-										{
-											$grp_access[$forum_id][$u_id][$r_field] = '-1';
-										}
-										else
-										{
-											$grp_access[$forum_id][$u_id][$r_field] = '0';
-										}
+										$grp_access[$forum_id][$user_id][$r_field] = '1';
+										$grp_info[$main][$parent][$r_field][$lang['PERMISSION_FOUNDER']] = $lang['PERM_1'];
+									}
+	
+									if ( $r_value != 0 )
+									{
+										$grp_info[$main][$parent][$r_field][$temp_info[$group_id]['name']] = $lang['PERM_' . $r_value];
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		foreach ( $acl_field_name as $f_name )
+		{
+			if ( $overview )
+			{
+				foreach ( $overview as $forum_id => $users )
+				{
+					foreach ( $users as $user_id => $user_groups )
+					{
+						$main	= ( $cnt_f > 1 && $cnt_g < 2 ) ? $user_id : $forum_id;
+						$parent	= ( $cnt_f > 1 && $cnt_g < 2 ) ? $forum_id : $user_id;
+						
+						if ( isset($urs_access[$forum_id][$user_id][$f_name]) )
+						{
+							if ( $urs_access[$forum_id][$user_id][$f_name] == '1' )
+							{
+								if ( isset($u_a[$main][$parent][$f_name]) )
+								{
+									if ( $u_a[$main][$parent][$f_name] == '-1' )
+									{
+										$u_a[$main][$parent][$f_name] = '-1';
+									}
+									else if ( $u_a[$main][$parent][$f_name] == '0' )
+									{
+										$u_a[$main][$parent][$f_name] = '1';
 									}
 								}
 								else
 								{
-									$grp_access[$forum_id][$u_id][$r_field] = $r_value;
+									$u_a[$main][$parent][$f_name] = '1';
 								}
-
-								if ( $u_founder[$u_id] )
+							}
+							else if ( $urs_access[$forum_id][$user_id][$f_name] == '0' )
+							{
+								if ( isset($u_a[$main][$parent][$f_name]) )
 								{
-									$grp_access[$forum_id][$u_id][$r_field] = '1';
-									$grp_info[$main][$parent][$r_field][lang('founder')] = $lang['perm_1'];
+									if ( $u_a[$main][$parent][$f_name] == '-1' )
+									{
+										$u_a[$main][$parent][$f_name] = '-1';
+									}
+									else if ( $u_a[$main][$parent][$f_name] == '1' )
+									{
+										$u_a[$main][$parent][$f_name] = '1';
+									}
 								}
-
-								if ( $r_value != 0 )
+								else
 								{
-									$grp_info[$main][$parent][$r_field][$temp_info[$gid]['name']] = $lang['perm_' . $r_value];
+									$u_a[$main][$parent][$f_name] = '0';
 								}
+							}
+							else
+							{
+								$u_a[$main][$parent][$f_name] = '-1';
+							}
+						}
+	
+						if ( isset($grp_access[$forum_id][$user_id][$f_name]) )
+						{
+							if ( $grp_access[$forum_id][$user_id][$f_name] == '1' )
+							{
+								if ( isset($u_a[$main][$parent][$f_name]) )
+								{
+									if ( $u_a[$main][$parent][$f_name] == '-1' )
+									{
+										$u_a[$main][$parent][$f_name] = '-1';
+									}
+									else if ( $u_a[$main][$parent][$f_name] == '0' )
+									{
+										$u_a[$main][$parent][$f_name] = '1';
+									}
+								}
+								else
+								{
+									$u_a[$main][$parent][$f_name] = '1';
+								}
+							}
+							else if ( $grp_access[$forum_id][$user_id][$f_name] == '0' )
+							{
+								if ( isset($u_a[$main][$parent][$f_name]) )
+								{
+									if ( $u_a[$main][$parent][$f_name] == '-1' )
+									{
+										$u_a[$main][$parent][$f_name] = '-1';
+									}
+									else if ( $u_a[$main][$parent][$f_name] == '1' )
+									{
+										$u_a[$main][$parent][$f_name] = '1';
+									}
+								}
+								else
+								{
+									$u_a[$main][$parent][$f_name] = '0';
+								}
+							}
+							else
+							{
+								$u_a[$main][$parent][$f_name] = '-1';
 							}
 						}
 					}
 				}
 			}
 		}
-
-		foreach ( $acl_field_name as $f_name )
-		{
-			foreach ( $info as $forum_id => $user )
-			{
-				foreach ( $user as $user_id => $user_groups )
-				{
-					$ua_main	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $user_id : $forum_id;
-					$ua_parent	= ( sizeof($forum_ids) > 1 && sizeof($ug_ids) < 2 ) ? $forum_id : $user_id;
-
-					if ( isset($urs_access[$forum_id][$user_id][$f_name])  )
-					{
-						if ( $urs_access[$forum_id][$user_id][$f_name] == '1' )
-						{
-							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
-							{
-								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
-								}
-								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '0' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '1';
-								}
-							}
-							else
-							{
-								$u_a[$ua_main][$ua_parent][$f_name] = '1';
-							}
-						}
-						else if ( $urs_access[$forum_id][$user_id][$f_name] == '0' )
-						{
-							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
-							{
-								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
-								}
-								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '1' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '1';
-								}
-							}
-							else
-							{
-								$u_a[$ua_main][$ua_parent][$f_name] = '0';
-							}
-						}
-						else
-						{
-							$u_a[$ua_main][$ua_parent][$f_name] = '-1';
-						}
-					}
-
-					if ( isset($grp_access[$forum_id][$user_id][$f_name])  )
-					{
-						if ( $grp_access[$forum_id][$user_id][$f_name] == '1' )
-						{
-							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
-							{
-								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
-								}
-								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '0' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '1';
-								}
-							}
-							else
-							{
-								$u_a[$ua_main][$ua_parent][$f_name] = '1';
-							}
-						}
-						else if ( $grp_access[$forum_id][$user_id][$f_name] == '0' )
-						{
-							if ( isset($u_a[$ua_main][$ua_parent][$f_name]) )
-							{
-								if ( $u_a[$ua_main][$ua_parent][$f_name] == '-1' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '-1';
-								}
-								else if ( $u_a[$ua_main][$ua_parent][$f_name] == '1' )
-								{
-									$u_a[$ua_main][$ua_parent][$f_name] = '1';
-								}
-							}
-							else
-							{
-								$u_a[$ua_main][$ua_parent][$f_name] = '0';
-							}
-						}
-						else
-						{
-							$u_a[$ua_main][$ua_parent][$f_name] = '-1';
-						}
-					}
-				}
-			}
-		}
+		
+	#	debug($access, 'access');
+	#	debug($urs_access, '$urs_access');
+	#	debug($grp_access, '$grp_access');
+	#	debug($u_a, '$u_a');
 
 		switch ( $action )
 		{
@@ -523,8 +565,8 @@ else
 		{
 			case 'show':
 
-				$forums[0] = lang($type . $_action);
-
+				$forums[0] = langs($type . strtoupper($_action));
+				
 				break;
 
 			case 'forum':
@@ -598,40 +640,41 @@ else
 			foreach ( $options as $opts )
 			{
 				$selected = ( $opts == $type ) ? ' selected="selected"' : '';
-				$s_options .= '<option value="' . $opts . '"' . $selected . '>' . lang("{$opts}right") . '</option>';
+				$s_options .= '<option value="' . $opts . '"' . $selected . '>' . langs("{$opts}right") . '</option>';
 			}
 
 			$s_options .= '</select>';
 		}
-
-		$main	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $ugs : $forums;
-		$parent	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $forums : $ugs;
-
-		if ( isset($info) )
+		
+		if ( $overview )
 		{
-			foreach ( $info as $forum_id => $users )
+			foreach ( $overview as $forum_id => $value )
 			{
-				foreach ( $users as $user_id => $user_group )
+				/*	value = user_ids / group_ids	*/
+				foreach ( $value as $value_id => $value_value )
 				{
-					$l_main		= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $user_id : $forum_id;
-					$l_parent	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $forum_id : $user_id;
-					$l_info		= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? true : false;
-
-					foreach ( $user_group as $info_id )
+					$l_main		= ( $cnt_f > 1 && $cnt_g < 2 ) ? $value_id : $forum_id;
+					$l_parent	= ( $cnt_f > 1 && $cnt_g < 2 ) ? $forum_id : $value_id;
+					$l_info		= ( $cnt_f > 1 && $cnt_g < 2 ) ? true : false;
+					
+					foreach ( $value_value as $info_id )
 					{
-						$legend[$l_main][$l_parent][] = href('a_style', false, false, $temp_info[$info_id]['color'], $temp_info[$info_id]['name']);
+						$legend[$l_main][$l_parent][] = href('a_style', $file, array('ug_type' => ($ug_type == 'user' ? 'group' : 'user'), 'ug_id' => $info_id), $temp_info[$info_id]['color'], $temp_info[$info_id]['name']);
 					}
 
-					$legend[$l_main][$l_parent] = (($ug_type == 'user' ? $lang['groups'] : $lang['users']) . ': ') . implode(', ', $legend[$l_main][$l_parent]);
+					$legend[$l_main][$l_parent] =  (isset($legend[$l_main][$l_parent]) ? (($ug_type == 'user' ? sprintf('<b>%s</b>', $lang['GROUPS']) : sprintf('<b>%s</b>', $lang['USERS'])) . ': ') . implode(', ', $legend[$l_main][$l_parent]) : false);
 				}
 			}
 		}
-
+		
+		$main	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $ugs : $forums;
+		$parent	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $forums : $ugs;
+		
 		foreach ( $main as $m_id => $m_data )
 		{
 			$template->assign_block_vars('view.row', array(
-				'INFO' => ( $l_info ) ? $legend[$l_main][$l_parent] : '',
-				'NAME' => $m_data,
+				'INFO' => ( $l_info ) ? $legend[$m_id] : '',
+				'NAME' => $m_data . ' :: '  . $m_id,
 			));
 
 			foreach ( $parent as $p_id => $p_data )
@@ -641,18 +684,18 @@ else
 				$test_auth[] = 'auths' . $m_id . $p_id;
 
 				$template->assign_block_vars('view.row.parent', array(
-					'NAME'		=> $p_data,
+					'NAME'		=> $p_data . ' :: '  . $p_id,
 					'TOGGLE'	=> $row_switch,
-					'LABEL'		=> '<label for="' . $row_switch . '">' . $lang['label'] . '</label>',
+				#	'LABEL'		=> '<label for="' . $row_switch . '">' . $lang['LABEL'] . '</label>',
 					'AUTHS'		=> 'auths' . $m_id . $p_id,
-					'INFO'		=> ( !$l_info ) ? ((isset($legend[$m_id][$p_id])) ? $legend[$m_id][$p_id] : (($ug_type == 'user') ? $lang['no_legend_user'] : $lang['no_legend_group'])) : '',
+					'INFO'		=> ( !$l_info ) ? ((@$legend[$m_id][$p_id]) ? @$legend[$m_id][$p_id] : (($ug_type == 'user') ? $lang['LEGEND_NONE_USER'] : $lang['LEGEND_NONE_GROUP'])) : '',
 				));
 
 				foreach ( $acl_auth_group as $cat => $rows )
 				{
 					$template->assign_block_vars('view.row.parent.cats', array(
 						'CAT'	=> $cat,
-						'NAME'	=> $lang['tabs'][$type][$cat],
+						'NAME'	=> $lang['TABS'][$type][$cat],
 						'OPTIONS' => "options{$m_id}{$p_id}{$cat}",
 					));
 
@@ -673,7 +716,7 @@ else
 						}
 
 						$template->assign_block_vars('view.row.parent.cats.auths', array(
-							'OPT_NAME'	=> lang($row),
+							'OPT_NAME'	=> langs($row),
 							'OPT_INFO'	=> isset($grp_info_grp[$m_id][$p_id][$row]) ? img('i_icon', 'icon_details', $grp_info_grp[$m_id][$p_id][$row]) : '',
 							'CSS_YES'	=> ( @$u_a[$m_id][$p_id][$row] == '1' ) ? 'bggreen' : '',
 							'CSS_NO'	=> ( @$u_a[$m_id][$p_id][$row] != '1' ) ? 'bgred' : '',
@@ -716,7 +759,7 @@ else
 	function construct_permission_box($ug_ids, $forum_ids, $options, $type)
 	{
 		global $db, $lang, $template, $fields, $action;
-		global $ug_type, $mode;
+		global $ug_type, $mode, $file, $ug_id;
 
 		$type = ($mode ? $mode : $options[0]);
 
@@ -774,8 +817,11 @@ else
 		{
 			$ugs[$row['ugid']] = $row['name'];
 		}
-
-		$access			= access($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_data, $acl_field_name);
+		
+		$ugs_ids = array_keys($ugs);
+		
+	#	$access			= access($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_data, $acl_field_name);
+		$access			= access($access_action[0], array($access_action[2], $ugs_ids), $forum_ids, $acl_label_data, $acl_field_name);
 		$access_label	= access_label($access_action[0], array($access_action[2], $ug_ids), $forum_ids, $acl_label_ids);
 
 		$_action = ( strpos($action, 'permission_') !== false ) ? 'permission' : 'forums';
@@ -784,7 +830,7 @@ else
 		{
 			case 'permission':
 
-				$forums[0] = lang($type . $_action);
+				$forums[0] = langs($type . strtoupper($_action));
 
 				break;
 
@@ -792,7 +838,12 @@ else
 
 				$forum_data = $forums = array();
 
-				$sql = 'SELECT forum_id as ugid, type, main, forum_name as name FROM ' . FORUM . ' WHERE type != 0 AND forum_id IN (' . (is_array($forum_ids) ? implode(', ', $forum_ids) : $forum_ids) . ') ORDER BY main ASC, forum_order ASC';
+			#	$sql = 'SELECT forum_id as ugid, type, main, forum_name as name FROM ' . FORUM . '
+			#				WHERE type != 0 AND forum_id IN (' . (is_array($forum_ids) ? implode(', ', $forum_ids) : $forum_ids) . ')
+			#			ORDER BY main ASC, forum_order ASC';
+				$sql = 'SELECT forum_id, forum_name, type, main FROM ' . FORUM . '
+							WHERE type != 0 AND forum_id IN (' . (is_array($forum_ids) ? implode(', ', $forum_ids) : $forum_ids) . ')
+						ORDER BY main ASC, forum_order ASC';
 				if ( !($result = $db->sql_query($sql)) )
 				{
 					message(GENERAL_ERROR, 'SQL Error', '', __LINE__, __FILE__, $sql);
@@ -800,16 +851,56 @@ else
 
 				while ( $row = $db->sql_fetchrow($result) )
 				{
-					$forum_data[$row['ugid']] = $row['name'];
-					$forum_sort[] = $row;
+			#		$forum_data[$row['ugid']] = $row['name'];
+			#		$forum_sort[] = $row;
+					$forum_data[$row['forum_id']] = $row;
 				}
 				$db->sql_freeresult($result);
 
+			#	foreach ( $forum_data as $f_key => $f_row )
+			#	{
+			#		if ( in_array($f_key, $forum_ids) )
+			#		{
+			#			$forums[$f_key] = $f_row;
+			#		}
+			#	}
+			
 				foreach ( $forum_data as $f_key => $f_row )
 				{
-					if ( in_array($f_key, $forum_ids) )
+					if ( $f_row['type'] == 1 )
 					{
-						$forums[$f_key] = $f_row;
+						$_main[$f_row['forum_id']] = $f_row['forum_name'];
+					}
+					else
+					{
+						$_subs[$f_row['main']][$f_row['forum_id']] = $f_row['forum_name'];
+					}
+				}
+				
+				if ( isset($_main) )
+				{
+					foreach ( $_main as $forum_id => $forum_name )
+					{
+						$forums[$forum_id] = $forum_name;
+
+						if ( isset($_subs[$forum_id]) )
+						{
+							foreach ( $_subs[$forum_id] as $sub_id => $sub_name )
+							{
+								$forums[$sub_id] = $sub_name;
+							}
+						}
+					}
+				}
+
+				if ( isset($_subs) )
+				{
+					foreach ( $_subs as $forum_id => $sub_forum )
+					{
+						foreach ( $sub_forum as  $sub_id => $sub_name )
+						{
+							$forums[$sub_id] = $sub_name;
+						}
 					}
 				}
 
@@ -817,23 +908,37 @@ else
 		}
 
 		$s_options = '';
-
-		if ( is_array($options) && count($options) > 1 )
+		
+	#	if ( is_array($options) && count($options) > 1 )
+	#	{
+	#		/* änderung auf oki button drücken zum wechsel */
+	#		$s_options .= '<select name="mode" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
+	#		
+	#		foreach ( $options as $opts )
+	#		{
+	#			$selected = ( $opts == $type ) ? ' selected="selected"' : '';
+	#			$s_options .= '<option value="' . $opts . '"' . $selected . ' title="">' . langs("{$opts}right") . '</option>';
+	#		}
+	#		$s_options .= '</select>';
+	#	}
+		
+		$sort = '';
+		
+		debug($options, '$options');
+		
+		if ( count($options) > 1 )
 		{
-			/* änderung auf oki button drücken zum wechsel */
-			$s_options .= '<select name="mode" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
-
-			foreach ( $options as $opts )
-			{
-				$selected = ( $opts == $type ) ? ' selected="selected"' : '';
-				$s_options .= '<option value="' . $opts . '"' . $selected . '>' . lang("{$opts}right") . '</option>';
-			}
-
-			$s_options .= '</select>';
+			
+		foreach ( $options as $opts )
+		{
+			$sort[] = href((($type == $opts) ? 'AHREF_TXT_B' : 'AHREF_TXT'), $file, array('ug_type' => $ug_type, 'action' => 'permission_group', 'mode' => $opts, 'ug_id' => $ug_id), langs("{$opts}right"), langs("{$opts}right"));
+		}
+				
+		$sort = implode(', ', $sort);
 		}
 
 		/* SPRACHFILES ANPASSEN UND ERSTELLEN !!! */
-		$add_lang = array('label_id' => 0, 'label_name' => 'no_select', 'label_desc' => 'no_select_reset', 'label_type' => $type);
+		$add_lang = array('label_id' => 0, 'label_name' => $lang['NO_SELECT'], 'label_desc' => $lang['NO_SELECT_DESC'], 'label_type' => $type);
 		array_unshift($acl_label, $add_lang);
 
 	#	$add_lang = array('label_id' => 0, 'label_name' => 'no select', 'label_type' => $type, 'label_desc' => 'reset');
@@ -841,11 +946,11 @@ else
 
 		$main	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $ugs : $forums;
 		$parent	= ( sizeof($forums) > 1 && sizeof($ugs) < 2 ) ? $forums : $ugs;
-
+		
 		foreach ( $main as $m_id => $m_data )
 		{
 			$template->assign_block_vars('permission.row', array('NAME' => $m_data));
-
+			
 			foreach ( $parent as $p_id => $p_data )
 			{
 				$simple_auth = '<select name="' . sprintf('sa[%s_%s]', $m_id, $p_id) . '" id="' . sprintf('s%sg%s', $m_id, $p_id) . '" onchange="set_permission(this.options[selectedIndex].value, \'' . $m_id . '\', \'' . $p_id . '\');">';
@@ -853,7 +958,7 @@ else
 				foreach ( $acl_label as $labels )
 				{
 					$selected = ( (isset($access_label[$m_id][$p_id]) ? @$access_label[$m_id][$p_id] : @$access_label[$p_id][$m_id]) == $labels['label_id'] ) ? ' selected="selected"' : '';
-					$simple_auth .= '<option title="' . lang($labels['label_desc']) . '" value="' . $labels['label_id'] . '"' . $selected . '>' . lang($labels['label_name']) . '</option>';
+					$simple_auth .= '<option title="' . langs($labels['label_desc']) . '" value="' . $labels['label_id'] . '"' . $selected . '>' . langs($labels['label_name']) . '</option>';
 				}
 
 				$simple_auth .= '</select>';
@@ -863,7 +968,7 @@ else
 				$template->assign_block_vars('permission.row.parent', array(
 					'NAME'		=> $p_data,
 					'TOGGLE'	=> $row_switch,
-					'LABEL'		=> '<label for="' . $row_switch . '">' . $lang['label'] . '</label>',
+					'LABEL'		=> '<label for="' . $row_switch . '">' . $lang['LABEL'] . '</label>',
 					'SIMPLE'	=> $simple_auth,
 					'AUTHS'		=> 'auths' . $m_id . $p_id,
 				));
@@ -872,16 +977,16 @@ else
 				{
 					$template->assign_block_vars('permission.row.parent.cats', array(
 						'CAT'	=> $cat,
-						'NAME'	=> $lang['tabs'][$type][$cat],
+						'NAME'	=> $lang['TABS'][$type][$cat],
 						'OPTIONS' => "options{$m_id}{$p_id}{$cat}",
 					));
 
 					foreach ( $rows as $row )
 					{
 						$row_format = sprintf('%s%s[%s][%s]', $type, $m_id, $p_id, $row);
-
+						
 						$template->assign_block_vars('permission.row.parent.cats.auths', array(
-							'OPT_NAME'	=> lang($row),
+							'OPT_NAME'	=> langs($row),
 							'OPT_YES'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s[%s][%s]_y', $row, $m_id, $p_id) . '" onclick="reset_simpleauth(\'' . $row_switch . '\');" value="1"' . (( @$access[$m_id][$p_id][$row] == 1 ) ? ' checked="checked"' : '') . ' /></label>',
 							'OPT_UNSET'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s[%s][%s]_u', $row, $m_id, $p_id) . '" onclick="reset_simpleauth(\'' . $row_switch . '\');" value="0"' . (( @$access[$m_id][$p_id][$row] == 0 ) ? ' checked="checked"' : '') . ' /></label>',
 							'OPT_NEVER'	=> '<label><input type="radio" name="' . $row_format . '" id="' . sprintf('%s[%s][%s]_n', $row, $m_id, $p_id) . '" onclick="reset_simpleauth(\'' . $row_switch . '\');" value="-1"' . (( @$access[$m_id][$p_id][$row] == -1 ) ? ' checked="checked"' : '') . ' /></label>',
@@ -913,6 +1018,7 @@ else
 		$template->assign_vars(array(
 	#		'L_LABEL'	=> $lang['label'],
 			'S_OPTIONS' => $s_options,
+			'L_SWITCH'	=> $sort ? sprintf($lang['STF_COMMON_SWITCH'], $sort) : '',
 			'S_HIDDEN'	=> $fields,
 		));
 	}
@@ -924,7 +1030,8 @@ else
 		global $template;
 		global $label_ids;
 		global $options;
-
+		global $lang;
+		
 		$label_ids	= array_keys(acl_label((is_array($options) ? $options[0] : $options)));
 		$acl_field	= acl_field((is_array($options) ? $options[0] : $options), '');
 
@@ -1115,9 +1222,9 @@ else
 
 				$s_group_none .= '</select>';
 				
-				$s_group_copy .= '<select name="copy" class="small">';
+				$s_group_copy .= '<select name="copy">';
 				$s_group_copy .= '<option value="0">noch keine Funktion hinterlegt</option>';
-				$s_group_copy .= '<option value="0">' . lang('select_copy') . '</option>';
+				$s_group_copy .= '<option value="0">' . $lang['SELECT_COPY'] . '</option>';
 				
 				foreach ( $group_acl as $row )
 				{
@@ -1150,30 +1257,36 @@ else
 
 				foreach ( $_cat as $ckey => $crow )
 				{
-					$new[] = array($params[0] => $crow[$params[0]], $params[1] => lang($crow[$params[1]]), 'type' => $crow['type']);
+					$new[] = array($params[0] => $crow[$params[0]], $params[1] => langs($crow[$params[1]]), 'type' => $crow['type']);
 
 					if ( isset($_main[$ckey]) )
 					{
 						foreach ( $_main[$ckey] as $mkey => $mrow )
 						{
-							$new[] = array($params[0] => $mrow[$params[0]], $params[1] => lang($mrow[$params[1]]), 'type' => $mrow['type']);
+							$new[] = array($params[0] => $mrow[$params[0]], $params[1] => langs($mrow[$params[1]]), 'type' => $mrow['type']);
 
 							if ( isset($_sub[$mkey]) )
 							{
 								foreach ( $_sub[$mkey] as $skey => $srow )
 								{
-									$new[] = array($params[0] => $srow[$params[0]], $params[1] => lang($srow[$params[1]]), 'type' => $srow['type']);
+									$new[] = array($params[0] => $srow[$params[0]], $params[1] => langs($srow[$params[1]]), 'type' => $srow['type']);
 								}
 							}
 						}
 					}
 				}
 
+				$s_select .= '<label><input type="checkbox" class="radio" name="all_forums" value="1" />&nbsp;' . $lang['FORUMS_ALL'] . '</label><br />';
 				$s_select .= '<select name="forum_id[]" multiple="multiple" size="10">';
 
 				foreach ( $new as $row )
 				{
 					$s_select .= '<option value="' . $row[$params[0]] . '">' . ((!$row['type']) ? '' : (($row['type'] == 1) ? '&nbsp; &nbsp;' : '&nbsp; &nbsp;&nbsp; &nbsp;')) . $row[$params[1]] . '</option>';
+				}
+				
+				foreach ( $new as $row )
+				{
+					$s_select .= '<input type="hidden" name="forums[]" value="' . $row[$params[0]] . '">';
 				}
 
 				$s_select .= '</select>';
@@ -1190,10 +1303,22 @@ else
 		{
 			case 'show_forum':
 
-				$options	= array('f_', 'm_');
+				$options	= array('F_', 'M_');
 				$permission	= array('usergroups', 'selects');
 				$page_title	= 'acp_user_perm';
-				$forum_id	= check_ids($forum_id);
+			#	$forum_id	= check_ids($forum_id);
+				
+				if ( $forum_id || $all_forums )
+				{
+					if ( $forum_id )
+					{
+						$forum_id = check_ids($forum_id);
+					}
+					else
+					{
+						$forum_id = request('forums', ARY);
+					}
+				}
 
 				if ( $all_groups || $all_users )
 				{
@@ -1248,7 +1373,7 @@ else
 			case 'show_download':
 			case 'show_gallery':
 
-				$options	= array(substr($action, strpos($action, '_')+1, 1) . '_');
+				$options	= array(substr(strtoupper($action), strpos($action, '_')+1, 1) . '_');
 				$permission	= array('usergroups', 'selects');
 
 				if ( $all_groups || $all_users )
@@ -1289,9 +1414,9 @@ else
 			case 'permission_download':
 			case 'permission_gallery':
 
-				$options	= array(substr($action, strpos($action, '_')+1, 1) . '_');
+				$options	= array(substr(strtoupper($action), strpos($action, '_')+1, 1) . '_');
 				$permission	= array('usergroups', 'selects');
-
+				
 				if ( $user_names )
 				{
 					$result = get_user_name_id($user_ids, $user_names);
@@ -1341,7 +1466,7 @@ else
 
 			case 'permission_group':
 
-				$options	= array('a_', 'd_', 'g_');
+				$options	= array('A_', 'D_', 'G_');
 				$permission	= array('group', 'drop');
 				$page_title	= 'acp_permission_group';
 
@@ -1367,7 +1492,7 @@ else
 
 			case 'permission_user':
 
-				$options	= array('u_');
+				$options	= array('U_');
 				$permission	= array('user', 'input');
 				$page_title	= 'acp_user_perm';
 
@@ -1406,10 +1531,24 @@ else
 			case 'forums_all':
 			case 'forums_mod':
 
-				$options	= ($action == 'forums_all') ? array('f_', 'm_') : array('m_', 'f_');
+				$options	= ($action == 'forums_all') ? array('F_', 'M_') : array('M_', 'F_');
 				$permission	= array('usergroups', 'selects');
 				$page_title	= ($action == 'forums_all') ? 'acp_user_perm' : 'acp_group_perm';
-				$forum_id	= check_ids($forum_id);
+			#	$forum_id	= check_ids($forum_id);
+			
+			#	debug($all_forums, '$all_forums');
+			
+				if ( $forum_id || $all_forums )
+				{
+					if ( $forum_id )
+					{
+						$forum_id = check_ids($forum_id);
+					}
+					else
+					{
+						$forum_id = check_ids(request('forum_id', ARY));
+					}
+				}
 
 				if ( $user_names )
 				{
@@ -1464,7 +1603,7 @@ else
 			case 'forums_user':
 			case 'forums_group':
 
-				$options	= array('f_');
+				$options	= array('F_');
 				$permission	= ($action == 'forums_user') ? array('user', 'input') : array('group', 'drop');
 				$page_title	= ($action == 'forums_user') ? 'acp_user_perm' : 'acp_group_perm';
 				$forum_id	= check_ids($forum_id);
@@ -1722,7 +1861,7 @@ else
 			}
 		}
 
-		$msg = $lang['update'] . sprintf($lang['return'], check_sid($file), $acp_title);
+		$msg = $lang['UPDATE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 
 		log_add(LOG_ADMIN, $log, $mode);
 		message(GENERAL_MESSAGE, $msg);
@@ -1730,29 +1869,29 @@ else
 	}
 
 	$template->assign_vars(array(
-		'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-		'L_EXPLAIN'	=> $lang['explain'],
-	#	'L_INPUT'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['label_name']),
+		'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+		'L_EXPLAIN'	=> $lang['EXPLAIN'],
+	#	'L_INPUT'	=> msg_head($mode, $lang['TITLE'], $data_sql['label_name']),
 	#	'L_OPTIONS'	=> $s_options,
 
-		'L_GROUPS'			=> $lang['groups'],
-		'L_GROUPS_MANAGE'	=> $lang['groups_manage'],
-		'L_GROUPS_ADDED'	=> $lang['groups_added'],
-		'L_GROUPS_ALL'		=> $lang['groups_all'],
+		'L_GROUPS'			=> $lang['GROUPS'],
+		'L_GROUPS_ALL'		=> $lang['GROUPS_ALL'],
+		'L_GROUPS_ADDED'	=> $lang['GROUPS_ADDED'],
+		'L_GROUPS_MANAGE'	=> $lang['GROUPS_MANAGE'],
+		
+		'L_USERS'			=> $lang['USERS'],
+		'L_USERS_ALL'		=> $lang['USERS_ALL'],
+		'L_USERS_ADDED'		=> $lang['USERS_ADDED'],
+		'L_USERS_MANAGE'	=> $lang['USERS_MANAGE'],
+		
+		'L_AUTH_CREATE' => $lang['AUTH_CREATE'],
+		'L_AUTH_UPDATE' => $lang['AUTH_UPDATE'],
+		'L_AUTH_SHOW'	=> $lang['AUTH_SHOW'],
+		'L_AUTH_DELETE' => $lang['AUTH_DELETE'],
 
-		'L_USERS'			=> $lang['users'],
-		'L_USERS_MANAGE'	=> $lang['users_manage'],
-		'L_USERS_ADDED'		=> $lang['users_added'],
-		'L_USERS_ALL'		=> $lang['users_all'],
-
-		'L_AUTH_CREATE' => $lang['auth_create'],
-		'L_AUTH_UPDATE' => $lang['auth_update'],
-		'L_AUTH_SHOW'	=> $lang['auth_show'],
-		'L_AUTH_DELETE' => $lang['auth_delete'],
-
-		'L_PERMISSION'	=> $lang['extended_permission'],
-		'L_PERMISSION_ALL'	=> $lang['extended_permission_all'],
-		'L_VIEW_AUTH'	=> $lang['common_auth'],
+		'L_PERMISSION'	=> $lang['EXTENDED_PERMISSION'],
+		'L_PERMISSION_ALL'	=> $lang['EXTENDED_PERMISSION_ALL'],
+		'L_VIEW_AUTH'	=> $lang['COMMON_AUTH'],
 
 		'S_ACTION'	=> check_sid("$file"),
 		'S_FIELDS'	=> $fields,

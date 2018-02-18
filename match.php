@@ -696,7 +696,7 @@ else
 			{
 				$match_id = $new[$i]['match_id'];
 				
-				$name	= ( $new[$i]['match_public'] ) ? sprintf($lang['sprintf_match_name'], $new[$i]['match_rival_name']) : sprintf($lang['sprintf_match_intern'], $new[$i]['match_rival_name']);
+				$name	= ( $new[$i]['match_public'] ) ? sprintf($lang['STF_MATCH_NAME'], $new[$i]['match_rival_name']) : sprintf($lang['STF_MATCH_INTERN'], $new[$i]['match_rival_name']);
 				$css	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? 'yes' : 'replace' : 'no' : 'none';
 				$pos	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? $lang['yes'] : $lang['replace'] : $lang['no'] : $lang['join_none'];
 				
@@ -736,7 +736,7 @@ else
 			{
 				$match_id = $old[$i]['match_id'];
 				
-				$name	= ( $old[$i]['match_public'] ) ? sprintf($lang['sprintf_match_name'], $old[$i]['match_rival_name']) : sprintf($lang['sprintf_match_intern'], $old[$i]['match_rival_name']);
+				$name	= ( $old[$i]['match_public'] ) ? sprintf($lang['STF_MATCH_NAME'], $old[$i]['match_rival_name']) : sprintf($lang['STF_MATCH_INTERN'], $old[$i]['match_rival_name']);
 				$css	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? 'yes' : 'replace' : 'no' : 'none';
 				$pos	= isset($in_ary[$match_id][$user]) ? ( $in_ary[$match_id][$user] != STATUS_NO ) ? ( $in_ary[$match_id][$user] == STATUS_YES ) ? $lang['yes'] : $lang['replace'] : $lang['no'] : $lang['join_none'];
 				

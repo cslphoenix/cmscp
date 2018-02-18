@@ -29,7 +29,7 @@ if ( isset($_POST['name']) )
 	if ( $forms )
 	{
 		$s_select .= "<select class=\"select\" name=\"forum_suborder\" id=\"forum_suborder\">";
-		$s_select .= "<option selected=\"selected\">" . sprintf($lang['stf_select_format'], $lang['msg_select_order']) . "</option>";
+		$s_select .= "<option selected=\"selected\">" . sprintf($lang['STF_SELECT_FORMAT'], $lang['msg_select_order']) . "</option>";
 	
 		for ( $i = 0; $i < count($forms); $i++ )
 		{
@@ -51,7 +51,7 @@ if ( isset($_POST['name']) )
 }
 else
 {
-	echo sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+	echo sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_MAPS_NONE']);
 }
 
 ?>

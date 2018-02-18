@@ -39,7 +39,7 @@ if ( isset($_POST['mode']) )
 			foreach ( $tmp as $row )
 			{
 			#	$selected = ( $default == $row['type_game'] ) ? ' selected="selected"' : '';
-				$s_select .= "<option value=\"" . $row['type_game'] . "\">" . sprintf($lang['stf_select_format'], $row['type_name']) . "</option>";
+				$s_select .= "<option value=\"" . $row['type_game'] . "\">" . sprintf($lang['STF_SELECT_FORMAT'], $row['type_name']) . "</option>";
 			}
 			$s_select .= "</select>";
 			

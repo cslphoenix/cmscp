@@ -12,7 +12,7 @@
 <!-- END new_row -->
 <!-- BEGIN entry_empty_new -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
 <!-- END entry_empty_new -->
 <tr>
@@ -30,7 +30,7 @@
 <!-- END old_row -->
 <!-- BEGIN entry_empty_old -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
 <!-- END entry_empty_old -->
 </table>

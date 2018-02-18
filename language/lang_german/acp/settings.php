@@ -6,8 +6,8 @@ if ( !defined('IN_CMS') )
 }
 
 $lang = array_merge($lang, array(
-	'title'		=> 'Einstellungen der Seite',
-	'explain'	=> 'Hier werden alle wichtigen Einstellungen für die Seite gemacht.',
+	'TITLE'		=> 'Einstellungen der Seite',
+	'EXPLAIN'	=> 'Hier werden alle wichtigen Einstellungen für die Seite gemacht.',
 	
 	'update'	=> 'Seiteneinstellung erfolgreich geändert.',
 	
@@ -34,7 +34,7 @@ $lang = array_merge($lang, array(
 	'site_smain_explain'	=> 'blub2',
 	'site_ftp'				=> 'FTP Rechte',
 	'site_ftp_explain'		=> 'Hier kannst Du Notfalls FTP Rechte eingestellt werden, FTP-Benutzername und FTP-Passwort sind notwendig!',
-	'site_phpinfo'			=> 'Support Infos',
+	'ACP_PHPINFO'			=> 'Support Infos',
 	'site_phpinfo_explain'	=> 'Infos über PHP und SQL.',
 	
 	/* site settings */
@@ -342,7 +342,7 @@ $lang = array_merge($lang, array(
 		'rating'	=> $lang['site_rating'],
 		'smain'		=> $lang['site_smain'],
 		'ftp'		=> $lang['site_ftp'],
-		'phpinfo'	=> $lang['site_phpinfo'],
+		'PHPINFO'	=> $lang['ACP_PHPINFO'],
 	),
 ));
 

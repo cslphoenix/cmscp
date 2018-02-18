@@ -10,11 +10,9 @@ function SelectAll(id)
 // ]]>
 </script>
 
-<form action="{S_ACTION}" method="post" name="mode" id="mode">
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
-<ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
-</form>
+<ul id="navopts"><li>{S_MODE}</li></ul>
 
 <form action="{S_ACTION}" method="post">
 <li class="header">{L_HEADING}</li>
@@ -71,10 +69,12 @@ function display_options(value)
 	if ( value == '0' )
 	{
 		dE('compact', -1);
+		dE('start', -1);
 	}
 	else 
 	{
 		dE('compact', 1);
+		dE('start', 1);
 	}
 }
 
@@ -84,7 +84,7 @@ function display_options(value)
 {calendar.row.hidden.HIDDEN}
 <!-- END hidden -->
 <!-- BEGIN tab -->
-<div style="float:left; width:49%;">
+<div style="float:left; width:50%;">
 <fieldset>
 	<legend>{calendar.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
@@ -149,7 +149,7 @@ function display_options(value)
 {module.row.hidden.HIDDEN}
 <!-- END hidden -->
 <!-- BEGIN tab -->
-<div style="float:left; width:49%;">
+<div style="float:left; width:50%;">
 <fieldset>
 	<legend>{module.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
@@ -216,7 +216,7 @@ function display_options(value)
 {other.row.hidden.HIDDEN}
 <!-- END hidden -->
 <!-- BEGIN tab -->
-<div style="float:left; width:49%;">
+<div style="float:left; width:50%;">
 <fieldset>
 	<legend>{other.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
@@ -390,11 +390,8 @@ function display_options(value)
  **********************************************
  * {L_OPTION_A}&nbsp;{OPTION_A}
  * {L_OPTION_B}&nbsp;{OPTION_B}
- * {L_OPTION_C}&nbsp;{OPTION_C}
- * {L_OPTION_D}&nbsp;{OPTION_D}
  * {L_OPTION_E}&nbsp;{OPTION_E}
  * {L_OPTION_F}&nbsp;{OPTION_F}
- * {L_OPTION_G}&nbsp;{OPTION_G}
  * {L_OPTION_H}&nbsp;{OPTION_H}
  * {L_OPTION_I}&nbsp;{OPTION_I}
  **********************************************/

@@ -5,9 +5,9 @@
 <!-- BEGIN list -->
 <!-- BEGIN rows -->
 <tr>
-	<td class="{_list._rows.CLASS} top" align="center" width="3%"><a name="{_list._rows.CAL_ID}"></a>{_list._rows.CAL_DAY}</td>
-	<td class="{_list._rows.CLASS} top" align="center" width="3%">{_list._rows.CAL_WEEKDAY}</td>
-	<td class="{_list._rows.CLASS} top" width="95%">{_list._rows.CAL_EVENT}</td>
+	<td class="{list.rows.CLASS} top" align="center" width="3%"><a name="{list.rows.CAL_ID}"></a>{list.rows.CAL_DAY}</td>
+	<td class="{list.rows.CLASS} top" align="center" width="3%">{list.rows.CAL_WEEKDAY}</td>
+	<td class="{list.rows.CLASS} top" width="95%">{list.rows.CAL_EVENT}</td>
 </tr>
 <!-- END rows -->
 <!-- END list -->

@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -50,35 +50,63 @@ function update_image(newimage)
 <fieldset>
 	<legend>{L_MEMBER}</legend>
 	<table class="users">
+	<thead>
 	<tr>
-		<th>{L_MEMBER}</th>
+		<th>{L_MODERATORS}</th>
 		<th>{L_RANK}</th>
 		<th>{L_MAIN}</th>
 		<th>{L_JOIN}</th>
 		<th>{L_REGISTER}</th>
 		<th>&nbsp;</th>
 	</tr>
-	<!-- BEGIN row -->
-	<tr onclick="checked({member.row.ID})" class="hover">
-        <td>{member.row.NAME}{member.row.MOD}</td>
-		<td>{member.row.RANK}</td>
-		<td>{member.row.MAIN}</td>
-		<td>{member.row.JOIN}</td>
-		<td>{member.row.REG}</td>
-		<td><input type="checkbox" name="members[]" value="{member.row.ID}" id="check_{member.row.ID}"></td>
+	</thead>
+	<tbody>
+	<!-- BEGIN moderators -->
+	<tr onclick="checked({member.moderators.ID})" class="hover">
+        <td>{member.moderators.NAME}</td>
+		<td>{member.moderators.RANK}</td>
+		<td>{member.moderators.MAIN}</td>
+		<td>{member.moderators.JOIN}</td>
+		<td>{member.moderators.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
 	</tr>
-	<!-- END row -->
-	<!-- BEGIN no_row -->
+	<!-- END moderators -->
+	<!-- BEGIN moderators_none -->
 	<tr>
-		<td class="empty" colspan="5" align="center">{L_NO_MEMBER}</td>
+		<td colspan="6" style="text-align:center;">{L_MODERATORS_NONE}</td>
 	</tr>
-	<!-- END no_row -->
+	<!-- END moderators_none -->
+	<tr>
+		<th colspan="6">{L_MEMBERS}</th>
+	</tr>
+	<!-- BEGIN members -->
+	<tr onclick="checked({member.members.ID})" class="hover">
+        <td>{member.members.NAME}</td>
+		<td>{member.members.RANK}</td>
+		<td>{member.members.MAIN}</td>
+		<td>{member.members.JOIN}</td>
+		<td>{member.members.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
+	</tr>
+	<!-- END members -->
+	<!-- BEGIN members_none -->
+	<tr>
+		<td colspan="6" style="text-align:center;">{L_MEMBERS_NONE}</td>
+	</tr>
+	<!-- END members_none -->
+	</tbody>
 	</table>
 </fieldset>
 
+<div class="pagination">
+<ul>
+	<li>{PAGE_NUMBER}&nbsp;{PAGE_PAGING}</li>
+</ul>
+</div>
+
 <table class="footer2">
 <tr>
-	<td rowspan="2" width="150%">{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+	<td rowspan="2" width="150%"></td>
 	<td>{S_OPTIONS}</td>
 	<td><div id="close"></div><div id="ajax_content"></div></td>
 	<td><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
@@ -90,54 +118,138 @@ function update_image(newimage)
 {S_FIELDS}
 </form>
 
-<form action="{S_ACTION}" method="post" name="post" id="list">
+<form action="{S_ACTION}" method="post" name="post">
 <fieldset>
-	<legend>{L_MEMBERS_ADD}</legend>
-	<table class="update" border="0" cellspacing="0" cellpadding="0">
-	
-	<tr>
-		<td class="row1"><label for="status" title="{L_MEMBER_ADD_MOD}">{L_MEMBER_ADD_MOD}:</label></td>
-		<td class="row2"><label><input type="radio" name="status" id="status" value="1" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_NO}</label></td>
-	</tr>
-	<tr>
-		<td class="row1"><label for="rank_id">{L_MEMBER_ADD_RANK}:</label></td>
-		<td class="row2">{S_RANK_SELECT}</td>
-	</tr>
-	<tr>
-		<td class="row1"><label for="textarea">{L_USERNAME}:</label></td>
-		<td class="row2">{L_MEMBERS_ADD_EXPLAIN}<br/><br/><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea></td>
-	</tr>
-	</table>
-    </fieldset>
-    
-	<table class="rfooter">
-	<tr>
-    	<td align="right"><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
-	</tr>
-	</table>
-    {S_FIELDS}
-    <input type="hidden" name="smode" value="create" />
+	<legend>{L_ADD}</legend>
+	<dl>			
+		<dt><label for="status">{L_MOD}:</label></dt>
+		<dd><label><input type="radio" name="status" value="1" id="status" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="status" value="0" checked="checked" />&nbsp;{L_NO}</label></dd>
+	</dl>
+	<dl>			
+		<dt><label for="default">{L_MAIN}:</label></dt>
+		<dd><label><input type="radio" name="default" value="1" id="default" />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="default" value="0" checked="checked" />&nbsp;{L_NO}</label></dd>
+	</dl>
+	<dl>			
+		<dt><label for="default">{L_RANK}:</label></dt>
+		<dd>{S_RANKS}</dd>
+	</dl>
+	<dl>			
+		<dt><label for="textarea">{L_USERNAME}:</label></dt>
+		<dd><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea><br/><br/>{L_ADD_EXPLAIN}</dd>
+	</dl>
+</fieldset>
+
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd></dd>
+</dl>
+</div>
+<input type="hidden" name="smode" value="create" />
+{S_FIELDS}
 </form>
 <!-- END member -->
+
+<!-- BEGIN wars -->
+<table class="rows">
+<tr>
+	<th>{L_MATCH_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN mupcoming -->
+<tr>
+	<td><span class="right">{wars.mupcoming.DATE}</span>{wars.mupcoming.NAME}</td>
+	<td>{wars.mupcoming.UPDATE}&nbsp;{wars.mupcoming.DELETE}</td>
+</tr>
+<!-- END mupcoming -->
+<!-- BEGIN mupcoming_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END mupcoming_none -->
+</table>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_MATCH_EXPIRED}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN mexpired -->
+<tr>
+	<td><span style="float: right;">{wars.mexpired.DATE}</span>{wars.mexpired.NAME}</td>
+	<td>{wars.mexpired.UPDATE}&nbsp;{wars.mexpired.DELETE}</td>
+</tr>
+<!-- END mexpired -->
+<!-- BEGIN mexpired_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END mexpired_none -->
+</table>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_TRAINING_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN tupcoming -->
+<tr>
+	<td><span class="right">{wars.tupcoming.DATE}</span>{wars.tupcoming.NAME}</td>
+	<td>{wars.tupcoming.UPDATE}&nbsp;{wars.tupcoming.DELETE}</td>
+</tr>
+<!-- END tupcoming -->
+<!-- BEGIN tupcoming_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END tupcoming_none -->
+</table>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_TRAINING_EXPIRED}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN texpired -->
+<tr>
+	<td><span style="float: right;">{wars.texpired.DATE}</span>{wars.texpired.NAME}</td>
+	<td>{wars.texpired.UPDATE}&nbsp;{wars.texpired.DELETE}</td>
+</tr>
+<!-- END texpired -->
+<!-- BEGIN texpired_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END texpired_none -->
+</table>
+<!-- END wars -->
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
 <tr>
-	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
+	<th>{L_NAME}</th>
+	<th>{L_COUNT}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.row.COUNT}</span>{display.row.GAME}{display.row.NAME}</td>
-	<td>{display.row.MEMBER}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.GAME}{display.row.NAME}</td>
+	<td>{display.row.COUNT}</td>
+	<td>{display.row.MEMBER}&nbsp;{display.row.UPDATE}&nbsp;{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">

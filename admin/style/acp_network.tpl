@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -49,7 +49,7 @@
 <!-- END row_1 -->
 <!-- BEGIN no_entry_1 -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END no_entry_1 -->
 </table>
@@ -76,7 +76,7 @@
 <!-- END row_2 -->
 <!-- BEGIN no_entry_2 -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END no_entry_2 -->
 </table>
@@ -103,7 +103,7 @@
 <!-- END row_3 -->
 <!-- BEGIN no_entry_3 -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 <!-- END no_entry_3 -->
 </table>

@@ -1,11 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset={S_CONTENT_ENCODING}">
 	<meta http-equiv="Content-Style-Type" content="text/css">
-	{META}
+    
+    {META}
 	
 	<title>{SITENAME} :: {PAGE_TITLE}</title>
+
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php">
 	
@@ -162,7 +165,6 @@
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
 <a name="top"></a>
-
 <div align="center">
 	<table width="986" cellpadding="0" cellspacing="0" border="0">
 	<tr>

@@ -12,7 +12,7 @@
 <!-- END match_row_n -->
 <!-- BEGIN no_entry_n -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
+	<td class="noentry" align="center" colspan="4">{L_NONE}</td>
 </tr>
 <!-- END no_entry_n -->
 </table>
@@ -33,7 +33,7 @@
 <!-- END match_row_o -->
 <!-- BEGIN no_entry_o -->
 <tr>
-	<td class="noentry" align="center" colspan="4">{L_EMPTY}</td>
+	<td class="noentry" align="center" colspan="4">{L_NONE}</td>
 </tr>
 <!-- END no_entry_o -->
 </table>
@@ -63,7 +63,7 @@
 	<!-- END teams_row -->
 	<!-- BEGIN no_entry_team -->
 	<tr>
-		<td class="row1" align="center" colspan="5">{L_EMPTY}</td>
+		<td class="row1" align="center" colspan="5">{L_NONE}</td>
 	</tr>
 	<!-- END no_entry_team -->
 	</table>

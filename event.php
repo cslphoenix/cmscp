@@ -312,7 +312,7 @@ else
 				$template->assign_block_vars('list._new_row', array(
 					'CLASS' => ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 
-					'TITLE'	=> '<a href="' . check_sid("$file?$url=$id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
+					'TITLE'		=> '<a href="' . check_sid("$file?$url=$id") . '" alt="" />' . $new[$i]['event_title'] . '</a>',
 					'DATE'	=> sprintf($lang['sprintf_event'], $date, $time, $dura),
 					
 					'CSS'	=> $css,
@@ -355,7 +355,7 @@ else
 				$template->assign_block_vars('list._old_row', array(
 					'CLASS' => ( $i % 2 ) ? $theme['td_class1'] : $theme['td_class2'],
 
-					'TITLE'	=> '<a href="' . check_sid("$file?$url=$id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
+					'TITLE'		=> '<a href="' . check_sid("$file?$url=$id") . '" alt="" />' . $old[$i]['event_title'] . '</a>',
 					'DATE'	=> sprintf($lang['sprintf_event'], $date, $time, $dura),
 					
 					'CSS'	=> $css,
@@ -369,8 +369,8 @@ else
 		$template->assign_vars(array(
 			'L_HEAD'		=> $page_title,
 			
-			'L_UPCOMING'	=> $lang['event_upcoming'],
-			'L_EXPIRED'		=> $lang['event_expired'],
+			'L_UPCOMING'	=> $lang['EVENT_UPCOMING'],
+			'L_EXPIRED'		=> $lang['EVENT_EXPIRED'],
 			
 			'PAGE_NUMBER'	=> sprintf($lang['common_page_of'], ( floor( $start / $settings['per_page_entry_site'] ) + 1 ), $current_page ),
 			'PAGE_PAGING'	=> generate_pagination("$file?", $cnt_old, $settings['per_page_entry_site'], $start ),

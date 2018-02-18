@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -89,7 +89,7 @@ function display_options(value)
 <!-- END sub -->
 <!-- BEGIN empty_sub -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY_SUBFORUM}</td>
+	<td class="none" colspan="2">{L_NONE_SUBFORUM}</td>
 </tr>
 <!-- END empty_sub -->
 </table>
@@ -102,13 +102,13 @@ function display_options(value)
 <br />
 <!-- END row -->
 
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <table class="rows">
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY_FORUM}</td>
+	<td class="none" colspan="2">{L_NONE_FORUM}</td>
 </tr>
 </table>
-<!-- END empty -->
+<!-- END none -->
 {S_FIELDS}
 </form>
 <!-- END list -->
@@ -166,13 +166,13 @@ function display_options(value)
 <!-- END row -->
 </table>
 
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <table class="rows">
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 </table>
-<!-- END empty -->
+<!-- END none -->
 {S_FIELDS}
 </form>
 <!-- END display -->

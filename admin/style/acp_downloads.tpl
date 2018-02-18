@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -61,37 +61,6 @@ function display_options(value)
 </form>
 <!-- END input -->
 
-<!-- BEGIN list -->
-<form action="{S_ACTION}" method="post">
-<table class="rows">
-<tr>
-	<th>{CAT} :: {NAME}</th>
-	<th><span class="right">{UPDATE}{DELETE}</span></th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td>{list.row.NAME}</td>
-	<td>{list.row.MOVE_DOWN}{list.row.MOVE_UP}{list.row.UPDATE}{list.row.DELETE}</td>
-</tr>
-<!-- END row -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
-</table>
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="dl_filename" /></td>
-	<td><input type="submit" value="{L_CREATE_FILE}" /></td>
-</tr>
-</table>
-<br />
-
-{S_FIELDS}
-</form>
-<!-- END list -->
-
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 
@@ -102,20 +71,20 @@ function display_options(value)
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td>{display.row.NAME}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.NAME}<br />{display.row.TYPES}</td>
+	<td>{display.row.UPDATE}&nbsp;{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">
 <tr>
-	<td><input type="text" name="dl_name" /></td>
+	<td><input type="text" name="{S_CREATE}" /></td>
 	<td><input type="submit" value="{L_CREATE}" /></td>
 </tr>
 </table>

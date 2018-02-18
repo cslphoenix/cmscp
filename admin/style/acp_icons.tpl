@@ -1,4 +1,5 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN append -->
@@ -63,79 +64,38 @@
 
 <!-- BEGIN input -->
 <form action="{S_ACTION}" method="post">
-<ul id="navlist"><li><a href="{S_ACTION}">{L_HEAD}</a></li><li id="active"><a href="#" id="current" onclick="return false;">{L_INPUT}</a></li></ul>
-<ul id="navinfo"><li>{L_REQUIRED}</li></ul>
-
 {ERROR_BOX}
 
 <!-- BEGIN row -->
 <!-- BEGIN hidden -->
 {input.row.hidden.HIDDEN}
 <!-- END hidden -->
-<table class="update">
 <!-- BEGIN tab -->
-<tr>
-	<th colspan="2"><ul id="navlist"><li id="active"><a href="#" id="current" onclick="return false;">{input.row.tab.L_LANG}</a></li></ul></th>
-</tr>
+<fieldset>
+	<legend>{input.row.tab.L_LANG}</legend>
 <!-- BEGIN option -->
-<tr>
-	<td class="{input.row.tab.option.CSS}"><label for="{input.row.tab.option.LABEL}" {input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></td>
-	<td class="row2">{input.row.tab.option.OPTION}</td>
-</tr>
+{input.row.tab.option.DIV_START}
+<dl>			
+	<dt{input.row.tab.option.CSS}><label for="{input.row.tab.option.LABEL}"{input.row.tab.option.EXPLAIN}>{input.row.tab.option.L_NAME}:</label></dt>
+	<dd>{input.row.tab.option.OPTION}</dd>
+</dl>
+{input.row.tab.option.DIV_END}
 <!-- END option -->
+</fieldset>
 <!-- END tab -->
-</table>
 <!-- END row -->
 
-<table class="submit">
-<tr>
-	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
-	<td><input type="reset" value="{L_RESET}"></td>
-</tr>
-</table>
+<div class="submit">
+<dl>
+	<dt><input type="submit" name="submit" value="{L_SUBMIT}"></dt>
+	<dd><input type="reset" value="{L_RESET}"></dd>
+</dl>
+</div>
 {S_FIELDS}
 </form>
 <!-- END input -->
 
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<table class="rows">
-<tr>
-	<th>{L_NAME}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN row -->
-<tr>
-	<td>{display.row.SHOW}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE} {display.row.DELETE}</td>
-</tr>
-<!-- END row -->
-<!-- BEGIN empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END empty -->
-</table>
 
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="game_name" /></td>
-	<td><input type="submit" value="{L_CREATE}"></td>
-</tr>
-</table>
-
-<br />
-
-<table class="lfooter">
-<tr>
-	<td><input type="submit" name="append" value="{L_CREATE}"></td>
-	<td><input type="submit" name="modify" value="{L_CREATE}"></td>
-</tr>
-</table>
-{LIST}
-{S_FIELDS}
-</form>
-<!-- END display -->
 
 <!-- BEGIN list -->
 <form action="{S_ACTION}" method="post">
@@ -163,3 +123,42 @@
 {S_FIELDS}
 </form>
 <!-- END list -->
+
+<!-- BEGIN display -->
+<form action="{S_ACTION}" method="post">
+<table class="rows">
+<tr>
+	<th style="width:85%;">{L_NAME}</th>
+	<!-- BEGIN smilies -->
+	<th>{L_CODE}</th>
+	<th>{L_EMOTION}</th>
+	<!-- END smilies -->
+	<th>{L_SETTINGS}</th>
+	
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td style="text-align:center;">{display.row.SHOW}</td>
+	<!-- BEGIN smilies -->
+	<td>{display.row.CODE}</td>
+	<td>{display.row.EMOTION}</td>
+	<!-- END smilies -->
+	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.UPDATE}&nbsp;{display.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END none -->
+</table>
+
+<table class="rfooter">
+<tr>
+	<td><input type="submit" name="append" value="{L_CREATE} append"></td>
+	<td><input type="submit" name="modify" value="{L_CREATE} modify"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

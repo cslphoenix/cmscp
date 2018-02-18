@@ -1,5 +1,6 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
-<p>{L_EXPLAIN}</p>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
+<p>{L_EXPLAIN}<br /><br />{L_SWITCH}</p>
 
 <!-- BEGIN input -->
 <form action="{S_ACTION}" method="post" enctype="multipart/form-data">
@@ -41,6 +42,7 @@
 <fieldset>
 	<legend>{L_USERS}</legend>
 	<table class="users">
+	<thead>
 	<tr>
 		<th>{L_MEMBER}</th>
 		<th>{L_MAIN}</th>
@@ -48,34 +50,78 @@
 		<th>{L_REGISTER}</th>
 		<th>&nbsp;</th>
 	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<th colspan="5">{L_MODERATORS}</th>
+	</tr>
+	<!-- BEGIN moderators -->
+	<tr onclick="checked({member.moderators.ID})" class="hover">
+        <td>{member.moderators.NAME}</td>
+		<td>{member.moderators.MAIN}</td>
+		<td>{member.moderators.JOIN}</td>
+		<td>{member.moderators.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.moderators.ID}" id="check_{member.moderators.ID}"></td>
+	</tr>
+	<!-- END moderators -->
+	<!-- BEGIN moderators_none -->
+	<tr>
+		<td colspan="5" style="text-align:center;">{L_MODERATORS_NONE}</td>
+	</tr>
+	<!-- END moderators_none -->
+	<tr>
+		<th colspan="6">{L_MEMBERS}</th>
+	</tr>
+	<!-- BEGIN members -->
+	<tr onclick="checked({member.members.ID})" class="hover">
+		<td>{member.members.NAME}</td>
+		<td>{member.members.MAIN}</td>
+		<td>{member.members.JOIN}</td>
+		<td>{member.members.REG}</td>
+		<td><input type="checkbox" name="members[]" value="{member.members.ID}" id="check_{member.members.ID}"></td>
+	</tr>
+	<!-- END members -->
+	<!-- BEGIN members_none -->
+	<tr>
+		<td colspan="5" style="text-align:center;">{L_MEMBERS_NONE}</td>
+	</tr>
+	<!-- END members_none -->
+	<!-- BEGIN pendings -->
+	<tr>
+		<th colspan="6">{L_PENDING}</th>
+	</tr>
 	<!-- BEGIN row -->
-	<tr onclick="checked({member.row.ID})" class="hover">
-		<td>{member.row.NAME}{member.row.MOD}</td>
-		<td>{member.row.MAIN}</td>
-		<td>{member.row.JOIN}</td>
-		<td>{member.row.REG}</td>
-		<td><input type="checkbox" name="members[]" value="{member.row.ID}" id="check_{member.row.ID}"></td>
+	<tr onclick="checked({member.pendings.row.ID})" class="hover">
+		<td>{member.pendings.row.NAME}</td>
+		<td>{member.pendings.row.MAIN}</td>
+		<td>{member.pendings.row.JOIN}</td>
+		<td>{member.pendings.row.REG}</td>
+		<td><input type="checkbox" name="pending[]" value="{member.pendings.row.ID}" id="check_{member.pendings.row.ID}" checked="checked"></td>
 	</tr>
 	<!-- END row -->
-	<!-- BEGIN no_row -->
-	<tr>
-		<td class="empty" colspan="3">{L_NO_MEMBER}</td>
-	</tr>
-	<!-- END no_row -->
+	<!-- END pending -->
+	</tbody>
 	</table>
 </fieldset>
 
-	<table class="footer2">
-    <tr>
-        <td rowspan="2" width="150%">{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-        <td>{S_OPTIONS}</td>
-        <td><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
-    </tr>
-    <tr>
-        <td colspan="2"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a></td>
-    </tr>
-    </table>
-	
+<div class="pagination">
+<ul>
+	<li>{PAGE_NUMBER}&nbsp;{PAGE_PAGING}</li>
+</ul>
+</div>
+
+<table class="footer2">
+<tr>
+	<td rowspan="2" width="150%"></td>
+	<td>{S_OPTIONS}</td>
+	<td><input type="submit" class="button2" value="{L_SUBMIT}" /></td>
+</tr>
+<tr>
+	<td colspan="2"><a href="#" onclick="marklist('list', 'members', true); return false;">{L_MARK_ALL}</a>&nbsp;&bull;&nbsp;<a href="#" onclick="marklist('list', 'members', false); return false;">{L_MARK_DEALL}</a></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
 <!-- BEGIN pending -->
 <br />
 
@@ -118,7 +164,7 @@
 	</dl>
 	<dl>			
 		<dt><label for="textarea">{L_USERNAME}:</label></dt>
-		<dd><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea></dd>
+		<dd><textarea class="textarea" name="textarea" id="textarea" style="width:95%" rows="5"></textarea><br/><br/>{L_ADD_EXPLAIN}</dd>
 	</dl>
 </fieldset>
 	<div class="submit">
@@ -135,20 +181,13 @@
 
 <!-- BEGIN permission -->
 <form action="{S_ACTION}" method="post">
-{S_OPTIONS}
-
 <!-- BEGIN row -->
 <fieldset>
 	<legend id="legend">{permission.row.NAME}</legend>
 <!-- BEGIN parent -->
 <fieldset class="views" id="view">
 	<legend id="legend">{permission.row.parent.NAME}</legend>
-	<div class="views-switch">
-		{GROUPS}
-		<a href="#" onClick="toggle('{permission.row.parent.AUTHS}'); return false;">{L_PERMISSION}</a>
-	</div>
-	<div id="{permission.row.parent.AUTHS}" align="center">
-	    <br />
+	<div>
 		<div class="tabs">
 			<ul>
 				<!-- BEGIN cats -->
@@ -187,21 +226,27 @@
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post">
 <table class="rows">
+<thead>
 <tr>
-	<th><span class="right">{L_COUNT}</span>{L_NAME}</th>
+	<th>{L_NAME}</th>
+	<th>{L_COUNT}</th>
 	<th>{L_SETTINGS}</th>
 </tr>
+</thead>
+<tbody>
 <!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.row.COUNT}</span>{display.row.NAME}</td>
-	<td>{display.row.MEMBER}{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.NAME}</td>
+	<td>{display.row.COUNT}</td>
+	<td>{display.row.MEMBER}&nbsp;{display.row.UPDATE}&nbsp;{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
+</tbody>
 </table>
 
 <table class="lfooter">

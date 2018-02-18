@@ -12,7 +12,7 @@ $start		= ( request('start', INT) ) ? request('start', INT) : 0;
 $start		= ( $start < 0 ) ? 0 : $start;
 #$data_id	= request(POST_GALLERY_URL, INT);
 $mode		= request('mode', TXT);
-$dir_path	= $root_path . $settings['path_gallery'];
+$dir_path	= $root_path . $settings['path']['gallery'];
 
 if ( $data_id )
 {
@@ -82,7 +82,7 @@ if ( $data_id )
 				$prev	= $dir_path . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_preview'];
 				$image	= $dir_path . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_filename'];
 				
-				list($width, $height, $type, $attr) = getimagesize($root_path . $settings['path_gallery'] . '/' . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_filename']);
+				list($width, $height, $type, $attr) = getimagesize($root_path . $settings['path']['gallery'] . '/' . $gallery['gallery_path'] . '/' . $galleries_pics[$j]['pic_filename']);
 				
 				$template->assign_block_vars('details.row_pics.col_pics', array(
 					'PIC_ID'	=> $galleries_pics[$j]['pic_id'],

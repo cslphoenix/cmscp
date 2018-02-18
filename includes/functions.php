@@ -16,12 +16,12 @@ function build_options($var)
 				{
 					foreach ( $_value as $_v1 => $_v2 )
 					{
-						$new_fields .= '<option value="' . $_v1 . '">' . sprintf($lang['stf_select_format'], sprintf($lang[$_var], $lang[$_v2])) . "</option>\n";
+						$new_fields .= '<option value="' . $_v1 . '">' . sprintf($lang['STF_SELECT_FORMAT'], sprintf($lang[$_var], $lang[$_v2])) . "</option>\n";
 					}
 				}
 				else
 				{
-					$new_fields .= '<option value="' . $_var . '">' . sprintf($lang['stf_select_format'], $lang[$_value]) . "</option>\n";
+					$new_fields .= '<option value="' . $_var . '">' . sprintf($lang['STF_SELECT_FORMAT'], $lang[$_value]) . "</option>\n";
 				}
 			}
 		}
@@ -36,11 +36,11 @@ function build_options($var)
 	return $new_fields;
 	
 	#	$s_options .= '<select name="mode" onchange="setRequest(this.options[selectedIndex].value);">';
-	#	$s_options .= '<option value="">' . sprintf($lang['stf_select_format'], $lang['com_select_option']) . "</option>\n";
-	#	$s_options .= '<option value="uchange">' . sprintf($lang['stf_select_format'], $lang['notice_select_permission']) . "</option>\n";
-	#	$s_options .= '<option value="uranks">' . sprintf($lang['stf_select_format'], $lang['notice_select_rank']) . "</option>\n";
-	#	$s_options .= '<option value="udefault">' . sprintf($lang['stf_select_format'], $lang['notice_select_default']) . "</option>\n";
-	#	$s_options .= '<option value="udelete">' . sprintf($lang['stf_select_format'], $lang['com_delete']) . "</option>\n";
+	#	$s_options .= '<option value="">' . sprintf($lang['STF_SELECT_FORMAT'], $lang['COMMON_SELECT_OPTION']) . "</option>\n";
+	#	$s_options .= '<option value="uchange">' . sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_PERMISSION']) . "</option>\n";
+	#	$s_options .= '<option value="uranks">' . sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_RANK']) . "</option>\n";
+	#	$s_options .= '<option value="udefault">' . sprintf($lang['STF_SELECT_FORMAT'], $lang['notice_select_default']) . "</option>\n";
+	#	$s_options .= '<option value="udelete">' . sprintf($lang['STF_SELECT_FORMAT'], $lang['COMMON_DELETE']) . "</option>\n";
 	#	$s_options .= '</select>';
 }
 
@@ -79,11 +79,12 @@ function build_fields($var)
 /*
  * Prüft ob der Eintrag im Langarray vorhanden ist.
  */
-function lang($lng)
+
+function langs($lng)
 {
 	global $lang;
 	
-	return isset($lang[$lng]) ? $lang[$lng] : $lng;
+	return isset($lang[strtoupper($lng)]) ? $lang[strtoupper($lng)] : $lng;
 }
 
 /*
@@ -151,11 +152,11 @@ function request($request_var, $request_type, $filter = '')
 					}
 					else if ( $request_type == TXT )
 					{
-						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT, 'ISO-8859-1'));
+						$v_tmp[$key][] = trim(htmlspecialchars($v_value, ENT_COMPAT, 'UTF-8'));
 					}
 					else
 					{
-						$v_tmp[$key][] = (is_numeric($v_value) ? (int) $v_value : trim(htmlspecialchars($v_value, ENT_COMPAT, 'ISO-8859-1')));
+						$v_tmp[$key][] = (is_numeric($v_value) ? (int) $v_value : trim(htmlspecialchars($v_value, ENT_COMPAT, 'UTF-8')));
 					}
 				}
 				
@@ -169,11 +170,11 @@ function request($request_var, $request_type, $filter = '')
 				}
 				else if ( $request_type == TXT )
 				{
-					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT, 'ISO-8859-1'));
+					$_tmp[$key] = trim(htmlspecialchars($value, ENT_COMPAT, 'UTF-8'));
 				}
 				else
 				{
-					$_tmp[$key] = (is_numeric($value) ? (int) $value : trim(htmlspecialchars($value, ENT_COMPAT, 'ISO-8859-1')));
+					$_tmp[$key] = (is_numeric($value) ? (int) $value : trim(htmlspecialchars($value, ENT_COMPAT, 'UTF-8')));
 				}
 				
 				$var[$key] = $_tmp[$key];
@@ -184,11 +185,11 @@ function request($request_var, $request_type, $filter = '')
 	{
 		switch ( $request_type )
 		{
-			case INT: $var = ( isset($tmp) ) ? (int) $tmp : ''; break;
-			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? (int) $tmp : trim(htmlspecialchars($tmp, ENT_COMPAT, 'ISO-8859-1')) : ''; break;
-			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT, 'ISO-8859-1')) : ''; break;
-			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT, 'ISO-8859-1')) : ''; break;
-			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT, 'ISO-8859-1')) : ''; break;
+			case INT: $var = ( isset($tmp) ) ? intval($tmp) : ''; break;
+			case TYP: $var = ( isset($tmp) ) ? (is_numeric($tmp)) ? (int) $tmp : trim(htmlspecialchars($tmp, ENT_COMPAT, 'UTF-8')) : ''; break;
+			case TXT: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT, 'UTF-8')) : ''; break;
+			case CLN: $var = ( isset($tmp) ) ? trim(htmlspecialchars($tmp, ENT_COMPAT, 'UTF-8')) : ''; break;
+			case HTM: $var = ( isset($tmp) ) ? trim(htmlspecialchars(strip_tags($tmp), ENT_COMPAT, 'UTF-8')) : ''; break;
 			case URL:
 				
 				if ( $tmp != '' )
@@ -314,7 +315,7 @@ function request_file($request_var)
 {
 	global $_FILES;
 	
-	debug($request_var, 'request_var');
+#	debug($request_var, 'request_var');
 	
 	$var['temp'] = $_FILES[$request_var]['tmp_name'];
 	$var['name'] = $_FILES[$request_var]['name'];
@@ -402,7 +403,7 @@ function href($type, $file, $params, $text, $lng = '', $comment = false)
 	{
 		foreach ( $params as $k => $v )
 		{
-			$url[] = "$k=$v";
+			$url[] = (is_array($v)) ? "$k=$v[0]" : "$k=$v";
 		}
 	}
 	
@@ -460,7 +461,7 @@ function cal_string($entry, $css, $lng, $array, $viewer)
 	return $msg;
 }
 
-function cal_cut($string, $length)
+function cut_cal($string, $length)
 {
 	$string = ( strlen($string) <= $length ) ? $string : substr($string, 0, ($length-3));
 	
@@ -1461,7 +1462,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 
 	}
 
-	$page_string = $lang['Goto_page'] . ' ' . $page_string;
+#	$page_string = $lang['Goto_page'] . ' ' . $page_string;
 
 	return $page_string;
 }
@@ -1811,7 +1812,7 @@ function message($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $er
 // dougk_ff7 <October 5, 2002>
 function cms_realpath($path)
 {
-	global $root_path, $phpEx;
+	global $root_path;
 
 	return (!@function_exists('realpath') || !@realpath($root_path . 'includes/functions.php')) ? $path : @realpath($path);
 }
@@ -2000,6 +2001,24 @@ function rating_bar($id, $units = '', $static = '', $rating_unitwidth = 30)
 		$rater.='</div>';
 		return $rater;
 	}
+}
+
+function _in_ary($sql_grp, $match_group)
+{
+	$_in_group = '';
+	
+	foreach ( $sql_grp as $groups )
+	{
+		foreach ( $groups as $group_id )
+		{
+			if ( in_array($group_id, $match_group) )
+			{
+				$_in_group = true;
+			}
+		}
+	}
+	
+	return $_in_group;
 }
 
 function main_header($page_title = '')
@@ -2352,7 +2371,7 @@ function main_header($page_title = '')
 	//
 	// Show the overall footer.
 	//
-	$admin_link = (	$userdata['user_level'] == ADMIN || $userauth || $userdata['user_founder'] ) ? '<a href="admin/admin_index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
+	$admin_link = (	$userdata['user_level'] == ADMIN || $userauth || $userdata['user_founder'] ) ? '<a href="admin/index.php?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a>' : '';
 	
 	//$sql = 'SELECT * FROM ' . CHANGELOG . ' ORDER BY changelog_id';
 	//if ( !($result = $db->sql_query($sql)) )
@@ -2409,8 +2428,8 @@ function main_header($page_title = '')
 		'L_SN_NEXT_MATCH'		=> $lang['sn_nextmatch'],
 		'L_SN_NEXT_TRAINING'	=> $lang['sn_nexttraining'],
 		
-		'L_MARK_ALL'	=> $lang['mark_all'],
-	'L_MARK_DEALL'	=> $lang['mark_deall'],
+		'L_MARK_ALL'	=> $lang['MARK_ALL'],
+	'L_MARK_DEALL'	=> $lang['MARK_DEALL'],
 
 		'SITENAME' => $config['page_name'],
 		
@@ -2419,8 +2438,8 @@ function main_header($page_title = '')
 		'PAGE_TITLE' => $page_title,
 		
 		
-	'L_NO'			=> $lang['com_no'],
-	'L_YES'			=> $lang['com_yes'],
+	'L_NO'			=> $lang['COMMON_NO'],
+	'L_YES'			=> $lang['COMMON_YES'],
 	
 	'L_SUBMIT'		=> $lang['common_submit'],
 	'L_RESET'		=> $lang['common_reset'],
@@ -2587,10 +2606,8 @@ function main_header($page_title = '')
 	header('Pragma:no-cache');
 	
 	$template->pparse('overall_header');
-	
-	
-	
-	debug($_POST);
+
+#	debug($_POST);
 	
 	return;
 }

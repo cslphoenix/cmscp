@@ -1,4 +1,4 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -10,7 +10,6 @@ function display_options(value)
 	if ( value == '0' )
 	{
 		dE('main', -1);
-		dE('menu_lang', 1);
 		dE('menu_show', 1);
 		dE('menu_file', -1);
 		dE('menu_opts', -1);
@@ -18,7 +17,6 @@ function display_options(value)
 	else if ( value == '1' )
 	{
 		dE('main', 1);
-		dE('menu_lang', 1);
 		dE('menu_show', 1);
 		dE('menu_file', -1);
 		dE('menu_opts', -1);
@@ -26,7 +24,6 @@ function display_options(value)
 	else if ( value == '2' )
 	{
 		dE('main', 1);
-		dE('menu_lang', 1);
 		dE('menu_show', 1);
 		dE('menu_file', 1);
 		dE('menu_opts', 1);
@@ -34,7 +31,6 @@ function display_options(value)
 	else if ( value == '3' )
 	{
 		dE('main', -1);
-		dE('menu_lang', 1);
 		dE('menu_show', 1);
 		dE('menu_file', -1);		
 		dE('menu_target', -1);
@@ -43,7 +39,6 @@ function display_options(value)
 	else if ( value == '4' )
 	{
 		dE('main', 1);
-		dE('menu_lang', 1);
 		dE('menu_show', 1);
 		dE('menu_file', 1);		
 		dE('menu_target', 1);
@@ -168,11 +163,11 @@ function display_modes(value)
 	<td>{navi.row.MOVE_DOWN}{navi.row.MOVE_UP}{navi.row.UPDATE}{navi.row.DELETE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 <table class="lfooter">
 <tr>
@@ -210,12 +205,12 @@ function display_modes(value)
 <!-- BEGIN row -->
 <tr>
 	<td>{display.row.NAME}</td>
-	<td>{display.row.MOVE_DOWN}{display.row.MOVE_UP}{display.row.UPDATE}{display.row.DELETE}</td>
+	<td>{display.row.UPDATE}&nbsp;{display.row.MOVE_DOWN}{display.row.MOVE_UP}&nbsp;{display.row.DELETE}</td>
 </tr>
 <!-- BEGIN subrow -->
 <tr>
 	<td><span style="padding:0px 8px;"></span>{display.row.subrow.NAME}</td>
-	<td><span style="padding:0px 8px;"></span>{display.row.subrow.MOVE_DOWN}{display.row.subrow.MOVE_UP}{display.row.subrow.UPDATE}{display.row.subrow.DELETE}</td>
+	<td><span style="padding:0px 8px;"></span>{display.row.subrow.UPDATE}&nbsp;{display.row.subrow.MOVE_DOWN}{display.row.subrow.MOVE_UP}&nbsp;{display.row.subrow.DELETE}</td>
 </tr>
 <!-- END subrow -->
 <!-- BEGIN br_empty -->
@@ -240,13 +235,44 @@ function display_modes(value)
 <!-- END row -->
 </table>
 
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <table class="rows">
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
 </table>
-<!-- END empty -->
+<!-- END none -->
 {S_FIELDS}
 </form>
 <!-- END display -->
+
+<!-- BEGIN navigation -->
+<form action="{S_ACTION}" method="post">
+
+<table class="rows">
+<tr>
+	<th>{L_NAME}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN row -->
+<tr>
+	<td>{navigation.row.NAME}</td>
+	<td>{navigation.row.UPDATE}&nbsp;{navigation.row.MOVE_DOWN}{navigation.row.MOVE_UP}&nbsp;{navigation.row.DELETE}</td>
+</tr>
+<!-- END row -->
+<!-- BEGIN none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END none -->
+</table>
+
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="{S_CREATE}" /></td>
+	<td><input type="submit" value="{L_CREATE}" /></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END navigation -->

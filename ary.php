@@ -108,13 +108,46 @@ $newscat		= array('path' => array('value' => 'images/newscat/'));
 $ranks			= array('path' => array('value' => 'images/ranks/'));
 $downloads		= array('path' => array('value' => 'upload/downloads/'));
 $gallery		= array('path' => array('value' => 'upload/gallery/'));
-$groups			= array('path' => array('value' => 'upload/groups/'),		'filesize' => array('value' => '1'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'));
-$matchs			= array('path' => array('value' => 'upload/matchs/'),		'filesize' => array('value' => '2'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'), 'preview' => array('type' => 'text:text', 'value' => '100:100'));
-$path_network	= array('path' => array('value' => 'upload/network/'),		'filesize' => array('value' => '3'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'));
-$teams_banner	= array('path' => array('value' => 'upload/teams/'),		'filesize' => array('value' => '4'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'), 'upload' => array('type' => 'radio:yesno', 'value' => '1'));
-$teams_logo		= array('path' => array('value' => 'upload/teams/'),		'filesize' => array('value' => '5'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'), 'upload' => array('type' => 'radio:yesno', 'value' => '1'));
-$users			= array('path' => array('value' => 'upload/users/'),		'filesize' => array('value' => '6'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'));
+$groups			= array('path' => array('value' => 'upload/groups/'),		'filesize' => array('value' => '1;1'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'));
+$matchs			= array('path' => array('value' => 'upload/matchs/'),		'filesize' => array('value' => '2;2'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'), 'preview' => array('type' => 'text:text', 'value' => '100:100'));
+$path_network	= array('path' => array('value' => 'upload/network/'),		'filesize' => array('value' => '3;1'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'));
+$teams_banner	= array('path' => array('value' => 'upload/teams/'),		'filesize' => array('value' => '4;2'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'), 'upload' => array('type' => 'radio:yesno', 'value' => '1'));
+$teams_logo		= array('path' => array('value' => 'upload/teams/'),		'filesize' => array('value' => '5;1'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'), 'upload' => array('type' => 'radio:yesno', 'value' => '1'));
+$users			= array('path' => array('value' => 'upload/users/'),		'filesize' => array('value' => '6;2'), 'dimension' => array('type' => 'text:text', 'value' => '100:100'));
 
+$groups	= array (
+'path' => 'upload/groups/',
+'filesize' => '2;2',
+'dimension' => '100:100',
+);
+$matchs = array (
+  'path' => 'upload/matchs/',
+  'filesize' => '2;2',
+  'dimension' => '100:100',
+  'preview' => '100:100',
+);
+$path_network = array (
+  'path' => 'upload/network/',
+  'filesize' => '2;2',
+  'dimension' => '99:99',
+);
+$teams_banner = array (
+  'path' => 'upload/teams/',
+  'upload' => 1,
+  'filesize' => '2;2',
+  'dimension' => '101:101',
+);
+$teams_logo	 = array (
+  'path' => 'upload/teams/',
+  'upload' => 1,
+  'filesize' => '2;2',
+  'dimension' => '99:99',
+);
+$users = array (
+  'path' => 'upload/users/',
+  'filesize' => '2;2',
+  'dimension' => '100:100',
+);
 
 $testtt	= array(
 			'games'		=> 'images/games/',
@@ -384,7 +417,7 @@ while ( !feof($option) )
 {
 	$zeile = fgets($option, 1000);
 	
-	$_ary[] = explode("\t", $zeile);
+	$_ary[] = explode("\t", strtoupper($zeile));
 #	echo $zeile . "<br>";
 }
 fclose($option);  

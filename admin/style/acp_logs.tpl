@@ -1,14 +1,14 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN display -->
 <form action="{S_ACTION}" method="post" id="list" name="post">
-<table class="logs">
+<table id="logs">
 <tr>
-	<th>{L_LOGS_USERNAME}</th>
-	<th>{L_LOGS_IP}</th>
-	<th>{L_LOGS_TIME}</th>
-	<th>{L_LOG_SEKTION}</th>
+	<th>{L_USERNAME}</th>
+	<th>{L_IP}</th>
+	<th>{L_TIME}</th>
+	<th>{L_SECTION}</th>
 	<th><input type="checkbox" name="log_id[]" onclick="checkbox(this.name,this.checked)" value="" /></th>
 </tr>
 <!-- BEGIN row -->
@@ -22,16 +22,13 @@
 <!-- END row -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="empty" colspan="7">{L_EMPTY}</td>
+	<td class="none" colspan="7">{L_NONE}</td>
 </tr>
 <!-- END no_entry -->
 </table>
 
 <table class="footer">
 <tr>
-	<td></td>
-	<td></td>
-	<td></td>
 	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
 </tr>
 </table>
@@ -88,11 +85,11 @@
 	<td class="{error.row.CLASS}" align="left" valign="top">{error.row.SQL_STORE}</td>
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="row_class1" colspan="4" align="center">{L_EMPTY}</td>
+	<td class="row_class1" colspan="4" align="center">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="footer">

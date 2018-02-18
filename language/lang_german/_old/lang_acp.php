@@ -70,7 +70,7 @@ $lang['sm_settings']		= 'Einstellungen';
 $lang['stf_header']			= '%s Administration';
 $lang['sprintf_add']			= '%s hinzufügen';
 $lang['sprintf_edit']			= '%s bearbeiten: %s';
-$lang['stf_create']			= 'Neue %s erstellen';
+$lang['STF_CREATE']			= 'Neue %s erstellen';
 $lang['sprintf_creates']		= 'Neues %s erstellen';
 $lang['sprintf_createn']		= 'Neuen %s erstellen';
 $lang['sprintf_list']			= '%sliste';
@@ -89,8 +89,8 @@ $lang['stf_overview']		= '%s Übersicht';
 $lang['sprintf_right_overview']	= '%s Rechteübersicht';
 $lang['sprintf_upload']			= '%s Upload';
 $lang['sprintf_rating']			= '%sbewertung';
-$lang['sprintf_match_name']		= 'vs. %s';
-$lang['sprintf_match_intern']	= '<span style="font-style:italic;">vs. %s</span>';
+$lang['STF_MATCH_NAME']		= 'vs. %s';
+$lang['STF_MATCH_INTERN']	= '<span style="font-style:italic;">vs. %s</span>';
 $lang['sprintf_news_title']		= '<em><b>%s</b></em>';
 $lang['sprintf_event']			= 'am: %s von %s - %s';
 $lang['sprintf_processing']		= '%s Bearbeitung';
@@ -103,36 +103,36 @@ $lang['sprintf_upload_info']	= '%s x %s / %s KB\'s';
  *	Allgemeine Sprachdateien
  */
  /*
-$lang['common_auth']			= 'Berechtigung';
+$lang['COMMON_AUTH']			= 'Berechtigung';
 $lang['common_comment']			= 'Kommentar';
 $lang['common_comments']		= 'Kommentare?';		
 $lang['common_date']			= 'Datum';
 $lang['common_default']			= 'Standarteinstellungen';
-$lang['com_delete']			= 'Löschen';
+$lang['COMMON_DELETE']			= 'Löschen';
 $lang['common_details']			= 'Details';
 $lang['common_duration']		= 'Dauer';		
 $lang['common_member']			= 'Mitglied';
 $lang['common_members']			= 'Mitglieder';
 $lang['common_moderator']		= 'Moderator';		
-$lang['common_moderators']		= 'Moderatoren';		
+$lang['COMMON_MODERATORS']		= 'Moderatoren';		
 $lang['common_more']			= 'Erweitern';
-$lang['com_no']				= 'Nein';
-$lang['common_overview']		= 'Übersicht';		
-$lang['com_remove']			= 'Entfernen';
+$lang['COMMON_NO']				= 'Nein';
+$lang['COMMON_OVERVIEW']		= 'Übersicht';		
+$lang['COMMON_REMOVE']			= 'Entfernen';
 $lang['common_reset']			= 'Zurücksetzen';
 $lang['common_setting']			= 'Einstellung';
 $lang['common_settings']		= 'Einstellungen';		
 $lang['common_submit']			= 'Absenden';
-$lang['com_update']			= 'Bearbeiten';
+$lang['COMMON_UPDATE']			= 'Bearbeiten';
 $lang['common_upload']			= 'Upload';
 $lang['common_userlevel']		= 'Benutzerlevel';		
 $lang['common_view']			= 'Anzeigen';
-$lang['com_yes']				= 'Ja';
+$lang['COMMON_YES']				= 'Ja';
 $lang['common_default']			= 'Standarteinstellungen';
 $lang['common_add']				= 'Hinzufügen';
 
 $lang['common_image']			= 'Bild';
-#$lang['com_image_delete']	= 'Bild löschen';
+#$lang['COMMON_IMAGE_DELETE']	= 'Bild löschen';
 $lang['common_visible']			= 'Sichtbar?';
 $lang['common_category']		= 'Kategorie';
 $lang['common_language']		= 'Sprachdatei?';
@@ -214,7 +214,7 @@ $lang['rank_standard']	= 'Standardrang';
 $lang['switch_level']		= array(GUEST => $lang['auth_guest'], USER => $lang['auth_user'], TRIAL => $lang['auth_trial'], MEMBER => $lang['auth_member'], MOD => $lang['auth_mod'], ADMIN => $lang['auth_admin']);
 
 
-$lang['image_filesize']			= 'Die Dateigröße muss kleiner als %d KB sein.';
+$lang['IMAGE_FILESIZE']			= 'Die Dateigröße muss kleiner als %d KB sein.';
 $lang['image_imagesize']		= 'Das Bild muss weniger als %d Pixel breit und %d Pixel hoch sein.';
 
 /*
@@ -235,8 +235,6 @@ $lang['msg_select_type']			= 'Bitte ein Type / Art auswählen';
 $lang['msg_select_cat']				= 'Bitte ein Match Art auswählen';
 $lang['msg_select_league']			= 'Bitte eine Liga auswählen';
 
-#$lang['notice_select_map']				= 'Bitte eine Map eintragen';
-$lang['msg_select_match']			= 'Bitte eine Begegnung auswählen';
 $lang['msg_select_game']			= 'Bitte ein Spiel auswählen!';
 $lang['msg_select_game_image']		= 'Bitte ein Spielbild auswählen!';
 $lang['msg_select_cat_image']		= 'Bitte ein Newsbild auswählen!';
@@ -359,7 +357,7 @@ $lang['delete_confirm_network']		= 'das der %s:';
 $lang['delete_confirm_team']		= 'dass dieses Team:';
 $lang['delete_confirm_team_user']	= 'dass dieser Spiele(r): %s vom Team:';
 
-$lang['notice_confirm_delete']		= 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?';
+$lang['NOTICE_CONFIRM_DELETE']		= 'Bist du sicher, %s <strong><em>%s</em></strong> gelöscht werden soll?';
 
 
 $lang['sprintf_confirm_delete_game']			= 'Bist du sicher, dass dieses Spiel: \'%s\' gelöscht werden soll?';

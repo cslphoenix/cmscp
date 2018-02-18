@@ -5,13 +5,21 @@ if ( !defined('IN_CMS') )
 	die('Hacking attempt');
 }
 
+#define('SORT_DAY',		86400);
+#define('SORT_WEEK',		604800);
+#define('SORT_WEEKS',	1209600);
+#define('SORT_MONTH',	2629743);
+#define('SORT_YEAR',		31556926);
+
 define('CAL_TRAINING',	'training');
 define('CAL_TODAY',		'today');
+
+define('CAL_HOLIDAYS',		'holidays');
+
 define('CAL_EVENT',		'event');
 define('CAL_NEWS',		'news');
 define('CAL_MATCH', 	'match');
 define('CAL_BIRTHDAY',	'birthday');
-
 
 define('INT', 'int');
 define('URL', 'url');
@@ -107,6 +115,7 @@ define('SECTION_FIELDS',		777);
 define('SECTION_FORUM',			3);
 define('SECTION_GALLERY',		22);	
 define('SECTION_GAMES',			4);
+define('SECTION_ATTACHMENT',	123456);
 define('SECTION_GROUPS',		6);	
 define('SECTION_ICONS',			666);
 define('SECTION_LABEL',			99923123);
@@ -305,6 +314,11 @@ define('STATUS_NO',			2);
 define('STATUS_REPLACE',	3);
 
 /* Tabellennamen */
+
+
+define('ATTACHMENT',		$db_prefix . 'attachment');
+define('ATTACHMENT_GROUPS',	$db_prefix . 'attachment_groups');
+
 #define('ACL_FIELDS',		$db_prefix . 'acl_fields');	
 #define('ACL_GROUPS',		$db_prefix . 'acl_groups');	
 #define('ACL_LABEL',			$db_prefix . 'acl_label');
@@ -325,9 +339,7 @@ define('LOGS',				$db_prefix . 'log');
 
 define('BANLIST',			$db_prefix . 'banlist');
 define('CAPTCHA',			$db_prefix . 'captcha');
-define('CASH2',				$db_prefix . 'cash_new');
 define('CASH',				$db_prefix . 'cash');
-define('CASH_USER',			$db_prefix . 'cash_users');
 define('COMMENT',			$db_prefix . 'comment');
 define('COMMENT_READ',		$db_prefix . 'comment_read');
 define('CONTACT',			$db_prefix . 'contact');
@@ -380,6 +392,8 @@ define('TRAINING',			$db_prefix . 'training');
 define('USERS',				$db_prefix . 'users');
 define('VOTES',				$db_prefix . 'vote');
 define('VOTES_OPTION',		$db_prefix . 'vote_option');
+
+define('SMILIES',			$db_prefix . 'smilies');
 
 define('BUGTRACKER',		$db_prefix . 'bugtracker');
 define('CHANGELOG',			$db_prefix . 'change');

@@ -11,37 +11,41 @@ init_userprefs($userdata);
 
 #$viewcat = ( !empty($_GET[POST_CATEGORY]) ) ? $_GET[POST_CATEGORY] : -1;
 
-$viewcat = request('id', INT);
+$main	= request('main', TYP) ? request('main', TYP) : 0;
 
-debug($viewcat, 'viewcat');
+#$viewcat = request('id', INT);
 
-$tmp = data(FORUM, false, 'main ASC, forum_order ASC', 1, false);
+$sqlout = data(FORUM, false, 'main ASC, forum_order ASC', 1, false);
+
+#debug($sqlout, '$sqlout');
+
+#debug($main, 'main');
 		
-$cats = $subforum = $forum = array();
+$cats = $forms = $subforms = array();
 
-if ( $tmp )
+if ( $sqlout )
 {
-	foreach ( $tmp as $rows )
+	foreach ( $sqlout as $rows )
 	{
-		if ( $rows['forum_id'] == $viewcat )
+		if ( $rows['type'] == 0 )
 		{
-			$cats = $rows;
+			$cat[$rows['forum_id']] = $rows;
 		}
-		else if ( $rows['main'] == $viewcat )
+		else if ( $rows['main'] != 0 && $rows['type'] == 1 )
 		{
-			$forum[$rows['forum_id']] = $rows;
+			$forms[$rows['main']][$rows['forum_id']] = $rows;
 		}
 	}
 	
-	if ( $forum )
+	if ( $forms )
 	{
-		$keys_labels = array_keys($forum);
+		$keys_labels = array_keys($forms);
 		
-		foreach ( $tmp as $rows )
+		foreach ( $sqlout as $rows )
 		{
 			if ( in_array($rows['main'], $keys_labels) )
 			{
-				$subforum[$rows['main']][] = $rows;
+				$subforms[$rows['main']][] = $rows;
 			}
 			
 		}
@@ -50,9 +54,6 @@ if ( $tmp )
 
 $template->set_filenames(array('body' => 'body_forum.tpl'));	
 
-//
-// Start output of page
-//
 $page_title = $lang['forum'];
 main_header();
 
@@ -80,24 +81,54 @@ $template->assign_vars(array(
 	'U_MARK_READ' => check_sid('index.$phpEx?mark=forums'),
 ));
 
-if ( $cats )
+#debug($cat, 'cat');
+debug($forms, 'forms');
+#debug($subforms, 'subforms');
+
+if ( $cat )
 {
-	//
-	// Define appropriate SQL
-	//
-	$sql = "SELECT f.*, p.post_time, p.post_user_name, u.user_name, u.user_id
-				FROM (( " . FORUM . " f
-				LEFT JOIN " . POSTS . " p ON p.post_id = f.forum_last_post_id )
-				LEFT JOIN " . USERS . " u ON u.user_id = p.poster_id )
-				WHERE f.cat_id != 0
-				ORDER BY f.cat_id, f.forum_order";
-//	$forms = _cached($sql, 'forum_forms');
-	if ( !($result = $db->sql_query($sql)) )
+	foreach ( $cat as $_numc => $_valc )
 	{
-		message(GENERAL_ERROR, 'Could not query forums information', '', __LINE__, __FILE__, $sql);
+		#debug($_numc);
+		
+		if ( isset($forms[$_numc]) && auth('f_read', array_keys($forms[$_numc]), $userdata))
+		{
+			debug($forms[$_numc], 'test 1234');
+			
+			$template->assign_block_vars('_c', array(
+				'NAME'	=> $_valc['forum_name'],
+			));
+		}
 	}
-	$forms = $db->sql_fetchrowset($result);
+}
+/*	
+if ( $cat )
+{
+#	foreach ( $cat as $_rows )
+#	{
+#		$template->assign_block_vars('_cat', array(
+#			'CAT_ID'	=> $_rows['forum_id'],
+#			'CAT_NAME'	=> $_rows['forum_name'],
+#		));
+#		
+#	}
 	
+	
+#	$sql = "SELECT f.*, p.post_time, p.post_user_name, u.user_name, u.user_id
+#				FROM (( " . FORUM . " f
+#				LEFT JOIN " . POSTS . " p ON p.post_id = f.forum_last_post_id )
+#				LEFT JOIN " . USERS . " u ON u.user_id = p.poster_id )
+#				WHERE f.forum_id != 0
+#				ORDER BY f.forum_id, f.forum_order";
+//	$forms = _cached($sql, 'forum_forms');
+#	if ( !($result = $db->sql_query($sql)) )
+#	{
+#		message(GENERAL_ERROR, 'Could not query forums information', '', __LINE__, __FILE__, $sql);
+#	}
+#	$forms = $db->sql_fetchrowset($result);
+	
+#	debug($forms);
+
 	if ( $forms )
 	{
 		//
@@ -162,13 +193,13 @@ if ( $cats )
 									{
 										$sql = 'SELECT topic_id FROM ' . TOPICS . ' WHERE forum_id = ' . $forum_id;
 										$forum_topics = _cached($sql, 'forum_' . $forum_id . '_topics');
-									/*
+									<--
 										if ( !($result = $db->sql_query($sql)) )
 										{
 											message(GENERAL_ERROR, 'Could not query new topic information', '', __LINE__, __FILE__, $sql);
 										}
 										$forum_topics = $db->sql_fetchrowset($result);
-									*/
+									-->
 										//debug($forum_topics);
 										
 										$sql = 'SELECT tr.topic_id
@@ -259,13 +290,14 @@ if ( $cats )
 		$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
 		$template->assign_block_vars('no_forums', array() );
 	}
+	
 }
 else
 {
 	$template->assign_vars(array('NO_FORUMS' => $lang['No_forums']));
 	$template->assign_block_vars('no_forums', array() );
 }
-
+*/
 
 $template->pparse('body');
 	

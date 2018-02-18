@@ -21,7 +21,7 @@
 <!-- END row_bugtracker -->
 <!-- BEGIN no_entry -->
 <tr>
-	<td class="row_noentry2" align="center" colspan="5">{L_EMPTY}</td>
+	<td class="row_noentry2" align="center" colspan="5">{L_NONE}</td>
 </tr>
 <!-- END no_entry -->
 </table>

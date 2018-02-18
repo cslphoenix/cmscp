@@ -40,18 +40,7 @@ if ( isset($_POST['cash_name']) || isset($_POST['user_name']) || isset($_POST['u
 			$reg	= date($tmp[$i]['user_dateformat'], $tmp[$i]['user_regdate']);
 			$log	= date($tmp[$i]['user_dateformat'], $tmp[$i]['user_lastvisit']);
 			
-			switch ( $tmp[$i]['user_level'] )
-			{
-				case GUEST:	$lvl = $lang['auth_guest'];	break;
-				case USER:	$lvl = $lang['auth_user'];	break;
-				case TRIAL:	$lvl = $lang['auth_trial'];	break;
-				case MEMBER:$lvl = $lang['auth_member'];break;
-				case MOD:	$lvl = $lang['auth_mod'];	break;
-				case ADMIN:	$lvl = $lang['auth_admin'];	break;
-				default: $lvl = $tmp[$i]['user_level'];	break;
-			}				
-			
-			echo "<li onclick=\"$fill_type('$name');\">" . sprintf($lang['stf_ajax_users'], $name, $lvl, $reg, $log) . "</li>";
+			echo "<li onclick=\"$fill_type('$name');\">" . sprintf($lang['STF_AJAX_USERS'], $name, $reg, $log) . "</li>";
 			
 			if ( $i == 4 )
 			{
@@ -68,13 +57,13 @@ if ( isset($_POST['cash_name']) || isset($_POST['user_name']) || isset($_POST['u
 		}
 		else
 		{
-			echo sprintf($lang['stf_select_format'], $lang['no_entry']);
+			echo sprintf($lang['STF_SELECT_FORMAT'], $lang['no_entry']);
 		}
 	}
 }
 else
 {
-	echo sprintf($lang['stf_select_format'], $lang['no_entry']);
+	echo sprintf($lang['STF_SELECT_FORMAT'], $lang['no_entry']);
 }
 
 ?>

@@ -405,9 +405,11 @@ else
 	
 	$ary = array();
 	
-	if ( $tmp )
+	$sqlout = $tmp;
+	
+	if ( $sqlout )
 	{
-		foreach ( $tmp as $row )
+		foreach ( $sqlout as $row )
 		{
 			if ( $userdata['user_level'] >= TRIAL && $row['news_public'] == 1 )
 			{
@@ -460,6 +462,9 @@ else
 			$cnt_comment[$row['news_id']] = $row['count'];
 		}
 		
+	#	debug($settings['news'], 'settings');
+	#	debug($settings['rating_news'], 'settings');
+		
 		$cnt_ary = count($ary);
 		
 		for ( $i = $start; $i < min($settings['news']['limit'] + $start, $cnt_ary); $i++ )
@@ -492,15 +497,21 @@ else
 					$rate_sum	= $count_value;
 					$rate_ave	= round(($rate_sum/$rate_cnt), 1);
 				}
-
-				if ( in_array($userdata['user_id'], $rate_ids) )
-				{
-					$rate_check = ( $userdata['user_id'] == ANONYMOUS ) ? ( in_array(iptoint($userdata['session_ip']), $rate_ips) ) ? 'true' : 'false' : 'true';
-				}
-				else if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
+				
+				if ( in_array(iptoint($userdata['session_ip']), $rate_ips) )
 				{
 					$rate_check = 'true';
+					
+				#	debug($rate_check, 'test2');
 				}
+				else if ( in_array($userdata['user_id'], $rate_ids) )
+				{
+					$rate_check = ( $userdata['user_id'] == ANONYMOUS ) ? ( in_array(iptoint($userdata['session_ip']), $rate_ips) ) ? 'true' : 'false' : 'true';
+					
+				#	debug($rate_check, 'test1');
+				}
+				
+			#	debug($rate_check, 'test');
 
 				$template->assign_block_vars('list.info', array(
 					'ID'	=> $ary[$i]['news_id'],
@@ -523,7 +534,7 @@ else
 				'AUTHOR'	=> '<a href="' . check_sid('profile.php?mode=view&amp;id=' . $ary[$i]['user_id']) . '" style="color:' . $ary[$i]['user_color'] . '"><b>' . $ary[$i]['user_name'] . '</b></a>',
 				
 				'NC_TITLE'	=> ( $ary[$i]['cat_name'] ) ? $ary[$i]['cat_name'] : '',
-				'NC_IMAGE'	=> ( $ary[$i]['cat_image'] ) ? $root_path . $settings['path_newscat'] . '/' . $ary[$i]['cat_image'] : '',
+				'NC_IMAGE'	=> ( $ary[$i]['cat_image'] ) ? $root_path . $settings['path']['newscat'] . '/' . $ary[$i]['cat_image'] : '',
 				
 				'R_SHOW'	=> ( $ary[$i]['news_rate'] ) ? '' : 'none',
 				'R_CNT'		=> ( $rate_cnt ) ? $rate_cnt : 0,

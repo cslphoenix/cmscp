@@ -1,4 +1,4 @@
-<li class="header">{L_HEAD}</li>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 <p>{L_EXPLAIN}</p>
 
 <!-- BEGIN input -->
@@ -57,11 +57,11 @@ function update_image(newimage)
 	<td>{ndisplay.row.PUBLIC}{ndisplay.row.UPDATE}{ndisplay.row.DELETE}</td>		
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="footer">
@@ -89,11 +89,11 @@ function update_image(newimage)
 	<td>{cdisplay.row.MOVE_DOWN}{cdisplay.row.MOVE_UP}{cdisplay.row.UPDATE}{cdisplay.row.DELETE}</td>		
 </tr>
 <!-- END row -->
-<!-- BEGIN empty -->
+<!-- BEGIN none -->
 <tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
+	<td class="none" colspan="2">{L_NONE}</td>
 </tr>
-<!-- END empty -->
+<!-- END none -->
 </table>
 
 <table class="lfooter">
@@ -120,7 +120,7 @@ function update_image(newimage)
 <!-- END send_row -->
 <!-- BEGIN send_empty -->
 <tr>
-	<td class="empty" colspan="3">{L_EMPTY}</td>
+	<td class="none" colspan="3">{L_NONE}</td>
 </tr>
 <!-- END send_empty -->
 </table>

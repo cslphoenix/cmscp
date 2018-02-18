@@ -7,31 +7,35 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 
-	'title'			=> 'Protokoll',
-	'title_error'	=> 'Fehlerprotokoll',
+	'TITLE'		=> 'Protokoll',
+	'TITLE_E'	=> 'Fehlerprotokoll',
 	
-	'explain'		=> 'blub',
-	'explain_error'	=> 'blub2',
+	'EXPLAIN'	=> 'Alle Protokolle Ã¼ber AktivitÃ¤ten.',
+	'EXPLAIN_E'	=> 'Alle Fehlerprotokolle Ã¼ber AktivitÃ¤ten.',
 	
-#	'create'	=> 'Neues Spiel hinzugefügt.',
-#	'update'	=> 'Spieldaten erfolgreich geändert.',
-#	'delete'	=> 'Der/die Einträge wurde gelöscht!',
+#	'create'	=> 'Neues Spiel hinzugefÃ¼gt.',
+#	'update'	=> 'Spieldaten erfolgreich geÃ¤ndert.',
+#	'delete'	=> 'Der/die EintrÃ¤ge wurde gelÃ¶scht!',
 #	'confirm'	=> 'dass dieses Spiel:',
+
+	'LOG_IP'		=> 'IP-Adresse',
+	'LOG_TIME'		=> 'Datum und Zeit',
+	'LOG_SECTION'	=> 'Bereich und Aktion',
 	
-	'common_create'		=> 'hinzugefügt',
-	'common_error'		=> 'fehler',
-	'com_update'		=> 'geändert',
-	'com_delete'		=> 'gelöscht',
-	'common_default'	=> 'Standard',
+#	'common_create'		=> 'hinzugefÃ¼gt',
+#	'common_error'		=> 'fehler',
+#	'COMMON_UPDATE'		=> 'geÃ¤ndert',
+#	'COMMON_DELETE'		=> 'gelÃ¶scht',
+#	'common_default'	=> 'Standard',
 	
-	'notice_confirm_delete'		=> 'Bist du sicher, dass der/die Logeinträge gelöscht werden soll?',
-	'msg_confirm_delete_all'	=> 'Bist du sicher, dass Alle Logeinträge gelöscht werden soll?',
+#	'NOTICE_CONFIRM_DELETE'		=> 'Bist du sicher, dass der/die LogeintrÃ¤ge gelÃ¶scht werden soll?',
+#	'msg_confirm_delete_all'	=> 'Bist du sicher, dass Alle LogeintrÃ¤ge gelÃ¶scht werden soll?',
 	
-	'msg_must_select'			=> 'Bitte einen Log oder Logeinträge auswählen!',
+#	'msg_must_select'			=> 'Bitte einen Log oder LogeintrÃ¤ge auswÃ¤hlen!',
 	
-#	'delete_log'				=> 'Der oder die Logeinträge wurde gelöscht',
-#	'delete_log_all'			=> 'Alle Logeinträge wurde gelöscht!',
-#	'delete_log_error'			=> 'Der oder die Fehlermeldungen wurde gelöscht!',
+#	'delete_log'				=> 'Der oder die LogeintrÃ¤ge wurde gelÃ¶scht',
+#	'delete_log_all'			=> 'Alle LogeintrÃ¤ge wurde gelÃ¶scht!',
+#	'delete_log_error'			=> 'Der oder die Fehlermeldungen wurde gelÃ¶scht!',
 	
 	'section'	=> array(
 		SECTION_COMMENT		=> 'Kommentare',
@@ -48,7 +52,7 @@ $lang = array_merge($lang, array(
 		SECTION_NEWS_CAT	=> 'Newskategorie',
 		SECTION_NEWSLETTER	=> 'Newsletter',
 		SECTION_PROFILE		=> 'Profilefelder',
-		SECTION_RANK		=> 'Ränge',
+		SECTION_RANK		=> 'RÃ¤nge',
 		SECTION_TEAM		=> 'Teams',
 		SECTION_TEAMSPEAK	=> 'Teamspeak',
 		SECTION_TRAINING	=> 'Training',
@@ -62,7 +66,7 @@ $lang = array_merge($lang, array(
 		SECTION_VOTES		=> 'Umfragen',
 		SECTION_SERVER_TYPE	=> 'Servertypen',
 		SECTION_SETTINGS	=> 'Einstellungen',
-		SECTION_MENU		=> 'Menü',
+		SECTION_MENU		=> 'MenÃ¼',
 	),
 ));
 

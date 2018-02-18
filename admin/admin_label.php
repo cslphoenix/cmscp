@@ -3,17 +3,16 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_label',
-		'cat'		=> 'system',
-		'modes'		=> array(
-			'admin'		=> array('title' => 'acp_label_admin'),
-			'forum'		=> array('title' => 'acp_label_forum'),
-			'mod'		=> array('title' => 'acp_label_mod'),
-			'gallery'	=> array('title' => 'acp_label_gallery'),
-			'dl'		=> array('title' => 'acp_label_dl'),
-			'user'		=> array('title' => 'acp_label_user'),
-			'new'		=> array('title' => 'acp_label_new'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'ACP_LABEL',
+		'CAT'		=> 'SYSTEM',
+		'MODES'		=> array(
+			'ADMIN'		=> array('TITLE' => 'ACP_LABEL_ADMIN', 'AUTH' => 'A_LABEL'),
+			'FORUM'		=> array('TITLE' => 'ACP_LABEL_FORUM', 'AUTH' => 'A_LABEL'),
+			'MOD'		=> array('TITLE' => 'ACP_LABEL_MOD', 'AUTH' => 'A_LABEL'),
+			'GALLERY'	=> array('TITLE' => 'ACP_LABEL_GALLERY', 'AUTH' => 'A_LABEL'),
+			'DL'		=> array('TITLE' => 'ACP_LABEL_DL', 'AUTH' => 'A_LABEL'),
+			'USER'		=> array('TITLE' => 'ACP_LABEL_USER', 'AUTH' => 'A_LABEL'),
 		)
 	);
 }
@@ -24,41 +23,38 @@ else
 	$cancel = ( isset($_POST['cancel']) ) ? true : false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current = 'acp_label';
+	$current = 'ACP_LABEL';
 	
 	include('./pagestart.php');
 	
 	add_lang(array('label', 'labels'));
-	acl_auth(array('a_label', 'a_label_assort', 'a_label_create', 'a_label_delete'));
+	acl_auth('A_LABEL');
 	
 	$error	= '';
 	$index	= '';
 	$fields = '';
 	
 	$log	= SECTION_LABEL;
+	$file	= basename(__FILE__) . $iadds;
 	
 	$data	= request('id', INT);
 	$start	= request('start', INT);
 	$order	= request('order', INT);
-	$main	= request('main', TYP);
 	$copy	= request('copy', INT);
+	$main	= request('main', TYP);	
 	$usub	= request('usub', TYP);
 	$mode	= request('mode', TYP);
 	$type	= request('type', TYP);
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
+		
+	( $cancel )	? redirect('admin/' . $file) : false;
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$template->set_filenames(array('body' => "style/$current.tpl"));
 	
-	( $cancel ) ? redirect('admin/' . check_sid($file, true)) : false;
-	
-	$template->set_filenames(array(
-		'body'		=> 'style/acp_label.tpl',
-		'confirm'	=> 'style/info_confirm.tpl',
-	));
-	
-	$mode = (in_array($mode, array('create', 'update', 'move_down', 'move_up', 'delete'))) ? $mode : false;
-	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
+	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
+	$mode = (in_array($mode, array('create', 'delete', 'move_up', 'move_down', 'update'))) ? $mode : false;
 	
 	switch ( $mode )
 	{
@@ -69,7 +65,7 @@ else
 			
 			$vars = array(
 				'label' => array(
-					'title1' => 'input_data',
+					'title'			=> 'INPUT_DATA',
 					'label_name'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'required' => 'input_name'),
 					'label_desc'	=> array('validate' => TXT,	'explain' => false,	'type' => 'textarea:25', 'required' => 'input_desc'),
 					'label_type'	=> 'hidden',
@@ -77,20 +73,20 @@ else
 				),
 			);
 			
-			$option[] = href('a_txt', $file, false, $lang['common_overview'], $lang['common_overview']);
+			$option[] = href('a_txt', $file, false, $lang['COMMON_OVERVIEW'], $lang['COMMON_OVERVIEW']);
 			
 			if ( $mode == 'create' && !$submit )
 			{
 				$data_sql = array(
 					'label_name'	=> request('label_name', TXT),
 					'label_desc'	=> '',
-					'label_type'	=> $action[0] . '_',
+					'label_type'	=> strtoupper($action[0]) . '_',
 					'label_order'	=> 0,
 				);
 			}
 			else if ( $mode == 'update' && !$submit )
 			{
-				$data_sql = data(ACL_LABEL, $data, false, 1, true);
+				$data_sql = data(ACL_LABEL, $data, false, 1, 'row');
 			}
 			else
 			{
@@ -100,10 +96,10 @@ else
 				{
 					if ( $mode == 'create' )
 					{
-						$data_sql['label_order'] = maxa(ACL_LABEL, 'label_order', false);
+						$data_sql['label_order'] = _max(ACL_LABEL, 'label_order', false);
 						
 						$sql = sql(ACL_LABEL, $mode, $data_sql);
-						$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+						$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 						$lid = $db->sql_nextid();
 						
 						if ( isset($_POST['set']) )
@@ -151,7 +147,7 @@ else
 					else
 					{
 						$sql = sql(ACL_LABEL, $mode, $data_sql, 'label_id', $data);
-						$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+						$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 						
 						if ( isset($_POST['set']) )
 						{
@@ -199,14 +195,14 @@ else
 			));
 
 			$template->assign_vars(array(
-				'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], lang($data_sql['label_name'])),
-				'L_EXPLAIN'	=> $lang['com_required'],
+				'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['label_name']),
+				'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 				
-				'L_ACL_USERS'	=> $lang['acl_users'],
-				'L_ACL_GROUPS'	=> $lang['acl_groups'],
-				'L_PERMISSION'	=> $lang['common_auth'],
+				'L_ACL_USERS'	=> $lang['ACL_USERS'],
+				'L_ACL_GROUPS'	=> $lang['ACL_GROUPS'],
+				'L_PERMISSION'	=> $lang['COMMON_AUTH'],
 				
-				'L_OPTION'	=> implode($lang['com_bull'], $option),
+				'L_OPTION'	=> implode($lang['COMMON_BULL'], $option),
 
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
@@ -216,12 +212,12 @@ else
 		
 		case 'delete':
 
-			$data_sql = data(ACL_LABEL, $data, false, 1, true);
+			$data_sql = data(ACL_LABEL, $data, false, 1, 'row');
 			
 			if ( $data && $accept && $userauth['a_label_delete'] )
 			{
 				$sql = sql(ACL_LABEL, $mode, $data_sql, 'label_id', $data);
-				$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+				$msg = $lang['DELETE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 
 				orders(ACL_LABEL);
 
@@ -236,8 +232,8 @@ else
 				));
 				
 				$template->assign_vars(array(
-					'M_TITLE'	=> $lang['com_confirm'],
-					'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['label_name']),
+					'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+					'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $data_sql['label_name']),
 
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
@@ -245,7 +241,7 @@ else
 			}
 			else
 			{
-				message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+				message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 			}
 
 			break;
@@ -260,12 +256,14 @@ else
 		
 			$template->assign_block_vars('display', array());
 			
+			$ltypes = strtoupper($action[0]);
+						
 			$fields = build_fields(array('mode' => 'create'));
-			$sqlout = data(ACL_LABEL, "WHERE label_type = '$action[0]_'", 'label_order ASC', 1, false);
+			$sqlout = data(ACL_LABEL, 'WHERE label_type = "' . $ltypes . '_"', 'label_order ASC', 1, 0);
 			
 			if ( !$sqlout )
 			{
-				$template->assign_block_vars('display.empty', array());
+				$template->assign_block_vars('display.none', array());
 				$s_copy = '';
 			}
 			else
@@ -273,45 +271,38 @@ else
 				$cnt = count($sqlout);
 				
 				$s_copy = '<select name="copy">';
-				$s_copy .= '<option value="0">' . lang('select_copy') . '</option>';
+				$s_copy .= '<option value="0">' . $lang['SELECT_COPY'] . '</option>';
 				
 				foreach ( $sqlout as $row )
 				{
 					$id		= $row['label_id'];
 					$order	= $row['label_order'];
-					$name	= lang($row['label_name']);
-					$tact	= $action[0] . '_';
+					$name	= langs($row['label_name']);
+					$tact	= strtoupper($action[0]) . '_';
 					
-				#	foreach ( $options as $opts )
-				#	{
-					#	$selected = ( $opts == $type ) ? ' selected="selected"' : '';
-					$s_copy .= '<option value="' . $id . '">' . lang($name) . '</option>';
-				#	}
-		
-					$template->assign_block_vars('display.row', array( 
+					$s_copy .= '<option value="' . $id . '">' . langs($name) . '</option>';
+					
+					$template->assign_block_vars('display.row', array(
 						'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $id), $name, $name),
-						'DESC'		=> lang($row['label_desc']),
+						'DESC'		=> langs($row['label_desc']),
 						
-						'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'type' => $tact, 'order' => $order), 'icon_arrow_u', 'common_order_u') : img('i_icon', 'icon_arrow_u2', 'common_order_u'),
-						'MOVE_DOWN'	=> ( $order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'type' => $tact, 'order' => $order), 'icon_arrow_d', 'common_order_d') : img('i_icon', 'icon_arrow_d2', 'common_order_d'),
+						'MOVE_UP'	=> ( $order != '1' )	? href('a_img', $file, array('mode' => 'move_up',	'type' => $tact, 'order' => $order), 'icon_arrow_u', 'COMMON_ORDER_U') : img('i_icon', 'icon_arrow_u2', 'COMMON_ORDER_U'),
+						'MOVE_DOWN'	=> ( $order != $cnt )	? href('a_img', $file, array('mode' => 'move_down', 'type' => $tact, 'order' => $order), 'icon_arrow_d', 'COMMON_ORDER_D') : img('i_icon', 'icon_arrow_d2', 'COMMON_ORDER_D'),
 			
-						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'com_update'),
-						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'com_delete'),
+						'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $id), 'icon_update', 'COMMON_UPDATE'),
+						'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $id), 'icon_cancel', 'COMMON_DELETE'),
 					));
 				}
 				
 				$s_copy .= '</select>&nbsp;';
-				
-			#	$add_lang = array('label_id' => 0, 'label_name' => 'no_select', 'label_desc' => 'no_select_reset', 'label_type' => $type);
-			#	array_unshift($acl_label, $add_lang);
 			}
 			
 			$template->assign_vars(array(
-				'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-				'L_EXPLAIN'	=> $lang['explain'],
+				'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+				'L_EXPLAIN'	=> $lang['EXPLAIN'],
 				
-				'L_NAME'	=> $lang['label'],
-				'L_CREATE'	=> sprintf($lang['stf_create'], $lang["type_$action"]),
+				'L_NAME'	=> $lang['LABEL'],
+				'L_CREATE'	=> sprintf($lang['STF_CREATE'], $lang["TYPE_" . strtoupper($action)]),
 				
 				'S_COPY'	=> $s_copy,
 				

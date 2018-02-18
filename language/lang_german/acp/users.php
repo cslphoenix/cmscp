@@ -8,21 +8,47 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Benutzer',
-	'explain'	=> 'Benutzer',
+	'TITLE'		=> 'Benutzer',
+	'EXPLAIN'	=> 'Benutzer',
+	
+	'USER_NAME'			=> 'Benutzername',
+	'USER_EMAIL'		=> 'E-Mail-Adresse',
+	'EMAIL_CONFIRM'		=> 'E-Mail-Adresse wiederholen',
+	'USER_REGDATE'		=> 'Registiert',
+	'USER_LASTVISIT'	=> 'Letzter Besuch',
+	'WHOIS'				=> 'IP',
+	'USER_FOUNDER'		=> 'Gründer',
+	'USER_ACTIVE'		=> 'Aktiv',
+	'USER_BIRTHDAY'		=> 'Geburtstag',
+	'PASSWORD_TYPE'		=> 'Passwort erstellen',
+	'PASSWORD'			=> 'Passwort',
+	'PASSWORD_CONFIRM'	=> 'Passwort wiederholen',
+	'PASSWORD_RANDOM'	=> 'Beispiel: %s',
+	'PASSWORD_INPUT'	=> 'Passwort eintragen',
+	'PASSWORD_GENERATE'	=> 'Passwort generieren',
+	
+	
 
 	'update_auth'	=> 'Benutzerberechtigungen erfolgreich geändert.',
 	'update_groups'	=> 'Benutzergruppen & Teams erfolgreich geändert.',
 	'update_fields'	=> 'Profilefelder erfolgreich geändert.',
 	
-	'option' => array(
-		'update'	=> 'Übersicht',
-		'settings'	=> '!Einstellungen',
-		'pics'		=> '!Foto & Avatar',
-		'permission'=> 'Benutzerberechtigungen',
-		'groups'	=> 'Benutzergruppen & Teams',		
-		'fields'	=> 'Profilfelder',
-	),
+#	'option' => array(
+#		'update'	=> 'Übersicht',
+#		'settings'	=> '!Einstellungen',
+#		'pics'		=> '!Foto & Avatar',
+#		'permission'=> 'Benutzerberechtigungen',
+#		'groups'	=> 'Benutzergruppen & Teams',		
+#		'fields'	=> 'Profilfelder',
+#	),
+	
+	'userinfo'	=> 'Infos',
+	'settings'	=> 'Einstellungen',
+	'pics'		=> 'Bilder',
+	'permission'=> 'Berechtigungen',
+	'tgroups'	=> 'Gruppen & Teams',		
+	'fields'	=> 'Profilfelder',
+	'log'		=> 'Log Einträge',
 	
 	'teams'			=> 'Teams',
 	'usergroups'	=> 'Benutzergruppen',
@@ -41,17 +67,14 @@ $lang = array_merge($lang, array(
 	'auth'			=> 'Benutzerberechtigungen',
 	'auth_explain'	=> 'Hier kann jeder Benutzer individuell eingestellt werden, "<em>Spezial</em>" heisst, er hat immer diese Rechte, egal wie die Gruppe oder Gruppen eingestellt sind von den Rechten.',
 	
-	'password_random'	=> 'Beispiel: %s',
-	'password_input'	=> 'Passwort eintragen',
-	'password_generate'	=> 'Passwort generieren',
+	
 	
 	'register'			=> 'Angemeldet seit',
 	'lastlogin'			=> 'Letzter Login',
 	
 	'email'				=> 'Mail',
 	'email_confirm'		=> 'Mail bestätigen',
-	'password'			=> 'Passwort',
-	'password_confirm'	=> 'Passwort wiederholen',
+	
 	
 	'auth_for'		=> 'Rechte für: %s',
 	'auth_from'		=> 'Rechte von: %s',
@@ -59,7 +82,7 @@ $lang = array_merge($lang, array(
 	'active'		=> 'Aktiviert',
 	'birthday'		=> 'Geburtstag',
 	
-	'radio:password'	=> array(0 => 'Generieren', 1 => 'Eintragen'),
+	
 	
 	'auth_forum' => array(
 		'auth_view'				=> 'Ansicht',
@@ -146,9 +169,13 @@ $lang = array_merge($lang, array(
 			0 => 'Galerie',
 			1 => 'Bild',
 	),
-	
-	
-	
+));
+
+$lang = array_merge($lang, array(
+	'radio:password' => array(
+		0 => $lang['PASSWORD_GENERATE'],
+		1 => $lang['PASSWORD_INPUT'],
+	),
 ));
 
 $lang['Membership_pending'] = '<span title="Ja für Annehmen, Nein für Ablehnen"><u>Freigabe</u></span>';

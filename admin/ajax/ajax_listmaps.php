@@ -4,7 +4,7 @@
  *	require: acp_match, acp_train
  */
 
-header('content-type: text/html; charset=ISO-8859-1');
+header('content-type: text/html; charset=UTF-8');
 
 define('IN_CMS', true);
 define('IN_ADMIN', true);
@@ -52,38 +52,38 @@ if ( isset($_POST['type']) )
 			if ( $maps )
 			{
 				$s_select .= '<div><div><select name="' . sprintf('%s[%s][]', $meta, $name) . '" id="' . sprintf('%s_%s', $meta, $name) . '">';
-				$s_select .= '<option selected="selected" value="-1">' . sprintf($lang['stf_select_format'], $lang['notice_select_map']) . '</option>';
+				$s_select .= '<option selected="selected" value="-1">' . sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_MAP']) . '</option>';
 				
 				for ( $j = 0; $j < count($maps); $j++ )
 				{
 					$map_id		= $maps[$j]['map_id'];
 					$map_name	= $maps[$j]['map_name'];
 		
-					$s_select .= '<option value="' . $map_id . '">' . sprintf($lang['stf_select_format'], $map_name) . '</option>';
+					$s_select .= '<option value="' . $map_id . '">' . sprintf($lang['STF_SELECT_FORMAT'], $map_name) . '</option>';
 				}
 				
 				$s_select .= '</select>&nbsp;<input type="button" class="more" value="' . $lang['common_more'] . '" onclick="clone(this)"></div></div>';
 			}
 			else
 			{
-				$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+				$s_select = sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_MAPS_NONE']);
 			}
 		}
 		else
 		{
-			$s_select = sprintf($lang['stf_select_format'], $lang['notice_empty_maps']);
+			$s_select = sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_MAPS_NONE']);
 		}
 	}
 	else
 	{
-		$s_select = sprintf($lang['stf_select_format'], $lang['notice_select_team_first']);
+		$s_select = sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_TEAM_FIRST']);
 	}
 	
 	echo $s_select;
 }
 else
 {
-	echo sprintf($lang['stf_select_format'], $lang['notice_select_team_first']);
+	echo sprintf($lang['STF_SELECT_FORMAT'], $lang['NOTICE_SELECT_TEAM_FIRST']);
 }
 
 ?>

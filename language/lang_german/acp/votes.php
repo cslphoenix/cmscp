@@ -7,8 +7,8 @@ if ( !defined('IN_CMS') )
 
 $lang = array_merge($lang, array(
 	
-	'title'		=> 'Umfragen',
-	'explain'	=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
+	'TITLE'		=> 'Umfragen',
+	'EXPLAIN'	=> 'Hier kannst du die Spiele der Seite Verwalten. Du kannst bestehende Spiele löschen, editieren oder neue anlegen.',
 
 	'vote_title'	=> 'Umfragentitel',
 	'vote_text'		=> 'Umfragentext',

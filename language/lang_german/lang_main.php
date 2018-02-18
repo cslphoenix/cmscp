@@ -11,7 +11,7 @@ $lang = array_merge($lang, array(
 	'update_training_status_edit'	=> 'Training-Status geändert',
 
 
-	'notice_select_permission'	=> 'Rechte geben/nehmen',
+	'NOTICE_SELECT_PERMISSION'	=> 'Rechte geben/nehmen',
 	
 
 	'header_empty_news'			=> 'keine News vorhanden',
@@ -19,8 +19,8 @@ $lang = array_merge($lang, array(
 	'header_empty_topics'		=> 'keine Themen vorhanden',
 	'header_empty_downloads'	=> 'keine Downloads vorhanden',
 	
-	'mark_all'			=> 'alle markieren',
-	'mark_deall'		=> 'alles abwählen',
+	'MARK_ALL'			=> 'Alles markieren',
+	'MARK_DEALL'		=> 'Alles abwählen',
 	
 
 	'cur_max'	=> '%s / %s',
@@ -28,11 +28,13 @@ $lang = array_merge($lang, array(
 
 	'common_entry_empty'	=> 'Keine Eintr&auml;ge vorhanden.',
 
-	'main'	=> 'Main Navi',
-	'clan'	=> 'Clan Navi',
-	'com'	=> 'Community Navi',
-	'misc'	=> 'Misc Navi',
-	'user'	=> 'Benutzer Navi',
+	'NAVI_MAIN'	=> 'Main',
+	'NAVI_CLAN'	=> 'Clan',
+	'NAVI_COM'	=> 'Community',
+	'NAVI_MISC'	=> 'Misc',
+	'NAVI_USER'	=> 'Benutzer',
+	
+	'UCP_LOBBY'	=> 'Lobby',
 	
 	'link'		=> 'Link',
 	'partner'	=> 'Partner',
@@ -78,6 +80,11 @@ $lang = array_merge($lang, array(
 	'sprintf_empty_points'		=> ' :: %s',
 	
 	'a_txt'			=> '<a href="%s" title="%s">%s</a>',
+	'a_txt_b'		=> '<a href="%s" title="%s"><b>%s</b></a>',
+	
+	'AHREF_TXT'		=> '<a href="%s" title="%s">%s</a>',
+	'AHREF_TXT_B'	=> '<a href="%s" title="%s"><b>%s</b></a>',
+	
 	'a_new'			=> '<a href="%s" target="_blank">%s</a>',
 	'a_css'			=> '<a href="%s" class="%s">%s</a>',
 	'a_style'		=> '<a href="%s" style="color:%s">%s</a>',
@@ -104,25 +111,54 @@ $lang = array_merge($lang, array(
 	'main_ucp'		=> 'Benutzer-Center',
 	
 	
+	'CAL_TODAY'		=> 'Heute',
+	'CAL_NEWS'		=> 'News',
 	
-	'cal_birthday'	=> 'Geburtstag',
-	'cal_birthdays'	=> 'Geburtstage',
-	'cal_event'		=> 'Ereignis',
-	'cal_events'	=> 'Ereignisse',
-	'cal_match'		=> 'War',
-	'cal_matchs'	=> 'Wars',
-	'cal_training'	=> 'Training',
-	'cal_trainings'	=> 'Trainings',
-	'cal_news'		=> 'News',
-	'cal_birth'		=> '%s wird %s Jahre alt',
-	'cal_today'		=> 'Heute',
+	'CAL_NYEAR'			=> 'Neujahr',
+	'CAL_KINGS'			=> 'Heilige Drei Könige',
+	'CAL_FRIDAY'		=> 'Karfreitag',
+	'CAL_EASTERO'		=> 'Ostersonntag',
+	'CAL_EASTERM'		=> 'Ostermontag',
+	'CAL_MAY'			=> 'Erster Mai',
+	'CAL_ASCENSION'		=> 'Christi Himmelfahrt',
+	'CAL_WHITS'			=> 'Pfingstsonntag',
+	'CAL_WHITM'			=> 'Pfingstmontag',
+	'CAL_CORPUS'		=> 'Fronleichnam',
+	'CAL_ASS_UMPTION'	=> 'Mariä Himmelfahrt',
+	'CAL_DOGU'			=> 'Tag der deutschen Einheit',
+	'CAL_RDAY'			=> 'Reformationstag',
+	'CAL_ASDAY'			=> 'Allerheiligen',
+	'CAL_DAYOPAR'		=> 'Buß- und Bettag',
+	'CAL_XMAS'			=> 'Weihnachten',
+	'CAL_XMAS1'			=> '1. Weihnachtsfeiertag',
+	'CAL_XMAS2'			=> '2. Weihnachtsfeiertag',
+	'CAL_NEWYEAR'		=> 'Silvester',
+	
+	
+	'CAL_EVENT'			=> 'Ereignis',
+	'CAL_EVENTS'		=> 'Ereignisse',
+	
+	'CAL_DAY_WHOLE'		=> 'am gesamten Tag',
+	'CAL_DAY_FROMTO'	=> 'von %s bis %s',
+	
+	'SPRINTF_WHOLE'		=> 'am gesamten Tag: %s',	# event
+	'SPRINTF_EVENT'		=> 'am: %s von %s - %s',	# event
+	
+	'CAL_BIRTHDAY'	=> 'Geburtstag',
+	'CAL_BIRTHDAYS'	=> 'Geburtstage',
+	'CAL_AGE'		=> '%s wird %s Jahre alt',
+	
+	'CAL_TRAINING'	=> 'Training',
+	'CAL_TRAININGS'	=> 'Trainings',
+	'CAL_MATCH'		=> 'War',
+	'CAL_MATCHS'	=> 'Wars',
 	
 	'stf_cal_today'	=> '<b>%s</b><br/>',
 	
 	
 	'common_entry_new'		=> 'Neuer Eintrag',
 	'common_add'			=> 'Hinzufügen',
-	'common_auth'			=> 'Berechtigung',
+	'COMMON_AUTH'			=> 'Berechtigung',
 	'common_comment'		=> 'Kommentar',
 	'common_comments_pub'	=> 'Kommentare erlauben',
 	'common_input_data'		=> 'Daten eingeben',
@@ -130,7 +166,7 @@ $lang = array_merge($lang, array(
 	'common_input_upload'	=> 'Upload von Dateien oder Bildern',
 	'common_input_standard'	=> 'Standard',
 	'common_default'		=> 'Standarteinstellungen',
-	'com_delete'			=> 'Lüschen',
+	'COMMON_DELETE'			=> 'Lüschen',
 	'common_delete_all'		=> 'Alles löschen',
 	'common_login'			=> 'Login',
 	'common_login_acp'		=> 'Adminlogin',
@@ -141,17 +177,17 @@ $lang = array_merge($lang, array(
 	'common_members'		=> 'Mitglieder',
 	'common_message'		=> 'Nachricht',
 	'common_moderator'		=> 'Moderator',		
-	'common_moderators'		=> 'Moderatoren',		
+	'COMMON_MODERATORS'		=> 'Moderatoren',		
 	'common_member_empty'	=> 'Keine Mitglieder eingetragen/vorhanden.',
 	'common_moderator_empty'=> 'Keine Moderator eingetragen/vorhanden.',
-	'com_select_option'		=> 'Option wählen',			
-	'common_overview'		=> '&Uuml;bersicht as',
+	'COMMON_SELECT_OPTION'		=> 'Option wählen',			
+	'COMMON_OVERVIEW'		=> '&Uuml;bersicht as',
 	'common_reset'			=> 'Zurücksetzen',
 	'common_setting'		=> 'Einstellung',
 	'common_settings'		=> 'Einstellungen',		
 	'common_submit'			=> 'Absenden',
 	'common_upload'			=> 'Upload',
-	'com_update'			=> 'Bearbeiten',
+	'COMMON_UPDATE'			=> 'Bearbeiten',
 	'common_create'			=> 'Hinzufügen',
 	'common_order'			=> 'Ordnen',
 	'common_sort'			=> 'Sortieren',
@@ -159,8 +195,24 @@ $lang = array_merge($lang, array(
 	'common_page_of'		=> 'Seite <b>%d</b> von <b>%d</b>',
 	'common_on'				=> 'Aktiv',
 	'common_off'			=> 'Inaktiv',
-	'com_no'				=> 'Nein',
-	'com_yes'				=> 'Ja',
+	
+	'COMMON_LOG_UPDATE'		=> 'bearbeitet',
+	
+
+	'COMMON_YES'	=> 'Ja',
+	'COMMON_NO'		=> 'Nein',
+	'COMMON_NEVER'	=> 'Nie',
+	
+	'COMMON_ALL'	=> 'Alle',
+	
+	'SORT_BY_TIME'	=> array(
+		'SORT_ALL'		=> 'Alle Einträge',
+		'SORT_DAY'		=> '1 Tag',
+		'SORT_WEEK'		=> 'Woche',
+		'SORT_WEEKS'	=> '2 Wochen',
+		'SORT_MONTH'	=> 'Monat',
+		'SORT_YEAR'		=> 'Jahr',
+	),
 	
 	/* 01.08 */
 	'common_rating'		=> 'Abstimmungen',
@@ -171,7 +223,7 @@ $lang = array_merge($lang, array(
 	'click_return_training'	=> '%sHier klicken%s, um zum Training zurückzukehren.',
 	'click_return_news'		=> '%sHier klicken%s, um zu den News zurückzukehren.',
 	
-	'return'			=> '<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a></strong>',
+	'RETURN'			=> '%s<br /><br /><strong><a href="%s">&laquo;&nbsp;%s</a></strong>',
 	
 ));
 
@@ -217,11 +269,12 @@ $lang['sprintf_comment_no']	= 'keine Kommentare';
 /* event */
 $lang = array_merge($lang, array(
 
-	'stf_select_format'	=> '&raquo;&nbsp;%s&nbsp;',
+	'STF_SELECT_FORMAT'		=> '&raquo;&nbsp;%s&nbsp;',
+	'STF_SELECT_FORMAT2'	=> '&raquo;&nbsp;%s&nbsp;&nbsp;\'%s\'', /* acp_selects, s_gameq() */
 	
 
-	'event_upcoming'	=> 'Ereignis: Aktuelle',
-	'event_expired'		=> 'Ereignis: Abgelaufen',
+	'EVENT_UPCOMING'	=> 'Ereignis: Aktuelle',
+	'EVENT_EXPIRED'		=> 'Ereignis: Abgelaufen',
 
 	'sprintf_event'	=> 'am: %s von %s - %s',
 	
@@ -331,9 +384,9 @@ $lang = array_merge($lang, array(
 	
 ));
 
-
-
-$lang['current_time'] = 'Aktuelles Datum und Uhrzeit: %s';
+$lang = array_merge($lang, array(
+	'CURRENT_TIME' => 'Aktuelles Datum und Uhrzeit: %s',
+));
 
 
 $lang['msg_select_order']		= 'Bitte Reihenfolge ausw&auml;hlen';
@@ -349,8 +402,8 @@ $lang['user']			= 'Benutzer';
 $lang['Today_at'] = "Today at %s"; // %s is the time
 $lang['Yesterday_at'] = "Yesterday at %s"; // %s is the time
 
-#$lang['sprintf_match_name']		= 'vs. %s';
-#$lang['sprintf_match_intern']	= 'vs. <span style="font-style:italic;">%s</span>';
+#$lang['STF_MATCH_NAME']		= 'vs. %s';
+#$lang['STF_MATCH_INTERN']	= 'vs. <span style="font-style:italic;">%s</span>';
 
 
 
@@ -407,7 +460,7 @@ $lang['auth_navi']			= 'Navigation';
 $lang['auth_news']			= 'News';
 $lang['auth_news_public']	= 'News ver�ffentlichen';
 $lang['auth_newscat']		= 'News Kategorien';
-$lang['auth_ranks']			= 'R�nge';
+#$lang['auth_ranks']			= 'R�nge';
 $lang['auth_server']		= 'Server';
 $lang['auth_teams']			= 'Teams';
 $lang['auth_teamspeak']		= 'Teamspeak';
@@ -1107,7 +1160,7 @@ $lang['No_post_id'] = 'Es wurde keine Beitrags-ID angegeben.';
 $lang['No_such_folder'] = 'Es existiert kein solcher Ordner.';
 $lang['No_folder'] = 'Kein Ordner ausgewählt';
 
-$lang['Mark_all'] = 'Alle markieren';
+$lang['MARK_ALL'] = 'Alle markieren';
 $lang['Unmark_all'] = 'Markierungen aufheben';
 
 $lang['Confirm_delete_pm'] = 'Diese Nachricht wirklich löschen?';
@@ -1600,6 +1653,27 @@ $lang = array_merge($lang, array(
 	),
 ));
 
+$lang = array_merge($lang, array(
+	'state' => array(
+		'all'	=> 'alle Bundesländer',
+		'bw'	=> 'Baden-Württemberg',
+		'by'	=> 'Bayern',
+		'be'	=> 'Berlin',
+		'bb'	=> 'Brandenburg',
+		'hb'	=> 'Bremen',
+		'hh'	=> 'Hamburg',
+		'he'	=> 'Hessen',
+		'mv'	=> 'Mecklenburg-Vorpommern',
+		'ni'	=> 'Niedersachsen',
+		'nw'	=> 'Nordrhein-Westfalen',
+		'rp'	=> 'Rheinland-Pfalz',
+		'sl'	=> 'Saarland',
+		'sn'	=> 'Sachsen',
+		'st'	=> 'Sachsen-Anhalt',
+		'sh'	=> 'Schleswig-Holstein',
+		'th'	=> 'Thüringen',
+	),
+));
 
 $lang['datetime']['Sunday'] = 'Sonntag';
 $lang['datetime']['Monday'] = 'Montag';

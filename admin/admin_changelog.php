@@ -3,11 +3,11 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_change',
-		'cat'		=> 'addition',
-		'modes'		=> array(
-			'main'	=> array('title' => 'acp_change'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'acp_change',
+		'CAT'		=> 'addition',
+		'MODES'		=> array(
+			'MAIN'	=> array('TITLE' => 'acp_change'),
 		)
 	);
 }
@@ -42,7 +42,7 @@ else
 	$accept	= request('accept', TYP);
 	$action	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
 
 	( $cancel ) ? redirect('admin/' . check_sid(basename(__FILE__))) : false;
 	
@@ -52,7 +52,7 @@ else
 	));
 	
 	$mode = (in_array($mode, array('create', 'update', 'delete'))) ? $mode : 'default';
-	$_tpl = ($mode == 'delete') ? 'confirm' : 'body';
+	$_tpl = ($mode === 'delete') ? 'confirm' : 'body';
 
 	if ( $mode )
 	{
@@ -65,7 +65,7 @@ else
 				
 				$vars = array(
 					'change' => array(
-						'title' => 'input_data',
+						'title'	=> 'INPUT_DATA',
 							'type'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:type',	'params' => array('combi', false, 'main')),
 							'main'			=> array('validate' => INT,	'explain' => false,	'type' => 'radio:main', 'divbox' => true, 'params' => array(false, true, false)),
 							'change_num'	=> array('validate' => TXT,	'explain' => false,	'type' => 'text:25;25', 'divbox' => true, 'required' => array('input_num', 'type', 0)),
@@ -96,7 +96,7 @@ else
 				}
 				else if ( $mode == 'update' && !$submit )
 				{
-					$data_sql = data(CHANGELOG, $data, false, 1, true);
+					$data_sql = data(CHANGELOG, $data, false, 1, 'row');
 				}
 				else
 				{
@@ -107,12 +107,12 @@ else
 						if ( $mode == 'create' )
 						{
 							$sql = sql(CHANGELOG, $mode, $data_sql);
-							$msg = $lang[$mode] . sprintf($lang['return'], check_sid($file), $acp_title);
+							$msg = sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 						}
 						else
 						{
 							$sql = sql(CHANGELOG, $mode, $data_sql, 'change_id', $data);
-							$msg = $lang[$mode] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file&mode=$mode&id=$data"));
+							$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file&mode=$mode&id=$data"));
 						}
 						
 						log_add(LOG_ADMIN, $log, $mode, $sql);
@@ -127,8 +127,8 @@ else
 				build_output(CHANGELOG, $vars, $data_sql);
 
 				$template->assign_vars(array(
-					'L_HEAD'	=> sprintf($lang['stf_' . $mode], $lang['title'], $data_sql['change_num']),
-					'L_EXPLAIN'	=> $lang['com_required'],
+					'L_HEADER'	=> msg_head($mode, $lang['TITLE'], $data_sql['change_num']),
+					'L_EXPLAIN'	=> $lang['COMMON_REQUIRED'],
 					
 					'S_ACTION'	=> check_sid("$file&mode=$mode&id=$data"),
 					'S_FIELDS'	=> $fields,
@@ -138,12 +138,12 @@ else
 		
 			case 'delete':
 				
-				$data_sql = data(GAMES, $data, false, 1, true);
+				$data_sql = data(GAMES, $data, false, 1, 'row');
 	
 				if ( $data && $accept && $userauth['a_game_delete'] )
 				{
 					$sql = sql(GAMES, $mode, $data_sql, 'game_id', $data);
-					$msg = $lang['delete'] . sprintf($lang['return'], check_sid($file), $acp_title);
+					$msg = $lang['DELETE'] . sprintf($lang['RETURN'], langs($mode), check_sid($file), $_top);
 	
 					orders(GAMES);
 	
@@ -158,8 +158,8 @@ else
 					));
 					
 					$template->assign_vars(array(
-						'M_TITLE'	=> $lang['com_confirm'],
-						'M_TEXT'	=> sprintf($lang['notice_confirm_delete'], $lang['confirm'], $data_sql['game_name']),
+						'M_TITLE'	=> $lang['COMMON_CONFIRM'],
+						'M_TEXT'	=> sprintf($lang['NOTICE_CONFIRM_DELETE'], $lang['CONFIRM'], $data_sql['game_name']),
 	
 						'S_ACTION'	=> check_sid($file),
 						'S_FIELDS'	=> $fields,
@@ -167,7 +167,7 @@ else
 				}
 				else
 				{
-					message(GENERAL_ERROR, sprintf($lang['msg_select_must'], $lang['title']));
+					message(GENERAL_ERROR, sprintf($lang['MSG_SELECT_MUST'], $lang['TITLE']));
 				}
 
 				break;
@@ -184,7 +184,7 @@ else
 				{
 					if ( !$change['main'] )
 					{
-						$template->assign_block_vars('display.empty', array());
+						$template->assign_block_vars('display.none', array());
 					}
 					else
 					{
@@ -200,8 +200,8 @@ else
 								'NAME'		=> href('a_txt', $file, array('main' => $change_id), $change_num, $change_num),
 								'DATE'		=> create_date('Y-m-d', $row['change_date'], $userdata['user_timezone']),
 								'INFO'		=> isset($change['data_id'][$change_id]) ? count($change['data_id'][$change_id]) : 0,
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $change_id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $change_id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $change_id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $change_id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
@@ -219,21 +219,21 @@ else
 								'NAME'		=> href('a_txt', $file, array('mode' => 'update', 'id' => $change_id), $change_typ, $change_typ),
 								'DATE'		=> $row['change_file'],
 								'INFO'		=> $row['change_user'],
-								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $change_id), 'icon_update', 'com_update'),
-								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $change_id), 'icon_cancel', 'com_delete'),
+								'UPDATE'	=> href('a_img', $file, array('mode' => 'update', 'id' => $change_id), 'icon_update', 'COMMON_UPDATE'),
+								'DELETE'	=> href('a_img', $file, array('mode' => 'delete', 'id' => $change_id), 'icon_cancel', 'COMMON_DELETE'),
 							));
 						}
 					}
 					else
 					{
-						$template->assign_block_vars('display.empty', array());
+						$template->assign_block_vars('display.none', array());
 					}
 				}
 				
 				$template->assign_vars(array(
-					'L_HEADER'	=> sprintf($lang['stf_header'], $lang['title']),
-					'L_CREATE'	=> sprintf($lang['stf_create'], $lang['title']),
-					'L_EXPLAIN'	=> $lang['explain'],
+					'L_HEADER'	=> sprintf($lang['STF_HEADER'], $lang['TITLE']),
+					'L_CREATE'	=> sprintf($lang['STF_CREATE'], $lang['TITLE']),
+					'L_EXPLAIN'	=> $lang['EXPLAIN'],
 			
 					'L_NAME'	=> $lang['change_num'],
 			

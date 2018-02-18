@@ -4,7 +4,7 @@
  *	require: 
  */
 
-header('content-type: text/html; charset=ISO-8859-1');
+header('content-type: text/html; charset=UTF-8');
 
 define('IN_CMS', true);
 define('IN_ADMIN', true);

@@ -1,5 +1,6 @@
-<li class="header">{L_HEADER}<span class="right">{L_OPTION}</span></li>
-<p>{L_EXPLAIN}</p>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
+
+<p>{L_EXPLAIN}<span class="right">{L_SORT}</span></p>
 
 <!-- BEGIN input -->
 <script type="text/javascript" src="style/ajax_listmaps.js"></script>
@@ -35,72 +36,6 @@
 </form>
 <!-- END input -->
 
-<!-- BEGIN display -->
-<form action="{S_ACTION}" method="post">
-<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
-</form>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_UPCOMING}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN new_row -->
-<tr>
-	<td><span class="right">{display.new_row.DATE}</span>{display.new_row.GAME} {display.new_row.NAME}</td>
-	<td>{display.new_row.MEMBER}{display.new_row.UPDATE}{display.new_row.DELETE}</td>		
-</tr>
-<!-- END new_row -->
-<!-- BEGIN new_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END new_empty -->
-</table>
-
-<form action="{S_ACTION}" method="post">
-<table class="lfooter">
-<tr>
-	<td><input type="text" name="training_vs" /></td>
-	<td>{S_TEAM}</td>
-	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-
-<br />
-
-<table class="rows">
-<tr>
-	<th>{L_EXPIRED}</th>
-	<th>{L_SETTINGS}</th>
-</tr>
-<!-- BEGIN old_row -->
-<tr>
-	<td><span class="right">{display.old_row.DATE}</span>{display.old_row.GAME} {display.old_row.NAME}</td>
-	<td>{display.old_row.MEMBER}{display.old_row.UPDATE}{display.old_row.DELETE}</td>		
-</tr>
-<!-- END old_row -->
-<!-- BEGIN old_empty -->
-<tr>
-	<td class="empty" colspan="2">{L_EMPTY}</td>
-</tr>
-<!-- END old_empty -->
-</table>
-
-<form action="{S_ACTION}" method="post">
-<table class="rfooter">
-<tr>
-	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
-</tr>
-</table>
-{S_FIELDS}
-</form>
-<!-- END display -->
-
 <!-- BEGIN member -->
 {AJAX}
 {ERROR_BOX}
@@ -125,7 +60,7 @@
 	<!-- END row -->
 	<!-- BEGIN no_row -->
 	<tr>
-		<td class="empty" colspan="4" align="center">{L_NO_PLAYER}</td>
+		<td class="none" colspan="4" align="center">{L_NO_PLAYER}</td>
 	</tr>
 	<!-- END no_row -->
 	</table>
@@ -167,3 +102,68 @@
 <input type="hidden" name="smode" value="create" />
 </form>
 <!-- END member -->
+
+<!-- BEGIN display -->
+<!--
+<form action="{S_ACTION}" method="post">
+<ul id="navopts"><li>{L_SORT}: {S_SORT}</li></ul>
+</form>
+-->
+<table class="rows">
+<tr>
+	<th>{L_UPCOMING}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN upcoming -->
+<tr>
+	<td><span class="right">{display.upcoming.DATE}</span>{display.upcoming.GAME} {display.upcoming.NAME}</td>
+	<td>{display.upcoming.MEMBER}{display.upcoming.UPDATE}{display.upcoming.DELETE}</td>		
+</tr>
+<!-- END upcoming -->
+<!-- BEGIN upcoming_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END upcoming_none -->
+</table>
+
+<form action="{S_ACTION}" method="post">
+<table class="lfooter">
+<tr>
+	<td><input type="text" name="training_vs" /></td>
+	<td>{S_TEAM}</td>
+	<td><input type="submit" class="button2" value="{L_CREATE}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+
+<br />
+
+<table class="rows">
+<tr>
+	<th>{L_EXPIRED}</th>
+	<th>{L_SETTINGS}</th>
+</tr>
+<!-- BEGIN expired -->
+<tr>
+	<td><span class="right">{display.expired.DATE}</span>{display.expired.GAME} {display.expired.NAME}</td>
+	<td>{display.expired.MEMBER}{display.expired.UPDATE}{display.expired.DELETE}</td>		
+</tr>
+<!-- END expired -->
+<!-- BEGIN expired_none -->
+<tr>
+	<td class="none" colspan="2">{L_NONE}</td>
+</tr>
+<!-- END expired_none -->
+</table>
+
+<form action="{S_ACTION}" method="post">
+<table class="rfooter">
+<tr>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END display -->

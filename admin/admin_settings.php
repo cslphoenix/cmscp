@@ -3,21 +3,22 @@
 if ( !empty($setmodules) )
 {
 	return array(
-		'filename'	=> basename(__FILE__),
-		'title'		=> 'acp_settings',
-		'modes'		=> array(
-			'default'	=> array('title' => 'acp_settings'),
-			'calendar'	=> array('title' => 'acp_calendar'),
-			'module'	=> array('title' => 'acp_module'),
-			'subnavi'	=> array('title' => 'acp_subnavi'),
-			'upload'	=> array('title' => 'acp_upload'),
-			'other'		=> array('title' => 'acp_other'),
-			'match'		=> array('title' => 'acp_match'),
-			'gallery'	=> array('title' => 'acp_gallery'),
-			'rating'	=> array('title' => 'acp_rating'),
-			'smain'		=> array('title' => 'acp_smain'),
-			'ftp'		=> array('title' => 'acp_ftp'),
-			'phpinfo'	=> array('title' => 'acp_phpinfo'),
+		'FILENAME'	=> basename(__FILE__),
+		'TITLE'		=> 'acp_settings',
+		'CAT'		=> 'SYSTEM',
+		'MODES'		=> array(
+			'default'	=> array('TITLE'		=> 'acp_settings'),
+			'calendar'	=> array('TITLE'		=> 'acp_calendar'),
+			'module'	=> array('TITLE'		=> 'acp_module'),
+		#	'subnavi'	=> array('TITLE'		=> 'acp_subnavi'),
+			'upload'	=> array('TITLE'		=> 'acp_upload'),
+			'other'		=> array('TITLE'		=> 'acp_other'),
+			'match'		=> array('TITLE'		=> 'ACP_MATCH'),
+			'gallery'	=> array('TITLE'		=> 'acp_gallery'),
+			'rating'	=> array('TITLE'		=> 'acp_rating'),
+			'smain'		=> array('TITLE'		=> 'acp_smain'),
+			'ftp'		=> array('TITLE'		=> 'acp_ftp'),
+			'phpinfo'	=> array('TITLE'		=> 'acp_phpinfo'),
 		)
 	);
 }
@@ -28,7 +29,7 @@ else
 	$cancel = false;
 	$submit = ( isset($_POST['submit']) ) ? true : false;
 	
-	$current	= 'acp_settings';
+	$current = 'acp_settings';
 	
 	include('./pagestart.php');
 	
@@ -40,25 +41,66 @@ else
 	
 	$log	= SECTION_SETTINGS;
 	
-#	$mode	= request('mode', TYP);
+	$file	= basename(__FILE__) . $iadds;
+	
 	$mode	= request('action', TYP);
 	
-	$acp_title	= sprintf($lang['stf_header'], $lang['title']);
+	$_top = sprintf($lang['STF_HEADER'], $lang['TITLE']);
 
 	$mode = (in_array($mode, array('default', 'calendar', 'module', 'subnavi', 'upload', 'other', 'match', 'gallery', 'smain', 'rating', 'ftp', 'phpinfo')) ) ? $mode : 'default';
 	
-	$s_mode = '<select name="action" onkeyup="if (this.options[this.selectedIndex].value != \'\') this.form.submit();" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
+	$_mode = array(
+		array('mode' => 'default',	'lang'	=> $lang['site_default']),
+		array('mode' => 'calendar',	'lang'	=> $lang['site_calendar']),
+		array('mode' => 'module',	'lang'	=> $lang['site_module']),
+	#	array('mode' => 'subnavi',	'lang'	=> $lang['site_subnavi']),
+		array('mode' => 'upload',	'lang'	=> $lang['site_upload']),
+		array('mode' => 'other',	'lang'	=> $lang['site_other']),
+		array('mode' => 'match',	'lang'	=> $lang['site_match']),
+		array('mode' => 'gallery',	'lang'	=> $lang['site_gallery']),
+		array('mode' => 'rating',	'lang'	=> $lang['site_rating']),
+		array('mode' => 'smain',	'lang'	=> $lang['site_smain']),
+		array('mode' => 'ftp',		'lang'	=> $lang['site_ftp']),
+		array('mode' => 'phpinfo',	'lang'	=> $lang['ACP_PHPINFO']),
+	);
 	
-	$key = $value = '';
-
-	foreach ( $lang['settings_option'] as $key => $value )
+	$option = '';
+			
+	foreach ( $_mode as $_switch )
 	{
-		$selected = ( $mode == $key ) ? ' selected="selected"' : '';
-		$s_mode .= "<option value=\"$key\" $selected>&raquo;&nbsp;$value&nbsp;</option>";
+		$option[] = href((($mode == $_switch['mode']) ? 'AHREF_TXT_B' : 'AHREF_TXT'), $file, array('action' => $_switch['mode']), langs($_switch['lang']), langs($_switch['lang']));
 	}
 	
-	$s_mode .= '</select>';
+	function option($delimiter, $array, $num)
+	{
+		$max = count($array);
+		$return = '';
+		
+		for ( $i = 0; $i < $max; $i++ )
+		{
+			$return .= (( $i == 0 || $i == $num+1 || $i == (2*$num)+1 ) ? '' : $delimiter) . $array[$i];
+				
+			if ( $i == $num || $i == 2*$num )
+			{
+				$return .= '<br />';
+			}
+		}	
+		
+		return $return;
+	}
+		
+#	$s_mode = '<select name="action" onkeyup="if (this.options[this.selectedIndex].value != \'\') this.form.submit();" onchange="if (this.options[this.selectedIndex].value != \'\') this.form.submit();">';
 	
+#	$key = $value = '';
+
+#	foreach ( $lang['settings_option'] as $key => $value )
+#	{
+#		$selected = ( $mode == $key ) ? ' selected="selected"' : '';
+#		$s_mode .= "<option value=\"$key\" $selected>&raquo;&nbsp;$value&nbsp;</option>";
+#	}
+	
+#	$s_mode .= '</select>';
+
 	$template->set_filenames(array('body' => 'style/acp_settings.tpl'));
 	
 	$template->assign_block_vars($mode, array(
@@ -71,27 +113,22 @@ else
 	$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
 	
 	$template->assign_vars(array(
-		'L_HEAD'	=> $lang['title'],
-		'L_EXPLAIN'	=> $lang['explain'],
+		'L_HEAD'	=> $lang['TITLE'],
+		'L_EXPLAIN'	=> $lang['EXPLAIN'],
 		
 		'S_PATH_PAGE'		=> select_path(),
 		'S_PATH_PERMS'		=> select_perms(),
-	#	'SORT'		=> $sort,
 		
-		'S_MODE'	=> $s_mode,
+		'S_MODE'	=> option($lang['COMMON_BULL'], $option, 4),
+	#	'S_MODE'	=> sprintf($lang['STF_COMMON_SWITCH'], option($lang['COMMON_BULL'], $s_mode, 3)),
 		
 	#	'S_ACTION'	=> check_sid($file),
 		'S_FIELDS'	=> $fields,
 	));
 	
-#	debug($_SERVER);
-#	debug($_POST);
-	
 	switch ( $mode )
 	{
 		case 'default':
-			
-		#	include('./page_header_admin.php');
 			
 			$vars = array(
 				'config'	=> array(
@@ -110,16 +147,23 @@ else
 					
 					'tab3' => 'standards',
 					'default_dateformat'	=> array('validate' => TXT, 'type' => 'text:25;25'),
-					'default_timezone'		=> array('validate' => TXT, 'type' => 'drop:tz'),	// select_tz($new['default_timezone'], 'default_timezone')
-					'default_lang'			=> array('validate' => TXT, 'type' => 'drop:lang'),	// select_lang($new['default_lang'], 'default_lang', "language")
-					'default_style'			=> array('validate' => TXT, 'type' => 'drop:style'),	// select_style($new['default_style'], 'default_style', "../templates")
+					'default_timezone'		=> array('validate' => TXT, 'type' => 'drop:tz'),	// s_tz($new['default_timezone'], 'default_timezone')
+					'default_lang'			=> array('validate' => TXT, 'type' => 'drop:lang'),	// s_lang($new['default_lang'], 'default_lang', "language")
+					'default_style'			=> array('validate' => TXT, 'type' => 'drop:style'),	// s_style($new['default_style'], 'default_style', "../templates")
 					'override_user_style'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-					'default_currency'		=> array('validate' => TXT,	'type' => 'drop:currency'),
+				#	'default_currency'		=> array('validate' => TXT,	'type' => 'drop:currency'),
 					
 					'tab4' => 'maintenance',
 					'page_disable'			=> array('validate' => TXT, 'type' => 'radio:yesno'),
 					'page_disable_msg'		=> array('validate' => TXT, 'type' => 'textarea:25;255'),
 					'page_disable_mode'		=> array('validate' => ARY,	'type' => 'drop:disable'), // page_mode_select($config['page_disable_mode'])
+					
+					'tab5' => 'cookie',
+					'cookie_domain'			=> array('validate' => TXT, 'type' => 'text:25;25'),
+					'cookie_name'			=> array('validate' => TXT, 'type' => 'text:25;25'),
+					'cookie_path'			=> array('validate' => TXT,	'type' => 'text:25;25'),
+					'cookie_secure'			=> array('validate' => INT,	'type' => 'radio:yesno'),
+					
 				),
 			);
 			
@@ -155,7 +199,6 @@ else
 						
 							$con_name = $request[$config_name];
 							$con_value = $request[$config_name];
-							
 							
 							$sql = "UPDATE " . CONFIG . " SET config_value = '{$request[$config_name]}' WHERE config_name = '$config_name'";
 							if ( !$db->sql_query($sql) )
@@ -214,19 +257,19 @@ else
 				}
 			}
 			
-		#	if ( request('submit', TXT) )
-		#	{
-		#		$oCache->deleteCache('cfg_config');
-		#		
-		#		$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file?mode=$mode"));
-		#		
-		#		message(GENERAL_MESSAGE, $msg);
-		#	}
+			if ( request('submit', TXT) )
+			{
+				$oCache->deleteCache('cfg_config');
+				
+				$msg = sprintf($lang['RETURN_UPDATE'], langs($mode), check_sid($file), $_top, check_sid("$file?mode=$mode"));
+				
+				message(GENERAL_MESSAGE, $msg);
+			}
 			
 			build_output($config, $vars, $config, $mode);
 			
 			$template->assign_vars(array(
-				'S_MODE'	=> $s_mode,
+				'S_MODE'	=> option($lang['COMMON_BULL'], $option, 4),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
@@ -241,7 +284,7 @@ else
 		case 'module':
 		case 'other':
 		case 'rating':
-		case 'subnavi':
+	#	case 'subnavi':
 		case 'upload':
 		case 'smain':
 
@@ -257,20 +300,24 @@ else
 							'tab1'	=> 'calendar',
 							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:calview', 'params' => array('type', true, 'compact')),
 							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
+							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false), 'divbox' => true),
 							'compact'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
 							'birthday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'news'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'training'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'holidays'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'state'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:state'),
 						),
 						// Minikalendereinstellungen
 						'module_calendar' => array(
 							'tab2'	=> 'module_calendar',
 							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
 							'compact'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
@@ -279,6 +326,9 @@ else
 							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'training'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'holidays'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'state'		=> array('validate' => TXT,	'explain' => false,	'type' => 'drop:state'),
+							
 						),
 					);
 					
@@ -295,7 +345,7 @@ else
 						#	'auth_rate'		=> array('validate' => ARY,	'type' => 'drop:auth_rate'),
 						#	'auth_upload'	=> array('validate' => ARY,	'type' => 'drop:auth_upload'),
 						#	'auth'			=> array('validate' => ARY, 'type' => 'drop:auth'),
-							'filesize'		=> array('validate' => INT, 'type' => 'text:4;5'),
+							'filesize'		=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'		=> array('validate' => INT, 'type' => 'double:4;5'),
 							'format'		=> array('validate' => INT, 'type' => 'double:4;5'),
 							'preview'		=> array('validate' => INT, 'type' => 'double:4;5'),
@@ -423,16 +473,18 @@ else
 						),
 						// Minikalendereinstellungen -> Right
 						'module_calendar' => array(
-							'tab9' => 'sn_mini2',
+							'tab9' => 'module_calendar',
 							'show'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'time'		=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
+							'length'	=> array('validate' => INT,	'explain' => false,	'type' => 'text:4;5'),
 							'cache'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'start'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:caldays', 'params' => array(false, true, false)),
-							'bday'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'compact'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno', 'divbox' => true),
+							'birthday'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'news'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'event'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 							'match'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
-							'train'		=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
+							'training'	=> array('validate' => INT,	'explain' => false,	'type' => 'radio:yesno'),
 						),
 						// Serverviewer -> Right
 						'module_server' => array(
@@ -595,6 +647,7 @@ else
 							'tab' => 'path',
 							'games'		=> array('validate' => TXT, 'type' => 'text:25;25'),
 							'icons'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'smilies'	=> array('validate' => TXT, 'type' => 'text:25;25'),
 							'maps'		=> array('validate' => TXT, 'type' => 'text:25;25'),
 							'newscat'	=> array('validate' => TXT, 'type' => 'text:25;25'),
 							'ranks'		=> array('validate' => TXT, 'type' => 'text:25;25'),
@@ -603,41 +656,41 @@ else
 						),
 						'path_group' => array(
 							'tab' => 'path_group',
-							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
-							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_matchs' => array(
 							'tab' => 'path_matchs',
-							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
-							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 							'preview'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_network' => array(
 							'tab' => 'path_network',
-							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
-							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_users' => array(
 							'tab' => 'path_users',
-							'path'		=> array('validate' => TXT, 'type' => 'text:25;25',),
-							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_team_flag' => array(
 							'tab' => 'path_teamflag',
 							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
 							'upload'	=> array('validate' => INT, 'type' => 'radio:yesno'),
-							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 						'path_team_logo' => array(
 							'tab' => 'path_team_logo',
 							'path'		=> array('validate' => TXT, 'type' => 'text:25;25'),
 							'upload'	=> array('validate' => INT, 'type' => 'radio:yesno'),
-							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5'),
+							'filesize'	=> array('validate' => INT, 'type' => 'text:4;5', 'opt' => array('drop')),
 							'dimension'	=> array('validate' => INT, 'type' => 'double:4;5'),
 						),
 					);
@@ -681,7 +734,7 @@ else
 					break;
 			}
 			
-			debug($vars, '$vars');
+		#	debug($vars, '$vars');
 			
 			$sql = 'SELECT * FROM ' . SETTINGS;
 			if ( !($result = $db->sql_query($sql)) )
@@ -697,6 +750,8 @@ else
 					
 					$old[$settings_name] = isset($_POST['submit']) ? str_replace("'", "\'", $settings_value) : $settings_value;
 					$new[$settings_name] = isset($_POST[$settings_name] ) ? $_POST[$settings_name] : $old[$settings_name];
+					
+				#	debug($new[$settings_name]);
 					
 					if ( request('submit', TXT))
 					{
@@ -727,7 +782,7 @@ else
 			{
 				$oCache->deleteCache('cfg_setting');
 		
-				$msg = $lang['update'] . sprintf($lang['return_update'], check_sid($file), $acp_title, check_sid("$file"));
+				$msg = $lang['UPDATE'] . sprintf($lang['RETURN_UPDATE'], $mode, check_sid($file), $_top, check_sid("$file"));
 				
 				message(GENERAL_MESSAGE, $msg);
 			}
@@ -738,7 +793,7 @@ else
 		#	build_output(false, $vars, $config, $mode, true);
 			
 			$template->assign_vars(array(
-				'S_MODE'	=> $s_mode,
+				'S_MODE'	=> option($lang['COMMON_BULL'], $option, 4),
 				'S_ACTION'	=> check_sid($file),
 				'S_FIELDS'	=> $fields,
 			));
@@ -755,10 +810,50 @@ else
 			
 		case 'phpinfo':
 		
-			if ( !(request('submit', TXT)) )
+			$phpinfo = parsePHPInfo();
+		
+			if ( $submit )
 			{
-				$phpinfo = parsePHPInfo();
+				$core = ( $_SERVER['HTTP_HOST'] == 'localhost' ) ? 'Core' : 'PHP Core';
+			
+				$func_fopen = ( function_exists('fopen') == 1 ) ? 'On' : 'Off';
+				$func_fsock = ( function_exists('fsockopen') == 1 ) ? 'On' : 'Off';
 				
+				header("Pragma: no-cache");
+				header("Content-Type: text/x-delimtext; name=\"phpinfo.txt\"");
+				header("Content-disposition: attachment; filename=phpinfo.txt");
+				
+				echo "/**********************************************";
+				echo "\n * " . $lang['support_common'];
+				echo "\n **********************************************";
+				echo "\n * " . $lang['version'] . " " . $config['page_version'];
+				echo "\n * " . $lang['domain'] . " " . $_SERVER['HTTP_HOST'].str_replace('/admin','/',dirname($_SERVER['PHP_SELF']));
+				echo "\n * " . $lang['browser'] . " " . $_SERVER['HTTP_USER_AGENT'];
+				echo "\n **********************************************";
+				echo "\n * " . $lang['support_version'];
+				echo "\n **********************************************";
+				echo "\n * " . $lang['server_os'] . " " . @php_uname();
+				echo "\n * " . $lang['server_apache'] . " " . $phpinfo['apache2handler']['Apache Version'];
+				echo "\n * " . $lang['server_php'] . " " . phpversion();
+				echo "\n * " . $lang['server_sql'] . " " . mysql_get_server_info();
+				echo "\n **********************************************";
+				echo "\n * " . $lang['support_server'];
+				echo "\n **********************************************";
+				echo "\n * " . $lang['info_option_a'] . " " . $func_fopen;
+				echo "\n * " . $lang['info_option_b'] . " " . $func_fsock;
+			#	echo "\n * " . $lang['info_option_c'] . " " . $phpinfo[$core]['register_globals']['0'];
+			#	echo "\n * " . $lang['info_option_d'] . " " . $phpinfo[$core]['safe_mode']['0'];
+				echo "\n * " . $lang['info_option_e'] . " " . $phpinfo['gd']['GD Support'];
+				echo "\n * " . $lang['info_option_f'] . " " . $phpinfo['gd']['GD Version'];
+			#	echo "\n * " . $lang['info_option_g'] . " " . $phpinfo[$core]['magic_quotes_gpc']['0'];
+				echo "\n * " . $lang['info_option_h'] . " " . $phpinfo[$core]['file_uploads']['0'];
+				echo "\n * " . $lang['info_option_i'] . " " . $phpinfo[$core]['upload_max_filesize']['0'];
+				echo "\n * " . $lang['info_option_j'] . " " . $_SERVER['HTTP_ACCEPT_ENCODING'];
+				echo "\n **********************************************/";
+				exit;
+			}
+			else
+			{
 				$core = ( $_SERVER['HTTP_HOST'] == 'localhost' ) ? 'Core' : 'PHP Core';
 				
 				$fields .= "<input type=\"hidden\" name=\"mode\" value=\"$mode\" />";
@@ -776,11 +871,11 @@ else
 					'L_SERVER_SQL'		=> $lang['server_sql'],
 					'L_OPTION_A'		=> $lang['info_option_a'],
 					'L_OPTION_B'		=> $lang['info_option_b'],
-					'L_OPTION_C'		=> $lang['info_option_c'],
-					'L_OPTION_D'		=> $lang['info_option_d'],
+				#	'L_OPTION_C'		=> $lang['info_option_c'],
+				#	'L_OPTION_D'		=> $lang['info_option_d'],
 					'L_OPTION_E'		=> $lang['info_option_e'],
 					'L_OPTION_F'		=> $lang['info_option_f'],
-					'L_OPTION_G'		=> $lang['info_option_g'],
+				#	'L_OPTION_G'		=> $lang['info_option_g'],
 					'L_OPTION_H'		=> $lang['info_option_h'],
 					'L_OPTION_I'		=> $lang['info_option_i'],
 					'L_OPTION_J'		=> $lang['info_option_j'],
@@ -793,72 +888,28 @@ else
 					'SERVER_PHP'		=> phpversion(),
 					'SERVER_SQL'		=> mysql_get_server_info(),
 					'OPTION_A'			=> function_exists('fopen') == true ? 'On' : 'Off',
-					'OPTION_B'			=> function_exists('fsockopen') == true? 'On' : 'Off',
-					'OPTION_C'			=> $phpinfo[$core]['register_globals']['0'],
-					'OPTION_D'			=> $phpinfo[$core]['safe_mode']['0'],
+					'OPTION_B'			=> function_exists('fsockopen') == true ? 'On' : 'Off',
+				#	'OPTION_C'			=> $phpinfo[$core]['register_globals']['0'],
+				#	'OPTION_D'			=> $phpinfo[$core]['safe_mode']['0'],
 					'OPTION_E'			=> $phpinfo['gd']['GD Support'],
 					'OPTION_F'			=> $phpinfo['gd']['GD Version'],
-					'OPTION_G'			=> $phpinfo[$core]['magic_quotes_gpc']['0'],
+					#'OPTION_G'			=> $phpinfo[$core]['magic_quotes_gpc']['0'],
 					'OPTION_H'			=> $phpinfo[$core]['file_uploads']['0'],
 					'OPTION_I'			=> $phpinfo[$core]['upload_max_filesize']['0'],
 					'OPTION_J'			=> $_SERVER['HTTP_ACCEPT_ENCODING'],
 					
 					'L_SUBMIT'			=> $lang['save_as'],
 					
-					'S_MODE'	=> $s_mode,
+					'S_MODE'	=> option($lang['COMMON_BULL'], $option, 4),
 					'S_ACTION'	=> check_sid($file),
 					'S_FIELDS'	=> $fields,
 				));
 				
-				$template->pparse("body");
-				
-				break;
+				$template->pparse('body');
 			}
-			
-			$phpinfo = parsePHPInfo();
-			
-			$core = ( $_SERVER['HTTP_HOST'] == 'localhost' ) ? 'Core' : 'PHP Core';
-			
-			$func_fopen = ( function_exists('fopen') == 1 ) ? 'On' : 'Off';
-			$func_fsock = ( function_exists('fsockopen') == 1 ) ? 'On' : 'Off';
-			
-			header("Pragma: no-cache");
-			header("Content-Type: text/x-delimtext; name=\"phpinfo.txt\"");
-			header("Content-disposition: attachment; filename=phpinfo.txt");
-			
-			echo "/**********************************************";
-			echo "\n * " . $lang['support_common'];
-			echo "\n **********************************************";
-			echo "\n * " . $lang['version'] . " " . $config['page_version'];
-			echo "\n * " . $lang['domain'] . " " . $_SERVER['HTTP_HOST'].str_replace('/admin','/',dirname($_SERVER['PHP_SELF']));
-			echo "\n * " . $lang['browser'] . " " . $_SERVER['HTTP_USER_AGENT'];
-			echo "\n **********************************************";
-			echo "\n * " . $lang['support_version'];
-			echo "\n **********************************************";
-			echo "\n * " . $lang['server_os'] . " " . @php_uname();
-			echo "\n * " . $lang['server_apache'] . " " . $phpinfo['apache2handler']['Apache Version'];
-			echo "\n * " . $lang['server_php'] . " " . phpversion();
-			echo "\n * " . $lang['server_sql'] . " " . mysql_get_server_info();
-			echo "\n **********************************************";
-			echo "\n * " . $lang['support_server'];
-			echo "\n **********************************************";
-			echo "\n * " . $lang['info_option_a'] . " " . $func_fopen;
-			echo "\n * " . $lang['info_option_b'] . " " . $func_fsock;
-			echo "\n * " . $lang['info_option_c'] . " " . $phpinfo[$core]['register_globals']['0'];
-			echo "\n * " . $lang['info_option_d'] . " " . $phpinfo[$core]['safe_mode']['0'];
-			echo "\n * " . $lang['info_option_e'] . " " . $phpinfo['gd']['GD Support'];
-			echo "\n * " . $lang['info_option_f'] . " " . $phpinfo['gd']['GD Version'];
-			echo "\n * " . $lang['info_option_g'] . " " . $phpinfo[$core]['magic_quotes_gpc']['0'];
-			echo "\n * " . $lang['info_option_h'] . " " . $phpinfo[$core]['file_uploads']['0'];
-			echo "\n * " . $lang['info_option_i'] . " " . $phpinfo[$core]['upload_max_filesize']['0'];
-			echo "\n * " . $lang['info_option_j'] . " " . $_SERVER['HTTP_ACCEPT_ENCODING'];
-			echo "\n **********************************************/";
-			exit;
-		
 		break;
 	}
 }
-
 acp_footer();
 
 ?>

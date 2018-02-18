@@ -1,6 +1,8 @@
-<li class="header">{L_HEAD}</li>
-<p>{L_EXPLAIN}</p>
+<li class="header">{L_HEADER}<span class="right"><span class="rightd">{L_OPTION}</span></span></li>
 
+<p>{L_EXPLAIN}<br /><br />{L_SWITCH}<br />{L_SORT}<br />{L_SECTION}</p>
+
+<form action="{S_ACTION}" method="post">
 <!-- BEGIN head -->
 <form action="{S_ACTION}" method="post">
 <ul id="navopts"><li>{S_MODE} <input type="submit" value="{L_GO}" /></li></ul>
@@ -320,16 +322,16 @@ function activate_checkbox(name)
 <div style="float: {S_FLOAT_BEGIN}; width: {S_WIDTH}%;">
 <fieldset>
 	<legend>{L_GROUPS}</legend>
-	<!-- BEGIN row_group -->
+	<!-- BEGIN row -->
 	<dl class="test">
-		<dt style="width: 45%;"><label for="{groups.group.row_group.FIELD}">{groups.group.row_group.NAME}:</label></dt>
-		<dd style="margin-left: 45%;"><label><input type="radio" onclick="activate_checkbox('checkbox_group_{groups.group.row_group.S_MARK_ID}');" name="{groups.group.row_group.S_MARK_NAME}" id="{groups.group.row_group.FIELD}" value="{groups.group.row_group.S_MARK_ID}" {groups.group.row_group.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.group.row_group.S_MARK_ID}');" name="{groups.group.row_group.S_MARK_NAME}" value="{groups.group.row_group.S_NEG_MARK_ID}" {groups.group.row_group.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.group.row_group.S_MARK_ID}" name="mod_group_{groups.group.row_group.S_MARK_ID}" {groups.group.row_group.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.group.row_group.RIGHT} {groups.group.row_group.U_USER_PENDING}</dd>
+		<dt style="width: 45%;"><label for="{groups.group.row.FIELD}">{groups.group.row.NAME}:</label></dt>
+		<dd style="margin-left: 45%;"><label><input type="radio" onclick="activate_checkbox('checkbox_group_{groups.group.row.S_MARK_ID}');" name="{groups.group.row.S_MARK_NAME}" id="{groups.group.row.FIELD}" value="{groups.group.row.S_MARK_ID}" {groups.group.row.S_ASSIGNED_GROUP} />&nbsp;{L_YES}</label><span style="padding:2px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_group_{groups.group.row.S_MARK_ID}');" name="{groups.group.row.S_MARK_NAME}" value="{groups.group.row.S_NEG_MARK_ID}" {groups.group.row.S_UNASSIGNED_GROUP} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_group_{groups.group.row.S_MARK_ID}" name="mod_group_{groups.group.row.S_MARK_ID}" {groups.group.row.S_MOD_GROUP} />&nbsp;{L_MOD}</label><span style="padding:4px;"></span>{groups.group.row.RIGHT} {groups.group.row.U_USER_PENDING}</dd>
 	</dl>
-	<!-- END row_group -->
+	<!-- END row -->
 	<br />
 	<dl>
 		<dt style="width: 45%;"><label for="email_group">{L_MAIL}</label></dt>
-		<dd style="margin-left: 45%;"><label><input type="radio" name="email_group" id="email_group" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_group" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
+		<dd style="margin-left: 45%;"><label><input type="radio" name="email_group" id="email_group" value="1">&nbsp;{L_YES}</label><span style="padding:2px;"></span><label><input type="radio" name="email_group" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
 	</dl>
 	
 </fieldset>
@@ -339,16 +341,16 @@ function activate_checkbox(name)
 <div style="float: {S_FLOAT_END}; width: {S_WIDTH}%;">
 <fieldset>
 	<legend>{L_TEAMS}</legend>
-	<!-- BEGIN row_team -->
+	<!-- BEGIN row -->
 	<dl>			
-		<dt style="width: 45%;"><label for="{groups.team.row_team.FIELD}">{groups.team.row_team.NAME}:</label></dt>
-		<dd style="margin-left: 45%;"><label><input type="radio" onclick="activate_checkbox('checkbox_team_{groups.team.row_team.S_MARK_ID}');" name="{groups.team.row_team.S_MARK_NAME}" id="{groups.team.row_team.FIELD}" value="{groups.team.row_team.S_MARK_ID}" {groups.team.row_team.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.team.row_team.S_MARK_ID}');" name="{groups.team.row_team.S_MARK_NAME}" value="{groups.team.row_team.S_NEG_MARK_ID}" {groups.team.row_team.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.team.row_team.S_MARK_ID}" name="mod_team_{groups.team.row_team.S_MARK_ID}" {groups.team.row_team.S_MOD_TEAM} />&nbsp;{L_MOD}</label></dd>
+		<dt style="width: 45%;"><label for="{groups.team.row.FIELD}">{groups.team.row.NAME}:</label></dt>
+		<dd style="margin-left: 45%;"><label><input type="radio" onclick="activate_checkbox('checkbox_team_{groups.team.row.S_MARK_ID}');" name="{groups.team.row.S_MARK_NAME}" id="{groups.team.row.FIELD}" value="{groups.team.row.S_MARK_ID}" {groups.team.row.S_ASSIGNED_TEAM} />&nbsp;{L_YES}</label><span style="padding:2px;"></span><label><input type="radio" onClick="disable_checkbox('checkbox_team_{groups.team.row.S_MARK_ID}');" name="{groups.team.row.S_MARK_NAME}" value="{groups.team.row.S_NEG_MARK_ID}" {groups.team.row.S_UNASSIGNED_TEAM} />&nbsp;{L_NO}</label><span style="padding:4px;"></span><label><input type="checkbox" id="checkbox_team_{groups.team.row.S_MARK_ID}" name="mod_team_{groups.team.row.S_MARK_ID}" {groups.team.row.S_MOD_TEAM} />&nbsp;{L_MOD}</label></dd>
 	</dl>
-	<!-- END row_team -->
+	<!-- END row -->
 	<br />
 	<dl>			
 		<dt style="width: 45%;"><label for="email_group">{L_MAIL}</label></dt>
-		<dd style="margin-left: 45%;"><label><input type="radio" name="email_team" id="email_team" value="1">&nbsp;{L_YES}</label><span style="padding:4px;"></span><label><input type="radio" name="email_team" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
+		<dd style="margin-left: 45%;"><label><input type="radio" name="email_team" id="email_team" value="1">&nbsp;{L_YES}</label><span style="padding:2px;"></span><label><input type="radio" name="email_team" value="0" checked="checked">&nbsp;{L_NO}</label></dd>
 	</dl>
 </fieldset>
 </div>
@@ -421,6 +423,7 @@ function set_color(name,farbe)
 <!-- END auth -->
 
 <!-- BEGIN view -->
+<form action="{S_ACTION}" method="post">
 {S_OPTIONS}
 
 <!-- BEGIN row -->
@@ -467,7 +470,37 @@ function set_color(name,farbe)
 </fieldset>
 <!-- END row -->
 {S_FIELDS}
+</form>
 <!-- END view -->
+
+<!-- BEGIN log -->
+<fieldset>
+	<legend>{L_ACP_LOG}</legend>
+	<p>{L_EXPLAIN3}</p>
+	<div>
+		<!-- BEGIN row -->
+		<dl>
+			<dt>{log.row.DATE} :: {log.row.IP}</dt>
+			<dd><strong>{log.row.SEKTION}&nbsp;&raquo;&nbsp;{log.row.MESSAGE}</strong>&nbsp;{log.row.DATA}</dd>
+		</dl>
+		<!-- END row -->
+	</div>
+</fieldset>
+<table class="footer">
+<tr>
+	<td>{PAGE_NUMBER}<br />{PAGE_PAGING}</td>
+</tr>
+</table>
+<br />
+<table class="submit">
+<tr>
+	<td><input type="submit" name="submit" value="{L_SUBMIT}"></td>
+	<td><input type="reset" value="{L_RESET}"></td>
+</tr>
+</table>
+{S_FIELDS}
+</form>
+<!-- END log -->
 
 <!-- BEGIN display -->
 <script type="text/JavaScript">
@@ -503,7 +536,7 @@ function fill(thisValue)
 </tr>
 <!-- BEGIN row -->
 <tr>
-	<td><span class="right">{display.row.LEVEL}&nbsp;&bull;&nbsp;{display.row.REGISTER}</span>{display.row.USERNAME}</td>
+	<td><span class="right">{display.row.REGISTER}</span>{display.row.USERNAME}</td>
 	<td>{display.row.AUTH}{display.row.FIELD}{display.row.GROUP}{display.row.UPDATE}{display.row.DELETE}</td>		
 </tr>
 <!-- END row -->
